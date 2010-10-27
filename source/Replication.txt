@@ -1,0 +1,222 @@
+Replication Notes
+=================
+
+
+:Author: Dave Vieglas
+
+
+This document contains notes about replication that may be of some use in
+DataONE.
+
+General
+-------
+
+  1. Reduce complex transactions to be written by a single server
+
+  2. Monitor the server log
+
+  3. Be prepared for failure. The more data is distributed and scaled, the
+     more likely failure will be encountered.
+
+Coordinating Nodes
+------------------
+
+CNs need to keep a copy of all science metadata, and it is expected that
+each CN will be replicated with the others, so that each will appear the same.
+
+There will be three CNs to start with.
+
+There's basically three models for dealing with replication in this case:
+
+ - single master, two slaves
+ - ring - write one, it writes to the next, and so on
+ - multi-master. Write to any, replication to others
+
+Multi-master replication would be the ideal option, as each CN would then
+offer identical functionality rather than the alternative of redirecting
+(presumably) 2/3 of requests to the master node.
+
+There are basically two categories of information that are replicated:
+
+  - science metadata, which is information about a data set
+
+  - system metadata, which is information that is used to keep track of things
+    such as the science metadata, MN capabilities and state, perhaps groups
+    and access control lists, identity mappings
+
+Member Nodes
+------------
+
+Replication of data is achieved by copying content between Member Nodes until
+sufficient copies have been made to address concerns of access (x% of MNs may
+be offline and the content can still be reached) and efficiency of access
+(Internet distance between client and the MN).
+
+Resources
+---------
+
+ - rcs - venerable, functional
+ - inotify - the linux kernel file system monitor
+ - LDAP multi-master (OpenLDAP, 389 Directory Server)
+ - MySQL multi-master
+ - Microsoft's File System Replication Service and/or Distributed File System
+ - slony1 for Postgresql
+ - DRBD_  (dual master)
+ - Git_
+ - Mercurial_
+ - Bazaar_
+ - Metacat_
+ - Zookeeper_
+
+
+Coordinating Node Object Store
+------------------------------
+
+The CN object store (CN-OS) is responsible for holding a copy of all science
+and system metadata, enabling retrieval of objects by an identifier and for
+ensuring that the local copy is synchronized with the other CNs. The CN-OS is
+analogous to a replicated dictionary with the identifiers being keys and the
+science or system metadata documents being the values.
+
+The CN-OS should support operations:
+
+- Create(guid)
+
+- Read(guid)
+
+- Update(guid)
+
+- Delete(guid)
+
+- List(start, stop, restriction)
+
+
+
+Metacat As Replicating Object Manager
+-------------------------------------
+
+Metacat_ is a flexible metadata database that utilizes XML as a common syntax
+for representing various types of metadata. In general, Metacat can be
+considered functionally equivalent to an XML database.
+
+Metacat supports replication of documents between instances, with replication
+being triggered by several events:
+
+- Timer, at pre-specified intervals
+- Inserts, when a document is inserted locally
+- Updates, when a document is updated locally
+- Lock, when a lock is requested on a document (replication after lock received)
+
+With Metacat filling the role of the Coordinating Node Object Store, each CN
+Metacat instance would replicate with the other instances on the CNs. The
+configuration for DataONE CNs would be something like:
+
+===== ========== ========= ============= ====
+host  server     replicate datareplicate hub
+===== ========== ========= ============= ====
+cn1   localhost  0         0             1
+ .      cn2      1         0             1   
+ .      cn3      1         0             1
+cn2   localhost  0         0             1
+ .      cn1      1         0             1   
+ .      cn3      1         0             1
+cn3   localhost  0         0             1
+ .      cn1      1         0             1   
+ .      cn2      1         0             1
+===== ========== ========= ============= ====
+
+
+Using a Distributed Lock Manager
+--------------------------------
+
+Apache Zookeeper_ can be used as a distributed lock manager to assist with
+synchronization of records, especially across the CNs. Zookeeper is
+interesting because it can potentially scale to many more than three CNs.
+
+In this case we would create a globally synchronous lock on a specific GUID
+(essentially the same as the Lock operation of Metacat). The basic procedure
+is described in the `Zookeeper recipes`_.
+
+
+Distributed Execution Environment
+---------------------------------
+
+For example, hazelcast_. These types of solutions are typically developed with
+LAN clusters in mind, and may run into problems with higher latency networks.
+Interesting product though.
+
+
+File Based Object Store with Distributed Revision Control
+---------------------------------------------------------
+
+These notes describe a strategy of utilizing the Linux file system and a
+`distributed version control`_ system (DVC) such as Git_ or Mercurial_ as the
+science and system metadata store for the Coordinating Nodes.
+
+The basic approach is to treat all primary instances of science and system
+metadata as files that are stored on the Linux file system. The files are
+located in one or more folders that are under revision control using the DVC.
+As a new metadata file is added to a CN, it is replicated to the other CNs on
+a scheduled basis (e.g. every 10 minutes or when n files have been changed or
+added). Change notification hooks (e.g. commit scripts) are used to update
+local databases that are used to search science metadata (e.g. the Mercury
+index) or the local system metadata database.
+
+
+Scenario 1: Adding a new document
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. A new document (d) is retrieved from a MN (or is pushed to the CN by the
+   MN).
+
+2. The document is added to the file system and added to version control. 
+
+3. In response to some trigger (time or number of commits), the DVC initiates
+   a sync with other repositories.
+
+
+Advantages
+~~~~~~~~~~
+
+- Very simple replication mechanism
+- Scalable, especially through partitioning of the file system
+- No global write lock necessary
+- Agnostic with respect to the file types
+- Many existing tools
+- Changes replicated through diffs
+- Enable segmentation of all content through a simple taxonomy
+- General approach is RCS agnostic - could use Git, Bazaar or any other
+  distributed RCS system
+- Change detection is trivial
+
+Disadvantages
+~~~~~~~~~~~~~
+
+- File replication only, need to implement mechanisms for search etc
+- No per-object access control
+- Potential for collisions for object instances
+- How to (automatically) resolve conflicts?
+- Limitations on the absolute number of files per folder/filesystem
+
+
+.. _DRBD: http://www.drbd.org/home/what-is-drbd/
+ 
+.. _mm_replication: http://www.dbspecialists.com/files/presentations/mm_replication.html
+
+.. _389 Directory Server: https://help.Ubuntu.com/community/FedoraDirectoryServer
+
+.. _distributed version control: http://en.wikipedia.org/wiki/Distributed_revision_control
+
+.. _Mercurial: http://mercurial.selenic.com/
+
+.. _Git: http://git-scm.com/
+
+.. _Zookeeper: http://hadoop.apache.org/zookeeper
+
+.. _Zookeeper recipes: http://hadoop.apache.org/zookeeper/docs/r3.1.1/recipes.html#sc_recipes_Locks
+
+.. _Metacat: http://knb.ecoinformatics.org/software/metacat/
+
+.. _Bazaar: http://bazaar-vcs.org/en/
+
+.. _hazelcast: http://www.hazelcast.com/

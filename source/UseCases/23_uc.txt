@@ -1,0 +1,81 @@
+Use Case 23 - Owner Expunge Content
+-----------------------------------
+
+Author
+  VDC TWG
+
+Date
+  - 20090925 Adding to use case description and documentation
+  - 20090114 (TWG meeting).  Subsequent various modifications.
+
+Version 
+  Draft
+
+Goal
+  User can find out where all copies of my data are in the system and can
+  expunge them.
+
+  
+
+Summary 
+
+  xxx
+
+Actors
+  xxx
+
+Preconditions 
+  xxx
+  
+Triggers
+  xxx
+ 
+Post Conditions
+  xxx
+
+**Notes**
+
+- Dealing with inappropriate usage of (ie, copyrighted objects that are
+  stored)
+
+
+.. figure:: images/23_interaction.png
+   :width: 100%
+
+   Interactions for use case 23.
+
+..
+  @startuml images/23_interaction.png
+  !include ../plantuml.conf
+  title Interactions: 23 - User can find out where all copies of my data are in the system and\ncan expunge them
+
+  actor "User (Data Owner)" as user
+  participant "Client" as app_client << Application >>
+  user -> app_client
+  participant "Authentication API" as c_authenticate << Coordinating Node >>
+  app_client -> c_authenticate: login (user, pw)
+  app_client <-- c_authenticate: token or failure
+  participant "Query API" as c_query << Coordinating Node >>
+  app_client -> c_query: getAllCopies (token, ownerID)
+  participant "Authorization API" as c_authorize << Coordinating Node >>
+  c_query -> c_authorize: isAuth (token, resultset)
+  participant "Verify API" as c_ver << Coordinating Node >>
+  c_authorize -> c_ver: isValidToken (token)
+  c_authorize <-- c_ver: T or F
+  c_query <-- c_authorize: T or F
+  app_client <-- c_query: records or fail
+  participant "CRUD API" as c_crud << Coordinating Node >>
+  app_client -> c_crud: deleteRecords (token, listOfGUIDs)
+  app_client <-- c_crud: ack or fail
+  note right
+  Can the Query API find out where all
+  copies of my data are in the system
+  or should this be handled by another
+  API?
+  end note
+  @enduml
+  
+
+.. raw:: latex
+
+   \newpage

@@ -1,0 +1,60 @@
+DataONE Application Programming Interfaces
+==========================================
+
+These APIs represents the interfaces exposed by the Coordinating and Member
+Nodes and the Investigator Toolkit. They do not describe interfaces used only
+internally by those components.
+
+
+.. figure:: images/componentMethods.png 
+   :figwidth: 100%
+
+   Overview of the system components and the methods being called by each
+   component. An arrow to a target indicates the origin is calling the method
+   on the target.
+
+
+Contents
+--------
+
+.. toctree::
+   :maxdepth: 1
+   
+   SystemMetadata
+   SystemMetadataAnalysis
+   SysmetaLifecycle
+   MN_APIs
+   CN_APIs
+   ITK_APIs
+   Exceptions
+   Types
+   REST_interface
+   Serialization
+   querying_content
+   logging
+
+
+Summary of API Functions
+------------------------
+
+.. include:: generated/generated_module_summary.txt
+
+
+Summary of Exceptions
+---------------------
+
+.. include:: generated/generated_exception_summary.txt
+
+
+Method, Exception Cross Reference
+---------------------------------
+
+.. include:: generated/generated_method_exception_xref.txt
+
+
+.. raw:: latex
+
+   \newpage
+
+
+

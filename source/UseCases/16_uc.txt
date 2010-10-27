@@ -1,0 +1,70 @@
+Use Case 16 - Log CRUD Operations
+---------------------------------
+
+Author
+  VDC TWG
+
+Date
+  - 20091126 [PEA] Make consistent with V0.3 APIs documentation.
+  - 20090925 Adding to use case description and documentation
+  - 20090114 (TWG meeting). Subsequent various modifications.
+
+Version 
+  0.3
+
+Goal
+  All CRUD operations on metadata and data are logged at each node (including
+  both Member and Coordinating).
+
+Summary 
+
+  Logging is important for monitoring performance and stability of the system
+  as well as for ensuring appropriate attribution is given to contributors of
+  content. This use case describes the action of logging a user request for
+  content.
+
+  This use case supports the reporting of log information as required by Use
+  Case 17.
+
+Actors
+  - User
+  - Node (Member or Coordinating)
+
+Preconditions 
+
+  - User has authenticated, and is authorized for requested operation
+
+Triggers
+
+  - Any of the CRUD operations (object access or modification)
+
+
+Post Conditions
+
+  - The operation is recorded in the log for the node.
+
+
+.. figure:: images/16_interaction.png
+   :figwidth: 100%
+
+   Interactions for use case 16.
+
+
+..
+  @startuml images/16_interaction.png
+  !include ../plantuml.conf
+
+  participant "Client" as app_client << Application >>
+  participant "CRUD API" as m_crud << Node >>
+  app_client -> m_crud: operation (token, parameters)
+  note right
+    See Use Case 1, Use Case 4
+  end note
+  m_crud -> m_crud: log (typeOfOperation, identifier, requestorIdentity, dateOfRequest, ...)
+  m_crud --> app_client: response
+  @enduml
+
+
+.. raw:: latex
+
+   \newpage

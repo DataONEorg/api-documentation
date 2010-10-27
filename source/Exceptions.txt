@@ -1,0 +1,180 @@
+Exceptions Raised by MN and CN APIs
+-----------------------------------
+
+.. module:: Exceptions
+   :synopsis: Exceptions that are raised by MN, CN, and ITK software.
+
+
+.. contents::
+
+
+General
+~~~~~~~
+
+All exceptions raised by APIS methods in DataONE cicore must include three
+basic elements of information and an optional element ``traceInformation`` as
+detailed in :class:`Types.ErrorMessage`, repeated here for convenience.
+
+================= ==============================================================
+Element           Description
+================= ==============================================================
+errorCode         The error code. This is the HTTP error code (i.e. 4xx)
+detailCode        A code that can be mapped to a specific location in the 
+                  source code of the implementation. Implemented as a string
+                  with dot notation to indicate progressive levels of detail.
+description       A human readable message describing what happened
+traceInformation  An optional dictionary of values that provides more
+                  information about the error condition (e.g. calling
+                  parameters). Note that traceInformation should never contain
+                  sensitive information.
+================= ==============================================================
+
+There will be conditions encountered where exceptions are raised in the APIs
+which are not exposed to HTTP. In these cases, the ``detailCode`` and
+``description`` values must be included, and the code should be set to an
+appropriate value.
+
+
+HTTP Exception Handling Codes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+HTTP error codes of relevance to the DataONE cicore are repeated here for
+convenience. Refer to the `HTTP specification`_ for a complete reference.
+
+==== =================== =======================================================
+Code Meaning             Description
+==== =================== =======================================================
+400  Bad Request         Bad request if the request REST operation is invalid,
+                         serialization is erroneous, mime type is not supported, 
+                         or resource is not supported.  
+401  Unauthorized        Authentication failure. Credentials are required or 
+                         were invalid. 
+403  Forbidden           The current user does not have the right to perform 
+                         the requested action.
+404  Not Found           The object does not exist.
+405  Method not allowed  The HTTP method used is not allowed on this resource.
+                         Response must include an Allow header indicating valid
+                         HTTP methods.
+406  Not Acceptable      The resource identified by the request is only capable 
+                         of generating response entities which have content 
+                         characteristics not acceptable according to the accept 
+                         headers sent in the request.
+408  Request Timeout     The client did not produce a request within the time 
+                         that the server was prepared to wait.
+409  Conflict            The request could not be completed due to a conflict 
+                         with the current state of the resource.
+410  Gone                The resource is known to be permanently deleted (as 
+                         opposed to 404 which indicates uncertainty about the
+                         state of the object).   
+413  Request Entity Too  The server is refusing to process a request because 
+     Large               the request entity is larger than the server is willing 
+                         or able to process.
+415  Unsupported Media   The server is refusing to service the request because 
+     Type                the entity of the request is in a format not supported 
+                         by the requested resource for the requested method. 
+500  Internal Server     The server encountered an unexpected condition which 
+     Error               prevented it from fulfilling the request.
+501  Not Implemented     The server does not support the functionality required 
+                         to fulfill the request. This is the appropriate
+                         response  when the server does not recognize the
+                         request method and is not capable of supporting it for
+                         any resource.
+==== =================== =======================================================
+
+.. _HTTP specification: http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
+
+
+Serializing Exception Information
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Exceptions can be serialized in different formats that vary according to where
+the error occurs and what caller the error message is being sent to. Four
+common serialization formats will be HTML, XML, JSON, and Log. The general
+approach for serializing error messages is indicated by way of example below.
+For errors raised in response to a HTTP call (e.g. through the REST interface),
+the error should be serialized in the format indicated in the request Accept
+header, defaulting to HTML.
+
+Examples of a :exc:`Exceptions.NotFound` error raised by a request to
+:func:`MN_crud.get` object ``123XYZ`` from a Member Node. The trace
+information contains ``{'method':'mn.get'}``.
+
+In HTML:
+
+.. code-block:: html
+
+  <html>
+    <head>
+      <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+      <title>Error: 404 Not Found (1020.1)</title>
+    </head>
+    <body>
+      <p>
+        <dl>
+          <dt>Error</dt>
+          <dd class='erroName'>NotFound</dd>
+          <dt>Code</dt>
+          <dd class='errorCode'>404</dd>
+          <dt>Detail Code</dt>
+          <dd class='detailCode'>1020.1</dd>
+        </dl>
+      </p>
+      <p class='description'>The specified object does not exist on this node.</p>
+      <dl class='traceInformation'>
+        <dt>identifier</dt>
+        <dd>123XYZ</dd>
+        <dt>method</dt>
+        <dd>mn.get</dd>
+        <dt>hint</dt>
+        <dd>Please try <a href='http://cn.dataone.org/cn/resolve/123XYZ'> resolving</a> 
+            at a <a href='http://dataone.org'>DataONE</a> Coordinating Node.</dd>
+      </dl>
+    </body>
+  </html>
+
+
+In XML:
+
+.. code-block:: xml
+
+  <error name="NotFound" errorCode='404' detailCode='1020.1'>
+    <description>The specified object does not exist on this node.</description>
+    <traceInformation>
+      <value key='identifier'>123XYZ</value>
+      <value key='method'>mn.get</value>
+      <value key='hint'>http://cn.dataone.org/cn/resolve/123XYZ</value>
+    </traceInformation>
+  </error>
+
+
+In JSON::
+
+  {
+    'name': 'NotFound',
+    'errorCode':404,
+    'detailCode': '1020.1',
+    'description': 'The specified object does not exist on this node.',
+    'traceInformation':
+    {
+      'identifier':'123XYZ',
+      'method': 'mn.get',
+      'hint':'http://cn.dataone.org/cn/resolve/123XYZ'
+    }
+  }
+
+
+Log message body. This type of representation is presented here as a
+suggestion. The actual log representation may differ according to the actual
+implementation::
+
+  [detail:1020.1][identifier:123XYZ, method:mn.get]The specified object does not exist on this node.
+
+
+
+The Exceptions
+~~~~~~~~~~~~~~
+
+.. include:: generated/generated_exception_summary.txt
+
+.. include:: generated/generated_exceptions.txt
+

@@ -1,0 +1,296 @@
+Metadata Attributes for Discovery
+=================================
+
+.. module:: SearchMetadata
+
+This document describes the attributes pulled from :term:`science metadata`
+documents that are used to assist discovery (i.e. search) of content in the DataONE system.
+
+
+Extracted Search Attributes
+---------------------------
+
+Data that exists within the DataONE system is always accompanied by science
+metadata in one of the supported metadata schemes (e.g. Dublin Core, EML, or
+another supported scheme) and expressed in one of the supported formats (e.g.
+XML, RDF-XML). The science metadata is also replicated with the data (where
+the Member Node supports the format and scheme) and additional copies are
+replicated across the Coordinating Nodes. The science metadata is parsed by
+the CNs to extract information to verify the content provides at least the
+minimal metadata content and meets consistency requirements. Attributes
+extracted from the science metadata are also used to support search
+operations.
+
+
+Searching content in DataONE involves the process of matching a user provided
+value with some value extracted from the science metadata.
+
+Values can be simple (e.g. string, integer, floating point, date) or compound
+(e.g. spatial coordinate constructed from two floats - the latitude and
+longitude and a string - the coordinate system identifier).
+
+
+Expression in science metadata
+
+Expression in extracted values that are indexed
+
+Expression in a query
+
+
+Required Query Expressions
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Search the authors of content.
+
+Search the keywords of content
+
+
+Search Element Types
+~~~~~~~~~~~~~~~~~~~~
+
+* Integer
+
+* Float
+
+* String
+
+* DateTime
+
+* SpatialFeature (use `Well Known Text`_ )
+
+* Publication (A structured type, perhaps search by decomposing to elements)
+
+* ScientificName (A structured type, perhaps search by decomposing to elements)
+
+
+.. _Well Known Text: http://en.wikipedia.org/wiki/Well-known_text
+
+
+Essential Elements
+~~~~~~~~~~~~~~~~~~
+
+.. attribute:: author
+
+   (String)
+
+   - Principle Investigator (PI) / Author
+
+   - Name authority service is desired for some control over names appearing in metadata
+
+   - For search, advantages to keep simple text representation
+
+   - Goal of gradual increase in specificity
+
+
+.. attribute:: keyWord
+
+   (String)
+
+   - Keyword (uncontrolled keywords)
+
+
+.. attribute:: keyConcept
+
+   - Key concept -key concepts drawn from a set of ontologies
+
+   - Term
+
+   - Namespace
+
+.. attribute:: spatialFeature
+
+   (SpatialFeature)
+
+   - Spatial bounding box (largest bounding rectangle)
+
+   - Spatial window (series of spatial envelopes representative of the spatial
+     locations of where the data is collected from or relevant to)
+
+   - Spatial features (points, bounding boxes, polygons)
+
+   - Centroid
+
+   - Bounding box
+
+   - Polygon
+
+   - (not largest extent)
+
+   - (need to resolve the semantics of the bounding box search - e.g. if centroids are recorded but fall outside of bounding box search)
+
+
+.. attribute:: namedLocation
+
+   (String)
+
+   - Named places
+
+   - Term 
+
+   - Type 
+
+   - Context (Columbus OH, Columbus GA)
+
+   - Namespace of gazetteer  
+
+.. attribute:: earliestDate
+
+   (DateTime)
+
+
+.. attribute:: latestDate
+
+   (DateTime)
+
+   - Temporal window
+
+   - Relative terms (e.g. terms from the Geologic time scale) need to be supported
+
+   - Date ranges
+
+   - Temporal coverage of the data set  (e.g. searches - during, before, after)
+
+.. attribute:: any
+
+   (String)
+
+   - Full text search / Text search on abstract
+
+
+Desirable Elements
+~~~~~~~~~~~~~~~~~~
+
+.. attribute:: title
+
+   (string)
+
+   - Title (2)
+
+.. attribute:: objectFormat
+
+   (String)
+
+  - Type of data (format) (2)
+  
+    - Original data
+
+    - Summarized versions
+
+    - Method used for processing (to generate summary, or original data)
+
+    - Resource type (spatial, models, observations, web service, ...)
+
+.. attribute:: variableName
+
+   (String)
+
+   - Scientific variables (from a controlled vocabulary) (1)
+
+.. attribute:: dataDomain
+
+   (String)
+
+   - Domain of data (physics, environmental, ...) (1)
+
+
+.. attribute:: scientificName
+
+   (String)
+
+   - Biological taxonomic extents (1)
+
+.. attribute:: publication
+
+   (String)
+
+  - Search by publication (1)
+
+
+Some Others
+~~~~~~~~~~~
+
+.. attribute:: creator
+
+   (String)  Dublin core
+
+- Generator of data (instrument, application)
+
+.. attribute:: relatedObject
+
+   (String)
+
+   - Related data (data sets, publications)
+
+.. attribute:: quality
+
+   (String, controlled vocabulary)
+
+   - Quality / level of curation
+
+.. attribute:: relatedOrganizations
+
+   (String)
+
+   - Organizations involved in study
+
+.. attribute:: size
+
+   (Integer, long)
+
+   - Size of data (bytes)
+
+.. attribute:: replicaCount
+
+   (Integer)
+
+.. attribute:: replicaLocation
+
+   (String)
+
+   - Number / location of replicas 
+
+.. attribute:: dimensions
+
+   (Integer or perhaps float?)
+
+   - Dimensionality of data 
+
+.. attribute:: measurementUnits
+
+   (String)
+
+   - Units of measure (for sci variables)
+
+.. attribute:: identifier
+
+   (:class:`Types.IdentifierType`)
+
+   - Identifier (GUID)
+
+
+.. attribute:: datePublished
+
+.. attribute:: dateCreated
+
+.. attribute:: dateSysMetadataModified
+
+   (DateTime)
+
+  - Temporal coverage, low priority
+
+    - Publication date
+
+    - Creation date
+
+    - Last modified date
+
+
+.. attribute:: readPrincipal
+
+.. attribute:: writePrincipal
+
+   (:class:`Types.PrincipalType`)
+
+   - Permissions on objects (e.g. available to read by user)
+
+

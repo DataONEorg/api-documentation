@@ -1,0 +1,75 @@
+Use Case 07 - CN Batch Upload
+-----------------------------
+
+Author
+  VDC TWG
+
+Date
+  - 20090930 Flagged as dupe
+  - 20090925 Adding to use case description and documentation
+  - 20090114 (TWG meeting).  Subsequent various modifications.
+
+Version 
+  Draft
+
+Goal
+  Batch Operations - Coordinating Node requests metadata /data list from new
+  Member Node and then batch upload (disable indexing for example to improve
+  insert performance).
+
+Summary
+
+  This is a dupe of Use Case 06 after refactoring that
+  use case use a pull mechanism to retrieve changed records. The intent is to
+  streamline the retrieval of large amounts of content from a MN, which
+  perhaps involves turning of indexing and other potentially time consuming
+  operations to speed the upload process.
+
+
+Actors
+
+  - CN
+
+  - MN
+
+Preconditions 
+
+  - Large amount of metadata data is required to be uploaded to the CN
+  
+Triggers
+
+  - Indication of a large amount of content to retrieves from a MN
+
+Post Conditions
+
+  - The upload is completed, CN synchronization is completed, MN replication
+    is scheduled.
+
+
+
+.. figure:: images/07_interaction.png
+   :figwidth: 100%
+
+   Interactions for use case 07.
+
+..
+  @startuml images/07_interaction.png
+  !include ../plantuml.conf
+  title Interactions: 07 - Coordinating Node requests metadata, data list from new Member Node\nand then performs a batch upload.interaction
+
+  participant "Synchronization API" as c_sync << Coordinating Node >>
+  participant "Replication API" as m_rep << Member Node >>
+  c_sync -> m_rep: listAllObjects ()
+  c_sync <-- m_rep: objectsList
+  participant "CRUD API" as m_crud << Member Node >>
+  c_sync -> m_crud: batchGet (objectsList)
+  c_sync <-- m_crud: objects
+  c_sync -> c_sync: verifyAllObjectsReceived ()
+  participant "CRUD API" as c_crud << Coordinating Node >>
+  c_sync -> c_crud: batchWrite (objectsList)
+  @enduml
+
+
+.. raw:: latex
+
+   \newpage

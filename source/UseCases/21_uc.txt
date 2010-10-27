@@ -1,0 +1,66 @@
+Use Case 21 - Owner Subscribe to CRUD Operations
+------------------------------------------------
+
+Author
+  VDC TWG
+
+Date
+  - 20090925 Adding to use case description and documentation
+  - 20090114 (TWG meeting).  Subsequent various modifications.
+
+Version 
+  Draft
+
+Goal
+  Data owners can subscribe to notification service for CRUD operations for objects they own.
+
+Summary 
+
+  xxx
+
+
+Actors
+  xxx
+
+Preconditions 
+  xxx
+  
+Triggers
+  xxx
+ 
+Post Conditions
+  xxx
+
+**Notes**
+
+xxx
+
+
+.. figure:: images/21_interaction.png
+   :width: 100%
+
+   Interactions for use case 21.
+
+
+..
+  @startuml images/21_interaction.png
+  !include ../plantuml.conf
+
+  actor "User (Data Owner)" as user
+  participant "Client" as app_client << Application >>
+  user -> app_client
+  note left
+  Assume user authority
+  for notification registration.
+  end note
+  participant "Register API" as c_reg << Coordinating Node >>
+  app_client -> c_reg: registerForNotification (token, dataOwnerID)
+  app_client <-- c_reg: ack or fail
+
+  @enduml
+
+
+
+.. raw:: latex
+
+   \newpage

@@ -1,0 +1,559 @@
+Data Types in CICore
+--------------------
+
+.. module:: Types
+   :synopsis: Catalog of data types (structures) used by the DataONE cicore.
+
+.. Note:: Here we use the Sphinx ``class`` directives to identify data
+  structures. This is not meant to imply that these structures are implemented
+  as classes - it is merely a convenience mechanism for documentation.
+
+.. Note:: Class structures are described using the Google `Protocol Buffer
+  Language`_ . This is for convenience only, and the IDL used will probably
+  change in the future.
+
+========= =============================
+Version   Structure
+========= =============================
+.         :class:`AccessRule`
+.         :class:`AuthenticationSystem`
+.         :class:`AuthToken`
+.         :class:`Capabilities`
+.         :class:`Checksum`
+.         :class:`DateTime`
+.         :class:`DescribeResponse`
+.         :class:`ErrorMessage`
+.         :class:`Event`
+.         :class:`HeartbeatResponse`
+.         :class:`IdentifierFormat`
+.         :class:`IdentifierList`
+.         :class:`Identifier`
+.         :class:`LogRecord`
+.         :class:`LogRecords`
+.         :class:`MonitorList`
+.         :class:`Node`
+.         :class:`NodeList`
+.         :class:`NodeReference`
+.         :class:`ObjectFormat`
+.         :class:`ObjectList`
+.         :class:`ObjectLocationList`
+.         :class:`PingResponse`
+.         :class:`Principal`
+.         :class:`Query`
+.         :class:`Status`
+.         :class:`SystemMetadata`
+========= =============================
+
+
+.. include:: types_auth.txt
+
+----
+
+.. class:: Capabilities
+
+  Describes the capabilities of a Member Node.
+
+
+----
+
+.. class:: Checksum
+
+  Represents the value of a computed checksum.
+
+  ::
+
+    enum ChecksumAlgorithmEnum 
+    {
+      SHA-1 = 0;
+      SHA-224 = 1;
+      SHA-356 = 2;
+      SHA-384 = 3;
+      SHA-512 = 4;
+      MD5 = 5;
+    }
+
+    message Checksum 
+    {
+      required ChecksumAlgorithmEnum algorithm = 1  [default = SHA-1];
+      required string value = 2;
+    }
+
+----
+
+
+.. class:: DateTime
+
+  A string that completely identifies a specific time.
+
+  - Must include date and time
+  - If not specified, then the time zone is 0, i.e. GMT
+
+  Valid representations include:
+  
+  - `HTTP Full Date`_ format. e.g. `Sun, 06 Nov 1994 08:49:37 GMT`
+  - `YYYY-MM-DDTHH:MM:SS.mmmmmm`
+  - `YYYYMMDDTHHMMSS.mmmmmm`
+  - `YYYY-MM-DDTHH:MM:SS.mmmmmm+HH:MM`
+  - `YYYYMMDDTHHMMSS.mmmmmm+HHMM`
+
+  The milliseconds may be left off if that precision is not available.
+
+
+.. _HTTP Full Date: http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.3.1
+
+----
+
+.. class:: DescribeResponse  
+
+  Provides a low cost hint about the type, size and state of an object.
+  Describe responses are encoded in the header of the HTTP response and so
+  differ in the serialization mechanism used by other REST calls.
+
+  ::
+
+    message DescribeResponse 
+    {
+      required ObjectFormat DataONE-ObjectFormat = 1;
+      required uint64 Content-Length = 2;
+      required DateTime Last-Modified = 3;
+      required Checksum DataONE-Checksum = 4;
+    }
+
+
+  .. attribute:: DataONE-ObjectFormat
+
+     The value of the :attr:`SystemMetadata.objectFormat` entry available in
+     the :class:`SystemMetadata`.
+
+  .. attribute:: Content-Length
+
+     Size of the object in bytes, the value of :attr:`SystemMetadata.size`
+     from :class:`SystemMetadata`.
+
+  .. attribute:: Last-Modified
+
+     A :class:`DateTime` value that indicates when the :term:`system metadata`
+     associated with the object was last modified, i.e. the value of
+     :attr:`SystemMetadata.dateSysMetadataModified` for the object.
+
+  .. attribute:: DataONE-Checksum
+
+     The algorithm (:attr:`SystemMetadata.algorithm`) and :class:`Checksum`
+     (:attr:`SystemMetadata.checksum`) of the object being examined, drawn
+     from the :class:`SystemMetadata`. The algorithm and checksum are
+     separated by a single comma with the algorithm first.
+
+
+  Example of a HEAD response on object "ABC123"::
+
+    curl -I http://mn1.dataone.org/mn/object/ABC123
+
+    HTTP/1.1 200 OK
+    Last-Modified: Wed, 16 Dec 2009 13:58:34 GMT
+    Content-Length: 10400
+    Content-Type: application/octet-stream
+    DataONE-ObjectFormat: eml://ecoinformatics.org/eml-2.0.1
+    DataONE-Checksum: SHA-1,2e01e17467891f7c933dbaa00e1459d23db3fe4f
+
+
+----
+
+.. include:: types_errors.txt
+
+
+----
+
+.. class:: Event
+
+  The contolled list of events that are logged, which will include 'CREATE',
+  'UPDATE', 'DELETE', 'READ', 'REPLICATE' events
+
+  ::
+
+    message Event {
+      CREATE = 0;
+      READ = 1;
+      UPDATE = 2;
+      DELETE = 3;
+      REPLICATE = 4;
+      CHANGEOWNER = 5;
+    }
+
+
+----
+
+.. class:: PingResponse
+
+  The response from :func:`MN_health.ping`. This is currently (2010-10-21) a
+  HTTP response with status code 200 and no payload.
+
+
+----
+
+.. class:: StatusResponse
+
+  The response from :func:`MN_health.getStatus`. This is currently
+  (2010-10-21) undefined. This opertation *may* replace ping() on closer
+  evaluation of the design notes.
+
+----
+
+.. class:: IdentifierFormat
+
+  Initially an enumerated list of strings that specify different types of identifiers.
+
+  ::
+
+    message IdentifierFormat {
+      enum IdentifierFormat {
+        OID = 0;
+        LSID = 1;
+        UUID = 2;
+        LSRN = 3;
+      }
+    }
+
+.. TODO:: There's a few more of these that need to be specified.
+
+----
+
+.. class:: Identifier
+
+  An :term:`identifier` (:term:`GUID`) in the DataONE system. This is
+  equivalent to a Unicode string of printable characters, excluding
+  whitespace. All representations of identifiers must be encoded in 7-bit
+  ASCII or UTF-8.
+
+  Identifiers have a maximum length of 800 characters. Some discussion on this
+  is described in `ticket 577`_.
+
+
+.. _ticket 577: https://redmine.dataone.org/issues/577
+
+----
+
+.. class:: IdentifierList
+
+   A list of identifiers, so a list of Unicode strings.
+
+   ::
+   
+     message IdentifierList {
+       repeated IdentifierType identifier = 1;
+     }
+
+----
+
+.. class:: LogRecord
+
+  A single log entry as reported by a Member Node or Coordinating Node through
+  the getLogRecords methods.
+
+  :: 
+
+    message LogRecord {
+
+      enum EventType {
+        create = 0;
+        read = 1;
+        update = 2;
+        delete = 3;
+        replicate = 4;
+      }
+      
+      required Identifier entryID = 0;
+      required Identifier identifier = 1;
+      required ipAddress = 2;
+      required userAgent = 3;
+      required Principal principal = 4;
+      required EventType event = 5;
+      required dateTime dateLogged = 6;
+      required NodeReference memberNode = 7;
+    }
+
+----
+
+.. class:: LogRecords
+
+  A list of LogRecord instances.
+
+  ::
+
+    message LogRecords {
+      required int start = 0;
+      required int count = 1;
+      required int total = 2;
+      repeated LogRecord entry = 3;
+    }
+
+----
+
+.. class:: MonitorList
+
+  A list of MonitorInfo instances.
+
+  ::
+
+    message MonitorList {
+      repeated LogRecord entry = 0;
+    }
+
+----
+
+.. class:: MonitorInfo
+
+  A single log entry as reported by a Member Node or Coordinating Node through
+  the getMonitorInfos methods.
+
+  :: 
+
+    message MonitorInfo {
+      required DateTime time = 0;
+      required uint64 size = 1;
+    }
+
+----
+
+.. class:: Node
+
+  A set of values that describe a node, its Internet location, the services it
+  supports and its replication policy.
+
+
+----
+
+.. class:: NodeList
+
+  A list of Node entries that is returned by :func:`cn_register.listNodes()`.
+
+  NodeList is described in :mod:`NodeList`.
+
+
+----
+
+.. class:: NodeReference
+
+  Member Node identifier drawn from the DataONE :mod:`cn_register <registry service>`.
+
+
+----
+
+.. class:: ObjectFormat
+
+  One value from the DataONE Object Format Vocabulary, which may be an adopted
+  vocabulary maintained by another organization. ObjectFormatType is currently
+  (in the prototype implementation) a string, however it seems likely that this
+  will require a more structured type in the future as the requirements of this
+  type are better defined.
+
+----
+
+.. class:: ObjectList
+
+  A list of objects. This provides more information than the :class:`IdentifierList` by
+  adding an identifier to the :class:`DescribeResponse`.
+  
+  ::
+  
+    message ObjectInfo
+    {
+      extend DescribeResponse
+      {
+        required string identifier = 5
+      }
+    }
+  
+    message ObjectList 
+    {
+      required int start = 0;
+      required int count = 1;
+      required int total = 2;
+      repeated ObjectInfo objectInfo = 3;
+    }
+
+  .. attribute:: identifier
+
+     Identifier of the object in the describe response.
+
+  .. attribute:: start
+
+     An integer that indicates zero-based offset of the first entry in
+     objectInfo from the start of the list of entries from which this list was
+     drawn (such as the results of :func:`CN_query.search` or
+     :func:`MN_replication.listObjects`)
+
+  .. attribute:: count
+
+     The total number of entries returned in :attr:`objectInfo`.
+
+  .. attribute:: total
+
+     The total number of entries in the list from which this list was drawn.
+
+  .. attribute:: objectInfo
+
+     List of ObjectInfo structures, which are an extension of :class:`DescribeResponse`
+
+
+----
+
+.. class:: ObjectLocationList
+
+   A list of nodes and node service base URLs known to hold a copy of an
+   object.
+
+  ::
+  
+    message ObjectLocationList {
+      required IdentifierType identifier = 1;
+      repeated ObjectLocation locations = 2;
+    }
+
+.. attribute:: identifier
+
+   The identifier that this ObjectLocationList refers to (e.g. the
+   identifier for the science metadata or data object).
+
+.. attribute:: locations
+
+   List of ``ObjectLocation`` entries that indicate the nodes on which the
+   object is located.
+
+
+.. class:: ObjectLocation
+
+   Portion of an ObjectLocationList indicating the node from which the object
+   can be retrieved. 
+
+   ::
+
+    message ObjectLocation {
+      required string nodeIdentifier = 1;
+      required string baseURL = 2;
+      required string url = 3;
+      optional integer preference = 4;
+    }
+
+
+  .. attribute:: nodeIdentifier
+
+     A node identifier. Node identifiers follow the same composition rules as
+     other identifiers in the system and no meaning should be implied from the
+     construct other than as a unique identifier for the node.
+
+  .. attribute:: baseURL
+
+     The current base URL for services implemented on the target node. For example:
+     ``http://mn1.dataone.org/mn/``
+
+  .. attribute:: url
+
+    The full URL for retrieving the object bytes. For example, if identifer
+    was "ABX154", and the node had a base URL of ``http://mn1.dataone.org/mn``
+    then the value would be ``http://mn1.dataone.org/mn/object/ABX154``
+
+  .. attribute:: preference
+
+     A weighting parameter that provides a hint to the caller for the relative
+     preference for nodes from which the content should be retrieved. Higher
+     values have higher preference. Values are only relative to each other in
+     a particular response. Nodes with equal weight get equal values.
+
+----
+
+.. class:: ObjectStatistics
+
+   A summary of object use information intended primarily for the monitoring service.
+
+
+----
+
+.. class:: OperationStatistics
+
+   A summary of operation calls intended primarily for the monitoring service.
+
+
+----
+
+.. class:: PingResponse
+
+  The response from :func:`MN_health.ping`
+
+
+----
+
+.. class:: Principal
+
+  Person (user), group, or organization.
+
+  PrincipalIdentifier drawn from the DataONE IdentityProviderService/
+
+  Used by :mod:`SystemMetadata`
+
+----
+
+.. class:: Query
+
+   Queries are used to identify a subset of objects from a collection. The
+   form of query used by the DataONE system is likely to evolve significantly
+   as the project proceeds. The query specification listed here applies to the
+   prototype implementations (i.e. pre-version 1.0).
+
+   ::
+    
+     enum FilterTypeEnum 
+     {
+       NVP = 1;
+       SOLR = 3;
+       EARTHGRID = 4;
+     }
+     
+     enum LogicalOperator
+     {
+       LOP_OR = 0;
+       LOP_AND = 1;
+     }
+
+     message NameValuePair
+     {
+       required string name = 0;
+       required string value= 1;
+     }
+
+     message NameValuePairFilter
+     {
+       optional LogicalOperator LOP = 1 [default = LOP_AND];
+       repeated NameValuePair nvpair = 2;
+     }
+
+     message SOLRFilter
+     {
+       required string filter = 0;
+       optional string facetFilter = 1;
+     }
+
+     message EarthGridFilter
+     {
+       required string filter = 0;
+     }
+
+
+Expressing a NVP query in a URL
+
+
+----
+
+.. class:: Status
+
+  The response from :func:`MN_health.getStatus`
+
+----
+
+.. class:: SystemMetadata
+
+  A set of low level information about an object in the DataONE system.
+  SystemMetadata is described in :mod:`SystemMetadata`.
+
+
+
+.. _Protocol Buffer Language: http://code.google.com/apis/protocolbuffers/docs/overview.html

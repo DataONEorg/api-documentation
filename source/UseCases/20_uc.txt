@@ -1,0 +1,86 @@
+Use Case 20 - Owner Retrieve Aggregate Logs
+-------------------------------------------
+
+Author
+  VDC TWG
+
+Date
+  - 20090925 Adding to use case description and documentation
+  - 20090114 (TWG meeting).  Subsequent various modifications.
+
+Version 
+  Draft
+
+Goal
+  Data owners can request aggregated CRUD log for {time period/object id} for
+  all of 'their' objects.
+
+Summary 
+
+  This operation provides a mechanism for data contributors to retrieve use
+  information for content that they own. This is similar to :doc:`Use Case 19
+  </UseCases/19_uc>` except that the requesting use is authenticated, and a query on
+  objects owned by the user is used to generate a list of GUIDs that indicate
+  log information to be retrieved.
+
+
+Actors
+
+  - Data owner
+
+  - Coordinating Node
+
+Preconditions 
+
+  - User has authenticated
+
+  - Log statistics are available
+
+Triggers
+
+  - Authenticated user requests use information
+
+Post Conditions
+
+  - User has a copy of use information
+
+
+.. figure:: images/20_interaction.png
+   :width: 100%
+
+   Interactions for use case 20.
+
+
+..
+  @startuml images/20_interaction.png
+  !include ../plantuml.conf
+
+  actor "User (Data Owner)" as user
+  participant "Client" as app_client << Application >>
+  user -> app_client
+  participant "Authentication API" as c_authenticate << Coordinating Node >>
+  app_client -> c_authenticate: login (user, pw)
+  app_client <-- c_authenticate: token or failure
+  participant "Query API" as c_query << Coordinating Node >>
+  app_client -> c_query: getLogRecords (GUID, fromDate, toDate)
+  participant "Authorization API" as c_authorize << Coordinating Node >>
+  c_query -> c_authorize: isAuth (token, resultset)
+  participant "Verify API" as c_ver << Coordinating Node >>
+  c_authorize -> c_ver: isValidToken (token)
+  c_authorize <-- c_ver: T or F
+  c_query <-- c_authorize: T or F
+  app_client <-- c_query: records or fail
+  note right
+  Can the Query API handle queries
+  on log records or should this be
+  handled by another API?
+  (e.g. "Report API"?)
+  end note
+  @enduml
+
+
+
+.. raw:: latex
+
+   \newpage
+  

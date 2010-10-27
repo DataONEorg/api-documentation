@@ -1,0 +1,138 @@
+Components of the DataONE Infrastructure
+========================================
+
+
+
+Dependency Graph
+-----------------
+
+.. graphviz::
+
+   digraph components {
+     rankdir = BT;
+     fontname = "Bitstream Vera Sans";
+     fontsize = 8;
+
+     edge [
+       fontname = "Bitstream Vera Sans"
+       fontsize = 8
+       color = "#888888"
+       arrowhead = "open"
+       arrowsize = 0.5
+       len = 0.2
+       style="dashed"
+       ];
+
+     node [
+       shape = "record"
+       fontname = "Courier"
+       fontsize = 8
+       fontcolor = "black"];   
+
+     arch [label="d1_architecture\n/documents/Projects/documentation/architecture"
+           URL="https://repository.dataone.org/documents/Projects/documentation/architecture"];
+     schemas [label="d1_schemas\n/software/cicore/trunk/d1_schemas"
+              URL="https://repository.dataone.org/software/cicore/trunk/d1_schemas"]
+     commonjava [label="d1_common_java\n/software/cicore/trunk/d1_common_java"
+                 URL="https://repository.dataone.org/software/cicore/trunk/d1_common_java"];
+     commonpython [label="d1_common_python\n/software/cicore/trunk/d1_common_python"
+                   URL="https://repository.dataone.org/software/cicore/trunk/d1_common_python"];
+     javalib [label="d1_clientlib_java\n/software/cicore/trunk/d1_libclient_java"
+              URL="https://repository.dataone.org/software/cicore/trunk/d1_libclient_java"];
+     pythonlib [label="d1_clientlib_python\n/software/cicore/trunk/d1_libclient_python"
+                URL="https://repository.dataone.org/software/cicore/trunk/d1_libclient_python"];
+
+     
+     subgraph cluster_CN {
+       label="Coordinating Node stack";
+       color="#888888";
+       cnsvc [label="d1_cn_service"];
+       indexer [label="d1_indexer"];
+       sync [label="d1_synchronization"];
+     }
+
+     subgraph cluster_MN {
+       label="Member Node Implementations";
+       color = "#888888"
+       gmn [label="d1-mn-generic"];
+       mndaac [label="d1-mn-daac"];
+       mndryad [label="d1-mn-dryad"];
+       mnfedora [label="d1-mn-fedora"];
+       metacat [label="metacat"];
+     }
+
+     subgraph cluster_ITK {
+       label="Investigator Toolkit"
+       color = "#888888"
+       cli [label="d1-client-cli"];
+       fuse [label="d1-client-fuse"];
+       r [label="d1-client-r"];       
+     }
+
+     monitor [label="d1-monitor"];
+     base [label="d1-debian-base"];
+     
+     schemas -> arch [style="dotted"];
+     commonjava -> arch [style="dotted"];
+     commonpython -> arch [style="dotted"];
+     commonjava -> schemas;
+     commonpython -> schemas;
+     metacat -> commonjava;
+     javalib -> commonjava;
+     javalib -> arch [style="dotted"];
+     pythonlib -> arch [style="dotted"];
+     
+     cnsvc -> commonjava;
+     cnsvc -> metacat;
+     cnsvc -> arch [style="dotted"];
+     indexer -> commonjava;
+     sync -> commonjava;
+     sync -> javalib;
+     
+     pythonlib -> commonpython;
+     cli -> pythonlib;
+     fuse -> pythonlib;
+     r -> javalib;
+     
+     gmn -> pythonlib;
+     gmn -> arch [style="dotted"];
+     mndaac -> pythonlib;
+     mndaac -> gmn;
+     mndryad -> pythonlib;
+     mndryad -> gmn;
+     
+     mnfedora -> javalib;
+   }
+
+
+
+====== =================== ================ ================================================
+Group  Product Name        Issue Category   Description
+====== =================== ================ ================================================
+Core                                       
+.      d1_architecture     architecture     The system architecture documentation
+.      d1_schemas          schemas          The core schemas used for defining serialization
+.      d1_common-java      common_java      Base DataONE library in Java
+.      d1_common-python    common_python    Base DataONE library in Python
+.      metacat             metacat          The Metacat application
+CN                         
+.      d1_cn_service       cn_service      
+.      d1_indexer          indexer
+.      d1_synchronization  synchronization
+MN                         
+.      d1_mn_generic       mn_generic
+.      d1_mn_daac          mn_daac
+.      d1_mn_dryad         mn_dryad
+.      d1_mn_fedora        mn_fedora
+ITK                        
+.      d1_libclient_java   libclient_java
+.      d1_libclient_python libclient_python
+.      d1_client_cli       client_cli
+.      d1_client_fuse      client_fuse
+.      d1_client_r         client_r
+Other
+.      d1-monitor          monitor
+.      d1-debian-base      debian-base
+====== =================== ================ ================================================
+
+

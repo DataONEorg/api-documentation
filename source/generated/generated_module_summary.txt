@@ -1,0 +1,326 @@
+.. list-table:: Overview of APIs and the functions they implement
+   :widths: 6 6 30
+   :header-rows: 1
+
+   * - Module
+     - Function
+     - Description
+   * - :mod:`MN_crud`
+     - :func:`MN_crud.get`
+     - Retrieve an object identified by `guid` from the node. The response must
+       contain the bytes of the indicated object, and the checksum of the bytes
+       retrieved must match the :attr:`SystemMetadata.checksum` recorded in the
+       :class:`Types.SystemMetadata` if the object is science data. If the
+       object does not exist on the node servicing the request, then
+       :exc:`Exceptions.NotFound` must be raised even if the object exists on
+       another node in the DataONE system.
+
+       Appears in functional use cases: :doc:`UC01 </UseCases/01_uc>`,
+       :doc:`UC06 </UseCases/06_uc>`, :doc:`UC16 </UseCases/16_uc>`
+   * - \
+     - :func:`MN_crud.getSystemMetadata`
+     - Describes the science metadata or data object (and likely other objects
+       in the future) identified by `guid` by returning the associated system
+       metadata object.
+
+       If the object does not exist on the node servicing the request, then
+       :exc:`Exceptions.NotFound` must be raised even if the object exists on
+       another node in the DataONE system.
+
+        Appears in functional use cases: :doc:`UC06 </UseCases/06_uc>`,
+       :doc:`UC37 </UseCases/37_uc>`, :doc:`UC16 </UseCases/16_uc>`
+   * - \
+     - :func:`MN_crud.create`
+     - Adds a new object to the Member Node, where the object is either a data
+       object or a science metadata object. This method is called by clients to
+       create new data objects on Member Nodes.
+
+       The `id` must not exist in the DataONE system or must have been
+       previously reserved using  :func:`CN_crud.reserveIdentifier`.
+
+       Appears in functional use cases: :doc:`UC04 </UseCases/04_uc>`,
+       :doc:`UC09 </UseCases/09_uc>`, :doc:`UC16 </UseCases/16_uc>`
+   * - \
+     - :func:`MN_crud.update`
+     - Creates a new `object` on the Member Node that explicitly updates and
+       obsoletes a previous object (identified by `obsoletedGuid`).    This
+       method is called by clients to update objects on Member Nodes.  The
+       object that is being obsoleted is passed in as a parameter, and the
+       Member Node should record the update by storing the
+       :attr:`SystemMetadata.obsoletes` and :attr:`SystemMetadata.obsoletedBy`
+       fields for the respective objects in their system metadata. The modified
+       system metadata entries must then be available in
+       :func:`MN_replication.listObjects` to ensure that a Coordinating Node
+       will pick up the changes.
+
+       Appears in functional use cases: :doc:`UC16 </UseCases/16_uc>`
+   * - \
+     - :func:`MN_crud.delete`
+     - Deletes an object from the Member Node, where the object is either a data
+       object or a science metadata object. This method is called by clients to
+       delete objects on Member nodes. Member Nodes must check that the caller
+       is authorized to perform this function. If the object does not exist on
+       the node servicing the request, then an :exc:`Exceptions.NotFound`
+       exception is raised. The message body of the exception should contain a
+       hint as to the location of the :func:`CN_crud.resolve` method.
+
+       Appears in functional use cases: :doc:`UC16 </UseCases/16_uc>`
+   * - \
+     - :func:`MN_crud.describe`
+     - This method provides a lighter weight mechanism than
+       :func:`MN_crud.getSystemMetadata` for a client to determine basic
+       properties of the referenced object. The response should indicate
+       properties that are typically returned in a HTTP HEAD request: the date
+       late modified, the size of the object, the type of the object (the
+       :attr:`SystemMetadata.objectFormat`). The principal indicated by `token`
+       must have read privileges on the object, otherwise
+       :exc:`Exceptions.NotAuthorized` is raised. If the object does not exist
+       on the node servicing the request, then :exc:`Exceptions.NotFound` must
+       be raised even if the object exists on another node in the DataONE
+       system.
+
+        Appears in functional use cases: :doc:`UC16 </UseCases/16_uc>`
+   * - \
+     - :func:`MN_crud.getChecksum`
+     - Returns a :class:`Types.Checksum` for the specified object using an
+       accepted hashing algorithm. The result is used to determine if two
+       instances referenced by a GUID are identical, hence it is necessary that
+       MNs can ensure that the returned checksum is valid for the referenced
+       object either by computing it on the fly or by using a cached value that
+       is certain to be correct.
+   * - \
+     - :func:`MN_crud.getLogRecords`
+     - Retrieve log information from the MN for the specified date range
+       (inclusive).
+   * - \
+     - :func:`MN_crud.log`
+     - This method is used exclusively internally by a MN. It really isn't part
+       of external the API that must be implemented. However, a MN will need to
+       implement some sort of logging infrastructure so that it can respond to
+       :func:`MN_crud.getLogRecords()`.
+
+       Appears in functional use cases: :doc:`UC01 </UseCases/01_uc>`,
+       :doc:`UC06 </UseCases/06_uc>`, :doc:`UC04 </UseCases/04_uc>`, :doc:`UC09
+       </UseCases/09_uc>`, :doc:`UC16 </UseCases/16_uc>`, :doc:`UC37
+       </UseCases/37_uc>`
+   * - :mod:`MN_replication`
+     - :func:`MN_replication.listObjects`
+     - Retrieve the list of objects present on the MN that match the calling
+       parameters. This method is required to support the process of
+       :term:`Member Node synchronization`. At a minimum, this method should be
+       able to return a list of objects that match::      startTime <=
+       SystemMetadata.dateSysMetadataModified    but is expected to also support
+       date range (by also specifying `endTime`), and should also support
+       slicing of the matching set of records by indicating the starting `index`
+       of the response (where 0 is the index of the first item) and the `count`
+       of elements to be returned.
+
+       Appears in functional use cases: :doc:`UC06 </UseCases/06_uc>`,
+       :doc:`UC16 </UseCases/16_uc>`
+   * - \
+     - :func:`MN_replication.replicate`
+     - Called by a Coordinating Node to indicate to the Member Node that it
+       should retrieve the specified object from the indicated Member Node and
+       store it locally so that it can be made accessible to the DataONE system.
+
+       Appears in functional use cases: :doc:`UC09 </UseCases/09_uc>`
+   * - :mod:`MN_health`
+     - :func:`MN_health.ping`
+     - Low level "are you alive" operation. Response is simple ACK, but may be
+       reasonable to overload with a couple of flags that could indicate
+       availability of new data or change in capabilities. The Member Node
+       should perform some minimal internal functionality testing before
+       answering. However, ping checks will be frequent (every few minutes) so
+       the internal functionality test should not be high impact.
+
+       Appears in functional use cases: :doc:`UC10 </UseCases/10_uc>`
+   * - \
+     - :func:`MN_health.getObjectStatistics`
+     - Called by the monitoring system to find how many objects are stored on
+       the MN, cumulative or for each day in a given range.
+   * - \
+     - :func:`MN_health.getOperationStatistics`
+     - Called by the monitoring system to find how many operations have been
+       performed on the MN, cumulative or for each day in a given range.
+   * - \
+     - :func:`MN_health.getStatus`
+     - This function is similar to ping() but returns a more complete status
+       which may include information such as planned service outtages.
+
+       Appears in functional use cases: :doc:`UC10 </UseCases/10_uc>`
+   * - :mod:`CN_crud`
+     - :func:`CN_crud.get`
+     - Retrieves the object identified by `guid` from the node. If the object is
+       not present on the node, then an :exc:`Exceptions.NotFound` error is
+       raised (regardless of whether the object exists on another node in the
+       DataONE system).
+
+       Appears in functional use cases: :doc:`UC01 </UseCases/01_uc>`,
+       :doc:`UC16 </UseCases/16_uc>`, :doc:`UC09 </UseCases/09_uc>`
+   * - \
+     - :func:`CN_crud.getSystemMetadata`
+     - Returns the :term:`system metadata` that contains DataONE specific
+       information about the object identified by `guid`. Note that
+       authoritative copies of system metadata are only available from the
+       Coordinating Nodes.
+
+       Appears in functional use cases: :doc:`UC36 </UseCases/36_uc>`,
+       :doc:`UC37 </UseCases/37_uc>`, :doc:`UC16 </UseCases/16_uc>`
+   * - \
+     - :func:`CN_crud.resolve`
+     - Given an identifier, returns information that a client can use to
+       retrieve the identified target object from the DataONE system. The target
+       may reside on a MN or a CN.
+
+       Appears in functional use cases: :doc:`UC36 </UseCases/36_uc>`,
+       :doc:`UC16 </UseCases/16_uc>`
+   * - \
+     - :func:`CN_crud.create`
+     - This is a method used internally by the CN, not exposed to MNs or the
+       world. Stores the two given objects (system metadata, science metadata)
+       in a single atomic action. The science metadata document is optional as
+       `guid` may refer to science data which is not retrieved to the
+       Coordinating Node. This method is used as part of the :term:`Member Node
+       synchronization` of science metadata between a MN and a CN.
+
+       Appears in functional use cases: :doc:`UC06 </UseCases/06_uc>`,
+       :doc:`UC16 </UseCases/16_uc>`
+   * - \
+     - :func:`CN_crud.reserveIdentifier`
+     - Given an optional scope and format, reserves and returns an identifier
+       within that scope and format that is unique and will not be used by any
+       other sessions. Future calls to :func:`MN_crud.create` and
+       :func:`MN_crud.update` that reference this ID must originate from the
+       :term:`session` in which the identifier was reserved, otherwise an error
+       is raised on those methods.
+
+       Appears in functional use cases: :doc:`UC16 </UseCases/16_uc>`
+   * - \
+     - :func:`CN_crud.assertRelation`
+     - Tests that the specified relationship between `idOfSubject` and
+       `idOfObject` exists.
+   * - \
+     - :func:`CN_crud.log`
+     - This method is used exclusively internally by a CN. It really isn't part
+       of external the API that must be implemented. However, a CN will need to
+       implement some sort of logging infrastructure so that it can respond to
+       :func:`CN_crud.getLogRecords()`.
+
+       Appears in functional use cases: :doc:`UC01 </UseCases/01_uc>`,
+       :doc:`UC02 </UseCases/02_uc>`, :doc:`UC06 </UseCases/06_uc>`, :doc:`UC16
+       </UseCases/16_uc>`, :doc:`UC09 </UseCases/09_uc>`
+   * - \
+     - :func:`CN_crud.getChecksum`
+     - Returns the checksum for the specified object as reported in the system
+       metadata.
+
+       Appears in functional use cases: :doc:`UC09 </UseCases/09_uc>`
+   * - :mod:`CN_query`
+     - :func:`CN_query.search`
+     - Search the metadata catalog and return identifiers of metadata records
+       that match the criteria.
+
+       Appears in functional use cases: :doc:`UC02 </UseCases/02_uc>`,
+       :doc:`UC16 </UseCases/16_uc>`
+   * - \
+     - :func:`CN_query.getLogRecords`
+     - Retrieves consolidated log information for the specified date range
+       (inclusive) for the entire DataONE infrastructure
+
+       Appears in functional use cases: :doc:`UC16 </UseCases/16_uc>`
+   * - :mod:`CN_authentication`
+     - :func:`CN_authentication.login`
+     - Authenticates a user for interaction with the DataONE system. The
+       returned token is trusted throughout the DataONE system as a reliable
+       statement as to the identity of the authenticated user. :func:`login` may
+       delegate the actual login to an authentication service, and a given user
+       may utilize several authentication services. If this is the case then an
+       additional parameter identifying the authentication service to use will
+       be required.
+
+       Appears in functional use cases: :doc:`UC16 </UseCases/16_uc>`
+   * - \
+     - :func:`CN_authentication.setOwner`
+     - Changes ownership of the specified object to the :term:`principal`
+       specified by `userId`
+
+       Appears in functional use cases: :doc:`UC16 </UseCases/16_uc>`
+   * - \
+     - :func:`CN_authentication.newAccount`
+     - Create a new :term:`principal` in the DataONE system. Note that there
+       should probably be a lot more metadata captured about the new user, and
+       there should be a mechanism for specifying the default access control
+       rules for the new account.
+
+       Appears in functional use cases: :doc:`UC16 </UseCases/16_uc>`
+   * - \
+     - :func:`CN_authentication.verifyToken`
+     - Test if the provided token is valid. The token is passed to the method
+       end point using the normal authentication token transfer mechanism (e.g.
+       HTTP Auth header). Note that there is a potential security issue here as
+       open access to this method enables a malicious user to potentially probe
+       a large number of generated tokens to determine properties of the system,
+       and perhaps even generate a token that matches a system token. Hence
+       another level of restriction (perhaps network level blocking / limiting)
+       is necessary.
+   * - :mod:`CN_authorization`
+     - :func:`CN_authorization.isAuthorized`
+     - Test if the user identified by the provided token has authorization for
+       operation on the specified object. .. Note:: Should perhaps add
+       convenience methods for "canRead()" and "canWrite()" to verify that a
+       user is able to read / write an object.
+
+       Appears in functional use cases: :doc:`UC01 </UseCases/01_uc>`,
+       :doc:`UC02 </UseCases/02_uc>`, :doc:`UC36 </UseCases/36_uc>`, :doc:`UC37
+       </UseCases/37_uc>`
+   * - \
+     - :func:`CN_authorization.setAccess`
+     - Sets the access permissions for an object identified by `guid`.
+
+       Appears in functional use cases: :doc:`UC16 </UseCases/16_uc>`
+   * - :mod:`MN_authentication`
+     - :func:`MN_authentication.login`
+     - Authenticates a user for interaction with the DataONE system. The
+       returned token is trusted throughout the DataONE system as a reliable
+       statement as to the identity of the authenticated user. :func:`login` may
+       delegate the actual login to an authentication service, and a given user
+       may utilize several authentication services. If this is the case then an
+       additional parameter identifying the authentication service to use will
+       be required.
+
+       Appears in functional use cases: :doc:`UC16 </UseCases/16_uc>`
+   * - \
+     - :func:`MN_authentication.logout`
+     - Revokes trust in the supplied token, making it invalid for further use
+       within the DataONE system.
+   * - :mod:`MN_authorization`
+     - :func:`MN_authorization.isAuthorized`
+     - Test if the user identified by the provided token has authorization for
+       operation on the specified object. .. Note:: Should perhaps add
+       convenience methods for "canRead()" and "canWrite()" to verify that a
+       user is able to read / write an object.
+
+       Appears in functional use cases: :doc:`UC01 </UseCases/01_uc>`,
+       :doc:`UC37 </UseCases/37_uc>`
+   * - :mod:`CN_data_replication`
+     - :func:`CN_data_replication.setReplicationStatus`
+     - Update the replication status of the system metadata, ensuring that the
+       change is appropriate for the given state of system metadata.  For
+       example, a MN can not change the status to Requested unless the CN
+       previously requested replication of the object and the replications
+       status of the object (as indicated in the system metadata) is set to
+       Queued.
+
+       Appears in functional use cases: :doc:`UC09 </UseCases/09_uc>`
+   * - :mod:`CN_register`
+     - :func:`CN_register.listNodes`
+     - Returns a list of nodes that have been registered with the DataONE
+       infrastructure.
+
+       Appears in functional use cases: :doc:`UC39 </UseCases/39_uc>`
+   * - \
+     - :func:`CN_register.addNodeCapabilities`
+     - 
+   * - \
+     - :func:`CN_register.register`
+     - 

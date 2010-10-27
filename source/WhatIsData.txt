@@ -1,0 +1,469 @@
+What is Data (DataONE Perspective)?
+===================================
+
+:Author: Initial version by Dave Vieglais <vieglais@ku.edu>
+
+:Status: DRAFT - comments, edits, even complete rewrites welcome and expected
+
+
+This document describes the concept of "data" within the first iteration of
+the DataONE system.
+
+
+Overview
+--------
+
+Data, in the context of DataONE, is a discrete unit of digital content that is
+expected to represent information obtained from some experiment or scientific
+study. The :term:`data` is accompanied by :term:`science metadata`, which is a
+separate unit of digital content that describes properties of the data. Each
+unit of science data or science metadata is accompanied by a :term:`system
+metadata` document which contains attributes that describe the digital object
+it accompanies (e.g. hash, time stamps, ownership, relationships).
+
+In the initial version of DataONE, science data are treated as opaque sets of
+bytes and are stored on :term:`Member Node`\s (MN). A copy of the science
+metadata is held by the :term:`Coordinating Node`\s (CN) and is parsed to
+extract attributes to assist the discovery process (i.e. users searching for
+content).
+
+The opaqueness of data in DataONE is likely to change in the future to enable
+processing of the data with operations such as translation (e.g. for format
+migration), extraction (e.g. for rendering), and merging (e.g. to combine
+multiple instances of data that are expressed in different formats). Such
+operations rely upon a stable, accessible framework supporting reliable data
+access, and so are targeted after the initial requirements of DataONE are met
+and the core infrastructure is demonstrably robust.
+
+
+Metadata Types
+--------------
+
+The following metadata formats are of interest to the DataONE project for the
+initial version and are representative of the types of content that will need
+to be stored and parsed.
+
+In all cases the descriptive text was retrieved from the URL provided with the
+description, and so where there is discrepancy, the referenced location (or
+the currently authoritative location) takes precedence.
+
+
+.. table:: Types of :term:`science metadata` and their corresponding
+   :attr:`SystemMetdata.ObjectFormat` identifier.
+
+  ============================ ==========================================================
+  Name                         Object Format
+  ============================ ==========================================================
+  Dublin Core                  .
+  Darwin Core                  .
+  EML                          .
+  FGDC CSDGM                   .
+  GCMD DIF                     .
+  ISO 19137                    .
+  NEXML                        .
+  Water ML                     .
+  Genbank internal format      .
+  ISO 19115                    .
+  Dryad Application Profile    .
+  ADN                          .
+  GML Profiles                 .
+  NetCDF-CF-OPeNDAP            .
+  DDI                          .
+  MAGE                         .
+  ESML                         .
+  CSR                          .
+  ============================ ==========================================================
+
+
+Dublin Core
+~~~~~~~~~~~
+
+- http://dublincore.org/documents/dces/
+
+The Dublin Core Metadata Element Set is a vocabulary of fifteen properties for
+use in resource description.
+
+
+Darwin Core
+~~~~~~~~~~~
+
+- http://rs.tdwg.org/dwc/index.htm 
+
+The Darwin Core is body of standards. It includes a glossary of terms (in
+other contexts these might be called properties, elements, fields, columns,
+attributes, or concepts) intended to facilitate the sharing of information
+about biological diversity by providing reference definitions, examples, and
+commentaries. The Darwin Core is primarily based on taxa, their occurrence in
+nature as documented by observations, specimens, and samples, and related
+information. Included are documents describing how these terms are managed,
+how the set of terms can be extended for new purposes, and how the terms can
+be used. The Simple Darwin Core [SIMPLEDWC] is a specification for one
+particular way to use the terms - to share data about taxa and their
+occurrences in a simply structured way - and is probably what is meant if
+someone suggests to "format your data according to the Darwin Core".
+
+
+EML
+~~~
+
+- http://knb.ecoinformatics.org/software/eml
+
+The Ecological Metadata Language (EML) is a metadata specification developed
+by the ecology discipline and for the ecology discipline. It is based on prior
+work done by the Ecological Society of America and associated efforts
+(Michener et al., 1997, Ecological Applications). EML is implemented as a
+series of XML document types that can by used in a modular and extensible
+manner to document ecological data. Each EML module is designed to describe
+one logical part of the total metadata that should be included with any
+ecological dataset.
+
+
+FGDC CSDGM
+~~~~~~~~~~
+
+- http://www.fgdc.gov/metadata/geospatial-metadata-standards
+
+The Content Standard for Digital Geospatial Metadata (CSDGM), Vers. 2
+(FGDC-STD-001-1998) is the US Federal Metadata standard. The Federal
+Geographic Data Committee (FGDC) originally adopted the CSDGM in 1994 and
+revised it in 1998. According to Executive Order 12096 all Federal agencies
+are ordered to use this standard to document geospatial data created as of
+January, 1995. The standard is often referred to as the FGDC Metadata Standard
+and has been implemented beyond the federal level with State and local
+governments adopting the metadata standard as well.
+
+::
+
+  -bio
+  (word document available for descriptions, Matt has XSD of FGDCbio)
+  (Excel spreadsheet listing mapping,
+   xslt: EML->FGDC (lossy), FGDC->EML)
+  (mapping available for EML -> DC (Duane))
+
+
+GCMD DIF
+~~~~~~~~
+
+- http://gcmd.nasa.gov/User/difguide/difman.html
+
+The DIF does not compete with other metadata standards. It is simply the
+"container" for the metadata elements that are maintained in the IDN database,
+where validation for mandatory fields, keywords, personnel, etc. takes place.
+
+The DIF is used to create directory entries which describe a group of data. A
+DIF consists of a collection of fields which detail specific information about
+the data. Eight fields are required in the DIF; the others expand upon and
+clarify the information. Some of the fields are text fields, others require
+the use of controlled keywords (sometimes known as "valids").
+
+The DIF allows users of data to understand the contents of a data set and
+contains those fields which are necessary for users to decide whether a
+particular data set would be useful for their needs.
+
+- Mapping to DC available at http://gcmd.nasa.gov/Aboutus/standards/dublin_to_dif.html
+
+
+ISO 19137
+~~~~~~~~~
+
+http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=32555
+
+ISO 19137:2007 defines a core profile of the spatial schema specified in ISO
+19107 that specifies, in accordance with ISO 19106, a minimal set of geometric
+elements necessary for the efficient creation of application schemata.
+
+It supports many of the spatial data formats and description languages already
+developed and in broad use within several nations or liaison organizations.
+
+
+NEXML
+~~~~~
+
+http://nexml.org
+
+The NEXUS file format is a commonly used format for phylogenetic data.
+Unfortunately, over time, the format has become overloaded - which has caused
+various problems. Meanwhile, new technologies around the XML standard have
+emerged. These technologies have the potential to greatly simplify, and
+improve robustness, in the processing of phylogenetic data.
+
+
+
+Water ML
+~~~~~~~~
+
+http://his.cuahsi.org/wofws.html
+
+The Water Markup Language (WaterML) specification defines an information
+exchange schema, which has been used in water data services within the
+Hydrologic Information System (HIS) project supported by the U.S. National
+Science Foundation, and has been adopted by several federal agencies as a
+format for serving hydrologic data. The goal of WaterML was to encode the
+semantics of hydrologic observation discovery and retrieval and implement
+water data services in a way that is both generic and unambiguous across
+different data providers, thus creating the least barriers for adoption by the
+hydrologic research community.
+
+Genbank internal format
+~~~~~~~~~~~~~~~~~~~~~~~
+
+http://www.ncbi.nlm.nih.gov/Sitemap/samplerecord.html
+
+
+
+ISO 19115
+~~~~~~~~~
+
+- http://en.wikipedia.org/wiki/ISO_19115
+
+ISO 19115 "Geographic Information - Metadata" is a standard of the
+International Organization for Standardization (ISO). It is a component of the
+series of ISO 191xx standards for Geospatial metadata. ISO 19115 defines how
+to describe geographical information and associated services, including
+contents, spatial-temporal purchases, data quality, access and rights to use.
+The standard defines more than 400 metadata elements and 20 core elements.
+
+- NA profile
+- bio profile
+- marine community metadata profile
+- WMO profile
+
+
+
+Dryad Metadata Profile
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+https://www.nescent.org/wg_dryad/Metadata_Profile
+
+The Dryad metadata team has developed a metadata application profile based on
+the Dublin Core Metadata Initiative Abstract Model (DCAM) following the Dublin
+Core guidelines for application profiles. The Dryad metadata profile is being
+developed to conform to the Dublin Core Singapore Framework, a framework
+aligning with Semantic Web development and deployment.
+
+
+
+ADN
+~~~
+
+- http://www.dlese.org/Metadata/adn-item/
+
+The purpose of the ADN (ADEPT/DLESE/NASA) metadata framework is to describe
+resources typically used in learning environments (e.g. classroom activities,
+lesson plans, modules, visualizations, some datasets) for discovery by the
+Earth system education community.
+
+
+
+GML Profiles
+~~~~~~~~~~~~
+
+- http://en.wikipedia.org/wiki/Geography_Markup_Language#Profile
+
+GML profiles are logical restrictions to GML, and may be expressed by a
+document, an XML schema or both.
+
+
+
+NetCDF-CF-OPeNDAP
+~~~~~~~~~~~~~~~~~
+
+- http://opendap.org/
+
+- http://www.oceanobs09.net/work/cwp_proposals/docs/100_Hankin_StandardsOceanDataInteroperability_CWPprop.doc
+
+
+
+
+DDI
+~~~
+
+- http://www.ddialliance.org/
+
+The Data Documentation Initiative is an international effort to establish a
+standard for technical documentation describing social science data. A
+membership-based Alliance is developing the DDI specification, which is
+written in XML.
+
+
+
+MAGE
+~~~~
+
+- http://www.mged.org/Workgroups/MAGE/mage.html
+
+The MicroArray and Gene Expression (MAGE) provides a standard for the
+representation of microarray expression data that would facilitate the
+exchange of microarray information between different data systems.
+
+
+
+ESML
+~~~~
+
+- Earth Science Markup Language
+
+- http://esml.itsc.uah.edu/
+
+The Earth Science Markup Language (ESML) is a interchange standard that
+supports the description of both syntactic (structural) and semantic
+information about Earth science data. Semantic tags provide linking of
+different domain ontologies to provide a complete machine understandable data
+description.
+
+
+
+CSR
+~~~
+
+- http://www.oceanteacher.org/oceanteacher/index.php/Cruise_Summary_Report_%28CSR%29
+
+The Cruise Summary Report (CSR), previously known as ROSCOP (Report of
+Observations/Samples Collected by Oceanographic Programmes), is an established
+international standard designed to gather information about oceanographic
+data. ROSCOP was conceived in the late 1960s by the IOC to provide a low level
+inventory for tracking oceanographic data collected on Research Vessels.
+
+The ROSCOP form was extensively revised in 1990, and was re-named CSR (Cruise
+Summary Report), but the name ROSCOP still persists with many marine
+scientists. Most marine disciplines are represented in ROSCOP, including
+physical, chemical, and biological oceanography, fisheries, marine
+contamination/pollution, and marine meteorology. The ROSCOP database is
+maintained by ICES
+
+Additional specifications in use by relevant agencies
+-----------------------------------------------------
+
+ISO 2146
+~~~~~~~~
+
+ISO 2146 (Registry Services for Libraries and Related Organisations) is an
+international standard currently under development by ISO TC46 SC4 WG7 to
+operate as a framework for building registry services for libraries and
+related organizations. It takes the form of an information model that
+identifies the objects and data elements needed for the collaborative
+construction of registries of all types. It is not bound to any specific
+protocol or data schema. The aim is to be as abstract as possible, in order to
+facilitate a shared understanding of the common processes involved, across
+multiple communities of practice.
+
+Used by the Australian National Data Service (ANDS) for 
+describing data collections in ANDS, which for many Australian data sets
+corresponds to the concept of a 'data set' used here. The term 'collection' 
+is loosely defined so that different disciplines can apply it appropriately.
+
+See: http://www.nla.gov.au/wgroups/ISO2146/
+Schema: http://www.nla.gov.au/wgroups/ISO2146/n198.xsd
+
+ANZLIC Metadata Profile
+~~~~~~~~~~~~~~~~~~~~~~~
+A profile of ISO 19115 for Australia.  See:
+http://www.osdm.gov.au/ANZLIC_MetadataProfile_v1-1.pdf?ID=303
+
+.. raw:: latex
+
+   \newpage
+
+Additional Notes about Data
+---------------------------
+
+Identifying Metadata Types
+--------------------------
+
+It is a requirement (#384) of DataONE that users are able to search the
+holdings, and so a mechanism for indexing the content and therefore a
+mechanism for specifying how to retrieve attribute values from the different
+:term:`science metadata` formats is required. This in turn requires that the
+system is able to accurately determine the format of the metadata in order to
+utilize the correct parser for extracting the necessary attribute values for
+indexing.  Potential resources may be found at:
+
+- GDFR_
+- UDFR_
+- PRONOM_
+
+.. _GDFR: http://www.gdfr.info/docs.html 
+
+.. _UDFR: http://www.udfr.org/
+
+.. _PRONOM: http://www.nationalarchives.gov.uk/PRONOM/Default.aspx
+
+
+
+Mutability
+----------
+
+Data and science metadata are immutable for the first version of the
+DataONE system. As such, resolving the identifiers assigned to the data or the
+science metadata will always resolve to the same stream of bytes.
+
+.. todo::
+   Byte stream equivalence of replicated science metadata would require that MNs
+   record an exact copy of the metadata document received during replication
+   operations in addition to the content that would be extracted and stored as
+   part of the normal (existing) operations of a MN. Is this a reasonable
+   requirement for MNs? Since MNs are required to store a copy of data, it seems
+   reasonable to assume a copy of the metadata can be stored as well.
+
+
+The DataONE :func:`CN_crud.update` method will fail if attempting to modify an
+instance of science data. 
+
+Deletion of content is only available to DataONE administrators (perhaps a
+curator role is required?).
+
+.. todo::
+   Define the procedures for content deletion - who is responsible,
+   procedures for contacting authors, timeliness of response.
+
+
+Data Endianness
+---------------
+
+The data component of a DataONE package is opaque to the DataONE system
+(though this may change in the future), and so the endianness of the content
+does not affect operations except that it must be preserved. However,
+processing modules may utilize content from DataONE and may be sensitive to
+the byte ordering of content. As such, the endianness of the data content
+should be recorded in the user supplied metadata (the science metadata), and
+where not present SHOULD be assumed to be least significant byte first (LSB,
+or small-endian).
+
+
+.. todo::
+   Describe how endianness is specified in various science metadata
+   formats.
+
+
+Longevity
+---------
+
+An original copy of the data is maintained for a long as practicable (ideally,
+the original content is never deleted). Derived copies of content, such as
+might occur when a new copy of a data object is created to migrate to a
+different binary format (e.g. an Excel 1.0 spreadsheet translated to Open
+Document Format) always create a new data object that will be noted as an
+annotation recorded in the system metadata of the data package.
+
+
+Metadata Character Encoding
+---------------------------
+
+All metadata, including the science metadata and DataONE package metadata MUST
+be encoded in the UTF-8 encoding. The DataONE :func:`CN_crud.create` and
+:func:`CN_crud.update` methods always expect UTF-8 encoded information, and so
+content that contains characters outside of the ASCII character set should be
+converted to UTF-8 through an appropriate mechanism before adding to DataONE.
+
+
+Metadata Minimal Content
+------------------------
+
+Experiment metadata MUST contain a minimal set of fields to be accepted by the
+DataONE system.
+
+.. todo::
+   List and define the minimal set of fields with examples. A starting
+   point would be the union of the required search properties and the
+   information required for accurate citation.
+

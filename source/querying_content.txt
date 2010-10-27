@@ -1,0 +1,251 @@
+Querying DataONE
+================
+
+:Author: Dave V. (contributors, please add your name)
+
+:Revisions:
+  ========= ========================================================
+  Date      Comments
+  ========= ========================================================
+  20100126  Fleshed out path query and NVP query
+  20100119  Collation of various notes floating around
+  ========= ========================================================
+
+.. TODO::
+   - Attribute mapping to the list prepared previously
+   - Attribute mapping to sysmeta docs
+   - SOLR examples, specific to Mercury
+
+
+
+Synopsis
+--------
+
+This document provides an outline for approaches to querying content available
+in DataONE through the ``/object/`` collection exposed by the CNs and MNs
+(i.e. :func:`MN_replication.listObjects` and :func:`CN_query.search`
+methods). The same approach can be applied to the ``/log/`` collection exposed
+by the CNs and MNs (i.e. the :func:`CN_query.getLogRecords` and
+:func:`MN_crud.getLogRecords` methods).
+
+There are three types of query that can be readily supported by CNs
+(name-value pairs, Metacat path query, and Mercury SOLR query), and at least
+one by MNs (name-value pairs). There may also be additional query types
+specified in the future (e.g. CQL, SPARQL).
+
+
+Overview
+--------
+
+The basic model is that a query applied against a collection acts as a filter,
+restricting the results to only those objects whose properties match the
+supplied query expression. The default, or unfiltered view of the collection
+shows all objects (that the user is authorized to access). The query does not
+shape the result, i.e. it does not indicate which fields are returned or the
+structure of the response.
+
+There seems to be two basic types of query that need to be supported. One is
+querying against fairly distinct and controlled object attributes that are for
+the most part, defined by the DataONE system ("system queries"). The other is
+for queries that apply to the content of objects that are contributed to
+DataONE ("content queries"). In this case, the content, structure, and even
+representation is essentially uncontrolled, and so may vary considerably
+across the universe of objects that are managed by DataONE.
+
+A longterm goal would be to support a query syntax that is expressive enough
+to enable precise discovery of content but also simple enough that at least
+common queries can be expressed in a URL.
+
+There are three types of query expression that can be supported easily with
+the initial version of the DataONE cyber-infrastructure:
+
+1) Simple name-value pairs combined together with a single logical operator
+(e.g. AND).
+
+2) The Path Query syntax / structure that is used by Metacat. This is a
+potentially very expressive query that is encoded in an XML structure, and so
+can be unwieldy for passing in a URL (POST is typically used) or generation by
+hand.
+
+3) The SOLR / Lucene query syntax that is supported by Mercury. Fairly
+sophisticated queries can be expressed, but there is no mechanism for querying
+against structure (e.g. matching the value of a term that is a child of some
+other element). SOLR queries are designed to be transmitted in URLs and are
+reasonably simple to create by hand.
+
+The different types of query are described in more detail below.
+
+Since it is feasible that MNs and CNs could support multiple query types, it
+is desirable that the client provide a hint about the type of query being
+transmitted through a URL parameter such as "``qt``" (query type), with::
+
+  qt=nvp    --> Name, value pairs
+  qt=path   --> Metacat path query
+  qt=solr   --> SOLR query syntax (used by Mercury)
+
+
+Simple NV Pairs
+---------------
+
+The basic approach here is the use name/value pairs (NVPs) in the URL to
+construct a query, with names typically mapping to an attribute + comparison
+operator (with comparison operator indicated as a suffix to the attribute),
+and values being the value to compare against entries in the database.
+Multiple NVPs are combined together with either the logical AND operator or
+the logical OR operator. The types of queries that can be expressed are quite
+limited, though can be sufficient for restricting results to a portion of a
+data set modeled as a flat table.
+
+The primary goal of this query syntax is to enable simple implementation of
+range restrictions for collections available on MNs.  
+
+An example of how a simple query might express "objects of type data that have
+been modified since 6AM on the first of January, 2010 UTC":: 
+
+  ../object/?qt=nvp&oclass=data&lastModified_gt=20100101T060000+00
+
+Suggestions for comparison operator suffixes:
+
+======= ===========================
+Suffix  Comparison Operator
+======= ===========================
+None    Equals (==) (default)
+_eq     Equals (==)
+_ne     Not equal (!=)
+_lt     Less than (<)
+_le     Less than or equals (<=)
+_gt     Greater than (>)
+_ge     Greater than or equals (>=)
+======= ===========================
+
+The presence of one or more wildcard characters in the value for an
+equivalence operator would invoke the equivalent of a substring search. For
+example::
+
+  ../object/?qt=nvp&oclass=d*
+
+could be mapped to the SQL WHERE clause::
+
+  WHERE oclass LIKE 'd%'
+
+The general grammar of the query can be expressed as:
+
+.. productionlist::
+   NVPQuery : { `nvpair` }
+   nvpair   : `name` + "=" + `value`
+   name     : string [+ `operator`]
+   operator : "_eq" | "_ne" | "_lt" | "_le" | "_gt" | "_ge"
+   value    : string
+
+
+
+An alternative approach is to use enumerated triples, so for the same query as
+above (with ``a`` referring to "attribute name", ``c`` to "comparison
+operator", and ``v`` to "value")::
+
+  ../object/?qt=nvp&a0=oclass&c0=eq&v0=data&
+                    a1=lastModified&c1=gt&v1=20100101T060000+00
+
+This approach has an advantage of specifying simple logical operators, e.g.::
+
+  &lop0_1=AND
+
+which would indicate that the logical operator between the first and second
+query elements is "AND". This gets messy pretty quickly though when
+considering precedence rules.
+
+
+Metacat Path Query
+------------------
+
+.. TODO::
+   - Rewrite this section to use the EarthGrid query syntax, which is more
+     readable and expresses the same concepts as the pathquery
+
+Metacat is an XML database, and so must support mechanisms for querying not
+just the attribute name, but also its location relative to other elements of
+the document (similar to XPath). The path query also indicates the elements
+that will be returned in the response. An `example path query`_::
+
+  <pathquery version="1.0">
+    <meta_file_id>unspecified</meta_file_id>
+    <querytitle>unspecified</querytitle>
+    <returnfield>dataset/title</returnfield>
+    <returnfield>keyword</returnfield>
+    <returnfield>originator/individualName/surName</returnfield>
+    <returndoctype>eml://ecoinformatics.org/eml-2.0.1</returndoctype>
+    <returndoctype>eml://ecoinformatics.org/eml-2.0.0</returndoctype>
+    <querygroup operator="UNION">
+      <queryterm casesensitive="false" searchmode="contains">
+        <value>Plant</value>
+        <pathexpr>dataset/title</pathexpr>
+      </queryterm>
+      <queryterm casesensitive="false" searchmode="contains">
+        <value>plant</value>
+        <pathexpr>keyword</pathexpr>
+      </queryterm>
+    </querygroup>
+  </pathquery>
+
+This query states something like return the field values ``dataset/title``,
+``keyword``, and ``originator/individualName/surName`` from documents where
+the string "plant" appears in the ``keyword`` attribute or the string "Datos"
+appears in the ``dataset/title`` attribute. The comparisons are performed
+without consideration of case.
+
+Since path queries are expressed as XML documents, they can get quite large
+and so can be unwieldy when sending over a HTTP GET request. However, the
+types of queries that can be created can be quite precise and expressive, so
+these should be supported by the CN services, which shouldn't involve much
+more than passing the query through to the Metacat instance operating as the
+document store on the CN.
+
+.. _example path query: https://code.ecoinformatics.org/code/metacat/trunk/docs/user/metacatquery.html
+
+
+SOLR Query Syntax
+-----------------
+
+- http://wiki.apache.org/solr/SolrQuerySyntax
+
+- http://lucene.apache.org/java/2_4_0/queryparsersyntax.html
+
+
+
+
+Query Attributes
+----------------
+
+- Best if query attributes were consistent across all the query types
+
+- Distinction between searches against system metadata and science metadata
+  (though some overlap of attributes)
+
+- Log searches can probably be pretty simple - just slicing by time
+
+- MNs and CNs should support introspection that lists the supported query
+  types and the supported query attributes
+
+
+
+
+
+Misc Notes
+
+Google visualization api query language: http://code.google.com/apis/visualization/documentation/querylanguage.html
+
+SRU/SRW and CQL: http://www.loc.gov/standards/sru/
+
+OpenSearch: http://www.opensearch.org/Home
+
+XPath: http://www.w3.org/TR/xpath and XQuery: http://www.w3.org/TR/xquery/
+(appropriate for querying against a general XML model)
+
+SPARQL (assuming you can express content in an RDF model):
+http://www.w3.org/TR/rdf-sparql-query/
+
+TAPIR:
+http://www.tdwg.org/dav/subgroups/tapir/1.0/docs/TAPIRSpecification_2008-02-07.html
+
+MetaCat (EarthGRID):
+https://code.ecoinformatics.org/code/metacat/trunk/docs/user/metacatquery.html  

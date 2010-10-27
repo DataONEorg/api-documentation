@@ -1,0 +1,470 @@
+Authentication in DataONE
+=========================
+
+:Author: Dave Vieglais
+:Status: Draft for comment
+
+
+This document outlines some simplistic approaches for authentication of users
+of the DataONE system. It is not intended to be comprehensive but rather to
+offer a common starting point for discussion about the topic in the context of
+the DataONE infrastructure.
+
+Overview
+--------
+
+Users and services authenticate in DataONE to confirm their identity. The
+identity is then used for:
+
+- Indicating ownership of objects
+
+- Recording activity within DataONE, such as object access, for reporting
+  purposes
+
+Further, the authenticated identity is used as the basis for authorization
+within the DataONE infrastructure for:
+
+- Controlling access to objects (using access control rules)
+
+Four scenarios of identity provider arrangements are outlined below: 
+
+1. `Users are authenticated by Coordinating Nodes`_;
+
+2. `Users are authenticated by Member Nodes`_ (a user identity managed by "their"
+   MN);
+
+3. `Users are authenticated by a third party identity provider`_; and
+
+4. `Users are authenticated by any scheme with algorithmic verification`_
+   available at any node.
+
+The basic assumption in all cases is that the user authenticates using some
+credentials and a key (password or some other secret) and the identity
+provider returns a token that the user can pass around as proof that they have
+authenticated with the DataONE system at some time within the last XXX period
+of time.
+
+Access control rules are carried in the :class:`Types.SystemMetadata` for each
+object, and authoritative copies of the system metadata are held on the
+Coordinating Nodes. Hence, authorization always occurs through the
+Coordinating Nodes.
+
+
+Requirements of Authentication and Authorization
+------------------------------------------------
+
+#390 - Consistent mechanism for identifying users
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+https://trac.dataone.org/ticket/390
+
+It is necessary to provide a mechanism for users to be identified in the
+DataONE system. There are several distinct roles that need to be supported for
+users.
+
+Rationale
+
+Identity of users, contributors and other participants in DataONE is necessary
+to ensure appropriate policies for data sharing (read, write), attribution,
+and notification (e.g. subscription to types of data).
+
+Fit Criteria
+
+* Users can identify themselves in the DataONE system 
+
+* Identity is consistent across all nodes (i.e. identity associated with an
+  object is consistent regardless of where the object is retrieved from or
+  acted on)
+
+* Users can associate various accounts with a single identity 
+
+* Identity information is sufficient to ensure appropriate attribution to
+  content
+
+* Authentication and authorization mechanisms are recognized consistently by
+  all participant nodes and services of the cicore.
+
+* Existing user directories in use in environmental science communities can
+  directly contribute identities (not "yet another" identity system)
+
+
+#391 - Enable different classes of users commensurate with their roles
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+https://trac.dataone.org/ticket/391
+
+There are several types of users that will be interacting with the DataONE
+infrastructure, as such it is necessary to ensure that user roles can be
+supported by the identity management infrastructure.
+
+Closely related to #390
+
+Rationale
+
+Different user classes or groups provides an effective mechanism for
+indicating the types of interaction that might be supported by the system. The
+alternative is to specifically assign privileges for each user - an approach
+that is inefficient and potentially insecure as it is easy to miss an
+individual when setting privileges for a large number of users.
+
+Fit Criteria
+
+* A well defined set of standard groups is identified and can be easily managed
+  (e.g. administrators, data contributors, data readers)
+
+* Users can be assigned to and removed from groups
+
+* Additional groups can be created to support group functions as necessary
+
+* Users can create their own groups for ad-hoc collaboration when needed and
+  without approval of system administrators
+
+* Access control rules can be associated with groups and operate as expected.
+
+
+#392 - Identity and access control should be interoperable across datanets
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+https://trac.dataone.org/ticket/392
+
+There is a general requirement / suggestion by NSF that there should be
+interoperability between the various DataNet? projects.
+
+Rationale
+
+It seems like identity and access control is a good place where considerable
+value can be demonstrated to the user community if credentials and access
+control rules worked across the data net projects.
+
+Fit Criteria
+
+* Users can sign into DataONE and DC with the same credentials
+
+* Once signed in to DataONE, access to DC services is seamless (no additional
+  authentication required)
+
+
+
+#393 - Access control rule evaluation must be highly scalable and responsive
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+https://trac.dataone.org/ticket/393
+
+Access control for objects is evaluated for every object access in the DataONE
+infrastructure. As such, the mechanisms used to determine if a particular
+token (i.e. handle to an authenticated principle) must be very efficient and
+should not offer a barrier to the desired levels of access control in the
+system.
+
+Rationale
+
+Access control should not be an impediment to effective use of the content
+available through DataONE.
+
+Fit Criteria
+
+* Access control rules can be evaluted for any token in a predetermined average
+  time frame
+
+* Access control rules must not take longer than a predetermine amount of time
+  to evaluate
+
+* Access control must not block critical operations (e.g replications,
+  synchronization).
+
+
+.. _Users are authenticated by Coordinating Nodes:
+
+Scenario 1: Authentication provided by CNs
+------------------------------------------
+
+.. figure:: images/authenticate_case_a.png
+   :figwidth: 100%
+
+   Authentication is provided by the CNs. The CNs may actually act as proxies
+   for some other identity service, but from a DataONE perspective, the CNs
+   are providing the authn/authz services.
+
+
+..
+  @startuml images/authenticate_case_a.png
+  !include plantuml_fullsized.conf
+  actor User
+  participant MN1
+  participant MN2
+  participant CN
+  User -> MN1: login(D1.username, password)
+  activate MN1
+  MN1 -> CN: login(D1.username, password)
+  activate CN
+  CN --> MN1: token
+  deactivate CN
+  MN1 -> User: token
+  deactivate MN1
+  User -> MN2: get(token, GUID)
+  activate MN2
+  MN2 -> CN: verify(token)
+  activate CN
+  CN --> MN2: T or F
+  deactivate CN
+  note right of MN2
+    verify() could be called from within 
+    isAuthorized() to avoid additional 
+    network call.
+  end note
+  MN2 -> CN: isAuthorized(token, GUID, OP_GET)
+  activate CN
+  CN -> MN2: T or F
+  deactivate CN
+  MN2 --> User: object
+  deactivate MN2
+  @enduml
+  
+- The Member Nodes must trust Coordinating Nodes as an identity provider
+
+- The CNs must trust that MNs are forwarding credentials appropriately
+
+- All accounts exist on and are managed by CNs
+
+
+.. raw:: latex
+
+   \newpage
+
+
+.. _Users are authenticated by Member Nodes:
+
+Scenario 2. Authentication provided by MN
+-----------------------------------------
+
+.. figure:: images/authenticate_case_b.png
+   :figwidth: 100%
+
+   Authentication provided by a Member Node. With MN verification, the request
+   is forwarded to the appropriate MN (presumably the correct MN is indicated
+   as a property of the token). An alternative is for verify requests to
+   always go to a CN, which then forwards the request to the appropriate MN.
+
+   This requires that the token contains properties that reliably indicates
+   both the appropriate Member Node and the principal.
+
+..
+  @startuml images/authenticate_case_b.png
+  !include plantuml_fullsized.conf
+  actor User
+  participant MN1
+  participant MN2
+  participant CN
+  User -> MN1: login(MN1.username, password)
+  activate MN1
+  MN1 -> User: token
+  deactivate MN1
+  alt MN verification
+    User -> MN2: get(token, GUID)
+    activate MN2
+    MN2 -> MN1: verify(token)
+    activate MN1
+    MN1 --> MN2: T or F
+    deactivate MN1
+    MN2 -> CN: isAuthorized(token, GUID, OP_GET)
+    activate CN
+    CN --> MN2: result
+    deactivate CN
+    MN2 --> User: object
+    deactivate MN2
+  else CN verification
+    User -> MN2: get(token, GUID)
+    activate MN2
+    MN2 -> CN: verify(token)
+    activate CN
+    CN -> MN1: verify(token)
+    activate MN1
+    MN1 --> CN: T or F
+    deactivate MN1
+    CN --> MN2: T or F
+    deactivate CN
+    MN2 -> CN: isAuthorized(token, GUID, OP_GET)
+    activate CN
+    CN --> MN2: result
+    deactivate CN
+    MN2 --> User: object
+    deactivate MN2
+  end  
+  @enduml
+
+- token must have signature that indicates the issuing MN
+- MN2 trusts MN1 as an authentication provider
+
+.. raw:: latex
+
+   \newpage
+
+.. _Users are authenticated by a third party identity provider:
+
+Scenario 3. Authentication through Third Party Identity Provider
+----------------------------------------------------------------
+
+.. figure:: images/authenticate_case_c.png
+   :figwidth: 100%
+
+   Authentication and verification provided by some third party, with
+   authorization provided by the CNs. Requires that the token contains a
+   property that reliably indicates the principal.
+
+..
+  @startuml images/authenticate_case_c.png
+  !include plantuml_fullsized.conf
+  actor User
+  participant MN1
+  participant CN
+  participant "Third Party" as TP
+  User -> TP: login(TP.username, password)
+  TP --> User: token
+  User -> MN1: get(token, GUID)
+  activate MN1
+  MN1 -> TP: verify(token)
+  TP --> MN1: T or F
+  MN1 -> CN: isAuthorized(token, GUID, OP_GET)
+  activate CN
+  CN --> MN1: result
+  deactivate CN
+  MN1 --> User: object
+  deactivate MN1
+  @enduml
+
+- MNs and CNs must trust the third party identity provider
+
+- Assuming access control rules are present on MN1
+
+
+.. raw:: latex
+
+   \newpage
+
+.. _Users are authenticated by any scheme with algorithmic verification:
+
+Scenario 4. Authentication Verified Algorithmically by Any Node
+---------------------------------------------------------------
+
+.. figure:: images/authenticate_case_d.png
+   :figwidth: 100%
+
+   Tokens are verified by an algorithm. This requires trust in the algorithm,
+   and that the principal can be reliably determined from the token.
+
+..
+  @startuml images/authenticate_case_d.png
+  !include plantuml_fullsized.conf
+  actor User
+  participant MN1
+  participant CN
+  participant "Identity Provider" as ident
+  User -> ident: login(username, password)
+  ident --> User: token
+  User -> MN1: get(token, GUID)
+  activate MN1
+  MN1 -> MN1: verify(token)
+  MN1 -> CN: isAuthorized(token, GUID, OP_GET)
+  activate CN
+  CN --> MN1: result
+  deactivate CN
+  MN1 --> User: object
+  deactivate MN1
+  @enduml
+
+- Minimizes communication between Nodes for identity verification
+- All MNs and CNs must trust each other (to accept identity)
+- Assuming access control rules are present on MN1
+
+
+.. raw:: latex
+
+   \newpage
+
+----
+
+Authentication in HTTP
+----------------------
+
+The process for retrieving a protected resource through HTTP involves several
+interactions between the client and server. If the client is already
+authenticated, or includes credentials in the request, then the process
+commences at step 3.
+
+1. A client issues a request to access some resource
+
+2. The server responds with a 401 "Authenticate" message
+
+3. The client repeats the request including appropriate credentials
+
+4.a) If the credentials have suitable access, then the content is returned (200)
+
+4.b) If the credentials do not have suitable access, then a 403 "Forbidden" message is returned
+
+
+
+
+
+Notes from 20090602 ABQ Meeting
+-------------------------------
+
+Access Control, Logging, Auditing -> Authentication + Identity Management
+
+* Centralized directory (LDAP)
+* Distributed directory (LDAP with referrals)
+* Distributed management, replicated (LDAP with replication)
+* GSI proxy certificates
+* OpenID
+* Shibboleth + InCommon
+
+
+Verifying Identity
+
+* Self registered (valid email, txt message, ...)
+* Real person
+* Member of xxx
+
+
+Access Control
+
+:Principals:
+  * User
+  * Member of group
+  * Public
+  * Authenticated user
+  * Site manager (for harvest, system operations, ...)
+  * Change request approval workflow
+  * group who have accepted intellectual rights
+
+Things to control:
+
+- Data
+
+  * read
+  * write
+  * change perms
+
+- Metadata
+
+  * read
+  * write
+  * change perms
+
+- Member Node Write
+- Perform certain API calls (e.g. register node)
+- Logs about {MNs, Data, ... }
+
+Special People
+
+- data curators
+- MN curators / IMs
+
+Expressing Permissions
+
+- SAML
+- eml-access
+- Others to consider?
+
+Attaching Permissions to Resources and Services
+
+

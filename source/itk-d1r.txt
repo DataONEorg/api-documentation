@@ -1,0 +1,112 @@
+DataONE R Client Package
+========================
+
+Synopsis
+--------
+
+Environmental scientists commonly use the `R Project`_ software system for
+statistical analysis and modeling. The R framework is a flexible statistical
+computing environment with robust, extensive packages to perform a large
+variety of analysis and modeling tasks. Because R is open source and
+extensible, it has been widely adopted by the environmental science community,
+and it is easy to extend to provide new analysis capabilities.
+
+The `DataONE R Client Package`_ is an R package that provides access to the
+DataONE services that are present at Coordinating Nodes and Member Nodes. The
+tool will allow an R user to easily load the d1r package (using CRAN_) and
+then use functions in R to search the DataONE system, locate data of interest,
+load that data into the R environment, process it using R's various tools, and
+then upload derived data and metadata back into DataONE.
+
+.. _R Project: http://www.r-project.org
+.. _CRAN: http://cran.r-project.org
+
+User stories 
+------------
+
+* A scientist with R on their system can easily install d1r from CRAN_
+
+* A scientist can load a data object using its DataONE identifier from the 
+  DataONE system into R for further processing by other R functions. The
+  data objects supported should minimally include:
+
+   * Data Tables in CSV and other delimited formats
+   * NetCDF files
+   * Raster images in various formats
+
+* A scientist can use d1r to search for data based on critical metadata,
+  including title, creator, keywords, abstract, spatial location, temporal
+  coverage, taxonomic coverage, and other relevant fields
+
+* A scientist can load all of the supported data objects into R by using the
+  metadata found in a metadata search without directly knowing the
+  identifiers for individual data objects
+
+* Given a data object loaded from DataONE into R, a scientist can display
+  the science metadata associated with that object from within the R system
+  (this might include a link to an external web URI that provides a nice
+  human readable version of the metadata too)
+
+* A scientist can authenticate with the DataONE system in order to establish
+  their identity to access restricted objects and services
+
+* A scientist can upload an R dataframe as a data set with associated
+  science and system metadata for that object from within the R environment
+
+Package design
+--------------
+
+Classes, fields, and methods
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. Note:: 
+    All of the classes and methods in R are inverted (ie, classes don't contain methods per se, instead, methods are specialized to work on particular classes, and the class is generally passed in as the first parameter of the method call.  So, all signatures below need to have an added parameter for this object to be passed in.
+
+* D1Client
+
+   * Fields
+
+       * endpoint
+       * username
+       * cli <D1Client>
+       * token <AuthToken>
+
+   * Constructors
+
+       * d1(CN_URI)
+
+   * Methods
+
+       * login(username, password): D1Client
+       * getEndpoint(): String
+       * getPackage(guid): DataPackage
+
+       * logout()
+       * getUsername(): String
+       * getToken(): AuthToken
+       * search(): ResultSet
+       * resolve(guid): [MemberNodeURI]
+
+* DataPackage
+
+   * Fields
+
+       * identifier
+       * scimeta
+       * sysmeta
+       * [dataList]
+
+   * Constructors
+
+       * datapackage(identifier, scimeta, sysmeta)
+
+   * Methods
+
+       * addData(dataObject): DataPackage
+       * getDataCount(): int
+       * getData(index): dataframe
+
+       * getTitle(): String
+       * getCreator(): String
+       * getDisplayURL(): String
+

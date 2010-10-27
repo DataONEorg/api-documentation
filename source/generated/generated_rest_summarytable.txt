@@ -1,0 +1,101 @@
+.. list-table:: API methods exposed through REST URLs and the infrastructure
+     version they will be supported.
+   :widths: 5 20 20
+   :header-rows: 1
+
+   * - Version
+     - Method
+     - Path
+   * - 0.3
+     - :func:`MN_crud.get`
+     - `GET /object/<guid>`_
+   * - 0.3
+     - :func:`MN_crud.getSystemMetadata`
+     - `GET /meta/<guid>`_
+   * - 0.4
+     - :func:`MN_crud.create`
+     - `POST /object`_
+   * - 0.4
+     - :func:`MN_crud.update`
+     - `PUT /object/<guid>`_
+   * - 0.9
+     - :func:`MN_crud.delete`
+     - `DELETE /object/<guid>`_
+   * - 0.3
+     - :func:`MN_crud.describe`
+     - `HEAD /object/<guid>`_
+   * - 0.3
+     - :func:`MN_crud.getChecksum`
+     - `GET /checksum/<guid>`_
+   * - 0.3
+     - :func:`MN_crud.getLogRecords`
+     - `GET /log`_
+   * - 0.3
+     - :func:`MN_replication.listObjects`
+     - `GET /object`_
+   * - 0.4
+     - :func:`MN_health.ping`
+     - `GET /health/ping`_
+   * - 0.4
+     - :func:`MN_health.getObjectStatistics`
+     - `GET /monitor/object`_
+   * - 0.6
+     - :func:`MN_health.getStatus`
+     - `GET /health/status`_
+   * - 0.3
+     - :func:`CN_crud.get`
+     - `GET /object/<guid>`_
+   * - 0.3
+     - :func:`CN_crud.getSystemMetadata`
+     - `GET /meta/<guid>`_
+   * - 0.3
+     - :func:`CN_crud.resolve`
+     - `GET /resolve/<guid>`_
+   * - 0.4
+     - :func:`CN_crud.reserveIdentifier`
+     - `POST /reserve`_
+   * - 0.7
+     - :func:`CN_crud.assertRelation`
+     - `GET /assertRelation/<idOfSubject>`_
+   * - 0.3
+     - :func:`CN_query.search`
+     - `GET /object`_
+   * - 0.3
+     - :func:`CN_query.getLogRecords`
+     - `GET /log`_
+   * - 0.7
+     - :func:`CN_authentication.login`
+     - `POST /account`_
+   * - 0.7
+     - :func:`CN_authentication.setOwner`
+     - `PUT /owner/<guid>`_
+   * - 0.7
+     - :func:`CN_authentication.newAccount`
+     - `POST /account/login`_
+   * - 0.7
+     - :func:`CN_authentication.verifyToken`
+     - `GET /account/verifyToken`_
+   * - 0.7
+     - :func:`CN_authorization.isAuthorized`
+     - `GET /isAuthorized/<guid>`_
+   * - 0.7
+     - :func:`CN_authorization.setAccess`
+     - `PUT /accessRules/<guid>`_
+   * - 0.7
+     - :func:`MN_authentication.login`
+     - `POST /account/login`_
+   * - 0.7
+     - :func:`MN_authentication.logout`
+     - `GET /account/logout`_
+   * - 0.7
+     - :func:`MN_authorization.isAuthorized`
+     - `GET /isAuthorized/<guid>`_
+   * - 
+     - :func:`CN_register.listNodes`
+     - `GET /node`_
+   * - 
+     - :func:`CN_register.addNodeCapabilities`
+     - `PUT /node/<id>`_
+   * - 
+     - :func:`CN_register.register`
+     - `POST /node`_

@@ -1,0 +1,133 @@
+Object Resolution Service
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _CN_crud.resolve:
+
+``GET /resolve/<guid>``
+.......................
+
+Implemented by CNs, returns the nodes known to hold copies of the object
+identified by ``<guid>``. The object resolution process is intended to provide
+a simple mechanism for a client to discover from which node(s) a particular
+object may be retrieved, and this information is returned as a list of node
+identifiers. Details about method interfaces (i.e. REST URLs) exposed by a
+particular node can be determined by examining the response from the ``node``
+collection. For convenience, the `GET /object/<guid>`_ URL is included in the
+response as is the base URL of the node REST services.
+
+Note also that the same functionality as resolve() can be implemented by
+retrieving a copy of the system metadata for the object and utilizing the node
+registry to discover the base URL from which the client can construct the
+get() URL. Resolve is provided for efficiency since the response size is much
+smaller.
+
+The resolve service is implemented by the following methods:
+
+- :func:`CN_crud.resolve` (``GET /object/resolve/<guid>``)
+
+
+**Response**
+
+The response is of type :class:`Types.ObjectLocationList`. The response is
+serialized according to the usual content type negotiation as indicated in the
+following examples where the location of a science metadata object "1234" is
+resolved.
+
+Where multiple entries are returned for the object location, they should be
+placed in descending order by preference (i.e. highest preference first).
+
+**Examples**
+
+XML (default) in response to ``Accept: text/xml``::
+
+  curl -X GET -H "Accept: text/xml" http://cn.dataone.org/object/resolve/1234
+  or
+  curl -X GET -H "Accept: */*" http://cn.dataone.org/object/resolve/1234
+
+  <objectLocationList 
+    xmlns:d1="http://dataone.org/service/types/ObjectLocationList/0.1" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://dataone.org/service/types/ObjectLocationList/0.1 https://repository.dataone.org/software/cicore/trunk/schemas/objectLocationList.xsd">
+    <identifier>1234</identifier>
+    <objectLocation>
+      <nodeIdentifier>mn1</nodeIdentifier>
+      <baseURL>http://mn1.dataone.org/mn</baseURL>
+      <url>http://mn1.dataone.org/mn/object/1234</url>
+      <preference>100</preference>
+    </objectLocation>
+    <objectLocation>
+      <nodeIdentifier>mn2</nodeIdentifier>
+      <baseURL>http://mn2.dataone.org/mn</baseURL>
+      <url>http://mn2.dataone.org/some_base/object/1234</url>
+      <preference>75</preference>
+    </objectLocation>
+    <objectLocation>
+      <nodeIdentifier>cn1</nodeIdentifier>
+      <baseURL>http://cn1.dataone.org/mn</baseURL>
+      <url>http://cn1.dataone.org/cn/object/1234</url>
+      <preference>1</preference>
+    </objectLocation>
+    <objectLocation>
+      <nodeIdentifier>cn2</nodeIdentifier>
+      <baseURL>http://cn2.dataone.org/mn</baseURL>
+      <url>http://cn2.dataone.org/cn/object/1234</url>
+      <preference>1</preference>
+    </objectLocation>
+    <objectLocation>
+      <nodeIdentifier>cn3</nodeIdentifier>
+      <baseURL>http://cn3.dataone.org/mn</baseURL>
+      <url>http://cn3.dataone.org/cn/object/1234</url>
+      <preference>1</preference>
+    </objectLocation>
+  </objectLocationList>
+
+
+JSON::
+
+  curl -X GET -H "Accept: application/json" http://cn.dataone.org/object/resolve/1234
+
+  {
+    'identifier':'1234',
+    'locations': [ 
+      ['mn1', 'http://mn1.dataone.org/mn','http://mn1.dataone.org/mn/object/1234',100],
+      ['mn2', 'http://mn2.dataone.org/some_base','http://mn2.dataone.org/some_base/object/1234',75], 
+      ['cn1', 'http://cn1.dataone.org/cn','http://cn1.dataone.org/cn/object/1234',1],
+      ['cn2', 'http://cn2.dataone.org/cn','http://cn2.dataone.org/cn/object/1234',1],
+      ['cn3', 'http://cn3.dataone.org/cn','http://cn3.dataone.org/cn/object/1234',1],
+      ]
+   }
+
+
+CSV in response to ``Accept: text/csv`` or ``Accept: text/plain``::
+
+  curl -X GET -H "Accept: text/csv" http://cn.dataone.org/object/resolve/1234
+  
+  #1234
+  node,baseURL,url,preference
+  'mn1','http://mn1.dataone.org/mn','http://mn1.dataone.org/mn/object/1234',100
+  'mn2','http://mn2.dataone.org/some_base','http://mn2.dataone.org/some_base/object/1234',75
+  'cn1','http://cn1.dataone.org/cn','http://cn1.dataone.org/cn/object/1234',1
+  'cn2','http://cn2.dataone.org/cn','http://cn2.dataone.org/cn/object/1234',1
+  'cn3','http://cn3.dataone.org/cn','http://cn3.dataone.org/cn/object/1234',1
+
+
+HTML in response to ``Accept: text/html``::
+
+  curl -X GET -H "Accept: text/html" http://cn.dataone.org/object/resolve/1234
+
+  ...
+  <ul identifier='1234'>
+    <li><a href='http://mn1.dataone.org/mn/object/1234' baseURL='http://mn1..dataone.org/mn' preference='100'>mn1</a></li>
+    <li><a href='http://mn2.dataone.org/some_base/object/1234' baseURL='http://mn2.dataone.org/some_base' preference='75'>mn2</a></li>
+    <li><a href='http://cn1.dataone.org/cn/object/1234' baseURL='http://cn1.dataone.org/cn' preference='1'>cn1</a></li>
+    <li><a href='http://cn2.dataone.org/cn/object/1234' baseURL='http://cn2.dataone.org/cn' preference='1'>cn2</a></li>
+    <li><a href='http://cn3.dataone.org/cn/object/1234' baseURL='http://cn3.dataone.org/cn' preference='1'>cn3</a></li>
+  </ul>
+  ...
+
+
+.. TODO:: 
+
+   Evaluate if it might be useful to support HEAD requests against resolve.
+   The response may contain for example, the timestamp for when an entry was
+   last modified which can be used for client side cache management.

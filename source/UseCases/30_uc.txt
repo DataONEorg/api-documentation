@@ -1,0 +1,62 @@
+Use Case 30 - MN Outage Notification
+------------------------------------
+
+Author
+  VDC TWG
+
+Date
+  - 20090925 Adding to use case description and documentation
+  - 20090114 (TWG meeting).  Subsequent various modifications.
+
+Version 
+  Draft
+
+Goal
+  MN can notify CN about pending outages, severity, and duration, and CNs may
+  want to act on that knowledge to maintain seamless operation.
+
+Summary 
+
+  xxx
+
+Actors
+  xxx
+
+Preconditions 
+  xxx
+  
+Triggers
+  xxx
+ 
+Post Conditions
+  xxx
+
+**Notes**
+
+xxx
+
+
+
+.. figure:: images/30_interaction.png
+   :width: 100%
+
+   Interactions for use case 30.
+
+..
+  @startuml images/30_interaction.png
+  !include ../plantuml.conf
+  title Interactions: 30 - MN can notify CN about pending outages, severity and duration, and\nCNs may want to act on that knowledge to maintain seamless operation
+
+  participant "State of Health API" as c_health << Coordinating Node >>
+  participant "State of Health API" as m_health << Member Node >>
+  m_health -> c_health: reportPendingEvent ()
+  m_health <-- c_health: ack
+  c_health -> c_health: actOnPendingEvent (event)
+  @enduml
+  
+
+
+.. raw:: latex
+
+   \newpage
+

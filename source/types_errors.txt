@@ -1,0 +1,49 @@
+.. class:: ErrorMessage
+
+   The information that is returned with :doc:`Exceptions`.
+
+   ::
+   
+     message ErrorMessage 
+     {
+       required int32 errorCode = 1;
+       required string detailCode = 2;
+       required string description = 3;
+       
+       message KVPair 
+       {
+         required string key = 1;
+         required string value = 2;
+       }
+       
+       repeated KVPair traceInformation = 4;
+     }
+
+
+  .. attribute:: errorCode
+
+    The error code. This is the HTTP error code (i.e. 4xx)
+
+  .. attribute:: detailCode
+
+    A more detailed error code which provides a precise indication of where the
+    exception was raised. This is a string formatting using a dot notation,
+    where the first word is an integer value that is uniquely associated with a
+    DataONE API call and additional words may be appended to provide application
+    specific detail about the error. For example, :func:`MN_crud.get` returns a
+    detail code of 1020 with a :exc:`Exceptions.NotFound` error. A specific
+    Member Node implementation may append additional error codes, for example:
+    "1020.1.14" might indicate that the NotFound error was caused by an IO error
+    that indicated the requested file did not exist, as opposed to some other IO
+    error raised by the system. Detail code words beyond the first word are
+    application specific.
+
+  .. attribute:: description
+
+    A human readable message describing what happened
+
+  .. attribute:: traceInformation
+
+    A dictionary of key-value pairs that can provide more information about
+    the error condition.
+

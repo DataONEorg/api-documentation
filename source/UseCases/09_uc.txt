@@ -1,0 +1,179 @@
+Use Case 09 - Replicate MN to MN
+--------------------------------
+
+Author
+  VDC TWG
+
+Date
+  - 20091001 Filled out description a bit more
+  - 20090925 Adding to use case description and documentation
+  - 20090114 (TWG meeting).  Subsequent various modifications.
+
+Version 
+  Draft
+
+Goal
+  Replicate data from Member Node to Member Node.
+
+Summary 
+
+  Replication of content between Member Nodes (MN) is done to improve
+  persistence of information (avoid data loss with loss of MN) and to improve
+  accessibility (more choices for content retrieval can lower bandwidth
+  requirements for any particular MN). The process of replication is controlled
+  by a Coordinating Node (CN). 
+
+  A full copy of science data and metadata is made during the replication
+  process, so the original science metadata and data is copied to the
+  recipient MN.
+
+  Data is copied across as an exact copy. Science metadata may be transformed
+  into another format if the original can not be supported. 
+
+  It is important that the original metadata is preserved on the CNs, as
+  it is always possible that the original MN where the content was published
+  may go offline or be removed from the DataONE system.
+
+
+Actors
+  Member Node x2, Coordinating Node
+
+Preconditions 
+  - Content is present on a Member Node
+
+  - The content has been registered with the DataONE system (i.e. Member Node
+    Synchronization has occurred for the data and metadata)
+
+Triggers
+
+ - A Coordinating Node detects that there are insufficient copies of the
+   object(s) in question.
+
+ - Information on a Member Node is altered
+
+ - Capabilities of a Member Node changes (accepting more or less content)
+
+ - Replication policy of DataONE or a Member Node changes
+
+ - A Member Node goes offline
+
+
+Post Conditions
+  - Content is present on the recipient Member Node
+
+  - System metadata is updated to reflect the change
+
+  - Watchers are notified of the change
+
+  - Member Node and Coordinating Node logs are updated
+
+
+.. figure:: images/09_UC.png
+
+   Use case diagram indicating the actors involved in the process of Member
+   Node replication.
+
+----
+
+.. figure:: images/09_interaction.png
+   :figwidth: 100%
+
+   Interactions for use case 09. The diagram describes transfer of a single
+   object from MN_B to MN_A as directed by a CN. It is assumed that the object
+   does not exist on MN_B and the object has been identified as requiring
+   synchronization by the CN checking its status in the system metadata.
+
+
+..
+  This block defines the use case diagram referenced above
+  @startuml images/09_uc.png
+    !include ../plantuml.conf
+    usecase "12. Authentication" as authen
+
+    package "DataONE"
+      actor "Coordinating Node" as CN
+      actor "Member Node 1" as MN1
+      actor "Member Node 2" as MN2
+      usecase "13. Authorization" as author
+      usecase "01. Get Object" as GET
+      usecase "04. Create object" as CREATE
+      usecase "16. Log event" as log
+      usecase "21. Notify subscribers" as subscribe
+      CN -- CREATE
+      MN1 -- CREATE
+      MN2 -- GET
+      MN1 -- GET
+      GET ..> author: <<includes>>
+      GET ..> authen: <<includes>>
+      GET ..> log: <<includes>>
+      GET ..> subscribe: <<includes>>
+      CREATE ..> author: <<includes>>
+      CREATE ..> log: <<includes>>
+      CREATE ..> subscribe: <<includes>>
+  @enduml
+
+
+
+..
+  @startuml images/09_interaction.png
+  !include ../plantuml.conf
+  title Interactions: 09 - Replicate data from Member Node to Member Node
+
+  participant "Replication API" as c_sync << Coordinating Node >>
+  participant "CRUD API" as m_crud_b << Member Node B >>
+  participant "CRUD API" as m_crud_a << Member Node A >>
+  
+  c_sync -> c_sync: setReplicationStatus(GUID, Queued)
+  activate c_sync
+    c_sync -> m_crud_b: replicate(token, GUID, SourceNode)
+  deactivate c_sync
+  
+  activate m_crud_b
+    m_crud_b -> c_sync: setReplicationStatus(token, GUID, Requested)
+    activate c_sync
+      c_sync --> m_crud_b: OK
+    deactivate c_sync
+
+    m_crud_b -> m_crud_a: get(token, GUID)
+    activate m_crud_a
+      m_crud_a --> m_crud_a: log(GUID, REPLICATE)
+      m_crud_a -> m_crud_b: bytes
+    deactivate m_crud_a
+    m_crud_b -> c_sync: getChecksum(token, GUID)
+    activate c_sync
+    note right
+      The MN must verify the checksum of the 
+      object before committing storage 
+      of the object.
+    end note
+    c_sync --> m_crud_b: checksum
+    deactivate c_sync
+    m_crud_b -> m_crud_b: create(token, GUID, bytes)
+    m_crud_b --> m_crud_b: log(GUID, REPLICATE)
+    m_crud_b -> c_sync: setReplicationStatus(token, GUID, Complete)
+    activate c_sync
+      c_sync -> m_crud_b: getSystemMetadata(token, GUID)
+      m_crud_b --> c_sync: SystemMetadata
+      note right
+        CN needs a copy of system metadata from
+        MN to verify that copy completed
+      end note
+      c_sync -> c_sync: verifySystemMetadata
+      note right
+        CN updates the SystemMetadata for GUID,
+        setting appropriate values of replica with
+        the member node, time stamp, and status.
+      end note
+      c_sync --> c_sync: log(GUID, REPLICATE)
+      c_sync --> m_crud_b: OK
+      m_crud_b --> c_sync: OK
+    deactivate c_sync
+  deactivate m_crud_b
+
+  @enduml
+
+
+.. raw:: latex
+
+   \newpage
+

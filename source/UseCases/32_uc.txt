@@ -1,0 +1,71 @@
+Use Case 32 - Transfer Object Ownership
+---------------------------------------
+
+Author
+  VDC TWG
+
+Date
+  - 20090925 Adding to use case description and documentation
+  - 20090114 (TWG meeting).  Subsequent various modifications.
+
+Version 
+  Draft
+
+Goal
+  User or organization takes over 'ownership' of a set of objects (write
+  access for orphaned records)
+
+Summary 
+
+  xxx
+
+Actors
+  xxx
+
+Preconditions 
+  xxx
+  
+Triggers
+  xxx
+ 
+Post Conditions
+  xxx
+
+**Notes**
+
+- Is there an authority for any given data/metadata object? 
+
+
+.. figure:: images/32_interaction.png
+   :width: 100%
+
+   Interactions for use case 32.
+
+
+..
+  @startuml images/32_interaction.png
+  !include ../plantuml.conf
+  title Interactions: 32 - User or organization takes over 'ownership' of a set of objects\n(write access for orphaned records)
+
+  actor "User (User or Organization)" as user
+  participant "Client" as app_client << Application >>
+  user -> app_client
+  note right
+  Assume user authority for
+  specifying restrictions
+  end note
+  participant "Authorization API" as c_authorize << Coordinating Node >>
+  app_client -> c_authorize: takeOwnership (objectList)
+  app_client <-- c_authorize: ack or fail
+  note right
+  Is there an authority for any
+  given data / metadata object?
+  end note
+  @enduml
+  
+  
+
+.. raw:: latex
+
+   \newpage
+

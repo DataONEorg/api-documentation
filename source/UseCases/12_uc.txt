@@ -1,0 +1,120 @@
+Use Case 12 - User Authentication
+---------------------------------
+
+.. index:: Use Case 12, authentication
+
+Author
+  VDC TWG
+
+Date
+  - 20091001 Filled out more details
+  - 20090925 Adding to use case description and documentation
+  - 20090114 (TWG meeting).  Subsequent various modifications.
+
+Version 
+  Draft
+
+Goal
+  User Authentication - Person via client software authenticates against
+  Identify Provider to establish session token.
+
+Summary 
+  Many operations in the DataONE system require user authentication to ensure
+  that the user's identity is known to the system, and that appropriate access
+  controls can be executed based on the identity.
+
+  The actual identity and authentication framework may exist outside of
+  DataONE (one possible example might be the emerging `CILogon service`_).
+
+  The authentication process might occur using either a Coordinating Node or a
+  Member Node (if it implements the DataONE authentication API).
+  
+  See also some notes about discussion at :doc:`/Authentication`
+
+
+Actors
+  User, Member Node, Coordinating Node, Authentication System
+
+
+Preconditions 
+  - User is not authenticated in the system
+
+
+Triggers
+  - A user logs on to the DataONE system.
+
+  - A user tries to perform an operation in the DataONE system that requires
+    authentication.
+
+ 
+Post Conditions
+  - An ``auth_token`` is returned to the user (application) that can be used
+    for future interactions with the DataONE system.
+
+  - In the event of authentication failure, the ``auth_token`` will provide
+    identity equivalent to an anonymous user.
+
+  - The authentication operation is recorded in MN or CN logs (depending on
+    where the authentication attempt was made)
+
+
+**Notes**
+
+- To be a bit more abstract, it might be good to use something like
+  login(user, credentials) or login(subject) for the method signature. Here
+  "subject" would be similar to the `javax.security.auth.Subject
+  <http://java.sun.com/javase/6/docs/api/javax/security/auth/Subject.html>`_
+  concept. (PEA)
+
+- Can logins also happening against a MN, which simply proxies the request up
+  to the CN? (PEA)
+
+- Need to specify a time to live for auth_tokens. Is this part of the
+  authentication sub-system? If so, can the TTL be altered by the DataONE
+  system?
+
+
+.. _CILogon service: http://www.cilogon.org/service
+
+
+.. figure:: images/12_interaction.png
+   :figwidth: 100%
+
+   Interactions for use case 12.
+
+
+..
+  @startuml images/12_interaction.png
+  !include ../plantuml.conf
+
+  actor User
+  participant "Client" as app_client << Application >>
+  User -> app_client
+  alt MN Login
+  participant "Authorization API" as m_authorize << Member Node >>
+    app_client -> m_authorize: login(username, password)
+    activate m_authorize
+    participant "Authentication Subsystem" as auth_system
+    m_authorize -> auth_system: authorize(username, password, domain)
+    m_authorize <-- auth_system: auth_token or FAIL
+    note right
+      The authentication system may be an external
+      service or could be operating on the CN.
+    end note
+    app_client <-- m_authorize: auth_token or FAIL
+    deactivate m_authorize
+  else CN Login
+  participant "Authentication API" as c_authenticate << Coordinating Node >>
+    app_client -> c_authenticate: login(username, password)
+    activate c_authenticate
+    c_authenticate -> auth_system: authorize(username, password, domain)
+    c_authenticate <-- auth_system: auth_token or FAIL
+    app_client <-- c_authenticate: auth_token or FAIL
+    deactivate c_authenticate
+  end MN Login
+  @enduml
+  
+  
+.. raw:: latex
+
+   \newpage

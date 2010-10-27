@@ -1,0 +1,220 @@
+Overview
+========
+
+The DataONE core cyberinfrastructure implements three significant
+functionalities:
+
+1. Persistent identifiers for all discrete objects in the system (i.e. data,
+   metadata, system metadata, annotations, identities, node capabilities, and
+   so forth). The main goal here is to ensure that an identifier can be used
+   reliably in the future without concern about the classic 404-not found
+   error encountered with many web sites. Objects are replicated across 
+   participant nodes of the DataONE system, so access can generally be 
+   guaranteed even if the original node holding the data   goes offline.
+
+2. A consistent scheme for identifying users across all participating nodes.
+   It is expected that participants in the DataONE infrastructure will have
+   existing systems and requirements for identifying users. One of the goals
+   of DataONE is to support synonymous identity by mapping user identities
+   between different systems.
+
+3. A substantial, extensible search mechanism to assist discovery. The number
+   of objects in DataONE is expected to expand significantly over the years.
+   The total is currently undefined and somewhat dependent on the definition
+   of a data object, but data object counts in the order of millions is not
+   unreasonable. Finding relevant content in such a set of objects obviously
+   requires sophisticated search tools that provide accurate and precise
+   mechanisms for identifying useful subsets of information. The process for
+   search is likely to evolve significantly over the life of the project,
+   starting with simple searches against metadata through to more
+   sophisticated, semantically aware search.
+
+
+Additional capabilities, such as mechanisms for sub-setting, transforming, and
+slicing data; services for visualizing content; and mechanisms supporting
+on-demand services such as remote model and workflow execution will build upon
+these core features.
+
+This functionality is available through a set of components, service
+interfaces and interactions described in detail in theses document.
+
+There are three major functional components of the DataONE
+cyberinfrastructure: Member Nodes (MNs), Coordinating Nodes (CNs), and the Investigator toolkit (ITK).
+
+:Member Nodes:
+
+  Existing and new community data repositories. These systems offer
+  heterogeneous implementations across a variety of data types and support a
+  variety of metadata types. All data is stored on Member Nodes, and the
+  DataONE infrastructure, in particular the Coordinating Nodes assist with
+  coordinating distribution of data between MNs. Existing data repositories
+  need to implement the DataONE Member Node APIs in order to participate in
+  the DataONE network.
+
+
+:Coordinating Nodes:
+
+  The operational core of DataONE. The Coordinating Nodes catalog data and
+  metadata, control the dispersion of data across Member Nodes, keep a replica
+  of all metadata, offer services for distributed identity, and offer search
+  and discovery capabilities. Coordinating nodes are geographically distinct
+  mirror images of each other, operating in a multi-master configuration.
+
+
+:Investigator Toolkit:
+
+  Initially providing a set of libraries for interacting with DataONE
+  Coordinating and Member Nodes (i.e. the "client libraries"). As the project
+  develops, the ITK will grow to contain a rich set of applications and tools
+  for interacting with the content available in DataONE (and potentially other
+  Data Nets).
+
+
+
+.. figure:: images/ServicesOverview.png
+   :figwidth: 100%
+
+   Major components of DataONE and the services they implement. It is
+   envisioned that there will be few Coordinating Nodes (three initially),
+   more Member Nodes (tens ... hundreds), and even more instances of the
+   Investigator Toolkit.
+
+
+.. figure:: images/MNOverview.png
+   :figwidth: 100%
+
+   Component diagram of the high level Member Node structure. DataONE service
+   application programming interfaces (APIs) are implemented by a service
+   layer that interacts with the existing APIs of the Member Node.
+
+
+.. raw:: latex
+
+   \begin{landscape}
+
+.. figure:: images/CNOverview.png
+   :figwidth: 100%
+
+   High level component diagram of the Coordinating Node structure and the
+   service interfaces it exposes.
+
+
+.. raw:: latex
+
+   \end{landscape}
+
+
+..
+  @startuml images/MNOverview.png
+  !include plantuml.conf
+
+  () "Object Store" as mn_crud
+  () "Authorization" as mn_auth
+  () "Replication" as mn_repl
+  () "Health" as mn_health
+  () "Logging" as mn_logging
+  component "Investigator Toolkit" as ITK
+  component "Coordinating Node" as CN
+  package "Member Node" #EEEEEE
+    component "Existing Services" as mn_existing
+    component "DataONE Services" as MN
+  mn_existing --> MN
+  mn_existing <-- MN
+  MN -- mn_crud
+  MN -- mn_auth
+  MN -- mn_repl
+  MN -- mn_health
+  MN -- mn_logging
+  mn_auth .. CN
+  mn_crud .. CN
+  mn_repl .. CN
+  mn_health .. CN
+  mn_logging .. CN
+  mn_crud .. ITK
+  mn_auth .. ITK
+  mn_health ..ITK
+  mn_logging .. ITK
+  @enduml
+
+
+..
+  @startuml images/CNOverview.png
+  !include plantuml.conf
+  skinparam noteFontSize 12
+  
+  () "Object Store" as cn_crud
+  () "Authentication" as cn_authn
+  () "Authorization" as cn_authz
+  () "Replication" as cn_repl
+  () "Health" as cn_health
+  () "Search" as cn_search
+  () "Registration" as cn_register
+
+  component "Member Node" as MN
+  component "Investigator Toolkit" as ITK
+  package "Coordinating Node" #EEEEEE
+    component "Document Store" as ostore
+    component "Science Metadata\nParser" as sparser
+    component "Search Index" as index
+    component "CN_Service" as cn_service
+
+    cn_service --> ostore
+    note right of ostore
+      Prototype implementation uses Metacat
+      as the object store, logging service and 
+      CN-CN replication
+    end note
+    ostore --> cn_service
+    index --> cn_service
+    sparser --> index
+    note right of index
+      Prototype implementation uses Mercury as the
+      search index, which is based on SOLR / Lucene.
+    end note
+    ostore --> sparser
+    note right of sparser
+      Prototype implementation utilizes the
+      metadata parsing capabilities of Mercury
+    end note
+
+  cn_service -- cn_crud
+  cn_service -- cn_repl
+  cn_service -- cn_register
+  cn_service -- cn_health
+  cn_service -- cn_authz
+  cn_service -- cn_search
+  cn_service -- cn_authn
+  
+  cn_crud .. MN
+  cn_repl .. MN
+  cn_register .. MN
+  cn_authz .. MN
+  cn_authn .. MN
+  
+  cn_crud .. ITK
+  cn_health .. ITK
+  cn_authz .. ITK
+  cn_search .. ITK
+  cn_authn .. ITK
+  
+  @enduml
+
+
+
+.. raw:: latex
+
+   \newpage
+
+
+
+.. toctree::
+   :maxdepth: 1
+
+   WhatIsData
+   SearchMetadata
+   GUIDs
+   Replication
+   DataAndMetadata
+   Authentication
+
+   

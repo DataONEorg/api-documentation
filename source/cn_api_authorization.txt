@@ -1,0 +1,24 @@
+Coordinating Node Authorization API
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. module:: CN_authorization
+   :synopsis: Methods for authorization
+
+
+.. include:: generated/generated_CN_authorization.txt
+
+
+
+----
+
+
+.. function:: requestToken ()
+
+   This operation is used by CN applications to obtain a token for system
+   level operations.
+
+   .. Note:: 
+      This could be a normal :func:`login` operation using a system user and
+      secret that is stored in a secure location.
+
+

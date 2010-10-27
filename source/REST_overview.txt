@@ -1,0 +1,193 @@
+
+Overview
+~~~~~~~~
+
+
+- Content is modeled as collections, with :class:`GUIDs <Types.Identifier>`
+  identifying individual items of a collection.
+
+- The HTTP verbs HEAD, GET, POST, PUT, DELETE are used for retrieving
+  information about content, retrieving content, creating content, updating
+  content, and deleting content respectively.
+
+- If state information is required (e.g. authentication token), it is passed
+  in the HTTP headers.
+
+- Hints to support efficient caching (e.g. content time stamps) should be
+  respected. Caching is an important mechanism for achieving scalability.
+
+- Several URL patterns listed below support parameters as key, value pairs.
+  Unless otherwise indicted, the key is not case sensitive, though the case of
+  the value is significant.
+
+Collections exposed by :term:`Member Node`\s and :term:`Coordinating Node`\s
+include:
+
+:``/object``:
+  The set of objects available for retrieval from the node.
+
+:``/meta``:
+  Metadata about objects available for retrieval from the node.  
+
+:``/log``:
+  Log records held on the node.
+
+:``/reserve``:
+  Identifiers that have been reserved for future use.
+
+:``/account``:
+  Principal and ownership related functionality.
+
+:``/node``:
+  Service and status information for all nodes on the system.
+
+:``/monitor``:
+
+
+.. include:: generated/generated_rest_summarytable.txt
+
+
+.. note::
+   GUID is used interchangeably with the term 'identifier' in this document.
+   For all purposes of DataONE, a 'guid' is an identifier.
+
+
+**Serialization**
+
+The format of the response (except for responses from :func:`MN_crud.get` or
+:func:`CN_crud.get`) is determined by the ``Accept:`` header provided in the
+request. 
+
+The default serialization format is XML and must be supported by all services.
+
+Acceptable content types include:
+
+:``application/json``:
+   The response structure is returned as a JSON_ encoded string. The service
+   should support an additional parameter "jsonvar" which would cause the
+   value of the parameter to be set as a variable name for the resulting JSON
+   block (e.g. ``&jsonvar=rs1`` would cause the JSON output to be "rs1=...").
+
+:``text/xml``:
+
+  The response is serialized as XML.
+
+:``application/rdf+xml``:
+
+  The response is serialized in RDF-XML.
+
+:``text/csv``:
+
+  The response is serialized as a comma delimited set of fields, with records
+  delimited by a new line.
+
+:``text/html``:
+
+  A HTML rendering of the response.
+
+Regardless of the format, the response is always encoded using the UTF-8
+character set.
+
+If the service is not able to provide a response in the specified format, then
+the node should return an error code of :exc:`Exceptions.NotImplemented`, with
+the HTTP error code set to 406.
+
+
+.. _JSON: http://www.json.org/
+
+
+**Parameters in Requests**
+
+Many of the URL patterns described here accept parameters in the URL. In these
+cases the parameter name is not case sensitive. However, the value of the
+parameter should be preserved unless specifically indicated otherwise. In all
+cases, identifiers are treated as literal strings with no case conversion, so for 
+example the identifier ``a`` is not equal to ``A``.
+
+Parameter names are identical to the parameter names as described in the
+corresponding method signature.
+
+For requests that use the HTTP POST verb, all parameters are sent as part of
+the request body using an appropriate encoding.
+
+Requests that use HTTP PUT should include the ``id`` parameter as a URL
+parameter to be consistent with the semantics of the HTTP PUT operation which
+is intended to modify a specific resource.
+
+In all cases where it is required, the ``token`` parameter will be provided in
+the HTTP request header.
+
+
+**Authorization Token**
+
+The authorization token is generated in response to an authentication
+operation and is used to indicate the principal that is performing the
+request. The authorization token is transferred as a value in the HTTP
+headers.
+
+.. warning:: The expression of authorization information is likely to change.
+
+The authorization token is serialized in the HTTP headers as indicated::
+
+  Auth: authorization-token-string
+
+The content of ``authorization-token-string`` is currently (2010-10-04)
+undefined except that it will be a string that may be several kilobytes in
+length, but unlikely to be more than 10 kilobytes.
+
+Note that although the HTTP spec does not impose a size limit on HTTP header
+entries, practical limits are set by web servers. For example, the default
+limit HTTP header field sizes for Apache is `8190 bytes`_.
+
+.. _8190 bytes: http://httpd.apache.org/docs/2.2/mod/core.html#limitrequestfieldsize
+
+
+Wildcards and Range Operators
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Several of the REST calls support filtering using wildcards and/or range
+operators. When such filtering is supported, it is explicitly noted in the
+documentation for a given REST call.
+
+The basic approach is the use of name/value pairs (NVPs) in the URL to construct
+a filter for restricting results to a portion of a data set. All NVPs are
+combined using the AND operator.
+
+Wildcards are typically supported for string values and allow substring
+filters to be specified by including one or more of the following wildcard
+characters in the string.
+
+:\*: Match a string of zero or more random characters
+:\?: Match a single random character
+
+Range operators are typically supported for values that represent a continuous
+series, such as byte sizes and datetimes. A range operator is specified by
+appending it to a name. Valid range operators are:
+
+======= ===========================
+Suffix  Range Operator
+======= ===========================
+None    Equals (==) (default)
+_eq     Equals (==)
+_lt     Less than (<)
+_le     Less than or equals (<=)
+_gt     Greater than (>)
+_ge     Greater than or equals (>=)
+======= ===========================
+
+Wildcards and range operators cannot be combined in a single NVP.
+
+**Examples**
+
+Return only objects that have been modified since 6AM on the first of January,
+2010 UTC::
+
+  ../object?qt=nvp&lastModified_gt=2010-01-01T06:00:00Z
+
+Return only objects that were last modified in 2005::
+
+  ../object?qt=nvp&lastModified_ge=2005-01-01-T00:00:00Z&lastModified_lt=2006-01-01-T00:00:00Z
+
+.. TODO:: Define the fields that should be supported for filtering for each type of collection.
+
+

@@ -1,0 +1,152 @@
+Serialization of Types for Transfer Over HTTP
+---------------------------------------------
+
+Boolean
+~~~~~~~
+
+When the response is simply a boolean True or False, the response is a single
+character "1" if True, or "0" if False.
+
+
+ObjectList
+~~~~~~~~~~
+
+JSON
+....
+
+::
+
+  {
+    'start': <integer>,
+    'count': <integer>,
+    'total': <integer>,
+    'objectInfo':
+    [
+      {
+        'identifier':<IdentifierType>,
+        'objectFormat':<ObjectFormatType>,
+        'checksum':
+        {
+          'algorithm':<checkSum Algorithm Type>,
+          'value':<SHA1 hash of object>
+        },
+        'dateSysMetadataModified':<DateTime>,
+        'size':<integer>
+      },
+      ...
+    ]
+  }
+  
+
+CSV
+...
+
+::
+
+  #<start>,<count>,<total>
+  identifier,objectFormat,algorithm,checksum,dateSysMetadataModified,size
+  "<identifier>","<object class>","<SHA-1 | SHA-224 | MD5 | ...>","<SHA1 hash of object>","<date time last modified>",<byte size of object>
+
+XML
+...
+
+::
+
+  <d1:listObjects xmlns:d1="http://dataone.org/service/types/ListObjects/0.1"
+    xmlns:common="http://dataone.org/service/types/common/0.1"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    count="_integer_"
+    start="_integer_"
+    total="_integer_">
+    <objectInfo>
+      <identifier>_identifier_</identifier>
+      <objectFormat>_object class_</objectFormat>
+      <checksum algorithm='SHA-1 | SHA-224 | MD5 | ...'>_hash of object_</checksum>
+      <dateSysMetadataModified>_date time last modified_</dateSysMetadataModified>
+      <size>_byte size of object_</size>
+    </objectInfo>
+    ...
+  </d1:listObjects
+
+
+HTML
+....
+
+.. TODO:: Define ObjectList rendering in HTML 
+
+
+DescribeResponse
+~~~~~~~~~~~~~~~~
+
+Returned in response to :func:`MN_crud.describe` which is called using the
+HTTP HEAD verb. As such, the response is entirely in the HTTP headers (no body).
+
+:Content-Length: :attr:`SystemMetadata.size`
+:Last-Modified: <dateSysMetadataModified>
+:DataONE-ObjectFormat: <objectFormat>
+:DataONE-Checksum: <checksumAlgorithm>,<checksum>
+
+
+Identifier
+~~~~~~~~~~
+
+Returned as a simple string.
+
+
+SystemMetadata
+~~~~~~~~~~~~~~
+
+Currently returned only in the XML form.
+
+
+ObjectLocationList
+~~~~~~~~~~~~~~~~~~
+
+JSON
+....
+
+::
+
+  {
+   'identifier':'1234',
+   'locations': [
+     ['mn1.dataone.org/mn', 'http://mn1.dataone.org/mn/object?id=1234'],
+     ['mn2.dataone.org/some_base/mn', 'http://mn2.dataone.org/some_base/mn/object?id=1234'],
+     ['cn.dataone.org/cn', 'http://cn.dataone.org/cn/object?id=1234'] ]
+  }
+  
+CSV
+...
+
+::
+
+  #1234
+  node,url
+  'mn1.dataone.org/mn','http://mn1.dataone.org/mn/object?id=1234'
+  'mn2.dataone.org/some_base/mn','http://mn2.dataone.org/some_base/mn/object?id=1234'
+  'cn.dataone.org/cn','http://cn.dataone.org/cn/object?id=1234'
+  
+
+XML
+...
+
+::
+
+  <locations identifier='1234'>
+    <location node='mn1.dataone.org/mn' href='http://mn1.dataone.org/mn/object?id=1234' />
+    <location node='mn2.dataone.org/some_base/mn' href='http://mn1.dataone.org/some_base/mn/object?id=1234' />
+    <location node='cn.dataone.org/cn' href='http://cn.dataone.org/cn/object?id=1234' />
+  </locations>
+
+HTML
+....
+
+::
+
+  ...
+  <ol identifier='1234'>
+    <a href='http://mn1.dataone.org/mn/object?id=1234'>mn1.dataone.org/mn</a>
+    <a href='http://mn2.dataone.org/some_base/mn/object?id=1234'>mn1.dataone.org/some_base/mn</a>
+    <a href='http://cn.dataone.org/cn/object?id=1234'>cn.dataone.org/cn</a>
+  </ol>
+  ...

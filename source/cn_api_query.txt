@@ -1,0 +1,36 @@
+Query API
+~~~~~~~~~
+
+.. module:: CN_query
+   :synopsis: 
+     Handles queries against science metadata, system metdata, and log
+     records held by CNs
+
+The Query API handles searches of science metadata and system metadata. It also 
+exposes log records held by CNs. This log-related functionality probably needs
+to be split out into the Logging and Alert API (not yet defined).
+
+
+.. include:: generated/generated_CN_query.txt
+
+
+----
+
+.. TODO:: Flesh these out...
+
+----
+
+.. function:: getAllCopies (token, ownerID)
+
+.. function:: getLinksAndCites (GUID, fromDate, toDate)
+
+.. function:: getLogRecords (nodeID, fromDate, toDate)
+
+.. function:: query (token, query)
+    This is a DUPE of search(). Clean up use cases.
+
+.. function:: searchForData ()
+    This is a DUPE of search(). Clean up use cases.
+
+.. function:: usageQuery (token, GUID)
+

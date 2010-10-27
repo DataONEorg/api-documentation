@@ -1,0 +1,238 @@
+
+Infrastructure Versions
+=======================
+
+Outline of functionality to be implemented in versions of the DataONE
+cyber-infrastructure. Version numbers are expressed in three parts:
+Major.Minor.Revision to reflect official releases of the software, where:
+
+:Major:
+
+  Is a significantly different release from the previous version number, may
+  provide significant additional features and may implement functionality that
+  is not backwards compatible with prior releases.
+
+:Minor:
+
+  Adds additional features to an existing release and maintains compatibility
+  within the current major version.
+
+:Revision:
+
+  Indicates a minor change from the current version, typically used to provide
+  bug fix releases. Will not usually add additional functionality.
+
+Three major versions are planned for the first five years of the DataONE
+project. These versions refer to the general implementation of the overall
+cyber-infrastructure, though for specific components (e.g. the Coordinating
+Node software stack or the Investigator Toolkit), it may be more appropriate
+for them to evolve their own versions (with some mapping between those and the
+general version of DataONE).
+
+**Version 0.x** represents the prototype implementations to be developed prior to
+the first public release of the infrastructure. The general progression of
+features for this series beyond the initial specifications involves
+configuration of test environments and core API implementation libraries that
+are then used to add DataONE features and functionality to various existing
+data resources and component applications. The end result of the 0.x series
+will be three Coordinating Nodes and at least three Member Nodes that
+implement DataONE functionality to replicate metadata and data, enable search
+and discovery, and supports remote administration and monitoring. Another
+important output from the prototyping activities will be documentation and
+guidelines for further implementation, detailing the results of stress tests
+and evaluation of simulated failures such as node failures and connectivity
+issues.
+
+**Version 1.x** is the first public release of the DataONE
+cyber-infrastructure and will represent a hardened and well-tested system that
+can reliably be placed in a core infrastructure role. Additional features will
+be added to the infrastructure throughout the 1.x series, with the majority of
+focus addressing the remaining performance and reliability questions as well
+the science use cases developed by various working groups during the first
+year of activity.
+
+**Version 2.x** represents more advanced functionality that builds upon the
+capabilities of the version 1.x series. Anticipated features of the 2.x series
+include content validation and quality control services (extending basic
+services implemented previously), more sophisticated event and notification
+facilities, support for content version migration strategies, and several
+service enhancements such as various data extraction, analysis, visualization
+and integration operations. An important aspect of the 2.x series development
+activities will be ensuring the system being implemented supports as far as
+possible the requirements of the scientific use cases identified throughout
+project.
+
+
+General Schedule for Infrastructure Version 0.x
+-----------------------------------------------
+
+
+.. list-table:: Approximate timeline and functionality for version releases.
+   :widths: 1 1 10 4 2
+   :header-rows: 1
+
+   * - Version
+     - Date
+     - Description
+     - Use Cases
+     - API Methods
+   * - 0.1
+     - 2009/09
+     - | * General architecture laid out
+       | * Initial set of user requirements identified
+       | * Functional use cases for user requirements drafted
+     - \
+     - \
+   * - 0.2
+     - 2009/11
+     - | * Major system components identified
+       | * Service interfaces specified
+       | * Functional uses cases fleshed out, edited for consistency
+       | * High level component interactions documented
+     - \
+     - \
+   * - 0.3
+     - 2010/04
+     - | * Initial coding on low level functionality and shemas
+       | * Prototype specfications documented
+       | * Initial core software components identified
+       | * System metadata schema defined
+       | * CN library incompatibilities evaluatated
+       | * Base inter-process communications enabled (Mercury - Metacat)
+       | * CN, MN API wrappers generated
+       | * Reference implementations for CN and MN initiated
+       | * Low level logging incorporated into API wrappers
+     - | * :doc:`/UseCases/01_uc`
+       | * :doc:`/UseCases/36_uc`
+     - | * X :func:`MN_crud.get`
+       | * done for GMN :func:`MN_crud.log`
+       | * X :func:`CN_crud.get`
+       | * X :func:`CN_crud.getSystemMetadata`
+       | * X :func:`CN_query.search`
+   * - 0.4
+     - 2010/05
+     - | * Initial implementation of metadata replication and indexing
+       | * Initial implementation of selected MNs
+       | * CN Hardware procured
+       | * CN implemetation using Metacat + Mercury with API wrapper
+       | * MN - CN communication secured
+       | * Mercury search index population trigger implemented
+       | * CN - CN replication of metadata
+       | * Design initial web interface for user interaction
+       | * Design monitoring functionality to track services and objects
+     - | * :doc:`/UseCases/02_uc`
+       | * :doc:`/UseCases/03_uc`
+       | * :doc:`/UseCases/06_uc`
+       | * :doc:`/UseCases/10_uc`
+       | * :doc:`/UseCases/16_uc`
+     - | * X :func:`MN_crud.getSystemMetadata`
+       | * X :func:`MN_replication.listObjects`
+       | * X :func:`CN_crud.create`
+       | * :func:`CN_crud.log`
+       | * :func:`CN_crud.resolve`
+   * - 0.5
+     - 2010/06
+     - | * Initial data replication implemented
+       | * MN - MN transfer implemented
+       | * Basic search interface available
+       | * Basic log reporting available
+       | * Search and retrieval supported by ITK
+       | * Initial implementation of centralized user authentication
+       | * Identity and credentials propagated through system
+       | * Implement web interface for user interaction with CNs
+       | * Implement initial mechanisms for tracking objects and service uptime
+     - | * :doc:`/UseCases/06_uc`
+       | * :doc:`/UseCases/17_uc`
+       | * :doc:`/UseCases/12_uc`
+       | * :doc:`/UseCases/13_uc`
+     - | * :func:`CN_authentication.login`  (will use IP based auth)
+       | * :func:`CN_authentication.verifyToken`
+       | * :func:`CN_authorization.isAuthorized`
+   * - 0.6
+     - 2010/07
+     - | * System self manages replication
+       | * CN controlling replication between MNs
+       | * Reporting interface for system status
+     - | * :doc:`/UseCases/09_uc`
+       | * :doc:`/UseCases/24_uc`
+     - \
+   * - 0.7
+     - 2010/08
+     - | * Basic authorization and access control
+       | * Initial authorization subsystem implemented
+       | * Initial object access control implemented
+     - | * :doc:`/UseCases/14_uc`\
+     - \
+   * - 0.8
+     - 2010/09
+     - | * Stress testing
+       | * Failure recovery test and evaluation
+       | * Writeup, lessons learned
+       | * Re-design, select alternative components as necessary
+     - \
+     - \
+
+
+Detail for Version 0.3
+----------------------
+
+Major goals for this target are functional prototype implementations of the
+CN, MN and a simple client suitable for testing interactions.
+
+This version of the software represents the initial implementation of the CN
+and MN services, and should support at least use cases :doc:`UseCases/01_uc`
+and :doc:`UseCases/36_uc`.
+
+The MN implementation will be a Django application that can stand alone, or
+interact with Metacat, Dryad, or ORNL DAAC for retrieving data and science
+metadata objects. The MN will implement the APIs described in
+:doc:`MN_APIs` using a REST interface approach as described in
+:doc:`REST_interface`. The MN should be able to operate on any Linux, OS X or
+Windows platform that supports python 2.6. External dependencies beyond the
+standard python install should be clearly documented.
+
+The CN implementation will be a combination of Java servlet applications
+including Metacat for object storage, Mercury for object indexing for basic
+search and browse, and "cn_service" which will implement the necessary CN APIs
+and the logic to interact with the object store and search index. The CN
+should implement the APIs described in :doc:`CN_APIs` using a REST
+interface approach as described in :doc:`REST_interface`. 
+
+The simple client will be implemented in Python and should support the
+external APIs provided by both the CN and MN implementations. The client will
+be developed primarily to support test operations against the CN and MN,
+though should be developed with consideration as a general DataONE client
+tool.
+
+
+Detail for Version 0.4
+----------------------
+
+The major change for this target is replication of content across CNs.
+
+Version 0.4 will extend the implementations developed in version 0.3 by adding
+support for use cases :doc:`UseCases/02_uc`, :doc:`UseCases/03_uc`,
+:doc:`UseCases/06_uc`, and :doc:`UseCases/10_uc`.
+
+This MN implementation for this release should support basic interaction with
+at least one of the specified MN targets (i.e. Metacat, Dryad, ORNL DAAC) and
+provide access to real data from that service.
+
+The CN implementation will need to support replication between CN (Metacat)
+instances.
+
+
+Detail for Version 0.5
+----------------------
+
+The major change for this target is CN driven data replication across MNs.
+
+Version 0.5 will extend the implementation developed in version 0.4 by adding
+support for the use cases :doc:`UseCases/06_uc`, :doc:`UseCases/16_uc`, and
+:doc:`UseCases/17_uc`.
+
+At completion of this milestone, the infrastructure will support the basic
+functionality of DataONE except with no integration of identity,
+authentication, and minimal authorization (dictated by machine connections
+rather than user identities).
+

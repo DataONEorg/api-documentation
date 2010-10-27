@@ -1,0 +1,126 @@
+Replication API
+~~~~~~~~~~~~~~~
+
+The Replication API handles CN-directed replication of content between MNs and
+also supports the initial harvesting of science metadata from a MN by a CN.
+Method names used for the former (MN-to-MN replication) include some form of
+"replication" in their name. Method names used for the latter (MN-to-CN
+synchronization) include some form of "synchronize" in their name. Support for
+MN-to-MN replication is not part of the V0.3 APIs.
+
+
+.. module:: MN_replication
+   :synopsis: Handles CN directed replication of content between Member Nodes.
+
+
+.. include:: generated/generated_MN_replication.txt
+
+-----
+
+.. TODO:: THIS ALL NEEDS TO BE CLEANED UP
+
+::
+  cancelReplication (sess, transID)
+  listAllObjects ()
+  listRecords ()
+  replicationSucceeds (transID)
+  startReplica (ID, sessionID, transID, srcMN)
+  sysOp (token)
+  listChangedRecords(token) -> GUIDs
+
+  ## from v0.3 doc ##
+  listObjects(token, query) -> list of GUIDs
+  synchronizationComplete(token, GUID)
+  synchronizationFailed(token, GUID, problemDescription)
+
+
+
+.. function::  cancelReplication (sess, transID)
+
+.. function::  listAllObjects ()
+
+.. function::  listRecords ()
+
+.. function::  replicationSucceeds (transID)
+
+.. function::  startReplica (ID, sessionID, transID, srcMN)
+
+.. function::  sysOp (token)
+
+
+.. function:: listChangedRecords(token) -> GuidList
+
+   List the records that have changed since the last synchronization event.
+
+   :param token: A token with authority to retrieve a list of changed records.
+
+
+
+
+----
+
+.. function:: synchronizationComplete (token, GUID)
+
+   This is a callback method used by a CN to indicate to a MN that it has
+   completed replication of the science metadata identified by GUID. When
+   called, the MN should somehow record that synchronization is complete for
+   that object so that the next time it reponds to a ``listObjects(token,
+   query)`` query the object will not be included as requiring
+   synchronization.
+
+   :param token: authentication token; ignored for V0.3
+
+   :param GUID: 
+
+     The GUID of the science metadata object that is now synchronized with the
+     CN.
+
+   .. note::
+      A CN could use this method to provide the MN with an updated version of
+      the system metadata for the object if this method accepted a system
+      metadata object instead of a simple GUID as a parameter.
+
+   :returns: A simple acknowledgement.
+
+   .. TODO:: Define "a simple acknowledgement"
+
+   :raises Exceptions.NotAuthorized:
+
+   :raises Exceptions.InvalidIdentifier: 
+     The supplied GUID does not identify a science metadata object owned by
+     the MN.
+
+   :raises Exceptions.InvalidOperation: 
+     The science metadata object identified by the GUID is already marked as
+     synchronized.
+
+
+.. function::  synchronizationFailed (token, GUID, problemDescription)
+
+   This is a callback method used by a CN to indicate to a MN that it cannot
+   complete replication of the science metadata identified by GUID. When
+   called, the MN should take steps to record the problem description and
+   notify an administrator or the data owner of the issue.
+
+   :param token: authentication token; ignored for V0.3
+
+   :param GUID: 
+      The GUID of the science metadata object that was to be synchronized with
+      the CN.
+
+   :param problemDescription: 
+      Further information about the problem causing the fail to synchronize.
+      This might be an unsupported science metadata type, an invalid GUID,
+      etc.
+
+   :returns: A simple acknowledgement.
+
+   :raises Exceptions.NotAuthorized:
+
+   :raises InvalidIdentifier: 
+     The supplied GUID does not identify a science metadata object owned by
+     the MN.
+
+   :raises InvalidOperation: 
+     The science metadata object identified by the GUID is already marked as
+     synchronized.

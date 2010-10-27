@@ -1,0 +1,85 @@
+Use Case 31 - Manage Access Policies
+------------------------------------
+
+Author
+  VDC TWG
+
+Date
+  - 20090925 Adding to use case description and documentation
+  - 20090114 (TWG meeting).  Subsequent various modifications.
+
+Version 
+  Draft
+
+Goal
+  Manage Access Policies - Client can specify access restrictions for their
+  data and metadata objects. Also supports release time embargoes.
+
+  
+
+Summary 
+
+  xxx
+
+Actors
+  xxx
+
+Preconditions 
+  xxx
+  
+Triggers
+  xxx
+ 
+Post Conditions
+  xxx
+
+**Notes**
+
+- Users can be members of groups that can participate in access directives.
+
+- I have removed the phrase "and replication" from the use case statement
+  because :doc:`Use Case 08</UseCases/08_uc>` deals with setting replication policies.
+  (PEA)
+
+- Step #1, should have a signature of setAccess(token, GUID, accessPolicy).
+  Even though the diagram says "Assume user authority for specifying
+  restrictions", practically speaking we will need to verify that authority
+  and the user's identify with a token. Also "accessLevel" sounds very
+  limited, and access policy implies a possibly more sophisticated access
+  policy delineation, including embargoes.
+
+
+.. figure:: images/31_interaction.png
+   :width: 100%
+
+   Interactions for use case 31.
+
+
+..
+  @startuml images/31_interaction.png
+  !include ../plantuml.conf
+  
+  title Interactions: 31 - Client can specify access and replication restrictions for their\ndata and metadata objects, and supported timed embargoes
+
+  actor "User (Data Owner)" as user
+  participant "Client" as app_client << Application >>
+  user -> app_client
+  note right
+  Assume user authority for
+  specifying restrictions
+  end note
+  participant "Authorization API" as c_authorize << Coordinating Node >>
+  app_client -> c_authorize: setAccess (GUID, accessLevel)
+  app_client <-- c_authorize: ack or fail
+  note right
+  Users can be members of groups that can
+  participate in access directives.
+  end note
+  @enduml
+  
+  
+
+.. raw:: latex
+
+   \newpage
+

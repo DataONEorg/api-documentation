@@ -1,0 +1,157 @@
+Use Case 05 - Update Metadata
+-----------------------------
+
+
+Author
+  VDC TWG
+
+Date
+  - 20090929 Filling out details
+  - 20090925 Adding to use case description and documentation
+  - 20090114 (TWG meeting).  Subsequent various modifications.
+
+Version 
+  Draft
+
+Goal
+  Create, update or delete metadata record on a Member Node.
+
+Summary 
+  A user is creating a new metadata record on a Member Node (MN). The
+  mechanism by which the user does this is out of scope for the DataONE
+  system, so this use case continues from the point where a new Data Package
+  is present on the MN.
+
+  The metadata is retrieved by the CN using a pull mechanism (CN requests
+  content from the MN).
+
+  The availability of new content on a MN is indicated by a flag in the
+  response to a ping() message issued by a CN. The CN then retrieves a list of
+  changes from the MN and for each change, retrieves the experiment metadata,
+  stores it and generates a search metadata document by extracting content
+  from the experiment metadata. The changes to the CN (stored experiment
+  metadata, update search metadata) are replicated to the other CNs (Use Case
+  ###). The CN schedules replication of the data package across other MNs
+  (Use Case 06).
+
+
+Actors
+  Member Node, additional Member Nodes, Coordinating Nodes
+  
+  
+Preconditions
+
+  - Use is authenticated and so client application has an auth_token for the process.
+
+  - DataONE system operational
+  
+  - MN is registered and is monitored
+  
+  
+Triggers
+
+  - New data package is present on Member Node
+  
+  - An existing data package is modified on a Member Node
+  
+  - A data package is deleted from a Member Node
+ 
+ 
+Post Conditions
+  
+  - New data package is replicated across MNs
+  
+  - Search metadata is updated
+  
+  - Operation recorded in logs
+
+  - CN update of search metadata
+
+  - CN replication of metadata 
+
+  - Watchers notified of change
+  
+
+
+**Notes**
+
+- Are IDs are pegged to versions? If so, update might differ more radically
+  from create.
+
+- If delete is a metadata operation only, then will be very similar to update.
+  But if it is a physical operation, it becomes more complex. Will there be an
+  archival copy? Will member nodes that hold replicas be "forced" to destroy
+  the replicas?
+
+- Is submit from a member node a push or pull?
+
+- Should queuing of a submission within a member node be required for success?
+  (We assume yes, to guarantee replication of submissions).
+
+- Can data packages be deleted or modified?
+
+
+
+.. figure:: images/04_uc.png
+   :figwidth: 100%
+   
+   Use case 04.
+
+
+.. figure:: images/04_interaction.png
+  :figwidth: 100%
+
+  Create, update, delete, search metadata or data object in Member Node.
+
+
+.. 
+  This block defines the use case diagram referenced above
+  @startuml images/04_uc.png
+  !include ../plantuml.conf
+  actor "User" as client
+  usecase "12. Authentication" as authen
+
+  package "DataONE"
+    actor "Coordinating Node" as CN
+    actor "Member Node" as MN
+    usecase "13. Authorization" as author
+    usecase "04. Create Object" as create
+    usecase "06. MN Synchronize" as mn_sync
+    client -- create
+    CN -- create
+    MN -- create
+    create ..> author: <<includes>>
+    create ..> authen: <<includes>>
+    create ..> mn_sync: <<includes>>
+  @enduml
+
+
+..
+  @startuml images/04_interaction.png
+  !include ../plantuml.conf
+  Actor User
+  participant "Client" as app_client << Application >>
+  User -> app_client
+
+  participant "CRUD API" as m_crud << Member Node >>
+  app_client -> m_crud: create(auth_token, dataPackage)
+  activate m_crud
+  participant "CRUD API" as c_crud << Coordinating Node >>
+    m_crud -> c_crud: validateGUID(GUID)
+    m_crud <-- c_crud: GUID
+    m_crud -> m_crud: store()
+  deactivate m_crud
+
+  participant "State of Health API" as c_health << Coordinating Node >>
+  c_health -> m_crud: ping()
+  activate c_health
+    c_health <-- m_crud: [ACK, NewData]
+  participant "Synchronization API" as c_sync << Coordinating Node >>
+    c_health -> c_sync: scheduleSynch(MN_ID)
+  deactivate c_health
+  @enduml
+  
+
+.. raw:: latex
+
+   \newpage

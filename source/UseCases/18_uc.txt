@@ -1,0 +1,82 @@
+Use Case 18 - MN Retrieve Aggregated Logs
+-----------------------------------------
+
+Author
+  VDC TWG
+
+Date
+  - 20090925 Adding to use case description and documentation
+  - 20090114 (TWG meeting).  Subsequent various modifications.
+
+Version 
+  Draft
+
+Goal
+  Member nodes can request aggregated CRUD log for {time period/object
+  id/userid} for all of 'their' objects.
+
+Summary 
+
+  A Member Node should be able to request use information for any objects for
+  which that Member Node is the origin (or defacto origin in the case where
+  the original MN was decommissioned).
+
+
+Actors
+
+  - Coordinating Node
+
+  - Member Node
+
+Preconditions 
+
+  - Aggregate logs are accumulated by CNs
+
+Triggers
+
+  - MN Administrator requests aggregate logs
+
+  - Timed event
+
+Post Conditions
+
+  - Aggregate log information is available to the Member Node
+
+**Notes**
+
+This operation should really be a function for the administrative functions of
+the Investigator Toolkit. It is reasonable to expect that (especially for the
+first iteration of the infrastructure) MN administrators will want to peruse
+and evaluate the log data. In later stages, this information could be
+associated with content, so use statistics appear with search results.
+
+
+.. figure:: images/18_interaction.png
+   :width: 100%
+
+   Interactions for use case 18.
+
+..
+  @startuml images/18_interaction.png
+  !include ../plantuml.conf
+
+  participant "CRUD API" as m_crud << Member Node >>
+  participant "Query API" as c_query << Coordinating Node >>
+  c_query -> m_crud: getLogRecords (nodeID, fromDate, toDate)
+  note right
+  Assume Member Node has authority for
+  accessing Coordinating Node log records.
+  end note
+  c_query <-- m_crud: records or fail
+  note right
+  Can the Query API handle queries
+  on log records or should this be
+  handled by another API?
+  (e.g. "Report API"?)
+  end note
+  @enduml
+  
+
+.. raw:: latex
+
+   \newpage

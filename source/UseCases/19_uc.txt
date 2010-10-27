@@ -1,0 +1,75 @@
+Use Case 19 - Retrieve Object Download Summary
+----------------------------------------------
+
+Author
+  VDC TWG
+
+Date
+  - 20090925 Adding to use case description and documentation
+  - 20090114 (TWG meeting).  Subsequent various modifications.
+
+Version 
+  Draft
+
+Goal
+  General public can request aggregated download usage information for any
+  object ID (with anonymous read access)
+
+Summary 
+
+  This operation provides an indication of the popularity for an object in
+  DataONE, somewhat equivalent to a citation index for a publication.
+
+Actors
+
+  - Anonymous user
+
+  - Coordinating Node
+
+Preconditions 
+
+  Use statistics have been recorded for a given object
+  
+Triggers
+  - Any user requests use logs for an object
+
+Post Conditions
+
+  - Requesting user has a copy of use statistics for an object (if
+    authorized).
+
+
+.. figure:: images/19_interaction.png
+   :width: 100%
+
+   Interactions for use case 19.
+
+
+..
+  @startuml images/19_interaction.png
+  !include ../plantuml.conf
+  actor User
+  participant "Client" as app_client << Application >>
+  User -> app_client
+  participant "Authentication API" as c_authenticate << Coordinating Node >>
+  app_client -> c_authenticate: login (user, pw)
+  app_client <-- c_authenticate: token or failure
+  participant "Query API" as c_query << Coordinating Node >>
+  app_client -> c_query: usageQuery (token, GUID)
+  participant "Authorization API" as c_authorize << Coordinating Node >>
+  c_query -> c_authorize: isAuth (token, resultset)
+  c_query <-- c_authorize: T or F
+  app_client <-- c_query: download usage records
+  note right
+  Can the Query API handle queries
+  on log records or should this be
+  handled by another API?
+  (e.g. "Report API"?)
+  end note
+  @enduml
+
+
+
+.. raw:: latex
+
+   \newpage

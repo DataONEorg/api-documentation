@@ -1,0 +1,187 @@
+Monitor Collection
+~~~~~~~~~~~~~~~~~~
+
+The ``/monitor`` collection represents various performance and utilization
+metrics of Member Nodes. It is exposed by Member Nodes.
+
+
+``GET /monitor/object``
+.......................
+
+Returns the number of objects.
+
+Implemented by the methods:
+
+- :func:`MN_monitor.listObjects`.
+
+
+**Parameters**
+
+:day: (optional) Flag that causes the number of objects that were created to be
+  reported for each day in which one or more objects were created. Without
+  this flag the total number of objects is reported.
+
+:id: (optional) (wildcards supported) Filter on identifier.
+
+:url: (optional) (wildcards supported) Filter on URL. The URL points to the
+  object bytes when GMN is used as a DataONE adapter for an existing repository.
+
+:format: (optional) (wildcards supported) Filter on objectFormat.
+
+:time: (optional) (range operators supported) Filter on created date-time ranges.
+  Date-times must be ISO8601 compatible.
+
+
+**Response**
+
+:class:`Types.MonitorList`.
+
+The response format defaults to text/xml and is the only format currently
+supported. Other formats such as JSON may be supported in the future.
+
+**Examples**
+
+Retrieve a count of all objects on MN::
+
+  curl -X GET -H "Accept: text/xml" http://mn1.dataone.org/monitor/object
+
+  <?xml version="1.0" ?>
+  <ns1:monitorList xmlns:ns1="http://dataone.org/service/types/monitorList/0.1">
+    <monitorInfo>
+      <date>2010-07-23</date>
+      <count>100</count>
+    </monitorInfo>
+  </ns1:monitorList>
+
+Retrieve a count of objects based on EML that were created for each
+day in 1980 (arguments are on separate lines for readability)::
+
+  curl -X GET -H "Accept: text/xml" http://mn1.dataone.org
+    /monitor/object
+    ?day
+    &time_ge=1980-01-01
+    &time_lt=1981-01-01
+    &format=eml:*
+  
+  <?xml version="1.0" ?>
+  <ns1:monitorList xmlns:ns1="http://dataone.org/service/types/monitorList/0.1">
+    <monitorInfo>
+      <date>1980-01-19</date>
+      <count>1</count>
+    </monitorInfo>
+    <monitorInfo>
+      <date>1980-02-08</date>
+      <count>1</count>
+    </monitorInfo>
+    <monitorInfo>
+      <date>1980-03-22</date>
+      <count>1</count>
+    </monitorInfo>
+    <monitorInfo>
+      <date>1980-04-20</date>
+      <count>1</count>
+    </monitorInfo>
+    <monitorInfo>
+      <date>1980-05-06</date>
+      <count>1</count>
+    </monitorInfo>
+    <monitorInfo>
+      <date>1980-08-29</date>
+      <count>1</count>
+    </monitorInfo>
+  </ns1:monitorList>
+
+
+``GET /monitor/event``
+......................
+
+
+Returns the number of object related events that have occured.
+
+Implemented by the methods:
+
+- :func:`MN_monitor.listEvents`.
+
+Returns :class:`Types.MonitorList`
+
+
+**Parameters**
+
+:day: (optional) Flag that causes the number of object related events to be
+  reported for each day in which one or more events occurred. Without this flag,
+  the number of events is cumulative.
+
+:id: (optional) (wildcards supported) Filter on identifier.
+
+:format: (optional) (wildcards supported) Filter on objectFormat.
+
+:created: (optional) (range operators supported) Filter on create date-time ranges.
+  Date-times must be ISO8601 compatible.
+
+:eventtime: (optional) (range operators supported) Filter on event date-time.
+  Date-times must be ISO8601 compatible.
+
+:ip_address: (optional) (wildcards supported) Filter on IP address.
+
+:event: (optional) (wildcards supported) Filter on operation type.
+
+
+**Response**
+
+:class:`Types.MonitorList`.
+
+The response format defaults to text/xml and is the only format currently
+supported. Other formats such as JSON may be supported in the future.
+
+
+**Examples**
+
+Retrieve a cumulative count of all object related events on MN::
+
+  curl -X GET -H "Accept: text/xml" http://mn1.dataone.org/monitor
+
+  <?xml version="1.0" ?>
+  <ns1:monitorList xmlns:ns1="http://dataone.org/service/types/monitorList/0.1">
+    <monitorInfo>
+      <date>2010-07-23</date>
+      <count>100</count>
+    </monitorInfo>
+  </ns1:monitorList>
+
+Retrieve a count of object related events for all objects based on EML for each
+day in 1980 (arguments are on separate lines for readability)::
+
+  curl -X GET -H "Accept: text/xml" http://mn1.dataone.org
+    /monitor
+    ?day
+    &time_ge=1980-01-01
+    &time_lt=1981-01-01
+    &format=eml:*
+  
+  <?xml version="1.0" ?>
+  <ns1:monitorList xmlns:ns1="http://dataone.org/service/types/monitorList/0.1">
+    <monitorInfo>
+      <date>1980-01-19</date>
+      <count>1</count>
+    </monitorInfo>
+    <monitorInfo>
+      <date>1980-02-08</date>
+      <count>1</count>
+    </monitorInfo>
+    <monitorInfo>
+      <date>1980-03-22</date>
+      <count>1</count>
+    </monitorInfo>
+    <monitorInfo>
+      <date>1980-04-20</date>
+      <count>1</count>
+    </monitorInfo>
+    <monitorInfo>
+      <date>1980-05-06</date>
+      <count>1</count>
+    </monitorInfo>
+    <monitorInfo>
+      <date>1980-08-29</date>
+      <count>1</count>
+    </monitorInfo>
+  </ns1:monitorList>

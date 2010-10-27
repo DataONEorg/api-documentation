@@ -1,0 +1,46 @@
+Nodes Collection
+~~~~~~~~~~~~~~~~
+
+Returns a list of nodes that have been registered with the DataONE
+infrastructure. This list is also referred to as the registry.
+
+
+``GET /node``
+.............
+
+Implemented by the methods:
+
+- :func:`CN_register.listNodes`
+
+Returns :class:`Types.NodeList`
+
+
+``GET /node/<id>``
+..................
+
+Implemented by the methods:
+
+- ???
+
+Returns the registry information for a specific node.
+
+
+``PUT /node/<id>``
+..................
+
+Implemented by the methods:
+
+- :func:`CN_register.addNodeCapabilities`
+
+TODO
+
+
+``POST /node``
+..............
+
+Implemented by the methods:
+
+- :func:`CN_register.register`
+
+TODO
+

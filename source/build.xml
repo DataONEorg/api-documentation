@@ -1,0 +1,52 @@
+<project name = "BuildDoc" default = "main" basedir = ".">
+	<target name = "clean" description = "Delete generated files">
+		<delete>
+			<!-- Clean sequence diagrams. -->
+			<fileset dir = "${basedir}/UseCases/images"/>
+			<!-- Clean PlantUML files. -->	
+			<fileset dir = "${basedir}/UseCases/PlantUML"/>
+		</delete>
+	</target>
+
+	<target name = "interactions" description = "Generate PlantUML files from interaction files">
+		<exec dir = "${basedir}/UseCases" executable = "${basedir}/UseCases/interaction2plant.py"/>
+	</target>
+
+	<taskdef  name = "plantuml" classname = "net.sourceforge.plantuml.ant.PlantuTask" classpath = "${basedir}/UseCases/plantuml.jar"/>
+
+<!--
+  <target name="diagrams" depends="interactions" description="Generate sequence diagrams">
+    <plantuml dir = "${basedir}/UseCases/PlantUML" output = "${basedir}/UseCases/images"/>
+  </target>
+-->
+  <target name="diagrams" description="Generate all diagrams">
+    <plantuml dir = "${basedir}/UseCases" output = "${basedir}/UseCases/images"/>
+  </target>
+
+  <target name="html"
+          description="Generate documentation in HTML">
+    <exec dir="${basedir}" executable="rst2html">
+      <arg value="${basedir}/Architecture.txt" />
+      <arg value="${basedir}/Architecture.html" />
+    </exec>
+  </target>
+  
+  <target name="pdf"
+          description="Generate documentation in PDF">
+    <exec dir="${basedir}" executable="rst2pdf">
+      <arg value="--default-dpi=100" />
+      <!-- <arg value="-s letter" /> -->
+      <arg value="${basedir}/Architecture.txt" />
+    </exec>
+  </target>
+  
+  <target name="odt"
+          description="Generate Open Document format">
+    <exec dir="${basedir}" executable="rst2odt.py">
+      <arg value="${basedir}/Architecture.txt" />
+      <arg value="${basedir}/Architecture.odt" />
+    </exec>
+  </target>
+  <target name = "main" depends = "interactions, diagrams, html" description = "Generate html documentation">
+  </target>
+</project>

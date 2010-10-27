@@ -1,0 +1,56 @@
+Use Case 35 - Query Coordinating Node for Metadata Describing a Member Node
+---------------------------------------------------------------------------
+
+Author
+  Paul Allen
+
+Date
+  - 20091204 Created
+  
+Version 
+  draft
+
+Goal
+  Describe a member node, especially API endpoints
+
+Summary 
+
+  Naive clients may want to find out more about member nodes before 
+  interacting with them. In particular, clients need to determine the 
+  API endpoints for the Member Node. Information supplied might include 
+  the capabilities supported and state of health summary.
+
+
+Actors
+  - Coordinating Node
+  - Client requesting info
+
+Preconditions 
+  - Coordinating Nodes are operational
+  
+Triggers
+  - Request by client
+ 
+Post Conditions
+  - Client has locations where data object can be retrieved
+
+
+.. figure:: images/35_interaction.png
+   :figwidth: 100%
+
+
+   Interactions for use case 35.
+
+..
+  @startuml images/35_interaction.png
+  !include ../plantuml.conf
+  
+  title Interactions: 35 - Query Coordinating Node for metadata describing a Member Node
+  @enduml
+  
+
+.. raw:: latex
+
+   \newpage
+
+  

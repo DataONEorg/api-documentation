@@ -1,0 +1,68 @@
+.. raw:: latex
+
+  \newpage
+
+Use Case 39 - Test Node APIs
+----------------------------
+
+Author
+  VDC TWG
+
+Date
+  - 20100712 Initial version
+
+Version 
+  Draft
+
+Goal
+  Execute a series of method calls against all member and coordinating nodes
+  to ensure that the responses are as expected for both success and failure.
+
+Summary 
+  Part of the process for testing conformance of API implementation by member
+  and coordinating nodes is to ensure that the responses to individual calls
+  are as expected in the case of both successful requests and those that cause
+  some failure.
+
+
+Actors
+  - Coordinating Node
+  - Client API
+  - Test suite
+
+Preconditions 
+  - Coordinating nodes operational
+  
+Triggers
+  - Tests against all nodes are initiated
+ 
+Post Conditions
+  - All API methods of all member nodes are tested
+  - All API methods of all coordinating nodes are tested
+
+
+.. figure:: images/39_interaction.png
+   :figwidth: 100%
+
+
+..
+  This block defines the use case diagram referenced above
+  @startuml images/39_interaction.png
+  !include ../plantuml.conf
+  participant "Tester" as app_test << Application >>
+  participant "CN" as cn << CN >>
+  participant "API" as node << Node >>
+  app_test -> cn: listNodes()
+  cn --> app_test: nodeList
+  loop for node in nodeList
+    loop for test in tests
+      app_test -> node: test()
+      node --> app_test: result
+    end
+  end
+  @enduml
+
+
+.. raw:: latex
+
+   \newpage

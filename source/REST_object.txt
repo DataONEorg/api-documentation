@@ -1,0 +1,473 @@
+The Object Collection ``/object``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``/object`` collection represents any object that can be identified
+within the DataONE system. These can be :term:`science data`, :term:`science
+metadata`, or potentially other types of objects (e.g. :term:`principal`\s,
+work flows, relationships). It is anticipated that fundamental access and
+manipulation of those new object formats will occur through the same
+``/object`` collection interface.
+
+The object collection is exposed by both MNs and CNs. On a MN, the object
+collection is implemented by :func:`MN_replication.listObjects` and on a CN by
+:func:`CN_query.search`.
+
+
+.. list-table:: Response for HTTP operations on ``/object`` for different HTTP
+                request verbs.
+   :widths: 2 20
+   :header-rows: 1
+
+   * - Verb
+     - Response
+   * - HEAD
+     - Returns information about the collection in the headers, including last
+       modified to indicate when the collection was last updated. Note that
+       the HEAD response is the same as a GET response without a body.
+   * - GET
+     - Return a :class:`Types.ObjectList` if called without the ``id`` 
+       parameter in the URL, otherwise returns the object identified by
+       the value of the ``id`` URL parameter.
+   * - POST
+     - Creates a new instance with the specified identifier, implementing
+       :func:`MN_crud.create`. The DataONE authorization token should be
+       placed in the appropriate HTTP Header field (to be determined), the
+       identifier to be used, the object content, and sysmeta content are
+       encoded in the request body using `MIME-multipart Mixed Media Type`_,
+       where the identifier part has the name of 'id', the object part has the
+       name 'object', and the sysmeta part has the name 'systemmetadata'.
+       Parameter names are not case sensitive.
+   * - PUT
+     - Updates an existing instance identified by identifier, implementing
+       :func:`MN_crud.update`. The DataONE authorization token should be
+       placed in the appropriate HTTP Header field (to be determined). The 
+       identifier should be provided as the ``id`` URL parameter, and the
+       the object content, and sysmeta content are encoded in the request 
+       body using `MIME-multipart Mixed Media Type`_,
+       where the identifier part has the name 'id', the object part has the
+       name 'object', and the sysmeta part has the name 'systemmetadata'. The
+       obsoletedGUID parameter should be url-form-encoded in the query string
+       with the name 'obsoletedGUID'.
+   * - DELETE
+     - Removes the specified instance from the collection, implementing
+       :func:`MN_crud.delete`. The DataONE authorization token should be
+       placed in the appropriate HTTP Header field (to be determined). 
+
+
+.. _MIME-multipart Mixed Media Type: http://tools.ietf.org/html/rfc2046#section-5.1.3
+
+.. _MN_replication.listObjects:
+.. _CN_query.search:
+
+``GET /object``
+...............
+
+List of objects that are present on the node. Default ordering is newest first.
+
+Implemented by the methods:
+
+- :func:`MN_replication.listObjects`
+
+- :func:`CN_query.search`
+
+The return value is a :class:`Types.ObjectList`
+
+
+**Parameters**
+
+Parameter names are not case sensitive. The case of values should be preserved
+however, unless otherwise indicated.
+
+:start: (optional) Zero based index of the first item to return
+
+:count: (optional) Maximum number of items to return
+
+:format: (optional) Restrict the response to the specified object format. 
+
+:startTime: 
+  (optional) Specifies the beginning of the time range from which to return
+  object (>=). Queries against :attr:`SystemMetadata.dateSysMetadataModified`
+
+:endTime: 
+  (optional) Specifies the end of the time range to which to return object
+  (<=). Queries against :attr:`SystemMetadata.dateSysMetadataModified`
+
+.. note:: startTime <= :attr:`SystemMetadata.dateSysMetadataModified` <= endTime
+
+:jsonvar: 
+  (optional) Applicable only when the JSON response is requested. Indicates
+  the variable name that will be prepended to the JSON response. For example,
+  if ``jsonvar=rs1``, the JSON result would start with ``rs1=``. This enables
+  the response to be embedded as a script block in a static HTML page
+
+:orderby:
+  (optional) Indicates which attribute will be used to sort the results, and
+  whether the sorting should be in ascending or descending order. The value of
+  the parameter must be a valid attribute name, and should be prefixed with
+  ``asc_`` to indicate ascending order, or ``desc_`` to indicate descending
+  order. If neither the ``asc_`` or ``desc_`` prefix is present, then the
+  default should be ascending.
+
+.. TODO:: It is not clear what is meant by "attribute" here
+
+
+**Response**
+
+:class:`Types.ObjectList` serialized according to the requested format as
+indicated in the ``Accept:`` HTTP header.
+
+The expected response when a user agent sends a GET request to a Member Node
+exposing the DataONE REST API ``/object`` collection is an extract from the
+total list of identifiers that the Member Node is able to provide access to
+when the request was received. 
+
+Example of a JSON response structure::
+
+  {
+    'start': <integer>,
+    'count': <integer>,
+    'total': <integer>,
+    'objectInfo':
+    [
+      {
+        'identifier':<IdentifierType>,
+        'objectFormat':<ObjectFormatType>,
+        'checksum': 
+        {
+          'algorithm':<checkSum Algorithm Type>, 
+          'value':<SHA1 hash of object>
+        },
+        'dateSysMetadataModified':<DateTime>,
+        'size':<integer>
+      },
+      ...
+    ]
+  }
+
+JSON with ``jsonvar=rs1`` ::
+
+  rs1={ ... }
+
+and an associated html page that could utilize the JSON result::
+
+  <html>
+  <head>...
+  <script type="text/javascript">
+  var rs1=false;
+  </script>
+  <script src="http://cn1.dataone.org/cn/object?qt=solr&jsonvar=rs1&q=..."></script>
+  ...
+  </html>
+
+
+Expressed in CSV, one entry per line, comma delimiting fields, new line
+delimiting records::
+
+  #<start>,<count>,<total>
+  identifier,objectFormat,algorithm,checksum,dateSysMetadataModified,size
+  "<identifier>","<object format>","<SHA-1 | SHA-224 | MD5 | ...>","<SHA1 hash of object>","<date time last modified>",<byte size of object>
+
+
+Expressed in XML::
+
+  <d1:listObjects xmlns:d1="http://dataone.org/service/types/ListObjects/0.1"
+    xmlns:common="http://dataone.org/service/types/common/0.1"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    count="_integer_" 
+    start="_integer_" 
+    total="_integer_">
+    <objectInfo>
+      <identifier>_identifier_</identifier>
+      <objectFormat>_object format_</objectFormat>
+      <checksum algorithm='SHA-1 | SHA-224 | MD5 | ...'>_hash of object_</checksum>
+      <dateSysMetadataModified>_date time last modified_</dateSysMetadataModified>
+      <size>_byte size of object_</size>
+    </objectInfo>
+    ...
+  </d1:listObjects>
+
+
+Expressed in RDF/XML::
+
+  <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:d1='http://ns.dataone.org/core/objects/'>
+    <rdf:Description rdf:about="_requesting URL_">
+      <d1:start>_integer_</d1:start>
+      <d1:count>_integer_</d1:count>
+      <d1:total>_integer_</d1:total>
+    </rdf:Description>
+    <rdf:Description rdf:about="_requesting URL_">
+      <d1:objectInfo rdf:parseType="Collection">
+        <rdf:Description rdf:about="http://mn1.dataone.org/mn/object/_identifier_">
+          <d1:objectFormat>_object format_</d1:objectFormat>
+          <d1:checksum d1:algorithm='SHA-1 | SHA-224 | MD5 | ...'>_SHA1 hash of object</d1:checksum>
+          <d1:dateSysMetadataModified>_date time last modified_</d1:dateSysMetadataModified>
+          <d1:size>_byte size of object_</d1:size>
+        </rdf:Description>
+      </d1:objectInfo>
+    </rdf:Description>
+  </rdf:RDF>
+
+
+
+**Examples**
+
+Retrieve a list of identifiers from a Member Node in JSON format::
+
+  curl -X GET -H "Accept: application/json" http://mn1.dataone.org/mn/object/
+
+  {'start':0,
+   'count':1000,
+   'total':159734,
+   'objectInfo':[{'identifier': 'ABC123',
+  	  'objectFormat':'data',
+  	  'checksum': {
+  	     'algorithm':'SHA-1', 
+  	     'value':'b3a1617100c2b782fe5f9f2050dc714fdd05df28'
+  	   },
+  	  'dateSysMetadataModified':'2009-12-02T17:40:03.0Z',
+  	  'size':1040032112},
+  	 ...,
+  	 {'identifier':'XYZ332',
+  	  'objectFormat':'metadata',
+  	  'checksum': {
+  	     'algorithm':'SHA-1', 
+  	     'value':'008b7d10f4cb282e6054146c5ee3a1ae5f4b4c07'
+  	   },
+  	  'dateSysMetadataModified':'2009-11-30T06:44:19.0Z',
+  	  'size':1044} ] }
+
+
+Retrieve a list of identifiers from a Member Node in plain text format::
+
+  curl -X GET -H "Accept: text/csv" http://mn1.dataone.org/mn/object/
+
+  #0,1000,159734
+  identifier,objectFormat,algorithm,checksum,dateSysMetadataModified,size
+  "ABC123","data","SHA-1","b3a1617100c2b782fe5f9f2050dc714fdd05df28","2009-12-02T17:40:03.0Z",1040032112
+  ...
+  "XYZ332","science metadata","SHA-1","008b7d10f4cb282e6054146c5ee3a1ae5f4b4c07","2009-11-30T06:44:19.0Z",1044
+
+
+Retrieve last modified information about the collection::
+
+  curl -I http://mn1.dataone.org/mn/object/
+  
+  HTTP/1.1 200 OK
+  Date: Wed, 02 Dec 2009 22:48:46 GMT
+  Last-Modified: Wed, 02 Dec 2009 17:40:03 GMT
+  Content-Length: *
+  Content-Type: application/json; charset=utf-8
+
+
+Perform a search against a Coordinating Node::
+
+  curl -X GET -H "Accept: application/json" http://cn1.dataone.org/cn/object?qt=solr&q=...
+
+  {
+   'start':0,
+   'count':1000,
+   'total':159734,
+   'objectInfo':[
+     {
+      'identifier': 'ABC123',
+      'objectFormat':'data',
+      'checksum': 
+      {
+       'algorithm':'SHA-1', 
+       'value':'b3a1617100c2b782fe5f9f2050dc714fdd05df28'
+       },
+      'dateSysMetadataModified':'2009-12-02T17:40:03.0Z',
+      'size':1040032112
+     },
+     ...,
+     {
+      'identifier':'XYZ332',
+      'objectFormat':'metadata',
+      'checksum': 
+      {
+         'algorithm':'SHA-1', 
+         'value':'008b7d10f4cb282e6054146c5ee3a1ae5f4b4c07'
+       },
+      'dateSysMetadataModified':'2009-11-30T06:44:19.0Z',
+      'size':1044
+     } ] 
+  }
+
+The search results are the same as the response from
+:func:`MN_replication.listObjects`. At this stage, additional attributes can
+not be specified in the response, though this is likely to change in the
+future.
+
+Ordering of search results is currently unspecified. A simple approach would
+be to add an additional parameter ``orderby`` to the request, the value of
+which would be a combination of an attribute name and and indication of
+ascending or descending order.
+
+So for example, to return the results ordered by dateSysMetadataModified, with
+the oldest records first, the parameter and value of::
+
+  orderby=asc_dateSysMetadataModified
+
+might be specified, and similarly for newest first::
+
+  orderby=desc_dateSysMetadataModified
+
+
+.. _MN_crud.get:
+.. _CN_crud.get:
+
+``GET /object/<guid>``
+......................
+
+Operates on individual items of the ``/object`` collection identified by the
+identifier ``<guid>``. This URL pattern is implemented by Member and
+Coordinating Nodes.
+
+Implemented by the methods:
+
+- :func:`MN_crud.get`
+
+- :func:`CN_crud.get`
+
+Returns the bytes of the specified object.
+
+.. TODO:: How to specify the mime-type of HTTP response stream?
+
+**Examples**
+
+(GET) Retrieve the object with identifier "XYZ332"::
+
+  curl http://m1.dataone.org/mn/object/XYZ332
+  
+  ... data ...
+
+(GET) Attempt to retrieve a non-existent object (and show headers in response)::
+
+  curl -D - http://m1.dataone.org/mn/object/XYZ33255
+
+  HTTP/1.1 404 Not Found
+  Content-Type: 
+  Date: Wed, 16 Dec 2009 13:58:34 GMT
+  Content-Length: 355
+
+
+  <html>
+    <head>
+      <meta http-equiv="content-type" content="text/html;charset=utf-8">
+      <title>Error: 404 Not Found (1020)</title>
+    </head>
+    <body>
+      <p>
+        <dl>
+          <dt>Code</dt>
+          <dd class="errorCode">404</dd>
+          <dt>Detail Code</dt>
+          <dd class="detailCode">1020</dd>
+        </dl>
+      </p>
+      <p class="description">The specificed object does not exist on this node.</p>
+      <dl class="traceInformation">
+        <dt>identifier</dt>
+        <dd>123XYZ</dd>
+        <dt>method</dt>
+        <dd>mn.get</dd>
+        <dt>hint</dt>
+        <dd>Please try <a href='http://cn.dataone.org/cn/resolve/123XYZ'> resolving</a>
+            at a <a href='http://dataone.org'>DataONE</a> Coordinating Node.</dd>
+      </dl>
+    </body>
+  </html>
+
+
+.. _MN_crud.describe:
+.. _CN_crud.describe:
+
+``HEAD /object/<guid>``
+.......................
+
+This operation provides basic information about the target object. This method
+will likely receive high demand and so efficiency should be taken into
+consideration during implementation.
+
+Implemented by the methods:
+
+- :func:`MN_crud.describe`
+- :func:`CN_crud.describe`
+
+returns :class:`Types.DescribeResponse`
+
+**Examples**
+
+(HEAD) Retrieve information about the object with identifier "ABC123"::
+
+  curl -I http://mn1.dataone.org/mn/object/ABC123
+
+  HTTP/1.1 200 OK
+  Date: Wed, 16 Dec 2009 13:58:34 GMT
+  Content-Length: 1040032112
+  Content-Type: application/octet-stream
+
+
+.. _MN_crud.create:
+
+``POST /object``
+................
+
+Provides the mechanism for adding content to a Member Node using DataONE
+enabled clients.
+
+Implemented by the methods:
+
+- :func:`MN_crud.create`
+
+Returns :class:`Types.Identifier`
+
+
+**GMN specific:**
+
+By default, object storage is managed by GMN. By specifying the option
+vendor_gmn_remote_storage when creating an object, the caller can specify that
+the object is stored at another location. In that case, the submitted object is
+interpreted as a URL through which the object bytes can be retrieved.
+
+**Examples**
+
+(POST) Create a new object with a given identifier (``XYZ33256``)::
+
+  curl -H "AuthToken: UR45W21A1S19ZE3CC9" \
+       -F "file=@datafile.csv;name=object" \
+       -F "file=@sysmeta.xml;name=systemmetdata" \
+       -d "id=XYZ33256"
+       http://m1.dataone.org/mn/object
+  
+  HTTP/1.1 200 Success
+  Content-Type: 
+  Date: Wed, 16 Dec 2009 13:58:34 GMT
+  Content-Length: 355
+  
+  XYZ33256
+
+
+.. _MN_crud.update:
+
+``PUT /object/<guid>``
+......................
+
+Implemented by the methods:
+
+- :func:`MN_crud.update`
+
+Returns :class:`Types.Identifier`
+
+
+.. _MN_crud.delete:
+
+``DELETE /object/<guid>``
+.........................
+
+Implemented by the methods:
+
+- :func:`MN_crud.delete`
+
+Returns :class:`Types.Identifier`

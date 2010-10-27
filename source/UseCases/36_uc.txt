@@ -1,0 +1,100 @@
+Use Case 36 - Resolve an Object Location
+----------------------------------------
+
+Author
+  Paul Allen
+
+Date
+  - 20091204 Created.
+
+Version 
+  Draft
+
+Goal
+  Communicate the locations where a DataONE object can be found
+
+Summary 
+
+  Within DataONE, a registered object may be held on one or more Member Nodes
+  (depending on replication policy) and in the case of science metadata, on
+  Coordinating Nodes. Clients must be able to ask a Coordinating Node for
+  those locations.
+
+  The response to this query is a list of member node identifiers and
+  the URL endpoint of their DataONE API implementation.
+
+  The client will need to retrieve information about the node from the node
+  registry (Use case 35) in order to accurately determine the URL that can be used to
+  retrieve the object bytes (Use case 01).
+
+Actors
+  - Coordinating Node
+  - Client requesting info
+
+Preconditions 
+  - Coordinating Nodes are operational
+  - Client has an identifier for an object
+  - Object exists in the DataONE system and has been recorded by the
+    Coordinating Nodes
+
+Triggers
+  - Request by client
+
+Post Conditions
+  - Client has more information about the location of the object.
+
+
+.. figure:: images/36_uc.png
+   :figwidth: 100%
+
+   Use case diagram for Use Case 36.
+
+----
+
+.. figure:: images/36_interaction.png
+   :figwidth: 100%
+
+   Sequence diagram for implementation of use case 36.
+
+
+..
+  @startuml images/36_uc.png
+  !include ../plantuml.conf
+  actor "User" as client
+  usecase "12. Authentication" as authen
+
+  package "DataONE"
+    actor "Coordinating Node" as CN
+    usecase "13. Authorization" as author
+    usecase "36. Resolve Object" as resolve
+    client -- resolve
+    CN -- resolve
+    resolve ..> author: <<includes>>
+    resolve ..> authen: <<includes>>
+  @enduml
+
+
+  @startuml images/36_interaction.png
+  !include ../plantuml.conf
+  participant "Client" as itk <<Investigator Toolkit>>
+  participant "CRUD API" as c_crud << Coordinating Node >>
+  participant "Authorization API" as c_authorize << Coordinating Node >>
+  participant "Object Store" as c_store << Coordinating Node >>
+  itk -> c_crud: resolve(token, guid)
+  activate c_crud
+  c_crud -> c_authorize: isAuthorized(token, GUID, READ)
+  c_crud <- c_authorize: True, False, Err.NotFound
+  alt False
+    c_crud -> itk: Err.NotAuthorized
+  else Err.NotFound
+    c_crud -> itk: Err.NotFound
+  else OK
+    c_crud -> c_store: getSystemMetadata(guid)
+    c_store -> c_crud: SystemMetadata
+    c_crud -> c_crud: extract object locations
+    c_crud -> itk: objectLocations
+  end
+  deactivate c_crud
+  @enduml
+  
+

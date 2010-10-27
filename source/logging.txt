@@ -1,0 +1,260 @@
+Event Logging and Reporting
+===========================
+
+The DataONE system should log various interactions and operations in the
+system to provide operational status information about the entire system, to
+report on specific node operations, and to inform DataONE participants (users,
+contributors, administrators) about their specific domain of interest in the
+system. For example, a contributor might like to monitor use of their data and
+where it is being replicated to. The methods :func:MN.getLogRecords and
+:func:CN.getLogRecords provide the outward facing methods for retrieving log
+information from member and coordinating nodes respectively.
+
+Logging is described in use case 16, 17, 18, 20, and potentially 19.
+
+.. toctree::
+   :maxdepth: 1
+
+   LoggingSchema
+
+
+Use Cases to be Supported
+-------------------------
+
+- UC 16 specifies "all CRUD operations on metadata and data are logged at each
+  node"
+
+- UC 17 indicates that all CRUD operation logs should be aggregated at the CNs
+
+- UC 18 indicates that a MN can retrieve aggregated logs about content that
+  originated from that MN.
+
+- UC 20 indicates that a data owner (original contributor, delegated owner)
+  can retrieve aggregated logs about objects they own.
+
+- UC 19 indicates that anyone can retrieve general use information for any
+  object in DataONE.
+
+
+Performance Metrics to be Reported
+----------------------------------
+
+The performance metrics survey results from the Leadership Team specify (at
+least) the following metrics should be captured. Items that may be captured
+from the CI portion of the project are indicated by !!!.
+
+
+**Size and Diversity of DataONE Data, Metadata, and Investigator Toolkit
+Holdings**
+
+1. !!! Data volume – total size of data holdings in DataONE Member Nodes and
+   Coordinating Nodes
+  
+  Recorded in: 
+    - Total (including replicas) data volume + unique object data volume 
+    - Sysmeta
+  
+  
+
+2. !!! Number of metadata records – quantity of metadata records held at a
+   Coordinating Node (note: the concept of a record may vary across metadata
+   standards)
+
+   - science metadata only
+
+
+3. !!! Number of data sets held by Member Nodes – (note: may be less
+   meaningful as an absolute value because of the immense variability in data set
+   granularity, but probably still useful in tracking the shape of the data
+   accumulation curve)
+
+  - system metadata 
+
+
+4. !!! Number and types of software tools included in the Investigator Toolkit
+
+  - !!
+  - Mechanism to register external uses / implementations
+  - HTTP user-agent 
+
+
+5. !!! Number of different metadata schemas supported – (note: more metadata
+   schemas is not necessarily better)
+
+  - object format from sysmeta
+
+
+**DataONE System Capacity**
+
+6. !!! Number of Member Nodes
+
+  - registry
+
+7. !!! Total storage capacity at Member Nodes
+
+  - per member node
+  - total
+  - part of MN registration and capabilities
+
+8. !!! Geographic coverage of Member Nodes – continents, regions, and countries
+   covered
+   
+   - could potentially be part of capabilities (record physical location)
+
+9. !!! Number of Coordinating Nodes
+
+   - constant = 3
+   - general expansion over five years to all countries.
+
+10. !!! Total storage capacity at Coordinating Nodes
+
+  - disk space
+
+11. !!! Geographic coverage of Coordinating Nodes – continents, regions, and
+    countries covered
+
+  - capabilities  / metadata 
+
+**DataONE Usage Statistics**
+
+12. !!! (CN LOG) Number of web hits on DataONE portal
+
+   - standard web hits from logs
+   - aggregated across CNs
+
+13. !!! (CN LOG) Number of DataONE users – (note: recording of individual IP
+    addresses may be most readily implemented; requiring users to login to Member
+    Nodes is not presently required)
+    
+    - Any users of MNs = D1 user
+    - Eventually can use authn subsystem
+
+14. !!! (supporting web site logs) Number of downloads of tools from the
+    Investigator Toolkit  --> "Number of times tools are downloaded"
+    
+    - Log analysis
+    - Text needs to be clarified. ITK isn't a place
+    - supporting information (videos, documents, ...)
+
+15. !!! (CN LOG) Number of metadata catalog searches completed – (note: over
+    time it may also be desirable to assess precision and recall of incoming
+    searches)
+    
+    - part of the Mercury log (in mysql)
+    
+
+16. !!! (MN, CN LOG) Number of DataONE datasets downloaded (daily, weekly,
+    monthly, annually) – (note: this may be straightforward if included in
+    specifications for Member Node data, impossible otherwise)
+    
+    - Member node access logs - need to be aggregated
+    - What was pulled through D1.get() vs the native mechanisms of the MN
+    - 
+
+17. !!! (MN, CN LOG) Most frequently downloaded datasets
+
+
+  - Same as 16
+
+
+**Reliability and System Performance**
+
+18. !!! (CN heartbeat logs) Uptime (availability) of Coordinating Nodes 
+
+   - Need a monitoring service in addition to the CN service
+   - also need to consider geographic accessibility (users)
+
+19. !!! (MN heartbeat logs) Uptime (availability) of Member Nodes – (note:
+    tracked if heartbeat is fully implemented)
+
+   - Same as 18
+
+20. !!! Server response time
+
+   - REST service performance
+   - Define a bunch of test queries that can be executed in parallel for load testing.
+
+
+21. !!! Response time of user interface
+
+  - Time for "page load" vs. number of concurrent users
+  
+  - Time for specific operations (test queries, test renderings, ...)
+
+
+
+**Community Engagement**
+
+22. Baseline assessment of scientists completed
+
+23. Number of repeat assessments of scientists completed
+
+24. Baseline assessment of other stakeholders completed
+
+25. Number of repeat assessments of other stakeholders completed
+
+26. Number of DataONE Partnership Agreements established
+
+
+**Education and Outreach**
+
+27. Number of education modules developed and/or accessible through DataONE
+
+28. Number of times education modules are downloaded
+
+29. Number of best practices guides developed and/or accessible through DataONE
+
+30. Number of times best practices guides are downloaded
+
+31. Number of training sessions or workshops offered (e.g., at meetings)
+
+32. Number of workshop participants
+
+33. Number of people in DataONE International Users Group
+
+
+**Sustainability**
+
+34. Amount of revenue (including in-kind support) generated annually to
+    support DataONE
+
+35. Diversity of revenue streams – e.g., government, private foundations,
+    commercial for-profit sector, etc.
+
+36. Number of projects and partners collaborating with DataONE or leveraging
+    DataONE infrastructure
+
+
+Union of Use Cases and Metrics
+------------------------------
+
+The following bullets represent the union of logging information indicated in
+the use cases and the metrics that can be reported from the logs. The
+information logged and suitable summarization and extraction procedures need
+to be identified to ensure the following items can be addressed:
+
+- all CRUD operations on metadata and data are logged at each node
+
+- all CRUD operation logs should be aggregated at the CNs
+
+- an MN can retrieve aggregated logs about content that originated from that
+  MN.
+
+- A data owner (original contributor, delegated owner) can retrieve aggregated
+  logs about objects they own.
+
+- Anyone can retrieve general use information for any object in DataONE.
+
+- (metric) Number of web hits on DataONE portal
+
+- (metric) Number of DataONE users
+
+- (metric) Number of downloads of tools from the Investigator Toolkit (From
+  the download site logs)
+
+- (metric) Number of metadata catalog searches completed
+
+- (metric) Number of DataONE datasets downloaded (daily, weekly, monthly,
+  annually)
+
+- (metric) Most frequently downloaded datasets

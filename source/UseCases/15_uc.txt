@@ -1,0 +1,95 @@
+Use Case 15 - Account Management
+--------------------------------
+
+Author
+  VDC TWG
+
+Date
+  - 20090925 Adding to use case description and documentation
+  - 20090114 (TWG meeting).  Subsequent various modifications.
+
+Version 
+  Draft
+
+Goal
+
+  Edit a user account.  This includes creating, deleting, editing.
+
+  User Account Management - Create new user account on Identity Provider (also
+  edit, delete, ...).
+
+Summary 
+
+  Perform basic account management operations. This process can be quite
+  complex depending on the identity provider in use and the security policies
+  that need to be addressed.
+
+  The use case and interaction presented here assumes a simplistic operation
+  that relies only upon email verification for the new account creation. A
+  more sophisticated interaction might include administrative approval of the
+  new account, selection of an identity provider to use, and assignment of
+  roles based on the level of approval and the nature of the selected identity
+  provider (i.e. trustworthiness of identity provider).
+
+
+Actors
+
+  - New User
+
+  - Administrator
+
+  - Identity provider
+
+  - Coordinating Node
+
+
+Preconditions 
+
+  - System is operational and policy is in place to accept new users.
+
+Triggers
+
+  - A new user account is requested.
+
+Post Conditions
+
+  - New account is created (if accepted)
+
+  - Access control rules for new account are specified
+
+  - Account information is replicated across CNs
+
+
+**Notes**
+
+- By default, accounts have no real privileges. To get higher privileges,
+  users may have to jump through more hoops (such as verifying their
+  association with a project/institution)
+
+- Presumably, if we are using external identity providers this user account
+  management functionality isn't provided by the CN. Right? (PEA)
+
+
+
+.. figure:: images/15_interaction.png
+   :width: 100%
+
+   Interactions for use case 15.
+
+..
+  @startuml images/15_interaction.png
+  !include ../plantuml.conf
+
+  actor User
+  participant "Client" as app_client << Application >>
+  User -> app_client
+  participant "Authentication API" as c_authenticate << Coordinating Node >>
+  app_client -> c_authenticate: newAccount (user, pw)
+  app_client <-- c_authenticate: token or failure
+  User <-- c_authenticate: email confirmation
+  @enduml
+
+
+.. raw:: latex
+
+   \newpage

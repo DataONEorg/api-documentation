@@ -1,0 +1,61 @@
+Use Case 25 - Detect Damaged Content
+------------------------------------
+
+Author
+  VDC TWG
+
+Date
+  - 20090925 Adding to use case description and documentation
+  - 20090114 (TWG meeting).  Subsequent various modifications.
+
+Version 
+  Draft
+
+Goal
+  System should scans for damaged/defaced data and metadata using some
+  validation process.
+
+Summary 
+
+  xxx
+
+Actors
+  xxx
+
+Preconditions 
+  xxx
+  
+Triggers
+  xxx
+ 
+Post Conditions
+  xxx
+
+**Notes**
+
+xxx
+
+
+.. figure:: images/25_interaction.png
+   :width: 100%
+
+   Interactions for use case 25.
+
+..
+  @startuml images/25_interaction.png
+  title Interactions: 25 - System validates metadata and data
+
+  participant "CRUD API" as m_crud_a << Member Node A >>
+  participant "Synchronization API" as c_sync << Coordinating Node >>
+  c_sync -> m_crud_a: getChecksum (GUID)
+  c_sync <-- m_crud_a: checksum
+  participant "CRUD API" as m_crud_b << Member Node B >>
+  c_sync -> m_crud_b: getChecksum (GUID)
+  c_sync <-- m_crud_b: checksum
+  @enduml
+
+
+
+.. raw:: latex
+
+   \newpage

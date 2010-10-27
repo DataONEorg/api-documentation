@@ -1,0 +1,140 @@
+Acknowledgements
+================
+
+This design specification for the DataONE infrastructure has been developed
+through support of the National Science Foundation through the projects:
+
+- NSF DBI `0753138`_, "INTEROP: Creation of an International Virtual Data
+  Center for the Biodiversity, Ecological and Environmental Sciences"
+
+- NSF OCI `0830944`_, "DataNet Full Proposal: DataNetONE (Observation Network
+  For Earth)"
+
+
+
+About These Documents
+=====================
+
+These documents are generated using the excellent open source tools Sphinx_
+for the overall document processing and generation, and PlantUML_ for the
+various UML diagrams.
+
+
+Editing Content
+---------------
+
+All of these documents are formatted using reStructuredText_, which is simply
+well formatted plain text. In many respects it is similar to the plain text
+formatting used in wiki pages, though enriched by the many nice features of
+the Sphinx_ document builder.
+
+Formatting guidelines for Sphinx are available at
+http://sphinx.pocoo.org/contents.html
+
+Portions of content, specifically all the individual function and exception
+descriptions are maintained in an Excel spreadsheet (best edited using
+OpenOffice Calc) since there are many cross references between that content,
+having it generated from the spreadsheet simplifies maintenance.
+
+In general, it is best to edit in UTF-8 using UNIX® style new lines. Note that
+white space is significant and is used primarily for determining which
+formatting sections different blocks of text belong to.
+
+.. warning:: 
+
+  In these documents, indentation is used for grouping text so that Sphinx_
+  can format it correctly. Because of this, it is important to use a
+  consistent means of indenting the text. We have chosen to use two spaces for
+  each level of indentation. Accordingly, please do not use tabs when editing
+  these documents as tabs may cause Sphinx_ to format the text incorrectly.
+  You may find it easiest to correctly edit these documents by setting your
+  editor to replace one tab with two spaces.
+
+reStructuredText_ can be edited with any plain text editor. These documents
+have been edited mainly with TextMate_ on OS X, which offers a preview feature
+when the `reStructuredText bundle`_ is installed. Other editors that work well
+for editing reStructuredText_ are jEdit and Komodo Edit. There are also
+various plugins available for editors to assist with reStructuredText
+formatting.
+
+Follow the normal procedures for working with the subversion repository. After
+checking in, your edits should appear in the `built out version`_ of the docs
+within five minutes.
+
+The convention for different levels of heading used in these documents is::
+
+  ===  Level 1
+  ---  Level 2
+  ~~~  Level 3
+  ...  Level 4
+
+
+Building the Documentation
+--------------------------
+
+Sphinx_ and PlantUML_ are required to build the design documents from the
+source. Both of these have a dependency on Graphviz_ for diagram generation.
+
+Graphviz is available pre-built for many flavors of linux, windows, OS X, and
+can be installed on pretty much anything else that runs a c compiler. To
+install on Ubuntu::
+
+  $ sudo apt-get install graphviz
+
+Sphinx can be installed on any system with Python using setuptools_ ::
+
+  sudo easy_install -U Sphinx
+
+Installing PlantUML is simply a matter of downloading the plantuml.jar file
+from the PlantUML_ site and putting it somewhere it can be executed. An
+example script for running PlantUML is::
+
+  #!/bin/sh
+  CONFIG=/Users/vieglais/Projects/DataONE/svn/software/tools/trunk/docutils/plantuml.conf
+  java -jar ~/bin/plantuml.jar -config $CONFIG $1 $2 $3 $4 $5
+
+The plantuml.conf file is in the DataONE subversion source tree.
+
+xlrd and xlwt, Python libraries for reading and writing Microsoft Excel
+documents, are required for generating part of the content. To install on
+Ubuntu::
+
+  $ sudo easy_install xlrd xlwt
+
+To build a HTML copy of the documents::
+
+  $ cd ~/Projects/DataONE/svn/documents/Projects/VDC/docs/service-api/api-documentation
+  $ plantuml source source/UseCases
+  $ make generate
+  $ make html
+
+To build a PDF copy, you will need to install latex and its dependencies. Then run::
+
+  $ make generate
+  $ make latex; cd build/latex; make all-pdf
+
+
+.. _Graphviz: http://www.graphviz.org/
+
+.. _Sphinx: http://sphinx.pocoo.org/
+
+.. _PlantUML: http://plantuml.sourceforge.net
+
+.. _xlrd: http://pypi.python.org/pypi/xlrd
+
+.. _setuptools: http://pypi.python.org/pypi/setuptools
+
+.. _built out version: http://129.24.0.15/ArchitectureDocs/
+
+.. _TextMate: http://macromates.com/
+
+.. _reStructuredText bundle: http://svn.textmate.org/trunk/Bundles/reStructuredText.tmbundle/
+
+.. _jEdit: http://www.jedit.org/
+
+.. _reStructuredText: http://docutils.sourceforge.net/docs/user/rst/quickref.html
+
+.. _0753138: http://nsf.gov/awardsearch/showAward.do?AwardNumber=0753138
+
+.. _0830944: http://nsf.gov/awardsearch/showAward.do?AwardNumber=0830944
+

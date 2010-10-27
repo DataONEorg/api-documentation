@@ -1,0 +1,361 @@
+Globally Unique Identifiers in DataONE
+======================================
+
+Globally Unique Identifiers (GUIDs) are utilized by many data providers to
+provide pointers to content. These identifiers can take many different forms
+from auto generated, essentially random character strings, to more well
+defined strings such as the URIs utilized by LSIDs and DOIs. The former
+typically require some external, well known system to locate the object
+referenced by the identifier. The later typically utilize some well known
+protocol that in a manner similar to HTTP URLs, a client application (i.e. an
+application that supports the protocol of the particular identifier scheme) is
+able to retrieve the object (and typically some metadata about the object)
+that the identifier refers to.
+
+The entire set of potential Member Nodes is likely to utilize a wide range of
+identifier schemes, and it is unlikely that a given Member Node will
+change the identifier scheme they are utilizing. Hence, DataONE can not resort
+to reliance or promotion of any one scheme without risking the exclusion of
+participants. As such, DataONE must be identifier agnostic.  
+
+DataONE will replicate data and associated metadata across many Member Nodes,
+and it is likely that not all MNs will support the same identifier scheme.
+This leads to the situation where in order to replicate content across MNs,
+there will need to be some sort of mapping between identifiers utilized by the
+different systems.
+
+Suggested Strategy
+------------------
+
+1. 
+   DataONE supports all identifier schemes where the ID can be represented as
+   a Unicode string (this should be any identifier).
+
+2. 
+   The original identifier first assigned by a Member Node is the identifier
+   promoted as the authoritative identifier for that content. Other
+   identifiers that may be assigned by MNs that don't support the original
+   scheme will be mapped to the original.
+
+3.
+   If the original MN discontinues participation in DataONE, then the
+   identifier originally used remains as the authoritative identifier.
+
+4. 
+   Any identifiers in use by the DataONE system can be resolved at any node
+   (CN or MN). A caching system (e.g. memcached) should be used to improve
+   resolution performance (can be primed with existing IDs).
+
+This strategy will enable the use of any identifier that is represented by a
+string, and will persist the original identifier for the object regardless of
+what happens to the originating Member Node.
+
+An obvious concern with this strategy is that a single object may have
+multiple identifiers associated with it. Since the original identifier is
+persisted, however, it will be the primary identifier by which that content
+will be referenced, regardless of which node the object is located on.
+
+
+.. figure:: images/guid_resolve.png 
+   :figwidth: 100%
+
+   Resolving a GUID. In this scenario a user is trying to determine what the
+   ID "A5548D" refers to, and uses the resolution service of a Member Node to
+   that effect.
+
+..
+  @startuml images/guid_resolve.png
+  !include plantuml.conf  
+  title Resolve GUID
+  actor User
+  participant "CRUD API" as m_crud << Member Node >>
+  participant "Cache" as m_cache << Member Node >>
+  participant "CRUD API" as cn_crud << Coordinating Node >>
+  participant "Directory" as cn_dir << Coordinating Node >>
+  User -> m_crud: resolve(token, "A5548D")
+  m_crud -> m_cache: cache_lookup("A5548D")
+  m_cache --> m_crud: FAIL
+  m_crud -> cn_crud: resolve(token, "A5548D")
+  cn_crud -> cn_dir: lookup("A5548D")
+  cn_dir --> cn_crud: metadata
+  cn_crud --> m_crud: metadata
+  m_crud --> m_cache: addEntry("A5548D", metadata)
+  m_crud --> User: metadata
+  @enduml
+
+.. raw:: latex
+
+   \begin{landscape}
+
+
+.. figure:: UseCases/images/01_interaction.png
+   :figwidth: 100%
+
+   General sequence of retrieving an object identified by some GUID (Use Case
+   01).
+
+
+.. figure:: images/guid_resolve_detail.png 
+   :figwidth: 100%
+
+   Detail for object retrieval of an object identified by a GUID. In this
+   case, the User is requesting a data object from MN 1, though the data is
+   actually located on MN 2.
+
+..
+  @startuml images/guid_resolve_detail.png
+  !include plantuml.conf  
+  title Resolve GUID Detail
+  actor User
+  participant "CRUD API" as m_crud << Member Node >>
+  participant "Cache" as m_cache << Member Node >>
+  participant "CRUD API" as cn_crud << Coordinating Node >>
+  participant "Directory" as cn_dir << Coordinating Node >>
+  participant "CRUD API" as m_crud2 << Member Node 2 >>
+  User -> m_crud: get(token, "A5548D")
+  m_crud -> m_cache: lookup("A5548D")
+  note right
+    Local resolve failed, defer to CN
+  endnote
+  m_cache --> m_crud: FAIL
+  m_crud -> cn_crud: resolve(token, "A5548D")
+  cn_crud -> cn_dir: lookup("A5548D")
+  cn_dir --> cn_crud: metadata
+  cn_crud --> m_crud: metadata
+  m_crud --> m_cache: addEntry(GUID, metadata)
+  m_crud -> m_crud: parseMetadata(metadata)
+  note right
+    Found data URL = http://mn2.dataone.org/objects/A4448D
+  endnote
+  m_crud --> User: HTTP 302: http://mn2.dataone.org/objects/A4448D
+  note right
+    Return a redirect to the MN 2 get object 
+    interface for the specified object.
+  endnote
+  User -> m_crud2: GET "http://mn2.dataone.org/objects/A4448D"
+  m_crud2 --> User: bytes
+  @enduml
+  
+
+.. raw:: latex
+
+   \end{landscape}
+
+
+.. figure:: images/guid_a.png
+   :figwidth: 60%
+
+   A scenario where two MNs happen to add different content to the system with
+   the same identifier. Resolving the identifier without including the
+   namespace results in two matches that must be interpreted by the client.
+   The likelihood of such a scenario should be low, given that MNs should be
+   utilizing identifier schemes that under ideal circumstances should not
+   generate duplicate identifiers.
+
+
+..
+  @startuml images/guid_a.png
+  !include plantuml.conf  
+  title Conflicting IDs
+  participant "MN_A" as mn_a
+  participant "MN_B" as mn_b
+  participant "CN" as cn
+  participant "CN OStore" as cn_os
+  
+  mn_a -> cn: registerID("435")
+  cn -> cn_os: store("mn_a:435")
+  cn_os <-- cn: ACK
+  mn_a <-- cn: ACK
+
+  mn_b -> cn: registerID("435")
+  cn -> cn_os: store("mn_b:435")
+  cn_os <-- cn: ACK
+  mn_b <-- cn: ACK
+  
+  actor user
+  user -> cn: resolve("435")
+  user <-- cn: "mn_a:435", "mn_b:435"
+  @enduml
+
+
+
+Notes from the 20090602 Albuquerque Meeting
+-------------------------------------------
+
+These lightly edited notes were taken by Bruce Wilson of the group discussion
+about identifiers during the VDC-TWG 20090602 Albuquerque Meeting.
+
+Original notes are located in subversion at:
+
+/documents/Projects/VDC/docs/20090602_04_ABQ_Meeting
+
+
+Design Goals
+~~~~~~~~~~~~
+
+From the DataONE perspective, an identifier is opaque. DataONE does not attach
+any meaning or resolution protocol based on the identifier.
+
+A call to return the object associated with a particular identifier should
+always return either identically the same object or n/a if that object is no
+longer available. This raises a number of implementation issues, noted below.
+Particular issues include how to handle data which is regularly updated and
+things like status changes.
+
+A Member Node may use its own internal identification scheme, but must be able
+to retrieve an object based on its DataONE globally unique identifier.
+
+Member Nodes may generate their own unique identifiers, such as DOIs_,
+Handles_, PURLs_, or UUIDs_. The only requirement is that the identifier is
+unique across the space of DataONE. This implies that CN's must have
+functionality to:
+
+.. _DOIs: http://www.doi.org/
+.. _Handles: http://www.handle.net/
+.. _PURLs: http://purl.org/docs/index.html
+.. _UUIDs: http://en.wikipedia.org/wiki/UUID
+
+
+(a) check that an identifier is unique and 
+
+(b) to "reserve" or stub-out an identifier while the MN goes through the
+    process of assembling the package to submit the object into DataONE.
+
+When an object is replicated from one MN to another MN, the receiving MN must
+be able to accept and resolve the supplied DataONE identifier. That is, an
+object, no matter where it is within the DataONE network must be retrievable
+by its DataONE identifier, regardless of location. There was a lot of
+discussion on this point, and this is my interpretation of the conclusion. I
+believe we came out with the point that if a receiving Member Node assigns its
+own permanent identifier, then that creates more confusion, requires the MN to
+register that second ID with the CNs, and we can have confusion regarding the
+citation (for example) of the piece of data. It also makes tracking things
+like metrics, since the originating MN must then find out all other
+identifiers for the data and search for all of those. And while it can be
+argued that nobody "owns" the data, there is (currently) a culture and need
+for the original archive to feel like it still can receive credit for that
+investment.
+
+A system doesn't need to maintain every version, but it does need to be able
+to identify every version.
+
+Identifiers also apply to metadata as well as data.
+
+
+Questions for Further Consideration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If a MN uses a DOI for a data set identifier, is it appropriate to include
+doi: in the identifier. For example, 10.3334/ORNLDAAC/840 is the DOI for a
+particular data set at the ORNL DAAC. Both "doi:10.3334/ORNLDAAC/840" and
+"10.3334/ORNLDAAC/840" can be presumed to be unique identifiers. Which should
+be used? 
+
+BEW: My personal preference is to use the one with the resolution
+protocol included. That does, however, make the identifier more of a "smart"
+identifier, which is generally problematic.
+
+Where an identifier has a mechanism to resolve to multiple locations (such as
+is possible with an LSID and some DOI mechanisms) and that object is
+replicated from one MN to another MN, this would suggest that the originating
+MN needs to be notified of the additional location and has the option of
+registering the new location with the handle registration authority. This also
+means that if a replication is removed, the original MN should have the option
+of being notified, so that the resolution points are updated. Ideally, this
+should happen before the replica is removed (where possible), so that we
+eliminate (or at least minimize) the amount of time that an invalid resolution
+point is in someone else's system.
+
+Where an identifier (such as a Handle) has a URL resolution, what should that
+resolution be? ORNL DAAC DOI's resolve to a web page where a user (after
+logging in) can see and download the components of the data set. Our opinion
+is that the DOI resolving to a human interpretable description of the object
+is more important than a machine interpretable resolution point. Some thought
+and guidance on this point for the overall DataONE community of practice is
+desirable.
+
+Do we want/need a registry of name spaces? Where a MN uses a UUID (for
+example), there may not be a way to describe the name space for identifiers,
+unless the MN prefixes the UUID with some descriptor, which generally violates
+the general admonition about smart identifiers. It might, however, be helpful
+to have something like a set of regexps that describe the name space for a
+MN's identifiers, particularly if an automated way could be developed to look
+for potential collisions (non-null overlaps) between name spaces. BEW: My
+thought is that this is far from an initial feature, but the desirability of
+this as a possible future feature could have implications on the way we do
+things from the start.
+
+Can the metadata standards support multiple globally unique identifiers? For
+example, what happens in the case that a MN starts down the DOI path and then
+switches to LSID's because of economic costs, for example, and goes back and
+assigns an LSID to historical data sets. Those data sets now have both an LSID
+and a DOI. Where is this in the metadata? Is there a mechanism for indicating
+the preferred ID and the alternate ID's? Likewise, how should things be
+handled when a MN decides to register an object with e.g. GCMD and the
+namespace that GCMD allows for identifiers does not allow for the MN's
+preferred identifier. Can a MN update the metadata to show an alternate key
+with the GCMD identifier (data set is also known as)? What is the implication
+for the metadata identifier in such a case? This is an update operation to the
+metadata, which implies that the metadata identifier is changed. How would one
+update the old metadata record to indicate that it is:
+
+(a) deprecated and 
+
+(b) the id of the new metadata record?
+
+The above also relates to the issue of establishing predecessor-successor
+relationships between identifiers. How should this be done across the system?
+
+How do versions enter into the identifiers scheme? The general concept is that
+different versions of an object have different identifiers. What about having
+some type of an identifier that aggregates all versions of an object and which
+always points to the latest version of that object? How does D1 know that an
+object is a new version of an existing object? Update operation should take
+the old identifier and the new identifier. That would allow for the tracking
+of updates. A Member Node may track versions. Could create an interface
+specification for "latest version" where the CN calls the authoritative MN for
+the DS and asks for the identifier of the latest version of a particular
+identifier. Points back to the need for what amounts to meta-metadata - where
+the metadata object can be updated to indicate the status level of the data
+set (e.g. deprecated). Where is the identifier for something like World Ocean
+Data Base - this gets updated quarterly. They think of the fundamental unit as
+an observation point, which is either a location (e.g. buoy, possibly with
+different identifiers for different depths) or a leg of a trip, with multiple
+observations along a path.
+
+For identifiers, we may need to specify the character space. What happens when
+a MN stores unique identifiers in a database field that supports just ASCII,
+but a different MN does its unique identifiers in some other character set?
+PURL is a possible unique identifier, but we can get into cases now where URLs
+have characters from other language character sets (such as Arabic, Kanji, Ö)
+
+What happens when a request for a replicated version of a data set comes to
+the replicate MN and the data set has been updated and the originating MN has
+not supplied the information about the update (e.g. they did an insert for the
+new version)?
+
+How do we assign ID's for a continuous data stream or for a subset calculated
+on the fly? Does this mean that every request for a continuous data stream
+gets its own data set identifier, which then gets stored in the D1 system
+someplace? What is the value to the overall enterprise for storing the data
+set identifiers for each request, particularly in the context of something
+like a stream, where the on-the-fly processing is used to get a dynamic subset
+or dynamic reprojection? Examples of this sort of situation include the stream
+gauge data or the Atmospheric Radiation Measurement (ARM) archive. Ameriflux
+Flux tower data is a simpler case, in that they work on the basis of a
+site-year as a unit of data. The World Oceanic DataBase (WODB), however,
+operates on a location (and possibly depth) as a unit of data. Many of these
+are updated quarterly. Each unit of data has an identifier, unique within
+WODB, and WODB publishes a data stream that indicates what data packages were
+updated at what point in time. It is possible to determine whether a
+particular data package changed between two points in time. The differences
+are human interpretable, but it is not possible (in any generally automated
+fashion) to recreate the data stream for a particular data package at an
+arbitrary point in prior time.
+
+Do the CN's need a method to determine the object type for an identifier? Do
+identifiers need to be unique across all types of identified objects?
+
+.. raw:: pdf
+   
+   PageBreak

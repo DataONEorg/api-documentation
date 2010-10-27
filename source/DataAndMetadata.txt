@@ -1,0 +1,142 @@
+Cross Domain Indexing and Access for Data and Metadata
+======================================================
+
+:Status: Early Draft / notes
+
+
+Problem
+-------
+
+DataONE requires storage, search, and retrieval of information (data and
+metadata) from a wide variety of data services (e.g. Mercury, Metacat, and
+OpenDAP). All of these systems have different data service interfaces, support
+different metadata standards, and implement different query mechanism and
+syntaxes. Data must be replicated between service instances (Member Nodes, MN)
+and metadata must be replicated between all nodes (Coordinating Nodes, CN and
+Member Nodes) to ensure multiple copies exist to avoid data loss in the event of
+node failure and to improve access through geographic proximity.
+
+A few general approaches to the problem include: 
+
+- translate the metadata to and from the format/model used internally by a MN
+
+- treat the metadata document as an opaque object and just store it on the
+  MNs, the CNs provide indexing service that locate copies of the metadata
+  document
+
+- MNs must implement a very general purpose metadata format, but may
+  optionally make metadata available in more specific formats
+
+
+Translation Approach
+--------------------
+
+Translations between all metadata formats and the data service interfaces are
+implemented. In this scenario, metadata is translated to the native metadata
+format (or where multiple formats are supported, to the most appropriate form)
+supported by a MN and stored using the native API of the service. A common API
+provides the integration between all MNs, providing the basic operations
+necessary for managing and retrieving the content. Perhaps the most difficult
+component of this approach is the translation of metadata to the format
+supported internally by the service.
+
+Problems:
+
+- n x n bi-directional translations for metadata to be written, tested, and
+  maintained.
+
+- Metadata translation almost invariably leads to loss of information
+
+- ...
+
+Advantages:
+
+- No or minimal changes to existing services (translation functions required).
+
+- ...
+
+
+Indexing Approach
+-----------------
+
+Implement a common service API on all nodes that treats data and metadata as
+discrete units that can be read from and written to any node. The set of all
+nodes then becomes a large storage device. The CNs implement the processes
+which distribute content between all nodes (like a file system driver) to
+provide basic system level functionality. The actual metadata documents are
+opaque to the underlying storage system.
+
+Metadata is not searched directly but is indexed by extracting content that
+matches semantically equivalent search terms. A trivial example is the use of
+the Dublin Core terms to search across all types of metadata. In this case, a
+"dublin core metadata extractor" extracts term values from a metadata document
+and updates an index that supports DC fields with the values and the
+document GUID. Searches on the index return the document GUID, which is then
+retrieved using the MN API.
+
+Problems:
+
+- Can not treat data available through service interfaces as a discrete unit
+  (e.g. a MySQL service interface)
+
+- Need parsers for all metadata formats to extract specific content
+
+- New infrastructure (difficult to combine with existing services)
+
+- Search capabilities on highly structured metadata may be limited
+
+- ...
+
+Advantages:
+
+- No loss of information since there is no metadata translation, just
+  extraction
+
+- Format agnostic (system can store any type of discrete entity - basically
+  anything that can be represented as a file)
+
+- Search index can be highly tuned, multiple types of index can be implemented
+  (e.g. topical domains)
+
+- ...
+
+
+Content Model Approach
+----------------------
+
+Similar to the indexing approach, but in addition to the lowest common
+denominator format, objects may make more detailed metadata/data available by
+advertising that they exhibit specific content models. These content models
+may be dictated by central DataONE community, or may be agreed upon by a small
+group of Member Nodes.
+
+Problems:
+
+- A central registry of data/metadata formats must be maintained
+
+- Burden is on Member Nodes to make sure they adhere to published content
+  models
+
+Advantages:
+
+- No loss of information since there is no metadata translation, just
+  extraction
+
+- Format agnostic (system can store any type of discrete entity - basically
+  anything that can be represented as a file)
+
+- Search index can be highly tuned, multiple types of index can be implemented
+  (e.g. topical domains)
+
+- Will work even for Member Nodes that only understand
+  lowest-common-denominator formats, while nodes that understand more complex
+  data/metadata will benefit from more specific searching and data management
+
+- Multiple communities can be accommodated, even if they have overlapping
+  and/or inconsistent standards
+
+
+.. raw:: latex
+
+   \newpage
+

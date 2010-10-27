@@ -1,0 +1,76 @@
+Register API
+~~~~~~~~~~~~
+
+.. module:: CN_register
+   :synopsis: Register nodes and their capabilities, retrieve node list
+
+The register API methods are used to maintain a registry of nodes
+participating in the DataONE infrastructure.
+
+Note that the node registry is much the same as the Object collection with a
+restriction on the returned object formats to be Member Nodes or Coordinating
+Nodes. It may be prudent for the implementation of the registration API to
+leverage the existing functionality of the object collection rather than
+implementing a parallel data store. In this case, the "science metadata" could
+be a DC description of the node, and the "data" might be the detailed
+registration information including node capabilities, scheduling and so forth.
+
+
+.. include:: generated/generated_CN_register.txt
+
+
+----
+
+xxxx notes xxxx
+
+
+.. function:: addNodeCapabilities (nodeID, capabilities) -> boolean
+
+   Adds the supplied capabilities to the system metadata describing the Member Node.
+
+   :param nodeID: A GUID that identifies the Member Node.
+
+   :param capabilities: 
+     A capabilities document that describes the resources and supported
+     services of the Member Node.
+
+   :returns: True if the operation succeeds
+
+   :rtype: Boolean
+
+
+.. function:: register (token, capabilitiesURL) -> boolean
+
+   Used to register a new Member Node.
+
+   :param token: An authentication token with priviledges to rgister a new Member Node.
+
+   :param capabilitiesURL: The URL from which capabilities will be retrieved.
+
+   :raises exceptions.NotAuthorized: The supplied identity does not have
+     authority to register a node.
+
+   :raises Exceptions.NotFound: The supplied capabilitiesURL does not resolve
+     to a capabilities document
+
+   :rtype: Boolean
+
+   :returns: True if the registration operation succeeds
+
+
+
+.. function:: registerForNotification (token, dataOwnerID)
+
+
+
+.. function:: verifyCapabilities (nodeID, capabilities) -> boolean
+
+   Evaluates the supplied capabilities document. This may involve additional
+   interaction with the MN as various aspects are evaluated.
+
+
+.. todo:: 
+   The :func:`verifyCapabilities` will need to check functionality of the MN so
+   need to define a few service hooks for checking these properties.
+
+

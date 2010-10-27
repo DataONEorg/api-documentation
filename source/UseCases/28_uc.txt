@@ -1,0 +1,72 @@
+Use Case 28 - Derived Product Original Change Notification
+----------------------------------------------------------
+
+Author
+  VDC TWG
+
+Date
+  - 20090925 Adding to use case description and documentation
+  - 20090114 (TWG meeting).  Subsequent various modifications.
+
+Version 
+  Draft
+
+Goal
+  Relationships/Versioning - Derived products should be linked to source
+  objects so that notifications can be made to users of derived products when
+  source products change.
+
+Summary 
+
+  xxx
+
+Actors
+  xxx
+
+Preconditions 
+  xxx
+  
+Triggers
+  xxx
+ 
+Post Conditions
+  xxx
+
+**Notes**
+
+- Who can assert these relationships? The relevant object owners? Anybody?
+
+- How are relationships removed?
+
+
+.. figure:: images/28_interaction.png
+   :width: 100%
+
+   Interactions for use case 28.
+
+
+..
+  @startuml images/28_interaction.png
+  !include ../plantuml.conf
+  title Interactions: 28 - Versioning -- Derived products should be linked to source objects so\nthat notifications can be made to users of derived products when source products\nchange
+
+  actor User
+  participant "Client" as app_client << Application >>
+  User -> app_client
+  participant "Authentication API" as c_authenticate << Coordinating Node >>
+  app_client -> c_authenticate: login (user, pw)
+  app_client <-- c_authenticate: token or failure
+  participant "CRUD API" as c_crud << Coordinating Node >>
+  app_client -> c_crud: assertRelation (token, IDofSubject, relationship, IDofObject)
+  participant "Synchronization API" as c_sync << Coordinating Node >>
+  c_sync <-- c_crud: synchronize ()
+  c_crud <-- c_sync: ack or fail
+  app_client <-- c_crud: status
+  @enduml
+  
+
+.. raw:: latex
+
+   \newpage
+  
+  
