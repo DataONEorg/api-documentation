@@ -63,50 +63,77 @@ Classes, fields, and methods
     All of the classes and methods in R are inverted (ie, classes don't contain methods per se, instead, methods are specialized to work on particular classes, and the class is generally passed in as the first parameter of the method call.  So, all signatures below need to have an added parameter for this object to be passed in.
 
 * D1Client
-
    * Fields
-
        * endpoint
        * username
        * cli <D1Client>
        * token <AuthToken>
-
    * Constructors
-
-       * d1(CN_URI)
-
+       * D1Client(CN_URI)
    * Methods
-
-       * login(username, password): D1Client
+       * login(username, password): AuthToken
+       * logout()
        * getEndpoint(): String
        * getPackage(guid): DataPackage
-
-       * logout()
        * getUsername(): String
        * getToken(): AuthToken
        * search(): ResultSet
        * resolve(guid): [MemberNodeURI]
 
 * DataPackage
-
    * Fields
-
        * identifier
        * scimeta
        * sysmeta
-       * [dataList]
-
+       * [dataObject]
    * Constructors
-
-       * datapackage(identifier, scimeta, sysmeta)
-
+       * DataPackage(identifier, scimeta, sysmeta)
    * Methods
-
-       * addData(dataObject): DataPackage
-       * getDataCount(): int
-       * getData(index): dataframe
-
+       * addData(DataObject): DataPackage
+       * getDataObjectCount(): int
+       * getDataObject(index): DataObject
        * getTitle(): String
        * getCreator(): String
        * getDisplayURL(): String
+
+* DataObject
+   * Fields
+       * sysmeta
+       * databytes
+   * Constructors
+       * DataObject(Identifier, SystemMetadata, databytes)
+   * Methods
+   
+Algorithm for constructing Data Packages
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Constructing a data package involves taking a GUID as passed to the client, and
+using that GUID to query the system metadata to find all associated science
+metadata objects and other data objects.  If the GUID points at a scimeta
+object, it can be used to loop through all of the data objects it describes.
+If the GUID points at a data object, trace back to its scimeta object first,
+then populate the data package, and then loop over all associated data objects.
+In pseudocode:
+
+* mn = cn.resolve(ID)
+* sysmeta = getSystemMetadata(ID)
+* switch(sysmeta.getObjectFormat())
+    1. case: EML or FGDC or other metadata format
+        a. scimeta = mn.get(ID)
+        b. construct DataPackage dp with sysmeta and scimeta
+        c. for each objid in sysmeta.getDescribes()
+            * mn = cn.resolve(objid)
+            * objsysmeta = cn.getsysmetadata(objid)
+            * objdata = mn.get(objid)
+            * construct dobj = DataObject(objid, objsysmeta, objdata) 
+            * dp.addData(dobj)
+
+    2. case: all other objects considered data objects
+        a. scimetaid = sysmeta.getDescribedBy()
+        b. mn = cn.resolve(scimetaid)
+        c. scisysmeta = cn.getsystemmetadata(scimetaid)
+        d. scimeta = mn.get(scimetaid)
+        e. construct DataPackage dp with scisysmeta and scimeta
+        f. objdata = mn.get(objid)
+        g. construct dobj = DataObject(ID, sysmeta, objdata) 
+        h. follow step 1.3 above to get remainder of data objects in package
 
