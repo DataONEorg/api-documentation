@@ -1,54 +1,95 @@
-Globally Unique Identifiers in DataONE
-======================================
+Identifiers in DataONE
+======================
 
-Globally Unique Identifiers (GUIDs) are utilized by many data providers to
-provide pointers to content. These identifiers can take many different forms
-from auto generated, essentially random character strings, to more well
-defined strings such as the URIs utilized by LSIDs and DOIs. The former
-typically require some external, well known system to locate the object
-referenced by the identifier. The later typically utilize some well known
-protocol that in a manner similar to HTTP URLs, a client application (i.e. an
-application that supports the protocol of the particular identifier scheme) is
-able to retrieve the object (and typically some metadata about the object)
-that the identifier refers to.
+Identifiers are handles utilized by data providers as a mechanism to specifically identify the individual objects (documents, data sets, data records) they manage. Identifiers in use by the provider are unique at least within the scope of the data provider itself. In some cases the data provider will use a system that expands the scope of guaranteed uniqueness to a larger domain either through an `algorithmic approach <guid>`_ (where likelihood of duplication is statistically improbable) or through segmenting by namespaces, with values appearing within the namespace under the control of the identifier generator and namespace control enforced at a higher level to thus ensure uniqueness within the domain of interest.
 
-The entire set of potential Member Nodes is likely to utilize a wide range of
-identifier schemes, and it is unlikely that a given Member Node will
-change the identifier scheme they are utilizing. Hence, DataONE can not resort
-to reliance or promotion of any one scheme without risking the exclusion of
-participants. As such, DataONE must be identifier agnostic.  
+Uniqueness
+~~~~~~~~~~
 
-DataONE will replicate data and associated metadata across many Member Nodes,
-and it is likely that not all MNs will support the same identifier scheme.
-This leads to the situation where in order to replicate content across MNs,
-there will need to be some sort of mapping between identifiers utilized by the
-different systems.
+Uniqueness of identifiers in DataONE is largely under the control of the Member Nodes (i.e. the data providers), with the requirement that an existing identifier (i.e. one that is already registered in the dataONE system) can not be reused. This is enforced for new content by checking the uniqueness of a proposed identifier in the create() method, and for existing content by ignoring content with identifiers that are already in use. A mechanism is also available to reserve an identifier, so that a client may for example compose a composite object prior to committing the new content to storage on the Member Node.
+
+.. Note:: For many existing, large repositories, this approach of MN controlled identifiers is unlikely to be a problem. As many, perhaps smaller or less controlled Member Nodes come online, this approach of MN only controlled uniqueness is less likely to be reliable. A simple solution would be to provide each new MN with a suggested prefix for their new content. Such a prefix could be ignored by an MN during creation of identifiers with no harm other than reduced guarantee of uniqueness. Its use however, would help ensure uniqueness of new identifiers within the DataONE infrastructure. 
+
+Authority
+~~~~~~~~~
+
+DataONE treats the original identifier (i.e. the first assignment of the identifier to an object that becomes known to DataONE) as the authoritative identifier for an object. Although generally not encouraged, multiple identifiers may refer to a particular object and in such cases, DataONE will attempt to utilize the original identifier for all communications about the object.
+
+Opacity
+~~~~~~~
+
+Identifiers utilized by Member Nodes can take many different forms from automatically generated sequential or random character strings to strings that conform to schemes such as the LSID_ and DOI_ specifications. DataONE does not directly utilize implied functionality and services that might be available for some of the identifier schemes. This is not to say that mechanisms such as metadata retrieval for LSIDs is not used by any components of the DataONE infrastructure, but rather indicates that the DataONE infrastructure and services operate independently of such external services, with no functional dependency.
+
+Identifiers are treated as opaque strings in the DataONE system, with no meaning inferred from structure or pattern that may be present in identifiers. The rules for identifier construction in DataONE are minimal and intended to ensure practical utility of identifiers. There is a set of characters that  can not be used within an identifier string (non-printing characters), and the maximum number of characters that such a string may contain (400 characters). Leading and trailing which space is strongly discouraged (to enhance use of identifiers in printed media).
+
+.. Note:: It will be necessary to reserve at least one more character such as the quote (") character to enable clear representation of identifiers in printed media. For example, an identifier may be "something that can not be distinguished from the text body" without delimiters. Such an identifier could not be properly rendered in text if the quote character were part of the reserved character set. An alternative would be to escape such a reserved character, but this can reduce readability.
+
+
+Immutability
+~~~~~~~~~~~~
+
+Once assigned and registered in the DataONE infrastructure, an identifier will always refer to the same set of bytes in the case of data and metadata objects. Generation of other representations of the objects may be supported by services (e.g. an image may be transformed from TIFF to JPEG), but the identifier will always refer to the original form. 
+
+.. Note:: Delete and Update operations are supported through the CRUD APIs. We need to be very clear about what these operations actually do - can data and metadata actually be modified or deleted and retain the same identifier?
+
+
+Resolvability
+~~~~~~~~~~~~~
+
+A fundamental goal of DataONE is to ensure that any identifier utilized in the system is resolvable, that is, DataONE provides a method that will enable retrieval of the bytes associated with the object (the actual object bytes or metadata associated with the object). Resolution is handled by the Coordinating Nodes through the resolve() method of the CRUD API. A guarantee of resolvability is a fundamental function of the DataINE infrastructure upon which many other services may be constructed, both within DataONE and by third party systems.
+
+Granularity
+~~~~~~~~~~~
+
+Identifiers refer to objects in DataONE. Initially data and science metadata documents describing data have identifiers. The definition of "data" is somewhat arbitrary though, and a single data object may be a single record within some larger collection, or may refer to an entire set of records contained within some package.
+
+Opacity of identifiers currently (version 1.x) precludes the use of fragment identifiers in DataONE, since there is no reliable way to determine if a string suffix does indeed indicate a fragment or is actually part of the identifier string. Instead, it is more likely that selectors will be used along with some convention of representation. A selector is an operator that is able to extract some piece of content from an object referenced by an identifier. Selectors will necessarily be of varied form. For example, xpath may be enabled as a selector that can be applied against XML or well formed HTML documents, and similarly a feature expressed in `OGC WKT`_ may act as a selector against an spatial data set object.
+
+Serializing
+~~~~~~~~~~~
+
+When identifiers appear in text (human readable documents, printed or otherwise), it is recommended that identifiers that contain white space should be surrounded by the quote character ("). New line characters appearing in identifiers that span multiple lines should be ignored. Leading and trailing white space should be ignored.
+
+.. TODO:: This suggestion about serializing in text needs to be vetted and verified to be reasonable.
+
+Identifiers appearing in URLs or other representations that have reserved characters should be escaped according to the rules of the serialization format target. For example, the identifiers::
+
+  10.1000/182
+  urn:lsid:ubio.org:namebank:11815
+  http://example.com/data/mydata?row=24
+  ldap://ldap1.example.net:6666/o=University%20of%20Michigan, c=US??sub?(cn=Babs%20Jensen)
+
+would be serialized in DataONE get() URLs (or any other URL as per RFC3986_ encoding guidelines) as::
+
+  http://mn.example.com/mn/object/10.1000%2F182
+  http://mn.example.com/mn/object/urn:lsid:ubio.org:namebank:11815
+  http://mn.example.com/mn/object/http:%2F%2Fexample.com%2Fdata%2Fmydata%3Frow%3D24
+  http://mn.example.com/mn/object/ldap:%2F%2Fldap1.example.net:6666%2Fo%3DUniversity%2520of%2520Michigan%2C%20c%3DUS%3F%3Fsub%3F%28cn%3DBabs%2520Jensen%29
+
+
+.. _guid: http://en.wikipedia.org/wiki/Globally_unique_identifier#Algorithm
+
+.. _LSID: http://lsids.sourceforge.net/
+
+.. _DOI: http://www.doi.org/
+
+.. _OGC WKT: http://en.wikipedia.org/wiki/Well-known_text
+
+.. _RFC3986: http://tools.ietf.org/html/rfc3986
+
 
 Suggested Strategy
 ------------------
 
-1. 
-   DataONE supports all identifier schemes where the ID can be represented as
-   a Unicode string (this should be any identifier).
+1. DataONE supports all identifier schemes where the ID can be represented as   a Unicode string (this should be any identifier).
 
-2. 
-   The original identifier first assigned by a Member Node is the identifier
-   promoted as the authoritative identifier for that content. Other
-   identifiers that may be assigned by MNs that don't support the original
-   scheme will be mapped to the original.
+2. The original identifier first assigned by a Member Node is the identifier   promoted as the authoritative identifier for that content. Other  identifiers that may be assigned by MNs that don't support the original scheme will be mapped to the original.
 
-3.
-   If the original MN discontinues participation in DataONE, then the
-   identifier originally used remains as the authoritative identifier.
+3. If the original MN discontinues participation in DataONE, then the   identifier originally used remains as the authoritative identifier.
 
-4. 
-   Any identifiers in use by the DataONE system can be resolved at any node
-   (CN or MN). A caching system (e.g. memcached) should be used to improve
-   resolution performance (can be primed with existing IDs).
+4. Any identifiers in use by the DataONE system can be resolved at any node   (CN or MN). A caching system (e.g. memcached) should be used to improve   resolution performance (can be primed with existing IDs).
 
-This strategy will enable the use of any identifier that is represented by a
-string, and will persist the original identifier for the object regardless of
-what happens to the originating Member Node.
+This strategy will enable the use of any identifier that is represented by a string, and will persist the original identifier for the object regardless of what happens to the originating Member Node.
 
 An obvious concern with this strategy is that a single object may have
 multiple identifiers associated with it. Since the original identifier is
