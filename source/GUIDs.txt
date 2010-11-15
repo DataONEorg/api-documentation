@@ -52,19 +52,173 @@ When identifiers appear in text (human readable documents, printed or otherwise)
 
 .. TODO:: This suggestion about serializing in text needs to be vetted and verified to be reasonable.
 
-Identifiers appearing in URLs or other representations that have reserved characters should be escaped according to the rules of the serialization format target. For example, the identifiers::
+Identifiers appearing in URLs or other representations that have reserved characters should be escaped according to the rules of the targetted serialization format. For example, the identifiers::
 
   10.1000/182
   urn:lsid:ubio.org:namebank:11815
   http://example.com/data/mydata?row=24
   ldap://ldap1.example.net:6666/o=University%20of%20Michigan, c=US??sub?(cn=Babs%20Jensen)
+  ฉันกินกระจกได้
+  Is féidir liom ithe gloine
 
 would be serialized in DataONE get() URLs (or any other URL as per RFC3986_ encoding guidelines) as::
 
   http://mn.example.com/mn/object/10.1000%2F182
   http://mn.example.com/mn/object/urn:lsid:ubio.org:namebank:11815
   http://mn.example.com/mn/object/http:%2F%2Fexample.com%2Fdata%2Fmydata%3Frow%3D24
-  http://mn.example.com/mn/object/ldap:%2F%2Fldap1.example.net:6666%2Fo%3DUniversity%2520of%2520Michigan%2C%20c%3DUS%3F%3Fsub%3F%28cn%3DBabs%2520Jensen%29
+    http://mn.example.com/mn/object/ldap:%2F%2Fldap1.example.net:6666%2Fo%3DUniversity%2520of%2520Michigan%2C%20c%3DUS%3F%3Fsub%3F%28cn%3DBabs%2520Jensen%29
+    http://mn.example.com/mn/object/%E0%B8%89%E0%B8%B1%E0%B8%99%E0%B8%81%E0%B8%B4%E0%B8%99%E0%B8%81%E0%B8%A3%E0%B8%B0%E0%B8%88%E0%B8%81%E0%B9%84%E0%B8%94%E0%B9%89
+  http://mn.example.com/mn/object/Is%20f%C3%A9idir%20liom%20ithe%20gloine
+  
+
+The necessary encoding of URLs can be achieved through standard libraries available in many languages, with the caveat that the encoding follows the RFC3986_ path encoding rules, a subset up of the URI encoding rules the essential difference being that the ":" or colon character does not need to be encoded when it appears in the path past the root element of the path. The following examples in Python and Java illustrate percent encoding of data 
+such as an identifier appropriate for appending to a URL. Each processes
+utf-8 encoded input through ``stdin`` and outputs percent encoded or decoded
+responses.
+
+.. code-block:: python
+
+  import sys
+  import codecs
+  import urllib
+
+  def pctEncode(data):
+    '''Encode the unicode string data as utf-8 then percent encode that
+    ready for appending as a path element to a URL.
+    '''
+    response = urllib.quote_plus(data.encode("utf-8"), safe=":")
+    response = response.replace("+","%20")
+    return response
+
+
+  def pctDecode(data):
+    '''Decode a percent encoded string and return the unicode object.
+    '''
+    response = urllib.unquote(data)
+    return response
+
+
+  if __name__ == "__main__":
+    '''
+    Read utf-8 encoded input from stdin and percent encode or 
+    decode (with command line argument -d). 
+
+    e.g. given test_ids.txt, a UTF-8 encoded file with identifiers 
+    appearing one per line:
+      cat test_ids.txt | python PctEncode.py | python PctEncode.py -d
+
+    should output equivalent to:
+      cat test_ids.txt
+    '''
+    doEncode = True
+    try:
+      if sys.argv[1] == "-d":
+        doEncode = False
+    except:
+      pass
+    id = unicode(sys.stdin.readline(), "utf-8").strip()
+    while len(id) > 0:
+      if doEncode:
+        print pctEncode(id)
+      else:
+        print pctDecode(id)
+      id = unicode(sys.stdin.readline(), "utf-8").strip()
+  
+
+.. code-block:: java
+
+  import java.io.*;
+  import java.net.*;
+
+  class PctEncode 
+  {
+    /**
+    Simple example of URL path encoding of UTF-8 strings for including as
+    path elements in URLs as per RFC3986.
+
+    e.g. given test_ids.txt, a UTF-8 encoded file with identifiers 
+    appearing one per line:
+      cat test_ids.txt | java PctEncode | java PctEncode -d
+
+    should output equivalent to:
+      cat test_ids.txt
+    */
+
+    public static String pctDecode(String data) {
+      /**
+      Decode a percent encoded string, returning a Java Unicode string
+      */
+      String response = null;
+      try {
+        response = URLDecoder.decode( data, "UTF-8");
+      } catch (java.io.UnsupportedEncodingException e) {
+        System.out.println("Error pctDecode : " + e.getMessage());
+      } 
+      return response;
+    }
+
+
+    public static String pctEncode(String data) {
+      /**
+      Encode a Java string according to the path encoding rules in 
+      RFC3986. Note that this does not encode properly for data that 
+      is to be the root of the path, it is assumed that the data will 
+      be appended to the end of a a URL path.
+      */
+      String response = null;
+      try {
+        response = URLEncoder.encode( data, "UTF-8" );
+        response = response.replace("%3A",":").replace("+","%20");
+      } catch (java.io.UnsupportedEncodingException e) {
+        System.out.println("Error  pctEncode: " + e.getMessage());
+      } 
+      return response;
+    }
+
+
+    public static void main( String[] args ) {
+      try {
+        boolean doEncode = true;
+        try {
+          if (args[0].equals( "-d" ))
+            doEncode = false;
+        } catch(ArrayIndexOutOfBoundsException e) {
+        }
+
+        PrintStream outs = new PrintStream( System.out, true, "UTF-8" );
+        InputStreamReader isr = new InputStreamReader( System.in, "UTF-8" );
+        BufferedReader reader = new BufferedReader( isr );
+        String id = null;
+        String data = null;
+        while ( (id = reader.readLine()) != null ) {
+          if (doEncode) {
+            data = pctEncode( id );
+          } else {
+            data = pctDecode( id );
+          }
+          outs.println( data );
+        }
+      } catch(java.io.IOException e) {
+        System.out.println("Error main: " + e.getMessage());
+      }
+    }
+  }
+
+
+Given this code and a utf-8 encoded source file test_ids.txt such as::
+
+  ö
+  10.1000/182
+  urn:lsid:ubio.org:namebank:11815
+  http://example.com/data/mydata?row=24
+  ldap://ldap1.example.net:6666/o=University%20of%20Michigan, c=US??sub?(cn=Babs%20Jensen)",
+  ฉันกินกระจกได้
+  Is féidir liom ithe gloine
+
+The following commands should output the same as ``cat test_ids.txt``::
+
+  cat test_ids.txt | java PctEncode | python PctEncode.py -d
+  cat test_ids.txt | python PctEncode.py | java PctEncode -d
 
 
 .. _guid: http://en.wikipedia.org/wiki/Globally_unique_identifier#Algorithm
