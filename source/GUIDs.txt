@@ -61,7 +61,7 @@ Identifiers appearing in URLs or other representations that have reserved charac
   ฉันกินกระจกได้
   Is féidir liom ithe gloine
 
-would be serialized in DataONE get() URLs (or any other URL where it appears in the path section as per RFC3986_ encoding guidelines) as::
+would be serialized in DataONE get() URLs (or any other URL path) according to RFC3986_ encoding guidelines for URI path segments::
 
   http://mn.example.com/mn/object/10.1000%2F182
   http://mn.example.com/mn/object/urn:lsid:ubio.org:namebank:11815
@@ -70,41 +70,49 @@ would be serialized in DataONE get() URLs (or any other URL where it appears in 
   http://mn.example.com/mn/object/%E0%B8%89%E0%B8%B1%E0%B8%99%E0%B8%81%E0%B8%B4%E0%B8%99%E0%B8%81%E0%B8%A3%E0%B8%B0%E0%B8%88%E0%B8%81%E0%B9%84%E0%B8%94%E0%B9%89
   http://mn.example.com/mn/object/Is%20f%C3%A9idir%20liom%20ithe%20gloine
   
+----
 
-DataONE has decided to pct-escape one additional character beyond RFC3986_ rules: the '+' character, as it can sometimes be mistakenly decoded into a ' ' (space) character by clients using older parsers.  For example::
+*Escaping spaces in URLs*
+While RFC3986_ encodes ' ' (space) characters with "%20", previous encoding guidelines used "+" for readability.  In order to support clients that use these older parsers, DataONE will treat '+' as a character to percent-escape when encoding, and will decode '+' characters to ' ' characters.  The former is for consistency with decode, and the latter for compatibility with older clients.  The effect is uniform decoding under both encoding methods.
 
-  exampleIdentifier containing spaces+plus
+Take for instance the following identifier::
 
-would be serialized in DataONE get() URLs as::
+    ___  ___+___
 
-  exampleIdentifier%20containing%20spaces%2Bplus
+with encoding under both methods::
 
-instead of::
+    rfc3986:    ___%20___%2B___
+       plus:    ___+___%2B___
 
-  exampleIdentifier%20containing%20spaces+plus
+The rfc3986-encoded identifier decoded under either  methods yields the same result::
 
-to avoid possible decoding mistakes to::
+    rfc3986 decoding: ___ ___+___
+       plus decoding: ___ ___+___
+    
+However, the plus-encoded identifier decoded under each method gives inconsistent results.  The rfc3986 decoding not returning us to the original identifier::
 
-  exampleIdentifier containing spaces plus
+    rfc3986 decoding: ___+___+___
+       plus decoding: ___ ___+___
 
-Additionally DataONE is implementing a minimal escaping approach within the latitude RFC3986_ allows.  Specifically, using pchar as the set of unescaped characters for identifiers in path segments, and [pchar] - ['&', '='] + ['/', '?'] for identifiers in query segments, (segments in both cases meaning characters between delimiters).  For example::
+----
 
-  ex-location-dependent-__/__?__&__=__
-  ex-common-unescaped-;:@$-_.!*()',~
+The necessary encoding of URLs can be usually achieved through standard libraries available in many languages, with the caveat that the encoding follows the RFC3986_ encoding rules.  Many packages over-escape, keeping only the unreserved character set unescaped.  For its client libraries, DataONE is taking a minimal escaping approach within the latitude RFC3986_ allows.  Specifically, using [pchar] - ['+'] as the set of unescaped characters for identifiers in path segments, and [pchar] - ['+', '&', '='] + ['/', '?'] for identifiers in query segments, (segments in both cases meaning characters between delimiters).  For example::
+
+  example-location-dependent-__/__?__&__=__
+  example-common-unescaped-;:@$-_.!*()',~
 
 will be encoded in paths to::
 
-  ex-location-dependent-__%2F__%3F__&__=__
-  ex-common-unescaped-;:@$-_.!*()',~
+  example-location-dependent-__%2F__%3F__&__=__
+  example-common-unescaped-;:@$-_.!*()',~
 
 and encoded in the query section to::
 
-  ex-location-dependent-__/__?__%26__%3D__
-  ex-common-unescaped-;:@$-_.!*()',~
+  example-location-dependent-__/__?__%26__%3D__
+  example-common-unescaped-;:@$-_.!*()',~
 
 Note that RFC3986_ treats the query section of the URI as a blackbox, so '&' and '=' are unescaped (to be used as sub-delimiters).  For the purpose of encoding content, we take the approach of encoding at the segment level, so need to escape those characters.  For those implementing standard encoding routines, it is important to know that package's treatment of this.
 
-The necessary encoding of URLs can be usually achieved through standard libraries available in many languages, with the caveat that the encoding follows the RFC3986_ encoding rules.  
 
 The following examples in Python and Java illustrate percent encoding of data such as an identifier appropriate for appending to a URL. Each processes utf-8 encoded input through ``stdin`` and outputs percent encoded or decoded responses. In java pseudo-code the general process is as follows.
 
