@@ -74,6 +74,8 @@ would be serialized in DataONE get() URLs (or any other URL path) according to R
 
 **Escaping spaces in URLs**
 
+.. TODO::  The logic for escaping spaces needs review.  The following paragraph doesn't seem to hold true.  The example has been updated with the correct encodings/decodings.  Accomodating plus-escaping requires clients following the new standard to have to adapt.
+
 While RFC3986_ encodes ' ' (space) characters with "%20", previous encoding guidelines used "+" for readability.  In order to support clients that use these older parsers, DataONE will treat '+' as a character to percent-escape when encoding, and will decode '+' characters to ' ' characters.  The former is for consistency with decode, and the latter for compatibility with older clients.  The effect is uniform decoding under both encoding methods.
 
 Take for instance the following identifier::
@@ -82,13 +84,13 @@ Take for instance the following identifier::
 
 with encoding under both methods::
 
-    rfc3986:    id__%20___%2B___
+    rfc3986:    id__%20___+___
        plus:    id__+___%2B___
 
 The rfc3986-encoded identifier decoded under either  methods yields the same result::
 
     rfc3986 decoding: id__ ___+___
-       plus decoding: id__ ___+___
+       plus decoding: id__ ___ ___
     
 However, the plus-encoded identifier decoded under each method gives inconsistent results.  The rfc3986 decoding not returning us to the original identifier::
 
