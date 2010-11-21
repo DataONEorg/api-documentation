@@ -92,13 +92,13 @@ Post Conditions
 
 
 
-.. figure:: images/04_uc.png
+.. figure:: images/05_uc.png
    :figwidth: 100%
    
    Use case 04.
 
 
-.. figure:: images/04_interaction.png
+.. figure:: images/05_interaction.png
   :figwidth: 100%
 
   Create, update, delete, search metadata or data object in Member Node.
@@ -106,7 +106,7 @@ Post Conditions
 
 .. 
   This block defines the use case diagram referenced above
-  @startuml images/04_uc.png
+  @startuml images/05_uc.png
   !include ../plantuml.conf
   actor "User" as client
   usecase "12. Authentication" as authen
@@ -127,7 +127,7 @@ Post Conditions
 
 
 ..
-  @startuml images/04_interaction.png
+  @startuml images/05_interaction.png
   !include ../plantuml.conf
   Actor User
   participant "Client" as app_client << Application >>

@@ -48,3 +48,131 @@ Use Cases
 
 ..
   Comment.
+
+
+.. graphviz::
+
+   digraph uc_dependencies {
+     
+     fontname = "Bitstream Vera Sans";
+     fontsize = 8;
+
+     edge [
+       fontname = "Bitstream Vera Sans"
+       fontsize = 8
+       color = "#888888"
+       arrowhead = "open"
+       arrowsize = 0.5
+       len = 0.2
+       style="dashed"
+       ];
+
+     node [
+       shape = "record"
+       fontname = "Courier"
+       fontsize = 8
+       fontcolor = "black"];
+       
+      UC01 [label="UC01\nGet Object Identified by GUID"
+            URL="UseCases/01_uc.html"];
+      UC02 [label="UC02\nList GUIDs By Search"
+            URL="UseCases/02_uc.html"];
+      UC03 [label="UC03\nRegister MN"
+            URL="UseCases/03_uc.html"];
+      UC04 [label="UC04\nCreate New Object"
+            URL="UseCases/04_uc.html"];
+      UC05 [label="UC05\nUpdate Metadata"
+            URL="UseCases/05_uc.html"];
+      UC06 [label="UC06\nMN Synchronize"
+            URL="UseCases/06_uc.html"];
+      UC07 [label="UC07\nCN Batch Upload"
+            URL="UseCases/07_uc.html"];
+      UC08 [label="UC08\nReplication Policy Communication"
+            URL="UseCases/08_uc.html"];
+      UC09 [label="UC09\nReplicate MN to MN"
+            URL="UseCases/09_uc.html"];
+      UC10 [label="UC10\nMN Status Reports"
+            URL="UseCases/10_uc.html"];
+      UC11 [label="UC11\nCRUD Workflow Objects"
+            URL="UseCases/11_uc.html"];
+      UC12 [label="UC12\nUser Authentication"
+            URL="UseCases/12_uc.html"];
+      UC13 [label="UC13\nUser Authorization"
+            URL="UseCases/13_uc.html"];
+      UC14 [label="UC14\nSystem Authentication and Authorization"
+            URL="UseCases/14_uc.html"];
+      UC15 [label="UC15\nAccount Management"
+            URL="UseCases/15_uc.html"];
+      UC16 [label="UC16\nLog CRUD Operations"
+            URL="UseCases/16_uc.html"];
+      UC17 [label="UC17\nCRUD Logs Aggregated at CNs"
+            URL="UseCases/17_uc.html"];
+      UC18 [label="UC18\nMN Retrieve Aggregated Logs"
+            URL="UseCases/18_uc.html"];
+      UC19 [label="UC19\nRetrieve Object Download Summary"
+            URL="UseCases/19_uc.html"];
+      UC20 [label="UC20\nOwner Retrieve Aggregate Logs"
+            URL="UseCases/20_uc.html"];
+      UC21 [label="UC21\nOwner Subscribe to CRUD Operations"
+            URL="UseCases/21_uc.html"];
+      UC22 [label="UC22\nLink/Citation Report for Owner"
+            URL="UseCases/22_uc.html"];
+      UC23 [label="UC23\nOwner Expunge Content"
+            URL="UseCases/23_uc.html"];
+      UC24 [label="UC24\nMNs and CNs Support Transactions"
+            URL="UseCases/24_uc.html"];
+      UC25 [label="UC25\nDetect Damaged Content"
+            URL="UseCases/25_uc.html"];
+      UC26 [label="UC26\nData Quality Checks"
+            URL="UseCases/26_uc.html"];
+      UC27 [label="UC27\nMetadata Version Migration"
+            URL="UseCases/27_uc.html"];
+      UC28 [label="UC28\nDerived Product Original Change Notification"
+            URL="UseCases/28_uc.html"];
+      UC29 [label="UC29\nCN Load Balancing"
+            URL="UseCases/29_uc.html"];
+      UC30 [label="UC30\nMN Outage Notification"
+            URL="UseCases/30_uc.html"];
+      UC31 [label="UC31\nManage Access Policies"
+            URL="UseCases/31_uc.html"];
+      UC32 [label="UC32\nTransfer Object Ownership"
+            URL="UseCases/32_uc.html"];
+      UC33 [label="UC33\nSearch for Data"
+            URL="UseCases/33_uc.html"];
+      UC34 [label="UC34\nCNs Support Other Discovery Mechanisms (e.g. Google)"
+            URL="UseCases/34_uc.html"];
+      UC35 [label="UC35\nQuery Coordinating Node for Metadata Describing a Member Node"
+            URL="UseCases/35_uc.html"];
+      UC36 [label="UC36\nResolve an Object Location"
+            URL="UseCases/36_uc.html"];
+      UC37 [label="UC37\nGet System Metadata for Object"
+            URL="UseCases/37_uc.html"];
+      UC38 [label="UC38\nReserve an Identifier"
+            URL="UseCases/38_uc.html"];
+      UC39 [label="UC39\nTest Node APIs"
+            URL="UseCases/39_uc.html"];
+
+      UC01 -> UC12;
+      UC01 -> UC13;
+      UC01 -> UC16;
+      UC01 -> UC21;
+      
+      UC02 -> UC12;
+      UC02 -> UC13;
+    
+      UC03 -> UC12;
+      UC03 -> UC13;
+      
+      UC04 -> UC06;
+      UC04 -> UC12;
+      UC04 -> UC13;
+      
+      UC05 -> UC06;
+      UC05 -> UC12;
+      UC05 -> UC13;
+
+      UC06 -> UC12;
+      UC07 -> UC13;
+   }
+
+
