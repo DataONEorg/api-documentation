@@ -37,8 +37,6 @@ import sys, os
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 
-sys.path.append(os.path.abspath('../../../../../../../software/cicore/trunk/itk/d1-python/src/'))
-sys.path.append(os.path.abspath('../../../../../../../software/cicore/trunk/api-common-python/src/'))
 
 # -- General configuration -----------------------------------------------------
 
@@ -67,10 +65,11 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'DataONE Architecture'
-copyright = u'''- INTEROP: Creation of an International Virtual Data Center for the Biodiversity, 
-Ecological and Environmental Sciences (NSF Award 0753138); 
-
-- DataNet Full Proposal: DataNetONE (Observation Network for Earth) (NSF Award 0830944)'''
+copyright = u'2010, DataONE'
+#copyright = u'''- INTEROP: Creation of an International Virtual Data Center for the Biodiversity, 
+#Ecological and Environmental Sciences (NSF Award 0753138); 
+#
+#- DataNet Full Proposal: DataNetONE (Observation Network for Earth) (NSF Award 0830944)'''
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -136,7 +135,7 @@ todo_include_todos = True
 # The theme to use for HTML and HTML Help pages.  Major themes that come with
 # Sphinx are currently 'default' and 'sphinxdoc'.
 #html_theme = 'sphinxdoc'
-html_theme = 'readable'
+html_theme = 'dataone'
 #html_theme = 'nose'
 
 # Theme options are theme-specific and customize the look and feel of a theme
@@ -147,7 +146,7 @@ html_theme_options = {}
 
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []
-html_theme_path = ['themes', ]
+html_theme_path = ['../themes', ]
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
@@ -158,7 +157,7 @@ html_theme_path = ['themes', ]
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-#html_logo = None
+html_logo = '_static/dataone_logo.png'
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
@@ -172,7 +171,7 @@ html_static_path = ['_static']
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
-#html_last_updated_fmt = '%b %d, %Y'
+html_last_updated_fmt = '%Y-%b-%d'
 
 # If true, SmartyPants will be used to convert quotes and dashes to
 # typographically correct entities.
