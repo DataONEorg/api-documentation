@@ -80,128 +80,101 @@ cyberinfrastructure: Member Nodes (MNs), Coordinating Nodes (CNs), and the Inves
    Investigator Toolkit.
 
 
-.. figure:: images/MNOverview.png
-   :figwidth: 100%
+.. uml::
 
-   Component diagram of the high level Member Node structure. DataONE service
-   application programming interfaces (APIs) are implemented by a service
-   layer that interacts with the existing APIs of the Member Node.
-
-
-.. raw:: latex
-
-   \begin{landscape}
-
-.. figure:: images/CNOverview.png
-   :figwidth: 100%
-
-   High level component diagram of the Coordinating Node structure and the
-   service interfaces it exposes.
-
-
-.. raw:: latex
-
-   \end{landscape}
-
-
-..
-  @startuml images/MNOverview.png
-  !include plantuml.conf
-
-  () "Object Store" as mn_crud
-  () "Authorization" as mn_auth
-  () "Replication" as mn_repl
-  () "Health" as mn_health
-  () "Logging" as mn_logging
-  component "Investigator Toolkit" as ITK
-  component "Coordinating Node" as CN
-  package "Member Node" #EEEEEE
-    component "Existing Services" as mn_existing
-    component "DataONE Services" as MN
-  mn_existing --> MN
-  mn_existing <-- MN
-  MN -- mn_crud
-  MN -- mn_auth
-  MN -- mn_repl
-  MN -- mn_health
-  MN -- mn_logging
-  mn_auth .. CN
-  mn_crud .. CN
-  mn_repl .. CN
-  mn_health .. CN
-  mn_logging .. CN
-  mn_crud .. ITK
-  mn_auth .. ITK
-  mn_health ..ITK
-  mn_logging .. ITK
-  @enduml
+   () "Object Store" as mn_crud
+   () "Authorization" as mn_auth
+   () "Replication" as mn_repl
+   () "Health" as mn_health
+   () "Logging" as mn_logging
+   component "Investigator Toolkit" as ITK
+   component "Coordinating Node" as CN
+   package "Member Node" #EEEEEE
+     component "Existing Services" as mn_existing
+     component "DataONE Services" as MN
+   mn_existing --> MN
+   mn_existing <-- MN
+   MN -- mn_crud
+   MN -- mn_auth
+   MN -- mn_repl
+   MN -- mn_health
+   MN -- mn_logging
+   mn_auth .. CN
+   mn_crud .. CN
+   mn_repl .. CN
+   mn_health .. CN
+   mn_logging .. CN
+   mn_crud .. ITK
+   mn_auth .. ITK
+   mn_health ..ITK
+   mn_logging .. ITK
 
 
-..
-  @startuml images/CNOverview.png
-  !include plantuml.conf
-  skinparam noteFontSize 12
-  
-  () "Object Store" as cn_crud
-  () "Authentication" as cn_authn
-  () "Authorization" as cn_authz
-  () "Replication" as cn_repl
-  () "Health" as cn_health
-  () "Search" as cn_search
-  () "Registration" as cn_register
-
-  component "Member Node" as MN
-  component "Investigator Toolkit" as ITK
-  package "Coordinating Node" #EEEEEE
-    component "Document Store" as ostore
-    component "Science Metadata\nParser" as sparser
-    component "Search Index" as index
-    component "CN_Service" as cn_service
-
-    cn_service --> ostore
-    note right of ostore
-      Prototype implementation uses Metacat
-      as the object store, logging service and 
-      CN-CN replication
-    end note
-    ostore --> cn_service
-    index --> cn_service
-    sparser --> index
-    note right of index
-      Prototype implementation uses Mercury as the
-      search index, which is based on SOLR / Lucene.
-    end note
-    ostore --> sparser
-    note right of sparser
-      Prototype implementation utilizes the
-      metadata parsing capabilities of Mercury
-    end note
-
-  cn_service -- cn_crud
-  cn_service -- cn_repl
-  cn_service -- cn_register
-  cn_service -- cn_health
-  cn_service -- cn_authz
-  cn_service -- cn_search
-  cn_service -- cn_authn
-  
-  cn_crud .. MN
-  cn_repl .. MN
-  cn_register .. MN
-  cn_authz .. MN
-  cn_authn .. MN
-  
-  cn_crud .. ITK
-  cn_health .. ITK
-  cn_authz .. ITK
-  cn_search .. ITK
-  cn_authn .. ITK
-  
-  @enduml
+Component diagram of the high level Member Node structure. DataONE service
+application programming interfaces (APIs) are implemented by a service layer
+that interacts with the existing APIs of the Member Node.
 
 
+.. uml::
 
-.. raw:: latex
+   skinparam noteFontSize 12
 
-   \newpage
-   
+   () "Object Store" as cn_crud
+   () "Authentication" as cn_authn
+   () "Authorization" as cn_authz
+   () "Replication" as cn_repl
+   () "Health" as cn_health
+   () "Search" as cn_search
+   () "Registration" as cn_register
+
+   component "Member Node" as MN
+   component "Investigator Toolkit" as ITK
+   package "Coordinating Node" #EEEEEE
+     component "Document Store" as ostore
+     component "Science Metadata\nParser" as sparser
+     component "Search Index" as index
+     component "CN_Service" as cn_service
+
+     cn_service --> ostore
+     note right of ostore
+       Prototype implementation uses Metacat
+       as the object store, logging service and 
+       CN-CN replication
+     end note
+     ostore --> cn_service
+     index --> cn_service
+     sparser --> index
+     note right of index
+       Prototype implementation uses Mercury as the
+       search index, which is based on SOLR / Lucene.
+     end note
+     ostore --> sparser
+     note right of sparser
+       Prototype implementation utilizes the
+       metadata parsing capabilities of Mercury
+     end note
+
+   cn_service -- cn_crud
+   cn_service -- cn_repl
+   cn_service -- cn_register
+   cn_service -- cn_health
+   cn_service -- cn_authz
+   cn_service -- cn_search
+   cn_service -- cn_authn
+
+   cn_crud .. MN
+   cn_repl .. MN
+   cn_register .. MN
+   cn_authz .. MN
+   cn_authn .. MN
+
+   cn_crud .. ITK
+   cn_health .. ITK
+   cn_authz .. ITK
+   cn_search .. ITK
+   cn_authn .. ITK
+
+
+High level component diagram of the Coordinating Node structure and the
+service interfaces it exposes.
+

@@ -102,8 +102,8 @@ General Schedule for Infrastructure Version 0.x
        | * CN, MN API wrappers generated
        | * Reference implementations for CN and MN initiated
        | * Low level logging incorporated into API wrappers
-     - | * :doc:`/UseCases/01_uc`
-       | * :doc:`/UseCases/36_uc`
+     - | * :doc:`/design/UseCases/01_uc`
+       | * :doc:`/design/UseCases/36_uc`
      - | * X :func:`MN_crud.get`
        | * done for GMN :func:`MN_crud.log`
        | * X :func:`CN_crud.get`
@@ -120,11 +120,11 @@ General Schedule for Infrastructure Version 0.x
        | * CN - CN replication of metadata
        | * Design initial web interface for user interaction
        | * Design monitoring functionality to track services and objects
-     - | * :doc:`/UseCases/02_uc`
-       | * :doc:`/UseCases/03_uc`
-       | * :doc:`/UseCases/06_uc`
-       | * :doc:`/UseCases/10_uc`
-       | * :doc:`/UseCases/16_uc`
+     - | * :doc:`/design/UseCases/02_uc`
+       | * :doc:`/design/UseCases/03_uc`
+       | * :doc:`/design/UseCases/06_uc`
+       | * :doc:`/design/UseCases/10_uc`
+       | * :doc:`/design/UseCases/16_uc`
      - | * X :func:`MN_crud.getSystemMetadata`
        | * X :func:`MN_replication.listObjects`
        | * X :func:`CN_crud.create`
@@ -141,10 +141,10 @@ General Schedule for Infrastructure Version 0.x
        | * Identity and credentials propagated through system
        | * Implement web interface for user interaction with CNs
        | * Implement initial mechanisms for tracking objects and service uptime
-     - | * :doc:`/UseCases/06_uc`
-       | * :doc:`/UseCases/17_uc`
-       | * :doc:`/UseCases/12_uc`
-       | * :doc:`/UseCases/13_uc`
+     - | * :doc:`/design/UseCases/06_uc`
+       | * :doc:`/design/UseCases/17_uc`
+       | * :doc:`/design/UseCases/12_uc`
+       | * :doc:`/design/UseCases/13_uc`
      - | * :func:`CN_authentication.login`  (will use IP based auth)
        | * :func:`CN_authentication.verifyToken`
        | * :func:`CN_authorization.isAuthorized`
@@ -153,15 +153,15 @@ General Schedule for Infrastructure Version 0.x
      - | * System self manages replication
        | * CN controlling replication between MNs
        | * Reporting interface for system status
-     - | * :doc:`/UseCases/09_uc`
-       | * :doc:`/UseCases/24_uc`
+     - | * :doc:`/design/UseCases/09_uc`
+       | * :doc:`/design/UseCases/24_uc`
      - \
    * - 0.7
      - 2010/08
      - | * Basic authorization and access control
        | * Initial authorization subsystem implemented
        | * Initial object access control implemented
-     - | * :doc:`/UseCases/14_uc`\
+     - | * :doc:`/design/UseCases/14_uc`\
      - \
    * - 0.8
      - 2010/09
@@ -180,8 +180,8 @@ Major goals for this target are functional prototype implementations of the
 CN, MN and a simple client suitable for testing interactions.
 
 This version of the software represents the initial implementation of the CN
-and MN services, and should support at least use cases :doc:`UseCases/01_uc`
-and :doc:`UseCases/36_uc`.
+and MN services, and should support at least use cases :doc:`/design/UseCases/01_uc`
+and :doc:`/design/UseCases/36_uc`.
 
 The MN implementation will be a Django application that can stand alone, or
 interact with Metacat, Dryad, or ORNL DAAC for retrieving data and science
@@ -211,8 +211,8 @@ Detail for Version 0.4
 The major change for this target is replication of content across CNs.
 
 Version 0.4 will extend the implementations developed in version 0.3 by adding
-support for use cases :doc:`UseCases/02_uc`, :doc:`UseCases/03_uc`,
-:doc:`UseCases/06_uc`, and :doc:`UseCases/10_uc`.
+support for use cases :doc:`/design/UseCases/02_uc`, :doc:`/design/UseCases/03_uc`,
+:doc:`/design/UseCases/06_uc`, and :doc:`/design/UseCases/10_uc`.
 
 This MN implementation for this release should support basic interaction with
 at least one of the specified MN targets (i.e. Metacat, Dryad, ORNL DAAC) and
@@ -228,8 +228,8 @@ Detail for Version 0.5
 The major change for this target is CN driven data replication across MNs.
 
 Version 0.5 will extend the implementation developed in version 0.4 by adding
-support for the use cases :doc:`UseCases/06_uc`, :doc:`UseCases/16_uc`, and
-:doc:`UseCases/17_uc`.
+support for the use cases :doc:`/design/UseCases/06_uc`, :doc:`/design/UseCases/16_uc`, and
+:doc:`/design/UseCases/17_uc`.
 
 At completion of this milestone, the infrastructure will support the basic
 functionality of DataONE except with no integration of identity,
