@@ -44,10 +44,10 @@ generate: $(METHODXLS)
 plantuml: plantuml_source plantuml_usecase
 
 plantuml_source:
-	GRAPHVIZ_DOT=$(GRAPHVIZ) $(PLANTUML) source source
+	GRAPHVIZ_DOT=$(GRAPHVIZ) $(PLANTUML) source source/design
 
 plantuml_usecase:
-	GRAPHVIZ_DOT=$(GRAPHVIZ) $(PLANTUML) source source/UseCases
+	GRAPHVIZ_DOT=$(GRAPHVIZ) $(PLANTUML) source source/design/UseCases
 
 html: 
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html

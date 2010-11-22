@@ -49,7 +49,7 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.ifconfig',
               'sphinx.ext.graphviz',
               'rst2pdf.pdfbuilder', 
-              'sphinx.ext.todo',
+              #'sphinx.ext.todo',
               'sphinx.ext.inheritance_diagram',
               'plantuml',]
 
