@@ -1,0 +1,160 @@
+Notes for MN API
+================
+
+
+----
+
+.. function:: register (token, ID, metadata)
+
+   .. TODO:: Describe this operation.
+
+   :param token: The authentication token returned by :func:`login`
+
+   :param ID:
+
+   :param metadata:
+
+
+----
+
+.. function:: batchGet(token, GUIDs) -> ?
+
+  Identical to get() except that a list of identifiers is requested.
+
+  The issue here is how to serialize the results. There are some conceptual
+  mechanisms for handling structured markup such as XML, but no consistent
+  approaches for working with data blobs. Perhaps this method should apply
+  only to system metadata, for which the serialization can be defined
+  independently of all the other participating nodes?
+
+  :param token: (:class:`Types.AuthToken`) The authentication token returned 
+    by ``login()``
+
+  :param GUIDs: (GuidList) The list of identifiers to retrieve.
+
+  :rtype: 
+   Bytes of the specified objects. **How are multiple objects serialized?**
+
+  :raises Exceptions.NotAuthorized: The supplied identity does not have READ
+     permission on the object.
+
+  :raises Exceptions.NotFound: The object specified by GUID does not exist.
+
+  .. TODO:: batchGet specifies that multiple objects may be retrieved in a
+     single call. How are these objects packaged in the response?
+
+
+.. function:: checkDataQuality (GUID)
+
+  .. TODO:: need details on what this operation is supposed to be doing.
+
+  :param GUID: object to check
+
+----
+
+From the authorization API:
+
+
+.. function:: requestToken ()
+
+   This operation is used by CN applications to obtain a token for system
+   level operations.
+
+   .. Note:: 
+      This could be a normal :func:`login` operation using a system user and
+      secret that is stored in a secure location.
+
+
+----
+
+From the replication API:
+
+
+.. function:: synchronizationComplete (token, GUID)
+
+   This is a callback method used by a CN to indicate to a MN that it has
+   completed replication of the science metadata identified by GUID. When
+   called, the MN should somehow record that synchronization is complete for
+   that object so that the next time it reponds to a ``listObjects(token,
+   query)`` query the object will not be included as requiring
+   synchronization.
+
+   :param token: authentication token; ignored for V0.3
+
+   :param GUID: 
+
+     The GUID of the science metadata object that is now synchronized with the
+     CN.
+
+   .. note::
+      A CN could use this method to provide the MN with an updated version of
+      the system metadata for the object if this method accepted a system
+      metadata object instead of a simple GUID as a parameter.
+
+   :returns: A simple acknowledgement.
+
+   .. TODO:: Define "a simple acknowledgement"
+
+   :raises Exceptions.NotAuthorized:
+
+   :raises Exceptions.InvalidIdentifier: 
+     The supplied GUID does not identify a science metadata object owned by
+     the MN.
+
+   :raises Exceptions.InvalidOperation: 
+     The science metadata object identified by the GUID is already marked as
+     synchronized.
+
+This method is not necessary since the CNs keep track of when an object was
+last synchronized. There should not be a requirement for MNs to track if
+content has been retrieved by the CNs.
+
+
+-----
+
+More stuff from the replication APIs
+
+::
+  cancelReplication (sess, transID)
+  listAllObjects ()
+  listRecords ()
+  replicationSucceeds (transID)
+  startReplica (ID, sessionID, transID, srcMN)
+  sysOp (token)
+  listChangedRecords(token) -> GUIDs
+
+  ## from v0.3 doc ##
+  listObjects(token, query) -> list of GUIDs
+  synchronizationComplete(token, GUID)
+  synchronizationFailed(token, GUID, problemDescription)
+
+
+
+.. function::  cancelReplication (sess, transID)
+
+.. function::  listAllObjects ()
+
+.. function::  listRecords ()
+
+.. function::  replicationSucceeds (transID)
+
+.. function::  startReplica (ID, sessionID, transID, srcMN)
+
+.. function::  sysOp (token)
+
+
+.. function:: listChangedRecords(token) -> GuidList
+
+   List the records that have changed since the last synchronization event.
+
+   :param token: A token with authority to retrieve a list of changed records.
+
+
+
+----
+
+From the capabilities API, this function is listed but has no definition:
+
+.. function::  serviceRequest (token)
+
+

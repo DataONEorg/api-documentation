@@ -17,9 +17,7 @@ Implemented by the methods:
 
 **Parameters**
 
-:day: (optional) Flag that causes the number of objects that were created to be
-  reported for each day in which one or more objects were created. Without
-  this flag the total number of objects is reported.
+:day: (optional) Flag that causes the number of objects that were created to be reported for each day in which one or more objects were created. Without  this flag the total number of objects is reported.
 
 :id: (optional) (wildcards supported) Filter on identifier.
 
@@ -96,7 +94,7 @@ day in 1980 (arguments are on separate lines for readability)::
 ......................
 
 
-Returns the number of object related events that have occured.
+Returns the number of object related events that have occurred.
 
 Implemented by the methods:
 
@@ -107,9 +105,7 @@ Returns :class:`Types.MonitorList`
 
 **Parameters**
 
-:day: (optional) Flag that causes the number of object related events to be
-  reported for each day in which one or more events occurred. Without this flag,
-  the number of events is cumulative.
+:day: (optional) Flag that causes the number of object related events to be reported for each day in which one or more events occurred. Without this flag, the number of events is cumulative.
 
 :id: (optional) (wildcards supported) Filter on identifier.
 
@@ -148,8 +144,8 @@ Retrieve a cumulative count of all object related events on MN::
     </monitorInfo>
   </ns1:monitorList>
 
-Retrieve a count of object related events for all objects based on EML for each
-day in 1980 (arguments are on separate lines for readability)::
+Retrieve a count of object related events for all objects based on EML for
+each day in 1980 (arguments are on separate lines for readability)::
 
   curl -X GET -H "Accept: text/xml" http://mn1.dataone.org
     /monitor
