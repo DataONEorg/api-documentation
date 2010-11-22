@@ -3,18 +3,19 @@
 
 
 .. list-table:: Functions defined in :mod:`MN_authorization`
-   :widths: 10 30
+   :widths: 10 10 30
    :header-rows: 1
 
-   * - Function
+   * - REST
+     - Function
      - Parameters
-   * - :func:`isAuthorized`
+   * - :ref:`MN_authorization.isAuthorized`
+     - :func:`isAuthorized`
      - (:class:`token<Types.AuthToken>`, :class:`id<Types.Identifier>`,
        :class:`operation<Types.Event>`) ``->`` boolean
 
 
 
-----
 
 .. function:: isAuthorized(token,id,operation) -> boolean
 

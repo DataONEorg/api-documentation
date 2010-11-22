@@ -95,22 +95,20 @@ release = '0.5'
 today_fmt = '%Y-%m-%d'
 
 # List of documents that shouldn't be included in the build.
-unused_docs = ['UseCases/uc_template', 
-               'MN_APIs_v0_3', 
-               'CN_APIs_v0_3',
-               'REST_overview',
-               'REST_object',
-               'REST_meta',
-               'REST_resolve',
-               'REST_reserve',
-               'REST_log',
-               'REST_account',
-               'REST_nodes',
-               'REST_monitor']
+unused_docs = ['design/UseCases/uc_template', 
+               'apis/REST_overview',
+               'apis/REST_object',
+               'apis/REST_meta',
+               'apis/REST_resolve',
+               'apis/REST_reserve',
+               'apis/REST_log',
+               'apis/REST_account',
+               'apis/REST_nodes',
+               'apis/REST_monitor']
 
 # List of directories, relative to source directory, that shouldn't be searched
 # for source files.
-exclude_trees = ['generated', ]
+exclude_trees = ['apis/generated', ]
 
 # The reST default role (used for this markup: `text`) to use for all documents.
 #default_role = None

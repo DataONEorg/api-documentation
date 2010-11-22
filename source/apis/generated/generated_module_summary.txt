@@ -7,7 +7,7 @@
      - Description
    * - :mod:`MN_crud`
      - :func:`MN_crud.get`
-     - Retrieve an object identified by `guid` from the node. The response must
+     - Retrieve an object identified by *id* from the node. The response must
        contain the bytes of the indicated object, and the checksum of the bytes
        retrieved must match the :attr:`SystemMetadata.checksum` recorded in the
        :class:`Types.SystemMetadata` if the object is science data. If the
@@ -128,6 +128,14 @@
        store it locally so that it can be made accessible to the DataONE system.
 
        Appears in functional use cases: :doc:`UC09 </design/UseCases/09_uc>`
+   * - \
+     - :func:`MN_replication.synchronizationFailed`
+     - This is a callback method used by a CN to indicate to a MN that it cannot
+       complete synchronization of the science metadata identified by *id*. When
+       called, the MN should take steps to record the problem description and
+       notify an administrator or the data owner of the issue.
+
+       Appears in functional use cases: :doc:`UC06 </design/UseCases/06_uc>`
    * - :mod:`MN_health`
      - :func:`MN_health.ping`
      - Low level "are you alive" operation. Response is simple ACK, but may be
@@ -331,3 +339,6 @@
    * - \
      - :func:`CN_register.register`
      - 
+   * - :mod:`MN_capabilities`
+     - :func:`MN_capabilities.getCapabilities`
+     - Returns a document describing the capabilities of the Member Node.

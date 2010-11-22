@@ -3,21 +3,23 @@
 
 
 .. list-table:: Functions defined in :mod:`CN_query`
-   :widths: 10 30
+   :widths: 10 10 30
    :header-rows: 1
 
-   * - Function
+   * - REST
+     - Function
      - Parameters
-   * - :func:`search`
+   * - :ref:`CN_query.search`
+     - :func:`search`
      - (:class:`token<Types.AuthToken>`, :class:`query<Types.QueryType>`) ``->``
        :class:`Types.ObjectList`
-   * - :func:`getLogRecords`
+   * - :ref:`CN_query.getLogRecords`
+     - :func:`getLogRecords`
      - (:class:`token<Types.AuthToken>`, :class:`fromDate<Types.DateTime>`,
        :class:`toDate<Types.DateTime>`) ``->`` :class:`Types.LogRecords`
 
 
 
-----
 
 .. function:: search(token,query) -> ObjectList
 
@@ -55,7 +57,6 @@
 
 
 
-----
 
 .. function:: getLogRecords(token,fromDate,toDate) -> LogRecords
 

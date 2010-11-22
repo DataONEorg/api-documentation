@@ -39,7 +39,7 @@ clean:
 	-rm -rf $(BUILDDIR)/*
 
 generate: $(METHODXLS)
-	$(DOCGENERATOR) -s $(METHODXLS) -d ./source/generated
+	$(DOCGENERATOR) -s $(METHODXLS) -d ./source/apis/generated
 
 plantuml: plantuml_source plantuml_usecase
 

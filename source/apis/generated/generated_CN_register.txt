@@ -3,22 +3,25 @@
 
 
 .. list-table:: Functions defined in :mod:`CN_register`
-   :widths: 10 30
+   :widths: 10 10 30
    :header-rows: 1
 
-   * - Function
+   * - REST
+     - Function
      - Parameters
-   * - :func:`listNodes`
+   * - :ref:`CN_register.listNodes`
+     - :func:`listNodes`
      - () ``->`` :class:`Types.NodeList`
-   * - :func:`addNodeCapabilities`
+   * - :ref:`CN_register.addNodeCapabilities`
+     - :func:`addNodeCapabilities`
      - (:class:`token<Types.AuthToken>`, :class:`id<Types.Identifier>`) ``->``
        boolean
-   * - :func:`register`
+   * - :ref:`CN_register.register`
+     - :func:`register`
      - (:class:`token<Types.AuthToken>`) ``->`` :class:`Types.Identifier`
 
 
 
-----
 
 .. function:: listNodes() -> NodeList
 
@@ -41,7 +44,6 @@
 
 
 
-----
 
 .. function:: addNodeCapabilities(token,id,capabilities) -> boolean
 
@@ -75,7 +77,6 @@
 
 
 
-----
 
 .. function:: register(token,capabilities) -> Identifier
 

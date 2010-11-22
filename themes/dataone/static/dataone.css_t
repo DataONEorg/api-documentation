@@ -22,6 +22,10 @@ body {
     padding: 0;
 }
 
+caption {
+  text-align: left;
+}
+
 div.document {
     width: {{ page_width }};
     margin: 30px auto 0 auto;
@@ -271,6 +275,7 @@ table.docutils {
     -moz-box-shadow: 2px 2px 4px #eee;
     -webkit-box-shadow: 2px 2px 4px #eee;
     box-shadow: 2px 2px 4px #eee;
+    margin-bottom: 1em;
 }
 
 table.docutils td, table.docutils th {

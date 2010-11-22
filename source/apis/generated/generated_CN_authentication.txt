@@ -3,28 +3,32 @@
 
 
 .. list-table:: Functions defined in :mod:`CN_authentication`
-   :widths: 10 30
+   :widths: 10 10 30
    :header-rows: 1
 
-   * - Function
+   * - REST
+     - Function
      - Parameters
-   * - :func:`login`
+   * - :ref:`CN_authentication.login`
+     - :func:`login`
      - (``user``, ``password``,
        :class:`[authSystem]<Types.AuthenticationSystem>`) ``->``
        :class:`Types.AuthToken`
-   * - :func:`setOwner`
+   * - :ref:`CN_authentication.setOwner`
+     - :func:`setOwner`
      - (:class:`token<Types.AuthToken>`, :class:`id<Types.Identifier>`,
        :class:`userId<Types.Principal>`) ``->`` :class:`Types.Identifier`
-   * - :func:`newAccount`
+   * - :ref:`CN_authentication.newAccount`
+     - :func:`newAccount`
      - (``username``, ``password``,
        :class:`[authSystem]<Types.AuthenticationSystem>`) ``->``
        :class:`Types.PrincipalType`
-   * - :func:`verifyToken`
+   * - :ref:`CN_authentication.verifyToken`
+     - :func:`verifyToken`
      - (:class:`token<Types.AuthToken>`) ``->`` boolean
 
 
 
-----
 
 .. function:: login(user,password,[authSystem]) -> AuthToken
 
@@ -79,7 +83,6 @@
 
 
 
-----
 
 .. function:: setOwner(token,id,userId) -> Identifier
 
@@ -132,7 +135,6 @@
 
 
 
-----
 
 .. function:: newAccount(username,password,[authSystem]) -> PrincipalType
 
@@ -184,7 +186,6 @@
 
 
 
-----
 
 .. function:: verifyToken(token) -> boolean
 

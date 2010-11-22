@@ -3,44 +3,52 @@
 
 
 .. list-table:: Functions defined in :mod:`CN_crud`
-   :widths: 10 30
+   :widths: 10 10 30
    :header-rows: 1
 
-   * - Function
+   * - REST
+     - Function
      - Parameters
-   * - :func:`get`
+   * - :ref:`CN_crud.get`
+     - :func:`get`
      - (:class:`token<Types.AuthToken>`, :class:`id<Types.Identifier>`) ``->``
        bytes
-   * - :func:`getSystemMetadata`
+   * - :ref:`CN_crud.getSystemMetadata`
+     - :func:`getSystemMetadata`
      - (:class:`token<Types.AuthToken>`, :class:`id<Types.Identifier>`) ``->``
        :class:`Types.SystemMetadata`
-   * - :func:`resolve`
+   * - :ref:`CN_crud.resolve`
+     - :func:`resolve`
      - (:class:`token<Types.AuthToken>`, :class:`id<Types.Identifier>`) ``->``
        :class:`Types.ObjectLocationList`
-   * - :func:`create`
+   * - n/a
+     - :func:`create`
      - (:class:`guid<Types.Identifier>`,
        :class:`systemMetadata<Types.SystemMetadata>`, ``scienceMetadata``)
        ``->`` boolean
-   * - :func:`reserveIdentifier`
+   * - :ref:`CN_crud.reserveIdentifier`
+     - :func:`reserveIdentifier`
      - (:class:`token<Types.AuthToken>`,
        :class:`[identifier]<Types.Identifier>`, ``[scope]``, ``[format]``)
        ``->`` :class:`Types.Identifier`
-   * - :func:`assertRelation`
+   * - :ref:`CN_crud.assertRelation`
+     - :func:`assertRelation`
      - (:class:`token<Types.AuthToken>`, :class:`idOfSubject<Types.Identifier>`,
        :class:`relationship<Types.???>`, :class:`idOfObject<Types.Identifier>`)
        ``->`` boolean
-   * - :func:`log`
+   * - n/a
+     - :func:`log`
      - (:class:`typeOfOperation<Types.Event>`,
        :class:`targetGuid<Types.Identifier>`,
        :class:`requestorIdentitity<Types.Principal>`,
        :class:`dateOfRequest<Types.DateTime>`) ``->``
-   * - :func:`getChecksum`
+   * - n/a
+     - :func:`getChecksum`
      - (:class:`token<Types.AuthToken>`, :class:`guid<Types.Identifier>`) ``->``
        :class:`Types.Checksum`
 
 
 
-----
 
 .. function:: get(token,id) -> bytes
 
@@ -88,7 +96,6 @@
 
 
 
-----
 
 .. function:: getSystemMetadata(token,id) -> SystemMetadata
 
@@ -137,7 +144,6 @@
 
 
 
-----
 
 .. function:: resolve(token,id) -> ObjectLocationList
 
@@ -181,7 +187,6 @@
 
 
 
-----
 
 .. function:: create(guid,systemMetadata,scienceMetadata) -> boolean
 
@@ -234,7 +239,6 @@
 
 
 
-----
 
 .. function:: reserveIdentifier(token,[identifier],[scope],[format]) -> Identifier
 
@@ -301,7 +305,6 @@
 
 
 
-----
 
 .. function:: assertRelation(token,idOfSubject,relationship,idOfObject) -> boolean
 
@@ -352,7 +355,6 @@
 
 
 
-----
 
 .. function:: log(typeOfOperation,targetGuid,requestorIdentitity,dateOfRequest) -> 
 
@@ -400,7 +402,6 @@
 
 
 
-----
 
 .. function:: getChecksum(token,guid) -> Checksum
 

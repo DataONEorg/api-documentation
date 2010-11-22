@@ -325,32 +325,52 @@
      - :func:`replicate <MN_replication.replicate>`
      - NotImplemented
      - 501
-     - 2000
+     - 2150
    * - :mod:`MN_replication`
      - :func:`replicate <MN_replication.replicate>`
      - ServiceFailure
      - 500
-     - 2001
+     - 2151
    * - :mod:`MN_replication`
      - :func:`replicate <MN_replication.replicate>`
      - NotAuthorized
      - 401
-     - 2010
+     - 2152
    * - :mod:`MN_replication`
      - :func:`replicate <MN_replication.replicate>`
      - InvalidRequest
      - 400
-     - 2020
+     - 2153
    * - :mod:`MN_replication`
      - :func:`replicate <MN_replication.replicate>`
      - InsufficientResources
      - 413
-     - 2030
+     - 2154
    * - :mod:`MN_replication`
      - :func:`replicate <MN_replication.replicate>`
      - UnsupportedType
      - 400
-     - 2040
+     - 2155
+   * - :mod:`MN_replication`
+     - :func:`synchronizationFailed <MN_replication.synchronizationFailed>`
+     - NotImplemented
+     - 501
+     - 
+   * - :mod:`MN_replication`
+     - :func:`synchronizationFailed <MN_replication.synchronizationFailed>`
+     - ServiceFailure
+     - 500
+     - 
+   * - :mod:`MN_replication`
+     - :func:`synchronizationFailed <MN_replication.synchronizationFailed>`
+     - NotAuthorized
+     - 401
+     - 
+   * - :mod:`MN_replication`
+     - :func:`synchronizationFailed <MN_replication.synchronizationFailed>`
+     - InvalidRequest
+     - 400
+     - 
    * - :mod:`MN_health`
      - :func:`ping <MN_health.ping>`
      - NotImplemented
@@ -1061,3 +1081,23 @@
      - InvalidRequest
      - 400
      - 4843
+   * - :mod:`MN_capabilities`
+     - :func:`getCapabilities <MN_capabilities.getCapabilities>`
+     - NotImplemented
+     - 501
+     - 2160
+   * - :mod:`MN_capabilities`
+     - :func:`getCapabilities <MN_capabilities.getCapabilities>`
+     - NotAuthorized
+     - 401
+     - 2161
+   * - :mod:`MN_capabilities`
+     - :func:`getCapabilities <MN_capabilities.getCapabilities>`
+     - ServiceFailure
+     - 500
+     - 2162
+   * - :mod:`MN_capabilities`
+     - :func:`getCapabilities <MN_capabilities.getCapabilities>`
+     - InvalidRequest
+     - 400
+     - 2163

@@ -42,24 +42,7 @@ Post Conditions
   - All system and science metadata records from a MN are also present on the CN
 
 
-.. figure:: images/06_uc.png
-   :figwidth: 100%
-
-   Use case 06.
-
-
-.. figure:: images/06_interaction.png
-   :figwidth: 100%
-
-   Sequence diagram for use case 06. Synchronize metadata between Member and
-   Coordinating Node. Note that the log messages record a REPLICATE rather
-   than a READ event. The MN determines this through the User Agent header (NB
-   - this assumes that CNs only call MN.get to do replication).
-
-
-..
-  @startuml images/06_uc.png
-  !include ../plantuml.conf
+.. uml::
 
   package "DataONE"
   actor "Coordinating Node" as CN
@@ -71,12 +54,10 @@ Post Conditions
   MN -- SYNC
   SYNC ..> author: <<includes>>
   SYNC ..> NOTIFY: <<includes>>
-  @enduml
 
 
-..
-  @startuml images/06_interaction.png
-  !include ../plantuml.conf
+.. uml::
+
   participant "Registry API" as c_reg << CN >>
   participant "CRUD API" as c_crud << CN >>
   participant "Task Queue" as cn_queue << CN >>
@@ -121,7 +102,7 @@ Post Conditions
     deactivate m_crud
     c_sync -> c_reg: isScienceMetadata(objectInfo.objectFormat)
     c_reg -> c_sync: True or False
-    alt Fals (GUID refers to data)
+    alt False (GUID refers to data)
       c_sync -> c_crud: create(GUID, SystemMetadata)
       deactivate c_sync
       c_crud -> c_crud: log()
@@ -132,12 +113,25 @@ Post Conditions
         m_crud --> m_crud: log (REPLICATE)
         c_sync <-- m_crud: ScienceMetadata
       deactivate m_crud
-      c_sync -> c_crud: create(GUID, SystemMetadata, ScienceMetadata)
+      activate c_crud
+        c_sync -> c_crud: create(GUID, SystemMetadata, ScienceMetadata)
+        c_crud -> c_sync: True or False
+        alt False (Failed)
+          c_sync -> m_rep: synchronizationFailed(GUID, problemDescription)
+        end
       deactivate c_sync
       c_crud -> c_crud: log()
+      deactivate c_crud
     end
   end
-  @enduml
+
+
+Sequence diagram for use case 06. Synchronize metadata between Member and
+Coordinating Node. Note that the log messages record a REPLICATE rather than a
+READ event. The MN determines this through the User Agent header (NB - this
+assumes that CNs only call MN.get to do replication).
+
+
 
 
 Implementation

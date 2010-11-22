@@ -3,39 +3,49 @@
 
 
 .. list-table:: Functions defined in :mod:`MN_crud`
-   :widths: 10 30
+   :widths: 10 10 30
    :header-rows: 1
 
-   * - Function
+   * - REST
+     - Function
      - Parameters
-   * - :func:`get`
+   * - :ref:`MN_crud.get`
+     - :func:`get`
      - (:class:`token<Types.AuthToken>`, :class:`id<Types.Identifier>`) ``->``
        bytes
-   * - :func:`getSystemMetadata`
+   * - :ref:`MN_crud.getSystemMetadata`
+     - :func:`getSystemMetadata`
      - (:class:`token<Types.AuthToken>`, :class:`id<Types.Identifier>`) ``->``
        :class:`Types.SystemMetadata`
-   * - :func:`create`
+   * - :ref:`MN_crud.create`
+     - :func:`create`
      - (:class:`token<Types.AuthToken>`, :class:`id<Types.Identifier>`,
        ``object``, :class:`sysmeta<Types.SystemMetadata>`) ``->``
        :class:`Types.Identifier`
-   * - :func:`update`
+   * - :ref:`MN_crud.update`
+     - :func:`update`
      - (:class:`token<Types.AuthToken>`, :class:`id<Types.Identifier>`,
        ``object``, :class:`obsoletedGuid<Types.Identifier>`,
        :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
-   * - :func:`delete`
+   * - :ref:`MN_crud.delete`
+     - :func:`delete`
      - (:class:`token<Types.AuthToken>`, :class:`id<Types.Identifier>`) ``->``
        :class:`Types.Identifier`
-   * - :func:`describe`
+   * - :ref:`MN_crud.describe`
+     - :func:`describe`
      - (:class:`token<Types.AuthToken>`, :class:`id<Types.Identifier>`) ``->``
        :class:`Types.DescribeResponse`
-   * - :func:`getChecksum`
+   * - :ref:`MN_crud.getChecksum`
+     - :func:`getChecksum`
      - (:class:`token<Types.AuthToken>`, :class:`id<Types.Identifier>`,
        ``[checksumAlgorithm]``) ``->`` :class:`Types.Checksum`
-   * - :func:`getLogRecords`
+   * - :ref:`MN_crud.getLogRecords`
+     - :func:`getLogRecords`
      - (:class:`token<Types.AuthToken>`, :class:`fromDate<Types.DateTime>`,
        :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`) ``->``
        :class:`Types.LogRecords`
-   * - :func:`log`
+   * - n/a
+     - :func:`log`
      - (:class:`typeOfOperation<Types.Event>`,
        :class:`targetGuid<Types.Identifier>`,
        :class:`requestorIdentitity<Types.Principal>`,
@@ -43,11 +53,10 @@
 
 
 
-----
 
 .. function:: get(token,id) -> bytes
 
-   Retrieve an object identified by `guid` from the node.
+   Retrieve an object identified by *id* from the node.
 
    The response must contain the bytes of the indicated object, and the checksum
    of the bytes retrieved must match the :attr:`SystemMetadata.checksum`
@@ -64,7 +73,7 @@
 
    :REST URL: MN :ref:`MN_crud.get`
 
-   :param token: The authentication token returned by ``login()``.
+   :param token: The authentication token returned by *login()*.
 
    :type token: :class:`Types.AuthToken`
 
@@ -112,7 +121,6 @@
 
 
 
-----
 
 .. function:: getSystemMetadata(token,id) -> SystemMetadata
 
@@ -163,7 +171,6 @@
 
 
 
-----
 
 .. function:: create(token,id,object,sysmeta) -> Identifier
 
@@ -250,7 +257,6 @@
 
 
 
-----
 
 .. function:: update(token,id,object,obsoletedGuid,sysmeta) -> Identifier
 
@@ -351,7 +357,6 @@
 
 
 
-----
 
 .. function:: delete(token,id) -> Identifier
 
@@ -410,7 +415,6 @@
 
 
 
-----
 
 .. function:: describe(token,id) -> DescribeResponse
 
@@ -460,7 +464,6 @@
 
 
 
-----
 
 .. function:: getChecksum(token,id,[checksumAlgorithm]) -> Checksum
 
@@ -512,7 +515,6 @@
 
 
 
-----
 
 .. function:: getLogRecords(token,fromDate,[toDate],[event]) -> LogRecords
 
@@ -559,7 +561,6 @@
 
 
 
-----
 
 .. function:: log(typeOfOperation,targetGuid,requestorIdentitity,dateOfRequest) -> 
 

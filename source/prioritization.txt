@@ -182,13 +182,13 @@ Use Cases
 
 Authentication Using Short-term Solution
 
-  :doc:`Use Case 12</UseCases/12_uc>` - User Authentication: Person, via client
+  :doc:`Use Case 12</design/UseCases/12_uc>` - User Authentication: Person, via client
   software, authenticates against Identify Provider to establish session
   token. Many operations in the DataONE system require user authentication to
   ensure that the user's identity is known to the system, and that appropriate
   access controls can be executed based on the identity.
 
-  :doc:`Use Case 14</UseCases/14_uc>` - System Authentication and
+  :doc:`Use Case 14</design/UseCases/14_uc>` - System Authentication and
   Authorization: System Authentication/Authorization - Server authenticates
   and performs system operations (e.g. replication). This use case represents
   node-to-node authentication.
@@ -196,14 +196,14 @@ Authentication Using Short-term Solution
 Search and Retrieval, Indexing, Read Data and Metadata, Metadata
 Interoperability
 
-  :doc:`Use Case 1</UseCases/01_uc>` - CRUD get(): Get object identified by an
+  :doc:`Use Case 1</design/UseCases/01_uc>` - CRUD get(): Get object identified by an
   identifier (authenticated or not, notify subscriber of access). A client has
   an identifier for some object within the DataONE system and is retrieving
   the referenced object. The DataONE system must resolve the identifier and
   return the object bytes after checking that the user has read privileges on
   the object.
 
-  :doc:`Use Case 02</UseCases/02_uc>` - List identifiers By Search: Get list
+  :doc:`Use Case 02</design/UseCases/02_uc>` - List identifiers By Search: Get list
   of identifiers from metadata search (anonymous and authenticated). A user
   performs a search against the DataONE system and receives a list of object
   identifiers that match the search criteria. The list of identifiers is
@@ -213,7 +213,7 @@ Interoperability
 
 Replication of Data and Metadata
 
-  :doc:`Use Case 06</UseCases/06_uc>` - MN Synchronize: Copy metadata record
+  :doc:`Use Case 06</design/UseCases/06_uc>` - MN Synchronize: Copy metadata record
   from Member Node to Coordinating Node. As data are created or modified, the
   metadata associated with those is copied to the to the Coordinating Nodes.
   The presence of new or changed information on a Member Node (MN) is made
@@ -223,10 +223,10 @@ Replication of Data and Metadata
   CN proceeds to retrieve and process each object. If new data packages are
   present on the MN, then a MN-MN replication process is scheduled.
 
-  :doc:`Use Case 09</UseCases/09_uc>` - Replicate MN to MN: Replicate data
+  :doc:`Use Case 09</design/UseCases/09_uc>` - Replicate MN to MN: Replicate data
   from Member Node to Member Node - (facilitated by Coordinating Node).
 
-  :doc:`Use Case 24</UseCases/24_uc>` - MNs and CNs Support Transactions:
+  :doc:`Use Case 24</design/UseCases/24_uc>` - MNs and CNs Support Transactions:
   Transactions - CNs and MNs should support transaction sets where operations
   all complete successfully or get rolled back (e.g., upload both data and
   metadata records). Implementation of this use case could be deferred to year
@@ -234,23 +234,23 @@ Replication of Data and Metadata
 
 Basic Heartbeat / Health Monitoring
 
-  :doc:`Use Case 10</UseCases/10_uc>` - MN Status Reports: Coordinating Node
+  :doc:`Use Case 10</design/UseCases/10_uc>` - MN Status Reports: Coordinating Node
   checks "liveness" of all Member Nodes. Implementation of this use case could
   be deferred to year 2.
 
 Basic Logging Infrastructure
 
-  :doc:`Use Case 16</UseCases/16_uc>` - Log CRUD Operations: All CRUD
+  :doc:`Use Case 16</design/UseCases/16_uc>` - Log CRUD Operations: All CRUD
   operations on metadata and data are logged at each node. Implementation of
   this use case could be deferred to year 2.
 
-  :doc:`Use Case 17</UseCases/17_uc>` - CRUD Logs Aggregated at CNs: All CRUD
+  :doc:`Use Case 17</design/UseCases/17_uc>` - CRUD Logs Aggregated at CNs: All CRUD
   logs are aggregated at Coordinating Nodes. Implementation of this use case
   could be deferred to year 2.
 
 Basic Member Node Registry Services
 
-  :doc:`Use Case 03</UseCases/03_uc>` - Register MN: Register a new Member
+  :doc:`Use Case 03</design/UseCases/03_uc>` - Register MN: Register a new Member
   Node. This use case describes the technical process for addition of a new
   Member Node (MN) to the DataONE infrastructure. It is assumed that the
   appropriate social contracts have been formed and the MN is operational,
@@ -324,7 +324,7 @@ Use Cases
 
 Data and Metadata Deposit, Update, and Delete
 
-  :doc:`Use Case 04</UseCases/04_uc>` - CRUD (Create, Update Delete) Metadata:
+  :doc:`Use Case 04</design/UseCases/04_uc>` - CRUD (Create, Update Delete) Metadata:
   Create, update or delete metadata record on a Member Node. A user is
   creating a new metadata record on a Member Node (MN). The mechanism by which
   the user does this is out of scope for the DataONE system, so this use case
@@ -332,21 +332,21 @@ Data and Metadata Deposit, Update, and Delete
   metadata is retrieved by the CN using a pull mechanism (CN requests content
   from the MN).
 
-  :doc:`Use Case 05</UseCases/05_uc>` - CRUD (Create, Update Delete) Data:
+  :doc:`Use Case 05</design/UseCases/05_uc>` - CRUD (Create, Update Delete) Data:
   Create/Update/Delete data object in Member Node. May split out the update
   and delete portions to different use cases at some point in the future.
 
-  :doc:`Use Case 23</UseCases/23_uc>` - Owner Expunge Content: User can find
+  :doc:`Use Case 23</design/UseCases/23_uc>` - Owner Expunge Content: User can find
   out where all copies of my data are in the system and can expunge them.
   Implementation of this use case could be deferred to year 3.
 
 
 Client Discovery Services
 
-  :doc:`Use Case 33</UseCases/33_uc>` - Search for Data: Clients should be able
+  :doc:`Use Case 33</design/UseCases/33_uc>` - Search for Data: Clients should be able
   to search for data using CN metadata catalogs.
 
-  :doc:`Use Case 34</UseCases/34_uc>` - CNs Support Other Discovery Mechanisms
+  :doc:`Use Case 34</design/UseCases/34_uc>` - CNs Support Other Discovery Mechanisms
   (e.g. Google): Coordinating Nodes publish metadata in formats for other
   discovery services like Google/Libraries/GCMD/etc.
 
@@ -354,33 +354,33 @@ Client Discovery Services
 
 Identity Provider
 
-  :doc:`Use Case 15</UseCases/15_uc>` - Account Management: User Account
+  :doc:`Use Case 15</design/UseCases/15_uc>` - Account Management: User Account
   Management - Create new user account on Identity Provider (also edit,
   delete).
 
 
 Authentication Using a Long-Term Solution
 
-  :doc:`Use Case 12</UseCases/12_uc>` - User Authentication: Person, via client
+  :doc:`Use Case 12</design/UseCases/12_uc>` - User Authentication: Person, via client
   software, authenticates against Identify Provider to establish session
   token. Many operations in the DataONE system require user authentication to
   ensure that the user's identity is known to the system, and that appropriate
   access controls can be executed based on the identity.
 
-  :doc:`Use Case 14</UseCases/14_uc>` - System Authentication and
+  :doc:`Use Case 14</design/UseCases/14_uc>` - System Authentication and
   Authorization: System Authentication/Authorization - Server authenticates
   and performs system operations (e.g. replication). This use case represents
   node-to-node authentication.
 
 Support Authorization
 
-  :doc:`Use Case 13</UseCases/13_uc>` - User Authorization: ser Authorization -
+  :doc:`Use Case 13</design/UseCases/13_uc>` - User Authorization: ser Authorization -
   Client requests service (get, put, query, delete, ...) using session token.
 
 
 Support Data Usage Policies
 
-  :doc:`Use Case 08</UseCases/08_uc>` - Replication Policy Communication:
+  :doc:`Use Case 08</design/UseCases/08_uc>` - Replication Policy Communication:
   Communication of replication policy metadata between Member Nodes and
   Coordinating Nodes. The replication policy of Member Nodes (MN) indicates
   factors such as the amount of storage space available, bandwidth
@@ -389,45 +389,45 @@ Support Data Usage Policies
   (CN) to balance the distribution of data packages throughout the DataONE
   system to achieve the goals of data package persistence and accessibility.
 
-  :doc:`Use Case 31</UseCases/31_uc>` - Manage Access Policies: Manage Access
+  :doc:`Use Case 31</design/UseCases/31_uc>` - Manage Access Policies: Manage Access
   Policies - Client can specify access restrictions for their data and
   metadata objects. Also supports release time embargoes.
 
 
 Enhance the Logging Infrastructure
 
-  :doc:`Use Case 16</UseCases/16_uc>` - Log CRUD Operations: All CRUD
+  :doc:`Use Case 16</design/UseCases/16_uc>` - Log CRUD Operations: All CRUD
   operations on metadata and data are logged at each node.
 
-  :doc:`Use Case 17</UseCases/17_uc>` - CRUD Logs Aggregated at CNs: All CRUD
+  :doc:`Use Case 17</design/UseCases/17_uc>` - CRUD Logs Aggregated at CNs: All CRUD
   logs are aggregated at Coordinating Nodes.
 
-  :doc:`Use Case 18</UseCases/18_uc>` - MN Retrieve Aggregated Logs: Member
+  :doc:`Use Case 18</design/UseCases/18_uc>` - MN Retrieve Aggregated Logs: Member
   nodes can request aggregated CRUD log for {time period/object id/userid} for
   all of 'their' objects. Implementation of this use case could be deferred to
   year 3.
 
-  :doc:`Use Case 19</UseCases/19_uc>` - Retrieve Object Download Summary:
+  :doc:`Use Case 19</design/UseCases/19_uc>` - Retrieve Object Download Summary:
   General public can request aggregated download usage information by object
   id. Implementation of this use case could be deferred to year 3.
 
-  :doc:`Use Case 20</UseCases/20_uc>` - Owner Retrieve Aggregate Logs: Data
+  :doc:`Use Case 20</design/UseCases/20_uc>` - Owner Retrieve Aggregate Logs: Data
   owners can request aggregated CRUD log for {time period/object id} for all
   of 'their' objects. Implementation of this use case could be deferred to
   year 3.
 
-  :doc:`Use Case 22</UseCases/22_uc>` - Link/Citation Report for Owner: User
+  :doc:`Use Case 22</design/UseCases/22_uc>` - Link/Citation Report for Owner: User
   can get report of links/cites my data (also can view this as a referrer
   log).
 
 
 Support Notifications Based Upon DataONE Events
 
-  :doc:`Use Case 21</UseCases/21_uc>` - Owner Subscribe to CRUD Operations:
+  :doc:`Use Case 21</design/UseCases/21_uc>` - Owner Subscribe to CRUD Operations:
   Data owners can subscribe to notification service for CRUD operations for
   objects they own.
 
-  :doc:`Use Case 28</UseCases/28_uc>` - Derived Product Original Change
+  :doc:`Use Case 28</design/UseCases/28_uc>` - Derived Product Original Change
   Notification: Relationships/Versioning - Derived products should be linked
   to source objects so that notifications can be made to users of derived
   products when source products change. 
@@ -435,14 +435,14 @@ Support Notifications Based Upon DataONE Events
 
 Batch Ingest
 
-  :doc:`Use Case 07</UseCases/07_uc>` - CN Batch Upload: Batch Operations -
+  :doc:`Use Case 07</design/UseCases/07_uc>` - CN Batch Upload: Batch Operations -
   Coordinating Node requests metadata /data list from new Member Node and then
   batch upload (disable indexing for example to improve insert performance).
 
 
 Coordination Node Failover and Load Balancing 
 
-  :doc:`Use Case 29</UseCases/29_uc>` - CN Load Balancing: Load Balancing -
+  :doc:`Use Case 29</design/UseCases/29_uc>` - CN Load Balancing: Load Balancing -
   Requests to Coordinating Nodes are load balanced. Implementation of this use
   case could be deferred to years 4-5.
 
@@ -501,37 +501,37 @@ Use Cases
 
 Data and Metadata Validation
 
-  :doc:`Use Case 25</UseCases/25_uc>` - Detect Damaged Content: System should
+  :doc:`Use Case 25</design/UseCases/25_uc>` - Detect Damaged Content: System should
   scans for damaged/defaced data and metadata using some validation process.
 
-  :doc:`Use Case 26</UseCases/26_uc>` - Data Quality Checks: System performs
+  :doc:`Use Case 26</design/UseCases/26_uc>` - Data Quality Checks: System performs
   data quality checks on data.
 
 Data and Metadata Migration
 
-  :doc:`Use Case 27</UseCases/27_uc>` - Metadata Version Migration: CN should
+  :doc:`Use Case 27</design/UseCases/27_uc>` - Metadata Version Migration: CN should
   support forward migration of metadata documents from one version to another
   within a standard and to other standards.
 
 Workflow Support
 
-  :doc:`Use Case 11</UseCases/11_uc>` - CRUD Workflow Objects: Create / update
+  :doc:`Use Case 11</design/UseCases/11_uc>` - CRUD Workflow Objects: Create / update
   / delete / search workflow objects.
 
 Provenance Support
 
-  :doc:`Use Case 28</UseCases/28_uc>` - Derived Product Original Change
+  :doc:`Use Case 28</design/UseCases/28_uc>` - Derived Product Original Change
   Notification: Relationships/Versioning - Derived products should be linked
   to source objects so that notifications can be made to users of derived
   products when source products change.
 
-  :doc:`Use Case 32</UseCases/32_uc>` - Transfer Object Ownership: User or
+  :doc:`Use Case 32</design/UseCases/32_uc>` - Transfer Object Ownership: User or
   organization takes over 'ownership' of a set of objects (write access for
   orphaned records).
 
 Complete Heartbeat / Health Monitoring
 
-  :doc:`Use Case 30</UseCases/30_uc>` - MN Outage Notification: MN can notify
+  :doc:`Use Case 30</design/UseCases/30_uc>` - MN Outage Notification: MN can notify
   CN about pending outages, severity, and duration, and CNs may want to act on
   that knowledge to maintain seamless operation.
 

@@ -3,28 +3,32 @@
 
 
 .. list-table:: Functions defined in :mod:`MN_health`
-   :widths: 10 30
+   :widths: 10 10 30
    :header-rows: 1
 
-   * - Function
+   * - REST
+     - Function
      - Parameters
-   * - :func:`ping`
+   * - :ref:`MN_health.ping`
+     - :func:`ping`
      - () ``->`` :class:`Types.PingResponse`
-   * - :func:`getObjectStatistics`
+   * - :ref:`MN_health.getObjectStatistics`
+     - :func:`getObjectStatistics`
      - (:class:`token<Types.AuthToken>`, :class:`time<Types.DateTime Range>`,
        :class:`format<Types.ObjectFormat>`, ``day``) ``->``
        :class:`Types.ObjectStatistics`
-   * - :func:`getOperationStatistics`
+   * - n/a
+     - :func:`getOperationStatistics`
      - (:class:`token<Types.AuthToken>`, :class:`time<Types.DateTime Range>`,
        :class:`requestorIdentitity<Types.Principal>`, ``day``,
        :class:`typeOfOperation<Types.Event>`) ``->``
        :class:`Types.OperationStatistics`
-   * - :func:`getStatus`
+   * - :ref:`MN_health.getStatus`
+     - :func:`getStatus`
      - () ``->`` :class:`Types.StatusResponse`
 
 
 
-----
 
 .. function:: ping() -> PingResponse
 
@@ -60,7 +64,6 @@
 
 
 
-----
 
 .. function:: getObjectStatistics(token,time,format,day) -> ObjectStatistics
 
@@ -103,7 +106,6 @@
 
 
 
-----
 
 .. function:: getOperationStatistics(token,time,requestorIdentitity,day,typeOfOperation) -> OperationStatistics
 
@@ -150,7 +152,6 @@
 
 
 
-----
 
 .. function:: getStatus() -> StatusResponse
 
