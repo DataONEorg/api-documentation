@@ -54,6 +54,26 @@ Summary
     process of identity sharing (0) is used to generate the identities
     database at the Coordinating Nodes.
 
+  .. figure:: ../images/uc_12_authentication2.png
+
+    *Figure 2.* Sketch of an authentication scenario where the CILogon
+    certificate is used the authentication token when interacting with the
+    DataONE system. The user logs on to the CILogon service (1) and receives a
+    certificate (2). The user makes a request to a Member Node using the
+    certificate credentials as the authentication token (3). The Member Node
+    does not recognize the user identity in its local user database (4) and so
+    requests identity resolution from a Coordinating Node (5). The
+    Coordinating Node inspects its identity mapping tables and determines the
+    identity of the user according to the Member Node, and returns that
+    information (7). The Member Node asserts that the user has read access to
+    the object and returns it to the user (8). This approach assumes that the
+    user has had the opportunity to perform the necessary identity mapping,
+    and that the Member Node trusts the Coordinating Node's assertion about
+    the identity of the user.
+
+
+
+
 Actors
   User, Member Node, Coordinating Node, Authentication System
 
@@ -96,7 +116,7 @@ Post Conditions
    
    
 
-*Figure 1.* Interactions for use case 12.
+*Figure 3.* Interactions for use case 12.
 
 
 **Notes**
