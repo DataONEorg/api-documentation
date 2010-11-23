@@ -15,30 +15,50 @@ Version
   Draft
 
 Goal
-  User Authentication - Person via client software authenticates against
-  Identify Provider to establish session token.
+  User Authentication - Person via client software authenticates against an
+  identify provider to establish session token that can subsequently be used
+  as a proxy for the user.
 
-Summary 
-  Many operations in the DataONE system require user authentication to ensure
-  that the user's identity is known to the system, and that appropriate access
+Summary
+
+  Many operations in the DataONE system require user identity to ensure that
+  the user's identity is known to the system, and that appropriate access
   controls can be executed based on the identity.
 
   The actual identity and authentication framework may exist outside of
-  DataONE (one possible example might be the emerging `CILogon service`_).
+  DataONE, and the first version of the infrastructure will be utilizing the
+  certificate based services of the `CILogon service`_.
 
-  The authentication process might occur using either a Coordinating Node or a
-  Member Node (if it implements the DataONE authentication API).
-  
-  See also some notes about discussion at :doc:`/Authentication`
+  The user obtains a certificate from the CILogon service, then uses that
+  certificate to obtain an authentication token that can be used in the
+  DataONE system. The authentication token is a SAML document that contains
+  information mapping the user to *n* identities that may be recognized by the
+  DataONE participant nodes.
 
+  .. figure:: ../images/uc_12_authentication.png
+
+    *Figure 1.* Note: This diagram is an initial draft subject to significant
+    change. Rough sketch of an authentication scenario augmented by a
+    centralized identity mapping. A user logs on to the CILogon service (1)
+    and retrieves a certificate (2). A later connection to login to the
+    DataONE system uses the previously generated certificate to assert
+    identity with the Coordinating Node (3). The Coordinating Node looks up
+    the user's identities (4), retrieving multiple known identities for the
+    user (5). The Coordinating Node generates an encrypted XML document (e.g.
+    SAML) which contains the known identities of the user and returns the
+    document as the authentication token (6). The token is the used to
+    identify the user in a get() request against a Member Node, which checks
+    for a known alias in its own user database (8). A successful verification
+    (9) indicates the identity of the user, and verifies that the user has
+    access to the object (not shown), then returns the object (10). An initial
+    process of identity sharing (0) is used to generate the identities
+    database at the Coordinating Nodes.
 
 Actors
   User, Member Node, Coordinating Node, Authentication System
 
-
 Preconditions 
   - User is not authenticated in the system
-
 
 Triggers
   - A user logs on to the DataONE system.
@@ -48,14 +68,35 @@ Triggers
 
  
 Post Conditions
-  - An ``auth_token`` is returned to the user (application) that can be used
+  - An *auth_token* is returned to the user (application) that can be used
     for future interactions with the DataONE system.
 
-  - In the event of authentication failure, the ``auth_token`` will provide
+  - In the event of authentication failure, the *auth_token* will provide
     identity equivalent to an anonymous user.
 
-  - The authentication operation is recorded in MN or CN logs (depending on
-    where the authentication attempt was made)
+  - The authentication operation is recorded in CN logs (depending on where
+    the authentication attempt was made)
+
+  - The *auth_token* is trusted by participant Member Nodes as a proxy for the
+    actual user.
+
+
+.. uml::
+   
+   actor User
+   participant CILogon
+   User -> CILogon:login(credentials)
+   CILogon -> User: certificate
+   participant "Client" as app_client << Application >>
+   participant "Authentication API" as cn_auth << Coordinating Node >>
+   User --> app_client: certificate
+   app_client -> cn_auth: login(certificate)
+   cn_auth -> cn_auth: getAuthToken(certificate)
+   cn_auth -> app_client: SAML_token
+   
+   
+
+*Figure 1.* Interactions for use case 12.
 
 
 **Notes**
@@ -76,45 +117,3 @@ Post Conditions
 
 .. _CILogon service: http://www.cilogon.org/service
 
-
-.. figure:: images/12_interaction.png
-   :figwidth: 100%
-
-   Interactions for use case 12.
-
-
-..
-  @startuml images/12_interaction.png
-  !include ../plantuml.conf
-
-  actor User
-  participant "Client" as app_client << Application >>
-  User -> app_client
-  alt MN Login
-  participant "Authorization API" as m_authorize << Member Node >>
-    app_client -> m_authorize: login(username, password)
-    activate m_authorize
-    participant "Authentication Subsystem" as auth_system
-    m_authorize -> auth_system: authorize(username, password, domain)
-    m_authorize <-- auth_system: auth_token or FAIL
-    note right
-      The authentication system may be an external
-      service or could be operating on the CN.
-    end note
-    app_client <-- m_authorize: auth_token or FAIL
-    deactivate m_authorize
-  else CN Login
-  participant "Authentication API" as c_authenticate << Coordinating Node >>
-    app_client -> c_authenticate: login(username, password)
-    activate c_authenticate
-    c_authenticate -> auth_system: authorize(username, password, domain)
-    c_authenticate <-- auth_system: auth_token or FAIL
-    app_client <-- c_authenticate: auth_token or FAIL
-    deactivate c_authenticate
-  end MN Login
-  @enduml
-  
-  
-.. raw:: latex
-
-   \newpage
