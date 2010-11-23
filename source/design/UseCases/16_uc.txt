@@ -44,27 +44,16 @@ Post Conditions
   - The operation is recorded in the log for the node.
 
 
-.. figure:: images/16_interaction.png
-   :figwidth: 100%
+.. uml::
 
-   Interactions for use case 16.
+   participant "Client" as app_client << Application >>
+   participant "CRUD API" as m_crud << Node >>
+   app_client -> m_crud: operation (token, parameters)
+   note right
+     See Use Case 1, Use Case 4
+   end note
+   m_crud -> m_crud: log (typeOfOperation, identifier, requestorIdentity, dateOfRequest, ...)
+   m_crud --> app_client: response
 
+*Figure 1.* Interactions for use case 16.
 
-..
-  @startuml images/16_interaction.png
-  !include ../plantuml.conf
-
-  participant "Client" as app_client << Application >>
-  participant "CRUD API" as m_crud << Node >>
-  app_client -> m_crud: operation (token, parameters)
-  note right
-    See Use Case 1, Use Case 4
-  end note
-  m_crud -> m_crud: log (typeOfOperation, identifier, requestorIdentity, dateOfRequest, ...)
-  m_crud --> app_client: response
-  @enduml
-
-
-.. raw:: latex
-
-   \newpage

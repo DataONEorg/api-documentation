@@ -59,6 +59,18 @@ Post Conditions
 
   - Account information is replicated across CNs
 
+.. uml::
+
+   actor User
+   participant "Client" as app_client << Application >>
+   User -> app_client
+   participant "Authentication API" as c_authenticate << Coordinating Node >>
+   app_client -> c_authenticate: newAccount (user, pw)
+   app_client <-- c_authenticate: token or failure
+   User <-- c_authenticate: email confirmation
+
+*Figure 1.* Interactions for use case 15.
+
 
 **Notes**
 
@@ -70,26 +82,3 @@ Post Conditions
   management functionality isn't provided by the CN. Right? (PEA)
 
 
-
-.. figure:: images/15_interaction.png
-   :width: 100%
-
-   Interactions for use case 15.
-
-..
-  @startuml images/15_interaction.png
-  !include ../plantuml.conf
-
-  actor User
-  participant "Client" as app_client << Application >>
-  User -> app_client
-  participant "Authentication API" as c_authenticate << Coordinating Node >>
-  app_client -> c_authenticate: newAccount (user, pw)
-  app_client <-- c_authenticate: token or failure
-  User <-- c_authenticate: email confirmation
-  @enduml
-
-
-.. raw:: latex
-
-   \newpage

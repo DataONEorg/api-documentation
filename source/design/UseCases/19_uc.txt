@@ -39,37 +39,25 @@ Post Conditions
     authorized).
 
 
-.. figure:: images/19_interaction.png
-   :width: 100%
+.. uml::
 
-   Interactions for use case 19.
+   actor User
+   participant "Client" as app_client << Application >>
+   User -> app_client
+   participant "Authentication API" as c_authenticate << Coordinating Node >>
+   app_client -> c_authenticate: login (user, pw)
+   app_client <-- c_authenticate: token or failure
+   participant "Query API" as c_query << Coordinating Node >>
+   app_client -> c_query: usageQuery (token, GUID)
+   participant "Authorization API" as c_authorize << Coordinating Node >>
+   c_query -> c_authorize: isAuth (token, resultset)
+   c_query <-- c_authorize: T or F
+   app_client <-- c_query: download usage records
+   note right
+   Can the Query API handle queries
+   on log records or should this be
+   handled by another API?
+   (e.g. "Report API"?)
+   end note
 
-
-..
-  @startuml images/19_interaction.png
-  !include ../plantuml.conf
-  actor User
-  participant "Client" as app_client << Application >>
-  User -> app_client
-  participant "Authentication API" as c_authenticate << Coordinating Node >>
-  app_client -> c_authenticate: login (user, pw)
-  app_client <-- c_authenticate: token or failure
-  participant "Query API" as c_query << Coordinating Node >>
-  app_client -> c_query: usageQuery (token, GUID)
-  participant "Authorization API" as c_authorize << Coordinating Node >>
-  c_query -> c_authorize: isAuth (token, resultset)
-  c_query <-- c_authorize: T or F
-  app_client <-- c_query: download usage records
-  note right
-  Can the Query API handle queries
-  on log records or should this be
-  handled by another API?
-  (e.g. "Report API"?)
-  end note
-  @enduml
-
-
-
-.. raw:: latex
-
-   \newpage
+*Figure 1.* Interactions for use case 19.

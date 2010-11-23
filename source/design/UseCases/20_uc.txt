@@ -45,42 +45,30 @@ Post Conditions
   - User has a copy of use information
 
 
-.. figure:: images/20_interaction.png
-   :width: 100%
+.. uml::
 
-   Interactions for use case 20.
+   actor "User (Data Owner)" as user
+   participant "Client" as app_client << Application >>
+   user -> app_client
+   participant "Authentication API" as c_authenticate << Coordinating Node >>
+   app_client -> c_authenticate: login (user, pw)
+   app_client <-- c_authenticate: token or failure
+   participant "Query API" as c_query << Coordinating Node >>
+   app_client -> c_query: getLogRecords (GUID, fromDate, toDate)
+   participant "Authorization API" as c_authorize << Coordinating Node >>
+   c_query -> c_authorize: isAuth (token, resultset)
+   participant "Verify API" as c_ver << Coordinating Node >>
+   c_authorize -> c_ver: isValidToken (token)
+   c_authorize <-- c_ver: T or F
+   c_query <-- c_authorize: T or F
+   app_client <-- c_query: records or fail
+   note right
+   Can the Query API handle queries
+   on log records or should this be
+   handled by another API?
+   (e.g. "Report API"?)
+   end note
+   
 
+*Figure 1.* Interactions for use case 20.
 
-..
-  @startuml images/20_interaction.png
-  !include ../plantuml.conf
-
-  actor "User (Data Owner)" as user
-  participant "Client" as app_client << Application >>
-  user -> app_client
-  participant "Authentication API" as c_authenticate << Coordinating Node >>
-  app_client -> c_authenticate: login (user, pw)
-  app_client <-- c_authenticate: token or failure
-  participant "Query API" as c_query << Coordinating Node >>
-  app_client -> c_query: getLogRecords (GUID, fromDate, toDate)
-  participant "Authorization API" as c_authorize << Coordinating Node >>
-  c_query -> c_authorize: isAuth (token, resultset)
-  participant "Verify API" as c_ver << Coordinating Node >>
-  c_authorize -> c_ver: isValidToken (token)
-  c_authorize <-- c_ver: T or F
-  c_query <-- c_authorize: T or F
-  app_client <-- c_query: records or fail
-  note right
-  Can the Query API handle queries
-  on log records or should this be
-  handled by another API?
-  (e.g. "Report API"?)
-  end note
-  @enduml
-
-
-
-.. raw:: latex
-
-   \newpage
-  

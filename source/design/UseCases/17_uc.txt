@@ -49,36 +49,22 @@ Post Conditions
 
   - Log processing is triggered on CNs
 
-.. figure:: images/17a_interaction.png
-   :figwidth: 100%
-   
-   Interactions for use case 17, part 1.
-   
-.. figure:: images/17b_interaction.png
-   :figwidth: 100%
-   
-   Interactions for use case 17, part 2.
-   
-..
-  @startuml images/17a_interaction.png
-  !include ../plantuml.conf
-  participant "CRUD API" as m_crud << Member Node >>
-  participant "Synchronization API" as c_sync << Coordinating Node >>
-  loop for each MN
-    c_sync -> m_crud: getLogRecords (token, fromDate, toDate)
-    c_sync <-- m_crud: records or fail
-  end loop
-  @enduml
-  
-..  
-  @startuml images/17b_interaction.png
-  !include ../plantuml.conf
-    participant "Admin" as app_admin << Application >>
-    participant "Query Health API" as c_query << Coordinating Node >>
-    app_admin -> c_query: getLogRecords (token, fromDate, toDate)
-    c_query --> app_admin: logRecords
-  @enduml
+.. uml::
 
-.. raw:: latex
+   participant "CRUD API" as m_crud << Member Node >>
+   participant "Synchronization API" as c_sync << Coordinating Node >>
+   loop for each MN
+     c_sync -> m_crud: getLogRecords (token, fromDate, toDate)
+     c_sync <-- m_crud: records or fail
+   end loop
 
-   \newpage
+*Figure 1.* Interactions for use case 17, part 1.
+   
+.. uml::
+
+   participant "Admin" as app_admin << Application >>
+   participant "Query Health API" as c_query << Coordinating Node >>
+   app_admin -> c_query: getLogRecords (token, fromDate, toDate)
+   c_query --> app_admin: logRecords
+
+*Figure 2.* Interactions for use case 17, part 2.

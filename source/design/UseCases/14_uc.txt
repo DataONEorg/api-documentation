@@ -48,22 +48,7 @@ Post Conditions
   - The authentication token is optionally disposed
 
 
-.. figure:: images/14_uc.png
-   :width: 100%
-
-   Use case 14.
-
-
-.. figure:: images/14_interaction.png
-   :width: 100%
-
-   Interactions for use case 14.
-
-
-.. 
-  @startuml images/14_uc.png
-   !include ../plantuml.conf
-   usecase "12. User Authentication" as authen
+.. uml::
 
    actor "Coordinating Node" as CN 
    actor "Member Node A" as MN_A 
@@ -77,35 +62,32 @@ Post Conditions
    SYSOP ..> author: <<includes>>
    SYSOP ..> authen: <<includes>>
    SYSOP ..> repl: <<includes>
-  @enduml
+   
+
+*Figure 1.* Use case 14, system authentication
 
 
-..
-  @startuml images/14_interaction.png
-  !include ../plantuml.conf
-  participant "Replication API" as m_rep_a << Member Node A >>
-  participant "Replication API" as m_rep_b << Member Node B >>
-  participant "Authentication API" as c_authenticate << Coordinating Node >>
-  participant "Verify API" as c_ver << Coordinating Node >>
-  m_rep_a -> c_authenticate: login(user, pw)
-  note right
-    The user in this case is the DataONE 
-    identity given to MN A.
-  end note
-  m_rep_a <-- c_authenticate: token or failure
-  m_rep_a -> m_rep_b: getContent(token, ...)
-  m_rep_b -> c_ver: isAuthorized(token, ...)
-  m_rep_b <-- c_ver: True or False
-  m_rep_a <-- m_rep_b: content or Fail
-  note right
-    Member Node A is now in a modified 
-    state and should signal this during
-    next status request from a CN
-  end note
-  m_rep_a --> c_authenticate: logout(token)
-  @enduml
-  
+.. uml::
 
-.. raw:: pdf
-  
-   PageBreak
+   participant "Replication API" as m_rep_a << Member Node A >>
+   participant "Replication API" as m_rep_b << Member Node B >>
+   participant "Authentication API" as c_authenticate << Coordinating Node >>
+   participant "Verify API" as c_ver << Coordinating Node >>
+   m_rep_a -> c_authenticate: login(user, pw)
+   note right
+     The user in this case is the DataONE 
+     identity given to MN A.
+   end note
+   m_rep_a <-- c_authenticate: token or failure
+   m_rep_a -> m_rep_b: getContent(token, ...)
+   m_rep_b -> c_ver: isAuthorized(token, ...)
+   m_rep_b <-- c_ver: True or False
+   m_rep_a <-- m_rep_b: content or Fail
+   note right
+     Member Node A is now in a modified 
+     state and should signal this during
+     next status request from a CN
+   end note
+   m_rep_a --> c_authenticate: logout(token)
+
+*Figure 2.* Interactions for use case 14.
