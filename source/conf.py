@@ -56,7 +56,11 @@ extensions = ['sphinx.ext.autodoc',
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
-plantuml = 'plantuml'
+#Full path to the plantuml.jar file. This will normally be present in the tools folder.
+plantumljar = os.path.abspath('../tools/plantuml.jar')
+
+#Full command line for executing plantuml. Note that java must be on your path
+plantuml = 'java -jar %s -config source/plantuml.conf' % plantumljar
 
 # The suffix of source filenames.
 source_suffix = '.txt'

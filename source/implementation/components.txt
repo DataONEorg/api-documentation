@@ -9,7 +9,7 @@ Dependency Graph
 .. graphviz::
 
    digraph components {
-     rankdir = BT;
+     rankdir = R;
      fontname = "Bitstream Vera Sans";
      fontsize = 8;
 
@@ -29,17 +29,17 @@ Dependency Graph
        fontsize = 8
        fontcolor = "black"];   
 
-     arch [label="d1_architecture\n/documents/Projects/documentation/architecture"
+     arch [label="d1_architecture"
            URL="https://repository.dataone.org/documents/Projects/documentation/architecture"];
-     schemas [label="d1_schemas\n/software/cicore/trunk/d1_schemas"
+     schemas [label="d1_schemas"
               URL="https://repository.dataone.org/software/cicore/trunk/d1_schemas"]
-     commonjava [label="d1_common_java\n/software/cicore/trunk/d1_common_java"
+     commonjava [label="d1_common_java"
                  URL="https://repository.dataone.org/software/cicore/trunk/d1_common_java"];
-     commonpython [label="d1_common_python\n/software/cicore/trunk/d1_common_python"
+     commonpython [label="d1_common_python"
                    URL="https://repository.dataone.org/software/cicore/trunk/d1_common_python"];
-     javalib [label="d1_clientlib_java\n/software/cicore/trunk/d1_libclient_java"
+     javalib [label="d1_libclient_java"
               URL="https://repository.dataone.org/software/cicore/trunk/d1_libclient_java"];
-     pythonlib [label="d1_clientlib_python\n/software/cicore/trunk/d1_libclient_python"
+     pythonlib [label="d1_libclient_python"
                 URL="https://repository.dataone.org/software/cicore/trunk/d1_libclient_python"];
 
      
@@ -49,6 +49,7 @@ Dependency Graph
        cnsvc [label="d1_cn_service"];
        indexer [label="d1_indexer"];
        sync [label="d1_synchronization"];
+       metacatCN [label="metacat"];
      }
 
      subgraph cluster_MN {
@@ -78,12 +79,13 @@ Dependency Graph
      commonjava -> schemas;
      commonpython -> schemas;
      metacat -> commonjava;
+     metacatCN -> commonjava;
      javalib -> commonjava;
      javalib -> arch [style="dotted"];
      pythonlib -> arch [style="dotted"];
      
      cnsvc -> commonjava;
-     cnsvc -> metacat;
+     cnsvc -> metacatCN;
      cnsvc -> arch [style="dotted"];
      indexer -> commonjava;
      sync -> commonjava;
@@ -110,29 +112,33 @@ Dependency Graph
 Group  Product Name        Issue Category   Description
 ====== =================== ================ ================================================
 Core                                       
-.      d1_architecture     architecture     The system architecture documentation
-.      d1_schemas          schemas          The core schemas used for defining serialization
-.      d1_common-java      common_java      Base DataONE library in Java
-.      d1_common-python    common_python    Base DataONE library in Python
-.      metacat             metacat          The Metacat application
+\      d1_architecture     architecture     The system architecture documentation
+\      d1_schemas          schemas          The core schemas used for defining serialization
+\      d1_common-java      common_java      Base DataONE library in Java
+\      d1_common-python    common_python    Base DataONE library in Python
+\      metacat             metacat          The Metacat application
 CN                         
-.      d1_cn_service       cn_service      
-.      d1_indexer          indexer
-.      d1_synchronization  synchronization
+\      d1_cn_service       cn_service       Coordinating node service, implementing the
+                                            service APIs, data storage, and CN replication.
+\      d1_indexer          indexer          Enables search of data and metadata (Mercury)
+\      d1_synchronization  synchronization  Manages the synchronization of content between
+                                            Member Nodes and the Coordinating Nodes.
 MN                         
-.      d1_mn_generic       mn_generic
-.      d1_mn_daac          mn_daac
-.      d1_mn_dryad         mn_dryad
-.      d1_mn_fedora        mn_fedora
+\      d1_mn_generic       mn_generic       A generic, standalone Member Node implementation
+                                            written in Python
+\      d1_mn_daac          mn_daac          Adaptation of the generic Member Node to support
+                                            Member Node functionality on the DAAC
+\      d1_mn_dryad         mn_dryad         Currently the python adaptation of the GMN
+\      d1_mn_fedora        mn_fedora        Prototype Fedora Commons Member Node
 ITK                        
-.      d1_libclient_java   libclient_java
-.      d1_libclient_python libclient_python
-.      d1_client_cli       client_cli
-.      d1_client_fuse      client_fuse
-.      d1_client_r         client_r
+\      d1_libclient_java   libclient_java
+\      d1_libclient_python libclient_python
+\      d1_client_cli       client_cli
+\      d1_client_fuse      client_fuse
+\      d1_client_r         client_r
 Other
-.      d1-monitor          monitor
-.      d1-debian-base      debian-base
+\      d1-monitor          monitor
+\      d1-debian-base      debian-base
 ====== =================== ================ ================================================
 
 
