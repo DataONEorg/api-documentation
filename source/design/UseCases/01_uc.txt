@@ -1,12 +1,7 @@
-.. raw:: latex
-
-  \newpage
-  
-
 Use Case 01 - Get Object Identified by GUID
 -------------------------------------------
 
-.. index:: Use Case 01, Get
+.. index:: Use Case 01, get
 
 Author
   VDC TWG
@@ -18,9 +13,6 @@ Date
   - 20090924 Adding to use case description and documentation
   - 20090114 (TWG meeting).  Subsequent various modifications.
 
-Version 
-  0.3
-
 Goal
   Retrieve an object identified by GUID (authenticated or not, notify
   subscriber of access).
@@ -31,9 +23,6 @@ Summary
   Coordinating Node). If the object exists on the node and the user has READ
   permission on the object, then the bytes of that object are returned,
   otherwise an error condition occurs.
-
-  After V0.3 - Watchers (subscribers) of the object are notified of the retrieval (what are
-  they notified of?).
 
 Actors
   - Client requesting object
@@ -56,6 +45,61 @@ Post Conditions
   - Watchers are notified of the event.
 
 
+.. uml::
+
+   actor "User" as client
+   usecase "12. Authentication" as authen
+   note top of authen
+   Authentication may be provided 
+   by an external service
+   end note
+
+   package "DataONE"
+     actor "Coordinating Node" as CN
+     actor "Member Node" as MN
+     usecase "13. Authorization" as author
+     usecase "01. Get Object" as GET
+     usecase "16. Log event" as log
+     usecase "21. Notify subscribers" as subscribe
+     client -- GET
+     CN -- GET
+     MN -- GET
+     GET ..> author: <<includes>>
+     GET ..> authen: <<includes>>
+     GET ..> log: <<includes>>
+     GET ..> subscribe: <<includes>>
+
+*Figure 1.* Use case 01 diagram showing actors and components involved in this
+action.
+
+
+.. uml::
+
+   participant "Client" as app_client << Application >>
+   participant "CRUD API" as n_crud << Node >>
+   participant "Authorization API" as n_authorize << Node >>
+   participant "Object Store" as n_ostore << Node >>
+   app_client -> n_crud: get(token, GUID)
+   n_crud -> n_authorize: isAuthorized(token, GUID, READ)
+   n_crud <- n_authorize: True, False, Err.NotFound
+   alt NotFound
+     app_client <- n_crud: Err.NotFound
+   else False
+     app_client <- n_crud: Err.NotAuthorized
+   else True
+     n_crud -> n_ostore: read(GUID)
+     n_crud <- n_ostore: bytes
+     n_crud --> n_crud: log(READ)
+     app_client <- n_crud: bytes
+   end
+
+
+*Figure 2.* Sequence diagram for Use Case 01 illustrating the sequence for
+retrieving an object identified by a GUID from the DataONE system. No
+distinction is made between Member Node and Coordinating Node implementation
+as they are identical at this level of detail.
+
+
 **Notes**
 
 1. For the GET operation, should isAuth() be performed only by CNs? Relying on
@@ -68,82 +112,3 @@ Post Conditions
 
 2. Data sent to watchers might include: timestamp, object identifier, user id,
    IP of client.
-
-----
-
-.. figure:: images/01_uc.png
-   :align: center
-   :figwidth: 100%
-
-   Use case 01 diagram showing actors and components involved in this action.
-
-----
-
-.. figure:: images/01_interaction.png
-   :figwidth: 100%
-
-   Sequence diagram for Use Case 01 illustrating the sequence for retrieving
-   an object identified by a GUID from the DataONE system. No distinction is
-   made between Member Node and Coordinating Node implementation as they are
-   identical at this level of detail.
-
-
-.. raw:: latex
-
-  \newpage
-
-.. raw:: pdf
-
-  PageBreak
-
-.. 
-  This block defines the use case diagram referenced above
-  @startuml images/01_uc.png
-    !include ../plantuml.conf
-    actor "User" as client
-    usecase "12. Authentication" as authen
-    note top of authen
-    Authentication may be provided 
-    by an external service
-    end note
-
-    package "DataONE"
-      actor "Coordinating Node" as CN
-      actor "Member Node" as MN
-      usecase "13. Authorization" as author
-      usecase "01. Get Object" as GET
-      usecase "16. Log event" as log
-      usecase "21. Notify subscribers" as subscribe
-      client -- GET
-      CN -- GET
-      MN -- GET
-      GET ..> author: <<includes>>
-      GET ..> authen: <<includes>>
-      GET ..> log: <<includes>>
-      GET ..> subscribe: <<includes>>
-  @enduml
-
-
-..
-  This block defines the use sequence diagram referenced above
-  @startuml images/01_interaction.png
-  !include ../plantuml.conf
-  participant "Client" as app_client << Application >>
-  participant "CRUD API" as n_crud << Node >>
-  participant "Authorization API" as n_authorize << Node >>
-  participant "Object Store" as n_ostore << Node >>
-  app_client -> n_crud: get(token, GUID)
-  n_crud -> n_authorize: isAuthorized(token, GUID, READ)
-  n_crud <- n_authorize: True, False, Err.NotFound
-  alt NotFound
-    app_client <- n_crud: Err.NotFound
-  else False
-    app_client <- n_crud: Err.NotAuthorized
-  else True
-    n_crud -> n_ostore: read(GUID)
-    n_crud <- n_ostore: bytes
-    n_crud --> n_crud: log(READ)
-    app_client <- n_crud: bytes
-  end
-  @enduml
-

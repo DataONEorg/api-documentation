@@ -68,112 +68,90 @@ Post Conditions
   - Member Node and Coordinating Node logs are updated
 
 
-.. figure:: images/09_UC.png
+.. uml::
+   
+   usecase "12. Authentication" as authen
+   package "DataONE"
+     actor "Coordinating Node" as CN
+     actor "Member Node 1" as MN1
+     actor "Member Node 2" as MN2
+     usecase "13. Authorization" as author
+     usecase "01. Get Object" as GET
+     usecase "04. Create object" as CREATE
+     usecase "16. Log event" as log
+     usecase "21. Notify subscribers" as subscribe
+     CN -- CREATE
+     MN1 -- CREATE
+     MN2 -- GET
+     MN1 -- GET
+     GET ..> author: <<includes>>
+     GET ..> authen: <<includes>>
+     GET ..> log: <<includes>>
+     GET ..> subscribe: <<includes>>
+     CREATE ..> author: <<includes>>
+     CREATE ..> log: <<includes>>
+     CREATE ..> subscribe: <<includes>>
 
-   Use case diagram indicating the actors involved in the process of Member
-   Node replication.
+*Figure 1.* Use case diagram indicating the actors involved in the process of
+Member Node replication.
 
-----
+.. uml::
 
-.. figure:: images/09_interaction.png
-   :figwidth: 100%
+   title Interactions: 09 - Replicate data from Member Node to Member Node
 
-   Interactions for use case 09. The diagram describes transfer of a single
-   object from MN_B to MN_A as directed by a CN. It is assumed that the object
-   does not exist on MN_B and the object has been identified as requiring
-   synchronization by the CN checking its status in the system metadata.
+   participant "Replication API" as c_sync << Coordinating Node >>
+   participant "CRUD API" as m_crud_b << Member Node B >>
+   participant "CRUD API" as m_crud_a << Member Node A >>
 
+   c_sync -> c_sync: setReplicationStatus(GUID, Queued)
+   activate c_sync
+     c_sync -> m_crud_b: replicate(token, GUID, SourceNode)
+   deactivate c_sync
 
-..
-  This block defines the use case diagram referenced above
-  @startuml images/09_uc.png
-    !include ../plantuml.conf
-    usecase "12. Authentication" as authen
+   activate m_crud_b
+     m_crud_b -> c_sync: setReplicationStatus(token, GUID, Requested)
+     activate c_sync
+       c_sync --> m_crud_b: OK
+     deactivate c_sync
 
-    package "DataONE"
-      actor "Coordinating Node" as CN
-      actor "Member Node 1" as MN1
-      actor "Member Node 2" as MN2
-      usecase "13. Authorization" as author
-      usecase "01. Get Object" as GET
-      usecase "04. Create object" as CREATE
-      usecase "16. Log event" as log
-      usecase "21. Notify subscribers" as subscribe
-      CN -- CREATE
-      MN1 -- CREATE
-      MN2 -- GET
-      MN1 -- GET
-      GET ..> author: <<includes>>
-      GET ..> authen: <<includes>>
-      GET ..> log: <<includes>>
-      GET ..> subscribe: <<includes>>
-      CREATE ..> author: <<includes>>
-      CREATE ..> log: <<includes>>
-      CREATE ..> subscribe: <<includes>>
-  @enduml
-
-
-
-..
-  @startuml images/09_interaction.png
-  !include ../plantuml.conf
-  title Interactions: 09 - Replicate data from Member Node to Member Node
-
-  participant "Replication API" as c_sync << Coordinating Node >>
-  participant "CRUD API" as m_crud_b << Member Node B >>
-  participant "CRUD API" as m_crud_a << Member Node A >>
-  
-  c_sync -> c_sync: setReplicationStatus(GUID, Queued)
-  activate c_sync
-    c_sync -> m_crud_b: replicate(token, GUID, SourceNode)
-  deactivate c_sync
-  
-  activate m_crud_b
-    m_crud_b -> c_sync: setReplicationStatus(token, GUID, Requested)
-    activate c_sync
-      c_sync --> m_crud_b: OK
-    deactivate c_sync
-
-    m_crud_b -> m_crud_a: get(token, GUID)
-    activate m_crud_a
-      m_crud_a --> m_crud_a: log(GUID, REPLICATE)
-      m_crud_a -> m_crud_b: bytes
-    deactivate m_crud_a
-    m_crud_b -> c_sync: getChecksum(token, GUID)
-    activate c_sync
-    note right
-      The MN must verify the checksum of the 
-      object before committing storage 
-      of the object.
-    end note
-    c_sync --> m_crud_b: checksum
-    deactivate c_sync
-    m_crud_b -> m_crud_b: create(token, GUID, bytes)
-    m_crud_b --> m_crud_b: log(GUID, REPLICATE)
-    m_crud_b -> c_sync: setReplicationStatus(token, GUID, Complete)
-    activate c_sync
-      c_sync -> m_crud_b: getSystemMetadata(token, GUID)
-      m_crud_b --> c_sync: SystemMetadata
-      note right
-        CN needs a copy of system metadata from
-        MN to verify that copy completed
-      end note
-      c_sync -> c_sync: verifySystemMetadata
-      note right
-        CN updates the SystemMetadata for GUID,
-        setting appropriate values of replica with
-        the member node, time stamp, and status.
-      end note
-      c_sync --> c_sync: log(GUID, REPLICATE)
-      c_sync --> m_crud_b: OK
-      m_crud_b --> c_sync: OK
-    deactivate c_sync
-  deactivate m_crud_b
-
-  @enduml
+     m_crud_b -> m_crud_a: get(token, GUID)
+     activate m_crud_a
+       m_crud_a -> m_crud_b: bytes
+     deactivate m_crud_a
+     m_crud_b -> c_sync: getChecksum(token, GUID)
+     activate c_sync
+     note right
+       The MN must verify the checksum of the 
+       object before committing storage 
+       of the object.
+     end note
+     c_sync --> m_crud_b: checksum
+     deactivate c_sync
+     m_crud_b -> m_crud_b: create(token, GUID, bytes)
+     m_crud_b --> m_crud_b: log(GUID, REPLICATE)
+     m_crud_b -> c_sync: setReplicationStatus(token, GUID, Complete)
+     activate c_sync
+       c_sync -> m_crud_b: getSystemMetadata(token, GUID)
+       m_crud_b --> c_sync: SystemMetadata
+       note right
+         CN needs a copy of system metadata from
+         MN to verify that copy completed
+       end note
+       c_sync -> c_sync: verifySystemMetadata
+       note right
+         CN updates the SystemMetadata for GUID,
+         setting appropriate values of replica with
+         the member node, time stamp, and status.
+       end note
+       c_sync --> c_sync: log(GUID, REPLICATE)
+       c_sync --> m_crud_b: OK
+       m_crud_b --> c_sync: OK
+     deactivate c_sync
+   deactivate m_crud_b
 
 
-.. raw:: latex
-
-   \newpage
+*Figure 2.* Interactions for use case 09. The diagram describes transfer of a
+single object from MN_B to MN_A as directed by a CN. It is assumed that the
+object does not exist on MN_B and the object has been identified as requiring
+synchronization by the CN checking its status in the system metadata.
 

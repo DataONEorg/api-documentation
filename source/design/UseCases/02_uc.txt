@@ -1,7 +1,3 @@
-.. raw:: latex
-
-  \newpage
-
 Use Case 02 - List GUIDs By Search
 ----------------------------------
 
@@ -15,9 +11,6 @@ Date
   - 20090927 Provided more detail to use case
   - 20090925 Adding to use case description and documentation
   - 20090114 (TWG meeting).  Subsequent various modifications
-
-Version 
-  0.3
 
 Goal
   Get list of GUIDs from metadata search (anonymous and authenticated).
@@ -127,31 +120,8 @@ Post Conditions
   as a hit against each object? Just log the query (and perhaps who did it)?
 
 
-.. figure:: images/02_uc.png
-   :figwidth: 75%
-   
-   Use case 02.
+.. uml::
 
-
-.. figure:: images/02_interaction.png
-   :figwidth: 100%
-
-   Interactions for use case 02.
-
-
-.. raw:: latex
-
- \newpage
-
-.. raw:: pdf
-
- PageBreak
-
-
-
-.. 
-  @startuml images/02_uc.png
-  !include ../plantuml.conf
   actor User
   usecase "12. Authentication" as authen
 
@@ -163,31 +133,31 @@ Post Conditions
    CN -- SEARCH
    SEARCH ..> author: <<includes>>
    SEARCH ..> authen: <<includes>>
-  @enduml
+
+*Figure 1.* Use case 02.
 
 
-..
-  @startuml images/02_interaction.png
-  !include ../plantuml.conf
-  participant "Client" as app_client << Application >>
-  participant "Query API" as c_query << Coordinating Node >>
-  participant "Authentication API" as c_authenticate << Coordinating Node >>
-  participant "CRUD API" as c_crud << Coordinating Node >>
-  app_client -> c_query: search(token, query)
-  activate c_query
-  c_query -> c_query: search -> objectList
-  note right of c_query
-    The query response is a list of IDs.
-    Each ID needs to be checked for read 
-    access by the authenticated user.
-  end note
-    loop for ID in objectList
-      c_query -> c_authenticate: isAuthorized(token, ID, OP_GET)
-      c_query <-- c_authenticate: T or F
-    end 
-  c_query --> c_crud: log
-  app_client <-- c_query: objectList
-  deactivate c_query
-  @enduml
+.. uml::
 
+   participant "Client" as app_client << Application >>
+   participant "Query API" as c_query << Coordinating Node >>
+   participant "Authentication API" as c_authenticate << Coordinating Node >>
+   participant "CRUD API" as c_crud << Coordinating Node >>
+   app_client -> c_query: search(token, query)
+   activate c_query
+   c_query -> c_query: search -> objectList
+   note right of c_query
+     The query response is a list of IDs.
+     Each ID needs to be checked for read 
+     access by the authenticated user.
+   end note
+     loop for ID in objectList
+       c_query -> c_authenticate: isAuthorized(token, ID, OP_GET)
+       c_query <-- c_authenticate: T or F
+     end 
+   c_query --> c_crud: log
+   app_client <-- c_query: objectList
+   deactivate c_query
+
+*Figure 2.* Interaction diagram for Use Case 02.
 

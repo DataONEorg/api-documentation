@@ -28,9 +28,9 @@ Summary
 
 Actors
 
-  - CN
+  - Coordinating Node
 
-  - MN
+  - Member Node
 
 Preconditions 
 
@@ -47,29 +47,20 @@ Post Conditions
 
 
 
-.. figure:: images/07_interaction.png
-   :figwidth: 100%
+.. uml::
 
-   Interactions for use case 07.
+   title Interactions: 07 - Coordinating Node requests metadata, data list from new Member Node\nand then performs a batch upload.interaction
 
-..
-  @startuml images/07_interaction.png
-  !include ../plantuml.conf
-  title Interactions: 07 - Coordinating Node requests metadata, data list from new Member Node\nand then performs a batch upload.interaction
+   participant "CRUD API" as c_crud << Coordinating Node >>
+   participant "Synchronization API" as c_sync << Coordinating Node >>
+   participant "Replication API" as m_rep << Member Node >>
+   c_sync -> m_rep: listObjects ()
+   c_sync <-- m_rep: objectList
+   participant "CRUD API" as m_crud << Member Node >>
+   c_sync -> m_crud: batchGet (objectList)
+   c_sync <-- m_crud: objects
+   c_sync -> c_sync: verifyObjectsReceived ()
+   c_sync -> c_crud: batchWrite (objectsList)
 
-  participant "Synchronization API" as c_sync << Coordinating Node >>
-  participant "Replication API" as m_rep << Member Node >>
-  c_sync -> m_rep: listAllObjects ()
-  c_sync <-- m_rep: objectsList
-  participant "CRUD API" as m_crud << Member Node >>
-  c_sync -> m_crud: batchGet (objectsList)
-  c_sync <-- m_crud: objects
-  c_sync -> c_sync: verifyAllObjectsReceived ()
-  participant "CRUD API" as c_crud << Coordinating Node >>
-  c_sync -> c_crud: batchWrite (objectsList)
-  @enduml
+*Figure 1.* Interactions for use case 07.
 
-
-.. raw:: latex
-
-   \newpage

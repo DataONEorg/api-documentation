@@ -52,7 +52,44 @@ Post Conditions
 
   - Watchers are notified in change in DataONE system property  
 
-  
+
+.. uml::
+
+   package "DataONE"
+     actor "Coordinating Node" as CN
+     actor "Member Node" as MN
+     usecase "13. Authorization" as author
+     usecase "01. MN Policy" as policy
+     usecase "XX. Notify Watchers" as NOTIFY
+     usecase "XX. CN Synchronize" as CNSYNC
+     CN -- policy
+     MN -- policy
+     policy ..> author: <<includes>>
+     policy ..> NOTIFY: <<includes>>
+     policy ..> CNSYNC: <<includes>>
+   
+*Figure 1.* Use case 08.
+
+
+.. uml::
+
+   participant "Replication API" as c_rep << Coordinating Node >>
+   participant "Replication API" as m_rep << Member Node >>
+   c_rep -> m_rep: ping()
+   m_rep --> c_rep: [ACK, PolicyChange]
+   m_rep -> c_rep: 1.a. setDefaultReplicationPolicy (system_token, policy)
+   m_rep -> c_rep: 1.b. setReplicationPolicy (sess, policy, ID)
+   m_rep -> c_rep: 2.a. getDefaultReplicationPolicy (sess)
+   m_rep -> c_rep: 2.b. getReplicationPolicy (sess, ID)
+   c_rep -> m_rep: policy
+   note right
+     Policy:
+     Where
+     When
+     What gets replicated
+   end note
+
+*Figure 2.* Communication of Replication Policy Metadata
 
 
 **Notes**
@@ -64,60 +101,3 @@ Post Conditions
   changed to avoid thrashing that might occur for example, if a MN flips
   between significant differences in storage capacities (low to high, then low
   again).
-
-
-.. figure:: images/08_uc.png
-   :figwidth: 100%
-   
-   Use case 08.
-
-
-.. figure:: images/08_interaction.png
-   :figwidth: 100%
-
-   Communication of Replication Policy Metadata
-
-
-..
-  @startuml images/08_uc.png
-  !include ../plantuml.conf
-  package "DataONE"
-    actor "Coordinating Node" as CN
-    actor "Member Node" as MN
-    usecase "13. Authorization" as author
-    usecase "01. MN Policy" as policy
-    usecase "XX. Notify Watchers" as NOTIFY
-    usecase "XX. CN Synchronize" as CNSYNC
-    CN -- policy
-    MN -- policy
-    policy ..> author: <<includes>>
-    policy ..> NOTIFY: <<includes>>
-    policy ..> CNSYNC: <<includes>>
-  @enduml
-
-
-
-..
-  @startuml images/08_interaction.png
-  !include ../plantuml.conf
-  participant "Replication API" as c_rep << Coordinating Node >>
-  participant "Replication API" as m_rep << Member Node >>
-  c_rep -> m_rep: ping()
-  m_rep --> c_rep: [ACK, PolicyChange]
-  m_rep -> c_rep: 1.a. setDefaultReplicationPolicy (system_token, policy)
-  m_rep -> c_rep: 1.b. setReplicationPolicy (sess, policy, ID)
-  m_rep -> c_rep: 2.a. getDefaultReplicationPolicy (sess)
-  m_rep -> c_rep: 2.b. getReplicationPolicy (sess, ID)
-  c_rep -> m_rep: policy
-  note right
-  	Policy:
-  	Where
-  	When
-  	What gets replicated
-  end note
-  @enduml
-
-
-.. raw:: latex
-
-   \newpage

@@ -9,13 +9,9 @@ Date
   - 20090925 Adding to use case description and documentation
   - 20090114 (TWG meeting).  Subsequent various modifications.
 
-Version 
-  0.3
-
 Goal 
   Coordinating Node checks "liveness" of all Member Nodes - checks ping,
   service x, load, space, bandwidth, transaction rate, ...
-
 
 Summary 
 
@@ -51,44 +47,35 @@ Post Conditions
   - Status metadata is updated at CNs
 
 
-.. figure:: images/10_interaction.png
-   :width: 75%
-
-   Interactions for use case 10. These interactions describe a synchronous process for generating
-   a report. Most likely, a better mechanism would be for a background process
-   to be accumulating the necessary statistics from Member Nodes, then the
-   generateReport function would operate on the accumulated data
-   rather than forcing a fresh copy.
-
-
-..
-  @startuml images/10_interaction.png
-  !include ../plantuml.conf
-    actor Admin
-    participant "Admin" as app_admin << Application >>
-    Admin -> app_admin: login()
-    participant "State of Health API" as c_health << Coordinating Node >>
-    participant "State of Health API" as m_health << Member Node >>
-    app_admin -> c_health: generateReport(token)
-    loop for each MN
-      alt V0.3
-        c_health -> m_health: ping()
-        m_health --> c_health: PingResponse
-      else after V0.3
-        c_health -> m_health: getStatus(token)
-        m_health --> c_health: StatusResponse
-      end
-    end
-    note right of c_health
-      internal process, 
-      not in the CN API
-    end note
-    c_health -> c_health: processStatusReports() 
-    c_health --> app_admin: statusReport
-  @enduml
-  
+.. uml::
+   
+   actor Admin
+   participant "Admin" as app_admin << Application >>
+   Admin -> app_admin: login()
+   participant "State of Health API" as c_health << Coordinating Node >>
+   participant "State of Health API" as m_health << Member Node >>
+   app_admin -> c_health: generateReport(token)
+   loop for each MN
+     alt V0.3
+       c_health -> m_health: ping()
+       m_health --> c_health: PingResponse
+     else after V0.3
+       c_health -> m_health: getStatus(token)
+       m_health --> c_health: StatusResponse
+     end
+   end
+   note right of c_health
+     internal process, 
+     not in the CN API
+   end note
+   c_health -> c_health: processStatusReports() 
+   c_health --> app_admin: statusReport
 
 
-.. raw:: latex
+*Figure 1.* Interactions for use case 10. These interactions describe a
+synchronous process for generating a report. Most likely, a better mechanism
+would be for a background process to be accumulating the necessary statistics
+from Member Nodes, then the generateReport function would operate on the
+accumulated data rather than forcing a fresh copy.
 
-   \newpage
+

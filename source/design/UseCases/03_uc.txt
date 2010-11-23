@@ -1,7 +1,3 @@
-.. raw:: latex
-
-  \newpage
-  
 Use Case 03 - Register MN
 -------------------------
 
@@ -13,14 +9,11 @@ Date
   - 20090925 Adding to use case description and documentation
   - 20090114 (TWG meeting).  Subsequent various modifications.
 
-
 Version 
   Draft
 
-
 Goal
   Register a new Member Node.
-
 
 Summary 
   This use case describes the technical process for addition of a new member
@@ -36,10 +29,8 @@ Summary
   content on the MN is scheduled. The new MN also becomes a receiver for
   content replicated from other MNs.
 
-
 Actors
   MN, CN, Administrator
-
 
 Preconditions
   - The MN is operational
@@ -49,11 +40,9 @@ Preconditions
 
   - The CNs are ready for receiving MN registrations
 
-
 Triggers
   - A new Member Node is ready to be brought online and a DataONE
     administrator initiates the process.
-
 
 Post Conditions 
   - The new MN operates as part of the DataONE infrastructure
@@ -70,7 +59,6 @@ Post Conditions
   - Notify MN administrators of operation status (email?)
 
   - The new MN is added to CN list of targets for replication
-
 
 **Notes**
 
@@ -103,70 +91,55 @@ Post Conditions
   its capabilities list.
 
 
+.. uml::
 
-.. figure:: images/03_uc.png
-   :figwidth: 100%
+   actor "User" as client
+   usecase "12. Authentication" as authen
 
-   Use case 03.
-
-.. figure:: images/03_interaction.png
-   :figwidth: 100%
-
-   Interactions for use case 03.
-
-..
-  @startuml images/03_uc.png
-  !include ../plantuml.conf
-  actor "User" as client
-  usecase "12. Authentication" as authen
-
-  package "DataONE"
-    actor "Administrator" as admin
-    admin ..|> client
-    actor "Coordinating Node" as CN
-    actor "Member Node" as MN
-    usecase "13. Authorization" as author
-    usecase "03. Register MN" as register
-    admin -- register
-    CN -- register
-    MN -- register
-    register ..> author: <<includes>>
-    register ..> authen: <<includes>>
-  @enduml
-  
-
-..
-  @startuml images/03_interaction.png
-  !include ../plantuml.conf
-  actor Admin
-  participant "Admin" as app_admin << Application >>
-  Admin -> app_admin
-  note right
-    Assume admin authority for node registration.
-  end note
-  participant "Register API" as c_reg << Coordinating Node >>
-  participant "Synchronization API" as c_sync << Coordinating Node >>
-  activate c_reg
-  app_admin -> c_reg: register (auth_token, capabilitiesURL)
-  participant "Capabilities API" as m_cap << Member Node >>
-  c_reg -> m_cap: getCapabilities ()
-  c_reg <-- m_cap: capabilities
-  c_reg -> c_reg: verifyCapabilities ()
-  note right
-   Assume capabilities stored as any other metadata.
-  end note
-  c_reg -> c_reg: addNodeCapabilities ()
-  c_reg -> c_sync: scheduleSynch ()
-  note right
-   Harvest process occurs asynchronously.
-   Separate use case. 
-  end note
-  app_admin <-- c_reg: ack or fail
-  deactivate c_reg
-  @enduml
+   package "DataONE"
+     actor "Administrator" as admin
+     admin ..|> client
+     actor "Coordinating Node" as CN
+     actor "Member Node" as MN
+     usecase "13. Authorization" as author
+     usecase "03. Register MN" as register
+     admin -- register
+     CN -- register
+     MN -- register
+     register ..> author: <<includes>>
+     register ..> authen: <<includes>>
+   
+*Figure 1.* Use Case 03.
 
 
-.. raw:: latex
+.. uml::
 
-   \newpage
+   actor Admin
+   participant "Admin" as app_admin << Application >>
+   Admin -> app_admin
+   note right
+     Assume admin authority for node registration.
+   end note
+   participant "Register API" as c_reg << Coordinating Node >>
+   participant "Synchronization API" as c_sync << Coordinating Node >>
+   activate c_reg
+   app_admin -> c_reg: register (auth_token, capabilitiesURL)
+   participant "Capabilities API" as m_cap << Member Node >>
+   c_reg -> m_cap: getCapabilities ()
+   c_reg <-- m_cap: capabilities
+   c_reg -> c_reg: verifyCapabilities ()
+   note right
+    Assume capabilities stored as any other metadata.
+   end note
+   c_reg -> c_reg: addNodeCapabilities ()
+   c_reg -> c_sync: scheduleSynch ()
+   note right
+    Harvest process occurs asynchronously.
+    Separate use case. 
+   end note
+   app_admin <-- c_reg: ack or fail
+   deactivate c_reg
+   
+
+*Figure 2.* Interactions for use case 03.
 
