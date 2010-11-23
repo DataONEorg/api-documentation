@@ -37,7 +37,7 @@ import sys, os
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 
-sys.path.append( os.path.abspath('../sphinx-ext') )
+sys.path.append( os.path.abspath('../tools/docutils/rst_directives') )
 
 # -- General configuration -----------------------------------------------------
 
@@ -56,11 +56,14 @@ extensions = ['sphinx.ext.autodoc',
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
-#Full path to the plantuml.jar file. This will normally be present in the tools folder.
-plantumljar = os.path.abspath('../tools/plantuml.jar')
+#Full path to the plantuml.jar file. 
+plantumljar = os.path.abspath('../tools/docutils/plantuml.jar')
+
+#Full path to the plantuml configuration file
+plantumlconf = os.path.abspath('../tools/docutils/plantuml.conf')
 
 #Full command line for executing plantuml. Note that java must be on your path
-plantuml = 'java -jar %s -config source/plantuml.conf' % plantumljar
+plantuml = 'java -jar %s -config %s' % (plantumljar, plantumlconf)
 
 # The suffix of source filenames.
 source_suffix = '.txt'
@@ -152,7 +155,7 @@ html_theme_options = {}
 
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []
-html_theme_path = ['../themes', ]
+html_theme_path = ['../tools/docutils/sphinx_themes', ]
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
