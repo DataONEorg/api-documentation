@@ -31,32 +31,17 @@ Triggers
 Post Conditions
   xxx
 
-**Notes**
 
-xxx
+.. uml::
 
-
-
-.. figure:: images/30_interaction.png
-   :width: 100%
-
-   Interactions for use case 30.
-
-..
-  @startuml images/30_interaction.png
-  !include ../plantuml.conf
-  title Interactions: 30 - MN can notify CN about pending outages, severity and duration, and\nCNs may want to act on that knowledge to maintain seamless operation
-
-  participant "State of Health API" as c_health << Coordinating Node >>
-  participant "State of Health API" as m_health << Member Node >>
-  m_health -> c_health: reportPendingEvent ()
-  m_health <-- c_health: ack
-  c_health -> c_health: actOnPendingEvent (event)
-  @enduml
-  
+   participant "State of Health API" as c_health << Coordinating Node >>
+   participant "State of Health API" as m_health << Member Node >>
+   m_health -> c_health: reportPendingEvent ()
+   m_health <-- c_health: ack
+   c_health -> c_health: actOnPendingEvent (event)
 
 
-.. raw:: latex
-
-   \newpage
+*Figure 1.* Interactions for use case 30. MN can notify CN about pending
+outages, severity and duration, and\nCNs may want to act on that knowledge to
+maintain seamless operation.
 

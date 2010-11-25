@@ -30,34 +30,22 @@ Triggers
 Post Conditions
   xxx
 
-**Notes**
 
+.. uml::
+
+   participant "CRUD API" as m_crud_a << Member Node A >>
+   participant "Synchronization API" as c_sync << Coordinating Node >>
+   c_sync -> m_crud_a: checkDataQuality (GUID)
+   c_sync <-- m_crud_a: result
+   participant "CRUD API" as m_crud_b << Member Node B >>
+   c_sync -> m_crud_b: checkDataQuality (GUID)
+   c_sync <-- m_crud_b: result
+
+*Figure 1.* Interactions for use case 26. System performs quality checks on
+data
+
+**Notes**
 
 - Is this more for verifying the quality of metadata? Otherwise how does it
   differ from :doc:`Use Case 25</UseCases/25_uc>`?
 
-
-.. figure:: images/26_interaction.png
-   :width: 100%
-
-   Interactions for use case 26.
-
-..
-  @startuml images/26_interaction.png
-  !include ../plantuml.conf
-  title Interactions: 26 - System performs quality checks on data
-
-  participant "CRUD API" as m_crud_a << Member Node A >>
-  participant "Synchronization API" as c_sync << Coordinating Node >>
-  c_sync -> m_crud_a: checkDataQuality (GUID)
-  c_sync <-- m_crud_a: result
-  participant "CRUD API" as m_crud_b << Member Node B >>
-  c_sync -> m_crud_b: checkDataQuality (GUID)
-  c_sync <-- m_crud_b: result
-  @enduml
-
-
-
-.. raw:: latex
-
-   \newpage

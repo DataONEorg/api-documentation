@@ -42,6 +42,27 @@ Post Conditions
   - The transfer changes should be rolled back to the state before the operation.
 
 
+.. uml::
+
+   participant "CRUD API" as c_crud << Coordinating Node >>
+   participant "Object Store" as c_ostore << Coordinating Node >>
+   participant "CRUD API" as m_crud << Member Node >>
+   c_crud -> c_ostore: beginTransaction() 
+   c_ostore --> c_crud: transactionHandle
+   c_crud -> m_crud: get(token, GUID)
+   alt Success
+     m_crud --> c_crud: object
+     c_crud -> c_ostore: commitTransaction(transactionHandle)
+     c_crud -> c_ostore: updateSystemMetadata(GUID)
+   else Transfer failure
+    c_crud -> c_ostore: rollbackTransaction(transactionHandle)
+    c_ostore --> c_crud: ACK
+   end  
+
+*Figure 1.* Interactions for use case 24, Transfer Rollback due to Failure.
+Simple transaction control around a get operation by a CN against and MN.
+
+
 **Notes**
 
 - Does this include just one service, or sets of services that can be included
@@ -49,40 +70,3 @@ Post Conditions
 
 - Can transactions span multiple MNs? MNs and CNs?
 
-
-.. figure:: images/24_interaction.png
-   :width: 80%
-
-   Interactions for use case 24. Simple transaction control around a get
-   operation by a CN against and MN.
-
-
-..
-  @startuml images/24_interaction.png
-  !include ../plantuml.conf
-  
-  title Interactions: 24 - Transfer Rollback due to Failure
-  
-  participant "CRUD API" as c_crud << Coordinating Node >>
-  participant "Object Store" as c_ostore << Coordinating Node >>
-  participant "CRUD API" as m_crud << Member Node >>
-  
-  c_crud -> c_ostore: beginTransaction() 
-  c_ostore --> c_crud: transactionHandle
-  c_crud -> m_crud: get(token, GUID)
-  alt Success
-    m_crud --> c_crud: object
-    c_crud -> c_ostore: commitTransaction(transactionHandle)
-    c_crud -> c_ostore: updateSystemMetadata(GUID)
-  else Transfer failure
-   c_crud -> c_ostore: rollbackTransaction(transactionHandle)
-   c_ostore --> c_crud: ACK
-  end  
-  
-  @enduml
-
-
-
-.. raw:: latex
-
-   \newpage

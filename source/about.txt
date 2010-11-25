@@ -10,6 +10,28 @@ through support of the National Science Foundation through the projects:
 - NSF OCI `0830944`_, "DataNet Full Proposal: DataNetONE (Observation Network
   For Earth)"
 
+Many individuals have contributed to the development of these documents over a
+number of years. Hence specific authorship information for particular
+documents is difficult to determine. History for any portion of these
+documents can be obtained by examining the subversion metadata using the *log*
+command for general and the *blame* command for more specific change details.
+If a copy of the document source has been checked out locally::
+
+  svn log <<file name>>
+  svn blame <<file name>>
+
+or remotely::
+
+  svn log https://repository.dataone.org/documents/Projects/cicore/architecture/api-documentation/<<file name>>
+  svn blame https://repository.dataone.org/documents/Projects/cicore/architecture/api-documentation/<<file name>>
+
+History for this file for example can be obtained by::
+
+  svn blame source/about.txt
+
+or remotely::
+
+  svn blame https://repository.dataone.org/documents/Projects/cicore/architecture/api-documentation/source/about.txt  
 
 
 About These Documents
@@ -23,10 +45,11 @@ various UML diagrams.
 Editing Content
 ---------------
 
-All of these documents are formatted using reStructuredText_, which is simply
-well formatted plain text. In many respects it is similar to the plain text
-formatting used in wiki pages, though enriched by the many nice features of
-the Sphinx_ document builder.
+These documents are generated using Sphinx_ for the overall document
+processing and generation, and PlantUML_ for UML diagrams.
+
+All of these documents are formatted in reStructuredText_, formatted plain
+text that is similar to the plain text formatting used in wiki pages.
 
 Formatting guidelines for Sphinx are available at
 http://sphinx.pocoo.org/contents.html
@@ -40,15 +63,11 @@ In general, it is best to edit in UTF-8 using UNIX® style new lines. Note that
 white space is significant and is used primarily for determining which
 formatting sections different blocks of text belong to.
 
-.. warning:: 
+.. note:: 
 
-  In these documents, indentation is used for grouping text so that Sphinx_
-  can format it correctly. Because of this, it is important to use a
-  consistent means of indenting the text. We have chosen to use two spaces for
-  each level of indentation. Accordingly, please do not use tabs when editing
-  these documents as tabs may cause Sphinx_ to format the text incorrectly.
-  You may find it easiest to correctly edit these documents by setting your
-  editor to replace one tab with two spaces.
+  White space and indentation is part of the formatting for reStructuredText.
+  Please be consistent with the use of soft tabs (2 spaces per tab).
+
 
 reStructuredText_ can be edited with any plain text editor. These documents
 have been edited mainly with TextMate_ on OS X, which offers a preview feature
@@ -72,46 +91,65 @@ The convention for different levels of heading used in these documents is::
 Building the Documentation
 --------------------------
 
-Sphinx_ and PlantUML_ are required to build the design documents from the
-source. Both of these have a dependency on Graphviz_ for diagram generation.
+Sphinx_ is required to build the design documents from the source. A couple of
+Sphinx extensions are included with the subversion checkout of these documents
+(in ``tools/docutils/rst_directives``). Portions of Sphinx and the PlantUML_
+extension have a dependency of Graphviz_, and this will need to be installed
+in order to build the documents. If you want to build the pdf version of the
+documents, then it will be necessary to install rst2pdf_ .
 
-Graphviz is available pre-built for many flavors of linux, windows, OS X, and
-can be installed on pretty much anything else that runs a c compiler. To
-install on Ubuntu::
+Setting up a Build Environment
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  $ sudo apt-get install graphviz
+The following general instructions apply for Ubuntu linux. Adjust the commands
+as necessary for your OS (and please update these docs to help others in the
+process). It is assumed that Python >= 2.6 and Java are available.
 
-Sphinx can be installed on any system with Python using setuptools_ ::
+1. Install graphviz::
 
-  sudo easy_install -U Sphinx
+     $ sudo apt-get install graphviz
 
-Installing PlantUML is simply a matter of downloading the plantuml.jar file
-from the PlantUML_ site and putting it somewhere it can be executed. An
-example script for running PlantUML is::
+2. Install Sphinx (latest version)::
 
-  #!/bin/sh
-  CONFIG=/Users/vieglais/Projects/DataONE/svn/software/tools/trunk/docutils/plantuml.conf
-  java -jar ~/bin/plantuml.jar -config $CONFIG $1 $2 $3 $4 $5
+     $ sudo easy_install -U Sphinx
 
-The plantuml.conf file is in the DataONE subversion source tree.
+3. (Optional) Install rst2pdf::
 
-xlrd and xlwt, Python libraries for reading and writing Microsoft Excel
-documents, are required for generating part of the content. To install on
-Ubuntu::
+     $ sudo easy_install -U rst2pdf
 
-  $ sudo easy_install xlrd xlwt
+4. (Optional) Edits to the method descriptions in the excel spreadsheet
+   (``MethodCrossReference.xls``) require regeneration of some portions of the
+   documentation, which requires a couple of Python libraries (xlrd and xlwt)::
 
-To build a HTML copy of the documents::
+     $ sudo easy_install xlrd xlwt
 
-  $ cd ~/Projects/DataONE/svn/documents/Projects/VDC/docs/service-api/api-documentation
-  $ plantuml source source/UseCases
-  $ make generate
-  $ make html
 
-To build a PDF copy, you will need to install latex and its dependencies. Then run::
+5. Checkout a copy of the documentation from subversion::
 
-  $ make generate
-  $ make latex; cd build/latex; make all-pdf
+     $ svn co https://repository.dataone.org/documents/Projects/cicore/architecture/api-documentation
+
+
+6. Build the documents::
+
+     $ cd api-documentation
+     $ make html
+
+   The documents will be available in ``build/html``, with ``index.html`` being the root document.
+
+7. If changes are made to ``MethodCrosReference.xls``, then an additional make step is required::
+
+     $ cd api-documentation
+     $ make generate
+     $ make html
+
+8. To build a PDF version of the documents::
+
+     $ make pdf
+
+9. To build an ePub version of the documents::
+
+     $ make epub
+
 
 
 .. _Graphviz: http://www.graphviz.org/
@@ -123,6 +161,8 @@ To build a PDF copy, you will need to install latex and its dependencies. Then r
 .. _xlrd: http://pypi.python.org/pypi/xlrd
 
 .. _setuptools: http://pypi.python.org/pypi/setuptools
+
+.. _rst2pdf: http://code.google.com/p/rst2pdf/
 
 .. _built out version: http://129.24.0.15/ArchitectureDocs/
 

@@ -1,8 +1,3 @@
-.. raw:: latex
-
-  \newpage
-  
-
 Use Case 38 - Reserve an Identifier
 -----------------------------------
 
@@ -11,9 +6,6 @@ Author
 
 Date
   - 20100330 [DV] Added use case
-
-Version 
-  0.3
 
 Goal 
   Reserve an identifier to ensure it is available at some reasonable time in
@@ -40,63 +32,47 @@ Post Conditions
     period of time.
 
 
-.. figure:: images/38_uc.png
-   :figwidth: 100%
+.. uml::
 
-   Use case 38. Note that id a Member Node needs to reserve an identifier then
-   it would use the functioanlity of the Investigator Toolkit Library - that
-   is, the reserveIdentifier operation is not required for Member Node
-   functionality.
+   usecase "12. Authentication" as authen
+   package "DataONE"
+     actor "Coordinating Node" as CN
+     actor "Client" as ITK
+     usecase "13. Authorization" as author
+     usecase "38. Reserve Identifier" as RES
+     CN -- RES
+     ITK -- RES
+     RES ..> author: <<includes>>
+     RES ..> authen: <<includes>>
 
-
-.. figure:: images/06_interaction.png
-   :figwidth: 100%
-
-   Sequence diagram for use case 38. The Coordinating Node needs to keep track
-   of identifiers that have been reserved, and this information needs to be
-   replicated between Coordinating Nodes. The reserved identifier should not
-   be discoverable and should not be involved with any Member Node
-   synchronization or Member Node replication.
-
-..
-  @startuml images/38_uc.png
-  !include ../plantuml.conf
-
-  usecase "12. Authentication" as authen
-  package "DataONE"
-    actor "Coordinating Node" as CN
-    actor "Client" as ITK
-    usecase "13. Authorization" as author
-    usecase "38. Reserve Identifier" as RES
-    CN -- RES
-    ITK -- RES
-    RES ..> author: <<includes>>
-    RES ..> authen: <<includes>>
-  @enduml
+*Figure 1.* Use case 38. Note that id a Member Node needs to reserve an
+identifier then it would use the functioanlity of the Investigator Toolkit
+Library - that is, the reserveIdentifier operation is not required for Member
+Node functionality.
 
 
-..
-  @startuml images/38_interaction.png
-  !include ../plantuml.conf
-  participant "Client" as itk <<Investigator Toolkit>>
-  participant "CRUD API" as c_crud << Coordinating Node >>
-  itk -> c_crud: reserveIdentifier(token, guid, scope, format)
-  c_crud -> c_crud: createDummyEntry
-  note right
-    A dummy entry is created in the object store as a place holder.
-    This entry should not be retrievable through search or other 
-    discovery mechanisms.
-  end note
-  alt Not Authorized
-    c_crud -> itk: NotAuthorized
-  else Identifier Exists
-    c_crud -> itk: NotUnique
-  else ok
-    c_crud -> itk: identifier
-  end
-  @enduml
+.. uml::
 
+   participant "Client" as itk <<Investigator Toolkit>>
+   participant "CRUD API" as c_crud << Coordinating Node >>
+   itk -> c_crud: reserveIdentifier(token, guid, scope, format)
+   c_crud -> c_crud: createDummyEntry
+   note right
+     A dummy entry is created in the object store as a place holder.
+     This entry should not be retrievable through search or other 
+     discovery mechanisms.
+   end note
+   alt Not Authorized
+     c_crud -> itk: NotAuthorized
+   else Identifier Exists
+     c_crud -> itk: NotUnique
+   else ok
+     c_crud -> itk: identifier
+   end
 
-.. raw:: latex
+*Figure 2.* Sequence diagram for use case 38. The Coordinating Node needs to
+keep track of identifiers that have been reserved, and this information needs
+to be replicated between Coordinating Nodes. The reserved identifier should
+not be discoverable and should not be involved with any Member Node
+synchronization or Member Node replication.
 
-   \newpage

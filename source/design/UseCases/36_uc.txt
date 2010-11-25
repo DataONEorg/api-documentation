@@ -44,57 +44,44 @@ Post Conditions
   - Client has more information about the location of the object.
 
 
-.. figure:: images/36_uc.png
-   :figwidth: 100%
+.. uml:: 
 
-   Use case diagram for Use Case 36.
+   actor "User" as client
+   usecase "12. Authentication" as authen
 
-----
+   package "DataONE"
+     actor "Coordinating Node" as CN
+     usecase "13. Authorization" as author
+     usecase "36. Resolve Object" as resolve
+     client -- resolve
+     CN -- resolve
+     resolve ..> author: <<includes>>
+     resolve ..> authen: <<includes>>
 
-.. figure:: images/36_interaction.png
-   :figwidth: 100%
-
-   Sequence diagram for implementation of use case 36.
-
-
-..
-  @startuml images/36_uc.png
-  !include ../plantuml.conf
-  actor "User" as client
-  usecase "12. Authentication" as authen
-
-  package "DataONE"
-    actor "Coordinating Node" as CN
-    usecase "13. Authorization" as author
-    usecase "36. Resolve Object" as resolve
-    client -- resolve
-    CN -- resolve
-    resolve ..> author: <<includes>>
-    resolve ..> authen: <<includes>>
-  @enduml
+*Figure 1.* Use case diagram for Use Case 36.
 
 
-  @startuml images/36_interaction.png
-  !include ../plantuml.conf
-  participant "Client" as itk <<Investigator Toolkit>>
-  participant "CRUD API" as c_crud << Coordinating Node >>
-  participant "Authorization API" as c_authorize << Coordinating Node >>
-  participant "Object Store" as c_store << Coordinating Node >>
-  itk -> c_crud: resolve(token, guid)
-  activate c_crud
-  c_crud -> c_authorize: isAuthorized(token, GUID, READ)
-  c_crud <- c_authorize: True, False, Err.NotFound
-  alt False
-    c_crud -> itk: Err.NotAuthorized
-  else Err.NotFound
-    c_crud -> itk: Err.NotFound
-  else OK
-    c_crud -> c_store: getSystemMetadata(guid)
-    c_store -> c_crud: SystemMetadata
-    c_crud -> c_crud: extract object locations
-    c_crud -> itk: objectLocations
-  end
-  deactivate c_crud
-  @enduml
-  
+.. uml::
+
+   participant "Client" as itk <<Investigator Toolkit>>
+   participant "CRUD API" as c_crud << Coordinating Node >>
+   participant "Authorization API" as c_authorize << Coordinating Node >>
+   participant "Object Store" as c_store << Coordinating Node >>
+   itk -> c_crud: resolve(token, guid)
+   activate c_crud
+   c_crud -> c_authorize: isAuthorized(token, GUID, READ)
+   c_crud <- c_authorize: True, False, Err.NotFound
+   alt False
+     c_crud -> itk: Err.NotAuthorized
+   else Err.NotFound
+     c_crud -> itk: Err.NotFound
+   else OK
+     c_crud -> c_store: getSystemMetadata(guid)
+     c_store -> c_crud: SystemMetadata
+     c_crud -> c_crud: extract object locations
+     c_crud -> itk: objectLocations
+   end
+   deactivate c_crud
+
+*Figure 2. Sequence diagram for implementation of use case 36.
 

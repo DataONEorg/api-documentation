@@ -1,8 +1,3 @@
-.. raw:: latex
-
-  \newpage
-  
-
 Use Case 37 - Get System Metadata for Object
 --------------------------------------------
 
@@ -11,9 +6,6 @@ Author
 
 Date
   - 20100323 [DV] Added new use case as retrieving system metadata was not previously described.
-
-Version 
-  0.3
 
 Goal
   Retrieve the :term:`system metadata` for an object identified by some :term:`identifier`.
@@ -46,77 +38,54 @@ Post Conditions
     in the case of failure)
 
 
-.. figure:: images/37_uc.png
-   :figwidth: 100%
+.. uml::
 
-   Use case 37 diagram showing actors and components involved in this action.
+   actor "User" as client
+   usecase "12. Authentication" as authen
+   note top of authen
+   Authentication may be provided 
+   by an external service
+   end note
 
+   package "DataONE"
+     actor "Coordinating Node" as CN
+     actor "Member Node" as MN
+     usecase "13. Authorization" as author
+     usecase "01. Get System Metadata" as GET
+     client -- GET
+     CN -- GET
+     MN -- GET
+     GET ..> author: <<includes>>
+     GET ..> authen: <<includes>>
 
-.. figure:: images/37_interaction.png
-   :figwidth: 100%
-
-   Sequence diagram for Use Case 37 illustrating the sequence for retrieving
-   the system metadata for an object identified by GUID from a Coordinating
-   Node.
-
-
-.. raw:: latex
-
-  \newpage
-
-.. raw:: pdf
-
-  PageBreak
-
-.. 
-  This block defines the use case diagram referenced above
-  @startuml images/37_uc.png
-    !include ../plantuml.conf
-    actor "User" as client
-    usecase "12. Authentication" as authen
-    note top of authen
-    Authentication may be provided 
-    by an external service
-    end note
-
-    package "DataONE"
-      actor "Coordinating Node" as CN
-      actor "Member Node" as MN
-      usecase "13. Authorization" as author
-      usecase "01. Get System Metadata" as GET
-      client -- GET
-      CN -- GET
-      MN -- GET
-      GET ..> author: <<includes>>
-      GET ..> authen: <<includes>>
-  @enduml
+*Figure 1.* Use case 37 diagram showing actors and components involved in this action.
 
 
-..
-  This block defines the use sequence diagram referenced above
-  @startuml images/37_interaction.png
-  !include ../plantuml.conf
-  participant "Client" as app_client << Application >>
-  participant "CRUD API" as n_crud << Node >>
-  participant "Authorization API" as n_authorize <<  Node >>
-  participant "Object Store" as n_ostore << Node >>
-  app_client -> n_crud: getSystemMetadata(token, GUID)
-  activate app_client
-  activate n_crud
-  n_crud -> n_authorize: isAuthorized(token, GUID, READ)
-  n_crud <- n_authorize: True, False, Err.NotFound
-  alt NotFound
-    app_client <- n_crud: Err.NotFound
-  else False
-    app_client <- n_crud: Err.NotAuthorized
-  else True
-    n_crud --> n_crud: Log(READ)
-    n_crud -> n_ostore: getSystemMetadata(GUID)
-    n_crud <- n_ostore: bytes
-    app_client <- n_crud: bytes
-    deactivate n_crud
-  end
-  deactivate app_client
-  @enduml
+.. uml::
 
+   participant "Client" as app_client << Application >>
+   participant "CRUD API" as n_crud << Node >>
+   participant "Authorization API" as n_authorize <<  Node >>
+   participant "Object Store" as n_ostore << Node >>
+   app_client -> n_crud: getSystemMetadata(token, GUID)
+   activate app_client
+   activate n_crud
+   n_crud -> n_authorize: isAuthorized(token, GUID, READ)
+   n_crud <- n_authorize: True, False, Err.NotFound
+   alt NotFound
+     app_client <- n_crud: Err.NotFound
+   else False
+     app_client <- n_crud: Err.NotAuthorized
+   else True
+     n_crud --> n_crud: Log(READ)
+     n_crud -> n_ostore: getSystemMetadata(GUID)
+     n_crud <- n_ostore: bytes
+     app_client <- n_crud: bytes
+     deactivate n_crud
+   end
+   deactivate app_client
+
+*Figure 2.* Sequence diagram for Use Case 37 illustrating the sequence for
+retrieving the system metadata for an object identified by GUID from a
+Coordinating Node.
 

@@ -32,47 +32,29 @@ Triggers
 Post Conditions
   xxx
 
-**Notes**
 
-xxx
+.. uml::
 
+   actor "User (Data Owner)" as user
+   participant "Client" as app_client << Application >>
+   user -> app_client
+   participant "Authentication API" as c_authenticate << Coordinating Node >>
+   app_client -> c_authenticate: login (user, pw)
+   app_client <-- c_authenticate: token or failure
+   participant "Query API" as c_query << Coordinating Node >>
+   app_client -> c_query: getLinksAndCites (GUID, fromDate, toDate)
+   participant "Authorization API" as c_authorize << Coordinating Node >>
+   c_query -> c_authorize: isAuth (token, resultset)
+   participant "Verify API" as c_ver << Coordinating Node >>
+   c_authorize -> c_ver: isValidToken (token)
+   c_authorize <-- c_ver: T or F
+   c_query <-- c_authorize: T or F
+   app_client <-- c_query: records or fail
+   note right
+   Can the Query API handle queries
+   on log records or should this be
+   handled by another API?
+   (e.g. "Report API"?)
+   end note
 
-.. figure:: images/22_interaction.png
-   :width: 100%
-
-   Interactions for use case 22.
-
-
-..
-  @startuml images/22_interaction.png
-  !include ../plantuml.conf
-  title Interactions: 22 - User can get report of links, cites my data (also can view this as a\nreferrer log)
-
-  actor "User (Data Owner)" as user
-  participant "Client" as app_client << Application >>
-  user -> app_client
-  participant "Authentication API" as c_authenticate << Coordinating Node >>
-  app_client -> c_authenticate: login (user, pw)
-  app_client <-- c_authenticate: token or failure
-  participant "Query API" as c_query << Coordinating Node >>
-  app_client -> c_query: getLinksAndCites (GUID, fromDate, toDate)
-  participant "Authorization API" as c_authorize << Coordinating Node >>
-  c_query -> c_authorize: isAuth (token, resultset)
-  participant "Verify API" as c_ver << Coordinating Node >>
-  c_authorize -> c_ver: isValidToken (token)
-  c_authorize <-- c_ver: T or F
-  c_query <-- c_authorize: T or F
-  app_client <-- c_query: records or fail
-  note right
-  Can the Query API handle queries
-  on log records or should this be
-  handled by another API?
-  (e.g. "Report API"?)
-  end note
-  @enduml
-  
-
-
-.. raw:: latex
-
-   \newpage
+*Figure 1.* Interactions for use case 22, User can get report of links, cites my data (also can view this as a\nreferrer log)

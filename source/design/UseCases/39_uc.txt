@@ -1,7 +1,3 @@
-.. raw:: latex
-
-  \newpage
-
 Use Case 39 - Test Node APIs
 ----------------------------
 
@@ -10,9 +6,6 @@ Author
 
 Date
   - 20100712 Initial version
-
-Version 
-  Draft
 
 Goal
   Execute a series of method calls against all member and coordinating nodes
@@ -41,28 +34,18 @@ Post Conditions
   - All API methods of all coordinating nodes are tested
 
 
-.. figure:: images/39_interaction.png
-   :figwidth: 100%
+.. uml::
 
+   participant "Tester" as app_test << Application >>
+   participant "CN" as cn << CN >>
+   participant "API" as node << Node >>
+   app_test -> cn: listNodes()
+   cn --> app_test: nodeList
+   loop for node in nodeList
+     loop for test in tests
+       app_test -> node: test()
+       node --> app_test: result
+     end
+   end
 
-..
-  This block defines the use case diagram referenced above
-  @startuml images/39_interaction.png
-  !include ../plantuml.conf
-  participant "Tester" as app_test << Application >>
-  participant "CN" as cn << CN >>
-  participant "API" as node << Node >>
-  app_test -> cn: listNodes()
-  cn --> app_test: nodeList
-  loop for node in nodeList
-    loop for test in tests
-      app_test -> node: test()
-      node --> app_test: result
-    end
-  end
-  @enduml
-
-
-.. raw:: latex
-
-   \newpage
+*Figure 1.* Interaction diagram for use case 39, Test Node APIs.
