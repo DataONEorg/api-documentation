@@ -123,41 +123,41 @@ Interaction diagrams
 Phase 1
 ~~~~~~~
 
-..
-  @startuml _images/authorize_phase1.png
-  !include plantuml_fullsized.conf
-  actor User
-  participant MN1
-  participant MN2
-  participant CN
-  User -> CN: login(D1.username, password)
-  activate CN
-  CN --> MN1: token
-  deactivate CN
-  User -> MN1: create(token, GUID, object, sysmeta)
-  activate MN1
-  MN1 -> MN1: verify(token)
-  MN1 -> MN1: isAuthorized(token, GUID, OP_CREATE)
-  MN1 --> User: GUID
-  deactivate MN1
-  @enduml
-  
+.. uml::
 
-.. figure:: _images/authorize_phase1.png
-   :figwidth: 100%
+   actor User
+   participant MN1
+   participant MN2
+   participant CN
+   User -> CN: login(D1.username, password)
+   activate CN
+   CN --> MN1: token
+   deactivate CN
+   User -> MN1: create(token, GUID, object, sysmeta)
+   activate MN1
+   MN1 -> MN1: verify(token)
+   MN1 -> MN1: isAuthorized(token, GUID, OP_CREATE)
+   MN1 --> User: GUID
+   deactivate MN1
 
-   Only public objects are replicated in the system.  Create, Update, and
-   Delete operations are controlled by member nodes.
+*Figure 1.* Only public objects are replicated in the system. Create, Update,
+and Delete operations are controlled by member nodes.
 
 
 Phase 2
 ~~~~~~~
 
+TBD
+
 Phase 3
 ~~~~~~~
 
+TBD
+
 Phase 4
 ~~~~~~~
+
+TBD
 
 Issues
 ------
