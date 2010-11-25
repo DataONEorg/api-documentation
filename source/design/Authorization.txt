@@ -1,0 +1,177 @@
+Authorization in DataONE
+========================
+
+:Author: Matt Jones
+:Status: Incomplete Draft, Work in Progress being Edited
+
+
+This document outlines a proposed mechanism for specifying authorization
+policies for objects in DataONE and a set of services for controlling access to
+those objects on Member Nodes and Coordinating Nodes.
+
+Overview
+--------
+
+Users and services authenticate in DataONE to confirm their identity. The
+identity is then used for controlling access to objects, systems, and services
+within the DataONE framework. Requirements for Authorization are listed here:
+
+.. toctree::
+   :maxdepth: 1
+
+   AuthnAndAuthzRequirements
+
+During the DataONE Federated Security workshop, four phases for development
+were identified that involve increasingly sophisticated authorization and
+access control mechanisms.  The four phases are:
+
+- **Phase 1: Mostly public access (target date: January 2011)**: Only publicly 
+  readable content is replicated. Only publicly readable content is indexed for 
+  search and retrieval. Access to restricted content is through origin member 
+  node only. No authentication is required to search and retrieve public content.
+  Authentication is required to upload (create) content.
+- **Phase 2: Access control supported for search and retrieval**: ACLs respected 
+  by coordinating nodes.  Authenticated users can discover content that is 
+  restricted to them or their groups. Restricted access content is not replicated.
+- **Phase 3: Access control supported for content replication**: 
+  Restricted access content is replicated to member nodes with compatible ACLs 
+  and pre-arranged trust agreements.
+- **Phase 4: Consistent semantic and functional interoperability for identity and
+  security**: Restricted access content is replicated to any member node. 
+  Authentication by long-running workflows is supported.
+
+Trust relationships
+-------------------
+Any authorization system in a federated requires trust among participants in
+the federation.  For DataONE, there are three types of trust relationships
+among nodes in the federation:
+
+- **MN to MN**: Member Node to Member Node trust relies on one Member Node
+  believing that another Member Node will respect the authorization policies
+  that they publish for their objects and services.  In the case of restricted
+  access content, Member Nodes that house replicas of an object would need to
+  faithfully enforce authorization policies that were expressed by the data
+  owner. Because of this, Member Nodes can express replication policies for
+  objects that indicate which other Member Nodes are acceptable targets for
+  replication, and for which nodes they are willing to serve as replica stores.
+- **MN to CN**: Member Nodes need to have trust that Coordinating Nodes will
+  respect and enforce their authorization policies, including any restictions
+  placed on where and when to create replicas of objects and on the
+  presentation of search results for restricted content. As there are only
+  three Coordinating Nodes in the initial deployment, this trust relationship
+  should be easy to establish.
+- **CN to MN**: Coordinating Nodes rely upon Member Nodes for limited services,
+  and mainly expect Member Nodes to accurately implement the DataONE Service
+  API, including replication services.
+- **CN to CN**: Each Coordinating Node contains a replica of the content of the
+  others, and are configured to provide seamless failover and load-balancing
+  for all incoming requests across the three nodes. Consequently, the three CNs
+  inherently trust one another fully.  As the suite of Coordinating Node
+  instances expands to other continents, this relationship may need to be
+  re-examined.
+
+Objects Subject to Access Control
+---------------------------------
+A variety of resources in DataONE would be the subject of authorization
+policies.  The permission levels for each of these types of objects include:
+
+* Data objects and Science Metadata objects
+   * Read
+       The ability to view the content of this object
+   * Write
+       The ability to change the content of this object via update services
+   * ChangePermission
+       The ability to change the authorization policies for this object
+* MN services (create, update, delete, read, listObjects)
+   * Execute
+       The ability to invoke a service
+* CN services (synchronize, search, register)
+   * Execute
+       The ability to invoke a service
+* Log records
+   * Read
+       The ability to view the log records for an object or service
+
+
+Additional Authorization Constraints
+------------------------------------
+Some nodes may also want to conditionally provide access to some services based
+on a principal's current usage of a resource such as node storage or node
+bandwidth.
+
+* Create/Update constraints
+   * MaximumStorageQuota
+   * MaximumNetworkTransferQuota
+
+Access Control Language
+-----------------------
+
+- SAML
+- XACML
+- eml-access
+- custom simple language
+- Others to consider?
+
+Authorization Services
+----------------------
+In this section, define a set of Authorization services to be implemented at CN
+and MN. The current Authorization Service is defined as a standalone service.
+
+Interaction diagrams
+--------------------
+
+Phase 1
+~~~~~~~
+
+..
+  @startuml _images/authorize_phase1.png
+  !include plantuml_fullsized.conf
+  actor User
+  participant MN1
+  participant MN2
+  participant CN
+  User -> CN: login(D1.username, password)
+  activate CN
+  CN --> MN1: token
+  deactivate CN
+  User -> MN1: create(token, GUID, object, sysmeta)
+  activate MN1
+  MN1 -> MN1: verify(token)
+  MN1 -> MN1: isAuthorized(token, GUID, OP_CREATE)
+  MN1 --> User: GUID
+  deactivate MN1
+  @enduml
+  
+
+.. figure:: _images/authorize_phase1.png
+   :figwidth: 100%
+
+   Only public objects are replicated in the system.  Create, Update, and
+   Delete operations are controlled by member nodes.
+
+
+Phase 2
+~~~~~~~
+
+Phase 3
+~~~~~~~
+
+Phase 4
+~~~~~~~
+
+Issues
+------
+- Located At CN or MN?
+   * At CN requires global knowledge of ACLs
+   * At CN requires a lot of network traffic for authorization on objects
+   * At MN makes authorization of search results impossible
+
+   * Compromise: Federated, each authoritative MN for an object keeps its ACL list,
+     which gets synchronized to the CN at sync time
+     * Assume most object write is at MN level, so best to not have to go to CN
+     * Assume MN will want to control their own write access
+     * Requires MN Authorization services
+- Efficiency of search results authorization
+   * Need to authorize large number of search results in each operation
+   * Has implications for search results cacheing
+

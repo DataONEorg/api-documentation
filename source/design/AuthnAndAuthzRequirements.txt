@@ -1,0 +1,425 @@
+Identity, Authentication, and Authorization Requirements
+========================================================
+
+.. list-table::
+   :header-rows: 1
+   :widths: 5 15
+
+   * - Category
+     - Requirement ID
+
+   * - API
+     - .. line-block::
+
+          765: Tools can access an API for authn and authz
+          820: Common API for authentication and authorization operations
+
+   * - Authentication
+     - .. line-block::
+
+          392: Identity and access control should be interoperable across datanets
+          764: Authentication and access control should be consistently available
+          765: Tools can access an API for authn and authz
+          820: Common API for authentication and authorization operations
+
+   * - Authorization
+     - .. line-block::
+
+          393: Access control rule evaluation must be highly scalable and responsive.
+          761: Users can specify authorization rules for data objects, science metadata objects, and process artifacts separately
+          764: Authentication and access control should be consistently available
+          765: Tools can access an API for authn and authz
+          766: Users should be able to easily assign proxy privileges to other users and to systems acting on their behalf for limited time durations
+          767: Users need to be able to express embargo rules for data
+          768: Need default authz policies that resolve problems associated with inaccessible principals
+          769: Authorization should support critical roles, such as curators and system administrators
+          770: Authorization system should be able to express the pseudo-principal concepts like 'public'
+          772: Authentication services should be compatible with existing infrastructure and applications
+          777: Authorization rules should support common permission levels
+          795: System must support revocation of user permissions
+          820: Common API for authentication and authorization operations
+          xxx: Group Identifiers are equivalent to user identifiers in all ACL mechanisms
+          xxx: Local sites/data owners have ability to generate, populate, and modify groups
+          xxx: Group information can be replicated so that all MNs can see it and use it to
+             enforce ACLS
+          xxx: Need clear use cases for administering groups
+          xxx: Need clear business logic for replicating access control lists
+          xxx: Can access rules for Data Packages that cross operational bounds like MNs
+          xxx: System should support (and require?) transport-layer security
+          xxx: Need ability/clear policies to transfer ownership of abandoned objects
+          xxx: Support ability to use encryption to ensure restricted access from untrusted MNs
+          xxx: Can people with 'SetPermission' revoke access from original owners
+                -- also does revoking SetPermission priv also revoke the privs for their
+                grantees
+          xxx: Need to establish the default set of permissions in absence of additional roles
+          xxx: Need to ensure that deleted accounts can not be replaced by new users (i.e.,
+             identities are globally unique over time)
+          xxx: Curator at institutional level has ability to create accounts for their group
+          xxx: Sites have ability to create groups
+          xxx: Sensitive data that is encrypted is generally not replicated except possibly to
+             avoid risks of leaks of that information (confused)
+          xxx: Need process for data consumer to request authorization for an object
+          xxx: Need process for data owner to receive and evaluate the requests 
+          xxx: Need ability to create index of users so that clients can use that list to
+             assign access control rules, and ability to look up Identity for particular users
+          xxx: Should be able to assert write without read (controversial)
+          xxx: Users should be able to revoke their own access to an object
+          xxx: Allow users to create organic, self-created groups (e.g., for a lab or team)
+          xxx: Should have a user profile page to review/revise a user's own identity, group, and
+             other Identity information
+          xxx: Nodes need to be able to assert minimum LOA re: who has write access
+          xxx: May have need for 'Deny' permissions on access for convenience (but probably
+             lower priority)
+          xxx: People can modify access control rules
+          xxx: Should be able to deposit content with embargo, but should be able to grant
+             anonymous access tokens for access to the data without the owner knowing who it
+             was that had access (use case for anonymous peer review in Dryad)
+          xxx: Need ability to query what I have access to
+          xxx: co-ownership model for permissions is needed for handling co-authorship
+          xxx: Should groups be able to own objects?
+          xxx: Need to restrict visibility to objects for which they don't have access in all
+             services (e.g., search, listObjects, etc)
+          xxx: Member nodes should be able to restrict data access by individuals on Dept of
+             Commerce Embargo lists at high LOAs -- possibly determine that we won't support
+             this, but rather that we state these types of objects must not be uploaded
+          xxx: Anonymous access will be allowed for for publicly accessible objects 
+          xxx: Can groups contain groups, and at what nesting depth?  Yes, one level.
+          xxx: ID and acces control should be easy to use and not present barriers to adoption
+             and use
+          xxx: ID and access control should work in all geopolitical jurisdictions
+          xxx: ID and access control should comply with universal design standards
+
+   * - Identity
+     - .. line-block::
+
+          392: Identity and access control should be interoperable across datanets
+
+   * - IdentityProvision
+     - .. line-block::
+
+          390: Consistent mechanism for identifying users
+          391: Enable different classes of users commensurate with their roles.
+          762: User identities can be derived from existing institutional directory services
+          771: User identities should have simple string serializations that express both the user identity and namespace from which it is drawn
+
+   * - Interoperability
+     - .. line-block::
+
+          392: Identity and access control should be interoperable across datanets
+          765: Tools can access an API for authn and authz
+          820: Common API for authentication and authorization operations
+
+   * - Performance
+     - .. line-block::
+
+          393: Access control rule evaluation must be highly scalable and responsive.
+          763: Authentication and authorization services are geographically replicated
+          764: Authentication and access control should be consistently available
+
+
+390: Consistent mechanism for identifying users
+-----------------------------------------------
+
+:ID: https://trac.dataone.org/ticket/390
+
+It is necessary to provide a mechanism for users to be identified in the DataONE system. There are several distinct roles that need to be supported for users.Rationale: Identity of users, contributors and other participants in DataONE is necessary to ensure appropriate policies for data sharing (read, write), attribution, and notification (e.g. subscription to types of data).
+
+Fit Criteria
+
+ * Users can identify themselves in the DataONE system 
+ * Identity is consistent across all nodes (i.e. identity associated with an object is consistent regardless of where the object is retrieved from or acted on) 
+ * Users can associate various accounts with a single identity
+ * Identity information is sufficient to ensure appropriate attribution to content 
+ * Authentication and authorization mechanisms are recognized consistently by all participant nodes and services of the cicore.  
+ * Existing user directories in use in environmental science community can directly contribute identities (not "yet another" identity system)
+
+
+
+391: Enable different classes of users commensurate with their roles.
+---------------------------------------------------------------------
+
+:ID: https://trac.dataone.org/ticket/391
+
+There are several types of users that will be interacting with the DataONE infrastructure, as such it is necessary to ensure that user roles can be supported by the identity management infrastructure. Closely related to https://trac.dataone.org/ticket/390
+
+Rationale: Different user classes or groups provides an effective mechanismfor indicating the types of interaction that might be supported by the system. The alternative is to specifically assign privileges for each user - an
+approach that is inefficient and potentially insecure as it is easy to miss an
+individual when setting privileges for a large number of users.
+ 
+ Fit  Criteria
+
+ * A well defined set of standard groups is identified and can be easily manage (e.g. administrators, data contributors, data readers)
+
+ * Users can be assigned to and removed from groups 
+
+ * Additional groups can be created to support group functions as necessary 
+
+ * Users can create their own groups for ad-hoc collaboration when needed and without approval of system administrators 
+
+ * Access control rules can be associated with groups and operate as expected.
+
+
+392: Identity and access control should be interoperable across datanets
+------------------------------------------------------------------------
+
+:ID: https://trac.dataone.org/ticket/392
+
+There is a general requirement / suggestion by NSF that there should be interoperability between the various DataNet projects.  Rationale: It seems like identity and access control is a good place where considerable value can be demonstrated to the user community if credentials and access control rules worked across the data net projects.
+
+Fit Criteria
+ * Users can sign into DataONE and DC with the same credentials
+ * Once signed in to DataONE, access to DC services is seamless (no additional authentication required)
+
+393: Access control rule evaluation must be highly scalable and responsive.
+---------------------------------------------------------------------------
+
+:ID: https://trac.dataone.org/ticket/393
+
+Access control for objects is evaluated for every object access in the DataONE infrastructure.  As such, the mechanisms used to determine if a particular token (i.e. handle to an authenticated principle) must be very efficient and should not offer a barrier to the desired levels of access control in the system.
+
+Rationale
+
+Access control should not be an impediment to effective use of the content available through DataONE.
+
+Fit Criteria
+
+ * Access control rules can be evaluted for any token in an average of xxx milliseconds
+
+ * Access control rules must not take longer than xxx milliseconds to evaluate
+
+ * Access control must not block critical operations (e.g replications, synchronization)
+
+
+
+
+761: Users can specify authorization rules for data objects, science metadata objects, and process artifacts separately
+-----------------------------------------------------------------------------------------------------------------------
+
+:ID: https://trac.dataone.org/ticket/761
+
+Users might be able to upload data and science metadata as an atomic operation, but each should be identified separately and access control rules should apply to the objects separately.  For example, a user could grant public read access to a metadata object but only grant read access to certain colleagues for associated data objects.
+
+Rationale: 
+Enabling access control at the same level of granularity of objects in the system ensures that complete control over object conglomerations (packages, etc) is available.
+
+Fit Criteria
+  * All objects in the system have access control rules 
+  * Separate rules can be associated with the elements of a package during operations at the package level (e.g. ``create``)
+
+
+762: User identities can be derived from existing institutional directory services
+----------------------------------------------------------------------------------
+
+:ID: https://trac.dataone.org/ticket/762
+
+Many existing directory services are in use in the environmental sciences, and participating member nodes should be able to expose their directories through a standardized mechanism to allow users to make use of existing identities.  For example, the KNB LDAP server is a federation of multiple LDAP systems from around the world, and these identities have been used in access rules for many existing objects.Rationale: Re-use of existing infrastructure reduces cost of participation and minimizes confusion over which accounts to use and which rules are associated with what account. 
+
+Fit Criteria
+ 
+ * The system provides a mechanism for exsiting directory services to join * The system provides a namespacing mechanism to differentiate users with the same id in different original directories (e.g., mjones@LTER, mjones@UCNRS)
+ * The same email address can be associated with multiple identities
+ * The same person or system can possess multiple identities 
+ * If a user has multiple identities, the user can express equivalence rules that indicate that they are linked, equivalent identities for the purposes of authentication and authorization
+
+
+763: Authentication and authorization services are geographically replicated
+----------------------------------------------------------------------------
+
+:ID: https://trac.dataone.org/ticket/763
+
+Authentication and authorization are critical services that can not afford geographic delays, especially across continents, in order to allow adequate responsiveness. Users and developers of services should not have to know which authentication service is used (i.e. a load balancing and failover solution from a centralized address (probably the coordinating node address) should be able to access any of the replicated services.  Replicas should be located at multiple trusted sites (probably coordinating nodes) that are geographically distributed (incl. across continents)
+
+Fit Criteria
+
+ * Authentication operations should be less than xxx milliseconds from any point in the network
+
+ * Replicas of authentication and authorization services are geographically replicated
+
+ * Failover across replicated services is automatic without client-side intervention
+
+
+764: Authentication and access control should be consistently available
+-----------------------------------------------------------------------
+
+:ID: https://trac.dataone.org/ticket/764
+
+Authentication and authorization are a critical infrastructure bottleneck, and should be consistently available, likely through load balancing and failover solutions.
+
+Fit Criteria
+
+ * Authn and Authz should be available xx.xxxxx% (To be determined)
+
+
+765: Tools can access an API for authn and authz
+------------------------------------------------
+
+:ID: https://trac.dataone.org/ticket/765
+
+A standardized API allows us to build interoperable tools, and adapt existing tools to interoperate with the DataNets. All infrastructure components should be able to use these services, including CNs, MNs, and client tools and libraries.
+
+Fit Criteria
+
+ * Demonstrated interoperability of the API across 3 client and member node systems
+ * 
+ *
+
+
+766: Users should be able to easily assign proxy privileges to other users and to systems acting on their behalf for limited time durations
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+:ID: https://trac.dataone.org/ticket/766
+
+When users need to execute processes asynchronously, they need to be able to grant proxy privileges (e.g., to a workflow or grid system) to operate on their behalf in particular contexts.  In addition, at times some users want others to be able to run and access data and operate on behalf of another, such as in a faculty student situation where the student acts as a proxy for the faculty member.
+
+Fit Criteria
+
+ *
+ *
+ *
+
+
+767: Users need to be able to express embargo rules for data
+------------------------------------------------------------
+
+:ID: https://trac.dataone.org/ticket/767
+
+These embargo rules allow data to be published in the system, but not released until a particular date.  By operating this way, users can use the system in their daily management of their data without worry of losing track of publication of the data at a later date.  It encourages people to start using the system even long before they want to publicly release the data.
+
+Fit Criteria
+
+ *
+ *
+ *
+
+
+768: Need default authz policies that resolve problems associated with inaccessible principals
+----------------------------------------------------------------------------------------------
+
+:ID: https://trac.dataone.org/ticket/768
+
+When principals die, retire, change careers, or lose interest in a research area, they may leave in the system data objects that would be otherwise useful to science but are restricted access.  The authorization system should have carefully crafted default policies that encourage the public release and sharing of data, the expiration of embargo periods, and the movement of data into the public domain when it is legal and ethical to do so.  Principals should be able to override these defaults to create more restrictive policies (e.g., for human subjects data) that will be respected indefinitely, but the defaults should encourage openness and sharing.
+
+Fit Criteria
+
+ * Defaults encourage openness and sharing, without alienating principals through unexpected release of their data, etc.
+
+
+769: Authorization should support critical roles, such as curators and system administrators
+--------------------------------------------------------------------------------------------
+
+:ID: https://trac.dataone.org/ticket/769
+
+While the principals contributing data should be able to specify access, they frequently struggle with the software systems intended to do so, and at times make mistakes.  The system should support certain roles with elevated privielges for groups of objects to allow, e.g, a system administrator or data curator to change objects for which they are not otherwise granted access.  For example, all objects that are associated with a particular field station might be managed by the information manager at that field station, and the person filling that role through time might change.  Individual principals should be able to determine who has access to objects, both through explicit grants of access and through indirect roles that may be only implicitly defined.
+
+Fit Criteria
+
+ * Its possible for access by some roles to be assigned implicitly through certain membership criteria (e.g., a data object is part of an LTER site)
+
+
+770: Authorization system should be able to express the pseudo-principal concepts like 'public'
+-----------------------------------------------------------------------------------------------
+
+:ID: https://trac.dataone.org/ticket/770
+
+There should be well-known mechanisms in the authorization system to allow access rules that explicitly grant access to pseudo-principals, including:
+
+ * public: anonymous, non-authenticated users
+ * valid-user: authenticated user
+ * registered-user: authenticated user with explicit minimal contact information
+ * verified-user: authenticated user with explicit minimal contact information that has been verified as belonging to a real account holder
+
+Fit Criteria
+
+ *
+
+
+771: User identities should have simple string serializations that express both the user identity and namespace from which it is drawn
+--------------------------------------------------------------------------------------------------------------------------------------
+
+:ID: https://trac.dataone.org/ticket/771
+
+When user identities can be drawn from multiple providers, we need to be able to serialize both the id and the provider namespace, for example by encapsulating both in a single distinguished name (DN).  Ideally this serialization would be relatively short, persistent, and human understandable, and ideally it should not contain spaces or other characters that make it difficult to utilize in a variety of contexts (such as command line applications).
+
+An example DN that has worked for the KNB network is:
+
+  uid=jones,o=NCEAS,dc=ecoinformatics,dc=org
+
+Fit Criteria
+
+ *
+ *
+ *
+
+
+772: Authentication services should be compatible with existing infrastructure and applications
+-----------------------------------------------------------------------------------------------
+
+:ID: https://trac.dataone.org/ticket/772
+
+Many applications will need to be adapted to work with the authentication and authorization services provided.  Ideally, the services chosen will be compatible with existing systems and support those systems through standard protocols.  Applications will need to commonly connect to, for example, web applications using HTTP Basic Authentication for Apache and JAAS for servlets like Tomcat.  In addition, some applications may want to connect via PAM and similar security mechanisms.  Some identity services, such as LDAP, are commonly supported in these scenarios.
+
+Fit Criteria
+  * Software in common use at Member Nodes and as clients should be able to easily utilize the authentication and authorization services with minimal configuration
+
+777: Authorization rules should support common permission levels
+----------------------------------------------------------------
+
+:ID: https://trac.dataone.org/ticket/777
+
+Several types of access directives are in common use in data packages in the environmental sciences, and the authorization system should support these.  The most common authorization levels would include:
+
+  * read: the ability to display or download an object
+
+  * write: the ability to change the content of an object through an update operation (which does not mean it actually changes the object -- it may just create a new version that obsoletes the old)
+
+  * changePermission: the ability to change access control rules on the object
+
+Often, the permission levels are nested, in that higher privilege levels encompass the lower levels as well (e.g., write access to an object implies read access).
+
+See the EML access control module for a detailed explanation of these levels (eml-access module).
+
+In addition to specifying levels of permissions on the individual data objects, the authorization system should allow node administrators to specify what services principals can utilize on their nodes, and any resource constraints that may apply.  For example, a Member Node operator may want to specify for their node several rules, such as:
+
+  * user joe can insert or update objects on node 32
+
+  * user jack can not update objects on node 21
+
+  * user joe has an aggregate storage limit of 1TB (may want to consider soft and hard resource limits)
+
+  * user joe has a network bandwidth transfer limit of 10mb/s
+
+Note that these types of node-level resource limitations may not be implemented currently on most member nodes, but the authorization system should be expressive enough to allow node operators to build in these restrictions.
+
+
+795: System must support revocation of user permissions
+-------------------------------------------------------
+
+:ID: https://trac.dataone.org/ticket/795
+
+The system should be able to revoke any user's permissions and, ultimately, their direct access to the system, if the user is misbehaving within the system.
+
+Although it is unclear as to who assigns permissions, I believe that the final responsibility and authority for access control is the DataONE administrator.  As such, permissions and simple access to any part of the DataONE infrastructure, and perhaps member node infrastructure that is accessed through DataONE, should be revokable.
+
+Fit Criteria
+
+* Administrator can change permissions for a user for any object
+* Permission changes are propagated through the system within XXX seconds
+* Read, write access rules can be altered for a user for all content in the system
+
+820: Common API for authentication and authorization operations
+---------------------------------------------------------------
+
+:ID: https://trac.dataone.org/ticket/820
+
+There should be a common API utilized by the major software components of the infrastructure for DataONE (for all DataNet?) for authentication and authorization operations.
+
+Rationale
+
+A common API will help minimize inconsistencies that arise from functional and semantic mis-match when interacting across multiple systems.
+
+Fit Criteria
+
+ * CN, MN, and ITK libraries share a common API for authn and authz
+ * Differing component implementations pass integration testing
+
+
