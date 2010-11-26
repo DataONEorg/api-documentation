@@ -45,8 +45,8 @@ Triggers
 Post Conditions
   - The DataONE system is updated with current state of available resources
 
-  - Change in replication policy may trigger a re-synchronization (e.g. if
-    storage capacity shrinks or is enlarged)
+  - Change in replication policy may trigger adjustments to content that is
+    replicated to that node (e.g. if storage capacity shrinks or is enlarged)
 
   - Operation is logged
 
@@ -61,7 +61,7 @@ Post Conditions
      usecase "13. Authorization" as author
      usecase "01. MN Policy" as policy
      usecase "XX. Notify Watchers" as NOTIFY
-     usecase "XX. CN Synchronize" as CNSYNC
+     usecase "XX. CN Replication" as CNSYNC
      CN -- policy
      MN -- policy
      policy ..> author: <<includes>>

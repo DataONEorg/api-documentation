@@ -12,34 +12,36 @@ Date
   - 20090925 Adding to use case description and documentation
   - 20090114 (TWG meeting).  Subsequent various modifications.
 
-Version 
-  0.3
-
 Goal
+
   Science metadata records present in a Member Node are synchronized to a
   Coordinating Node.
 
 Summary
 
-  As content is added to Member Nodes, the associated system metadata objects
-  and copies of the science metadata are copied to a Coordinating Node. Once
-  the objects are registered with the Coordinating Node they are available for
+  As content is added to Member Nodes, the associated system metadata and
+  science metadata documents are copied to a Coordinating Node. Once the
+  objects are registered with the Coordinating Node they are available for
   transfer to other Coordinating and Member nodes.
 
-
 Actors
+
   Member Node, Coordinating Node
 
 Preconditions 
+
   - CN and MN operational
   - New content available on a Member Node
 
 Triggers
-  -  Periodic polling of MNs
 
+  - Periodic polling of MNs
+  - Signal to CN issued by a MN that is requesting synchronization
 
 Post Conditions
-  - All system and science metadata records from a MN are also present on the CN
+
+  - All system and science metadata records from a MN are also present on the
+    CN
 
 
 .. uml::
@@ -54,6 +56,9 @@ Post Conditions
   MN -- SYNC
   SYNC ..> author: <<includes>>
   SYNC ..> NOTIFY: <<includes>>
+
+*Figure 1.* Use case diagram indicating the components and other use cases
+involved in this use case.
 
 
 .. uml::
@@ -126,12 +131,10 @@ Post Conditions
   end
 
 
-Sequence diagram for use case 06. Synchronize metadata between Member and
-Coordinating Node. Note that the log messages record a REPLICATE rather than a
-READ event. The MN determines this through the User Agent header (NB - this
-assumes that CNs only call MN.get to do replication).
-
-
+*Figure 2.* Sequence diagram for use case 06. Synchronize metadata between
+Member and Coordinating Node. Note that the log messages record a REPLICATE
+rather than a READ event. The MN determines this through the User Agent header
+(NB - this assumes that CNs only call MN.get to do replication).
 
 
 Implementation

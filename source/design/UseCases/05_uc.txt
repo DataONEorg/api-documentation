@@ -1,94 +1,70 @@
-Use Case 05 - Update Metadata
------------------------------
+.. _UC05:
+
+Use Case 05 - Update Science Metadata
+-------------------------------------
 
 Author
   VDC TWG
 
 Date
+  - 20101126 (DV) Updated to conform with expected system behavior
   - 20090929 Filling out details
   - 20090925 Adding to use case description and documentation
   - 20090114 (TWG meeting).  Subsequent various modifications.
 
-Version 
-  Draft
-
 Goal
-  Create, update or delete metadata record on a Member Node.
+  Update or delete science metadata record on a Member Node.
 
 Summary 
-  A user is creating a new metadata record on a Member Node (MN). The
-  mechanism by which the user does this is out of scope for the DataONE
-  system, so this use case continues from the point where a new Data Package
-  is present on the MN.
 
-  The metadata is retrieved by the CN using a pull mechanism (CN requests
-  content from the MN).
+  Science metadata is immutable in DataONE. As such, modification involves
+  generating a new science metadata record and indicating that the new record
+  supersedes an existing record, and deletion involves deprecation so that the
+  old metadata record is no longer visible during normal discovery and access.
 
-  The availability of new content on a MN is indicated by a flag in the
-  response to a ping() message issued by a CN. The CN then retrieves a list of
-  changes from the MN and for each change, retrieves the experiment metadata,
-  stores it and generates a search metadata document by extracting content
-  from the experiment metadata. The changes to the CN (stored experiment
-  metadata, update search metadata) are replicated to the other CNs (Use Case
-  ###). The CN schedules replication of the data package across other MNs
-  (:doc:`06_uc`).
+  .. figure:: images/sketch_uc05_update.png
+
+  *Figure 1.* Sketch of interactions involved in updating a science metadata
+  object. An authenticated user calls the :func:`MN_crud.update` operation on
+  a Member Node (A) with a new science metadata document and the identifier of
+  the document being replaced. The update method sets the
+  :attr:`SystemMetadata.obsoletedBy` property of the original document system
+  metadata with the identifier of the new science metadata document (B), and
+  the :attr:`SystemMetadata.obsoletes` property of the system metadata
+  associated with the new science metadata is set to the identifier of the
+  science metadata document being replaced (C). The Coordinating Nodes pick up
+  the changes on the next Member Node synchronization (D). Changes are
+  subsequently propagated to the replica locations.
 
 
 Actors
   Member Node, additional Member Nodes, Coordinating Nodes
-  
-  
+
 Preconditions
 
-  - Use is authenticated and so client application has an auth_token for the process.
+  - User is authenticated
 
-  - DataONE system operational
-  
   - MN is registered and is monitored
-  
-  
+
+  - Science metadata being deleted / updated document exists  
+
 Triggers
 
-  - New data package is present on Member Node
-  
-  - An existing data package is modified on a Member Node
-  
-  - A data package is deleted from a Member Node
- 
- 
+  - User calls :func:`MN_crud.update`
+
+  - User calls :func:`MN_crud.delete`
+
 Post Conditions
-  
-  - New data package is replicated across MNs
-  
-  - Search metadata is updated
-  
+
+  - System metadata for science metadata object(s) updated
+
+  - Replacement science metadata propagated through the system
+
+  - Search indexes updated
+
   - Operation recorded in logs
 
-  - CN update of search metadata
-
-  - CN replication of metadata 
-
   - Watchers notified of change
-  
-
-
-**Notes**
-
-- Are IDs are pegged to versions? If so, update might differ more radically
-  from create.
-
-- If delete is a metadata operation only, then will be very similar to update.
-  But if it is a physical operation, it becomes more complex. Will there be an
-  archival copy? Will member nodes that hold replicas be "forced" to destroy
-  the replicas?
-
-- Is submit from a member node a push or pull?
-
-- Should queuing of a submission within a member node be required for success?
-  (We assume yes, to guarantee replication of submissions).
-
-- Can data packages be deleted or modified?
-
 
 
 .. uml::
@@ -100,17 +76,16 @@ Post Conditions
      actor "Coordinating Node" as CN
      actor "Member Node" as MN
      usecase "13. Authorization" as author
-     usecase "04. Create Object" as create
+     usecase "04. Update Object" as update
      usecase "06. MN Synchronize" as mn_sync
-     client -- create
-     CN -- create
-     MN -- create
-     create ..> author: <<includes>>
-     create ..> authen: <<includes>>
-     create ..> mn_sync: <<includes>>
-   
-   
-*Figure 1.* Use case 04.
+     client -- update
+     CN -- update
+     MN -- update
+     update ..> author: <<includes>>
+     update ..> authen: <<includes>>
+     update ..> mn_sync: <<includes>>
+
+*Figure 2.* Use case 04.
 
 
 .. uml::
@@ -120,24 +95,32 @@ Post Conditions
    User -> app_client
 
    participant "CRUD API" as m_crud << Member Node >>
-   app_client -> m_crud: create(auth_token, dataPackage)
+   app_client -> m_crud: update(token, obsoletedID, ID, scienceMetadata)
    activate m_crud
    participant "CRUD API" as c_crud << Coordinating Node >>
-     m_crud -> c_crud: validateGUID(GUID)
-     m_crud <-- c_crud: GUID
+     m_crud -> c_crud: validateGUID(token, ID)
+     c_crud -> m_crud: OK
+     m_crud -> m_crud: create(token, ID, scienceMetadata)
+     m_crud -> m_crud: setObsolete(token, ID, obsoletedID)
      m_crud -> m_crud: store()
+   m_crud -> app_client: OK
    deactivate m_crud
 
-   participant "State of Health API" as c_health << Coordinating Node >>
-   c_health -> m_crud: ping()
-   activate c_health
-     c_health <-- m_crud: [ACK, NewData]
-   participant "Synchronization API" as c_sync << Coordinating Node >>
-     c_health -> c_sync: scheduleSynch(MN_ID)
-   deactivate c_health
-   
-
-*Figure 2.* Create, update, delete, search metadata or data object in Member
+*Figure 3.* Create, update, delete, search metadata or data object in Member
 Node.
 
+
+**Notes**
+
+- Q. Are IDs are pegged to versions? If so, update might differ more radically
+  from create. A. Yes. Create involves creation of a new science metadata
+  object, update involves deprecating an existing science metadata document
+  with a replacement, delete involves setting system metadata properties.
+
+- Q. Should queuing of a submission within a member node be required for
+  success? (We assume yes, to guarantee replication of submissions). A. No.
+  Successful update is handled by the Member Node, if the new science metadata
+  can be created and the system metadata can be updated, then the change
+  should be considered complete. The Member Node synchronization process will
+  ensure that the changes are propagated to the wider system.
 

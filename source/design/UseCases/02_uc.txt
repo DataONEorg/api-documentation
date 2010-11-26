@@ -1,7 +1,9 @@
+.. _UC02:
+
 Use Case 02 - List GUIDs By Search
 ----------------------------------
 
-.. index:: Use Case 02, List
+.. index:: Use Case 02, List, Search, Query
 
 Author
   VDC TWG
@@ -19,10 +21,10 @@ Summary
   A user performs a search against the DataONE system and receives a list of
   object identifiers (GUIDs) that match the search criteria. The list of GUIDs
   is filtered such that only objects for which the user has read permission
-  will be returned.  
-  
-  This use case assumes that the search is being performed by submitting a
-  query against a CN.
+  will be returned.
+
+  Content discovery in DataONE is achieved primarily through the service
+  interfaces provided by the Coordinating Nodes.
 
 Actors
   - Client performing search operation
@@ -42,6 +44,49 @@ Post Conditions
     match the supplied query, or an error message if the query was invalid.
 
   - The log is updated with the request
+
+
+.. uml::
+
+  actor User
+  usecase "12. Authentication" as authen
+
+  package "DataONE"
+   actor "Coordinating Node" as CN 
+   usecase "13. Authorization" as author
+   usecase "02. Search Metadata" as SEARCH
+   User -- SEARCH
+   CN -- SEARCH
+   SEARCH ..> author: <<includes>>
+   SEARCH ..> authen: <<includes>>
+
+*Figure 1.* Use case 02.
+
+
+.. uml::
+
+   participant "Client" as app_client << Application >>
+   participant "Query API" as c_query << Coordinating Node >>
+   participant "Authentication API" as c_authenticate << Coordinating Node >>
+   participant "CRUD API" as c_crud << Coordinating Node >>
+   app_client -> c_query: search(token, query)
+   activate c_query
+   c_query -> c_query: search -> objectList
+   note right of c_query
+     The query response is a list of IDs.
+     Each ID needs to be checked for read 
+     access by the authenticated user.
+   end note
+     loop for ID in objectList
+       c_query -> c_authenticate: isAuthorized(token, ID, OP_GET)
+       c_query <-- c_authenticate: T or F
+     end 
+   c_query --> c_crud: log
+   app_client <-- c_query: objectList
+   deactivate c_query
+
+*Figure 2.* Interaction diagram for Use Case 02.
+
 
 
 **Notes**
@@ -118,46 +163,4 @@ Post Conditions
 
 - What logging level is required for the operation? Should the search appear
   as a hit against each object? Just log the query (and perhaps who did it)?
-
-
-.. uml::
-
-  actor User
-  usecase "12. Authentication" as authen
-
-  package "DataONE"
-   actor "Coordinating Node" as CN 
-   usecase "13. Authorization" as author
-   usecase "02. Search Metadata" as SEARCH
-   User -- SEARCH
-   CN -- SEARCH
-   SEARCH ..> author: <<includes>>
-   SEARCH ..> authen: <<includes>>
-
-*Figure 1.* Use case 02.
-
-
-.. uml::
-
-   participant "Client" as app_client << Application >>
-   participant "Query API" as c_query << Coordinating Node >>
-   participant "Authentication API" as c_authenticate << Coordinating Node >>
-   participant "CRUD API" as c_crud << Coordinating Node >>
-   app_client -> c_query: search(token, query)
-   activate c_query
-   c_query -> c_query: search -> objectList
-   note right of c_query
-     The query response is a list of IDs.
-     Each ID needs to be checked for read 
-     access by the authenticated user.
-   end note
-     loop for ID in objectList
-       c_query -> c_authenticate: isAuthorized(token, ID, OP_GET)
-       c_query <-- c_authenticate: T or F
-     end 
-   c_query --> c_crud: log
-   app_client <-- c_query: objectList
-   deactivate c_query
-
-*Figure 2.* Interaction diagram for Use Case 02.
 
