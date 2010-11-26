@@ -21,30 +21,35 @@ within the DataONE framework. Requirements for Authorization are listed here:
 
    AuthnAndAuthzRequirements
 
-During the DataONE Federated Security workshop, four phases for development
-were identified that involve increasingly sophisticated authorization and
-access control mechanisms.  The four phases are:
+During the first DataONE Federated Security workshop, four phases for
+development were identified that involve increasingly sophisticated
+authorization and access control mechanisms. The four phases are:
 
 - **Phase 1: Mostly public access (target date: January 2011)**: Only publicly 
   readable content is replicated. Only publicly readable content is indexed for 
   search and retrieval. Access to restricted content is through origin member 
   node only. No authentication is required to search and retrieve public content.
   Authentication is required to upload (create) content.
+
 - **Phase 2: Access control supported for search and retrieval**: ACLs respected 
   by coordinating nodes.  Authenticated users can discover content that is 
   restricted to them or their groups. Restricted access content is not replicated.
+
 - **Phase 3: Access control supported for content replication**: 
   Restricted access content is replicated to member nodes with compatible ACLs 
   and pre-arranged trust agreements.
+
 - **Phase 4: Consistent semantic and functional interoperability for identity and
   security**: Restricted access content is replicated to any member node. 
   Authentication by long-running workflows is supported.
 
+
 Trust relationships
 -------------------
-Any authorization system in a federated requires trust among participants in
-the federation.  For DataONE, there are three types of trust relationships
-among nodes in the federation:
+
+Any authorization system in a federation requires trust among participants.
+For DataONE, there are three types of trust relationships among nodes in the
+federation:
 
 - **MN to MN**: Member Node to Member Node trust relies on one Member Node
   believing that another Member Node will respect the authorization policies
@@ -54,15 +59,18 @@ among nodes in the federation:
   owner. Because of this, Member Nodes can express replication policies for
   objects that indicate which other Member Nodes are acceptable targets for
   replication, and for which nodes they are willing to serve as replica stores.
+
 - **MN to CN**: Member Nodes need to have trust that Coordinating Nodes will
-  respect and enforce their authorization policies, including any restictions
+  respect and enforce their authorization policies, including any restrictions
   placed on where and when to create replicas of objects and on the
   presentation of search results for restricted content. As there are only
   three Coordinating Nodes in the initial deployment, this trust relationship
   should be easy to establish.
+
 - **CN to MN**: Coordinating Nodes rely upon Member Nodes for limited services,
   and mainly expect Member Nodes to accurately implement the DataONE Service
   API, including replication services.
+
 - **CN to CN**: Each Coordinating Node contains a replica of the content of the
   others, and are configured to provide seamless failover and load-balancing
   for all incoming requests across the three nodes. Consequently, the three CNs
@@ -72,25 +80,29 @@ among nodes in the federation:
 
 Objects Subject to Access Control
 ---------------------------------
+
 A variety of resources in DataONE would be the subject of authorization
 policies.  The permission levels for each of these types of objects include:
 
 * Data objects and Science Metadata objects
-   * Read
-       The ability to view the content of this object
-   * Write
-       The ability to change the content of this object via update services
-   * ChangePermission
-       The ability to change the authorization policies for this object
+
+   :Read: The ability to view the content of this object
+
+   :Write: The ability to change the content of this object via update services
+
+   :ChangePermission: The ability to change the authorization policies for this object
+
 * MN services (create, update, delete, read, listObjects)
-   * Execute
-       The ability to invoke a service
+
+   :Execute: The ability to invoke a service
+
 * CN services (synchronize, search, register)
-   * Execute
-       The ability to invoke a service
+
+   :Execute: The ability to invoke a service
+
 * Log records
-   * Read
-       The ability to view the log records for an object or service
+
+   :Read: The ability to view the log records for an object or service
 
 
 Additional Authorization Constraints
@@ -143,16 +155,51 @@ Phase 1
 *Figure 1.* Only public objects are replicated in the system. Create, Update,
 and Delete operations are controlled by member nodes.
 
+.. figure:: images/anaz_phase1.png
+
+*Figure 2.* Trust relationships between components during phase 1 of
+Authz/Authn. Triangle = CN, Rectangle = MN, open circle = public data, filled
+circle = private data, dashed line = untrusted connection. A Coordinating Node
+retrieves only public content from a Member Node (A), and only publicly
+readable content is available to users through the Coordinating Nodes (B) and
+Member Nodes (C). A Coordinating Node must have a trusted relationship with
+Member Nodes to request replication operations (E) even though the content
+being replicated is publicly readable and does not require a trusted
+connection (D).
+
 
 Phase 2
 ~~~~~~~
 
-TBD
+.. figure:: images/anaz_phase2.png
+
+*Figure 3.* Trust relationships between components during phase 2 of
+Authn/Authz. Triangle = CN, Rectangle = MN, open circle = public data, filled
+circle = private data, dashed line = untrusted connection, solid line =
+trusted connection, user with hat = authenticated user. Coordinating Nodes
+synchronize public and private content (A). Authenticated users can retrieve
+private data from the origin Member Node (B) and can discover and retrieve
+metadata from the Coordinating Nodes (C). Public content is replicated between
+Member Nodes (D) under the direction of a trusted connection from the
+Coordinating Nodes (E).
+
 
 Phase 3
 ~~~~~~~
 
-TBD
+.. figure:: images/anaz_phase3.png
+
+*Figure 4.* Trust relationships between components during phase 3 of
+Authn/Authz. Triangle = CN, Rectangle = MN, open circle = public data, filled
+circle = private data, dashed line = untrusted connection, solid line =
+trusted connection, user with hat = authenticated user. Member Nodes of
+compatible technology (D) have a trust relationship that enables transfer of
+protected content from one member node to another (A). An authenticated user
+has the same access to private content replicated to other Member Nodes (B).
+Member Nodes with incompatible technology (i.e. unable to create a trusted
+relationship) are only able to replicate public content (C). Coordinating
+Nodes must have trusted relationships to all Member Nodes (E) to direct
+replication.
 
 Phase 4
 ~~~~~~~
