@@ -13,7 +13,7 @@ NodeList
   ======== ============================================================
 
 
-A NodeList is a synchronized register fo all of the nodes in the dataone environment.
+A NodeList is a synchronized register for all of the nodes in the dataone environment.
 It contains the information needed by DataONE to orchestrate activities across 
 the distributed coordinating and member nodes of the network.  While some information
 is provided by the Member Nodes themselves, the document itself is maintained
@@ -86,7 +86,6 @@ NodeList fields
 ---------------
 
 .. attribute:: identifier
-
   
   A unique identifier for the node of type NodeReference.  This may initially
   be the same as the baseURL, however this value should not change for future

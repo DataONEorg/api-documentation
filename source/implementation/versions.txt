@@ -186,8 +186,8 @@ and :doc:`/design/UseCases/36_uc`.
 The MN implementation will be a Django application that can stand alone, or
 interact with Metacat, Dryad, or ORNL DAAC for retrieving data and science
 metadata objects. The MN will implement the APIs described in
-:doc:`MN_APIs` using a REST interface approach as described in
-:doc:`REST_interface`. The MN should be able to operate on any Linux, OS X or
+:doc:`/apis/MN_APIs` using a REST interface approach as described in
+:doc:`/apis/REST_interface`. The MN should be able to operate on any Linux, OS X or
 Windows platform that supports python 2.6. External dependencies beyond the
 standard python install should be clearly documented.
 
@@ -195,8 +195,8 @@ The CN implementation will be a combination of Java servlet applications
 including Metacat for object storage, Mercury for object indexing for basic
 search and browse, and "cn_service" which will implement the necessary CN APIs
 and the logic to interact with the object store and search index. The CN
-should implement the APIs described in :doc:`CN_APIs` using a REST
-interface approach as described in :doc:`REST_interface`. 
+should implement the APIs described in :doc:`/apis/CN_APIs` using a REST
+interface approach as described in :doc:`/apis/REST_interface`. 
 
 The simple client will be implemented in Python and should support the
 external APIs provided by both the CN and MN implementations. The client will

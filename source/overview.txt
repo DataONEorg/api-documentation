@@ -1,180 +1,94 @@
-Overview
-========
+DataONE Overview
+================
 
-The DataONE core cyberinfrastructure implements three significant
-functionalities:
+There are three major components in the DataONE infrastructure: Member Nodes
+which represent data repositories, Coordinating Nodes which serve data
+management and discovery services, and the Investigator Toolkit which contains
+a variety of end user tools for interacting with the infrastructure.
 
-1. Persistent identifiers for all discrete objects in the system (i.e. data,
-   metadata, system metadata, annotations, identities, node capabilities, and
-   so forth). The main goal here is to ensure that an identifier can be used
-   reliably in the future without concern about the classic 404-not found
-   error encountered with many web sites. Objects are replicated across 
-   participant nodes of the DataONE system, so access can generally be 
-   guaranteed even if the original node holding the data   goes offline.
+Participation in the DataONE infrastructure as a Member Node or by using the
+Investigator Toolkit (i.e. implementing or utilizing DataONE service
+interfaces) enables several fundamental services to be available upon which
+additional infrastructure, services, applications and communities may be
+built. These core, community building services include:
 
-2. A consistent scheme for identifying users across all participating nodes.
-   It is expected that participants in the DataONE infrastructure will have
-   existing systems and requirements for identifying users. One of the goals
-   of DataONE is to support synonymous identity by mapping user identities
-   between different systems.
+- promotion of data preservation through automated replication of data and
+  metadata
 
-3. A substantial, extensible search mechanism to assist discovery. The number
-   of objects in DataONE is expected to expand significantly over the years.
-   The total is currently undefined and somewhat dependent on the definition
-   of a data object, but data object counts in the order of millions is not
-   unreasonable. Finding relevant content in such a set of objects obviously
-   requires sophisticated search tools that provide accurate and precise
-   mechanisms for identifying useful subsets of information. The process for
-   search is likely to evolve significantly over the life of the project,
-   starting with simple searches against metadata through to more
-   sophisticated, semantically aware search.
+- support for arbitrary globally unique identifiers with guaranteed resolution
 
+- extensible search and discovery services
 
-Additional capabilities, such as mechanisms for sub-setting, transforming, and
-slicing data; services for visualizing content; and mechanisms supporting
-on-demand services such as remote model and workflow execution will build upon
-these core features.
+- federated management of user identities and access control
 
-This functionality is available through a set of components, service
-interfaces and interactions described in detail in theses document.
+Member Nodes are primarily existing data repositories (e.g. Dryad_, the
+`Knowledge Network for Biodiversity`_, `ORNL DAAC`_) that already fill an
+important role in their respective communities supporting data management,
+curation, discovery and access functions. Existing or new repositories can
+participate in the DataONE infrastructure by implementing a simple set of APIs
+(Application Programming Interfaces) which represent a convergence of
+functionality expressed in a variety of existing systems. These APIs include
+basic operations such as listing and retrieving objects, support for creation
+of content, and the ability to generate low level system metadata describing
+the various objects (data, metadata) exposed by the service. Member Nodes may
+implement a subset of the full suite of :doc:`Member Node
+APIs</apis/MN_APIs>`, and in this way participate in the network with minimal
+effort (e.g. as a "read only" data source). Member Nodes that implement the
+full suite of APIs will be able to accept data from other Member Nodes which
+in turn assists with data preservation by ensuring multiple copies of all
+content are available, thus reducing the risk that content will be lost or
+inaccessible if a Member Node should go offline.
 
-There are three major functional components of the DataONE
-cyberinfrastructure: Member Nodes (MNs), Coordinating Nodes (CNs), and the Investigator toolkit (ITK).
+Member Nodes may eventually number in the thousands as progressively smaller
+repositories come online, perhaps even to the level of individual labs
+deploying their own Member Node to take advantage of the broad infrastructure
+enabled by DataONE.
 
-:Member Nodes:
+Coordinating Nodes implement critical services through the
+:doc:`APIs</apis/CN_APIs>` that enable identifier resolution, data
+preservation, data discovery, and supplement the federated identity system.
+Coordinating Nodes replicate all content between themselves, an in doing so
+create a small set (3-6 nodes) of geographically and institutionally isolated
+systems that ensure ongoing operation of the infrastructure should any
+particular node be inaccessible. Coordinating Nodes maintain complete copies
+of all science metadata (detailed descriptions of science data objects and
+collections) and system metadata (low level metadata describing the type,
+size, ownership, and locations of data and) and index this information to
+enable data discovery services.
 
-  Existing and new community data repositories. These systems offer
-  heterogeneous implementations across a variety of data types and support a
-  variety of metadata types. All data is stored on Member Nodes, and the
-  DataONE infrastructure, in particular the Coordinating Nodes assist with
-  coordinating distribution of data between MNs. Existing data repositories
-  need to implement the DataONE Member Node APIs in order to participate in
-  the DataONE network.
+Investigator Toolkit is a suite of software libraries, tools, and applications
+that support interaction with the DataONE infrastructure through the
+:doc:`REST</apis/REST_interface>` service APIs exposed by the
+:doc:`Coordinating</apis/CN_APIs>` and :doc:`Member</apis/MN_APIs>` Nodes. Low
+level libraries are initially available in Python and Java which assist
+application developers to take advantage of the core services exposed by
+DataONE participants. For example, an R plugin has been developed using the
+Java library. Enabling this plugin within a R script enables discovery,
+retrieval, and storage of content directly in the DataONE infrastructure.
+Similar extensions are being developed for workflow tools such as Kepler,
+VisTrails and Science Pipes to enable interaction with the core DataONE
+services.
 
-
-:Coordinating Nodes:
-
-  The operational core of DataONE. The Coordinating Nodes catalog data and
-  metadata, control the dispersion of data across Member Nodes, keep a replica
-  of all metadata, offer services for distributed identity, and offer search
-  and discovery capabilities. Coordinating nodes are geographically distinct
-  mirror images of each other, operating in a multi-master configuration.
-
-
-:Investigator Toolkit:
-
-  Initially providing a set of libraries for interacting with DataONE
-  Coordinating and Member Nodes (i.e. the "client libraries"). As the project
-  develops, the ITK will grow to contain a rich set of applications and tools
-  for interacting with the content available in DataONE (and potentially other
-  Data Nets).
-
-
-
-.. figure:: images/ServicesOverview.png
-   :figwidth: 100%
-
-   Major components of DataONE and the services they implement. It is
-   envisioned that there will be few Coordinating Nodes (three initially),
-   more Member Nodes (tens ... hundreds), and even more instances of the
-   Investigator Toolkit.
-
-
-.. uml::
-
-   () "Object Store" as mn_crud
-   () "Authorization" as mn_auth
-   () "Replication" as mn_repl
-   () "Health" as mn_health
-   () "Logging" as mn_logging
-   component "Investigator Toolkit" as ITK
-   component "Coordinating Node" as CN
-   package "Member Node" #EEEEEE
-     component "Existing Services" as mn_existing
-     component "DataONE Services" as MN
-   mn_existing --> MN
-   mn_existing <-- MN
-   MN -- mn_crud
-   MN -- mn_auth
-   MN -- mn_repl
-   MN -- mn_health
-   MN -- mn_logging
-   mn_auth .. CN
-   mn_crud .. CN
-   mn_repl .. CN
-   mn_health .. CN
-   mn_logging .. CN
-   mn_crud .. ITK
-   mn_auth .. ITK
-   mn_health ..ITK
-   mn_logging .. ITK
+The :doc:`implementation roadmap</implementation/roadmap>` of DataONE targets
+an initial public release of the core cyberinfrastructure towards the end of
+2011, with considerable emphasis on stable implementation of the core
+services. At that point, the infrastructure will support content replication,
+identifier resolution, content discovery and retrieval, and a significant
+proportion of the federated identity infrastructure. The Investigator Toolkit
+will contain several components widely used by the community, and at least six
+significant data collections will be participating as Member Nodes. Several
+relatively minor subsequent releases will provide incremental enhancements to
+core capabilities. Additional Member Nodes will be progressively added to the
+infrastructure as resources permit- some repositories may have resources to
+independently implement the necessary APIs, others may require assistance from
+the DataONE development team.
 
 
-Component diagram of the high level Member Node structure. DataONE service
-application programming interfaces (APIs) are implemented by a service layer
-that interacts with the existing APIs of the Member Node.
+.. _Dryad: http://datadryad.org/
 
+.. _Knowledge Network for Biodiversity: http://knb.ecoinformatics.org/
 
-.. uml::
+.. _ORNL DAAC: http://daac.ornl.gov/
 
-   skinparam noteFontSize 12
-
-   () "Object Store" as cn_crud
-   () "Authentication" as cn_authn
-   () "Authorization" as cn_authz
-   () "Replication" as cn_repl
-   () "Health" as cn_health
-   () "Search" as cn_search
-   () "Registration" as cn_register
-
-   component "Member Node" as MN
-   component "Investigator Toolkit" as ITK
-   package "Coordinating Node" #EEEEEE
-     component "Document Store" as ostore
-     component "Science Metadata\nParser" as sparser
-     component "Search Index" as index
-     component "CN_Service" as cn_service
-
-     cn_service --> ostore
-     note right of ostore
-       Prototype implementation uses Metacat
-       as the object store, logging service and 
-       CN-CN replication
-     end note
-     ostore --> cn_service
-     index --> cn_service
-     sparser --> index
-     note right of index
-       Prototype implementation uses Mercury as the
-       search index, which is based on SOLR / Lucene.
-     end note
-     ostore --> sparser
-     note right of sparser
-       Prototype implementation utilizes the
-       metadata parsing capabilities of Mercury
-     end note
-
-   cn_service -- cn_crud
-   cn_service -- cn_repl
-   cn_service -- cn_register
-   cn_service -- cn_health
-   cn_service -- cn_authz
-   cn_service -- cn_search
-   cn_service -- cn_authn
-
-   cn_crud .. MN
-   cn_repl .. MN
-   cn_register .. MN
-   cn_authz .. MN
-   cn_authn .. MN
-
-   cn_crud .. ITK
-   cn_health .. ITK
-   cn_authz .. ITK
-   cn_search .. ITK
-   cn_authn .. ITK
-
-
-High level component diagram of the Coordinating Node structure and the
-service interfaces it exposes.
+.. _NBII Metadata Clearing House: http://mercury.ornl.gov/clearinghouse/
 

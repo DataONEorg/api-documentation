@@ -26,7 +26,7 @@ be domain agnostic, progressively expanding to broader domains and building on
 infrastructure and interoperability with DataNet partners.
 
 .. figure:: images/proposal_figure_1.png
-   :figwidth: 100%
+   :figwidth: 7in
 
    DataONE Member Nodes form a robust, distributed network via coordinating
    services provided by a set of Coordinating Nodes (i.e., Oak Ridge Campus,
@@ -44,10 +44,6 @@ infrastructure and interoperability with DataNet partners.
    (e.g., node registration [purple arrow] and monitoring via heartbeat services
    (red arrow]).
 
-
-.. raw:: latex
-
-  \newpage
 
 
 US 02. Value Added Services (proposed)
@@ -84,11 +80,6 @@ FeederWatch).
    geospatial data processing (lower left), and providing scientific workflow
    solutions like Kepler (lower middle) and high-level analyses and
    visualizations like IBM ManyEyes.
-
-
-.. raw:: latex
-
-  \newpage
 
 
 US 03. System Architecture (proposed)
@@ -128,11 +119,6 @@ and international presence.
    for inserting data), and between Member Nodes and Coordinating Nodes (e.g.,
    for metadata indexing) is all mediated via a common DataNetONE Service
    Interface that spans all node types.
-
-
-.. raw:: latex
-
-  \newpage
 
 
 US 04. Spread and Impact of Invasive Species
@@ -199,65 +185,4 @@ Specifically, DataONE addresses:
 .. _INTEROP: http://nsf.gov/awardsearch/showAward.do?AwardNumber=0753138
 
 
-
-.. raw:: latex
-
-   \newpage
-
-
-Coordinating Node Requirements
-------------------------------
-
-This list of requirements for Coordinating Node functionality was obtained
-(probably) by a brainstorming session at the 20090602 ABQ VDC-TWG meeting.
-
-.. todo::
-   Estimate some times for the unknowns here.
-
-* IDs not discoverable until all CNs have confirmed copy
-
-* Metadata searches return in max xxx secs
-
-* CN can store and search > xxx metadata records
-
-* CN can store and search multiple metadata standards
-  - specifically (list Metadata_formats_of_interest.txt)
-
-* CN can load-balance to maximize performance
-
-* Any xxx CNs can be offline without affecting D1 services
-
-* xxx concurrent transactions can be supported
-  - different for different types of transaction e.g. delete vs. insert
-
-* Each CN should be available xxx% time
-
-* CN should expose MD in search within xxx secs of insert by MN
-
-* CN services should be designed to be independently scalable
-
-* CN services should be geographically replicated
-
-* CN have complete metadata copies from all MNs
-
-* D1 should be TRAC and/or DRAMBORA trusted repositories
-
-* CN should respect replication policies of MNs
-
-* CN should ensure that any given data set is available at any time (subject
-  to policy restrictions) even when xxx% of MNs are offline
-
-* CNs must validate that:
-  - data are available at all replicas
-  - replicas are valid
-
-* CNs ensure that data are available in current formats (data format upgrade?)
-
-* CNs should be economical to run and maintain
-
-* CNs should be able to be remotely administered
-
-* CNs should be secure and deflect malicious intent
-
-* CNs should provide services to detect rogue data (viruses, copyright, )
 

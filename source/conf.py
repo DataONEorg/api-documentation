@@ -39,6 +39,12 @@ import sys, os
 
 sys.path.append( os.path.abspath('../tools/docutils/rst_directives') )
 
+#from docutils.parsers.rst import directives
+#import plantuml
+#directives.register_directive('uml', plantuml.UmlDirective)
+
+
+
 # -- General configuration -----------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
@@ -51,7 +57,8 @@ extensions = ['sphinx.ext.autodoc',
               'rst2pdf.pdfbuilder', 
               #'sphinx.ext.todo',
               'sphinx.ext.inheritance_diagram',
-              'plantuml',]
+              'plantuml',
+              ]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -102,7 +109,9 @@ release = '0.5'
 today_fmt = '%Y-%m-%d'
 
 # List of documents that shouldn't be included in the build.
-unused_docs = ['design/UseCases/uc_template', 
+unused_docs = [
+               'design/UseCases/uc_template', 
+               'design/usecasesoverview',
                'apis/REST_overview',
                'apis/REST_object',
                'apis/REST_meta',
@@ -111,11 +120,22 @@ unused_docs = ['design/UseCases/uc_template',
                'apis/REST_log',
                'apis/REST_account',
                'apis/REST_nodes',
-               'apis/REST_monitor']
+               'apis/REST_monitor',
+               'apis/types_auth',
+               'apis/types_errors']
 
 # List of directories, relative to source directory, that shouldn't be searched
 # for source files.
 exclude_trees = ['apis/generated', ]
+
+exclude_patterns = [
+#                    'design/userscenarios*',
+#                    'design/Auth*',
+#                    'design/Data*',
+#                    'design/logging*',
+#                    'design/Logging*',
+#                    'design/NodeList*',
+                    ]
 
 # The reST default role (used for this markup: `text`) to use for all documents.
 #default_role = None
@@ -143,15 +163,14 @@ todo_include_todos = True
 
 # The theme to use for HTML and HTML Help pages.  Major themes that come with
 # Sphinx are currently 'default' and 'sphinxdoc'.
-#html_theme = 'sphinxdoc'
+#html_theme = 'default'
 html_theme = 'dataone'
 #html_theme = 'nose'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-html_theme_options = {}
-#html_theme_options = {'rightsidebar':'true'}
+html_theme_options = {'collapsiblesidebar':'true'}
 
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []
@@ -216,6 +235,98 @@ html_last_updated_fmt = '%Y-%b-%d'
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'DataONEArchitecturedoc'
 
+# -- Options for PDF output  --------------------------------------------------
+
+pdf_documents = [
+ ('index', u'dataone_arch', u'DataONE Architecture', u'DataONE'),
+ ]
+
+# A comma-separated list of custom stylesheets. 
+# Example: pdf_stylesheets = ['sphinx','kerning','a4']
+pdf_stylesheets = ['murphy','serif','letter']
+
+# Create a compressed PDF # Use True/False or 1/0 
+# Example: compressed=True #pdf_compressed = False
+
+# A colon-separated list of folders to search for fonts. Example: 
+# pdf_font_path = ['/usr/share/fonts', '/usr/share/texmf-dist/fonts/']
+
+# Language to be used for hyphenation support 
+pdf_language = "en_US"
+
+# Mode for literal blocks wider than the frame. Can be
+# overflow, shrink or truncate 
+pdf_fit_mode = "shrink"
+
+# Section level that forces a break page. 
+# For example: 1 means top-level sections start in a new page 
+# 0 means disabled #pdf_break_level = 0
+
+# When a section starts in a new page, force it to be 'even', 'odd', 
+# or just use 'any' 
+#pdf_breakside = 'any'
+
+# Insert footnotes where they are defined instead of 
+# at the end. 
+#pdf_inline_footnotes = True
+
+# verbosity level. 0 1 or 2 
+#pdf_verbosity = 0
+
+# If false, no index is generated. 
+pdf_use_index = True
+
+# If false, no modindex is generated. 
+pdf_use_modindex = True
+
+# If false, no coverpage is generated. 
+pdf_use_coverpage = True
+
+# Name of the cover page template to use 
+#pdf_cover_template = 'sphinxcover.tmpl'
+
+# Documents to append as an appendix to all manuals. 
+#pdf_appendices = []
+
+# Enable experimental feature to split table cells. Use it 
+# if you get "DelayedTable too big" errors 
+#pdf_splittables = False
+
+# Set the default DPI for images 
+pdf_default_dpi = 300
+
+# Enable rst2pdf extension modules (default is empty list) 
+# you need vectorpdf for better sphinx's graphviz support 
+#pdf_extensions = ['vectorpdf']
+
+# Page template name for "regular" pages 
+pdf_page_template = 'cutePage'
+
+#pdf_documents = [
+#  ('index', 'DataONEArchitecture_0_0_4', u'DataONE Architecture Documentation',
+#   u'VDC Project, DataONE CCIT', 'manual'),
+#  #('MN_APIs_v0_3', 'MN_APIs_v0_3', u'MN API 0.3',
+#  #u'VDC Project, DataONE CCIT', 'manual'),
+#]
+#pdf_default_dpi = 400
+#pdf_stylesheets = ['sphinx', ]
+
+#pdf_fit_mode = "shrink"
+
+#pdf_break_level = 1
+
+#pdf_breakside = 'any'
+
+#pdf_use_index = True
+
+#pdf_use_modindex = True
+
+#pdf_use_coverpage = False
+
+#pdf_splittables = False
+
+#pdf_page_template = 'cutePage'
+
 
 # -- Options for LaTeX output --------------------------------------------------
 
@@ -252,32 +363,6 @@ latex_preamble = '\\usepackage{pdflscape}'
 # If false, no module index is generated.
 #latex_use_modindex = True
 
-pdf_documents = [
-  ('index', 'DataONEArchitecture_0_0_4', u'DataONE Architecture Documentation',
-   u'VDC Project, DataONE CCIT', 'manual'),
-  #('MN_APIs_v0_3', 'MN_APIs_v0_3', u'MN API 0.3',
-  #u'VDC Project, DataONE CCIT', 'manual'),
-]
-
-#pdf_default_dpi = 400
-
-pdf_stylesheets = ['sphinx', ]
-
-pdf_fit_mode = "shrink"
-
-pdf_break_level = 1
-
-pdf_breakside = 'any'
-
-pdf_use_index = True
-
-pdf_use_modindex = True
-
-pdf_use_coverpage = False
-
-pdf_splittables = False
-
-pdf_page_template = 'cutePage'
 
 # -- Options for Epub output ---------------------------------------------------
 

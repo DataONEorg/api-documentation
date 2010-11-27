@@ -1,7 +1,7 @@
-.. _UC04:
-
 Use Case 04 - Create New Object
 -------------------------------
+
+.. index:: Use Case 02, UC02, create
 
 Author
   VDC TWG
@@ -11,18 +11,19 @@ Date
   - 20090925 Adding to use case description and documentation
   - 20090114 (TWG meeting).  Subsequent various modifications.
 
-Version 
-  Draft
-
 Goal
   Create new content on a Member Node.
 
 Summary
 
-  A user is adding new content on a Member Node (MN).
+  A user adds new content to a Member Node (MN). The operation of adding new
+  content to a Member Node is atomic to the Member Node, meaning there is no
+  dependency on the replication or synchronization processes for the
+  successful completion of a create operation.
 
   The metadata is retrieved by the CN using a pull mechanism (CN requests
-  content from the MN).
+  content from the MN) which may be triggered by a timer event or notification
+  from the MN.
 
   The availability of new content on a MN is indicated by a flag in the
   response to a ping() message issued by a CN. The CN then retrieves a list of

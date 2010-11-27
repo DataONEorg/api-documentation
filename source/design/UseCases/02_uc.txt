@@ -1,5 +1,3 @@
-.. _UC02:
-
 Use Case 02 - List GUIDs By Search
 ----------------------------------
 
@@ -24,26 +22,27 @@ Summary
   will be returned.
 
   Content discovery in DataONE is achieved primarily through the service
-  interfaces provided by the Coordinating Nodes.
+  interfaces provided by the Coordinating Nodes. Other systems may index
+  content available in DataONE (:doc:`UC36<36_uc>`), though the
+  operation of those systems is out of scope for DataONE operations.
 
 Actors
   - Client performing search operation
-
   - Coordinating Node
- 
 
 Preconditions 
   - Client has authenticated to at the desired level (e.g. client may not have
     authenticated, so access might be anonymous).
-  
+
 Triggers
   - A search is performed against the DataONE system
  
 Post Conditions
-  - The client has a list of GUIDs for which they have permission to read and
-    match the supplied query, or an error message if the query was invalid.
 
-  - The log is updated with the request
+  - The client has a list of GUIDs (:class:`Types.objectList`) for which they
+    have permission to read and match the supplied query or an error condition.
+
+  - The log is updated with information about the request
 
 
 .. uml::
