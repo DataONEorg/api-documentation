@@ -1,0 +1,56 @@
+Coordinating Node Requirements
+------------------------------
+
+This list of requirements for Coordinating Node functionality was developed
+during a brainstorming session at the 20090602 ABQ VDC-TWG meeting.
+
+.. todo::
+   Estimate some times for the unknowns here.
+
+* IDs not discoverable until all CNs have confirmed copy
+
+* Metadata searches return in max xxx secs
+
+* CN can store and search > xxx metadata records
+
+* CN can store and search multiple metadata standards
+  - specifically (list Metadata_formats_of_interest.txt)
+
+* CN can load-balance to maximize performance
+
+* Any xxx CNs can be offline without affecting D1 services
+
+* xxx concurrent transactions can be supported
+  - different for different types of transaction e.g. delete vs. insert
+
+* Each CN should be available xxx% time
+
+* CN should expose MD in search within xxx secs of insert by MN
+
+* CN services should be designed to be independently scalable
+
+* CN services should be geographically replicated
+
+* CN have complete metadata copies from all MNs
+
+* D1 should be TRAC and/or DRAMBORA trusted repositories
+
+* CN should respect replication policies of MNs
+
+* CN should ensure that any given data set is available at any time (subject
+  to policy restrictions) even when xxx% of MNs are offline
+
+* CNs must validate that:
+  - data are available at all replicas
+  - replicas are valid
+
+* CNs ensure that data are available in current formats (data format upgrade?)
+
+* CNs should be economical to run and maintain
+
+* CNs should be able to be remotely administered
+
+* CNs should be secure and deflect malicious intent
+
+* CNs should provide services to detect rogue data (viruses, copyright, )
+
