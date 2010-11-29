@@ -129,12 +129,12 @@ unused_docs = [
 exclude_trees = ['apis/generated', ]
 
 exclude_patterns = [
-#                    'design/userscenarios*',
-#                    'design/Auth*',
-#                    'design/Data*',
-#                    'design/logging*',
-#                    'design/Logging*',
-#                    'design/NodeList*',
+                    'design/userscenarios*',
+                    'design/Auth*',
+                    'design/Data*',
+                    'design/logging*',
+                    'design/Logging*',
+                    'design/NodeList*',
                     ]
 
 # The reST default role (used for this markup: `text`) to use for all documents.
@@ -238,8 +238,8 @@ htmlhelp_basename = 'DataONEArchitecturedoc'
 # -- Options for PDF output  --------------------------------------------------
 
 pdf_documents = [
- ('index', u'dataone_arch', u'DataONE Architecture', u'DataONE'),
- ]
+  ('index', u'dataone_arch', u'DataONE Architecture', u'DataONE'),
+  ]
 
 # A comma-separated list of custom stylesheets. 
 # Example: pdf_stylesheets = ['sphinx','kerning','a4']
@@ -341,8 +341,7 @@ latex_font_size = '10pt'
 dv_latex_author = u'''Produced by:\\\\INTEROP: Creation of an International Virtual Data Center for the Biodiversity, 
 Ecological and Environmental Sciences (NSF Award 0753138)\\\\and\\\\DataNet Full Proposal: DataNetONE (Observation Network for Earth) (NSF Award 0830944)'''
 latex_documents = [
-  ('index', 'DataONEArchitecture.tex', project,
-   dv_latex_author, 'manual'),
+  ('index', 'DataONEArchitecture.tex', project, dv_latex_author, 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of

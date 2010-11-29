@@ -1,0 +1,56 @@
+.. _UC40:
+
+Use Case 40 - Member Node Requests Synchronization
+--------------------------------------------------
+
+Author
+  VDC TWG
+
+Date
+  - 20101129 Initial version
+
+Version 
+  Draft
+
+Goal
+
+  A Member Node requests synchronization by a Coordinating Node.
+
+Summary 
+
+  Member Node synchronization is typically driven by the Coordinating Node
+  which polls Member Nodes on a regular basis and performing synchronization
+  as necessary. Some situations may benefit from the Member Node requesting
+  synchronization. For example:
+
+  - A large amount, or perhaps high priority data was added to a MN and the
+    owners or curators prefer to have the content synchronized as soon as
+    possible rather than during the next scheduled time.
+
+  - A MN may be going offline (e.g. unscheduled maintenance) and the
+    administrator wants to ensure the synchronized content is up to date
+    beforehand.
+
+  Note there is some implication that MN replication will also be driven by
+  this request (a process downstream from synchronization)
+
+Actors
+  - Member Node
+  - Coordinating Node
+  - Member Node administrator
+  - Data curator
+  - Data owner
+
+Preconditions 
+  - Member, Coordinating Nodes operational
+  - Member node registered
+  - New content exists on a Member Node
+  
+Triggers
+  - Administrator requests synchronization
+  - Curator or owner requests synchronization
+  - Member Node logic determines that synchronization is necessary
+ 
+Post Conditions
+  - Member Node synchronization is scheduled
+
