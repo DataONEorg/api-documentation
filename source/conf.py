@@ -55,7 +55,7 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.ifconfig',
               'sphinx.ext.graphviz',
               'rst2pdf.pdfbuilder', 
-              #'sphinx.ext.todo',
+              'sphinx.ext.todo',
               'sphinx.ext.inheritance_diagram',
               'plantuml',
               ]
@@ -129,12 +129,12 @@ unused_docs = [
 exclude_trees = ['apis/generated', ]
 
 exclude_patterns = [
-                    'design/userscenarios*',
-                    'design/Auth*',
-                    'design/Data*',
-                    'design/logging*',
-                    'design/Logging*',
-                    'design/NodeList*',
+#                    'design/userscenarios*',
+#                    'design/Auth*',
+#                    'design/Data*',
+#                    'design/logging*',
+#                    'design/Logging*',
+#                    'design/NodeList*',
                     ]
 
 # The reST default role (used for this markup: `text`) to use for all documents.

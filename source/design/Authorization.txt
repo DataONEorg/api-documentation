@@ -213,11 +213,14 @@ Issues
    * At CN requires a lot of network traffic for authorization on objects
    * At MN makes authorization of search results impossible
 
-   * Compromise: Federated, each authoritative MN for an object keeps its ACL list,
-     which gets synchronized to the CN at sync time
-     * Assume most object write is at MN level, so best to not have to go to CN
+   * Compromise: Federated, each authoritative MN for an object keeps its ACL
+     list, which gets synchronized to the CN at sync time
+
+     * Assume most object write is at MN level, so best to not have to go to
+       CN
      * Assume MN will want to control their own write access
      * Requires MN Authorization services
+     
 - Efficiency of search results authorization
    * Need to authorize large number of search results in each operation
    * Has implications for search results cacheing
