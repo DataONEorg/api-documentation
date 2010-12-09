@@ -7,7 +7,55 @@ metrics of Member Nodes. It is exposed by Member Nodes.
 ``GET /monitor/ping``
 .....................
 
-TBD
+Low level "are you alive" operation. Response is simple ACK, but may be
+reasonable to overload with a couple of flags that could indicate availability
+of new data or change in capabilities.
+
+The Member Node should perform some minimal internal functionality testing
+before answering. However, ping checks will be frequent (every few minutes) so
+the internal functionality test should not be high impact.
+
+Implemented by the methods:
+
+- :func:`MN_health.ping`
+
+**Parameters**
+
+This call takes no parameters.
+
+**Response**
+
+The response should be a valid HTTP response with a blank or arbitrary body.
+Only the HTTP header information is considered by the requestor. A successful
+response must have a HTTP status code of 200. In case of an error condition,
+the appropriate HTTP status code must be set, and an exception or error
+information *may* be returned in the response.
+
+**Example**
+
+Example of ping request and response for a Member Node. Lines prefixed with
+">" indicate outgoing information, lines prefixed with "<" show content
+returned from the server. Note that the actual response headers may vary, the
+only *required* header is the first status line. However, in order to fully
+support clients that may cache the response, the *Date*, *Expires*, and
+*Cache-Control* headers should also be included.
+
+::
+
+  curl -v http://my.membernode.org/mn/monitor/ping
+  
+  > GET / HTTP/1.1
+  > User-Agent: curl/7.19.7 (universal-apple-darwin10.0) libcurl/7.19.7 OpenSSL/0.9.8l zlib/1.2.3
+  > Host: my.membernode.org
+  > Accept: */*
+  > 
+  < HTTP/1.1 200 OK
+  < Date: Thu, 09 Dec 2010 20:57:21 GMT
+  < Expires: -1
+  < Cache-Control: private, max-age=0
+  < Content-Type: text/html; charset=utf-8
+  < 
+  
 
 
 ``GET /monitor/status``
