@@ -345,19 +345,19 @@ Classes, fields, and methods
 Algorithm for constructing Data Packages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Constructing a data package involves taking a GUID as passed to the client, and
-using that GUID to query the system metadata to find all associated science
-metadata objects and other data objects.  If the GUID points at a scimeta
-object, it can be used to loop through all of the data objects it describes.
-If the GUID points at a data object, trace back to its scimeta object first,
-then populate the data package, and then loop over all associated data objects.
-In pseudocode:
+Constructing a data package involves taking a PID as passed to the client,
+and using that PID to query the system metadata to find all associated
+science metadata objects and other data objects. If the PID points at a
+scimeta object, it can be used to loop through all of the data objects it
+describes. If the PID points at a data object, trace back to its scimeta
+object first, then populate the data package, and then loop over all
+associated data objects. In pseudocode:
 
-* mn = cn.resolve(ID)
-* sysmeta = getSystemMetadata(ID)
+* mn = cn.resolve(PID)
+* sysmeta = getSystemMetadata(PID)
 * switch(sysmeta.getObjectFormat())
     1. case: EML or FGDC or other metadata format
-        a. scimeta = mn.get(ID)
+        a. scimeta = mn.get(PID)
         b. construct DataPackage dp with sysmeta and scimeta
         c. for each objid in sysmeta.getDescribes()
             * mn = cn.resolve(objid)

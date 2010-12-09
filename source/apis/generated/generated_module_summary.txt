@@ -7,7 +7,7 @@
      - Description
    * - :mod:`MN_crud`
      - :func:`MN_crud.get`
-     - Retrieve an object identified by *id* from the node. The response must
+     - Retrieve an object identified by *pid* from the node. The response must
        contain the bytes of the indicated object, and the checksum of the bytes
        retrieved must match the :attr:`SystemMetadata.checksum` recorded in the
        :class:`Types.SystemMetadata` if the object is science data. If the
@@ -21,14 +21,12 @@
    * - \
      - :func:`MN_crud.getSystemMetadata`
      - Describes the science metadata or data object (and likely other objects
-       in the future) identified by `guid` by returning the associated system
-       metadata object.
+       in the future) identified by *pid* by returning the associated system
+       metadata object. If the object does not exist on the node servicing the
+       request, then :exc:`Exceptions.NotFound` must be raised even if the
+       object exists on another node in the DataONE system.
 
-       If the object does not exist on the node servicing the request, then
-       :exc:`Exceptions.NotFound` must be raised even if the object exists on
-       another node in the DataONE system.
-
-        Appears in functional use cases: :doc:`UC06 </design/UseCases/06_uc>`,
+       Appears in functional use cases: :doc:`UC06 </design/UseCases/06_uc>`,
        :doc:`UC37 </design/UseCases/37_uc>`, :doc:`UC16
        </design/UseCases/16_uc>`
    * - \
@@ -37,7 +35,7 @@
        object or a science metadata object. This method is called by clients to
        create new data objects on Member Nodes.
 
-       The `id` must not exist in the DataONE system or must have been
+       The *pid* must not exist in the DataONE system or must have been
        previously reserved using  :func:`CN_crud.reserveIdentifier`.
 
        Appears in functional use cases: :doc:`UC04 </design/UseCases/04_uc>`,
@@ -45,8 +43,8 @@
        </design/UseCases/16_uc>`
    * - \
      - :func:`MN_crud.update`
-     - Creates a new `object` on the Member Node that explicitly updates and
-       obsoletes a previous object (identified by `obsoletedGuid`).    This
+     - Creates a new *object* on the Member Node that explicitly updates and
+       obsoletes a previous object (identified by *obsoletedPid*).    This
        method is called by clients to update objects on Member Nodes.  The
        object that is being obsoleted is passed in as a parameter, and the
        Member Node should record the update by storing the
@@ -75,7 +73,7 @@
        properties of the referenced object. The response should indicate
        properties that are typically returned in a HTTP HEAD request: the date
        late modified, the size of the object, the type of the object (the
-       :attr:`SystemMetadata.objectFormat`). The principal indicated by `token`
+       :attr:`SystemMetadata.objectFormat`). The principal indicated by *token*
        must have read privileges on the object, otherwise
        :exc:`Exceptions.NotAuthorized` is raised. If the object does not exist
        on the node servicing the request, then :exc:`Exceptions.NotFound` must
@@ -87,7 +85,7 @@
      - :func:`MN_crud.getChecksum`
      - Returns a :class:`Types.Checksum` for the specified object using an
        accepted hashing algorithm. The result is used to determine if two
-       instances referenced by a GUID are identical, hence it is necessary that
+       instances referenced by a PID are identical, hence it is necessary that
        MNs can ensure that the returned checksum is valid for the referenced
        object either by computing it on the fly or by using a cached value that
        is certain to be correct.
@@ -114,9 +112,9 @@
        :term:`Member Node synchronization`. At a minimum, this method should be
        able to return a list of objects that match::      startTime <=
        SystemMetadata.dateSysMetadataModified    but is expected to also support
-       date range (by also specifying `endTime`), and should also support
-       slicing of the matching set of records by indicating the starting `index`
-       of the response (where 0 is the index of the first item) and the `count`
+       date range (by also specifying *endTime*), and should also support
+       slicing of the matching set of records by indicating the starting *index*
+       of the response (where 0 is the index of the first item) and the *count*
        of elements to be returned.
 
        Appears in functional use cases: :doc:`UC06 </design/UseCases/06_uc>`,
@@ -156,13 +154,14 @@
        performed on the MN, cumulative or for each day in a given range.
    * - \
      - :func:`MN_health.getStatus`
-     - This function is similar to ping() but returns a more complete status
-       which may include information such as planned service outtages.
+     - This function is similar to :func:`MN_health.ping` but returns a more
+       complete status which may include information such as planned service
+       outages.
 
        Appears in functional use cases: :doc:`UC10 </design/UseCases/10_uc>`
    * - :mod:`CN_crud`
      - :func:`CN_crud.get`
-     - Retrieves the object identified by `guid` from the node. If the object is
+     - Retrieves the object identified by *pid* from the node. If the object is
        not present on the node, then an :exc:`Exceptions.NotFound` error is
        raised (regardless of whether the object exists on another node in the
        DataONE system).
@@ -173,9 +172,8 @@
    * - \
      - :func:`CN_crud.getSystemMetadata`
      - Returns the :term:`system metadata` that contains DataONE specific
-       information about the object identified by `guid`. Note that
-       authoritative copies of system metadata are only available from the
-       Coordinating Nodes.
+       information about the object identified by *pid*. Note that authoritative
+       copies of system metadata are only available from the Coordinating Nodes.
 
        Appears in functional use cases: :doc:`UC36 </design/UseCases/36_uc>`,
        :doc:`UC37 </design/UseCases/37_uc>`, :doc:`UC16
@@ -193,7 +191,7 @@
      - This is a method used internally by the CN, not exposed to MNs or the
        world. Stores the two given objects (system metadata, science metadata)
        in a single atomic action. The science metadata document is optional as
-       `guid` may refer to science data which is not retrieved to the
+       *pid* may refer to science data which is not retrieved to the
        Coordinating Node. This method is used as part of the :term:`Member Node
        synchronization` of science metadata between a MN and a CN.
 
@@ -211,8 +209,8 @@
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
    * - \
      - :func:`CN_crud.assertRelation`
-     - Tests that the specified relationship between `idOfSubject` and
-       `idOfObject` exists.
+     - Tests that the specified relationship between *pidOfSubject* and
+       *pidOfObject* exists.
    * - \
      - :func:`CN_crud.log`
      - This method is used exclusively internally by a CN. It really isn't part
@@ -290,7 +288,7 @@
        </design/UseCases/36_uc>`, :doc:`UC37 </design/UseCases/37_uc>`
    * - \
      - :func:`CN_authorization.setAccess`
-     - Sets the access permissions for an object identified by `guid`.
+     - Sets the access permissions for an object identified by *pid*.
 
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
    * - :mod:`MN_authentication`
@@ -321,10 +319,10 @@
      - :func:`CN_data_replication.setReplicationStatus`
      - Update the replication status of the system metadata, ensuring that the
        change is appropriate for the given state of system metadata.  For
-       example, a MN can not change the status to Requested unless the CN
+       example, a MN can not change the status to *Requested* unless the CN
        previously requested replication of the object and the replications
        status of the object (as indicated in the system metadata) is set to
-       Queued.
+       *Queued*.
 
        Appears in functional use cases: :doc:`UC09 </design/UseCases/09_uc>`
    * - :mod:`CN_register`

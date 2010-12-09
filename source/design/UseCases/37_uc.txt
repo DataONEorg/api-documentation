@@ -67,10 +67,10 @@ Post Conditions
    participant "CRUD API" as n_crud << Node >>
    participant "Authorization API" as n_authorize <<  Node >>
    participant "Object Store" as n_ostore << Node >>
-   app_client -> n_crud: getSystemMetadata(token, GUID)
+   app_client -> n_crud: getSystemMetadata(token, PID)
    activate app_client
    activate n_crud
-   n_crud -> n_authorize: isAuthorized(token, GUID, READ)
+   n_crud -> n_authorize: isAuthorized(token, PID, READ)
    n_crud <- n_authorize: True, False, Err.NotFound
    alt NotFound
      app_client <- n_crud: Err.NotFound
@@ -78,7 +78,7 @@ Post Conditions
      app_client <- n_crud: Err.NotAuthorized
    else True
      n_crud --> n_crud: Log(READ)
-     n_crud -> n_ostore: getSystemMetadata(GUID)
+     n_crud -> n_ostore: getSystemMetadata(PID)
      n_crud <- n_ostore: bytes
      app_client <- n_crud: bytes
      deactivate n_crud
@@ -86,6 +86,6 @@ Post Conditions
    deactivate app_client
 
 *Figure 2.* Sequence diagram for Use Case 37 illustrating the sequence for
-retrieving the system metadata for an object identified by GUID from a
+retrieving the system metadata for an object identified by PID from a
 Coordinating Node.
 

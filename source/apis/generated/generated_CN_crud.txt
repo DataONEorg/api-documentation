@@ -11,48 +11,48 @@
      - Parameters
    * - :ref:`CN_crud.get`
      - :func:`get`
-     - (:class:`token<Types.AuthToken>`, :class:`id<Types.Identifier>`) ``->``
+     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        bytes
    * - :ref:`CN_crud.getSystemMetadata`
      - :func:`getSystemMetadata`
-     - (:class:`token<Types.AuthToken>`, :class:`id<Types.Identifier>`) ``->``
+     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.SystemMetadata`
    * - :ref:`CN_crud.resolve`
      - :func:`resolve`
-     - (:class:`token<Types.AuthToken>`, :class:`id<Types.Identifier>`) ``->``
+     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.ObjectLocationList`
    * - n/a
      - :func:`create`
-     - (:class:`guid<Types.Identifier>`,
+     - (:class:`pid<Types.Identifier>`,
        :class:`systemMetadata<Types.SystemMetadata>`, ``scienceMetadata``)
        ``->`` boolean
    * - :ref:`CN_crud.reserveIdentifier`
      - :func:`reserveIdentifier`
-     - (:class:`token<Types.AuthToken>`,
-       :class:`[identifier]<Types.Identifier>`, ``[scope]``, ``[format]``)
-       ``->`` :class:`Types.Identifier`
+     - (:class:`token<Types.AuthToken>`, :class:`[pid]<Types.Identifier>`,
+       ``[scope]``, ``[format]``) ``->`` :class:`Types.Identifier`
    * - :ref:`CN_crud.assertRelation`
      - :func:`assertRelation`
-     - (:class:`token<Types.AuthToken>`, :class:`idOfSubject<Types.Identifier>`,
-       :class:`relationship<Types.???>`, :class:`idOfObject<Types.Identifier>`)
+     - (:class:`token<Types.AuthToken>`,
+       :class:`pidOfSubject<Types.Identifier>`,
+       :class:`relationship<Types.???>`, :class:`pidOfObject<Types.Identifier>`)
        ``->`` boolean
    * - n/a
      - :func:`log`
      - (:class:`typeOfOperation<Types.Event>`,
-       :class:`targetGuid<Types.Identifier>`,
+       :class:`targetPid<Types.Identifier>`,
        :class:`requestorIdentitity<Types.Principal>`,
        :class:`dateOfRequest<Types.DateTime>`) ``->``
    * - n/a
      - :func:`getChecksum`
-     - (:class:`token<Types.AuthToken>`, :class:`guid<Types.Identifier>`) ``->``
+     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.Checksum`
 
 
 
 
-.. function:: get(token,id) -> bytes
+.. function:: get(token,pid) -> bytes
 
-   Retrieves the object identified by `guid` from the node. If the object is not
+   Retrieves the object identified by *pid* from the node. If the object is not
    present on the node, then an :exc:`Exceptions.NotFound` error is raised
    (regardless of whether the object exists on another node in the DataONE
    system).
@@ -64,16 +64,17 @@
 
    :REST URL: MN :ref:`CN_crud.get`
 
-   :param token: The authentication token returned by ``login()``
+   :param token: The authentication token returned by
+     :func:`CN_authentication.login`
 
    :type token: :class:`Types.AuthToken`
 
-   :param id: Identifier of the object to be retrieved
+   :param pid: Identifier of the object to be retrieved
 
-   :type id: :class:`Types.Identifier`
+   :type pid: :class:`Types.Identifier`
 
    :returns: For science metadata objects, this will be the exact byte stream of
-     the science metadata oject as it was original ingested. Note that
+     the science metadata object as it was original ingested. Note that
      additional object types may in the future be returned by the get method.
 
    :rtype: bytes
@@ -97,10 +98,10 @@
 
 
 
-.. function:: getSystemMetadata(token,id) -> SystemMetadata
+.. function:: getSystemMetadata(token,pid) -> SystemMetadata
 
    Returns the :term:`system metadata` that contains DataONE specific
-   information about the object identified by `guid`. Note that authoritative
+   information about the object identified by *pid*. Note that authoritative
    copies of system metadata are only available from the Coordinating Nodes.
 
    :Use Cases:
@@ -110,13 +111,14 @@
 
    :REST URL: MN :ref:`CN_crud.getSystemMetadata`
 
-   :param token: The authentication token returned by ``login()``
+   :param token: The authentication token returned by
+     :func:`CN_authentication.login`
 
    :type token: :class:`Types.AuthToken`
 
-   :param id: Identifier for the object of interest.
+   :param pid: Identifier for the object of interest.
 
-   :type id: :class:`Types.Identifier`
+   :type pid: :class:`Types.Identifier`
 
    :returns: A system metadata document describing the object.
 
@@ -136,8 +138,8 @@
 
    :raises Exceptions.NotFound: ``(errorCode=404, detailCode=1060)``
 
-     There is no object identified by ``identifier`` and so no system metadata
-     can be returned.
+     There is no object identified by *pid* and so no system metadata can be
+     returned.
 
 
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=1080)``
@@ -145,7 +147,7 @@
 
 
 
-.. function:: resolve(token,id) -> ObjectLocationList
+.. function:: resolve(token,pid) -> ObjectLocationList
 
    Given an identifier, returns information that a client can use to retrieve
    the identified target object from the DataONE system. The target may reside
@@ -157,13 +159,14 @@
 
    :REST URL: MN :ref:`CN_crud.resolve`
 
-   :param token: The authentication token returned by ``login()``
+   :param token: The authentication token returned by
+     :func:`CN_authentication.login`
 
    :type token: :class:`Types.AuthToken`
 
-   :param id: Identifier for the object of interest.
+   :param pid: Identifier for the object of interest.
 
-   :type id: :class:`Types.Identifier`
+   :type pid: :class:`Types.Identifier`
 
    :returns: A list of nodes known to contain copies of the target object, plus
      the URLs known to resolve to the node get methods.
@@ -188,11 +191,11 @@
 
 
 
-.. function:: create(guid,systemMetadata,scienceMetadata) -> boolean
+.. function:: create(pid,systemMetadata,scienceMetadata) -> boolean
 
    This is a method used internally by the CN, not exposed to MNs or the world.
    Stores the two given objects (system metadata, science metadata) in a single
-   atomic action. The science metadata document is optional as `guid` may refer
+   atomic action. The science metadata document is optional as *pid* may refer
    to science data which is not retrieved to the Coordinating Node. This method
    is used as part of the :term:`Member Node synchronization` of science
    metadata between a MN and a CN.
@@ -203,16 +206,16 @@
 
    :REST URL: N/A
 
-   :param guid: Identifier of the object being registered
+   :param pid: Identifier of the object being registered
 
-   :type guid: :class:`Types.Identifier`
+   :type pid: :class:`Types.Identifier`
 
    :param systemMetadata: System metadata generated by the Member Node (and ITK
      client) describing the object.
 
    :type systemMetadata: :class:`Types.SystemMetadata`
 
-   :param scienceMetadata: The science metadata referenced by `guid`
+   :param scienceMetadata: The science metadata referenced by *pid*.
 
    :type scienceMetadata: bytes
 
@@ -240,7 +243,7 @@
 
 
 
-.. function:: reserveIdentifier(token,[identifier],[scope],[format]) -> Identifier
+.. function:: reserveIdentifier(token,[pid],[scope],[format]) -> Identifier
 
    Given an optional scope and format, reserves and returns an identifier within
    that scope and format that is unique and will not be used by any other
@@ -254,17 +257,18 @@
 
    :REST URL: MN :ref:`CN_crud.reserveIdentifier`
 
-   :param token: The authentication token returned by ``login()``
+   :param token: The authentication token returned by
+     :func:`CN_authentication.login`
 
    :type token: :class:`Types.AuthToken`
 
-   :param identifier: An optional identifier proposed by the client. If no
-     identifier is provided then one will be automatically generated.
+   :param pid: An optional identifier proposed by the client. If no identifier
+     is provided then one will be automatically generated.
 
-   :type identifier: :class:`Types.Identifier`
+   :type pid: :class:`Types.Identifier`
 
    :param scope: An optional string to be used to qualify the scope of the
-     identifer namespace, which is applied differently depending on the format
+     identifier namespace, which is applied differently depending on the format
      requested. If scope is not supplied, a default scope will be used.
 
    :type scope: string
@@ -306,29 +310,30 @@
 
 
 
-.. function:: assertRelation(token,idOfSubject,relationship,idOfObject) -> boolean
+.. function:: assertRelation(token,pidOfSubject,relationship,pidOfObject) -> boolean
 
-   Tests that the specified relationship between `idOfSubject` and `idOfObject`
-   exists.
+   Tests that the specified relationship between *pidOfSubject* and
+   *pidOfObject* exists.
 
    :REST URL: MN :ref:`CN_crud.assertRelation`
 
-   :param token: The authentication token returned by ``login()``
+   :param token: The authentication token returned by
+     :func:`CN_authentication.login`
 
    :type token: :class:`Types.AuthToken`
 
-   :param idOfSubject: The subject of the relationship being tested
+   :param pidOfSubject: The subject of the relationship being tested
 
-   :type idOfSubject: :class:`Types.Identifier`
+   :type pidOfSubject: :class:`Types.Identifier`
 
-   :param relationship: Relationship between `idOfSubject` and `idOfObject`
+   :param relationship: Relationship between *pidOfSubject* and *pidOfObject*
      being evaluated
 
    :type relationship: ???
 
-   :param idOfObject: The object of the relationship
+   :param pidOfObject: The object of the relationship
 
-   :type idOfObject: :class:`Types.Identifier`
+   :type pidOfObject: :class:`Types.Identifier`
 
    :returns: True or False
 
@@ -356,7 +361,7 @@
 
 
 
-.. function:: log(typeOfOperation,targetGuid,requestorIdentitity,dateOfRequest) -> 
+.. function:: log(typeOfOperation,targetPid,requestorIdentitity,dateOfRequest) -> 
 
    This method is used exclusively internally by a CN. It really isn't part of
    external the API that must be implemented. However, a CN will need to
@@ -375,9 +380,9 @@
 
    :type typeOfOperation: :class:`Types.Event`
 
-   :param targetGuid: The target of the operation
+   :param targetPid: The target of the operation
 
-   :type targetGuid: :class:`Types.Identifier`
+   :type targetPid: :class:`Types.Identifier`
 
    :param requestorIdentitity: Who invoked the operation
 
@@ -403,7 +408,7 @@
 
 
 
-.. function:: getChecksum(token,guid) -> Checksum
+.. function:: getChecksum(token,pid) -> Checksum
 
    Returns the checksum for the specified object as reported in the system
    metadata.
@@ -414,13 +419,14 @@
 
    :REST URL: N/A
 
-   :param token: The authentication token returned by ``login()``
+   :param token: The authentication token returned by
+     :func:`CN_authentication.login`
 
    :type token: :class:`Types.AuthToken`
 
-   :param guid: Identifier of the object
+   :param pid: Identifier of the object
 
-   :type guid: :class:`Types.Identifier`
+   :type pid: :class:`Types.Identifier`
 
    :returns: The checksum of the specified object
 

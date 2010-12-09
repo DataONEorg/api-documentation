@@ -46,8 +46,8 @@ collection is implemented by :func:`MN_replication.listObjects` and on a CN by
        body using `MIME-multipart Mixed Media Type`_,
        where the identifier part has the name 'id', the object part has the
        name 'object', and the sysmeta part has the name 'systemmetadata'. The
-       obsoletedGUID parameter should be url-form-encoded in the query string
-       with the name 'obsoletedGUID'.
+       obsoletedPID parameter should be url-form-encoded in the query string
+       with the name 'obsoletedPID'.
    * - DELETE
      - Removes the specified instance from the collection, implementing
        :func:`MN_crud.delete`. The DataONE authorization token should be
@@ -300,7 +300,7 @@ not be specified in the response, though this is likely to change in the
 future.
 
 Ordering of search results is currently unspecified. A simple approach would
-be to add an additional parameter ``orderby`` to the request, the value of
+be to add an additional parameter *orderby* to the request, the value of
 which would be a combination of an attribute name and and indication of
 ascending or descending order.
 
@@ -317,11 +317,11 @@ might be specified, and similarly for newest first::
 .. _MN_crud.get:
 .. _CN_crud.get:
 
-``GET /object/<guid>``
-......................
+``GET /object/<pid>``
+.....................
 
-Operates on individual items of the ``/object`` collection identified by the
-identifier ``<guid>``. This URL pattern is implemented by Member and
+Operates on individual items of the */object* collection identified by the
+identifier *<pid>*. This URL pattern is implemented by Member and
 Coordinating Nodes.
 
 Implemented by the methods:
@@ -383,8 +383,8 @@ Returns the bytes of the specified object.
 .. _MN_crud.describe:
 .. _CN_crud.describe:
 
-``HEAD /object/<guid>``
-.......................
+``HEAD /object/<pid>``
+......................
 
 This operation provides basic information about the target object. This method
 will likely receive high demand and so efficiency should be taken into
@@ -428,8 +428,7 @@ Returns :class:`Types.Identifier`
 
 By default, object storage is managed by GMN. By specifying the option
 vendor_gmn_remote_storage when creating an object, the caller can specify that
-the object is stored at another location. In that case, the submitted object is
-interpreted as a URL through which the object bytes can be retrieved.
+the object is stored at another location. In that case, the submitted object is interpreted as a URL through which the object bytes can be retrieved.
 
 **Examples**
 
@@ -438,7 +437,7 @@ interpreted as a URL through which the object bytes can be retrieved.
   curl -H "AuthToken: UR45W21A1S19ZE3CC9" \
        -F "file=@datafile.csv;name=object" \
        -F "file=@sysmeta.xml;name=systemmetdata" \
-       -d "id=XYZ33256"
+       -d "pid=XYZ33256"
        http://m1.dataone.org/mn/object
   
   HTTP/1.1 200 Success
@@ -451,8 +450,8 @@ interpreted as a URL through which the object bytes can be retrieved.
 
 .. _MN_crud.update:
 
-``PUT /object/<guid>``
-......................
+``PUT /object/<pid>``
+.....................
 
 Implemented by the methods:
 
@@ -463,8 +462,8 @@ Returns :class:`Types.Identifier`
 
 .. _MN_crud.delete:
 
-``DELETE /object/<guid>``
-.........................
+``DELETE /object/<pid>``
+........................
 
 Implemented by the methods:
 

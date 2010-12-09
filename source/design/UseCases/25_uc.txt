@@ -36,10 +36,10 @@ Post Conditions
 
    participant "CRUD API" as m_crud_a << Member Node A >>
    participant "Synchronization API" as c_sync << Coordinating Node >>
-   c_sync -> m_crud_a: getChecksum (GUID)
+   c_sync -> m_crud_a: getChecksum (PID)
    c_sync <-- m_crud_a: checksum
    participant "CRUD API" as m_crud_b << Member Node B >>
-   c_sync -> m_crud_b: getChecksum (GUID)
+   c_sync -> m_crud_b: getChecksum (PID)
    c_sync <-- m_crud_b: checksum
 
 *Figure 1.* Interactions for use case 25, System validates metadata and data

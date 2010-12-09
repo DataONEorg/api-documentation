@@ -98,7 +98,7 @@ Post Conditions
    app_client -> m_crud: update(token, obsoletedID, ID, scienceMetadata)
    activate m_crud
    participant "CRUD API" as c_crud << Coordinating Node >>
-     m_crud -> c_crud: validateGUID(token, ID)
+     m_crud -> c_crud: validatePID(token, ID)
      c_crud -> m_crud: OK
      m_crud -> m_crud: create(token, ID, scienceMetadata)
      m_crud -> m_crud: setObsolete(token, ID, obsoletedID)

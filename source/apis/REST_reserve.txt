@@ -11,7 +11,7 @@ content through MN_crud.create.
 
 Implemented by the methods:
 
-- :func:`CN_crud.listReservedIdentifiers` (``GET /reserve``)
+- :func:`CN_crud.listReservedIdentifiers` (*GET /reserve*)
 
 Returns ???
 
@@ -25,18 +25,18 @@ Returns ???
 
 Implemented by the methods:
 
-- :func:`CN_crud.reserveIdentifier` (``POST /reserve``)
+- :func:`CN_crud.reserveIdentifier` (*POST /reserve*)
 
 Returns :class:`Types.Identifier`
 
 
 .. _CN_crud.deleteReservedIdentifier:
 
-``DELETE /reserve/<guid>``
-..........................
+``DELETE /reserve/<pid>``
+.........................
 
 Implemented by the methods:
 
-- :func:`CN_crud.deleteReservedIdentifier` (``DELETE /reserve?guid=<guid>``)
+- :func:`CN_crud.deleteReservedIdentifier` (*DELETE /reserve/<pid>*)
 
 Returns :class:`Types.Identifier`

@@ -48,7 +48,7 @@ Post Conditions
    app_client -> c_authenticate: login (user, pw)
    app_client <-- c_authenticate: token or failure
    participant "Query API" as c_query << Coordinating Node >>
-   app_client -> c_query: usageQuery (token, GUID)
+   app_client -> c_query: usageQuery (token, PID)
    participant "Authorization API" as c_authorize << Coordinating Node >>
    c_query -> c_authorize: isAuth (token, resultset)
    c_query <-- c_authorize: T or F

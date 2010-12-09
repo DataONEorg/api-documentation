@@ -67,21 +67,21 @@ Post Conditions
    participant "CRUD API" as c_crud << Coordinating Node >>
    participant "Authorization API" as c_authorize << Coordinating Node >>
    participant "Object Store" as c_store << Coordinating Node >>
-   itk -> c_crud: resolve(token, guid)
+   itk -> c_crud: resolve(token, pid)
    activate c_crud
-   c_crud -> c_authorize: isAuthorized(token, GUID, READ)
+   c_crud -> c_authorize: isAuthorized(token, pid, READ)
    c_crud <- c_authorize: True, False, Err.NotFound
    alt False
      c_crud -> itk: Err.NotAuthorized
    else Err.NotFound
      c_crud -> itk: Err.NotFound
    else OK
-     c_crud -> c_store: getSystemMetadata(guid)
+     c_crud -> c_store: getSystemMetadata(pid)
      c_store -> c_crud: SystemMetadata
      c_crud -> c_crud: extract object locations
      c_crud -> itk: objectLocations
    end
    deactivate c_crud
 
-*Figure 2. Sequence diagram for implementation of use case 36.
+*Figure 2.* Sequence diagram for implementation of use case 36.
 

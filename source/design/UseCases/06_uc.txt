@@ -96,7 +96,7 @@ involved in this use case.
     c_sync -> cn_queue: getNextTask()
     activate c_sync
     cn_queue --> c_sync: Node, ObjectInfo
-    c_sync -> m_crud: getSystemMetadata(token, GUID)
+    c_sync -> m_crud: getSystemMetadata(token, PID)
     activate m_crud
     note right
       The association between data and 
@@ -107,22 +107,22 @@ involved in this use case.
     deactivate m_crud
     c_sync -> c_reg: isScienceMetadata(objectInfo.objectFormat)
     c_reg -> c_sync: True or False
-    alt False (GUID refers to data)
-      c_sync -> c_crud: create(GUID, SystemMetadata)
+    alt False (PID refers to data)
+      c_sync -> c_crud: create(PID, SystemMetadata)
       deactivate c_sync
       c_crud -> c_crud: log()
-    else True (GUID refers to ScienceMetadata)
-      c_sync -> m_crud: get(token, GUID)
+    else True (PID refers to ScienceMetadata)
+      c_sync -> m_crud: get(token, PID)
       activate c_sync
       activate m_crud
         m_crud --> m_crud: log (REPLICATE)
         c_sync <-- m_crud: ScienceMetadata
       deactivate m_crud
       activate c_crud
-        c_sync -> c_crud: create(GUID, SystemMetadata, ScienceMetadata)
+        c_sync -> c_crud: create(PID, SystemMetadata, ScienceMetadata)
         c_crud -> c_sync: True or False
         alt False (Failed)
-          c_sync -> m_rep: synchronizationFailed(GUID, problemDescription)
+          c_sync -> m_rep: synchronizationFailed(PID, problemDescription)
         end
       deactivate c_sync
       c_crud -> c_crud: log()
@@ -207,7 +207,7 @@ In more detail
 Retrieve objects from Member Nodes. getNextMemberNode() gets the next Member
 Node to work on - this could be serial selection from the list of registered
 MNs, could be based on the last update, perhaps from some hint returned in
-MN.ping().
+:func:`MN_health.ping`.
 
 New structures::
 

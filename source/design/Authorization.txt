@@ -145,11 +145,11 @@ Phase 1
    activate CN
    CN --> MN1: token
    deactivate CN
-   User -> MN1: create(token, GUID, object, sysmeta)
+   User -> MN1: create(token, pid, object, sysmeta)
    activate MN1
    MN1 -> MN1: verify(token)
-   MN1 -> MN1: isAuthorized(token, GUID, OP_CREATE)
-   MN1 --> User: GUID
+   MN1 -> MN1: isAuthorized(token, pid, OP_CREATE)
+   MN1 --> User: pid
    deactivate MN1
 
 *Figure 1.* Only public objects are replicated in the system. Create, Update,

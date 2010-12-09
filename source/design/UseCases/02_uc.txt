@@ -1,4 +1,4 @@
-Use Case 02 - List GUIDs By Search
+Use Case 02 - List PIDs By Search
 ----------------------------------
 
 .. index:: Use Case 02, List, Search, Query
@@ -13,11 +13,11 @@ Date
   - 20090114 (TWG meeting).  Subsequent various modifications
 
 Goal
-  Get list of GUIDs from metadata search (anonymous and authenticated).
+  Get list of PIDs from metadata search (anonymous and authenticated).
 
 Summary 
   A user performs a search against the DataONE system and receives a list of
-  object identifiers (GUIDs) that match the search criteria. The list of GUIDs
+  object identifiers (PIDs) that match the search criteria. The list of PIDs
   is filtered such that only objects for which the user has read permission
   will be returned.
 
@@ -39,7 +39,7 @@ Triggers
  
 Post Conditions
 
-  - The client has a list of GUIDs (:class:`Types.objectList`) for which they
+  - The client has a list of PIDs (:class:`Types.objectList`) for which they
     have permission to read and match the supplied query or an error condition.
 
   - The log is updated with information about the request
@@ -72,12 +72,12 @@ Post Conditions
    activate c_query
    c_query -> c_query: search -> objectList
    note right of c_query
-     The query response is a list of IDs.
+     The query response is a list of PIDs.
      Each ID needs to be checked for read 
      access by the authenticated user.
    end note
-     loop for ID in objectList
-       c_query -> c_authenticate: isAuthorized(token, ID, OP_GET)
+     loop for pid in objectList
+       c_query -> c_authenticate: isAuthorized(token, pid, OP_GET)
        c_query <-- c_authenticate: T or F
      end 
    c_query --> c_crud: log
@@ -132,9 +132,9 @@ Post Conditions
   records that the user is authorized to see, and that gets anded with the
   result set.
 
-  A. The resultset is a list of GUIDs that needs to be vetted for read access.
+  A. The resultset is a list of PIDs that needs to be vetted for read access.
   Hence query results can be merged (union) or joined as the output from such
-  operations is always a list of GUIDs that will be vetted for read access.
+  operations is always a list of PIDs that will be vetted for read access.
 
 - How distributed is the database of users and their authorization records?
   

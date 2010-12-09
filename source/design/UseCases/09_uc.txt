@@ -103,22 +103,22 @@ Member Node replication.
    participant "CRUD API" as m_crud_b << Member Node B >>
    participant "CRUD API" as m_crud_a << Member Node A >>
 
-   c_sync -> c_sync: setReplicationStatus(GUID, Queued)
+   c_sync -> c_sync: setReplicationStatus(PID, Queued)
    activate c_sync
-     c_sync -> m_crud_b: replicate(token, GUID, SourceNode)
+     c_sync -> m_crud_b: replicate(token, PID, SourceNode)
    deactivate c_sync
 
    activate m_crud_b
-     m_crud_b -> c_sync: setReplicationStatus(token, GUID, Requested)
+     m_crud_b -> c_sync: setReplicationStatus(token, PID, Requested)
      activate c_sync
        c_sync --> m_crud_b: OK
      deactivate c_sync
 
-     m_crud_b -> m_crud_a: get(token, GUID)
+     m_crud_b -> m_crud_a: get(token, PID)
      activate m_crud_a
        m_crud_a -> m_crud_b: bytes
      deactivate m_crud_a
-     m_crud_b -> c_sync: getChecksum(token, GUID)
+     m_crud_b -> c_sync: getChecksum(token, PID)
      activate c_sync
      note right
        The MN must verify the checksum of the 
@@ -127,11 +127,11 @@ Member Node replication.
      end note
      c_sync --> m_crud_b: checksum
      deactivate c_sync
-     m_crud_b -> m_crud_b: create(token, GUID, bytes)
+     m_crud_b -> m_crud_b: create(token, PID, bytes)
      m_crud_b --> m_crud_b: log(GUID, REPLICATE)
-     m_crud_b -> c_sync: setReplicationStatus(token, GUID, Complete)
+     m_crud_b -> c_sync: setReplicationStatus(token, PID, Complete)
      activate c_sync
-       c_sync -> m_crud_b: getSystemMetadata(token, GUID)
+       c_sync -> m_crud_b: getSystemMetadata(token, PID)
        m_crud_b --> c_sync: SystemMetadata
        note right
          CN needs a copy of system metadata from
@@ -139,11 +139,11 @@ Member Node replication.
        end note
        c_sync -> c_sync: verifySystemMetadata
        note right
-         CN updates the SystemMetadata for GUID,
+         CN updates the SystemMetadata for PID,
          setting appropriate values of replica with
          the member node, time stamp, and status.
        end note
-       c_sync --> c_sync: log(GUID, REPLICATE)
+       c_sync --> c_sync: log(PID, REPLICATE)
        c_sync --> m_crud_b: OK
        m_crud_b --> c_sync: OK
      deactivate c_sync

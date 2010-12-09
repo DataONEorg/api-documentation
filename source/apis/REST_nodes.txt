@@ -4,6 +4,15 @@ Nodes Collection
 Returns a list of nodes that have been registered with the DataONE
 infrastructure. This list is also referred to as the registry.
 
+``GET /``
+.........
+
+Implemented by the method:
+
+- :func:`MN_capabilities.getCapabilities`
+
+Returns :class:`Types.NodeList`
+
 
 ``GET /node``
 .............
@@ -15,8 +24,8 @@ Implemented by the methods:
 Returns :class:`Types.NodeList`
 
 
-``GET /node/<id>``
-..................
+``GET /node/<pid>``
+...................
 
 Implemented by the methods:
 
@@ -25,8 +34,8 @@ Implemented by the methods:
 Returns the registry information for a specific node.
 
 
-``PUT /node/<id>``
-..................
+``PUT /node/<pid>``
+...................
 
 Implemented by the methods:
 

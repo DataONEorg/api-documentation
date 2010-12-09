@@ -11,17 +11,17 @@
      - Parameters
    * - :ref:`CN_authorization.isAuthorized`
      - :func:`isAuthorized`
-     - (:class:`token<Types.AuthToken>`, :class:`id<Types.Identifier>`,
+     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        :class:`operation<Types.Event>`) ``->`` boolean
    * - :ref:`CN_authorization.setAccess`
      - :func:`setAccess`
-     - (:class:`token<Types.AuthToken>`, :class:`id<Types.Identifier>`,
+     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        :class:`accessLevel<Types.AccessRule>`) ``->`` boolean
 
 
 
 
-.. function:: isAuthorized(token,id,operation) -> boolean
+.. function:: isAuthorized(token,pid,operation) -> boolean
 
    Test if the user identified by the provided token has authorization for
    operation on the specified object.
@@ -40,9 +40,9 @@
 
    :type token: :class:`Types.AuthToken`
 
-   :param id:
+   :param pid:
 
-   :type id: :class:`Types.Identifier`
+   :type pid: :class:`Types.Identifier`
 
    :param operation:
 
@@ -72,9 +72,9 @@
 
 
 
-.. function:: setAccess(token,id,accessLevel) -> boolean
+.. function:: setAccess(token,pid,accessLevel) -> boolean
 
-   Sets the access permissions for an object identified by `guid`.
+   Sets the access permissions for an object identified by *pid*.
 
    :Use Cases:
 
@@ -82,15 +82,15 @@
 
    :REST URL: MN :ref:`CN_authorization.setAccess`
 
-   :param token: The authentication token returned by :func:`login`. Used to
-     verify that the calling user has authority to modify access control for the
-     object.
+   :param token: The authentication token returned by
+     :func:`CN_authentication.login`. Used to verify that the calling user has
+     authority to modify access control for the object.
 
    :type token: :class:`Types.AuthToken`
 
-   :param id: The object for which access control is being edited.
+   :param pid: The object for which access control is being edited.
 
-   :type id: :class:`Types.Identifier`
+   :type pid: :class:`Types.Identifier`
 
    :param accessLevel: The desired privileges to be assigned to the object.
 

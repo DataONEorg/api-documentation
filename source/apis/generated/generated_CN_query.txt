@@ -32,7 +32,8 @@
 
    :REST URL: MN :ref:`CN_query.search`
 
-   :param token: The authentication token returned by ``login()``
+   :param token: The authentication token returned by
+     :func:`CN_authentication.login`
 
    :type token: :class:`Types.AuthToken`
 
@@ -69,7 +70,8 @@
 
    :REST URL: MN :ref:`CN_query.getLogRecords`
 
-   :param token: The authentication token returned by ``login()``
+   :param token: The authentication token returned by
+     :func:`CN_authentication.login`
 
    :type token: :class:`Types.AuthToken`
 

@@ -201,7 +201,7 @@ Scenario 1: Authentication provided by CNs
   deactivate CN
   MN1 -> User: token
   deactivate MN1
-  User -> MN2: get(token, GUID)
+  User -> MN2: get(token, pid)
   activate MN2
   MN2 -> CN: verify(token)
   activate CN
@@ -212,7 +212,7 @@ Scenario 1: Authentication provided by CNs
     isAuthorized() to avoid additional 
     network call.
   end note
-  MN2 -> CN: isAuthorized(token, GUID, OP_GET)
+  MN2 -> CN: isAuthorized(token, pid, OP_GET)
   activate CN
   CN -> MN2: T or F
   deactivate CN

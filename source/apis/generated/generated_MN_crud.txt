@@ -11,33 +11,33 @@
      - Parameters
    * - :ref:`MN_crud.get`
      - :func:`get`
-     - (:class:`token<Types.AuthToken>`, :class:`id<Types.Identifier>`) ``->``
+     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        bytes
    * - :ref:`MN_crud.getSystemMetadata`
      - :func:`getSystemMetadata`
-     - (:class:`token<Types.AuthToken>`, :class:`id<Types.Identifier>`) ``->``
+     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.SystemMetadata`
    * - :ref:`MN_crud.create`
      - :func:`create`
-     - (:class:`token<Types.AuthToken>`, :class:`id<Types.Identifier>`,
+     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        ``object``, :class:`sysmeta<Types.SystemMetadata>`) ``->``
        :class:`Types.Identifier`
    * - :ref:`MN_crud.update`
      - :func:`update`
-     - (:class:`token<Types.AuthToken>`, :class:`id<Types.Identifier>`,
-       ``object``, :class:`obsoletedGuid<Types.Identifier>`,
+     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
+       ``object``, :class:`obsoletedPid<Types.Identifier>`,
        :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
    * - :ref:`MN_crud.delete`
      - :func:`delete`
-     - (:class:`token<Types.AuthToken>`, :class:`id<Types.Identifier>`) ``->``
+     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.Identifier`
    * - :ref:`MN_crud.describe`
      - :func:`describe`
-     - (:class:`token<Types.AuthToken>`, :class:`id<Types.Identifier>`) ``->``
+     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.DescribeResponse`
    * - :ref:`MN_crud.getChecksum`
      - :func:`getChecksum`
-     - (:class:`token<Types.AuthToken>`, :class:`id<Types.Identifier>`,
+     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        ``[checksumAlgorithm]``) ``->`` :class:`Types.Checksum`
    * - :ref:`MN_crud.getLogRecords`
      - :func:`getLogRecords`
@@ -54,9 +54,9 @@
 
 
 
-.. function:: get(token,id) -> bytes
+.. function:: get(token,pid) -> bytes
 
-   Retrieve an object identified by *id* from the node.
+   Retrieve an object identified by *pid* from the node.
 
    The response must contain the bytes of the indicated object, and the checksum
    of the bytes retrieved must match the :attr:`SystemMetadata.checksum`
@@ -77,9 +77,9 @@
 
    :type token: :class:`Types.AuthToken`
 
-   :param id: The identifier for the object to be retrieved.
+   :param pid: The identifier for the object to be retrieved.
 
-   :type id: :class:`Types.Identifier`
+   :type pid: :class:`Types.Identifier`
 
    :returns: Bytes of the specified object. For data objects, this will be the
      actual bytes of data. For metadata objects, this will be the representation
@@ -94,7 +94,7 @@
 
    :raises Exceptions.NotFound: ``(errorCode=404, detailCode=1020)``
 
-     The object specified by GUID does not exist at this node. The description
+     The object specified by *pid* does not exist at this node. The description
      should include a reference to the resolve method.
 
 
@@ -122,10 +122,10 @@
 
 
 
-.. function:: getSystemMetadata(token,id) -> SystemMetadata
+.. function:: getSystemMetadata(token,pid) -> SystemMetadata
 
    Describes the science metadata or data object (and likely other objects in
-   the future) identified by `guid` by returning the associated system metadata
+   the future) identified by *pid* by returning the associated system metadata
    object.
 
    If the object does not exist on the node servicing the request, then
@@ -143,10 +143,10 @@
 
    :type token: :class:`Types.AuthToken`
 
-   :param id: Identifier for the science data or science metedata object of
+   :param pid: Identifier for the science data or science metedata object of
      interest.
 
-   :type id: :class:`Types.Identifier`
+   :type pid: :class:`Types.Identifier`
 
    :returns: System metadata object describing the object.
 
@@ -158,7 +158,7 @@
 
    :raises Exceptions.NotFound: ``(errorCode=404, detailCode=1060)``
 
-     There is no data or science metadata identified by the given GUID on the
+     There is no data or science metadata identified by the given *pid* on the
      node where the request was serviced. The error message should provide a
      hint to use the :func:`CN_crud.resolve` mechanism.
 
@@ -172,13 +172,13 @@
 
 
 
-.. function:: create(token,id,object,sysmeta) -> Identifier
+.. function:: create(token,pid,object,sysmeta) -> Identifier
 
    Adds a new object to the Member Node, where the object is either a data
    object or a science metadata object. This method is called by clients to
    create new data objects on Member Nodes.
 
-   The `id` must not exist in the DataONE system or must have been previously
+   The *pid* must not exist in the DataONE system or must have been previously
    reserved using  :func:`CN_crud.reserveIdentifier`.
 
    :Use Cases:
@@ -192,13 +192,13 @@
 
    :type token: :class:`Types.AuthToken`
 
-   :param id: The identifier that should be used in DataONE to identify and
+   :param pid: The identifier that should be used in DataONE to identify and
      access the object. This is an Unicode string that follows the constraints
-     on identifiers described in :doc:`GUIDs`. If the identifier is already in
-     use, :exc:`Exceptions.IdentifierNotUnique` will be raised and the client
-     should try again with a different, unique identifier.
+     on identifiers described in :doc:`/design/PIDs`. If the identifier is
+     already in use, :exc:`Exceptions.IdentifierNotUnique` will be raised and
+     the client should try again with a different, unique identifier.
 
-   :type id: :class:`Types.Identifier`
+   :type pid: :class:`Types.Identifier`
 
    :param object: The data bytes that are to be added to the Member Node.
 
@@ -258,10 +258,10 @@
 
 
 
-.. function:: update(token,id,object,obsoletedGuid,sysmeta) -> Identifier
+.. function:: update(token,pid,object,obsoletedPid,sysmeta) -> Identifier
 
-   Creates a new `object` on the Member Node that explicitly updates and
-   obsoletes a previous object (identified by `obsoletedGuid`).
+   Creates a new *object* on the Member Node that explicitly updates and
+   obsoletes a previous object (identified by *obsoletedPid*).
 
    This method is called by clients to update objects on Member Nodes.
 
@@ -284,32 +284,32 @@
 
    :type token: :class:`Types.AuthToken`
 
-   :param id: The globally unique identifier that should be used in DataONE to
+   :param pid: The globally unique identifier that should be used in DataONE to
      identify and access the object. If the identifier is already in use, an
      exception will be raised and the client should try again with a different,
      unique identifier, or use :func:`CN_crud.reserveIdentifier` to reserve one.
 
-   :type id: :class:`Types.Identifier`
+   :type pid: :class:`Types.Identifier`
 
    :param object: The bytes of the data or science metadata object.
 
    :type object: bytes
 
-   :param obsoletedGuid: The identifier of the object that is being updated. If
+   :param obsoletedPid: The identifier of the object that is being updated. If
      this identifier does not exist in the system, an error is raised and the
      operation does not complete.
 
-   :type obsoletedGuid: :class:`Types.Identifier`
+   :type obsoletedPid: :class:`Types.Identifier`
 
    :param sysmeta: The system metadata document that provides basic information
-     about `object`, including a reference to its identifier, access control
+     about *object*, including a reference to its identifier, access control
      information, obsoleted objects, etc.  The required client provided fields
      as described for :class:`Types.SystemMetadata` must be filled.
 
    :type sysmeta: :class:`Types.SystemMetadata`
 
    :returns: The identifier that was used to insert the document into the
-     system, which should be the same as `guid`.
+     system, which should be the same as *pid*.
 
    :rtype: :class:`Types.Identifier`
 
@@ -336,7 +336,7 @@
    :raises Exceptions.NotFound: ``(errorCode=404, detailCode=1280)``
 
      The update operation failed because the object which was supposed to be
-     updated in the system (indicated via the obsoletedGUID parameter) is not
+     updated in the system (indicated via the *obsoletedPid* parameter) is not
      present in the DataONE system, so update is an illegal operation.
 
 
@@ -358,7 +358,7 @@
 
 
 
-.. function:: delete(token,id) -> Identifier
+.. function:: delete(token,pid) -> Identifier
 
    Deletes an object from the Member Node, where the object is either a data
    object or a science metadata object. This method is called by clients to
@@ -380,9 +380,9 @@
 
    :type token: :class:`Types.AuthToken`
 
-   :param id: The identifier of the object to be deleted.
+   :param pid: The identifier of the object to be deleted.
 
-   :type id: :class:`Types.Identifier`
+   :type pid: :class:`Types.Identifier`
 
    :returns: The identifier that was used to delete the document from the
      system.
@@ -416,7 +416,7 @@
 
 
 
-.. function:: describe(token,id) -> DescribeResponse
+.. function:: describe(token,pid) -> DescribeResponse
 
    This method provides a lighter weight mechanism than
    :func:`MN_crud.getSystemMetadata` for a client to determine basic properties
@@ -425,7 +425,7 @@
    of the object, the type of the object (the
    :attr:`SystemMetadata.objectFormat`).
 
-   The principal indicated by `token` must have read privileges on the object,
+   The principal indicated by *token* must have read privileges on the object,
    otherwise :exc:`Exceptions.NotAuthorized` is raised.
 
    If the object does not exist on the node servicing the request, then
@@ -442,9 +442,9 @@
 
    :type token: :class:`Types.AuthToken`
 
-   :param id: Identifier for the object in question.
+   :param pid: Identifier for the object in question.
 
-   :type id: :class:`Types.Identifier`
+   :type pid: :class:`Types.Identifier`
 
    :returns: A set of values providing a basic description of the object.
 
@@ -465,11 +465,11 @@
 
 
 
-.. function:: getChecksum(token,id,[checksumAlgorithm]) -> Checksum
+.. function:: getChecksum(token,pid,[checksumAlgorithm]) -> Checksum
 
    Returns a :class:`Types.Checksum` for the specified object using an accepted
    hashing algorithm. The result is used to determine if two instances
-   referenced by a GUID are identical, hence it is necessary that MNs can ensure
+   referenced by a PID are identical, hence it is necessary that MNs can ensure
    that the returned checksum is valid for the referenced object either by
    computing it on the fly or by using a cached value that is certain to be
    correct.
@@ -480,9 +480,9 @@
 
    :type token: :class:`Types.AuthToken`
 
-   :param id: The identifier of the object the operation is being performed on.
+   :param pid: The identifier of the object the operation is being performed on.
 
-   :type id: :class:`Types.Identifier`
+   :type pid: :class:`Types.Identifier`
 
    :param checksumAlgorithm: The name of an algorithm that will be used to
      compute a checksum of the bytes of the object. This value is drawn from a

@@ -42,7 +42,7 @@ Post Conditions
    app_client -> c_authenticate: login (user, pw)
    app_client <-- c_authenticate: token or failure
    participant "Query API" as c_query << Coordinating Node >>
-   app_client -> c_query: getLinksAndCites (GUID, fromDate, toDate)
+   app_client -> c_query: getLinksAndCites (PID, fromDate, toDate)
    participant "Authorization API" as c_authorize << Coordinating Node >>
    c_query -> c_authorize: isAuth (token, resultset)
    participant "Verify API" as c_ver << Coordinating Node >>

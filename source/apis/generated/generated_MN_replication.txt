@@ -17,11 +17,11 @@
        ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.ObjectList`
    * - n/a
      - :func:`replicate`
-     - (:class:`token<Types.AuthToken>`, :class:`id<Types.Identifier>`,
+     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        :class:`sourceNode<Types.NodeReference>`) ``->`` boolean
    * - n/a
      - :func:`synchronizationFailed`
-     - (:class:`token<Types.AuthToken>`, :class:`id<Types.Identifier>`,
+     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        :class:`problemDescription<Types.String>`) ``->``
 
 
@@ -40,10 +40,10 @@
 
 
 
-   but is expected to also support date range (by also specifying `endTime`),
+   but is expected to also support date range (by also specifying *endTime*),
    and should also support slicing of the matching set of records by indicating
-   the starting `index` of the response (where 0 is the index of the first item)
-   and the `count` of elements to be returned.
+   the starting *index* of the response (where 0 is the index of the first item)
+   and the *count* of elements to be returned.
 
    :Use Cases:
 
@@ -88,7 +88,7 @@
 
    :type count=1000: integer
 
-   :returns: The list of GUIDs that match the query criteria. If none match, an
+   :returns: The list of PIDs that match the query criteria. If none match, an
      empty list is returned.
 
    :rtype: :class:`Types.ObjectList`
@@ -114,7 +114,7 @@
 
 
 
-.. function:: replicate(token,id,sourceNode) -> boolean
+.. function:: replicate(token,pid,sourceNode) -> boolean
 
    Called by a Coordinating Node to indicate to the Member Node that it should
    retrieve the specified object from the indicated Member Node and store it
@@ -130,9 +130,9 @@
 
    :type token: :class:`Types.AuthToken`
 
-   :param id: Identifier of the object that is to be copied.
+   :param pid: Identifier of the object that is to be copied.
 
-   :type id: :class:`Types.Identifier`
+   :type pid: :class:`Types.Identifier`
 
    :param sourceNode: The node from which the content should be retrieved.
 
@@ -157,7 +157,7 @@
 
 
 
-.. function:: synchronizationFailed(token,id,problemDescription) -> 
+.. function:: synchronizationFailed(token,pid,problemDescription) -> 
 
    This is a callback method used by a CN to indicate to a MN that it cannot
    complete synchronization of the science metadata identified by *id*. When
@@ -174,14 +174,14 @@
 
    :type token: :class:`Types.AuthToken`
 
-   :param id: The identifier of the object that was to be synchronized with the
+   :param pid: The identifier of the object that was to be synchronized with the
      CN.
 
-   :type id: :class:`Types.Identifier`
+   :type pid: :class:`Types.Identifier`
 
    :param problemDescription: Further information about the problem causing the
      fail to synchronize.     This might be an unsupported science metadata
-     type, an invalid id, etc.
+     type, an invalid pid, etc.
 
    :type problemDescription: :class:`Types.String`
 

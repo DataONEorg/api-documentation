@@ -66,7 +66,7 @@
 
    :raises Exceptions.AuthenticationTimeout: ``(errorCode=408, detailCode=1680)``
 
-     A response from the authentication ervice was not received before the
+     A response from the authentication service was not received before the
      operation timed out.
 
 
@@ -82,7 +82,8 @@
 
    :REST URL: MN :ref:`MN_authentication.logout`
 
-   :param token: The authentication token returned by ``login()``
+   :param token: The authentication token returned by
+     :func:`CN_authentication.login`
 
    :type token: :class:`Types.AuthToken`
 

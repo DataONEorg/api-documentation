@@ -2,8 +2,6 @@ Notes for MN API
 ================
 
 
-----
-
 .. function:: register (token, ID, metadata)
 
    .. TODO:: Describe this operation.
@@ -17,7 +15,7 @@ Notes for MN API
 
 ----
 
-.. function:: batchGet(token, GUIDs) -> ?
+.. function:: batchGet(token, PIDs) -> ?
 
   Identical to get() except that a list of identifiers is requested.
 
@@ -30,7 +28,7 @@ Notes for MN API
   :param token: (:class:`Types.AuthToken`) The authentication token returned 
     by ``login()``
 
-  :param GUIDs: (GuidList) The list of identifiers to retrieve.
+  :param PIDs: (pidList) The list of identifiers to retrieve.
 
   :rtype: 
    Bytes of the specified objects. **How are multiple objects serialized?**
@@ -38,17 +36,17 @@ Notes for MN API
   :raises Exceptions.NotAuthorized: The supplied identity does not have READ
      permission on the object.
 
-  :raises Exceptions.NotFound: The object specified by GUID does not exist.
+  :raises Exceptions.NotFound: The object specified by PID does not exist.
 
   .. TODO:: batchGet specifies that multiple objects may be retrieved in a
      single call. How are these objects packaged in the response?
 
 
-.. function:: checkDataQuality (GUID)
+.. function:: checkDataQuality (PID)
 
   .. TODO:: need details on what this operation is supposed to be doing.
 
-  :param GUID: object to check
+  :param PID: object to check
 
 ----
 
@@ -70,10 +68,10 @@ From the authorization API:
 From the replication API:
 
 
-.. function:: synchronizationComplete (token, GUID)
+.. function:: synchronizationComplete (token, PID)
 
    This is a callback method used by a CN to indicate to a MN that it has
-   completed replication of the science metadata identified by GUID. When
+   completed replication of the science metadata identified by PID. When
    called, the MN should somehow record that synchronization is complete for
    that object so that the next time it reponds to a ``listObjects(token,
    query)`` query the object will not be included as requiring
@@ -81,15 +79,15 @@ From the replication API:
 
    :param token: authentication token; ignored for V0.3
 
-   :param GUID: 
+   :param PID: 
 
-     The GUID of the science metadata object that is now synchronized with the
+     The PID of the science metadata object that is now synchronized with the
      CN.
 
    .. note::
       A CN could use this method to provide the MN with an updated version of
       the system metadata for the object if this method accepted a system
-      metadata object instead of a simple GUID as a parameter.
+      metadata object instead of a simple PID as a parameter.
 
    :returns: A simple acknowledgement.
 
@@ -98,11 +96,11 @@ From the replication API:
    :raises Exceptions.NotAuthorized:
 
    :raises Exceptions.InvalidIdentifier: 
-     The supplied GUID does not identify a science metadata object owned by
+     The supplied PID does not identify a science metadata object owned by
      the MN.
 
    :raises Exceptions.InvalidOperation: 
-     The science metadata object identified by the GUID is already marked as
+     The science metadata object identified by the PID is already marked as
      synchronized.
 
 This method is not necessary since the CNs keep track of when an object was
@@ -121,12 +119,12 @@ More stuff from the replication APIs
   replicationSucceeds (transID)
   startReplica (ID, sessionID, transID, srcMN)
   sysOp (token)
-  listChangedRecords(token) -> GUIDs
+  listChangedRecords(token) -> PIDs
 
   ## from v0.3 doc ##
-  listObjects(token, query) -> list of GUIDs
-  synchronizationComplete(token, GUID)
-  synchronizationFailed(token, GUID, problemDescription)
+  listObjects(token, query) -> list of PIDs
+  synchronizationComplete(token, PID)
+  synchronizationFailed(token, PID, problemDescription)
 
 
 
@@ -143,7 +141,7 @@ More stuff from the replication APIs
 .. function::  sysOp (token)
 
 
-.. function:: listChangedRecords(token) -> GuidList
+.. function:: listChangedRecords(token) -> PidList
 
    List the records that have changed since the last synchronization event.
 

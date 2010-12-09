@@ -51,7 +51,7 @@ Post Conditions
    c_query <-- c_authorize: T or F
    app_client <-- c_query: records or fail
    participant "CRUD API" as c_crud << Coordinating Node >>
-   app_client -> c_crud: deleteRecords (token, listOfGUIDs)
+   app_client -> c_crud: deleteRecords (token, listOfPids)
    app_client <-- c_crud: ack or fail
    note right
    Can the Query API find out where all

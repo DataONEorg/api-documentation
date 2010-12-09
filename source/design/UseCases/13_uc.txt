@@ -58,10 +58,10 @@ Post Conditions
    User -> app_client
    participant "CRUD API" as c_crud << Coordinating Node >>
    participant "Authorization API" as c_authorize << Coordinating Node >>
-   app_client -> c_crud: get(auth_token, GUID)
+   app_client -> c_crud: get(auth_token, PID)
    c_crud -> c_authorize: isAuthorized(auth_token, method, resultset)
-   loop for each guid in resultset
-     c_authorize -> c_authorize: isAuthorized(auth_token, method, guid)
+   loop for each pid in resultset
+     c_authorize -> c_authorize: isAuthorized(auth_token, method, pid)
    end
    c_crud <-- c_authorize: T or F
    app_client <-- c_crud: resultset or raise NotAuthorized

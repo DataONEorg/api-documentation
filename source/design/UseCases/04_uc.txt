@@ -123,8 +123,8 @@ Post Conditions
    app_client -> m_crud: create(auth_token, dataPackage)
    activate m_crud
    participant "CRUD API" as c_crud << Coordinating Node >>
-     m_crud -> c_crud: validateGUID(GUID)
-     m_crud <-- c_crud: GUID
+     m_crud -> c_crud: validatePID(PID)
+     m_crud <-- c_crud: PID
      m_crud -> m_crud: store()
    deactivate m_crud
 

@@ -11,13 +11,13 @@
      - Parameters
    * - :ref:`MN_authorization.isAuthorized`
      - :func:`isAuthorized`
-     - (:class:`token<Types.AuthToken>`, :class:`id<Types.Identifier>`,
+     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        :class:`operation<Types.Event>`) ``->`` boolean
 
 
 
 
-.. function:: isAuthorized(token,id,operation) -> boolean
+.. function:: isAuthorized(token,pid,operation) -> boolean
 
    Test if the user identified by the provided token has authorization for
    operation on the specified object.
@@ -35,9 +35,9 @@
 
    :type token: :class:`Types.AuthToken`
 
-   :param id:
+   :param pid:
 
-   :type id: :class:`Types.Identifier`
+   :type pid: :class:`Types.Identifier`
 
    :param operation:
 

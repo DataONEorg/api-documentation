@@ -44,7 +44,7 @@ Post Conditions
    specifying restrictions
    end note
    participant "Authorization API" as c_authorize << Coordinating Node >>
-   app_client -> c_authorize: setAccess (GUID, accessLevel)
+   app_client -> c_authorize: setAccess (PID, accessLevel)
    app_client <-- c_authorize: ack or fail
    note right
    Users can be members of groups that can
@@ -64,7 +64,7 @@ timed embargoes
   because :doc:`Use Case 08</design/UseCases/08_uc>` deals with setting
   replication policies. (PEA)
 
-- Step #1, should have a signature of setAccess(token, GUID, accessPolicy).
+- Step #1, should have a signature of setAccess(token, PID, accessPolicy).
   Even though the diagram says "Assume user authority for specifying
   restrictions", practically speaking we will need to verify that authority
   and the user's identify with a token. Also "accessLevel" sounds very

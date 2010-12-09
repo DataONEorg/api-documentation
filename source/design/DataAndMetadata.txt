@@ -71,7 +71,7 @@ matches semantically equivalent search terms. A trivial example is the use of
 the Dublin Core terms to search across all types of metadata. In this case, a
 "dublin core metadata extractor" extracts term values from a metadata document
 and updates an index that supports DC fields with the values and the
-document GUID. Searches on the index return the document GUID, which is then
+document PID. Searches on the index return the document PID, which is then
 retrieved using the MN API.
 
 Problems:

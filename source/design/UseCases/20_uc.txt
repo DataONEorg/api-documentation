@@ -12,7 +12,7 @@ Version
   Draft
 
 Goal
-  Data owners can request aggregated CRUD log for {time period/object id} for
+  Data owners can request aggregated CRUD log for {time period/pid} for
   all of 'their' objects.
 
 Summary 
@@ -20,7 +20,7 @@ Summary
   This operation provides a mechanism for data contributors to retrieve use
   information for content that they own. This is similar to :doc:`Use Case 19
   <19_uc>` except that the requesting use is authenticated, and a query on
-  objects owned by the user is used to generate a list of GUIDs that indicate
+  objects owned by the user is used to generate a list of PIDs that indicate
   log information to be retrieved.
 
 
@@ -54,7 +54,7 @@ Post Conditions
    app_client -> c_authenticate: login (user, pw)
    app_client <-- c_authenticate: token or failure
    participant "Query API" as c_query << Coordinating Node >>
-   app_client -> c_query: getLogRecords (GUID, fromDate, toDate)
+   app_client -> c_query: getLogRecords (pid, fromDate, toDate)
    participant "Authorization API" as c_authorize << Coordinating Node >>
    c_query -> c_authorize: isAuth (token, resultset)
    participant "Verify API" as c_ver << Coordinating Node >>

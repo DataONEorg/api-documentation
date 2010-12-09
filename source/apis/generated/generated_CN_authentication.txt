@@ -16,7 +16,7 @@
        :class:`Types.AuthToken`
    * - :ref:`CN_authentication.setOwner`
      - :func:`setOwner`
-     - (:class:`token<Types.AuthToken>`, :class:`id<Types.Identifier>`,
+     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        :class:`userId<Types.Principal>`) ``->`` :class:`Types.Identifier`
    * - :ref:`CN_authentication.newAccount`
      - :func:`newAccount`
@@ -84,7 +84,7 @@
 
 
 
-.. function:: setOwner(token,id,userId) -> Identifier
+.. function:: setOwner(token,pid,userId) -> Identifier
 
    Changes ownership of the specified object to the :term:`principal` specified
    by `userId`
@@ -95,15 +95,15 @@
 
    :REST URL: MN :ref:`CN_authentication.setOwner`
 
-   :param token: The authentication token returned by :func:`login`. Used to
-     verify that the calling user has authority to modify access control for the
-     object.
+   :param token: The authentication token returned by
+     :func:`CN_authentication.login`. Used to verify that the calling user has
+     authority to modify access control for the object.
 
    :type token: :class:`Types.AuthToken`
 
-   :param id: Identifier of the object to be modified
+   :param pid: Identifier of the object to be modified
 
-   :type id: :class:`Types.Identifier`
+   :type pid: :class:`Types.Identifier`
 
    :param userId: The principal that will be taking ownership of the specified
      object.

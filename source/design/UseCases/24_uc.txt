@@ -49,11 +49,11 @@ Post Conditions
    participant "CRUD API" as m_crud << Member Node >>
    c_crud -> c_ostore: beginTransaction() 
    c_ostore --> c_crud: transactionHandle
-   c_crud -> m_crud: get(token, GUID)
+   c_crud -> m_crud: get(token, PID)
    alt Success
      m_crud --> c_crud: object
      c_crud -> c_ostore: commitTransaction(transactionHandle)
-     c_crud -> c_ostore: updateSystemMetadata(GUID)
+     c_crud -> c_ostore: updateSystemMetadata(PID)
    else Transfer failure
     c_crud -> c_ostore: rollbackTransaction(transactionHandle)
     c_ostore --> c_crud: ACK

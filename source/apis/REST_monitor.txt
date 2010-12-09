@@ -4,6 +4,17 @@ Monitor Collection
 The ``/monitor`` collection represents various performance and utilization
 metrics of Member Nodes. It is exposed by Member Nodes.
 
+``GET /monitor/ping``
+.....................
+
+TBD
+
+
+``GET /monitor/status``
+.......................
+
+TBD
+
 
 ``GET /monitor/object``
 .......................
@@ -19,7 +30,7 @@ Implemented by the methods:
 
 :day: (optional) Flag that causes the number of objects that were created to be reported for each day in which one or more objects were created. Without  this flag the total number of objects is reported.
 
-:id: (optional) (wildcards supported) Filter on identifier.
+:pid: (optional) (wildcards supported) Filter on identifier.
 
 :url: (optional) (wildcards supported) Filter on URL. The URL points to the
   object bytes when GMN is used as a DataONE adapter for an existing repository.
@@ -50,6 +61,7 @@ Retrieve a count of all objects on MN::
       <count>100</count>
     </monitorInfo>
   </ns1:monitorList>
+
 
 Retrieve a count of objects based on EML that were created for each
 day in 1980 (arguments are on separate lines for readability)::
@@ -93,7 +105,6 @@ day in 1980 (arguments are on separate lines for readability)::
 ``GET /monitor/event``
 ......................
 
-
 Returns the number of object related events that have occurred.
 
 Implemented by the methods:
@@ -107,7 +118,7 @@ Returns :class:`Types.MonitorList`
 
 :day: (optional) Flag that causes the number of object related events to be reported for each day in which one or more events occurred. Without this flag, the number of events is cumulative.
 
-:id: (optional) (wildcards supported) Filter on identifier.
+:pid: (optional) (wildcards supported) Filter on identifier.
 
 :format: (optional) (wildcards supported) Filter on objectFormat.
 
@@ -143,6 +154,7 @@ Retrieve a cumulative count of all object related events on MN::
       <count>100</count>
     </monitorInfo>
   </ns1:monitorList>
+
 
 Retrieve a count of object related events for all objects based on EML for
 each day in 1980 (arguments are on separate lines for readability)::

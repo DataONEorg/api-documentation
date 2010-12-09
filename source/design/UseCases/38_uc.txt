@@ -55,7 +55,7 @@ Node functionality.
 
    participant "Client" as itk <<Investigator Toolkit>>
    participant "CRUD API" as c_crud << Coordinating Node >>
-   itk -> c_crud: reserveIdentifier(token, guid, scope, format)
+   itk -> c_crud: reserveIdentifier(token, pid, scope, format)
    c_crud -> c_crud: createDummyEntry
    note right
      A dummy entry is created in the object store as a place holder.

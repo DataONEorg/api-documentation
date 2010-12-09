@@ -1,5 +1,5 @@
-Use Case 01 - Get Object Identified by GUID
--------------------------------------------
+Use Case 01 - Get Object Identified by PID
+------------------------------------------
 
 .. index:: Use Case 01, get, UC01
 
@@ -14,7 +14,7 @@ Date
   - 20090114 (TWG meeting).  Subsequent various modifications.
 
 Goal
-  Retrieve an object identified by GUID (authenticated or not, notify
+  Retrieve an object identified by PID (authenticated or not, notify
   subscriber of access).
 
 Summary 
@@ -79,15 +79,15 @@ action.
    participant "CRUD API" as n_crud << Node >>
    participant "Authorization API" as n_authorize << Node >>
    participant "Object Store" as n_ostore << Node >>
-   app_client -> n_crud: get(token, GUID)
-   n_crud -> n_authorize: isAuthorized(token, GUID, READ)
+   app_client -> n_crud: get(token, PID)
+   n_crud -> n_authorize: isAuthorized(token, PID, READ)
    n_crud <- n_authorize: True, False, Err.NotFound
    alt NotFound
      app_client <- n_crud: Err.NotFound
    else False
      app_client <- n_crud: Err.NotAuthorized
    else True
-     n_crud -> n_ostore: read(GUID)
+     n_crud -> n_ostore: read(PID)
      n_crud <- n_ostore: bytes
      n_crud --> n_crud: log(READ)
      app_client <- n_crud: bytes
@@ -95,7 +95,7 @@ action.
 
 
 *Figure 2.* Sequence diagram for Use Case 01 illustrating the sequence for
-retrieving an object identified by a GUID from the DataONE system. No
+retrieving an object identified by a PID from the DataONE system. No
 distinction is made between Member Node and Coordinating Node implementation
 as they are identical at this level of detail.
 

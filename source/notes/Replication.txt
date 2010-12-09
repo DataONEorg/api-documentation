@@ -80,13 +80,13 @@ science or system metadata documents being the values.
 
 The CN-OS should support operations:
 
-- Create(guid)
+- Create(pid)
 
-- Read(guid)
+- Read(pid)
 
-- Update(guid)
+- Update(pid)
 
-- Delete(guid)
+- Delete(pid)
 
 - List(start, stop, restriction)
 
@@ -133,7 +133,7 @@ Apache Zookeeper_ can be used as a distributed lock manager to assist with
 synchronization of records, especially across the CNs. Zookeeper is
 interesting because it can potentially scale to many more than three CNs.
 
-In this case we would create a globally synchronous lock on a specific GUID
+In this case we would create a globally synchronous lock on a specific PID
 (essentially the same as the Lock operation of Metacat). The basic procedure
 is described in the `Zookeeper recipes`_.
 

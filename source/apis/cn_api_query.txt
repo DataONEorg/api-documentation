@@ -22,7 +22,7 @@ to be split out into the Logging and Alert API (not yet defined).
 
 .. function:: getAllCopies (token, ownerID)
 
-.. function:: getLinksAndCites (GUID, fromDate, toDate)
+.. function:: getLinksAndCites (PID, fromDate, toDate)
 
 .. function:: getLogRecords (nodeID, fromDate, toDate)
 
@@ -32,5 +32,5 @@ to be split out into the Logging and Alert API (not yet defined).
 .. function:: searchForData ()
     This is a DUPE of search(). Clean up use cases.
 
-.. function:: usageQuery (token, GUID)
+.. function:: usageQuery (token, PID)
 

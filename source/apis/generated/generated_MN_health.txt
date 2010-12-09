@@ -155,8 +155,9 @@
 
 .. function:: getStatus() -> StatusResponse
 
-   This function is similar to ping() but returns a more complete status which
-   may include information such as planned service outtages.
+   This function is similar to :func:`MN_health.ping` but returns a more
+   complete status which may include information such as planned service
+   outages.
 
    :Use Cases:
 

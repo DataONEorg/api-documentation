@@ -11,19 +11,19 @@
      - Parameters
    * - n/a
      - :func:`setReplicationStatus`
-     - (:class:`token<Types.AuthToken>`, :class:`guid<Types.Identifier>`,
+     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        ``status``) ``->`` boolean
 
 
 
 
-.. function:: setReplicationStatus(token,guid,status) -> boolean
+.. function:: setReplicationStatus(token,pid,status) -> boolean
 
    Update the replication status of the system metadata, ensuring that the
    change is appropriate for the given state of system metadata.  For example, a
-   MN can not change the status to Requested unless the CN previously requested
-   replication of the object and the replications status of the object (as
-   indicated in the system metadata) is set to Queued.
+   MN can not change the status to *Requested* unless the CN previously
+   requested replication of the object and the replications status of the object
+   (as indicated in the system metadata) is set to *Queued*.
 
    :Use Cases:
 
@@ -35,9 +35,9 @@
 
    :type token: :class:`Types.AuthToken`
 
-   :param guid: Identifier of the object to be replicated between Member Nodes
+   :param pid: Identifier of the object to be replicated between Member Nodes
 
-   :type guid: :class:`Types.Identifier`
+   :type pid: :class:`Types.Identifier`
 
    :param status: Replication status. See system metadata schema for possible
      values.
