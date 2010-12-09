@@ -17,7 +17,7 @@
      - (:class:`token<Types.AuthToken>`, :class:`time<Types.DateTime Range>`,
        :class:`format<Types.ObjectFormat>`, ``day``) ``->``
        :class:`Types.ObjectStatistics`
-   * - n/a
+   * - :ref:`MN_health.getOperationStatistics`
      - :func:`getOperationStatistics`
      - (:class:`token<Types.AuthToken>`, :class:`time<Types.DateTime Range>`,
        :class:`requestorIdentitity<Types.Principal>`, ``day``,
@@ -72,19 +72,21 @@
 
    :REST URL: MN :ref:`MN_health.getObjectStatistics`
 
-   :param token: The authentication token returned by ``login()``
+   :param token: Identity with authority to retrieve the statistics.
 
    :type token: :class:`Types.AuthToken`
 
-   :param time: Time stamp
+   :param time: Limit to date range. See Wildcards and Range Operators.
 
    :type time: :class:`Types.DateTime Range`
 
-   :param format: Identifier of the object that is to be copied.
+   :param format: Limit to objects of given format.
 
    :type format: :class:`Types.ObjectFormat`
 
-   :param day: The node from which the content should be retrieved.
+   :param day: Flag that causes a separate set of statistics to be returned for
+     each day. Without this flag, a single, cumulative set of statistics is
+     returned.
 
    :type day: flag
 
@@ -112,21 +114,23 @@
    Called by the monitoring system to find how many operations have been
    performed on the MN, cumulative or for each day in a given range.
 
-   :REST URL: N/A
+   :REST URL: MN :ref:`MN_health.getOperationStatistics`
 
-   :param token: The authentication token returned by ``login()``
+   :param token: Identity with authority to retrieve the statistics.
 
    :type token: :class:`Types.AuthToken`
 
-   :param time: Time stamp
+   :param time: Limit to date range. See Wildcards and Range Operators.
 
    :type time: :class:`Types.DateTime Range`
 
-   :param requestorIdentitity: Who invoked the operation
+   :param requestorIdentitity: Limit to operations performed by given requestor.
 
    :type requestorIdentitity: :class:`Types.Principal`
 
-   :param day: The node from which the content should be retrieved.
+   :param day: Flag that causes a separate set of statistics to be returned for
+     each day. Without this flag, a single, cumulative set of statistics is
+     returned.
 
    :type day: flag
 
