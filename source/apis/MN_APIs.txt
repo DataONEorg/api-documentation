@@ -1,6 +1,9 @@
 Member Node APIs
 ----------------
 
+.. include:: generated/generated_MN_function_table.txt
+
+
 Authentication API
 ~~~~~~~~~~~~~~~~~~
 
@@ -8,8 +11,8 @@ Authentication API
    :synopsis: Authentication operations for Member Nodes
 
 Provides a mechanism for a User (:term:`principal`) to authenticate themselves
-with the DataONE system. See the document :doc:`/design/Authentication` for more
-details on some authentication options.
+with the DataONE system. See the document :doc:`/design/Authentication` for
+more details on some authentication options.
 
 
 .. include:: generated/generated_MN_authentication.txt
@@ -23,9 +26,10 @@ Authorization API
 .. module:: MN_authorization
    :synopsis: Authorization operations for Member Nodes
 
-Provides a mechanism for a User (:term:`principal`) to verify that an operation
-is permitted for an authenticated User. See the document :doc:`/design/Authentication`
-for more details on some authentication and authorization options.
+Provides a mechanism for a User (:term:`principal`) to verify that an
+operation is permitted for an authenticated User. See the document
+:doc:`/design/Authentication` for more details on some authentication and
+authorization options.
 
 
 .. include:: generated/generated_MN_authorization.txt
@@ -39,7 +43,7 @@ CRUD API
 .. module:: MN_crud
    :synopsis: Create, read, update, and delete operations on Member Nodes
 
-The ``MN_crud`` API implements methods that enable object management
+The *MN_crud* API implements methods that enable object management
 operations on a :term:`Member Node`.  
 
 
@@ -54,9 +58,12 @@ Capabilities API
 .. module:: MN_capabilities
    :synopsis: Reports the capabilities of a Member Node
 
+The *MN_capabilities* API provides mechanisms for a Member Node to report on
+the level of service compliance and to specify replication policies. The
+capabilities information is used in the Member Node registration process by
+the Coordinating Nodes.
 
 .. include:: generated/generated_MN_capabilities.txt
-
 
 
 ----
@@ -66,6 +73,10 @@ State of Health API
 
 .. module:: MN_health
    :synopsis: Reports on the status of a Member Node
+
+The state of health API provides mechanisms for the monitoring infrastructure 
+to report on the current state of the DataONE infrastructure and for the
+Coordinating Nodes to track the current operating state of the Member Node.
 
 .. include:: generated/generated_MN_health.txt
 
@@ -80,8 +91,7 @@ The Replication API handles CN-directed replication of content between MNs and
 also supports the initial harvesting of science metadata from a MN by a CN.
 Method names used for the former (MN-to-MN replication) include some form of
 "replication" in their name. Method names used for the latter (MN-to-CN
-synchronization) include some form of "synchronize" in their name. Support for
-MN-to-MN replication is not part of the V0.3 APIs.
+synchronization) include some form of "synchronize" in their name. 
 
 
 .. module:: MN_replication
