@@ -1,0 +1,91 @@
+Overview of Authorization Policy Languages
+==========================================
+
+:Author: Matt Jones
+:Status: Incomplete Draft, Work in Progress being Edited
+
+
+This document provides an overview of authorization technologies that have been
+considered as part of the design of the DataONE authorization and access
+control system.
+
+Several open technologies can be used to express the policies for describing
+access control rules for resources and services in DataONE.
+
+eml-access
+~~~~~~~~~~
+Ecological Metadata Language (EML) is in common use in the ecological and
+environmental monitoring community, and includes a simple module
+(eml-access.xsd) for describing access control policies for data resources.  It
+allows both additive and subtractive rules, which allows one to either build up
+a set of allowed permissions and then subtract a few (e.g., all of the members
+of group 'data-managers' except 'john), or to deny all of the members of a
+group and then add a few.  After years of experience using EML within the KNB
+network, it has become clear that this ability to modify the ruleset using
+different approaches for combining the rules is unnecessary to express the
+typical rules needed in the stakeholder community.  The complexity also makes
+it more difficult for users to understand the implications of the access rules
+that they write, and that even with use of a GUI, many users compose access
+expressions that do not capture their intent.  Here is a simple eml-access
+block:
+
+.. literalinclude:: ./eml-access-example.xml
+   :language: xml
+
+One of the shortcominings of eml-access is that it assumes that the linkage to
+a particular resource is expressed elsewhere (typically the access element is
+embedded in a broader EML document, thereby implicitly expressing which
+resources it applies to), and so it contains no mechanism for referencing the
+resource that is to be controlled. Experience with using eml-access in EML
+documents indicates that this mechanism is cumbersome and causes inadvertant
+creation of multiple versions of objects just to accomplish an access rule
+policy change.  This is part of the motivation to moving access policies to
+SystemMetadata in DataONE (the other reason being that many metadata standards
+do not include an access policy descriptor at all).
+
+XACML 3.0
+~~~~~~~~~
+XACML 3 replaces version 2.  
+
+.. Note::
+    Need to outline the approach to access control in version 3 and contrast it
+    with versions 2 and 1.
+
+XACML 2.0
+~~~~~~~~~
+XACML 3 replaces version 1.
+
+.. Note::
+    Need to outline the approach to access control in version 2 and contrast it
+    with version 1.
+
+XACML 1.0
+~~~~~~~~~
+The Extensible Access Control Markup Language (XACML) is an OASIS standard for
+representing access control policies for resources and services.  XACML
+specifically includes support for federated systems in an open Internet
+environment, is an open standard, and is being widely adopted by various
+software systems. The advantages of XACML lie in its completeness and that it
+is an industry standard.  The disadvantages for DataONE lie in its complexity,
+which makes it difficult to author, understand, and consume these documents
+because of the large number of permutations which it could support.  As an
+example, below is the same access rule that is expressed in eml-access expressed
+instead in XACML. Note that there are multiple qualified mechanisms and types
+for matching values (e.g., string-equals), which is flexible but requires more
+implementation complexity than is specified in the DataONE authorization use
+cases.  With XACML, one could express conditions that include complex functions
+and comparisons of arbitrary subject attributes (beyond identity).
+
+.. literalinclude:: ./xacml-1.0-example.xml
+   :language: xml
+
+The XACML 'Permit' Effect is equivalent to the eml-access 'allow' rule, the
+XACML 'Deny' Effect is equivalent to the EML 'deny' element, the
+XACML 'Subject' is equivalent to the EML 'principal' element, and the XACML
+'Action' element is equivalent to the EML 'permission' element.  The XACML
+constructs have considerably more flexibility in what is expressed that is
+accomplished via the indirection in the model, but this flexibility and
+expressive power come at a significant cost in implementation time and software
+complexity that would need to be borne by all Member Node implementations.
+
+
