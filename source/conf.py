@@ -49,17 +49,30 @@ sys.path.append( os.path.abspath('../tools/docutils/rst_directives') )
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc', 
-              'sphinx.ext.todo', 
-              'sphinx.ext.pngmath', 
-              'sphinx.ext.ifconfig',
-              'sphinx.ext.graphviz',
-              'rst2pdf.pdfbuilder', 
-              'sphinx.ext.todo',
-              'sphinx.ext.inheritance_diagram',
-              'plantuml',
-              ]
-
+try:
+  extensions = ['sphinx.ext.autodoc', 
+                'sphinx.ext.todo', 
+                'sphinx.ext.pngmath', 
+                'sphinx.ext.ifconfig',
+                'sphinx.ext.graphviz',
+                'rst2pdf.pdfbuilder', 
+                'sphinx.ext.todo',
+                'sphinx.ext.inheritance_diagram',
+                'plantuml',
+                ]
+except:
+  extensions = ['sphinx.ext.autodoc', 
+                'sphinx.ext.todo', 
+                'sphinx.ext.pngmath', 
+                'sphinx.ext.ifconfig',
+                'sphinx.ext.graphviz',
+                #'rst2pdf.pdfbuilder', 
+                'sphinx.ext.todo',
+                'sphinx.ext.inheritance_diagram',
+                'plantuml',
+                ]
+  
+  
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 

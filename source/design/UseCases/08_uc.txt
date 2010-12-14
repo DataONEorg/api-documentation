@@ -24,16 +24,24 @@ Summary
   distribution of data packages throughout the DataONE system to achieve the
   goals of data package persistence and accessibility.
 
+  Initial implementation of the infrastructure emphasizes the preservation
+  goals of replication, i.e. ensuring sufficient copies of data and metadata
+  objects are available to ensure ongoing access to the content. The
+  replication system offers the possibility of more dynamic control over the
+  flow of information between systems to support science research. For
+  example, the replication services may be exploited as a mechanism for
+  staging data in preparation for experiments at HPC nodes or centers.
+
 Actors
   Member Node, Coordinating Node
 
 Preconditions 
-  - Member Node is registered with a Coordinating Node
 
+  - Member Node is registered with a Coordinating Node
   - Member Node is operational
   
-  
 Triggers
+
   - A Member Node changes available capacity, bandwidth or some other
     operating characteristic
 
@@ -55,6 +63,7 @@ Post Conditions
 
 .. uml::
 
+   @startuml
    package "DataONE"
      actor "Coordinating Node" as CN
      actor "Member Node" as MN
@@ -67,12 +76,14 @@ Post Conditions
      policy ..> author: <<includes>>
      policy ..> NOTIFY: <<includes>>
      policy ..> CNSYNC: <<includes>>
+   @enduml
    
 *Figure 1.* Use case 08.
 
 
 .. uml::
 
+   @startuml
    participant "Replication API" as c_rep << Coordinating Node >>
    participant "Replication API" as m_rep << Member Node >>
    c_rep -> m_rep: ping()
@@ -88,6 +99,7 @@ Post Conditions
      When
      What gets replicated
    end note
+   @enduml
 
 *Figure 2.* Communication of Replication Policy Metadata
 
@@ -101,3 +113,5 @@ Post Conditions
   changed to avoid thrashing that might occur for example, if a MN flips
   between significant differences in storage capacities (low to high, then low
   again).
+
+
