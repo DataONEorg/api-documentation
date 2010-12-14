@@ -1,0 +1,282 @@
+Apache Configuration for DataONE Services
+=========================================
+
+This document refers specifically to configuration directives that must be
+enabled to ensure Apache correctly processes the REST URLs used by the 
+DataONE service interfaces. 
+
+Parameters in question:
+
+:`AllowEncodedSlashes`_: 
+
+  ``(Off)|On``
+
+  The AllowEncodedSlashes directive allows URLs which contain encoded path
+  separators (%2F for / and additionally %5C for \ on according systems) to be
+  used. Normally such URLs are refused with a 404 (Not found) error.
+
+:`AcceptPathInfo`_:
+
+  ``Off|On|(Default)``
+
+  This directive controls whether requests that contain trailing pathname
+  information that follows an actual filename (or non-existent file in an
+  existing directory) will be accepted or rejected.
+
+Both of these must be set to *On* for Member Node and Coordinating Node
+services to ensure that URLs containing identifiers as path element (e.g. for
+:func:`MN_crud.get`) are not rejected or mishandled by the Apache web server.
+
+These parameters **must** be in effect for the section of the web server
+configuration handling DataONE service requests.
+
+
+Examples
+--------
+
+The following examples provide an indication of Apache response for different
+configurations.
+
+The version of Apache being examined was::
+
+  Apache/2.2.14 (Unix) DAV/2 mod_ssl/2.2.14 OpenSSL/0.9.8l PHP/5.3.1 
+  mod_perl/2.0.4 Perl/v5.10.1
+
+A simple Perl CGI script was installed in the web server root content folder,
+which was ExecCGI enabled. The script::
+
+  $ cat htdocs/test.cgi
+  
+  #!/usr/bin/perl
+  print "Content-type: text/html\n\n";
+  foreach $key (keys %ENV) {
+  print "$key --> $ENV{$key}\n";
+  }
+
+Only relevant output from the script is provided in the examples below.
+
+----
+
+:AllowEncodedSlashes: Off
+:AcceptPathInfo: Off
+:Request: http://localhost/test.cgi/bogus%2Fstuff
+:PID Equivalent: "bogus/stuff"
+:Error Message: Mon Dec 13 15:45:00 2010] [info] [client ::1] found %2f (encoded '/') in URI (decoded='/test.cgi/bogus/stuff'), returning 404
+:Response: Default 404
+
+----
+
+:AllowEncodedSlashes: On
+:AcceptPathInfo: Off
+:Request: http://localhost/test.cgi/bogus%2Fstuff
+:PID Equivalent: "bogus/stuff"
+:Error Message: Mon Dec 13 15:46:08 2010] [error] [client ::1] AcceptPathInfo off disallows user's path: /Applications/XAMPP/xamppfiles/htdocs/test.cgi
+:Response: Default 404
+
+----
+
+:AllowEncodedSlashes: Off
+:AcceptPathInfo: On
+:Request: http://localhost/test.cgi/bogus%2Fstuff
+:PID Equivalent: "bogus/stuff"
+:Error Message: Mon Dec 13 15:46:48 2010] [info] [client ::1] found %2f (encoded '/') in URI (decoded='/test.cgi/bogus/stuff'), returning 404
+:Response: Default 404
+
+----
+
+:AllowEncodedSlashes: On
+:AcceptPathInfo: On
+:PID Equivalent: "bogus/stuff"
+:Request: http://localhost/test.cgi/bogus%2Fstuff
+:Error Message: None
+:Response: 
+  ::
+
+    SCRIPT_NAME --> /test.cgi
+    SERVER_NAME --> localhost
+    SERVER_ADMIN --> you@example.com
+    PATH_INFO --> /bogus/stuff
+    REQUEST_METHOD --> GET
+    HTTP_ACCEPT --> */*
+    SCRIPT_FILENAME --> /Applications/XAMPP/xamppfiles/htdocs/test.cgi
+    VERSIONER_PERL_PREFER_32_BIT --> no
+    SERVER_SOFTWARE --> Apache/2.2.14 (Unix) DAV/2 mod_ssl/2.2.14 OpenSSL/0.9.8l PHP/5.3.1 mod_perl/2.0.4 Perl/v5.10.1
+    QUERY_STRING --> 
+    REMOTE_PORT --> 50155
+    HTTP_USER_AGENT --> curl/7.19.7 (universal-apple-darwin10.0) libcurl/7.19.7 OpenSSL/0.9.8l zlib/1.2.3
+    SERVER_SIGNATURE --> 
+    SERVER_PORT --> 80
+    REMOTE_ADDR --> ::1
+    SERVER_PROTOCOL --> HTTP/1.1
+    PATH --> /usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin
+    REQUEST_URI --> /test.cgi/bogus%2Fstuff
+    GATEWAY_INTERFACE --> CGI/1.1
+    SERVER_ADDR --> ::1
+    DOCUMENT_ROOT --> /Applications/XAMPP/xamppfiles/htdocs
+    PATH_TRANSLATED --> /Applications/XAMPP/xamppfiles/htdocs/bogus/stuff
+    HTTP_HOST --> localhost
+    VERSIONER_PERL_VERSION --> 5.10.0
+    UNIQUE_ID --> TQaGaEprSyIAAFOcw20AAAAB
+
+
+----
+
+:AllowEncodedSlashes: On
+:AcceptPathInfo: On
+:Request: http://localhost/test.cgi/bogus%2Fstuff%3Fvar%3Dvalue
+:PID Equivalent: "bogus/stuff?var=value"
+:Error Message: None
+:Response: 
+  ::
+
+    SCRIPT_NAME --> /test.cgi
+    SERVER_NAME --> localhost
+    SERVER_ADMIN --> you@example.com
+    PATH_INFO --> /bogus/stuff?var=value
+    REQUEST_METHOD --> GET
+    HTTP_ACCEPT --> */*
+    SCRIPT_FILENAME --> /Applications/XAMPP/xamppfiles/htdocs/test.cgi
+    VERSIONER_PERL_PREFER_32_BIT --> no
+    SERVER_SOFTWARE --> Apache/2.2.14 (Unix) DAV/2 mod_ssl/2.2.14 OpenSSL/0.9.8l PHP/5.3.1 mod_perl/2.0.4 Perl/v5.10.1
+    QUERY_STRING --> 
+    REMOTE_PORT --> 64650
+    HTTP_USER_AGENT --> curl/7.19.7 (universal-apple-darwin10.0) libcurl/7.19.7 OpenSSL/0.9.8l zlib/1.2.3
+    SERVER_SIGNATURE --> 
+    SERVER_PORT --> 80
+    REMOTE_ADDR --> ::1
+    SERVER_PROTOCOL --> HTTP/1.1
+    PATH --> /usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin
+    REQUEST_URI --> /test.cgi/bogus%2Fstuff%3Fvar%3Dvalue
+    GATEWAY_INTERFACE --> CGI/1.1
+    SERVER_ADDR --> ::1
+    DOCUMENT_ROOT --> /Applications/XAMPP/xamppfiles/htdocs
+    PATH_TRANSLATED --> /Applications/XAMPP/xamppfiles/htdocs/bogus/stuff?var=value
+    HTTP_HOST --> localhost
+    VERSIONER_PERL_VERSION --> 5.10.0
+    UNIQUE_ID --> TQaK80prSyIAAFOexIUAAAAD
+
+----
+
+:AllowEncodedSlashes: On
+:AcceptPathInfo: On
+:Request: http://localhost/test.cgi/bogus%2Fstuff%3Fvar%3Dvalue?var2=value2
+:PID Equivalent: "bogus/stuff?var=value" with query string at the end.
+:Error Message: None
+:Response: 
+  ::
+
+    SCRIPT_NAME --> /test.cgi
+    SERVER_NAME --> localhost
+    SERVER_ADMIN --> you@example.com
+    PATH_INFO --> /bogus/stuff?var=value
+    REQUEST_METHOD --> GET
+    HTTP_ACCEPT --> */*
+    SCRIPT_FILENAME --> /Applications/XAMPP/xamppfiles/htdocs/test.cgi
+    VERSIONER_PERL_PREFER_32_BIT --> no
+    SERVER_SOFTWARE --> Apache/2.2.14 (Unix) DAV/2 mod_ssl/2.2.14 OpenSSL/0.9.8l PHP/5.3.1 mod_perl/2.0.4 Perl/v5.10.1
+    QUERY_STRING --> var2=value2
+    REMOTE_PORT --> 49339
+    HTTP_USER_AGENT --> curl/7.19.7 (universal-apple-darwin10.0) libcurl/7.19.7 OpenSSL/0.9.8l zlib/1.2.3
+    SERVER_SIGNATURE --> 
+    SERVER_PORT --> 80
+    REMOTE_ADDR --> ::1
+    SERVER_PROTOCOL --> HTTP/1.1
+    PATH --> /usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin
+    REQUEST_URI --> /test.cgi/bogus%2Fstuff%3Fvar%3Dvalue?var2=value2
+    GATEWAY_INTERFACE --> CGI/1.1
+    SERVER_ADDR --> ::1
+    DOCUMENT_ROOT --> /Applications/XAMPP/xamppfiles/htdocs
+    PATH_TRANSLATED --> /Applications/XAMPP/xamppfiles/htdocs/bogus/stuff?var=value
+    HTTP_HOST --> localhost
+    VERSIONER_PERL_VERSION --> 5.10.0
+    UNIQUE_ID --> TQaLPEprSyIAAFOdxIcAAAAC
+
+----
+
+:AllowEncodedSlashes: On
+:AcceptPathInfo: On
+:Request: http://localhost/test.cgi/bogus%2Fstuff%3Fvar=value?var2=value2
+:PID Equivalent: "bogus/stuff?var=value" with query string at the end
+:Error Message: None
+:Response: 
+  ::
+
+    SCRIPT_NAME --> /test.cgi
+    SERVER_NAME --> localhost
+    SERVER_ADMIN --> you@example.com
+    PATH_INFO --> /bogus/stuff?var=value
+    REQUEST_METHOD --> GET
+    HTTP_ACCEPT --> */*
+    SCRIPT_FILENAME --> /Applications/XAMPP/xamppfiles/htdocs/test.cgi
+    VERSIONER_PERL_PREFER_32_BIT --> no
+    SERVER_SOFTWARE --> Apache/2.2.14 (Unix) DAV/2 mod_ssl/2.2.14 OpenSSL/0.9.8l PHP/5.3.1 mod_perl/2.0.4 Perl/v5.10.1
+    QUERY_STRING --> var2=value2
+    REMOTE_PORT --> 59889
+    HTTP_USER_AGENT --> curl/7.19.7 (universal-apple-darwin10.0) libcurl/7.19.7 OpenSSL/0.9.8l zlib/1.2.3
+    SERVER_SIGNATURE --> 
+    SERVER_PORT --> 80
+    REMOTE_ADDR --> ::1
+    SERVER_PROTOCOL --> HTTP/1.1
+    PATH --> /usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin
+    REQUEST_URI --> /test.cgi/bogus%2Fstuff%3Fvar=value?var2=value2
+    GATEWAY_INTERFACE --> CGI/1.1
+    SERVER_ADDR --> ::1
+    DOCUMENT_ROOT --> /Applications/XAMPP/xamppfiles/htdocs
+    PATH_TRANSLATED --> /Applications/XAMPP/xamppfiles/htdocs/bogus/stuff?var=value
+    HTTP_HOST --> localhost
+    VERSIONER_PERL_VERSION --> 5.10.0
+    UNIQUE_ID --> TQaNjkprSyIAAFOfxYgAAAAE
+
+----
+
+:AllowEncodedSlashes: On
+:AcceptPathInfo: On
+:Request: http://localhost/test.cgi/bogus%2Fstuff/something/else
+:PID Equivalent: "bogus/stuff" with additional path at the end
+:Error Message: None
+:Response: 
+  ::
+
+    SCRIPT_NAME --> /test.cgi
+    SERVER_NAME --> localhost
+    SERVER_ADMIN --> you@example.com
+    PATH_INFO --> /bogus/stuff/something/else
+    REQUEST_METHOD --> GET
+    HTTP_ACCEPT --> */*
+    SCRIPT_FILENAME --> /Applications/XAMPP/xamppfiles/htdocs/test.cgi
+    VERSIONER_PERL_PREFER_32_BIT --> no
+    SERVER_SOFTWARE --> Apache/2.2.14 (Unix) DAV/2 mod_ssl/2.2.14 OpenSSL/0.9.8l PHP/5.3.1 mod_perl/2.0.4 Perl/v5.10.1
+    QUERY_STRING --> 
+    REMOTE_PORT --> 57774
+    HTTP_USER_AGENT --> curl/7.19.7 (universal-apple-darwin10.0) libcurl/7.19.7 OpenSSL/0.9.8l zlib/1.2.3
+    SERVER_SIGNATURE --> 
+    SERVER_PORT --> 80
+    REMOTE_ADDR --> ::1
+    SERVER_PROTOCOL --> HTTP/1.1
+    PATH --> /usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin
+    REQUEST_URI --> /test.cgi/bogus%2Fstuff/something/else
+    GATEWAY_INTERFACE --> CGI/1.1
+    SERVER_ADDR --> ::1
+    DOCUMENT_ROOT --> /Applications/XAMPP/xamppfiles/htdocs
+    PATH_TRANSLATED --> /Applications/XAMPP/xamppfiles/htdocs/bogus/stuff/something/else
+    HTTP_HOST --> localhost
+    VERSIONER_PERL_VERSION --> 5.10.0
+    UNIQUE_ID --> TQaQiEprSyIAAFOixfMAAAAF
+
+
+Conclusions
+-----------
+
+1. *AllowEncodedSlashes* and *AcceptPathInfo* must be set to *On*
+
+2. We can successfully add query parameters to the end of the URL providing
+   the identifier embedded in the path is properly encoded.
+
+3. Adding additional path elements beyond the encoded identifier segment will
+   require additional processing, which entails custom parsing of the
+   REQUEST_URI environment variable passed on by the web server.
+
+
+.. _AllowEncodedSlashes: http://httpd.apache.org/docs/2.0/mod/core.html#AllowEncodedSlashes
+
+.. _AcceptPathInfo: http://httpd.apache.org/docs/2.0/mod/core.html#AcceptPathInfo
