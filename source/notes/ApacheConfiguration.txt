@@ -264,6 +264,37 @@ Only relevant output from the script is provided in the examples below.
     UNIQUE_ID --> TQaQiEprSyIAAFOixfMAAAAF
 
 
+Configuration
+-------------
+
+As of Apache 2.2.14, there are some bugs that affect the AllowEncodedSlashes
+setting.
+
+`Bug 46830`_:
+
+  If "AllowEncodedSlashes On" is set in the global context, it is not inherited
+  by virtual hosts. You must explicitly set "AllowEncodedSlashes On" in every
+  <VirtalHost> container.
+  
+  The documentation for how the different configuration sections are merged
+  (http://httpd.apache.org/docs/2.2/sections.html) says "Sections inside
+  <VirtualHost> sections are applied after the corresponding sections outside
+  the virtual host definition. This allows virtual hosts to override the main
+  server configuration."
+  
+  Virtual hosts are used in many default Apache configurations. In Ubuntu, the
+  default VirtualHost container is set up in
+  /etc/apache2/sites-available/default.
+
+`Bug 35256`_:
+
+  %2F will be decoded in PATH_INFO (Documentation to AllowEncodedSlashes says no
+  decoding will be done)
+
+  The consequence of this bug is that only the last section in a URL can contain
+  slashes.
+
+
 Conclusions
 -----------
 
@@ -280,3 +311,7 @@ Conclusions
 .. _AllowEncodedSlashes: http://httpd.apache.org/docs/2.0/mod/core.html#AllowEncodedSlashes
 
 .. _AcceptPathInfo: http://httpd.apache.org/docs/2.0/mod/core.html#AcceptPathInfo
+
+.. _`Bug 35256`: https://issues.apache.org/bugzilla/show_bug.cgi?id=35256
+
+.. _`Bug 46830`: https://issues.apache.org/bugzilla/show_bug.cgi?id=46830
