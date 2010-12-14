@@ -114,9 +114,12 @@ bandwidth.
 * Create/Update constraints
    * MaximumStorageQuota
    * MaximumNetworkTransferQuota
+* Embargoes
+   * Add ability to specify an embargo period during which the access policies
+     would not be in effect, and rather resources are only privately accessible
 
 .. Note::
-    Add constraints to the AccessPolicy language described below
+    Add constraints and embargoes to the AccessPolicy language described below
 
 Representing Principals (aka Subjects)
 --------------------------------------
@@ -328,8 +331,11 @@ Phase 1
    MN1 --> User: pid
    deactivate MN1
 
-*Figure 1.* Only public objects are replicated in the system. Create, Update,
-and Delete operations are controlled by member nodes.
+*Figure 1.* Only public objects are searchable and replicated in the system. 
+Create, Read, Update, and Delete operations are controlled by member nodes
+for private objects, but read for public resources can be handled by any
+replicating member node, or a coordinating node in the case of metadata
+resources.
 
 .. figure:: images/anaz_phase1.png
 
