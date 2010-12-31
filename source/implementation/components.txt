@@ -57,23 +57,23 @@ Dependency Graph
      subgraph cluster_MN {
        label="Member Node Implementations";
        color = "#888888"
-       gmn [label="d1-mn-generic"];
-       mndaac [label="d1-mn-daac"];
-       mndryad [label="d1-mn-dryad"];
-       mnfedora [label="d1-mn-fedora"];
+       gmn [label="d1_mn_generic"];
+       mndaac [label="d1_mn_daac"];
+       mndryad [label="d1_mn_dryad"];
+       mnfedora [label="d1_mn_fedora"];
        metacat [label="metacat"];
      }
 
      subgraph cluster_ITK {
        label="Investigator Toolkit"
        color = "#888888"
-       cli [label="d1-client-cli"];
-       fuse [label="d1-client-fuse"];
-       r [label="d1-client-r"];       
+       cli [label="d1_client_cli"];
+       fuse [label="d1_client_fuse"];
+       r [label="d1_client_r"];       
      }
 
-     monitor [label="d1-monitor"];
-     base [label="d1-debian-base"];
+     monitor [label="d1_monitor"];
+     base [label="debian_packaging"];
      
      schemas -> arch [style="dotted"];
      commonjava -> arch [style="dotted"];
