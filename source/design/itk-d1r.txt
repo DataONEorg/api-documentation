@@ -60,7 +60,11 @@ Classes, fields, and methods
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. Note:: 
-    All of the classes and methods in R are inverted (ie, classes don't contain methods per se, instead, methods are specialized to work on particular classes, and the class is generally passed in as the first parameter of the method call.  So, all signatures below need to have an added parameter for this object to be passed in.
+    All of the classes and methods in R are inverted (ie, classes don't
+    contain methods per se, instead, methods are specialized to work on
+    particular classes, and the class is generally passed in as the first
+    parameter of the method call. So, all signatures below need to have an
+    added parameter for this object to be passed in.
 
 * D1Client
    * Fields
@@ -107,13 +111,13 @@ Classes, fields, and methods
 Algorithm for constructing Data Packages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Constructing a data package involves taking a PID as passed to the client,
-and using that PID to query the system metadata to find all associated
-science metadata objects and other data objects. If the PID points at a
-scimeta object, it can be used to loop through all of the data objects it
-describes. If the PID points at a data object, trace back to its scimeta
-object first, then populate the data package, and then loop over all
-associated data objects. In pseudocode:
+Constructing a data package involves taking a PID as passed to the client, and
+using that PID to query the system metadata to find all associated science
+metadata objects and other data objects. If the PID points at a scimeta
+object, it can be used to loop through all of the data objects it describes.
+If the PID points at a data object, trace back to its scimeta object first,
+then populate the data package, and then loop over all associated data
+objects. In pseudocode:
 
 * mn = cn.resolve(PID)
 * sysmeta = getSystemMetadata(PID)

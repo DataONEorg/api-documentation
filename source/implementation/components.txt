@@ -1,7 +1,9 @@
 Components of the DataONE Infrastructure
 ========================================
 
-
+This document outlines the major components of the DataONE core
+infrastructure, and indicates the dependencies between them. The component
+names listed here are used to categorize issues in the `issue tracking system`_.
 
 Dependency Graph
 -----------------
@@ -107,38 +109,136 @@ Dependency Graph
    }
 
 
+.. list-table::
+   :header-rows: 1
+   :widths: 2 5 20
 
-====== =================== ================ ================================================
-Group  Product Name        Issue Category   Description
-====== =================== ================ ================================================
-Core                                       
-\      d1_architecture     architecture     The system architecture documentation
-\      d1_schemas          schemas          The core schemas used for defining serialization
-\      d1_common-java      common_java      Base DataONE library in Java
-\      d1_common-python    common_python    Base DataONE library in Python
-\      metacat             metacat          The Metacat application
-CN                         
-\      d1_cn_service       cn_service       Coordinating node service, implementing the
-                                            service APIs, data storage, and CN replication.
-\      d1_indexer          indexer          Enables search of data and metadata (Mercury)
-\      d1_synchronization  synchronization  Manages the synchronization of content between
-                                            Member Nodes and the Coordinating Nodes.
-MN                         
-\      d1_mn_generic       mn_generic       A generic, standalone Member Node implementation
-                                            written in Python
-\      d1_mn_daac          mn_daac          Adaptation of the generic Member Node to support
-                                            Member Node functionality on the DAAC
-\      d1_mn_dryad         mn_dryad         Currently the python adaptation of the GMN
-\      d1_mn_fedora        mn_fedora        Prototype Fedora Commons Member Node
-ITK                        
-\      d1_libclient_java   libclient_java
-\      d1_libclient_python libclient_python
-\      d1_client_cli       client_cli
-\      d1_client_fuse      client_fuse
-\      d1_client_r         client_r
-Other
-\      d1-monitor          monitor
-\      d1-debian-base      debian-base
-====== =================== ================ ================================================
+   * - Group
+     - Component Name
+     - Description
+   * - Core
+     - \
+     - \
+   * - \
+     - d1_architecture_
+     - The system architecture documentation
+   * - \
+     - d1_schemas_
+     - The schemas used for defining serialization of core data types
+   * - \
+     - d1_common_java_
+     - Base DataONE library in Java
+   * - \
+     - d1_common_python_
+     - Base DataONE library in Python
+   * - \
+     - metacat_
+     - The `Metacat application`_. Currently employed as the replicated object
+       store on Coordinating Nodes.
+   * - CN
+     - \
+     - \
+   * - \
+     - d1_cn_service_
+     - Coordinating node service, implementing the service APIs, data storage, 
+       and CN replication.
+   * - \
+     - d1_indexer_
+     - Indexes metadata and implements search interfaces for discovery of 
+       content stored in the DataONE network. Implemented using Mercury_, as
+       an extension of SOLR_, which in turn is an extension of Lucene_.
+   * - \
+     - d1_synchronization_
+     - Manages the synchronization of content between Member Nodes and the 
+       Coordinating Nodes.
+   * - MN
+     - \
+     - \
+   * - \
+     - d1_mn_generic_
+     - A generic, standalone Member Node implementation written in Python 
+       using the Django_ framework.
+   * - \
+     - d1_mn_daac_
+     - Adaptation of the Generic Member Node to support Member Node 
+       functionality on the DAAC.
+   * - \
+     - d1_mn_dryad_
+     - Currently the python adaptation of the Generic Member Node. A native 
+       implementation of Member Node services is being implemented 
+       (late 2010).
+   * - \
+     - d1_mn_fedora_
+     - Prototype Fedora Commons Member Node
+   * - \
+     - metacat_
+     - The `Metacat application`_. Implements the DataONE MN service interfaces.
+   * - ITK
+     - \
+     - \
+   * - \
+     - d1_libclient_java_
+     - Client library implemented in Java
+   * - \
+     - d1_libclient_python_
+     - Client library implemented in Python
+   * - \
+     - d1_client_cli_
+     - A command line client for interacting with the DataONE infrastructure. 
+       Currently (late 2010) implemented using d1_libclient_python.
+   * - \
+     - d1_client_fuse_
+     - A FUSE_ driver for mounting the DataONE infrastructure as a file 
+       system.
+   * - \
+     - d1_client_r_
+     - A plugin for R that enables access to DataONE content from the R_ 
+       application. Implemented using d1_libclient_java.
+   * - Other
+     - \
+     - \
+   * - \
+     - d1_monitor_
+     - The DataONE server and service monitoring system. Implemented using 
+       Cacti_.
+   * - \
+     - debian_packaging_
+     - Debian_ packages for setting up Ubuntu_ server installs of Coordinating
+       Nodes.
+
+
+.. _d1_architecture: https://redmine.dataone.org/projects/d1/issues?query_id=8
+.. _d1_authentication: https://redmine.dataone.org/projects/d1/issues?query_id=9
+.. _d1_authorization: https://redmine.dataone.org/projects/d1/issues?query_id=11
+.. _d1_schemas: https://redmine.dataone.org/projects/d1/issues?query_id=12
+.. _d1_common_java: https://redmine.dataone.org/projects/d1/issues?query_id=13
+.. _d1_common_python: https://redmine.dataone.org/projects/d1/issues?query_id=14
+.. _metacat: https://redmine.dataone.org/projects/d1/issues?query_id=15
+.. _d1_cn_service: https://redmine.dataone.org/projects/d1/issues?query_id=16
+.. _d1_indexer: https://redmine.dataone.org/projects/d1/issues?query_id=17
+.. _d1_synchronization: https://redmine.dataone.org/projects/d1/issues?query_id=18
+.. _d1_mn_generic: https://redmine.dataone.org/projects/d1/issues?query_id=19
+.. _d1_mn_daac: https://redmine.dataone.org/projects/d1/issues?query_id=20
+.. _d1_mn_dryad: https://redmine.dataone.org/projects/d1/issues?query_id=21
+.. _d1_mn_fedora: https://redmine.dataone.org/projects/d1/issues?query_id=22
+.. _d1_libclient_java: https://redmine.dataone.org/projects/d1/issues?query_id=23
+.. _d1_libclient_python: https://redmine.dataone.org/projects/d1/issues?query_id=24
+.. _d1_client_cli: https://redmine.dataone.org/projects/d1/issues?query_id=25
+.. _d1_client_fuse: https://redmine.dataone.org/projects/d1/issues?query_id=26
+.. _d1_client_r: https://redmine.dataone.org/projects/d1/issues?query_id=27
+.. _d1_monitor: https://redmine.dataone.org/projects/d1/issues?query_id=28
+.. _debian_packaging: https://redmine.dataone.org/projects/d1/issues?query_id=29
+
+.. _Metacat application: http://knb.ecoinformatics.org/software/
+.. _Mercury: http://daac.ornl.gov/mercury.shtml
+.. _SOLR: http://lucene.apache.org/solr/
+.. _Lucene: http://lucene.apache.org/
+.. _Django: http://www.djangoproject.com/
+.. _FUSE: http://fuse.sourceforge.net/
+.. _R: http://www.r-project.org/
+.. _Cacti: http://www.cacti.net/
+.. _Debian: http://www.debian.org/
+.. _Ubuntu: http://www.ubuntu.com/
+.. _issue tracking system: http://redmine.dataone.org/
 
 

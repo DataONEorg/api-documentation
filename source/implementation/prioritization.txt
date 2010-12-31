@@ -17,6 +17,8 @@ Implementation Priority
 
   - 201004; timeline revised.
 
+  - 20101231; Timeline revised
+
 
 
 Introduction
@@ -35,16 +37,16 @@ the Service Interface Prioritization diagram, the DataONE – VDC June 2009
 Technical Working Group Meeting Report, and the DataNetONE Implementation Plan
 (primarily Objective 4) – see References, below. The use cases are defined in
 the DataONE Architecture document available at
-https://mule1.dataone.org/ArchitectureDocs. Goals and milestones expressed in the CI
-Preliminary Task List were foundational for developing the proposed
+https://mule1.dataone.org/ArchitectureDocs. Goals and milestones expressed in
+the CI Preliminary Task List were foundational for developing the proposed
 prioritization (see Table 1).
 
 In some instances, use case implementations in the early years may be partial
 or limited implementations with work continuing in later years until
-completion. Examples of use cases that are likely to be improved over time include
-authentication, logging, search and retrieval, event notifications, etc. Work
-on other goals and milestones will begin as early as year 1, led by the
-appropriate working group, with the initial implementation in a subsequent
+completion. Examples of use cases that are likely to be improved over time
+include authentication, logging, search and retrieval, event notifications,
+etc. Work on other goals and milestones will begin as early as year 1, led by
+the appropriate working group, with the initial implementation in a subsequent
 year (e.g., scientific use cases; workflow support; ontology support). Certain
 goals and milestones (e.g., replication of data and metadata) will be met by
 evaluating alternatives and selecting a set of existing software applications.
@@ -64,7 +66,7 @@ held October 20-22, 2009.
 Goal / Milestone                               V 0.x  V 1.x  V 2.x
 ============================================== ====== ====== ======
 Launch 3 Coord. / 3 Member Node network        X
-Initial PID support                            X
+Initial persistent identifier support          X
 Formalize service APIs                         X
 Reference service / client implementations     X
 Authentication: short- then long-term          X      X
@@ -98,11 +100,11 @@ Capacity monitoring                                          X
 Hardened infrastructure                                      X
 ============================================== ====== ====== ======
 
-Table 1: Goal / milestone summary, by implementation version. Goals /
+Table 1: Goal / milestone summary by implementation version. Goals /
 milestones with asterisks could be deferred to the following year. X indicates
 the phase of development planned for implementation of that feature, and when
 appearing in multiple columns indicates that iterative development of that
-feature is expected. 
+feature is expected.
 
 
 Notes
@@ -182,11 +184,11 @@ Use Cases
 
 Authentication Using Short-term Solution
 
-  :doc:`Use Case 12</design/UseCases/12_uc>` - User Authentication: Person, via client
-  software, authenticates against Identify Provider to establish session
-  token. Many operations in the DataONE system require user authentication to
-  ensure that the user's identity is known to the system, and that appropriate
-  access controls can be executed based on the identity.
+  :doc:`Use Case 12</design/UseCases/12_uc>` - User Authentication: Person,
+  via client software, authenticates against Identify Provider to establish
+  session token. Many operations in the DataONE system require user
+  authentication to ensure that the user's identity is known to the system,
+  and that appropriate access controls can be executed based on the identity.
 
   :doc:`Use Case 14</design/UseCases/14_uc>` - System Authentication and
   Authorization: System Authentication/Authorization - Server authenticates
@@ -196,41 +198,42 @@ Authentication Using Short-term Solution
 Search and Retrieval, Indexing, Read Data and Metadata, Metadata
 Interoperability
 
-  :doc:`Use Case 1</design/UseCases/01_uc>` - CRUD get(): Get object identified by an
-  identifier (authenticated or not, notify subscriber of access). A client has
-  an identifier for some object within the DataONE system and is retrieving
-  the referenced object. The DataONE system must resolve the identifier and
-  return the object bytes after checking that the user has read privileges on
-  the object.
+  :doc:`Use Case 1</design/UseCases/01_uc>` - CRUD get(): Get object
+  identified by an identifier (authenticated or not, notify subscriber of
+  access). A client has an identifier for some object within the DataONE
+  system and is retrieving the referenced object. The DataONE system must
+  resolve the identifier and return the object bytes after checking that the
+  user has read privileges on the object.
 
-  :doc:`Use Case 02</design/UseCases/02_uc>` - List identifiers By Search: Get list
-  of identifiers from metadata search (anonymous and authenticated). A user
-  performs a search against the DataONE system and receives a list of object
-  identifiers that match the search criteria. The list of identifiers is
-  filtered such that only objects for which the user has read permission will
-  be returned. This use case assumes that the search is being performed by
-  submitting a query against a CN.
+  :doc:`Use Case 02</design/UseCases/02_uc>` - List identifiers By Search: Get
+  list of identifiers from metadata search (anonymous and authenticated). A
+  user performs a search against the DataONE system and receives a list of
+  object identifiers that match the search criteria. The list of identifiers
+  is filtered such that only objects for which the user has read permission
+  will be returned. This use case assumes that the search is being performed
+  by submitting a query against a CN.
 
 Replication of Data and Metadata
 
-  :doc:`Use Case 06</design/UseCases/06_uc>` - MN Synchronize: Copy metadata record
-  from Member Node to Coordinating Node. As data are created or modified, the
-  metadata associated with those is copied to the to the Coordinating Nodes.
-  The presence of new or changed information on a Member Node (MN) is made
-  known to a Coordinating Node (CN) through the status information in a ping()
-  response. If so indicated, the CN schedules a synchronization operation with
-  the MN, a list of changed object identifiers is retrieved by the CN, and the
-  CN proceeds to retrieve and process each object. If new data packages are
-  present on the MN, then a MN-MN replication process is scheduled.
+  :doc:`Use Case 06</design/UseCases/06_uc>` - MN Synchronize: Copy metadata
+  record from Member Node to Coordinating Node. As data are created or
+  modified, the metadata associated with those is copied to the to the
+  Coordinating Nodes. The presence of new or changed information on a Member
+  Node (MN) is made known to a Coordinating Node (CN) through the status
+  information in a ping() response. If so indicated, the CN schedules a
+  synchronization operation with the MN, a list of changed object identifiers
+  is retrieved by the CN, and the CN proceeds to retrieve and process each
+  object. If new data packages are present on the MN, then a MN-MN replication
+  process is scheduled.
 
-  :doc:`Use Case 09</design/UseCases/09_uc>` - Replicate MN to MN: Replicate data
-  from Member Node to Member Node - (facilitated by Coordinating Node).
+  :doc:`Use Case 09</design/UseCases/09_uc>` - Replicate MN to MN: Replicate
+  data from Member Node to Member Node - (facilitated by Coordinating Node).
 
-  :doc:`Use Case 24</design/UseCases/24_uc>` - MNs and CNs Support Transactions:
-  Transactions - CNs and MNs should support transaction sets where operations
-  all complete successfully or get rolled back (e.g., upload both data and
-  metadata records). Implementation of this use case could be deferred to year
-  2.
+  :doc:`Use Case 24</design/UseCases/24_uc>` - MNs and CNs Support
+  Transactions: Transactions - CNs and MNs should support transaction sets
+  where operations all complete successfully or get rolled back (e.g., upload
+  both data and metadata records). Implementation of this use case could be
+  deferred to year 2.
 
 Basic Heartbeat / Health Monitoring
 
