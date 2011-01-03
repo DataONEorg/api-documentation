@@ -11,7 +11,7 @@
      - Parameters
    * - :ref:`MN_health.ping`
      - :func:`ping`
-     - () ``->`` :class:`Types.PingResponse`
+     - () ``->`` :class:`Types.Null`
    * - :ref:`MN_health.getObjectStatistics`
      - :func:`getObjectStatistics`
      - (:class:`token<Types.AuthToken>`, :class:`time<Types.DateTime Range>`,
@@ -30,7 +30,7 @@
 
 
 
-.. function:: ping() -> PingResponse
+.. function:: ping() -> Null
 
    Low level "are you alive" operation. Response is simple ACK, but may be
    reasonable to overload with a couple of flags that could indicate
@@ -46,9 +46,9 @@
 
    :REST URL: MN :ref:`MN_health.ping`
 
-   :returns: Null body
+   :returns: Null body or Exception
 
-   :rtype: :class:`Types.PingResponse`
+   :rtype: :class:`Types.Null`
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2041)``
 
