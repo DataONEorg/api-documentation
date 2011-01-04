@@ -1,8 +1,66 @@
+.. module:: AccessPolicy
+   :synopsis: Catalog of data types (structures) used by the DataONE cicore for
+   authentication and access control.
+
+----
+
+
+.. class:: AccessPolicy
+
+  A set of rules that specifies as a whole the allowable permissions that a
+  given user or system has for accessing a resource, including both data and
+  metadata resources and service resources. An access policy consists of a
+  sequence of allow rules that grant permissions to principals, which can be
+  individual users, groups of users, sympolic users, or systems and services.
+
+  :: 
+
+    message AccessPolicy {
+
+      repeated AccessRule allow = 0;
+    }
+
 ----
 
 .. class:: AccessRule
 
-   An access rule.
+  A rule that is used to allow a principal to perform an action (such as read
+  or write) on an object in DataONE. Rules are three-tuples (principal,
+  permission, resource) specifying which permissions are allowed for the
+  principal(s) for the resource(s) listed. Access control rules are specified
+  by the OriginMemberNode when the object is first registered in DataONE. If
+  no rules are specified at that time, then the object is deemed to be private
+  and the only user with access to the object (read, write, or otherwise) is
+  the RightsHolder.
+
+  :: 
+
+    message AccessRule {
+
+      repeated Principal principal = 0;
+      repeated Permission permission = 1;
+      repeated Identifier resource = 2;
+    }
+
+----
+
+.. class:: Permission
+
+  A string value indicating the set of actions that can be performed on a
+  resource as specified in an access policy.  The set of permissions include
+  the ability to read a resource, modify a resource (write), and to change
+  the set of access control policies for a resource (changePermission).  In
+  addition, there is a permission that controls ability to execute a service
+  (execute).
+
+  ::
+
+    enum Permission {
+      READ = 0;
+      WRITE = 1;
+      CHANGEPERMISSION = 2;
+      EXECUTE = 3;
+    }
 
 ----
 
@@ -19,3 +77,5 @@
   An AuthToken is used to identify a principal and to assert that the identity
   of the principal has been verified by the DataONE authentication infrastructure.
 
+
+----
