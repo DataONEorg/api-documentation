@@ -151,7 +151,7 @@ system.  The two groups are:
       the authenticated users group.  This designation can be used in
       particular to require that user identity information is known and logged
       during read operations.
-    * Represented using the special principal '/C=US/O=DataONE/CN=AuthenticatedUser'
+    * Represented using the special principal 'AuthenticatedUser'
 * Public user
     * The Public user represents any user accessing services that does not have
       a valid session token, plus all of those who do have a valid token. 
@@ -160,7 +160,7 @@ system.  The two groups are:
       user.  For create, update, and delete operations, this typically means
       that the user has insufficient priveledges to access the service.  At
       times providers may want to provide Public read access to resources.
-    * Represented using the special principal '/C=US/O=DataONE/CN=Public'
+    * Represented using the special principal 'Public'
 
 Access Policy Language
 -----------------------
@@ -274,11 +274,6 @@ the elements in this AccessPolicy language are:
 An example instance of this syntax is:
 
 .. literalinclude:: /d1_schemas/accesspolicy-example.xml
-   :language: xml
-
-The schema for the access language is listed here for convenience.
-
-.. literalinclude:: /d1_schemas/accesspolicy.xsd
    :language: xml
 
 Managing Identities and Groups in DataONE
