@@ -12,12 +12,16 @@
    * - :ref:`MN_authorization.isAuthorized`
      - :func:`isAuthorized`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
-       :class:`operation<Types.Event>`) ``->`` boolean
+       :class:`action<Types.Permission>`) ``->`` boolean
+   * - :ref:`MN_authorization.setAccess`
+     - :func:`setAccess`
+     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
+       :class:`accessPolicy<Types.AccessPolicy>`) ``->`` boolean
 
 
 
 
-.. function:: isAuthorized(token,pid,operation) -> boolean
+.. function:: isAuthorized(token,pid,action) -> boolean
 
    Test if the user identified by the provided token has authorization for
    operation on the specified object.
@@ -39,9 +43,9 @@
 
    :type pid: :class:`Types.Identifier`
 
-   :param operation:
+   :param action:
 
-   :type operation: :class:`Types.Event`
+   :type action: :class:`Types.Permission`
 
    :returns: True if the operation is allowed
 
@@ -63,5 +67,69 @@
    :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=1840)``
 
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=1761)``
+
+
+
+
+.. function:: setAccess(token,pid,accessPolicy) -> boolean
+
+   Sets the access permissions for an object identified by *pid*.
+
+   .. Note:: The token and accessPolicy parameters are not currently encoded in
+     the REST URL, so unclear how they should be passed in.
+
+   :Use Cases:
+
+     :doc:`UC16 </design/UseCases/16_uc>`
+
+   :REST URL: MN :ref:`MN_authorization.setAccess`
+
+   :param token: The authentication token returned by
+     :func:`CN_authentication.login`. Used to verify that the calling user has
+     authority to modify access control for the object.
+
+   :type token: :class:`Types.AuthToken`
+
+   :param pid: The object for which access control is being edited.
+
+   :type pid: :class:`Types.Identifier`
+
+   :param accessPolicy: The desired privileges to be assigned to the object.
+
+   :type accessPolicy: :class:`Types.AccessPolicy`
+
+   :returns: True if the operation succeeds, otherwise false.
+
+   :rtype: boolean
+
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=4410)``
+
+     The supplied token is invalid
+
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4430)``
+
+   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=4400)``
+
+     The specified object does not exist in the DataONE system
+
+
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=4420)``
+
+     The :term:`principal` does not have permission to alter access control
+     rules for the object.
+
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4401)``
+
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4402)``
+
+.. TODO::
+    Should permissions cascade? e.g. Should setting permission on a Data Package
+    cascade to the contained objects as well (the experiment metadata and data)?
+
+.. TODO::
+    .. Note:: Setting access rules on a MN implies that the rules are propogated
+      to the CNs and to all MNs holding a copy of the object
 
 

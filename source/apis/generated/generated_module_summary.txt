@@ -124,6 +124,12 @@
      - Called by a Coordinating Node to indicate to the Member Node that it
        should retrieve the specified object from the indicated Member Node and
        store it locally so that it can be made accessible to the DataONE system.
+       Member Nodes should check that they have the object indictaed in the
+       provided SystemMetadata document, and update their system with the
+       provided SystemMetadata.  Because system metadata is stored
+       authoritatively on the Coordinating Nodes, the Member Nodes must update
+       their copy of SystemMetadata anytime that a CN calls replicate, even if
+       they already house a replica copy of the object.
 
        Appears in functional use cases: :doc:`UC09 </design/UseCases/09_uc>`
    * - \
@@ -242,20 +248,16 @@
 
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
    * - :mod:`CN_authentication`
-     - :func:`CN_authentication.login`
-     - Authenticates a user for interaction with the DataONE system. The
-       returned token is trusted throughout the DataONE system as a reliable
-       statement as to the identity of the authenticated user. :func:`login` may
-       delegate the actual login to an authentication service, and a given user
-       may utilize several authentication services. If this is the case then an
-       additional parameter identifying the authentication service to use will
-       be required.
+     - :func:`CN_authentication.getAuthToken`
+     - Retrieved credential information about a user, including a list of
+       equivalent identities for the user and a list of groups in which the user
+       is a member.
 
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
    * - \
      - :func:`CN_authentication.setOwner`
-     - Changes ownership of the specified object to the :term:`principal`
-       specified by `userId`
+     - Changes ownership (RightsHolder) of the specified object to the
+       :term:`principal` specified by `userId`
 
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
    * - \
@@ -276,36 +278,50 @@
        and perhaps even generate a token that matches a system token. Hence
        another level of restriction (perhaps network level blocking / limiting)
        is necessary.
+   * - \
+     - :func:`CN_authentication.mapIdentity`
+     - Map the two authenticated identities, asserting that they represent the
+       same principal. The two identities are represented as AuthToken objects,
+       which allows the CN to determine if both identities have been properly
+       authenticated, which demonstrates that the user has control of both
+       identities.
+   * - \
+     - :func:`CN_authentication.createGroup`
+     - Create a group with the given name. Groups are lists of principals that
+       allow all members of the group to be referenced by listing solely the
+       subject name of the group.  Group names must be unique within the DataONE
+       system, and can only be modified by their creator.
+   * - \
+     - :func:`CN_authentication.addGroupMembers`
+     - Add members to the named group. Group members can be added by the
+       original creator of the group, otherwise a NotAuthorized exception is
+       thrown.  Group members are provided as a list of principals to be added
+       to the group.
+   * - \
+     - :func:`CN_authentication.removeGroupMembers`
+     - Remove members to the named group. Group members can be removed by the
+       original creator of the group, otherwise a NotAuthorized exception is
+       thrown.  Group members are provided as a list of principals to be removed
+       from the group.
    * - :mod:`CN_authorization`
      - :func:`CN_authorization.isAuthorized`
      - Test if the user identified by the provided token has authorization for
        operation on the specified object. .. Note:: Should perhaps add
        convenience methods for "canRead()" and "canWrite()" to verify that a
-       user is able to read / write an object.
+       user is able to read / write an object. .. Note:: The token and operation
+       parameters are not currently encoded in the REST URL, so unclear how they
+       should be passed in.
 
        Appears in functional use cases: :doc:`UC01 </design/UseCases/01_uc>`,
        :doc:`UC02 </design/UseCases/02_uc>`, :doc:`UC36
        </design/UseCases/36_uc>`, :doc:`UC37 </design/UseCases/37_uc>`
    * - \
      - :func:`CN_authorization.setAccess`
-     - Sets the access permissions for an object identified by *pid*.
+     - Sets the access permissions for an object identified by *pid*. .. Note::
+       The token and accessPolicy parameters are not currently encoded in the
+       REST URL, so unclear how they should be passed in.
 
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
-   * - :mod:`MN_authentication`
-     - :func:`MN_authentication.login`
-     - Authenticates a user for interaction with the DataONE system. The
-       returned token is trusted throughout the DataONE system as a reliable
-       statement as to the identity of the authenticated user. :func:`login` may
-       delegate the actual login to an authentication service, and a given user
-       may utilize several authentication services. If this is the case then an
-       additional parameter identifying the authentication service to use will
-       be required.
-
-       Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
-   * - \
-     - :func:`MN_authentication.logout`
-     - Revokes trust in the supplied token, making it invalid for further use
-       within the DataONE system.
    * - :mod:`MN_authorization`
      - :func:`MN_authorization.isAuthorized`
      - Test if the user identified by the provided token has authorization for
@@ -315,6 +331,13 @@
 
        Appears in functional use cases: :doc:`UC01 </design/UseCases/01_uc>`,
        :doc:`UC37 </design/UseCases/37_uc>`
+   * - \
+     - :func:`MN_authorization.setAccess`
+     - Sets the access permissions for an object identified by *pid*. .. Note::
+       The token and accessPolicy parameters are not currently encoded in the
+       REST URL, so unclear how they should be passed in.
+
+       Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
    * - :mod:`CN_data_replication`
      - :func:`CN_data_replication.setReplicationStatus`
      - Update the replication status of the system metadata, ensuring that the

@@ -67,7 +67,7 @@
      - :func:`CN_query.getLogRecords`
      - `GET /log`_
    * - 0.7
-     - :func:`CN_authentication.login`
+     - :func:`CN_authentication.getAuthToken`
      - `POST /account`_
    * - 0.7
      - :func:`CN_authentication.setOwner`
@@ -78,6 +78,18 @@
    * - 0.7
      - :func:`CN_authentication.verifyToken`
      - `GET /account/verifyToken`_
+   * - 
+     - :func:`CN_authentication.mapIdentity`
+     - `PUT /account/map`_
+   * - 
+     - :func:`CN_authentication.createGroup`
+     - `POST /groups/<groupName>`_
+   * - 
+     - :func:`CN_authentication.addGroupMembers`
+     - `PUT /groups/<groupName>`_
+   * - 
+     - :func:`CN_authentication.removeGroupMembers`
+     - `DELETE /groups/<groupName>`_
    * - 0.7
      - :func:`CN_authorization.isAuthorized`
      - `GET /isAuthorized/<pid>`_
@@ -85,14 +97,11 @@
      - :func:`CN_authorization.setAccess`
      - `PUT /accessRules/<pid>`_
    * - 0.7
-     - :func:`MN_authentication.login`
-     - `POST /account/login`_
-   * - 0.7
-     - :func:`MN_authentication.logout`
-     - `GET /account/logout`_
-   * - 0.7
      - :func:`MN_authorization.isAuthorized`
      - `GET /isAuthorized/<pid>`_
+   * - 0.7
+     - :func:`MN_authorization.setAccess`
+     - `PUT /accessRules/<pid>`_
    * - 
      - :func:`CN_register.listNodes`
      - `GET /node`_

@@ -762,27 +762,27 @@
      - 400
      - 1480
    * - :mod:`CN_authentication`
-     - :func:`login <CN_authentication.login>`
+     - :func:`getAuthToken <CN_authentication.getAuthToken>`
      - ServiceFailure
      - 500
      - 1620
    * - :mod:`CN_authentication`
-     - :func:`login <CN_authentication.login>`
+     - :func:`getAuthToken <CN_authentication.getAuthToken>`
      - InvalidCredentials
      - 401
      - 1640
    * - :mod:`CN_authentication`
-     - :func:`login <CN_authentication.login>`
+     - :func:`getAuthToken <CN_authentication.getAuthToken>`
      - AuthenticationTimeout
      - 408
      - 1680
    * - :mod:`CN_authentication`
-     - :func:`login <CN_authentication.login>`
+     - :func:`getAuthToken <CN_authentication.getAuthToken>`
      - NotImplemented
      - 501
      - 1600
    * - :mod:`CN_authentication`
-     - :func:`login <CN_authentication.login>`
+     - :func:`getAuthToken <CN_authentication.getAuthToken>`
      - InvalidRequest
      - 400
      - 1601
@@ -866,6 +866,131 @@
      - InvalidRequest
      - 400
      - 4542
+   * - :mod:`CN_authentication`
+     - :func:`mapIdentity <CN_authentication.mapIdentity>`
+     - ServiceFailure
+     - 500
+     - 
+   * - :mod:`CN_authentication`
+     - :func:`mapIdentity <CN_authentication.mapIdentity>`
+     - InvalidToken
+     - 401
+     - 
+   * - :mod:`CN_authentication`
+     - :func:`mapIdentity <CN_authentication.mapIdentity>`
+     - NotAuthorized
+     - 401
+     - 
+   * - :mod:`CN_authentication`
+     - :func:`mapIdentity <CN_authentication.mapIdentity>`
+     - NotFound
+     - 404
+     - 
+   * - :mod:`CN_authentication`
+     - :func:`mapIdentity <CN_authentication.mapIdentity>`
+     - NotImplemented
+     - 501
+     - 
+   * - :mod:`CN_authentication`
+     - :func:`mapIdentity <CN_authentication.mapIdentity>`
+     - InvalidRequest
+     - 400
+     - 
+   * - :mod:`CN_authentication`
+     - :func:`createGroup <CN_authentication.createGroup>`
+     - ServiceFailure
+     - 500
+     - 
+   * - :mod:`CN_authentication`
+     - :func:`createGroup <CN_authentication.createGroup>`
+     - InvalidToken
+     - 401
+     - 
+   * - :mod:`CN_authentication`
+     - :func:`createGroup <CN_authentication.createGroup>`
+     - NotAuthorized
+     - 401
+     - 
+   * - :mod:`CN_authentication`
+     - :func:`createGroup <CN_authentication.createGroup>`
+     - NotFound
+     - 404
+     - 
+   * - :mod:`CN_authentication`
+     - :func:`createGroup <CN_authentication.createGroup>`
+     - NotImplemented
+     - 501
+     - 
+   * - :mod:`CN_authentication`
+     - :func:`createGroup <CN_authentication.createGroup>`
+     - InvalidRequest
+     - 400
+     - 
+   * - :mod:`CN_authentication`
+     - :func:`createGroup <CN_authentication.createGroup>`
+     - IdentifierNotUnique
+     - 409
+     - 
+   * - :mod:`CN_authentication`
+     - :func:`addGroupMembers <CN_authentication.addGroupMembers>`
+     - ServiceFailure
+     - 500
+     - 
+   * - :mod:`CN_authentication`
+     - :func:`addGroupMembers <CN_authentication.addGroupMembers>`
+     - InvalidToken
+     - 401
+     - 
+   * - :mod:`CN_authentication`
+     - :func:`addGroupMembers <CN_authentication.addGroupMembers>`
+     - NotAuthorized
+     - 401
+     - 
+   * - :mod:`CN_authentication`
+     - :func:`addGroupMembers <CN_authentication.addGroupMembers>`
+     - NotFound
+     - 404
+     - 
+   * - :mod:`CN_authentication`
+     - :func:`addGroupMembers <CN_authentication.addGroupMembers>`
+     - NotImplemented
+     - 501
+     - 
+   * - :mod:`CN_authentication`
+     - :func:`addGroupMembers <CN_authentication.addGroupMembers>`
+     - InvalidRequest
+     - 400
+     - 
+   * - :mod:`CN_authentication`
+     - :func:`removeGroupMembers <CN_authentication.removeGroupMembers>`
+     - ServiceFailure
+     - 500
+     - 
+   * - :mod:`CN_authentication`
+     - :func:`removeGroupMembers <CN_authentication.removeGroupMembers>`
+     - InvalidToken
+     - 401
+     - 
+   * - :mod:`CN_authentication`
+     - :func:`removeGroupMembers <CN_authentication.removeGroupMembers>`
+     - NotAuthorized
+     - 401
+     - 
+   * - :mod:`CN_authentication`
+     - :func:`removeGroupMembers <CN_authentication.removeGroupMembers>`
+     - NotFound
+     - 404
+     - 
+   * - :mod:`CN_authentication`
+     - :func:`removeGroupMembers <CN_authentication.removeGroupMembers>`
+     - NotImplemented
+     - 501
+     - 
+   * - :mod:`CN_authentication`
+     - :func:`removeGroupMembers <CN_authentication.removeGroupMembers>`
+     - InvalidRequest
+     - 400
+     - 
    * - :mod:`CN_authorization`
      - :func:`isAuthorized <CN_authorization.isAuthorized>`
      - ServiceFailure
@@ -926,51 +1051,6 @@
      - InvalidRequest
      - 400
      - 4402
-   * - :mod:`MN_authentication`
-     - :func:`login <MN_authentication.login>`
-     - NotImplemented
-     - 501
-     - 1600
-   * - :mod:`MN_authentication`
-     - :func:`login <MN_authentication.login>`
-     - ServiceFailure
-     - 500
-     - 1620
-   * - :mod:`MN_authentication`
-     - :func:`login <MN_authentication.login>`
-     - InvalidCredentials
-     - 401
-     - 1640
-   * - :mod:`MN_authentication`
-     - :func:`login <MN_authentication.login>`
-     - AuthenticationTimeout
-     - 408
-     - 1680
-   * - :mod:`MN_authentication`
-     - :func:`login <MN_authentication.login>`
-     - InvalidRequest
-     - 400
-     - 1601
-   * - :mod:`MN_authentication`
-     - :func:`logout <MN_authentication.logout>`
-     - ServiceFailure
-     - 500
-     - 1700
-   * - :mod:`MN_authentication`
-     - :func:`logout <MN_authentication.logout>`
-     - NotImplemented
-     - 501
-     - 1720
-   * - :mod:`MN_authentication`
-     - :func:`logout <MN_authentication.logout>`
-     - InvalidToken
-     - 401
-     - 1740
-   * - :mod:`MN_authentication`
-     - :func:`logout <MN_authentication.logout>`
-     - InvalidRequest
-     - 400
-     - 1701
    * - :mod:`MN_authorization`
      - :func:`isAuthorized <MN_authorization.isAuthorized>`
      - ServiceFailure
@@ -1001,6 +1081,36 @@
      - InvalidRequest
      - 400
      - 1761
+   * - :mod:`MN_authorization`
+     - :func:`setAccess <MN_authorization.setAccess>`
+     - InvalidToken
+     - 401
+     - 4410
+   * - :mod:`MN_authorization`
+     - :func:`setAccess <MN_authorization.setAccess>`
+     - ServiceFailure
+     - 500
+     - 4430
+   * - :mod:`MN_authorization`
+     - :func:`setAccess <MN_authorization.setAccess>`
+     - NotFound
+     - 404
+     - 4400
+   * - :mod:`MN_authorization`
+     - :func:`setAccess <MN_authorization.setAccess>`
+     - NotAuthorized
+     - 401
+     - 4420
+   * - :mod:`MN_authorization`
+     - :func:`setAccess <MN_authorization.setAccess>`
+     - NotImplemented
+     - 501
+     - 4401
+   * - :mod:`MN_authorization`
+     - :func:`setAccess <MN_authorization.setAccess>`
+     - InvalidRequest
+     - 400
+     - 4402
    * - :mod:`CN_data_replication`
      - :func:`setReplicationStatus <CN_data_replication.setReplicationStatus>`
      - ServiceFailure

@@ -17,7 +17,8 @@
        ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.ObjectList`
    * - n/a
      - :func:`replicate`
-     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
+     - (:class:`token<Types.AuthToken>`,
+       :class:`systemMetadata<Types.SystemMetadata>`,
        :class:`sourceNode<Types.NodeReference>`) ``->`` boolean
    * - n/a
      - :func:`synchronizationFailed`
@@ -114,11 +115,18 @@
 
 
 
-.. function:: replicate(token,pid,sourceNode) -> boolean
+.. function:: replicate(token,systemMetadata,sourceNode) -> boolean
 
    Called by a Coordinating Node to indicate to the Member Node that it should
    retrieve the specified object from the indicated Member Node and store it
-   locally so that it can be made accessible to the DataONE system.
+   locally so that it can be made accessible to the DataONE system.  Member
+   Nodes should check that they have the object indictaed in the provided
+   SystemMetadata document, and update their system with the provided
+   SystemMetadata.
+
+   Because system metadata is stored authoritatively on the Coordinating Nodes,
+   the Member Nodes must update their copy of SystemMetadata anytime that a CN
+   calls replicate, even if they already house a replica copy of the object.
 
    :Use Cases:
 
@@ -130,9 +138,11 @@
 
    :type token: :class:`Types.AuthToken`
 
-   :param pid: Identifier of the object that is to be copied.
+   :param systemMetadata: A systemMetadata document that lists the object to be
+     replicated and provides current system details describing that object,
+     including, e.g., access policies.
 
-   :type pid: :class:`Types.Identifier`
+   :type systemMetadata: :class:`Types.SystemMetadata`
 
    :param sourceNode: The node from which the content should be retrieved.
 
@@ -153,6 +163,10 @@
    :raises Exceptions.InsufficientResources: ``(errorCode=413, detailCode=2154)``
 
    :raises Exceptions.UnsupportedType: ``(errorCode=400, detailCode=2155)``
+
+.. TODO::
+    sourceNode is probably an unneeded parameter, as it should be present in the
+    SystemMetadata. Resolve.
 
 
 

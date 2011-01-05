@@ -9,11 +9,9 @@
    * - REST
      - Function
      - Parameters
-   * - :ref:`CN_authentication.login`
-     - :func:`login`
-     - (``user``, ``password``,
-       :class:`[authSystem]<Types.AuthenticationSystem>`) ``->``
-       :class:`Types.AuthToken`
+   * - :ref:`CN_authentication.getAuthToken`
+     - :func:`getAuthToken`
+     - (:class:`cert<Types.X.509Certificate>`) ``->`` :class:`Types.AuthToken`
    * - :ref:`CN_authentication.setOwner`
      - :func:`setOwner`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
@@ -26,41 +24,43 @@
    * - :ref:`CN_authentication.verifyToken`
      - :func:`verifyToken`
      - (:class:`token<Types.AuthToken>`) ``->`` boolean
+   * - :ref:`CN_authentication.mapIdentity`
+     - :func:`mapIdentity`
+     - (:class:`token1<Types.AuthToken>`, :class:`token2<Types.AuthToken>`)
+       ``->`` boolean
+   * - :ref:`CN_authentication.createGroup`
+     - :func:`createGroup`
+     - (:class:`token<Types.AuthToken>`, :class:`groupName<Types.Principal>`)
+       ``->`` :class:`Types.Identifier`
+   * - :ref:`CN_authentication.addGroupMembers`
+     - :func:`addGroupMembers`
+     - (:class:`token<Types.AuthToken>`, :class:`groupName<Types.Principal>`,
+       :class:`members<Types.PrincipalList>`) ``->`` :class:`Types.Identifier`
+   * - :ref:`CN_authentication.removeGroupMembers`
+     - :func:`removeGroupMembers`
+     - (:class:`token<Types.AuthToken>`, :class:`groupName<Types.Principal>`,
+       :class:`members<Types.PrincipalList>`) ``->`` :class:`Types.Identifier`
 
 
 
 
-.. function:: login(user,password,[authSystem]) -> AuthToken
+.. function:: getAuthToken(cert) -> AuthToken
 
-   Authenticates a user for interaction with the DataONE system. The returned
-   token is trusted throughout the DataONE system as a reliable statement as to
-   the identity of the authenticated user.
-
-   :func:`login` may delegate the actual login to an authentication service, and
-   a given user may utilize several authentication services. If this is the case
-   then an additional parameter identifying the authentication service to use
-   will be required.
+   Retrieved credential information about a user, including a list of equivalent
+   identities for the user and a list of groups in which the user is a member.
 
    :Use Cases:
 
      :doc:`UC16 </design/UseCases/16_uc>`
 
-   :REST URL: MN :ref:`CN_authentication.login`
+   :REST URL: MN :ref:`CN_authentication.getAuthToken`
 
-   :param user: User name
+   :param cert: The X.509 certificate that validates the user's identify from CI
+     Logon.
 
-   :type user: string
+   :type cert: :class:`Types.X.509Certificate`
 
-   :param password: Secret
-
-   :type password: string
-
-   :param authSystem: Place holder for support of multiple authentication
-     services for a single user.
-
-   :type authSystem: :class:`Types.AuthenticationSystem`
-
-   :returns: A composite of the user id and authentication token.
+   :returns: A SAM assertion comtaining the user identiites and groups.
 
    :rtype: :class:`Types.AuthToken`
 
@@ -68,7 +68,7 @@
 
    :raises Exceptions.InvalidCredentials: ``(errorCode=401, detailCode=1640)``
 
-     The supplied credentials were invalid (password + username don't jive)
+     The supplied certificate could not be validated.
 
 
    :raises Exceptions.AuthenticationTimeout: ``(errorCode=408, detailCode=1680)``
@@ -86,8 +86,8 @@
 
 .. function:: setOwner(token,pid,userId) -> Identifier
 
-   Changes ownership of the specified object to the :term:`principal` specified
-   by `userId`
+   Changes ownership (RightsHolder) of the specified object to the
+   :term:`principal` specified by `userId`
 
    :Use Cases:
 
@@ -224,5 +224,222 @@
    :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=4555)``
 
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4542)``
+
+
+
+
+.. function:: mapIdentity(token1,token2) -> boolean
+
+   Map the two authenticated identities, asserting that they represent the same
+   principal.
+
+   The two identities are represented as AuthToken objects, which allows the CN
+   to determine if both identities have been properly authenticated, which
+   demonstrates that the user has control of both identities.
+
+   :REST URL: MN :ref:`CN_authentication.mapIdentity`
+
+   :param token1: The authentication token returned by
+     :func:`CN_authentication.login`. Used to verify that the calling user has
+     control of this identity.
+
+   :type token1: :class:`Types.AuthToken`
+
+   :param token2: The authentication token returned by
+     :func:`CN_authentication.login`. Used to verify that the calling user has
+     control of this identity.
+
+   :type token2: :class:`Types.AuthToken`
+
+   :returns: True if the map was successfully created, false otherwise.
+
+   :rtype: boolean
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=)``
+
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=)``
+
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=)``
+
+     The supplied principal does not have permission to map these two identities
+
+
+   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=)``
+
+     The specified principal does not exist in the DataONE system
+
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=)``
+
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=)``
+
+.. TODO::
+    Detail codes have not been properly mapped for this method.  Need to
+    reassign them.
+
+
+
+
+.. function:: createGroup(token,groupName) -> Identifier
+
+   Create a group with the given name.
+
+   Groups are lists of principals that allow all members of the group to be
+   referenced by listing solely the subject name of the group.  Group names must
+   be unique within the DataONE system, and can only be modified by their
+   creator.
+
+   :REST URL: MN :ref:`CN_authentication.createGroup`
+
+   :param token: The authentication token returned by
+     :func:`CN_authentication.login`. Used to verify that the calling user has
+     rights to create a group.
+
+   :type token: :class:`Types.AuthToken`
+
+   :param groupName: The name of the group to be created.
+
+   :type groupName: :class:`Types.Principal`
+
+   :returns: Identifier of the group that was modified
+
+   :rtype: :class:`Types.Identifier`
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=)``
+
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=)``
+
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=)``
+
+     The supplied principal does not have permission to create a group
+
+
+   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=)``
+
+     The specified principal does not exist in the DataONE system
+
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=)``
+
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=)``
+
+   :raises Exceptions.IdentifierNotUnique: ``(errorCode=409, detailCode=)``
+
+     A group by this name already exists
+
+
+.. TODO::
+    Detail codes have not been properly mapped for this method.  Need to
+    reassign them.
+
+
+
+
+.. function:: addGroupMembers(token,groupName,members) -> Identifier
+
+   Add members to the named group.
+
+   Group members can be added by the original creator of the group, otherwise a
+   NotAuthorized exception is thrown.  Group members are provided as a list of
+   principals to be added to the group.
+
+   :REST URL: MN :ref:`CN_authentication.addGroupMembers`
+
+   :param token: The authentication token returned by
+     :func:`CN_authentication.login`. Used to verify that the calling user has
+     rights to modify a group.
+
+   :type token: :class:`Types.AuthToken`
+
+   :param groupName: The identifier of the group to be modified.
+
+   :type groupName: :class:`Types.Principal`
+
+   :param members: The list of members to be added to the group.
+
+   :type members: :class:`Types.PrincipalList`
+
+   :returns: Identifier of the group that was modified
+
+   :rtype: :class:`Types.Identifier`
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=)``
+
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=)``
+
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=)``
+
+     The supplied principal does not have permission to add to a group
+
+
+   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=)``
+
+     The specified group does not exist in the DataONE system
+
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=)``
+
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=)``
+
+.. TODO::
+    Detail codes have not been properly mapped for this method.  Need to
+    reassign them.
+
+
+
+
+.. function:: removeGroupMembers(token,groupName,members) -> Identifier
+
+   Remove members to the named group.
+
+   Group members can be removed by the original creator of the group, otherwise
+   a NotAuthorized exception is thrown.  Group members are provided as a list of
+   principals to be removed from the group.
+
+   :REST URL: MN :ref:`CN_authentication.removeGroupMembers`
+
+   :param token: The authentication token returned by
+     :func:`CN_authentication.login`. Used to verify that the calling user has
+     rights to modify a group.
+
+   :type token: :class:`Types.AuthToken`
+
+   :param groupName: The identifier of the group to be modified.
+
+   :type groupName: :class:`Types.Principal`
+
+   :param members: The list of members to be removed from the group.
+
+   :type members: :class:`Types.PrincipalList`
+
+   :returns: Identifier of the group that was modified
+
+   :rtype: :class:`Types.Identifier`
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=)``
+
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=)``
+
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=)``
+
+     The supplied principal does not have permission to remove from a group
+
+
+   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=)``
+
+     The specified group does not exist in the DataONE system
+
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=)``
+
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=)``
+
+.. TODO::
+    Detail codes have not been properly mapped for this method.  Need to
+    reassign them.
+
+.. TODO::
+    Evaluate the REST endpoint for this method and determine if DELETE is the
+    appropriate http method.
 
 

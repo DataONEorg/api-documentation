@@ -59,7 +59,8 @@
        ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.ObjectList`
    * - n/a
      - :func:`MN_replication.replicate`
-     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
+     - (:class:`token<Types.AuthToken>`,
+       :class:`systemMetadata<Types.SystemMetadata>`,
        :class:`sourceNode<Types.NodeReference>`) ``->`` boolean
    * - n/a
      - :func:`MN_replication.synchronizationFailed`
@@ -82,18 +83,14 @@
    * - :ref:`MN_health.getStatus`
      - :func:`MN_health.getStatus`
      - () ``->`` :class:`Types.StatusResponse`
-   * - :ref:`MN_authentication.login`
-     - :func:`MN_authentication.login`
-     - (``user``, ``password``,
-       :class:`[authSystem]<Types.AuthenticationSystem>`) ``->``
-       :class:`Types.AuthToken`
-   * - :ref:`MN_authentication.logout`
-     - :func:`MN_authentication.logout`
-     - (:class:`token<Types.AuthToken>`) ``->`` boolean
    * - :ref:`MN_authorization.isAuthorized`
      - :func:`MN_authorization.isAuthorized`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
-       :class:`operation<Types.Event>`) ``->`` boolean
+       :class:`action<Types.Permission>`) ``->`` boolean
+   * - :ref:`MN_authorization.setAccess`
+     - :func:`MN_authorization.setAccess`
+     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
+       :class:`accessPolicy<Types.AccessPolicy>`) ``->`` boolean
    * - :ref:`MN_capabilities.getCapabilities`
      - :func:`MN_capabilities.getCapabilities`
      - () ``->`` :class:`Types.Capabilities`

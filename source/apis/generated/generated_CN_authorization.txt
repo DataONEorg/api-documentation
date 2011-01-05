@@ -16,7 +16,7 @@
    * - :ref:`CN_authorization.setAccess`
      - :func:`setAccess`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
-       :class:`accessLevel<Types.AccessRule>`) ``->`` boolean
+       :class:`accessPolicy<Types.AccessPolicy>`) ``->`` boolean
 
 
 
@@ -28,6 +28,9 @@
 
    .. Note:: Should perhaps add convenience methods for "canRead()" and
      "canWrite()" to verify that a user is able to read / write an object.
+
+   .. Note:: The token and operation parameters are not currently encoded in the
+     REST URL, so unclear how they should be passed in.
 
    :Use Cases:
 
@@ -72,9 +75,12 @@
 
 
 
-.. function:: setAccess(token,pid,accessLevel) -> boolean
+.. function:: setAccess(token,pid,accessPolicy) -> boolean
 
    Sets the access permissions for an object identified by *pid*.
+
+   .. Note:: The token and accessPolicy parameters are not currently encoded in
+     the REST URL, so unclear how they should be passed in.
 
    :Use Cases:
 
@@ -92,9 +98,9 @@
 
    :type pid: :class:`Types.Identifier`
 
-   :param accessLevel: The desired privileges to be assigned to the object.
+   :param accessPolicy: The desired privileges to be assigned to the object.
 
-   :type accessLevel: :class:`Types.AccessRule`
+   :type accessPolicy: :class:`Types.AccessPolicy`
 
    :returns: True if the operation succeeds, otherwise false.
 
@@ -125,5 +131,9 @@
 .. TODO::
     Should permissions cascade? e.g. Should setting permission on a Data Package
     cascade to the contained objects as well (the experiment metadata and data)?
+
+.. TODO::
+    .. Note:: Setting access rules on a CN implies that the rules are propogated
+      to the CNs and to all MNs holding a copy of the object
 
 

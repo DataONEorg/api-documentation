@@ -55,11 +55,9 @@
      - :func:`CN_query.getLogRecords`
      - (:class:`token<Types.AuthToken>`, :class:`fromDate<Types.DateTime>`,
        :class:`toDate<Types.DateTime>`) ``->`` :class:`Types.LogRecords`
-   * - :ref:`CN_authentication.login`
-     - :func:`CN_authentication.login`
-     - (``user``, ``password``,
-       :class:`[authSystem]<Types.AuthenticationSystem>`) ``->``
-       :class:`Types.AuthToken`
+   * - :ref:`CN_authentication.getAuthToken`
+     - :func:`CN_authentication.getAuthToken`
+     - (:class:`cert<Types.X.509Certificate>`) ``->`` :class:`Types.AuthToken`
    * - :ref:`CN_authentication.setOwner`
      - :func:`CN_authentication.setOwner`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
@@ -72,6 +70,22 @@
    * - :ref:`CN_authentication.verifyToken`
      - :func:`CN_authentication.verifyToken`
      - (:class:`token<Types.AuthToken>`) ``->`` boolean
+   * - :ref:`CN_authentication.mapIdentity`
+     - :func:`CN_authentication.mapIdentity`
+     - (:class:`token1<Types.AuthToken>`, :class:`token2<Types.AuthToken>`)
+       ``->`` boolean
+   * - :ref:`CN_authentication.createGroup`
+     - :func:`CN_authentication.createGroup`
+     - (:class:`token<Types.AuthToken>`, :class:`groupName<Types.Principal>`)
+       ``->`` :class:`Types.Identifier`
+   * - :ref:`CN_authentication.addGroupMembers`
+     - :func:`CN_authentication.addGroupMembers`
+     - (:class:`token<Types.AuthToken>`, :class:`groupName<Types.Principal>`,
+       :class:`members<Types.PrincipalList>`) ``->`` :class:`Types.Identifier`
+   * - :ref:`CN_authentication.removeGroupMembers`
+     - :func:`CN_authentication.removeGroupMembers`
+     - (:class:`token<Types.AuthToken>`, :class:`groupName<Types.Principal>`,
+       :class:`members<Types.PrincipalList>`) ``->`` :class:`Types.Identifier`
    * - :ref:`CN_authorization.isAuthorized`
      - :func:`CN_authorization.isAuthorized`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
@@ -79,7 +93,7 @@
    * - :ref:`CN_authorization.setAccess`
      - :func:`CN_authorization.setAccess`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
-       :class:`accessLevel<Types.AccessRule>`) ``->`` boolean
+       :class:`accessPolicy<Types.AccessPolicy>`) ``->`` boolean
    * - n/a
      - :func:`CN_data_replication.setReplicationStatus`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
