@@ -155,3 +155,11 @@ single object from MN_B to MN_A as directed by a CN. It is assumed that the
 object does not exist on MN_B and the object has been identified as requiring
 synchronization by the CN checking its status in the system metadata.
 
+Note (2011.01.07 CWB): This simple authentication scheme will not work on member nodes that 
+have their own access control rules.  In this scheme, each member node
+will need to have knowledge of the administrative (or replication) credentials
+for each of the other member nodes.  The CN needs to handle the login actions
+for both of the MNs involved and send an authenticated token from MN_A to 
+MN_B so that it can use that credential to successfully get the document.  This
+is only the case if the document on MN_A is read protected.  If it is public,
+not token is needed.
