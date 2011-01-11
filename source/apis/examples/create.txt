@@ -1,0 +1,24 @@
+**Examples**
+
+(POST) Create a new object with a given identifier (*XYZ33256*)::
+
+  curl -H "AuthToken: UR45W21A1S19ZE3CC9" \
+       -F "file=@datafile.csv;name=object" \
+       -F "file=@sysmeta.xml;name=systemmetdata" \
+       -F "pid=XYZ33256"
+       http://m1.dataone.org/mn/object
+  
+  HTTP/1.1 200 Success
+  Content-Type: 
+  Date: Wed, 16 Dec 2009 13:58:34 GMT
+  Content-Length: 355
+  
+  XYZ33256
+
+
+**GMN Specific Implementation Note**
+
+By default, object storage is managed by GMN. By specifying the option
+vendor_gmn_remote_storage when creating an object, the caller can specify that
+the object is stored at another location. In that case, the submitted object
+is interpreted as a URL through which the object bytes can be retrieved.

@@ -9,22 +9,22 @@
    * - REST
      - Function
      - Parameters
-   * - :ref:`MN_capabilities.getCapabilities`
+   * - ``GET /  or  GET /node``
      - :func:`getCapabilities`
-     - () ``->`` :class:`Types.Capabilities`
+     - () ``->`` :class:`Types.NodeList`
 
 
 
 
-.. function:: getCapabilities() -> Capabilities
+.. function:: getCapabilities() -> NodeList
 
    Returns a document describing the capabilities of the Member Node.
 
-   :REST URL: MN :ref:`MN_capabilities.getCapabilities`
+   :REST URL: ``GET /  or  GET /node``
 
    :returns: The technical capabilities of the Member Node
 
-   :rtype: :class:`Types.Capabilities`
+   :rtype: :class:`Types.NodeList`
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2160)``
 
@@ -35,3 +35,5 @@
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=2163)``
 
 
+
+----

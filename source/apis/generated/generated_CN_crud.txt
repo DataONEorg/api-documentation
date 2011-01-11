@@ -9,15 +9,15 @@
    * - REST
      - Function
      - Parameters
-   * - :ref:`CN_crud.get`
+   * - ``GET /object/<pid>``
      - :func:`get`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        bytes
-   * - :ref:`CN_crud.getSystemMetadata`
+   * - ``GET /meta/<pid>``
      - :func:`getSystemMetadata`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.SystemMetadata`
-   * - :ref:`CN_crud.resolve`
+   * - ``GET /resolve/<pid>``
      - :func:`resolve`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.ObjectLocationList`
@@ -26,11 +26,11 @@
      - (:class:`pid<Types.Identifier>`,
        :class:`systemMetadata<Types.SystemMetadata>`, ``scienceMetadata``)
        ``->`` boolean
-   * - :ref:`CN_crud.reserveIdentifier`
+   * - ``POST /reserve``
      - :func:`reserveIdentifier`
      - (:class:`token<Types.AuthToken>`, :class:`[pid]<Types.Identifier>`,
        ``[scope]``, ``[format]``) ``->`` :class:`Types.Identifier`
-   * - :ref:`CN_crud.assertRelation`
+   * - ``GET /assertRelation/<pidOfSubject>``
      - :func:`assertRelation`
      - (:class:`token<Types.AuthToken>`,
        :class:`pidOfSubject<Types.Identifier>`,
@@ -62,7 +62,7 @@
      :doc:`UC01 </design/UseCases/01_uc>`, :doc:`UC16 </design/UseCases/16_uc>`,
      :doc:`UC09 </design/UseCases/09_uc>`
 
-   :REST URL: MN :ref:`CN_crud.get`
+   :REST URL: ``GET /object/<pid>``
 
    :param token: The authentication token returned by
      :func:`CN_authentication.login`
@@ -97,6 +97,7 @@
 
 
 
+----
 
 .. function:: getSystemMetadata(token,pid) -> SystemMetadata
 
@@ -109,7 +110,7 @@
      :doc:`UC36 </design/UseCases/36_uc>`, :doc:`UC37 </design/UseCases/37_uc>`,
      :doc:`UC16 </design/UseCases/16_uc>`
 
-   :REST URL: MN :ref:`CN_crud.getSystemMetadata`
+   :REST URL: ``GET /meta/<pid>``
 
    :param token: The authentication token returned by
      :func:`CN_authentication.login`
@@ -146,6 +147,7 @@
 
 
 
+----
 
 .. function:: resolve(token,pid) -> ObjectLocationList
 
@@ -157,7 +159,7 @@
 
      :doc:`UC36 </design/UseCases/36_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
 
-   :REST URL: MN :ref:`CN_crud.resolve`
+   :REST URL: ``GET /resolve/<pid>``
 
    :param token: The authentication token returned by
      :func:`CN_authentication.login`
@@ -190,6 +192,7 @@
 
 
 
+----
 
 .. function:: create(pid,systemMetadata,scienceMetadata) -> boolean
 
@@ -242,6 +245,7 @@
 
 
 
+----
 
 .. function:: reserveIdentifier(token,[pid],[scope],[format]) -> Identifier
 
@@ -255,7 +259,7 @@
 
      :doc:`UC16 </design/UseCases/16_uc>`
 
-   :REST URL: MN :ref:`CN_crud.reserveIdentifier`
+   :REST URL: ``POST /reserve``
 
    :param token: The authentication token returned by
      :func:`CN_authentication.login`
@@ -309,13 +313,14 @@
 
 
 
+----
 
 .. function:: assertRelation(token,pidOfSubject,relationship,pidOfObject) -> boolean
 
    Tests that the specified relationship between *pidOfSubject* and
    *pidOfObject* exists.
 
-   :REST URL: MN :ref:`CN_crud.assertRelation`
+   :REST URL: ``GET /assertRelation/<pidOfSubject>``
 
    :param token: The authentication token returned by
      :func:`CN_authentication.login`
@@ -360,6 +365,7 @@
 
 
 
+----
 
 .. function:: log(typeOfOperation,targetPid,requestorIdentitity,dateOfRequest) -> 
 
@@ -407,6 +413,7 @@
 
 
 
+----
 
 .. function:: getChecksum(token,pid) -> Checksum
 
@@ -445,3 +452,5 @@
    :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=1430)``
 
 
+
+----

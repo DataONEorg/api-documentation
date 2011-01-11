@@ -100,8 +100,8 @@ Member Node replication.
    title Interactions: 09 - Replicate data from Member Node to Member Node
 
    participant "Replication API" as c_sync << Coordinating Node >>
-   participant "CRUD API" as m_crud_b << Member Node B >>
-   participant "CRUD API" as m_crud_a << Member Node A >>
+   participant "CRUD API" as m_crud_b << Member Node A >>
+   participant "CRUD API" as m_crud_a << Member Node B >>
 
    c_sync -> c_sync: setReplicationStatus(PID, Queued)
    activate c_sync
@@ -118,17 +118,17 @@ Member Node replication.
      activate m_crud_a
        m_crud_a -> m_crud_b: bytes
      deactivate m_crud_a
-     m_crud_b -> c_sync: getChecksum(token, PID)
+     m_crud_b -> c_sync: getSystemMetadata(token, PID)
      activate c_sync
      note right
-       The MN must verify the checksum of the 
-       object before committing storage 
-       of the object.
+       The MN uses the System Metadata to verify the checksum 
+       of the object and to determine the access control rules
+       before committing storage of the object.
      end note
-     c_sync --> m_crud_b: checksum
+     c_sync --> m_crud_b: SystemMetadata
      deactivate c_sync
-     m_crud_b -> m_crud_b: create(token, PID, bytes)
-     m_crud_b --> m_crud_b: log(GUID, REPLICATE)
+     m_crud_b -> m_crud_b: _store(PID, bytes)
+     m_crud_b --> m_crud_b: log(PID, REPLICATE)
      m_crud_b -> c_sync: setReplicationStatus(token, PID, Complete)
      activate c_sync
        c_sync -> m_crud_b: getSystemMetadata(token, PID)

@@ -9,11 +9,11 @@
    * - REST
      - Function
      - Parameters
-   * - :ref:`CN_query.search`
+   * - ``GET /object``
      - :func:`search`
      - (:class:`token<Types.AuthToken>`, :class:`query<Types.QueryType>`) ``->``
        :class:`Types.ObjectList`
-   * - :ref:`CN_query.getLogRecords`
+   * - ``GET /log``
      - :func:`getLogRecords`
      - (:class:`token<Types.AuthToken>`, :class:`fromDate<Types.DateTime>`,
        :class:`toDate<Types.DateTime>`) ``->`` :class:`Types.LogRecords`
@@ -30,7 +30,7 @@
 
      :doc:`UC02 </design/UseCases/02_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
 
-   :REST URL: MN :ref:`CN_query.search`
+   :REST URL: ``GET /object``
 
    :param token: The authentication token returned by
      :func:`CN_authentication.login`
@@ -58,6 +58,7 @@
 
 
 
+----
 
 .. function:: getLogRecords(token,fromDate,toDate) -> LogRecords
 
@@ -68,7 +69,7 @@
 
      :doc:`UC16 </design/UseCases/16_uc>`
 
-   :REST URL: MN :ref:`CN_query.getLogRecords`
+   :REST URL: ``GET /log``
 
    :param token: The authentication token returned by
      :func:`CN_authentication.login`
@@ -105,3 +106,5 @@
     simple date range
 
 
+
+----

@@ -1,0 +1,44 @@
+**Examples**
+
+(GET) Retrieve the object with identifier "XYZ332"::
+
+  curl http://m1.dataone.org/mn/object/XYZ332
+  
+  ... data ...
+
+(GET) Attempt to retrieve a non-existent object (and show headers in response)::
+
+  curl -D - http://m1.dataone.org/mn/object/XYZ33255
+
+  HTTP/1.1 404 Not Found
+  Content-Type: 
+  Date: Wed, 16 Dec 2009 13:58:34 GMT
+  Content-Length: 355
+
+
+  <html>
+    <head>
+      <meta http-equiv="content-type" content="text/html;charset=utf-8">
+      <title>Error: 404 Not Found (1020)</title>
+    </head>
+    <body>
+      <p>
+        <dl>
+          <dt>Code</dt>
+          <dd class="errorCode">404</dd>
+          <dt>Detail Code</dt>
+          <dd class="detailCode">1020</dd>
+        </dl>
+      </p>
+      <p class="description">The specificed object does not exist on this node.</p>
+      <dl class="traceInformation">
+        <dt>identifier</dt>
+        <dd>123XYZ</dd>
+        <dt>method</dt>
+        <dd>mn.get</dd>
+        <dt>hint</dt>
+        <dd>Please try <a href='http://cn.dataone.org/cn/resolve/123XYZ'> resolving</a>
+            at a <a href='http://dataone.org'>DataONE</a> Coordinating Node.</dd>
+      </dl>
+    </body>
+  </html>

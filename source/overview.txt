@@ -1,6 +1,23 @@
 DataONE Overview
 ================
 
+The major goal of NSFs `DataNet program`_ is to catalyze development of a
+system addressing the vision outlined in Chapter 3 (Data, Data Analysis, and
+Visualization) of NSF’s `Cyberinfrastructure Vision`_ for 21st Century Discovery
+[2] in which “science and engineering digital data are routinely deposited in
+well-documented form, are regularly and easily consulted and analyzed by
+specialists and non-specialists alike, are openly accessible while suitably
+protected, and are reliably preserved.” The DataNet project DataONE_ (Data
+Observation Network for Earth) is a federated data network built to improve
+access to Earth science data, and to support science by: (1) engaging the
+relevant science, data, and policy communities; (2) facilitating easy, secure,
+and persistent storage of data; and (3) disseminating integrated and
+user-friendly tools for data discovery, analysis, visualization, and
+decision-making.
+
+..
+  [[ Overview diagram ]]
+
 There are three major components in the DataONE infrastructure: Member Nodes
 which represent data repositories, Coordinating Nodes which serve data
 management and discovery services, and the Investigator Toolkit which contains
@@ -21,6 +38,9 @@ core, community building services include:
 - extensible search and discovery services
 
 - federated management of user identities and access control
+
+..
+  [[ Member Node APIs diagram ]]
 
 Member Nodes are primarily existing data repositories (e.g. Dryad_, the
 `Knowledge Network for Biodiversity`_, `ORNL DAAC`_) that already fill an
@@ -45,6 +65,9 @@ repositories come online, perhaps even to the level of individual labs
 deploying their own Member Node to take advantage of the broad infrastructure
 enabled by DataONE.
 
+..
+  [[ Coordinating Node APIs diagram ]]
+
 Coordinating Nodes implement critical services through the
 :doc:`APIs</apis/CN_APIs>` that enable identifier resolution, data
 preservation, data discovery, and supplement the federated identity system.
@@ -56,6 +79,9 @@ of all science metadata (detailed descriptions of science data objects and
 collections) and system metadata (low level metadata describing the type,
 size, ownership, and locations of data and) and index this information to
 enable data discovery services.
+
+..
+  [[ ITK APIs and components diagram ]]
 
 Investigator Toolkit is a suite of software libraries, tools, and applications
 that support interaction with the DataONE infrastructure through the
@@ -84,6 +110,12 @@ infrastructure as resources permit- some repositories may have resources to
 independently implement the necessary APIs, others may require assistance from
 the DataONE development team.
 
+
+.. _DataNet program:  http://www.nsf.gov/pubs/2007/nsf07601/nsf07601.htm
+
+.. _Cyberinfrastructure Vision: http://www.nsf.gov/pubs/2007/nsf0728/index.jsp
+
+.. _DataONE: http://dataone.org/
 
 .. _Dryad: http://datadryad.org/
 

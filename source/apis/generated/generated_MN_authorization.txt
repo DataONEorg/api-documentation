@@ -9,11 +9,11 @@
    * - REST
      - Function
      - Parameters
-   * - :ref:`MN_authorization.isAuthorized`
+   * - ``GET /isAuthorized/{pid}``
      - :func:`isAuthorized`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        :class:`action<Types.Permission>`) ``->`` boolean
-   * - :ref:`MN_authorization.setAccess`
+   * - ``PUT /accessRules/{pid}``
      - :func:`setAccess`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        :class:`accessPolicy<Types.AccessPolicy>`) ``->`` boolean
@@ -33,7 +33,7 @@
 
      :doc:`UC01 </design/UseCases/01_uc>`, :doc:`UC37 </design/UseCases/37_uc>`
 
-   :REST URL: MN :ref:`MN_authorization.isAuthorized`
+   :REST URL: ``GET /isAuthorized/{pid}``
 
    :param token:
 
@@ -70,6 +70,7 @@
 
 
 
+----
 
 .. function:: setAccess(token,pid,accessPolicy) -> boolean
 
@@ -82,7 +83,7 @@
 
      :doc:`UC16 </design/UseCases/16_uc>`
 
-   :REST URL: MN :ref:`MN_authorization.setAccess`
+   :REST URL: ``PUT /accessRules/{pid}``
 
    :param token: The authentication token returned by
      :func:`CN_authentication.login`. Used to verify that the calling user has
@@ -133,3 +134,5 @@
       to the CNs and to all MNs holding a copy of the object
 
 
+
+----

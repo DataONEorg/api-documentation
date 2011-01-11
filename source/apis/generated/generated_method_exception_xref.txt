@@ -355,22 +355,22 @@
      - :func:`synchronizationFailed <MN_replication.synchronizationFailed>`
      - NotImplemented
      - 501
-     - 
+     - 2160
    * - :mod:`MN_replication`
      - :func:`synchronizationFailed <MN_replication.synchronizationFailed>`
      - ServiceFailure
      - 500
-     - 
+     - 2161
    * - :mod:`MN_replication`
      - :func:`synchronizationFailed <MN_replication.synchronizationFailed>`
      - NotAuthorized
      - 401
-     - 
+     - 2162
    * - :mod:`MN_replication`
      - :func:`synchronizationFailed <MN_replication.synchronizationFailed>`
      - InvalidRequest
      - 400
-     - 
+     - 2163
    * - :mod:`MN_health`
      - :func:`ping <MN_health.ping>`
      - NotImplemented
@@ -491,6 +491,86 @@
      - UnsupportedType
      - 400
      - 2105
+   * - :mod:`MN_authorization`
+     - :func:`isAuthorized <MN_authorization.isAuthorized>`
+     - ServiceFailure
+     - 500
+     - 1760
+   * - :mod:`MN_authorization`
+     - :func:`isAuthorized <MN_authorization.isAuthorized>`
+     - NotImplemented
+     - 501
+     - 1780
+   * - :mod:`MN_authorization`
+     - :func:`isAuthorized <MN_authorization.isAuthorized>`
+     - NotFound
+     - 404
+     - 1800
+   * - :mod:`MN_authorization`
+     - :func:`isAuthorized <MN_authorization.isAuthorized>`
+     - NotAuthorized
+     - 401
+     - 1820
+   * - :mod:`MN_authorization`
+     - :func:`isAuthorized <MN_authorization.isAuthorized>`
+     - InvalidToken
+     - 401
+     - 1840
+   * - :mod:`MN_authorization`
+     - :func:`isAuthorized <MN_authorization.isAuthorized>`
+     - InvalidRequest
+     - 400
+     - 1761
+   * - :mod:`MN_authorization`
+     - :func:`setAccess <MN_authorization.setAccess>`
+     - InvalidToken
+     - 401
+     - 4410
+   * - :mod:`MN_authorization`
+     - :func:`setAccess <MN_authorization.setAccess>`
+     - ServiceFailure
+     - 500
+     - 4430
+   * - :mod:`MN_authorization`
+     - :func:`setAccess <MN_authorization.setAccess>`
+     - NotFound
+     - 404
+     - 4400
+   * - :mod:`MN_authorization`
+     - :func:`setAccess <MN_authorization.setAccess>`
+     - NotAuthorized
+     - 401
+     - 4420
+   * - :mod:`MN_authorization`
+     - :func:`setAccess <MN_authorization.setAccess>`
+     - NotImplemented
+     - 501
+     - 4401
+   * - :mod:`MN_authorization`
+     - :func:`setAccess <MN_authorization.setAccess>`
+     - InvalidRequest
+     - 400
+     - 4402
+   * - :mod:`MN_capabilities`
+     - :func:`getCapabilities <MN_capabilities.getCapabilities>`
+     - NotImplemented
+     - 501
+     - 2160
+   * - :mod:`MN_capabilities`
+     - :func:`getCapabilities <MN_capabilities.getCapabilities>`
+     - NotAuthorized
+     - 401
+     - 2161
+   * - :mod:`MN_capabilities`
+     - :func:`getCapabilities <MN_capabilities.getCapabilities>`
+     - ServiceFailure
+     - 500
+     - 2162
+   * - :mod:`MN_capabilities`
+     - :func:`getCapabilities <MN_capabilities.getCapabilities>`
+     - InvalidRequest
+     - 400
+     - 2163
    * - :mod:`CN_crud`
      - :func:`get <CN_crud.get>`
      - NotAuthorized
@@ -1051,66 +1131,6 @@
      - InvalidRequest
      - 400
      - 4402
-   * - :mod:`MN_authorization`
-     - :func:`isAuthorized <MN_authorization.isAuthorized>`
-     - ServiceFailure
-     - 500
-     - 1760
-   * - :mod:`MN_authorization`
-     - :func:`isAuthorized <MN_authorization.isAuthorized>`
-     - NotImplemented
-     - 501
-     - 1780
-   * - :mod:`MN_authorization`
-     - :func:`isAuthorized <MN_authorization.isAuthorized>`
-     - NotFound
-     - 404
-     - 1800
-   * - :mod:`MN_authorization`
-     - :func:`isAuthorized <MN_authorization.isAuthorized>`
-     - NotAuthorized
-     - 401
-     - 1820
-   * - :mod:`MN_authorization`
-     - :func:`isAuthorized <MN_authorization.isAuthorized>`
-     - InvalidToken
-     - 401
-     - 1840
-   * - :mod:`MN_authorization`
-     - :func:`isAuthorized <MN_authorization.isAuthorized>`
-     - InvalidRequest
-     - 400
-     - 1761
-   * - :mod:`MN_authorization`
-     - :func:`setAccess <MN_authorization.setAccess>`
-     - InvalidToken
-     - 401
-     - 4410
-   * - :mod:`MN_authorization`
-     - :func:`setAccess <MN_authorization.setAccess>`
-     - ServiceFailure
-     - 500
-     - 4430
-   * - :mod:`MN_authorization`
-     - :func:`setAccess <MN_authorization.setAccess>`
-     - NotFound
-     - 404
-     - 4400
-   * - :mod:`MN_authorization`
-     - :func:`setAccess <MN_authorization.setAccess>`
-     - NotAuthorized
-     - 401
-     - 4420
-   * - :mod:`MN_authorization`
-     - :func:`setAccess <MN_authorization.setAccess>`
-     - NotImplemented
-     - 501
-     - 4401
-   * - :mod:`MN_authorization`
-     - :func:`setAccess <MN_authorization.setAccess>`
-     - InvalidRequest
-     - 400
-     - 4402
    * - :mod:`CN_data_replication`
      - :func:`setReplicationStatus <CN_data_replication.setReplicationStatus>`
      - ServiceFailure
@@ -1191,23 +1211,3 @@
      - InvalidRequest
      - 400
      - 4843
-   * - :mod:`MN_capabilities`
-     - :func:`getCapabilities <MN_capabilities.getCapabilities>`
-     - NotImplemented
-     - 501
-     - 2160
-   * - :mod:`MN_capabilities`
-     - :func:`getCapabilities <MN_capabilities.getCapabilities>`
-     - NotAuthorized
-     - 401
-     - 2161
-   * - :mod:`MN_capabilities`
-     - :func:`getCapabilities <MN_capabilities.getCapabilities>`
-     - ServiceFailure
-     - 500
-     - 2162
-   * - :mod:`MN_capabilities`
-     - :func:`getCapabilities <MN_capabilities.getCapabilities>`
-     - InvalidRequest
-     - 400
-     - 2163

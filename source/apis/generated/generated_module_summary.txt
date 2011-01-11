@@ -13,7 +13,8 @@
        :class:`Types.SystemMetadata` if the object is science data. If the
        object does not exist on the node servicing the request, then
        :exc:`Exceptions.NotFound` must be raised even if the object exists on
-       another node in the DataONE system.
+       another node in the DataONE system. Also implmented by Coordinating Nodes
+       as :func:`CN_crud.get`.
 
        Appears in functional use cases: :doc:`UC01 </design/UseCases/01_uc>`,
        :doc:`UC06 </design/UseCases/06_uc>`, :doc:`UC16
@@ -80,7 +81,10 @@
        be raised even if the object exists on another node in the DataONE
        system.
 
-        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
+       Note that this method is likely to be called frequently and so efficiency
+       should be taken into consideratin during implementation.
+
+       Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
    * - \
      - :func:`MN_crud.getChecksum`
      - Returns a :class:`Types.Checksum` for the specified object using an
@@ -121,23 +125,18 @@
        :doc:`UC16 </design/UseCases/16_uc>`
    * - \
      - :func:`MN_replication.replicate`
-     - Called by a Coordinating Node to indicate to the Member Node that it
-       should retrieve the specified object from the indicated Member Node and
-       store it locally so that it can be made accessible to the DataONE system.
-       Member Nodes should check that they have the object indictaed in the
-       provided SystemMetadata document, and update their system with the
-       provided SystemMetadata.  Because system metadata is stored
-       authoritatively on the Coordinating Nodes, the Member Nodes must update
-       their copy of SystemMetadata anytime that a CN calls replicate, even if
-       they already house a replica copy of the object.
+     - Called by a Coordinating Node to request that the Member Node create a
+       copy of the specified object by retrieving it from another Member Nodeode
+       and storing it locally so that it can be made accessible to the DataONE
+       system.
 
        Appears in functional use cases: :doc:`UC09 </design/UseCases/09_uc>`
    * - \
      - :func:`MN_replication.synchronizationFailed`
      - This is a callback method used by a CN to indicate to a MN that it cannot
-       complete synchronization of the science metadata identified by *id*. When
-       called, the MN should take steps to record the problem description and
-       notify an administrator or the data owner of the issue.
+       complete synchronization of the science metadata identified by *pid*.
+       When called, the MN should take steps to record the problem description
+       and notify an administrator or the data owner of the issue.
 
        Appears in functional use cases: :doc:`UC06 </design/UseCases/06_uc>`
    * - :mod:`MN_health`
@@ -162,9 +161,34 @@
      - :func:`MN_health.getStatus`
      - This function is similar to :func:`MN_health.ping` but returns a more
        complete status which may include information such as planned service
-       outages.
+       outages. This method provide a mechanism for notification to Coordinating
+       Nodes at a higher frequency than through setting properties in the node
+       registry information. The response to a *getStatus* request is currently
+       undefined, but will be a structure containing information that can be
+       used by the Coordinating Nodes for notification of pending outages,
+       software changes, or other significant events as described in
+       :doc:`/design/UseCases/10_uc`.
 
        Appears in functional use cases: :doc:`UC10 </design/UseCases/10_uc>`
+   * - :mod:`MN_authorization`
+     - :func:`MN_authorization.isAuthorized`
+     - Test if the user identified by the provided token has authorization for
+       operation on the specified object. .. Note:: Should perhaps add
+       convenience methods for "canRead()" and "canWrite()" to verify that a
+       user is able to read / write an object.
+
+       Appears in functional use cases: :doc:`UC01 </design/UseCases/01_uc>`,
+       :doc:`UC37 </design/UseCases/37_uc>`
+   * - \
+     - :func:`MN_authorization.setAccess`
+     - Sets the access permissions for an object identified by *pid*. .. Note::
+       The token and accessPolicy parameters are not currently encoded in the
+       REST URL, so unclear how they should be passed in.
+
+       Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
+   * - :mod:`MN_capabilities`
+     - :func:`MN_capabilities.getCapabilities`
+     - Returns a document describing the capabilities of the Member Node.
    * - :mod:`CN_crud`
      - :func:`CN_crud.get`
      - Retrieves the object identified by *pid* from the node. If the object is
@@ -322,22 +346,6 @@
        REST URL, so unclear how they should be passed in.
 
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
-   * - :mod:`MN_authorization`
-     - :func:`MN_authorization.isAuthorized`
-     - Test if the user identified by the provided token has authorization for
-       operation on the specified object. .. Note:: Should perhaps add
-       convenience methods for "canRead()" and "canWrite()" to verify that a
-       user is able to read / write an object.
-
-       Appears in functional use cases: :doc:`UC01 </design/UseCases/01_uc>`,
-       :doc:`UC37 </design/UseCases/37_uc>`
-   * - \
-     - :func:`MN_authorization.setAccess`
-     - Sets the access permissions for an object identified by *pid*. .. Note::
-       The token and accessPolicy parameters are not currently encoded in the
-       REST URL, so unclear how they should be passed in.
-
-       Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
    * - :mod:`CN_data_replication`
      - :func:`CN_data_replication.setReplicationStatus`
      - Update the replication status of the system metadata, ensuring that the
@@ -360,6 +368,3 @@
    * - \
      - :func:`CN_register.register`
      - 
-   * - :mod:`MN_capabilities`
-     - :func:`MN_capabilities.getCapabilities`
-     - Returns a document describing the capabilities of the Member Node.

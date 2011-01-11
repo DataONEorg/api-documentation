@@ -9,37 +9,37 @@
    * - REST
      - Function
      - Parameters
-   * - :ref:`MN_crud.get`
+   * - ``GET /object/{pid}``
      - :func:`get`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        bytes
-   * - :ref:`MN_crud.getSystemMetadata`
+   * - ``GET /meta/{pid}``
      - :func:`getSystemMetadata`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.SystemMetadata`
-   * - :ref:`MN_crud.create`
+   * - ``POST /object``
      - :func:`create`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        ``object``, :class:`sysmeta<Types.SystemMetadata>`) ``->``
        :class:`Types.Identifier`
-   * - :ref:`MN_crud.update`
+   * - ``PUT /object/{pid}``
      - :func:`update`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        ``object``, :class:`obsoletedPid<Types.Identifier>`,
        :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
-   * - :ref:`MN_crud.delete`
+   * - ``DELETE /object/{pid}``
      - :func:`delete`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.Identifier`
-   * - :ref:`MN_crud.describe`
+   * - ``HEAD /object/{pid}``
      - :func:`describe`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.DescribeResponse`
-   * - :ref:`MN_crud.getChecksum`
+   * - ``GET /checksum/{pid}``
      - :func:`getChecksum`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        ``[checksumAlgorithm]``) ``->`` :class:`Types.Checksum`
-   * - :ref:`MN_crud.getLogRecords`
+   * - ``GET /log``
      - :func:`getLogRecords`
      - (:class:`token<Types.AuthToken>`, :class:`fromDate<Types.DateTime>`,
        :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`) ``->``
@@ -66,14 +66,16 @@
    :exc:`Exceptions.NotFound` must be raised even if the object exists on
    another node in the DataONE system.
 
+   Also implmented by Coordinating Nodes as :func:`CN_crud.get`.
+
    :Use Cases:
 
      :doc:`UC01 </design/UseCases/01_uc>`, :doc:`UC06 </design/UseCases/06_uc>`,
      :doc:`UC16 </design/UseCases/16_uc>`
 
-   :REST URL: MN :ref:`MN_crud.get`
+   :REST URL: ``GET /object/{pid}``
 
-   :param token: The authentication token returned by *login()*.
+   :param token: The authentication token.
 
    :type token: :class:`Types.AuthToken`
 
@@ -106,6 +108,9 @@
 
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=1002)``
 
+
+.. include:: ../examples/get.txt
+
 .. TODO::
     There may be multiple representations of content (e.g. metadata as XML, RDF,
     or some other format).  May need to add another parameter to specify the
@@ -121,6 +126,7 @@
 
 
 
+----
 
 .. function:: getSystemMetadata(token,pid) -> SystemMetadata
 
@@ -137,7 +143,7 @@
      :doc:`UC06 </design/UseCases/06_uc>`, :doc:`UC37 </design/UseCases/37_uc>`,
      :doc:`UC16 </design/UseCases/16_uc>`
 
-   :REST URL: MN :ref:`MN_crud.getSystemMetadata`
+   :REST URL: ``GET /meta/{pid}``
 
    :param token: The authentication token returned by ``login()``.
 
@@ -170,7 +176,11 @@
    :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=1050)``
 
 
+.. include:: ../examples/getSystemMetadata.txt
 
+
+
+----
 
 .. function:: create(token,pid,object,sysmeta) -> Identifier
 
@@ -186,7 +196,7 @@
      :doc:`UC04 </design/UseCases/04_uc>`, :doc:`UC09 </design/UseCases/09_uc>`,
      :doc:`UC16 </design/UseCases/16_uc>`
 
-   :REST URL: MN :ref:`MN_crud.create`
+   :REST URL: ``POST /object``
 
    :param token: The authentication token returned by ``login()``
 
@@ -256,7 +266,11 @@
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=1102)``
 
 
+.. include:: ../examples/create.txt
 
+
+
+----
 
 .. function:: update(token,pid,object,obsoletedPid,sysmeta) -> Identifier
 
@@ -278,7 +292,7 @@
 
      :doc:`UC16 </design/UseCases/16_uc>`
 
-   :REST URL: MN :ref:`MN_crud.update`
+   :REST URL: ``PUT /object/{pid}``
 
    :param token: The authentication token returned by ``login()``
 
@@ -357,6 +371,7 @@
 
 
 
+----
 
 .. function:: delete(token,pid) -> Identifier
 
@@ -374,7 +389,7 @@
 
      :doc:`UC16 </design/UseCases/16_uc>`
 
-   :REST URL: MN :ref:`MN_crud.delete`
+   :REST URL: ``DELETE /object/{pid}``
 
    :param token: The authentication token returned by ``login()``
 
@@ -415,6 +430,7 @@
 
 
 
+----
 
 .. function:: describe(token,pid) -> DescribeResponse
 
@@ -432,11 +448,14 @@
    :exc:`Exceptions.NotFound` must be raised even if the object exists on
    another node in the DataONE system.
 
+   Note that this method is likely to be called frequently and so efficiency
+   should be taken into consideratin during implementation.
+
    :Use Cases:
 
      :doc:`UC16 </design/UseCases/16_uc>`
 
-   :REST URL: MN :ref:`MN_crud.describe`
+   :REST URL: ``HEAD /object/{pid}``
 
    :param token: The authentication token returned by ``login()``
 
@@ -463,7 +482,11 @@
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=1362)``
 
 
+.. include:: ../examples/describe.txt
 
+
+
+----
 
 .. function:: getChecksum(token,pid,[checksumAlgorithm]) -> Checksum
 
@@ -474,7 +497,7 @@
    computing it on the fly or by using a cached value that is certain to be
    correct.
 
-   :REST URL: MN :ref:`MN_crud.getChecksum`
+   :REST URL: ``GET /checksum/{pid}``
 
    :param token: The authentication token returned by ``login()``
 
@@ -515,13 +538,14 @@
 
 
 
+----
 
 .. function:: getLogRecords(token,fromDate,[toDate],[event]) -> LogRecords
 
    Retrieve log information from the MN for the specified date range
    (inclusive).
 
-   :REST URL: MN :ref:`MN_crud.getLogRecords`
+   :REST URL: ``GET /log``
 
    :param token: The authentication token returned by ``login()``
 
@@ -561,6 +585,7 @@
 
 
 
+----
 
 .. function:: log(typeOfOperation,targetGuid,requestorIdentitity,dateOfRequest) -> 
 
@@ -607,3 +632,5 @@
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=1501)``
 
 
+
+----

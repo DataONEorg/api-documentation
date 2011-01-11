@@ -8,31 +8,37 @@
      - Path
    * - 0.3
      - :func:`MN_crud.get`
-     - `GET /object/<pid>`_
+     - `GET /object/{pid}`_
    * - 0.3
      - :func:`MN_crud.getSystemMetadata`
-     - `GET /meta/<pid>`_
+     - `GET /meta/{pid}`_
    * - 0.4
      - :func:`MN_crud.create`
      - `POST /object`_
    * - 0.4
      - :func:`MN_crud.update`
-     - `PUT /object/<pid>`_
+     - `PUT /object/{pid}`_
    * - 0.9
      - :func:`MN_crud.delete`
-     - `DELETE /object/<pid>`_
+     - `DELETE /object/{pid}`_
    * - 0.3
      - :func:`MN_crud.describe`
-     - `HEAD /object/<pid>`_
+     - `HEAD /object/{pid}`_
    * - 0.3
      - :func:`MN_crud.getChecksum`
-     - `GET /checksum/<pid>`_
+     - `GET /checksum/{pid}`_
    * - 0.3
      - :func:`MN_crud.getLogRecords`
      - `GET /log`_
    * - 0.3
      - :func:`MN_replication.listObjects`
      - `GET /object`_
+   * - 
+     - :func:`MN_replication.replicate`
+     - `POST /replicate`_
+   * - 
+     - :func:`MN_replication.synchronizationFailed`
+     - `POST /error`_
    * - 0.4
      - :func:`MN_health.ping`
      - `GET /monitor/ping`_
@@ -45,6 +51,15 @@
    * - 0.6
      - :func:`MN_health.getStatus`
      - `GET /monitor/status`_
+   * - 0.7
+     - :func:`MN_authorization.isAuthorized`
+     - `GET /isAuthorized/{pid}`_
+   * - 0.7
+     - :func:`MN_authorization.setAccess`
+     - `PUT /accessRules/{pid}`_
+   * - 
+     - :func:`MN_capabilities.getCapabilities`
+     - `GET /  or  GET /node`_
    * - 0.3
      - :func:`CN_crud.get`
      - `GET /object/<pid>`_
@@ -96,12 +111,6 @@
    * - 0.7
      - :func:`CN_authorization.setAccess`
      - `PUT /accessRules/<pid>`_
-   * - 0.7
-     - :func:`MN_authorization.isAuthorized`
-     - `GET /isAuthorized/<pid>`_
-   * - 0.7
-     - :func:`MN_authorization.setAccess`
-     - `PUT /accessRules/<pid>`_
    * - 
      - :func:`CN_register.listNodes`
      - `GET /node`_
@@ -111,9 +120,3 @@
    * - 
      - :func:`CN_register.register`
      - `POST /node`_
-   * - 
-     - :func:`MN_capabilities.getCapabilities`
-     - `GET /`_
-   * - 
-     - :func:`MN_replication.replicate`
-     - `GET/replicate/<source_node_reference>/<pid>`_

@@ -9,14 +9,14 @@
    * - REST
      - Function
      - Parameters
-   * - :ref:`CN_register.listNodes`
+   * - ``GET /node``
      - :func:`listNodes`
      - () ``->`` :class:`Types.NodeList`
-   * - :ref:`CN_register.addNodeCapabilities`
+   * - ``PUT /node/<pid>``
      - :func:`addNodeCapabilities`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        boolean
-   * - :ref:`CN_register.register`
+   * - ``POST /node``
      - :func:`register`
      - (:class:`token<Types.AuthToken>`) ``->`` :class:`Types.Identifier`
 
@@ -32,7 +32,7 @@
 
      :doc:`UC39 </design/UseCases/39_uc>`
 
-   :REST URL: MN :ref:`CN_register.listNodes`
+   :REST URL: ``GET /node``
 
    :returns: List of nodes
 
@@ -44,12 +44,13 @@
 
 
 
+----
 
 .. function:: addNodeCapabilities(token,pid,capabilities) -> boolean
 
 
 
-   :REST URL: MN :ref:`CN_register.addNodeCapabilities`
+   :REST URL: ``PUT /node/<pid>``
 
    :param token: The authentication token returned by
      :func:`CN_authentication.login`
@@ -78,12 +79,13 @@
 
 
 
+----
 
 .. function:: register(token,capabilities) -> Identifier
 
 
 
-   :REST URL: MN :ref:`CN_register.register`
+   :REST URL: ``POST /node``
 
    :param token: The authentication token returned by
      :func:`CN_authentication.login`
@@ -107,3 +109,5 @@
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4843)``
 
 
+
+----

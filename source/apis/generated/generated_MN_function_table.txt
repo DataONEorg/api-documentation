@@ -9,37 +9,37 @@
    * - REST
      - Function
      - Parameters
-   * - :ref:`MN_crud.get`
+   * - ``GET /object/{pid}``
      - :func:`MN_crud.get`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        bytes
-   * - :ref:`MN_crud.getSystemMetadata`
+   * - ``GET /meta/{pid}``
      - :func:`MN_crud.getSystemMetadata`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.SystemMetadata`
-   * - :ref:`MN_crud.create`
+   * - ``POST /object``
      - :func:`MN_crud.create`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        ``object``, :class:`sysmeta<Types.SystemMetadata>`) ``->``
        :class:`Types.Identifier`
-   * - :ref:`MN_crud.update`
+   * - ``PUT /object/{pid}``
      - :func:`MN_crud.update`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        ``object``, :class:`obsoletedPid<Types.Identifier>`,
        :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
-   * - :ref:`MN_crud.delete`
+   * - ``DELETE /object/{pid}``
      - :func:`MN_crud.delete`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.Identifier`
-   * - :ref:`MN_crud.describe`
+   * - ``HEAD /object/{pid}``
      - :func:`MN_crud.describe`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.DescribeResponse`
-   * - :ref:`MN_crud.getChecksum`
+   * - ``GET /checksum/{pid}``
      - :func:`MN_crud.getChecksum`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        ``[checksumAlgorithm]``) ``->`` :class:`Types.Checksum`
-   * - :ref:`MN_crud.getLogRecords`
+   * - ``GET /log``
      - :func:`MN_crud.getLogRecords`
      - (:class:`token<Types.AuthToken>`, :class:`fromDate<Types.DateTime>`,
        :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`) ``->``
@@ -51,47 +51,46 @@
        :class:`requestorIdentitity<Types.Principal>`,
        :class:`dateOfRequest<Types.DateTime>`) ``->``
 
-   * - :ref:`MN_replication.listObjects`
+   * - ``GET /object``
      - :func:`MN_replication.listObjects`
-     - (:class:`token<Types.AuthToken>`, :class:`startTime<Types.DateTime>`,
+     - (:class:`token<Types.AuthToken>`, :class:`[startTime]<Types.DateTime>`,
        :class:`[endTime]<Types.DateTime>`,
        :class:`[objectFormat]<Types.ObjectFormat>`, ``[replicaStatus]``,
        ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.ObjectList`
-   * - n/a
+   * - ``POST /replicate``
      - :func:`MN_replication.replicate`
-     - (:class:`token<Types.AuthToken>`,
-       :class:`systemMetadata<Types.SystemMetadata>`,
-       :class:`sourceNode<Types.NodeReference>`) ``->`` boolean
-   * - n/a
-     - :func:`MN_replication.synchronizationFailed`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
-       :class:`problemDescription<Types.String>`) ``->``
-   * - :ref:`MN_health.ping`
+       :class:`sourceNode<Types.NodeReference>`) ``->`` boolean
+   * - ``POST /error``
+     - :func:`MN_replication.synchronizationFailed`
+     - (:class:`token<Types.AuthToken>`, :class:`message<Types.Exception>`)
+       ``->``
+   * - ``GET /monitor/ping``
      - :func:`MN_health.ping`
      - () ``->`` :class:`Types.Null`
-   * - :ref:`MN_health.getObjectStatistics`
+   * - ``GET /monitor/object``
      - :func:`MN_health.getObjectStatistics`
-     - (:class:`token<Types.AuthToken>`, :class:`time<Types.DateTime Range>`,
-       :class:`format<Types.ObjectFormat>`, ``day``) ``->``
-       :class:`Types.ObjectStatistics`
-   * - :ref:`MN_health.getOperationStatistics`
+     - (:class:`token<Types.AuthToken>`, :class:`[time]<Types.DateTime>`,
+       :class:`[format]<Types.ObjectFormat>`, ``[day]``,
+       :class:`[pid]<Types.Identifier>`) ``->`` :class:`Types.MonitorList`
+   * - ``GET /monitor/event``
      - :func:`MN_health.getOperationStatistics`
-     - (:class:`token<Types.AuthToken>`, :class:`time<Types.DateTime Range>`,
-       :class:`requestorIdentitity<Types.Principal>`, ``day``,
-       :class:`typeOfOperation<Types.Event>`) ``->``
-       :class:`Types.OperationStatistics`
-   * - :ref:`MN_health.getStatus`
+     - (:class:`token<Types.AuthToken>`, :class:`[time]<Types.DateTime>`,
+       :class:`[requestor]<Types.Principal>`, :class:`[day]<Types.Integer>`,
+       :class:`[event]<Types.Event>`, :class:`[eventTime]<Types.DateTime>`,
+       :class:`[format]<Types.ObjectFormat>`) ``->`` :class:`Types.MonitorList`
+   * - ``GET /monitor/status``
      - :func:`MN_health.getStatus`
      - () ``->`` :class:`Types.StatusResponse`
-   * - :ref:`MN_authorization.isAuthorized`
+   * - ``GET /isAuthorized/{pid}``
      - :func:`MN_authorization.isAuthorized`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        :class:`action<Types.Permission>`) ``->`` boolean
-   * - :ref:`MN_authorization.setAccess`
+   * - ``PUT /accessRules/{pid}``
      - :func:`MN_authorization.setAccess`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        :class:`accessPolicy<Types.AccessPolicy>`) ``->`` boolean
-   * - :ref:`MN_capabilities.getCapabilities`
+   * - ``GET /  or  GET /node``
      - :func:`MN_capabilities.getCapabilities`
-     - () ``->`` :class:`Types.Capabilities`
+     - () ``->`` :class:`Types.NodeList`
 

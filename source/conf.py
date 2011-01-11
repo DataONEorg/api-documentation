@@ -134,12 +134,13 @@ unused_docs = [
                'apis/REST_account',
                'apis/REST_nodes',
                'apis/REST_monitor',
+               'apis/REST_replicate',
                'apis/types_auth',
-               'apis/types_errors']
+               'apis/types_errors',]
 
 # List of directories, relative to source directory, that shouldn't be searched
 # for source files.
-exclude_trees = ['apis/generated', ]
+exclude_trees = ['apis/generated', 'apis/examples', ]
 
 exclude_patterns = [
 #                    'design/userscenarios*',

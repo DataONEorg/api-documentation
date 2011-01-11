@@ -9,34 +9,34 @@
    * - REST
      - Function
      - Parameters
-   * - :ref:`CN_authentication.getAuthToken`
+   * - ``POST /account``
      - :func:`getAuthToken`
      - (:class:`cert<Types.X.509Certificate>`) ``->`` :class:`Types.AuthToken`
-   * - :ref:`CN_authentication.setOwner`
+   * - ``PUT /owner/<pid>``
      - :func:`setOwner`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        :class:`userId<Types.Principal>`) ``->`` :class:`Types.Identifier`
-   * - :ref:`CN_authentication.newAccount`
+   * - ``POST /account/login``
      - :func:`newAccount`
      - (``username``, ``password``,
        :class:`[authSystem]<Types.AuthenticationSystem>`) ``->``
        :class:`Types.PrincipalType`
-   * - :ref:`CN_authentication.verifyToken`
+   * - ``GET /account/verifyToken``
      - :func:`verifyToken`
      - (:class:`token<Types.AuthToken>`) ``->`` boolean
-   * - :ref:`CN_authentication.mapIdentity`
+   * - ``PUT /account/map``
      - :func:`mapIdentity`
      - (:class:`token1<Types.AuthToken>`, :class:`token2<Types.AuthToken>`)
        ``->`` boolean
-   * - :ref:`CN_authentication.createGroup`
+   * - ``POST /groups/<groupName>``
      - :func:`createGroup`
      - (:class:`token<Types.AuthToken>`, :class:`groupName<Types.Principal>`)
        ``->`` :class:`Types.Identifier`
-   * - :ref:`CN_authentication.addGroupMembers`
+   * - ``PUT /groups/<groupName>``
      - :func:`addGroupMembers`
      - (:class:`token<Types.AuthToken>`, :class:`groupName<Types.Principal>`,
        :class:`members<Types.PrincipalList>`) ``->`` :class:`Types.Identifier`
-   * - :ref:`CN_authentication.removeGroupMembers`
+   * - ``DELETE /groups/<groupName>``
      - :func:`removeGroupMembers`
      - (:class:`token<Types.AuthToken>`, :class:`groupName<Types.Principal>`,
        :class:`members<Types.PrincipalList>`) ``->`` :class:`Types.Identifier`
@@ -53,7 +53,7 @@
 
      :doc:`UC16 </design/UseCases/16_uc>`
 
-   :REST URL: MN :ref:`CN_authentication.getAuthToken`
+   :REST URL: ``POST /account``
 
    :param cert: The X.509 certificate that validates the user's identify from CI
      Logon.
@@ -83,6 +83,7 @@
 
 
 
+----
 
 .. function:: setOwner(token,pid,userId) -> Identifier
 
@@ -93,7 +94,7 @@
 
      :doc:`UC16 </design/UseCases/16_uc>`
 
-   :REST URL: MN :ref:`CN_authentication.setOwner`
+   :REST URL: ``PUT /owner/<pid>``
 
    :param token: The authentication token returned by
      :func:`CN_authentication.login`. Used to verify that the calling user has
@@ -135,6 +136,7 @@
 
 
 
+----
 
 .. function:: newAccount(username,password,[authSystem]) -> PrincipalType
 
@@ -147,7 +149,7 @@
 
      :doc:`UC16 </design/UseCases/16_uc>`
 
-   :REST URL: MN :ref:`CN_authentication.newAccount`
+   :REST URL: ``POST /account/login``
 
    :param username: Requested username.  Must be unique within the DataONE
      system.
@@ -186,6 +188,7 @@
 
 
 
+----
 
 .. function:: verifyToken(token) -> boolean
 
@@ -200,7 +203,7 @@
    generate a token that matches a system token. Hence another level of
    restriction (perhaps network level blocking / limiting) is necessary.
 
-   :REST URL: MN :ref:`CN_authentication.verifyToken`
+   :REST URL: ``GET /account/verifyToken``
 
    :param token: The token to be tested.
 
@@ -227,6 +230,7 @@
 
 
 
+----
 
 .. function:: mapIdentity(token1,token2) -> boolean
 
@@ -237,7 +241,7 @@
    to determine if both identities have been properly authenticated, which
    demonstrates that the user has control of both identities.
 
-   :REST URL: MN :ref:`CN_authentication.mapIdentity`
+   :REST URL: ``PUT /account/map``
 
    :param token1: The authentication token returned by
      :func:`CN_authentication.login`. Used to verify that the calling user has
@@ -279,6 +283,7 @@
 
 
 
+----
 
 .. function:: createGroup(token,groupName) -> Identifier
 
@@ -289,7 +294,7 @@
    be unique within the DataONE system, and can only be modified by their
    creator.
 
-   :REST URL: MN :ref:`CN_authentication.createGroup`
+   :REST URL: ``POST /groups/<groupName>``
 
    :param token: The authentication token returned by
      :func:`CN_authentication.login`. Used to verify that the calling user has
@@ -334,6 +339,7 @@
 
 
 
+----
 
 .. function:: addGroupMembers(token,groupName,members) -> Identifier
 
@@ -343,7 +349,7 @@
    NotAuthorized exception is thrown.  Group members are provided as a list of
    principals to be added to the group.
 
-   :REST URL: MN :ref:`CN_authentication.addGroupMembers`
+   :REST URL: ``PUT /groups/<groupName>``
 
    :param token: The authentication token returned by
      :func:`CN_authentication.login`. Used to verify that the calling user has
@@ -387,6 +393,7 @@
 
 
 
+----
 
 .. function:: removeGroupMembers(token,groupName,members) -> Identifier
 
@@ -396,7 +403,7 @@
    a NotAuthorized exception is thrown.  Group members are provided as a list of
    principals to be removed from the group.
 
-   :REST URL: MN :ref:`CN_authentication.removeGroupMembers`
+   :REST URL: ``DELETE /groups/<groupName>``
 
    :param token: The authentication token returned by
      :func:`CN_authentication.login`. Used to verify that the calling user has
@@ -443,3 +450,5 @@
     appropriate http method.
 
 
+
+----

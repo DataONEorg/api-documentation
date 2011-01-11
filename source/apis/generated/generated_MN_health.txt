@@ -9,21 +9,21 @@
    * - REST
      - Function
      - Parameters
-   * - :ref:`MN_health.ping`
+   * - ``GET /monitor/ping``
      - :func:`ping`
      - () ``->`` :class:`Types.Null`
-   * - :ref:`MN_health.getObjectStatistics`
+   * - ``GET /monitor/object``
      - :func:`getObjectStatistics`
-     - (:class:`token<Types.AuthToken>`, :class:`time<Types.DateTime Range>`,
-       :class:`format<Types.ObjectFormat>`, ``day``) ``->``
-       :class:`Types.ObjectStatistics`
-   * - :ref:`MN_health.getOperationStatistics`
+     - (:class:`token<Types.AuthToken>`, :class:`[time]<Types.DateTime>`,
+       :class:`[format]<Types.ObjectFormat>`, ``[day]``,
+       :class:`[pid]<Types.Identifier>`) ``->`` :class:`Types.MonitorList`
+   * - ``GET /monitor/event``
      - :func:`getOperationStatistics`
-     - (:class:`token<Types.AuthToken>`, :class:`time<Types.DateTime Range>`,
-       :class:`requestorIdentitity<Types.Principal>`, ``day``,
-       :class:`typeOfOperation<Types.Event>`) ``->``
-       :class:`Types.OperationStatistics`
-   * - :ref:`MN_health.getStatus`
+     - (:class:`token<Types.AuthToken>`, :class:`[time]<Types.DateTime>`,
+       :class:`[requestor]<Types.Principal>`, :class:`[day]<Types.Integer>`,
+       :class:`[event]<Types.Event>`, :class:`[eventTime]<Types.DateTime>`,
+       :class:`[format]<Types.ObjectFormat>`) ``->`` :class:`Types.MonitorList`
+   * - ``GET /monitor/status``
      - :func:`getStatus`
      - () ``->`` :class:`Types.StatusResponse`
 
@@ -44,7 +44,7 @@
 
      :doc:`UC10 </design/UseCases/10_uc>`
 
-   :REST URL: MN :ref:`MN_health.ping`
+   :REST URL: ``GET /monitor/ping``
 
    :returns: Null body or Exception
 
@@ -63,22 +63,27 @@
    :raises Exceptions.UnsupportedType: ``(errorCode=400, detailCode=2046)``
 
 
+.. include:: ../examples/ping.txt
 
 
-.. function:: getObjectStatistics(token,time,format,day) -> ObjectStatistics
+
+----
+
+.. function:: getObjectStatistics(token,[time],[format],[day],[pid]) -> MonitorList
 
    Called by the monitoring system to find how many objects are stored on the
    MN, cumulative or for each day in a given range.
 
-   :REST URL: MN :ref:`MN_health.getObjectStatistics`
+   :REST URL: ``GET /monitor/object``
 
    :param token: Identity with authority to retrieve the statistics.
 
    :type token: :class:`Types.AuthToken`
 
-   :param time: Limit to date range. See Wildcards and Range Operators.
+   :param time: An ISO8601 compatible DateTime range specifying the time range
+     for which to return object statistics.
 
-   :type time: :class:`Types.DateTime Range`
+   :type time: :class:`Types.DateTime`
 
    :param format: Limit to objects of given format.
 
@@ -90,9 +95,13 @@
 
    :type day: flag
 
+   :param pid: Filter on identifier (with wildcards)
+
+   :type pid: :class:`Types.Identifier`
+
    :returns: List of statistics.
 
-   :rtype: :class:`Types.ObjectStatistics`
+   :rtype: :class:`Types.MonitorList`
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2060)``
 
@@ -107,40 +116,55 @@
    :raises Exceptions.UnsupportedType: ``(errorCode=400, detailCode=2065)``
 
 
+.. include:: ../examples/getObjectStatistics.txt
 
 
-.. function:: getOperationStatistics(token,time,requestorIdentitity,day,typeOfOperation) -> OperationStatistics
+
+----
+
+.. function:: getOperationStatistics(token,[time],[requestor],[day],[event],[eventTime],[format]) -> MonitorList
 
    Called by the monitoring system to find how many operations have been
    performed on the MN, cumulative or for each day in a given range.
 
-   :REST URL: MN :ref:`MN_health.getOperationStatistics`
+   :REST URL: ``GET /monitor/event``
 
    :param token: Identity with authority to retrieve the statistics.
 
    :type token: :class:`Types.AuthToken`
 
-   :param time: Limit to date range. See Wildcards and Range Operators.
+   :param time: An ISO8601 compatible DateTime range specifying the time range
+     for which to return operation statistics.
 
-   :type time: :class:`Types.DateTime Range`
+   :type time: :class:`Types.DateTime`
 
-   :param requestorIdentitity: Limit to operations performed by given requestor.
+   :param requestor: Limit to operations performed by given requestor identity.
 
-   :type requestorIdentitity: :class:`Types.Principal`
+   :type requestor: :class:`Types.Principal`
 
    :param day: Flag that causes a separate set of statistics to be returned for
-     each day. Without this flag, a single, cumulative set of statistics is
-     returned.
+     each day (non-zero). Without this flag (or = 0), a single, cumulative set
+     of statistics is returned.
 
-   :type day: flag
+   :type day: :class:`Types.Integer`
 
-   :param typeOfOperation: Enumerated value
+   :param event: Enumerated value
 
-   :type typeOfOperation: :class:`Types.Event`
+   :type event: :class:`Types.Event`
+
+   :param eventTime: An ISO8601 compatible DateTime range specifying the time
+     range that that objects were created for which to return operation
+     statistics.
+
+   :type eventTime: :class:`Types.DateTime`
+
+   :param format: Limit to events involving objects of the specified format.
+
+   :type format: :class:`Types.ObjectFormat`
 
    :returns: List of statistics.
 
-   :rtype: :class:`Types.OperationStatistics`
+   :rtype: :class:`Types.MonitorList`
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2080)``
 
@@ -155,7 +179,11 @@
    :raises Exceptions.UnsupportedType: ``(errorCode=400, detailCode=2085)``
 
 
+.. include:: ../examples/getOperationStatistics.txt
 
+
+
+----
 
 .. function:: getStatus() -> StatusResponse
 
@@ -163,11 +191,20 @@
    complete status which may include information such as planned service
    outages.
 
+   This method provide a mechanism for notification to Coordinating Nodes at a
+   higher frequency than through setting properties in the node registry
+   information.
+
+   The response to a *getStatus* request is currently undefined, but will be a
+   structure containing information that can be used by the Coordinating Nodes
+   for notification of pending outages, software changes, or other significant
+   events as described in :doc:`/design/UseCases/10_uc`.
+
    :Use Cases:
 
      :doc:`UC10 </design/UseCases/10_uc>`
 
-   :REST URL: MN :ref:`MN_health.getStatus`
+   :REST URL: ``GET /monitor/status``
 
    :returns: Undefined
 
@@ -186,3 +223,5 @@
    :raises Exceptions.UnsupportedType: ``(errorCode=400, detailCode=2105)``
 
 
+
+----

@@ -1,5 +1,5 @@
 Replication Collection
-~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
 
 The ``/replicate`` collection represents replication functionality for MN -> MN
 replication.  It is exposed by Member Nodes.
@@ -7,7 +7,8 @@ replication.  It is exposed by Member Nodes.
 .. _MN_replicate.replicate:
 
 ``GET/replicate/<source_node_reference>/<pid>``
-.....................
+...............................................
+
 
 The CN calls this function on its member nodes when a replica copy is required
 to be sent from one MN to another.  The call is effectively a pull operation,

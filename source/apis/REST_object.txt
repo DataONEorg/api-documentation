@@ -85,12 +85,10 @@ however, unless otherwise indicated.
 :format: (optional) Restrict the response to the specified object format. 
 
 :startTime: 
-  (optional) Specifies the beginning of the time range from which to return
-  object (>=). Queries against :attr:`SystemMetadata.dateSysMetadataModified`
+  (optional) Specifies the beginning of the time range from which to return object (>=). Queries against :attr:`SystemMetadata.dateSysMetadataModified`
 
 :endTime: 
-  (optional) Specifies the end of the time range to which to return object
-  (<=). Queries against :attr:`SystemMetadata.dateSysMetadataModified`
+  (optional) Specifies the end of the time range to which to return object (<=). Queries against :attr:`SystemMetadata.dateSysMetadataModified`
 
 .. note:: startTime <= :attr:`SystemMetadata.dateSysMetadataModified` <= endTime
 
@@ -404,9 +402,11 @@ returns :class:`Types.DescribeResponse`
   curl -I http://mn1.dataone.org/mn/object/ABC123
 
   HTTP/1.1 200 OK
-  Date: Wed, 16 Dec 2009 13:58:34 GMT
-  Content-Length: 1040032112
+  Last-Modified: Wed, 16 Dec 2009 13:58:34 GMT
+  Content-Length: 10400
   Content-Type: application/octet-stream
+  DataONE-ObjectFormat: eml://ecoinformatics.org/eml-2.0.1
+  DataONE-Checksum: SHA-1,2e01e17467891f7c933dbaa00e1459d23db3fe4f
 
 
 .. _MN_crud.create:
@@ -428,7 +428,8 @@ Returns :class:`Types.Identifier`
 
 By default, object storage is managed by GMN. By specifying the option
 vendor_gmn_remote_storage when creating an object, the caller can specify that
-the object is stored at another location. In that case, the submitted object is interpreted as a URL through which the object bytes can be retrieved.
+the object is stored at another location. In that case, the submitted object
+is interpreted as a URL through which the object bytes can be retrieved.
 
 **Examples**
 

@@ -1,0 +1,24 @@
+**Response**
+
+The response should be a valid HTTP response with a blank or arbitrary body.
+Only the HTTP header information is considered by the requestor. A successful
+response must have a HTTP status code of 200. In case of an error condition,
+the appropriate HTTP status code must be set, and an exception or error
+information *may* be returned in the response.
+
+
+::
+
+  curl -v http://my.membernode.org/mn/replicate/<some_other_member_node>/<pid>
+  
+  > GET / HTTP/1.1
+  > User-Agent: curl/7.19.7 (universal-apple-darwin10.0) libcurl/7.19.7 OpenSSL/0.9.8l zlib/1.2.3
+  > Host: my.membernode.org
+  > Accept: */*
+  > 
+  < HTTP/1.1 200 OK
+  < Date: Thu, 09 Dec 2010 20:57:21 GMT
+  < Expires: -1
+  < Cache-Control: private, max-age=0
+  < Content-Type: text/html; charset=utf-8
+

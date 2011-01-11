@@ -58,9 +58,13 @@
    * - :exc:`Exceptions.UnsupportedMetadataType`
      - `400 <http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1>`_
      - The science metadata document submitted is not of a type that is
-       recognized   by the DataONE system.
+       recognized by the DataONE system.
    * - :exc:`Exceptions.UnsupportedType`
      - `400 <http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1>`_
      - The information presented appears to be unsupported. This error might be
        encountered when attempting to register unrecognized science metadata for
        example.
+   * - :exc:`Exceptions.SynchronizationFailed`
+     - `0 <http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.0.1>`_
+     - Sent to a Member Node from a Coordinating Node when an attempt to
+       synchronize some object fails.

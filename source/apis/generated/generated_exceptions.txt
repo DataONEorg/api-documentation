@@ -380,3 +380,36 @@
    :type traceInformation: dictionary
 
 
+----
+
+.. exception:: SynchronizationFailed(detailCode, description, identifier, [traceInformation])
+
+   Sent to a Member Node from a Coordinating Node when an attempt to synchronize
+   some object fails.
+
+   :errorCode: 0
+
+   :param detailCode:
+     Set by the method raising the exception.
+
+   :type detailCode: string
+
+   :param description:
+     Human readable description of the problem which can be forwarded to an
+     administrator for further action.
+
+   :type description: string
+
+   :param identifier:
+     Identifier of the object that could not be synchronized.
+
+   :type identifier: :class:`Types.Identifier`
+
+   :param traceInformation:
+     Optional set of key-value pairs that can include the name of the method
+     that raised the error plus other details such as parameters used in the
+     call that can be helpful for debugging.
+
+   :type traceInformation: dictionary
+
+

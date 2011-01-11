@@ -1,0 +1,13 @@
+**Examples**
+
+(HEAD) Retrieve information about the object with identifier "ABC123"::
+
+  curl -I http://mn1.dataone.org/mn/object/ABC123
+
+  HTTP/1.1 200 OK
+  Last-Modified: Wed, 16 Dec 2009 13:58:34 GMT
+  Content-Length: 10400
+  Content-Type: application/octet-stream
+  DataONE-ObjectFormat: eml://ecoinformatics.org/eml-2.0.1
+  DataONE-Checksum: SHA-1,2e01e17467891f7c933dbaa00e1459d23db3fe4f
+
