@@ -12,7 +12,7 @@
    * - ``GET /object/{pid}``
      - :func:`get`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
-       bytes
+       :class:`Types.OctetStream`
    * - ``GET /meta/{pid}``
      - :func:`getSystemMetadata`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
@@ -54,7 +54,7 @@
 
 
 
-.. function:: get(token,pid) -> bytes
+.. function:: get(token,pid) -> OctetStream
 
    Retrieve an object identified by *pid* from the node.
 
@@ -87,7 +87,7 @@
      actual bytes of data. For metadata objects, this will be the representation
      of the object as provided by the Member Node.
 
-   :rtype: bytes
+   :rtype: :class:`Types.OctetStream`
 
    :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=1000)``
 

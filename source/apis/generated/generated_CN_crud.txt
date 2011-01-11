@@ -12,7 +12,7 @@
    * - ``GET /object/{pid}``
      - :func:`get`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
-       bytes
+       :class:`Types.OctetStream`
    * - ``GET /meta/{pid}``
      - :func:`getSystemMetadata`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
@@ -24,8 +24,9 @@
    * - n/a
      - :func:`create`
      - (:class:`pid<Types.Identifier>`,
-       :class:`systemMetadata<Types.SystemMetadata>`, ``scienceMetadata``)
-       ``->`` boolean
+       :class:`systemMetadata<Types.SystemMetadata>`,
+       :class:`scienceMetadata<Types.OctetStream>`) ``->``
+       :class:`Types.Boolean`
    * - ``POST /reserve``
      - :func:`reserveIdentifier`
      - (:class:`token<Types.AuthToken>`, :class:`[pid]<Types.Identifier>`,
@@ -35,7 +36,7 @@
      - (:class:`token<Types.AuthToken>`,
        :class:`pidOfSubject<Types.Identifier>`,
        :class:`relationship<Types.???>`, :class:`pidOfObject<Types.Identifier>`)
-       ``->`` boolean
+       ``->`` :class:`Types.Boolean`
    * - n/a
      - :func:`log`
      - (:class:`typeOfOperation<Types.Event>`,
@@ -50,7 +51,7 @@
 
 
 
-.. function:: get(token,pid) -> bytes
+.. function:: get(token,pid) -> OctetStream
 
    Retrieves the object identified by *pid* from the node. If the object is not
    present on the node, then an :exc:`Exceptions.NotFound` error is raised
@@ -64,8 +65,8 @@
 
    :REST URL: ``GET /object/{pid}``
 
-   :param token: The authentication token returned by
-     :func:`CN_authentication.login`
+   :param token: The authentication token to veriy the caller has access to the
+     object.
 
    :type token: :class:`Types.AuthToken`
 
@@ -77,7 +78,7 @@
      the science metadata object as it was original ingested. Note that
      additional object types may in the future be returned by the get method.
 
-   :rtype: bytes
+   :rtype: :class:`Types.OctetStream`
 
    :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=1000)``
 
@@ -115,8 +116,8 @@
 
    :REST URL: ``GET /meta/{pid}``
 
-   :param token: The authentication token returned by
-     :func:`CN_authentication.login`
+   :param token: The authentication token to veriy the caller has access to the
+     object.
 
    :type token: :class:`Types.AuthToken`
 
@@ -213,7 +214,7 @@
 
 ----
 
-.. function:: create(pid,systemMetadata,scienceMetadata) -> boolean
+.. function:: create(pid,systemMetadata,scienceMetadata) -> Boolean
 
    This is a method used internally by the CN, not exposed to MNs or the world.
    Stores the two given objects (system metadata, science metadata) in a single
@@ -239,11 +240,11 @@
 
    :param scienceMetadata: The science metadata referenced by *pid*.
 
-   :type scienceMetadata: bytes
+   :type scienceMetadata: :class:`Types.OctetStream`
 
    :returns: Acknowledgement of success or failure
 
-   :rtype: boolean
+   :rtype: :class:`Types.Boolean`
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4115)``
 
@@ -334,7 +335,7 @@
 
 ----
 
-.. function:: assertRelation(token,pidOfSubject,relationship,pidOfObject) -> boolean
+.. function:: assertRelation(token,pidOfSubject,relationship,pidOfObject) -> Boolean
 
    Tests that the specified relationship between *pidOfSubject* and
    *pidOfObject* exists.
@@ -359,9 +360,9 @@
 
    :type pidOfObject: :class:`Types.Identifier`
 
-   :returns: True or False
+   :returns: True if the relationship exists.
 
-   :rtype: boolean
+   :rtype: :class:`Types.Boolean`
 
    :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=4230)``
 

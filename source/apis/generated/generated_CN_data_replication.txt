@@ -9,27 +9,27 @@
    * - REST
      - Function
      - Parameters
-   * - n/a
+   * - ``POST /notify``
      - :func:`setReplicationStatus`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
-       ``status``) ``->`` boolean
+       :class:`status<Types.ReplicationStatus>`) ``->`` :class:`Types.Boolean`
 
 
 
 
-.. function:: setReplicationStatus(token,pid,status) -> boolean
+.. function:: setReplicationStatus(token,pid,status) -> Boolean
 
    Update the replication status of the system metadata, ensuring that the
    change is appropriate for the given state of system metadata.  For example, a
-   MN can not change the status to *Requested* unless the CN previously
+   MN can not change the status to *COMPELTED* unless the CN previously
    requested replication of the object and the replications status of the object
-   (as indicated in the system metadata) is set to *Queued*.
+   (as indicated in the system metadata) is set to *QUEUED*.
 
    :Use Cases:
 
      :doc:`UC09 </design/UseCases/09_uc>`
 
-   :REST URL: N/A
+   :REST URL: ``POST /notify``
 
    :param token:
 
@@ -42,12 +42,12 @@
    :param status: Replication status. See system metadata schema for possible
      values.
 
-   :type status: string
+   :type status: :class:`Types.ReplicationStatus`
 
    :returns: True if the operation is allowed and expected, otherwise an
      exception should be raised.
 
-   :rtype: boolean
+   :rtype: :class:`Types.Boolean`
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4700)``
 

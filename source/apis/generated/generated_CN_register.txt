@@ -15,7 +15,7 @@
    * - ``PUT /node/{pid}``
      - :func:`addNodeCapabilities`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
-       boolean
+       :class:`Types.Boolean`
    * - ``POST /node``
      - :func:`register`
      - (:class:`token<Types.AuthToken>`) ``->`` :class:`Types.Identifier`
@@ -46,7 +46,7 @@
 
 ----
 
-.. function:: addNodeCapabilities(token,pid,capabilities) -> boolean
+.. function:: addNodeCapabilities(token,pid,capabilities) -> Boolean
 
 
 
@@ -67,7 +67,7 @@
 
    :returns: True if operation is successful
 
-   :rtype: boolean
+   :rtype: :class:`Types.Boolean`
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4820)``
 

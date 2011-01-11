@@ -17,8 +17,8 @@
        ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.ObjectList`
    * - ``POST /replicate``
      - :func:`replicate`
-     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
-       :class:`sourceNode<Types.NodeReference>`) ``->`` boolean
+     - (:class:`token<Types.AuthToken>`, :class:`sysmeta<Types.SystemMetadata>`,
+       :class:`sourceNode<Types.NodeReference>`) ``->`` :class:`Types.Boolean`
    * - ``POST /error``
      - :func:`synchronizationFailed`
      - (:class:`token<Types.AuthToken>`, :class:`message<Types.Exception>`)
@@ -121,7 +121,7 @@
 
 ----
 
-.. function:: replicate(token,pid,sourceNode) -> boolean
+.. function:: replicate(token,sysmeta,sourceNode) -> Boolean
 
    Called by a Coordinating Node to request that the Member Node create a copy
    of the specified object by retrieving it from another Member Nodeode and
@@ -140,9 +140,9 @@
 
    :type token: :class:`Types.AuthToken`
 
-   :param pid: The PID for the object that is to be replicated.
+   :param sysmeta: The PID for the object that is to be replicated.
 
-   :type pid: :class:`Types.Identifier`
+   :type sysmeta: :class:`Types.SystemMetadata`
 
    :param sourceNode: A reference to node from which the content should be
      retrieved. The reference should be resolved by checking the CN node
@@ -152,7 +152,7 @@
 
    :returns: True if everything works OK, otherwise an error is returned.
 
-   :rtype: boolean
+   :rtype: :class:`Types.Boolean`
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2150)``
 
@@ -168,10 +168,6 @@
 
 
 .. include:: ../examples/replicate.txt
-
-.. TODO::
-    sourceNode is probably an unneeded parameter, as it should be present in the
-    SystemMetadata. Resolve.
 
 
 

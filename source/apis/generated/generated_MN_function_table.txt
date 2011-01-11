@@ -12,7 +12,7 @@
    * - ``GET /object/{pid}``
      - :func:`MN_crud.get`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
-       bytes
+       :class:`Types.OctetStream`
    * - ``GET /meta/{pid}``
      - :func:`MN_crud.getSystemMetadata`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
@@ -59,19 +59,19 @@
        ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.ObjectList`
    * - ``POST /replicate``
      - :func:`MN_replication.replicate`
-     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
-       :class:`sourceNode<Types.NodeReference>`) ``->`` boolean
+     - (:class:`token<Types.AuthToken>`, :class:`sysmeta<Types.SystemMetadata>`,
+       :class:`sourceNode<Types.NodeReference>`) ``->`` :class:`Types.Boolean`
    * - ``POST /error``
      - :func:`MN_replication.synchronizationFailed`
      - (:class:`token<Types.AuthToken>`, :class:`message<Types.Exception>`)
        ``->``
    * - ``GET /monitor/ping``
      - :func:`MN_health.ping`
-     - () ``->`` :class:`Types.Null`
+     - () ``->`` :class:`Types.Boolean`
    * - ``GET /monitor/object``
      - :func:`MN_health.getObjectStatistics`
      - (:class:`token<Types.AuthToken>`, :class:`[time]<Types.DateTime>`,
-       :class:`[format]<Types.ObjectFormat>`, ``[day]``,
+       :class:`[format]<Types.ObjectFormat>`, :class:`[day]<Types.Integer>`,
        :class:`[pid]<Types.Identifier>`) ``->`` :class:`Types.MonitorList`
    * - ``GET /monitor/event``
      - :func:`MN_health.getOperationStatistics`
@@ -85,11 +85,11 @@
    * - ``GET /isAuthorized/{pid}``
      - :func:`MN_authorization.isAuthorized`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
-       :class:`action<Types.Permission>`) ``->`` boolean
+       :class:`action<Types.Permission>`) ``->`` :class:`Types.Boolean`
    * - ``PUT /accessRules/{pid}``
      - :func:`MN_authorization.setAccess`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
-       :class:`accessPolicy<Types.AccessPolicy>`) ``->`` boolean
+       :class:`accessPolicy<Types.AccessPolicy>`) ``->`` :class:`Types.Boolean`
    * - ``GET /  or  GET /node``
      - :func:`MN_capabilities.getCapabilities`
      - () ``->`` :class:`Types.NodeList`

@@ -12,16 +12,16 @@
    * - ``GET /isAuthorized/{pid}``
      - :func:`isAuthorized`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
-       :class:`action<Types.Permission>`) ``->`` boolean
+       :class:`action<Types.Permission>`) ``->`` :class:`Types.Boolean`
    * - ``PUT /accessRules/{pid}``
      - :func:`setAccess`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
-       :class:`accessPolicy<Types.AccessPolicy>`) ``->`` boolean
+       :class:`accessPolicy<Types.AccessPolicy>`) ``->`` :class:`Types.Boolean`
 
 
 
 
-.. function:: isAuthorized(token,pid,action) -> boolean
+.. function:: isAuthorized(token,pid,action) -> Boolean
 
    Test if the user identified by the provided token has authorization for
    operation on the specified object.
@@ -49,7 +49,7 @@
 
    :returns: True if the operation is allowed
 
-   :rtype: boolean
+   :rtype: :class:`Types.Boolean`
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=1760)``
 
@@ -72,7 +72,7 @@
 
 ----
 
-.. function:: setAccess(token,pid,accessPolicy) -> boolean
+.. function:: setAccess(token,pid,accessPolicy) -> Boolean
 
    Sets the access permissions for an object identified by *pid*.
 
@@ -85,8 +85,7 @@
 
    :REST URL: ``PUT /accessRules/{pid}``
 
-   :param token: The authentication token returned by
-     :func:`CN_authentication.login`. Used to verify that the calling user has
+   :param token: Authentication token to verify that the calling user has
      authority to modify access control for the object.
 
    :type token: :class:`Types.AuthToken`
@@ -101,7 +100,7 @@
 
    :returns: True if the operation succeeds, otherwise false.
 
-   :rtype: boolean
+   :rtype: :class:`Types.Boolean`
 
    :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=4410)``
 

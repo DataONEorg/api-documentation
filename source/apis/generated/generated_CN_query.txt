@@ -16,7 +16,8 @@
    * - ``GET /log``
      - :func:`getLogRecords`
      - (:class:`token<Types.AuthToken>`, :class:`fromDate<Types.DateTime>`,
-       :class:`toDate<Types.DateTime>`) ``->`` :class:`Types.LogRecords`
+       :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`) ``->``
+       :class:`Types.LogRecords`
 
 
 
@@ -60,7 +61,7 @@
 
 ----
 
-.. function:: getLogRecords(token,fromDate,toDate) -> LogRecords
+.. function:: getLogRecords(token,fromDate,[toDate],[event]) -> LogRecords
 
    Retrieves consolidated log information for the specified date range
    (inclusive) for the entire DataONE infrastructure
@@ -80,9 +81,15 @@
 
    :type fromDate: :class:`Types.DateTime`
 
-   :param toDate: End time for records in response
+   :param toDate: End time for records in response. If not specified, then
+     defaults to now.
 
    :type toDate: :class:`Types.DateTime`
+
+   :param event: Return only log records for the specified type of event.
+     Default is all.
+
+   :type event: :class:`Types.Event`
 
    :returns:
 

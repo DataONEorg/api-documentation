@@ -11,11 +11,11 @@
      - Parameters
    * - ``GET /monitor/ping``
      - :func:`ping`
-     - () ``->`` :class:`Types.Null`
+     - () ``->`` :class:`Types.Boolean`
    * - ``GET /monitor/object``
      - :func:`getObjectStatistics`
      - (:class:`token<Types.AuthToken>`, :class:`[time]<Types.DateTime>`,
-       :class:`[format]<Types.ObjectFormat>`, ``[day]``,
+       :class:`[format]<Types.ObjectFormat>`, :class:`[day]<Types.Integer>`,
        :class:`[pid]<Types.Identifier>`) ``->`` :class:`Types.MonitorList`
    * - ``GET /monitor/event``
      - :func:`getOperationStatistics`
@@ -30,7 +30,7 @@
 
 
 
-.. function:: ping() -> Null
+.. function:: ping() -> Boolean
 
    Low level "are you alive" operation. Response is simple ACK, but may be
    reasonable to overload with a couple of flags that could indicate
@@ -48,7 +48,7 @@
 
    :returns: Null body or Exception
 
-   :rtype: :class:`Types.Null`
+   :rtype: :class:`Types.Boolean`
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2041)``
 
@@ -93,7 +93,7 @@
      each day. Without this flag, a single, cumulative set of statistics is
      returned.
 
-   :type day: flag
+   :type day: :class:`Types.Integer`
 
    :param pid: Filter on identifier (with wildcards)
 

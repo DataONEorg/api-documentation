@@ -12,16 +12,16 @@
    * - ``GET /isAuthorized/{pid}``
      - :func:`isAuthorized`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
-       :class:`operation<Types.Event>`) ``->`` boolean
+       :class:`operation<Types.Event>`) ``->`` :class:`Types.Boolean`
    * - ``PUT /accessRules/{pid}``
      - :func:`setAccess`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
-       :class:`accessPolicy<Types.AccessPolicy>`) ``->`` boolean
+       :class:`accessPolicy<Types.AccessPolicy>`) ``->`` :class:`Types.Boolean`
 
 
 
 
-.. function:: isAuthorized(token,pid,operation) -> boolean
+.. function:: isAuthorized(token,pid,operation) -> Boolean
 
    Test if the user identified by the provided token has authorization for
    operation on the specified object.
@@ -53,7 +53,7 @@
 
    :returns: True if the operation is allowed
 
-   :rtype: boolean
+   :rtype: :class:`Types.Boolean`
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=1760)``
 
@@ -76,7 +76,7 @@
 
 ----
 
-.. function:: setAccess(token,pid,accessPolicy) -> boolean
+.. function:: setAccess(token,pid,accessPolicy) -> Boolean
 
    Sets the access permissions for an object identified by *pid*.
 
@@ -105,7 +105,7 @@
 
    :returns: True if the operation succeeds, otherwise false.
 
-   :rtype: boolean
+   :rtype: :class:`Types.Boolean`
 
    :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=4410)``
 

@@ -12,7 +12,7 @@
    * - ``GET /object/{pid}``
      - :func:`CN_crud.get`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
-       bytes
+       :class:`Types.OctetStream`
    * - ``GET /meta/{pid}``
      - :func:`CN_crud.getSystemMetadata`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
@@ -24,8 +24,9 @@
    * - n/a
      - :func:`CN_crud.create`
      - (:class:`pid<Types.Identifier>`,
-       :class:`systemMetadata<Types.SystemMetadata>`, ``scienceMetadata``)
-       ``->`` boolean
+       :class:`systemMetadata<Types.SystemMetadata>`,
+       :class:`scienceMetadata<Types.OctetStream>`) ``->``
+       :class:`Types.Boolean`
    * - ``POST /reserve``
      - :func:`CN_crud.reserveIdentifier`
      - (:class:`token<Types.AuthToken>`, :class:`[pid]<Types.Identifier>`,
@@ -35,7 +36,7 @@
      - (:class:`token<Types.AuthToken>`,
        :class:`pidOfSubject<Types.Identifier>`,
        :class:`relationship<Types.???>`, :class:`pidOfObject<Types.Identifier>`)
-       ``->`` boolean
+       ``->`` :class:`Types.Boolean`
    * - n/a
      - :func:`CN_crud.log`
      - (:class:`typeOfOperation<Types.Event>`,
@@ -54,7 +55,8 @@
    * - ``GET /log``
      - :func:`CN_query.getLogRecords`
      - (:class:`token<Types.AuthToken>`, :class:`fromDate<Types.DateTime>`,
-       :class:`toDate<Types.DateTime>`) ``->`` :class:`Types.LogRecords`
+       :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`) ``->``
+       :class:`Types.LogRecords`
    * - ``POST /account``
      - :func:`CN_authentication.getAuthToken`
      - (:class:`cert<Types.X.509Certificate>`) ``->`` :class:`Types.AuthToken`
@@ -69,11 +71,11 @@
        :class:`Types.PrincipalType`
    * - ``GET /account/verifyToken``
      - :func:`CN_authentication.verifyToken`
-     - (:class:`token<Types.AuthToken>`) ``->`` boolean
+     - (:class:`token<Types.AuthToken>`) ``->`` :class:`Types.Boolean`
    * - ``POST /account/map``
      - :func:`CN_authentication.mapIdentity`
      - (:class:`token1<Types.AuthToken>`, :class:`token2<Types.AuthToken>`)
-       ``->`` boolean
+       ``->`` :class:`Types.Boolean`
    * - ``POST /groups/{groupName}``
      - :func:`CN_authentication.createGroup`
      - (:class:`token<Types.AuthToken>`, :class:`groupName<Types.Principal>`)
@@ -89,22 +91,22 @@
    * - ``GET /isAuthorized/{pid}``
      - :func:`CN_authorization.isAuthorized`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
-       :class:`operation<Types.Event>`) ``->`` boolean
+       :class:`operation<Types.Event>`) ``->`` :class:`Types.Boolean`
    * - ``PUT /accessRules/{pid}``
      - :func:`CN_authorization.setAccess`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
-       :class:`accessPolicy<Types.AccessPolicy>`) ``->`` boolean
-   * - n/a
+       :class:`accessPolicy<Types.AccessPolicy>`) ``->`` :class:`Types.Boolean`
+   * - ``POST /notify``
      - :func:`CN_data_replication.setReplicationStatus`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
-       ``status``) ``->`` boolean
+       :class:`status<Types.ReplicationStatus>`) ``->`` :class:`Types.Boolean`
    * - ``GET /node``
      - :func:`CN_register.listNodes`
      - () ``->`` :class:`Types.NodeList`
    * - ``PUT /node/{pid}``
      - :func:`CN_register.addNodeCapabilities`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
-       boolean
+       :class:`Types.Boolean`
    * - ``POST /node``
      - :func:`CN_register.register`
      - (:class:`token<Types.AuthToken>`) ``->`` :class:`Types.Identifier`

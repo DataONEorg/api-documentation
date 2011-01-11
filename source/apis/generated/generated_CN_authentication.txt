@@ -23,11 +23,11 @@
        :class:`Types.PrincipalType`
    * - ``GET /account/verifyToken``
      - :func:`verifyToken`
-     - (:class:`token<Types.AuthToken>`) ``->`` boolean
+     - (:class:`token<Types.AuthToken>`) ``->`` :class:`Types.Boolean`
    * - ``POST /account/map``
      - :func:`mapIdentity`
      - (:class:`token1<Types.AuthToken>`, :class:`token2<Types.AuthToken>`)
-       ``->`` boolean
+       ``->`` :class:`Types.Boolean`
    * - ``POST /groups/{groupName}``
      - :func:`createGroup`
      - (:class:`token<Types.AuthToken>`, :class:`groupName<Types.Principal>`)
@@ -190,7 +190,7 @@
 
 ----
 
-.. function:: verifyToken(token) -> boolean
+.. function:: verifyToken(token) -> Boolean
 
    Test if the provided token is valid.
 
@@ -211,7 +211,7 @@
 
    :returns: True if the supplied token is valid, otherwise False.
 
-   :rtype: boolean
+   :rtype: :class:`Types.Boolean`
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4550)``
 
@@ -232,7 +232,7 @@
 
 ----
 
-.. function:: mapIdentity(token1,token2) -> boolean
+.. function:: mapIdentity(token1,token2) -> Boolean
 
    Map the two authenticated identities, asserting that they represent the same
    principal.
@@ -257,7 +257,7 @@
 
    :returns: True if the map was successfully created, false otherwise.
 
-   :rtype: boolean
+   :rtype: :class:`Types.Boolean`
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=)``
 
