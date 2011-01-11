@@ -9,15 +9,15 @@
    * - REST
      - Function
      - Parameters
-   * - ``GET /object/<pid>``
+   * - ``GET /object/{pid}``
      - :func:`CN_crud.get`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        bytes
-   * - ``GET /meta/<pid>``
+   * - ``GET /meta/{pid}``
      - :func:`CN_crud.getSystemMetadata`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.SystemMetadata`
-   * - ``GET /resolve/<pid>``
+   * - ``GET /resolve/{pid}``
      - :func:`CN_crud.resolve`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.ObjectLocationList`
@@ -30,7 +30,7 @@
      - :func:`CN_crud.reserveIdentifier`
      - (:class:`token<Types.AuthToken>`, :class:`[pid]<Types.Identifier>`,
        ``[scope]``, ``[format]``) ``->`` :class:`Types.Identifier`
-   * - ``GET /assertRelation/<pidOfSubject>``
+   * - ``GET /assertRelation/{pidOfSubject}``
      - :func:`CN_crud.assertRelation`
      - (:class:`token<Types.AuthToken>`,
        :class:`pidOfSubject<Types.Identifier>`,
@@ -58,7 +58,7 @@
    * - ``POST /account``
      - :func:`CN_authentication.getAuthToken`
      - (:class:`cert<Types.X.509Certificate>`) ``->`` :class:`Types.AuthToken`
-   * - ``PUT /owner/<pid>``
+   * - ``PUT /owner/{pid}``
      - :func:`CN_authentication.setOwner`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        :class:`userId<Types.Principal>`) ``->`` :class:`Types.Identifier`
@@ -70,27 +70,27 @@
    * - ``GET /account/verifyToken``
      - :func:`CN_authentication.verifyToken`
      - (:class:`token<Types.AuthToken>`) ``->`` boolean
-   * - ``PUT /account/map``
+   * - ``POST /account/map``
      - :func:`CN_authentication.mapIdentity`
      - (:class:`token1<Types.AuthToken>`, :class:`token2<Types.AuthToken>`)
        ``->`` boolean
-   * - ``POST /groups/<groupName>``
+   * - ``POST /groups/{groupName}``
      - :func:`CN_authentication.createGroup`
      - (:class:`token<Types.AuthToken>`, :class:`groupName<Types.Principal>`)
        ``->`` :class:`Types.Identifier`
-   * - ``PUT /groups/<groupName>``
+   * - ``PUT /groups/{groupName}``
      - :func:`CN_authentication.addGroupMembers`
      - (:class:`token<Types.AuthToken>`, :class:`groupName<Types.Principal>`,
        :class:`members<Types.PrincipalList>`) ``->`` :class:`Types.Identifier`
-   * - ``DELETE /groups/<groupName>``
+   * - ``DELETE /groups/{groupName}``
      - :func:`CN_authentication.removeGroupMembers`
      - (:class:`token<Types.AuthToken>`, :class:`groupName<Types.Principal>`,
        :class:`members<Types.PrincipalList>`) ``->`` :class:`Types.Identifier`
-   * - ``GET /isAuthorized/<pid>``
+   * - ``GET /isAuthorized/{pid}``
      - :func:`CN_authorization.isAuthorized`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        :class:`operation<Types.Event>`) ``->`` boolean
-   * - ``PUT /accessRules/<pid>``
+   * - ``PUT /accessRules/{pid}``
      - :func:`CN_authorization.setAccess`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        :class:`accessPolicy<Types.AccessPolicy>`) ``->`` boolean
@@ -101,7 +101,7 @@
    * - ``GET /node``
      - :func:`CN_register.listNodes`
      - () ``->`` :class:`Types.NodeList`
-   * - ``PUT /node/<pid>``
+   * - ``PUT /node/{pid}``
      - :func:`CN_register.addNodeCapabilities`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        boolean

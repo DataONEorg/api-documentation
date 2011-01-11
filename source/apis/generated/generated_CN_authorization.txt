@@ -9,11 +9,11 @@
    * - REST
      - Function
      - Parameters
-   * - ``GET /isAuthorized/<pid>``
+   * - ``GET /isAuthorized/{pid}``
      - :func:`isAuthorized`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        :class:`operation<Types.Event>`) ``->`` boolean
-   * - ``PUT /accessRules/<pid>``
+   * - ``PUT /accessRules/{pid}``
      - :func:`setAccess`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        :class:`accessPolicy<Types.AccessPolicy>`) ``->`` boolean
@@ -37,7 +37,7 @@
      :doc:`UC01 </design/UseCases/01_uc>`, :doc:`UC02 </design/UseCases/02_uc>`,
      :doc:`UC36 </design/UseCases/36_uc>`, :doc:`UC37 </design/UseCases/37_uc>`
 
-   :REST URL: ``GET /isAuthorized/<pid>``
+   :REST URL: ``GET /isAuthorized/{pid}``
 
    :param token:
 
@@ -87,7 +87,7 @@
 
      :doc:`UC16 </design/UseCases/16_uc>`
 
-   :REST URL: ``PUT /accessRules/<pid>``
+   :REST URL: ``PUT /accessRules/{pid}``
 
    :param token: The authentication token returned by
      :func:`CN_authentication.login`. Used to verify that the calling user has

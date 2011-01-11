@@ -12,7 +12,7 @@
    * - ``GET /node``
      - :func:`listNodes`
      - () ``->`` :class:`Types.NodeList`
-   * - ``PUT /node/<pid>``
+   * - ``PUT /node/{pid}``
      - :func:`addNodeCapabilities`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        boolean
@@ -50,7 +50,7 @@
 
 
 
-   :REST URL: ``PUT /node/<pid>``
+   :REST URL: ``PUT /node/{pid}``
 
    :param token: The authentication token returned by
      :func:`CN_authentication.login`

@@ -210,11 +210,22 @@
        </design/UseCases/16_uc>`
    * - \
      - :func:`CN_crud.resolve`
-     - Given an identifier, returns information that a client can use to
-       retrieve the identified target object from the DataONE system. The target
-       may reside on a MN or a CN.
+     - Implemented by CNs, returns the nodes (MNs or CNs) known to hold copies
+       of the object identified by *<pid>*. The object resolution process is
+       intended to provide a simple mechanism for a client to discover from
+       which node(s) a particular object may be retrieved, and this information
+       is returned as a list of node identifiers. Details about method
+       interfaces (i.e. REST URLs) exposed by a particular node can be
+       determined by examining the response from the *node* collection. For
+       convenience, the `GET /object/<pid>`_ URL is included in the response as
+       is the base URL of the node REST services. Note also that the same
+       functionality as *resolve()* can be implemented by retrieving a copy of
+       the system metadata for the object and utilizing the node registry to
+       discover the base URL from which the client can construct the *get()*
+       URL. Resolve is provided for efficiency since the response size is much
+       smaller.
 
-       Appears in functional use cases: :doc:`UC36 </design/UseCases/36_uc>`,
+        Appears in functional use cases: :doc:`UC36 </design/UseCases/36_uc>`,
        :doc:`UC16 </design/UseCases/16_uc>`
    * - \
      - :func:`CN_crud.create`

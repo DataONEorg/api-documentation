@@ -12,7 +12,7 @@
    * - ``POST /account``
      - :func:`getAuthToken`
      - (:class:`cert<Types.X.509Certificate>`) ``->`` :class:`Types.AuthToken`
-   * - ``PUT /owner/<pid>``
+   * - ``PUT /owner/{pid}``
      - :func:`setOwner`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        :class:`userId<Types.Principal>`) ``->`` :class:`Types.Identifier`
@@ -24,19 +24,19 @@
    * - ``GET /account/verifyToken``
      - :func:`verifyToken`
      - (:class:`token<Types.AuthToken>`) ``->`` boolean
-   * - ``PUT /account/map``
+   * - ``POST /account/map``
      - :func:`mapIdentity`
      - (:class:`token1<Types.AuthToken>`, :class:`token2<Types.AuthToken>`)
        ``->`` boolean
-   * - ``POST /groups/<groupName>``
+   * - ``POST /groups/{groupName}``
      - :func:`createGroup`
      - (:class:`token<Types.AuthToken>`, :class:`groupName<Types.Principal>`)
        ``->`` :class:`Types.Identifier`
-   * - ``PUT /groups/<groupName>``
+   * - ``PUT /groups/{groupName}``
      - :func:`addGroupMembers`
      - (:class:`token<Types.AuthToken>`, :class:`groupName<Types.Principal>`,
        :class:`members<Types.PrincipalList>`) ``->`` :class:`Types.Identifier`
-   * - ``DELETE /groups/<groupName>``
+   * - ``DELETE /groups/{groupName}``
      - :func:`removeGroupMembers`
      - (:class:`token<Types.AuthToken>`, :class:`groupName<Types.Principal>`,
        :class:`members<Types.PrincipalList>`) ``->`` :class:`Types.Identifier`
@@ -94,7 +94,7 @@
 
      :doc:`UC16 </design/UseCases/16_uc>`
 
-   :REST URL: ``PUT /owner/<pid>``
+   :REST URL: ``PUT /owner/{pid}``
 
    :param token: The authentication token returned by
      :func:`CN_authentication.login`. Used to verify that the calling user has
@@ -241,7 +241,7 @@
    to determine if both identities have been properly authenticated, which
    demonstrates that the user has control of both identities.
 
-   :REST URL: ``PUT /account/map``
+   :REST URL: ``POST /account/map``
 
    :param token1: The authentication token returned by
      :func:`CN_authentication.login`. Used to verify that the calling user has
@@ -294,7 +294,7 @@
    be unique within the DataONE system, and can only be modified by their
    creator.
 
-   :REST URL: ``POST /groups/<groupName>``
+   :REST URL: ``POST /groups/{groupName}``
 
    :param token: The authentication token returned by
      :func:`CN_authentication.login`. Used to verify that the calling user has
@@ -349,7 +349,7 @@
    NotAuthorized exception is thrown.  Group members are provided as a list of
    principals to be added to the group.
 
-   :REST URL: ``PUT /groups/<groupName>``
+   :REST URL: ``PUT /groups/{groupName}``
 
    :param token: The authentication token returned by
      :func:`CN_authentication.login`. Used to verify that the calling user has
@@ -403,7 +403,7 @@
    a NotAuthorized exception is thrown.  Group members are provided as a list of
    principals to be removed from the group.
 
-   :REST URL: ``DELETE /groups/<groupName>``
+   :REST URL: ``DELETE /groups/{groupName}``
 
    :param token: The authentication token returned by
      :func:`CN_authentication.login`. Used to verify that the calling user has

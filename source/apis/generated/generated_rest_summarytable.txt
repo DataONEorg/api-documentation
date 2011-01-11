@@ -62,19 +62,19 @@
      - `GET /  or  GET /node`_
    * - 0.3
      - :func:`CN_crud.get`
-     - `GET /object/<pid>`_
+     - `GET /object/{pid}`_
    * - 0.3
      - :func:`CN_crud.getSystemMetadata`
-     - `GET /meta/<pid>`_
+     - `GET /meta/{pid}`_
    * - 0.3
      - :func:`CN_crud.resolve`
-     - `GET /resolve/<pid>`_
+     - `GET /resolve/{pid}`_
    * - 0.4
      - :func:`CN_crud.reserveIdentifier`
      - `POST /reserve`_
    * - 0.7
      - :func:`CN_crud.assertRelation`
-     - `GET /assertRelation/<pidOfSubject>`_
+     - `GET /assertRelation/{pidOfSubject}`_
    * - 0.3
      - :func:`CN_query.search`
      - `GET /object`_
@@ -86,7 +86,7 @@
      - `POST /account`_
    * - 0.7
      - :func:`CN_authentication.setOwner`
-     - `PUT /owner/<pid>`_
+     - `PUT /owner/{pid}`_
    * - 0.7
      - :func:`CN_authentication.newAccount`
      - `POST /account/login`_
@@ -95,28 +95,28 @@
      - `GET /account/verifyToken`_
    * - 
      - :func:`CN_authentication.mapIdentity`
-     - `PUT /account/map`_
+     - `POST /account/map`_
    * - 
      - :func:`CN_authentication.createGroup`
-     - `POST /groups/<groupName>`_
+     - `POST /groups/{groupName}`_
    * - 
      - :func:`CN_authentication.addGroupMembers`
-     - `PUT /groups/<groupName>`_
+     - `PUT /groups/{groupName}`_
    * - 
      - :func:`CN_authentication.removeGroupMembers`
-     - `DELETE /groups/<groupName>`_
+     - `DELETE /groups/{groupName}`_
    * - 0.7
      - :func:`CN_authorization.isAuthorized`
-     - `GET /isAuthorized/<pid>`_
+     - `GET /isAuthorized/{pid}`_
    * - 0.7
      - :func:`CN_authorization.setAccess`
-     - `PUT /accessRules/<pid>`_
+     - `PUT /accessRules/{pid}`_
    * - 
      - :func:`CN_register.listNodes`
      - `GET /node`_
    * - 
      - :func:`CN_register.addNodeCapabilities`
-     - `PUT /node/<pid>`_
+     - `PUT /node/{pid}`_
    * - 
      - :func:`CN_register.register`
      - `POST /node`_

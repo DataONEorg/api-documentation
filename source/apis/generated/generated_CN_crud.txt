@@ -9,15 +9,15 @@
    * - REST
      - Function
      - Parameters
-   * - ``GET /object/<pid>``
+   * - ``GET /object/{pid}``
      - :func:`get`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        bytes
-   * - ``GET /meta/<pid>``
+   * - ``GET /meta/{pid}``
      - :func:`getSystemMetadata`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.SystemMetadata`
-   * - ``GET /resolve/<pid>``
+   * - ``GET /resolve/{pid}``
      - :func:`resolve`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.ObjectLocationList`
@@ -30,7 +30,7 @@
      - :func:`reserveIdentifier`
      - (:class:`token<Types.AuthToken>`, :class:`[pid]<Types.Identifier>`,
        ``[scope]``, ``[format]``) ``->`` :class:`Types.Identifier`
-   * - ``GET /assertRelation/<pidOfSubject>``
+   * - ``GET /assertRelation/{pidOfSubject}``
      - :func:`assertRelation`
      - (:class:`token<Types.AuthToken>`,
        :class:`pidOfSubject<Types.Identifier>`,
@@ -62,7 +62,7 @@
      :doc:`UC01 </design/UseCases/01_uc>`, :doc:`UC16 </design/UseCases/16_uc>`,
      :doc:`UC09 </design/UseCases/09_uc>`
 
-   :REST URL: ``GET /object/<pid>``
+   :REST URL: ``GET /object/{pid}``
 
    :param token: The authentication token returned by
      :func:`CN_authentication.login`
@@ -96,6 +96,9 @@
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=1002)``
 
 
+.. include:: ../examples/cn_get.txt
+
+
 
 ----
 
@@ -110,7 +113,7 @@
      :doc:`UC36 </design/UseCases/36_uc>`, :doc:`UC37 </design/UseCases/37_uc>`,
      :doc:`UC16 </design/UseCases/16_uc>`
 
-   :REST URL: ``GET /meta/<pid>``
+   :REST URL: ``GET /meta/{pid}``
 
    :param token: The authentication token returned by
      :func:`CN_authentication.login`
@@ -146,23 +149,36 @@
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=1080)``
 
 
+.. include:: ../examples/cn_getSystemMetadata.txt
+
+
 
 ----
 
 .. function:: resolve(token,pid) -> ObjectLocationList
 
-   Given an identifier, returns information that a client can use to retrieve
-   the identified target object from the DataONE system. The target may reside
-   on a MN or a CN.
+   Implemented by CNs, returns the nodes (MNs or CNs) known to hold copies of
+   the object identified by *<pid>*. The object resolution process is intended
+   to provide a simple mechanism for a client to discover from which node(s) a
+   particular object may be retrieved, and this information is returned as a
+   list of node identifiers. Details about method interfaces (i.e. REST URLs)
+   exposed by a particular node can be determined by examining the response from
+   the *node* collection. For convenience, the `GET /object/<pid>`_ URL is
+   included in the response as is the base URL of the node REST services.
+
+   Note also that the same functionality as *resolve()* can be implemented by
+   retrieving a copy of the system metadata for the object and utilizing the
+   node registry to discover the base URL from which the client can construct
+   the *get()* URL. Resolve is provided for efficiency since the response size
+   is much smaller.
 
    :Use Cases:
 
      :doc:`UC36 </design/UseCases/36_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
 
-   :REST URL: ``GET /resolve/<pid>``
+   :REST URL: ``GET /resolve/{pid}``
 
-   :param token: The authentication token returned by
-     :func:`CN_authentication.login`
+   :param token: An authentication token to be used for making the request.
 
    :type token: :class:`Types.AuthToken`
 
@@ -189,6 +205,9 @@
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4131)``
 
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4132)``
+
+
+.. include:: ../examples/resolve.txt
 
 
 
@@ -320,7 +339,7 @@
    Tests that the specified relationship between *pidOfSubject* and
    *pidOfObject* exists.
 
-   :REST URL: ``GET /assertRelation/<pidOfSubject>``
+   :REST URL: ``GET /assertRelation/{pidOfSubject}``
 
    :param token: The authentication token returned by
      :func:`CN_authentication.login`
