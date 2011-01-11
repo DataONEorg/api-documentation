@@ -46,12 +46,32 @@ Version   Structure
 .         :class:`SystemMetadata`
 ========= =============================
 
+----
+
+.. class:: OctetStream
+
+   A series of 8-bit bytes which combined together for a digital object.
+
+----
+
+.. class:: Boolean
+
+   A boolean response is commonly used in the DataONE service APIs to indicte
+   success or otherwise of an operation. For operations that are called 
+   through the service interfaces, a positive boolean response (i.e. True) is
+   indicated by returning a HTTP response with a status code of "200". The 
+   body of the message may contain additional content, but this should be 
+   ignored by the receiver.
+   
+   A False or failure response must return an appropriate Error message and 
+   must set the appropriate HTTP status code on the response to indicate a 
+   failure.
 
 ----
 
 .. class:: Capabilities
 
-  Describes the capabilities of a Member Node.
+  This class has been deprecated by :class:`Node`
 
 
 ----
