@@ -361,7 +361,7 @@
      - :func:`CN_data_replication.setReplicationStatus`
      - Update the replication status of the system metadata, ensuring that the
        change is appropriate for the given state of system metadata.  For
-       example, a MN can not change the status to *COMPELTED* unless the CN
+       example, a MN can not change the status to *COMPLETED* unless the CN
        previously requested replication of the object and the replications
        status of the object (as indicated in the system metadata) is set to
        *QUEUED*.

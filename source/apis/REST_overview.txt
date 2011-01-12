@@ -48,10 +48,6 @@ include:
   Member node to member node replication functionality
 
 
-
-.. include:: generated/generated_rest_summarytable.txt
-
-
 **Serialization**
 
 The format of the response (except for responses from :func:`MN_crud.get` or
@@ -108,14 +104,17 @@ Parameter names are identical to the parameter names as described in the
 corresponding method signature.
 
 For requests that use the HTTP POST verb, all parameters are sent as part of
-the request body using an appropriate encoding.
+the request body using `multipart form encoding`_.
 
 Requests that use HTTP PUT should include the ``id`` parameter as a URL
 parameter to be consistent with the semantics of the HTTP PUT operation which
-is intended to modify a specific resource.
+is intended to modify a specific resource. The payload of HTTP PUT requests 
+must be encoded using `multipart form encoding`_.
 
-In all cases where it is required, the ``token`` parameter will be provided in
-the HTTP request header.
+In all cases where it is required, the *token* parameter (i.e. the
+authentication token) will be provided in the HTTP request header.
+
+.. _multipart form encoding: http://www.ietf.org/rfc/rfc2388.txt
 
 
 **Authorization Token**
@@ -125,13 +124,11 @@ operation and is used to indicate the principal that is performing the
 request. The authorization token is transferred as a value in the HTTP
 headers.
 
-.. warning:: The expression of authorization information is likely to change.
-
 The authorization token is serialized in the HTTP headers as indicated::
 
   Auth: authorization-token-string
 
-The content of ``authorization-token-string`` is currently (2010-10-04)
+The content of *authorization-token-string* is currently (2010-10-04)
 undefined except that it will be a string that may be several kilobytes in
 length, but unlikely to be more than 10 kilobytes.
 
@@ -149,9 +146,9 @@ Several of the REST calls support filtering using wildcards and/or range
 operators. When such filtering is supported, it is explicitly noted in the
 documentation for a given REST call.
 
-The basic approach is the use of name/value pairs (NVPs) in the URL to construct
-a filter for restricting results to a portion of a data set. All NVPs are
-combined using the AND operator.
+The basic approach is the use of name/value pairs (NVPs) in the URL to
+construct a filter for restricting results to a portion of a data set. All
+NVPs are combined using the AND operator.
 
 Wildcards are typically supported for string values and allow substring
 filters to be specified by including one or more of the following wildcard
