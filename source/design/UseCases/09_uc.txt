@@ -105,14 +105,15 @@ Member Node replication.
   participant "CRUD API" as m_crud_b << Member Node B >>
   participant "CRUD API" as m_crud_a << Member Node A >>
 
-    c_sync -> m_crud_b: replicate(token, SystemMetadata, SourceNode)
+    c_sync -> c_sync: placeholder so you can see the line below
+    activate c_sync
     note right
       token has the roles:
       1) verifying that the replicate request originates from a CN
       2) enables MN A to verify that the get request from MN B can
       be trusted.
     end note
-    activate c_sync
+    c_sync -> m_crud_b: replicate(token, SystemMetadata, SourceNode)
     activate m_crud_b
     c_sync <-- m_crud_b: OK
     deactivate m_crud_b

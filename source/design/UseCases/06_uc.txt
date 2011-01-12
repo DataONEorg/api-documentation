@@ -63,78 +63,106 @@ involved in this use case.
 
 .. uml::
 
-  participant "Registry API" as c_reg << CN >>
-  participant "CRUD API" as c_crud << CN >>
-  participant "Task Queue" as cn_queue << CN >>
-  participant "Notification API" as c_notify << CN >>
-  participant "Synchronization API" as c_sync << CN >>
-  participant "Replication API" as m_rep << MN >>
-  participant "CRUD API" as m_crud << MN >>
+    participant "CRUD API" as c_crud << CN >>
+    participant "Task Queue" as cn_queue << CN >>
+    participant "Notification API" as c_notify << CN >>
+    participant "Synchronization API" as c_sync << CN >>
+    participant "Replication API" as m_rep << MN >>
+    participant "CRUD API" as m_crud << MN >>
 
-  activate cn_queue
-  m_crud -> c_notify: notify(objectCreated, identifier)
-  c_notify -> cn_queue: addTask(NEW_OBJECT, node, identifier)
-  note right
-    notification triggered by successful 
-    create operation on MN.
-  end note
-
-  c_sync -> m_rep: listObjects(token, startTime, ...)
-  note right
-    Periodic call to listObjects ensures 
-    complete coverage of all MNs
-  end note
-  activate c_sync
-  activate m_rep
-  c_sync <-- m_rep: ObjectList
-  deactivate m_rep
-  c_sync -> c_sync: createTasksForNewEntries(ObjectList)
-  c_sync -> cn_queue: appendTasks()
-  deactivate c_sync
-
-  loop for each task
-    c_sync -> cn_queue: getNextTask()
-    activate c_sync
-    cn_queue --> c_sync: Node, ObjectInfo
-    c_sync -> m_crud: getSystemMetadata(token, PID)
-    activate m_crud
+    activate cn_queue
+    m_crud -> c_notify: notify(token, pid, OBJECT_CREATED)
+    c_notify -> cn_queue: addTask(SYNC_OBJECT, node, pid)
     note right
-      The association between data and 
-      science metadata is created on 
-      the Member Node (or by the ITK).
+      notification triggered by successful 
+      create operation on MN.
     end note
-    c_sync <-- m_crud: SystemMetadata
-    deactivate m_crud
-    c_sync -> c_reg: isScienceMetadata(objectInfo.objectFormat)
-    c_reg -> c_sync: True or False
-    alt False (PID refers to data)
-      c_sync -> c_crud: create(PID, SystemMetadata)
-      deactivate c_sync
-      c_crud -> c_crud: log()
-    else True (PID refers to ScienceMetadata)
-      c_sync -> m_crud: get(token, PID)
-      activate c_sync
-      activate m_crud
-        m_crud --> m_crud: log (REPLICATE)
-        c_sync <-- m_crud: ScienceMetadata
-      deactivate m_crud
-      activate c_crud
-        c_sync -> c_crud: create(PID, SystemMetadata, ScienceMetadata)
-        c_crud -> c_sync: True or False
-        alt False (Failed)
-          c_sync -> m_rep: synchronizationFailed(PID, problemDescription)
-        end
-      deactivate c_sync
-      c_crud -> c_crud: log()
-      deactivate c_crud
+
+    m_rep -> c_notify: setReplicationStatus(token, pid, COMPLETE)
+    c_notify -> cn_queue: addTask(SYNC_OBJECT, node, pid)
+    note right
+      notification triggered by completed 
+      replication operation on MN.
+    end note
+
+    c_sync -> m_rep: listObjects(token, startTime, ...)
+    note right
+      Periodic call to listObjects 
+      ensures complete coverage 
+      of all MNs
+    end note
+    activate c_sync
+    activate m_rep
+    c_sync <-- m_rep: ObjectList
+    deactivate m_rep
+    loop for each pid
+      c_sync -> cn_queue: addTask(SYNC_OBJECT, node, pid)
     end
-  end
+    deactivate c_sync
+
+    loop for each task
+      c_sync -> cn_queue: getNextTask()
+      note right
+        Process the task queue
+      end note
+      activate c_sync
+      cn_queue --> c_sync: Node, pid
+      c_sync -> m_crud: getSystemMetadata(token, pid)
+      note left
+        It is always necessary to retrieve the 
+        system metadata from the MN in order 
+        to determine how to process this object.
+        Is it a duplicate? Is it new? Is it 
+        an attempt to use an existing identifier?
+      end note
+      m_crud --> c_sync: SystemMetadata
+      c_sync -> c_crud: getSystemMetadata(pid)
+      note right
+        Continue in activity diagram below.
+      end note
+    end
+
+    deactivate c_sync
 
 
 *Figure 2.* Sequence diagram for use case 06. Synchronize metadata between
 Member and Coordinating Node. Note that the log messages record a REPLICATE
 rather than a READ event. The MN determines this through the User Agent header
 (NB - this assumes that CNs only call MN.get to do replication).
+
+
+.. uml::
+
+   (*) --> if "CN_crud.getSystemMetadata(pid)" then
+     if "Duplicate Object?" then
+       -->[Yes] "Duplicate Content"
+       --> "Update Replica Info"
+       --> (*)
+     else 
+       -->[No] "Error: Duplicate Identifier"
+       --> (*)
+     endif
+
+   else
+     ->[FAIL] "New content"
+     note right
+       The content is unknown to DataONE
+       so needs to be examined and its
+       location recorded and optionally
+       retrieved and stored on the CN.
+     end note
+     if "is Science Metadata?" then
+       ->[yes] "Get science metadata from MN"
+       --> "Store on CN"
+       --> "Update Replica Info"
+     else
+       -->[no] "Update Replica Info"
+     endif
+   endif
+
+
+*Figure 3.* Activity diagram indicating the execution flow after attempting to
+retrieve the system metadata for the object from the CN. 
 
 
 Implementation
