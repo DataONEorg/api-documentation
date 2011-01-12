@@ -104,17 +104,17 @@ Parameter names are identical to the parameter names as described in the
 corresponding method signature.
 
 For requests that use the HTTP POST verb, all parameters are sent as part of
-the request body using `multipart form encoding`_.
+the request body using multipart mixed encoding as described in RFC2046_.
 
 Requests that use HTTP PUT should include the ``id`` parameter as a URL
 parameter to be consistent with the semantics of the HTTP PUT operation which
 is intended to modify a specific resource. The payload of HTTP PUT requests 
-must be encoded using `multipart form encoding`_.
+must be encoded using multipart mixed encoding as described in RFC2046_.
 
 In all cases where it is required, the *token* parameter (i.e. the
 authentication token) will be provided in the HTTP request header.
 
-.. _multipart form encoding: http://www.ietf.org/rfc/rfc2388.txt
+.. _RFC2046: http://tools.ietf.org/html/rfc2046#section-5.1.3
 
 
 **Authorization Token**
