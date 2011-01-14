@@ -9,16 +9,30 @@ information *may* be returned in the response.
 
 ::
 
-  curl -v http://my.membernode.org/mn/replicate/<some_other_member_node>/<pid>
-  
-  > GET / HTTP/1.1
-  > User-Agent: curl/7.19.7 (universal-apple-darwin10.0) libcurl/7.19.7 OpenSSL/0.9.8l zlib/1.2.3
-  > Host: my.membernode.org
-  > Accept: */*
-  > 
-  < HTTP/1.1 200 OK
-  < Date: Thu, 09 Dec 2010 20:57:21 GMT
-  < Expires: -1
-  < Cache-Control: private, max-age=0
-  < Content-Type: text/html; charset=utf-8
+  curl -v -X POST "http://localhost:8000/mn/replicate" \
+    -H "Content-type: multipart/mixed" \
+    -F "sysmeta=@systemmetadata.xml" \
+    -F "sourceNode=MN_B"
 
+  * About to connect() to localhost port 8000 (#0)
+  *   Trying ::1... Connection refused
+  *   Trying fe80::1... Connection refused
+  *   Trying 127.0.0.1... connected
+  * Connected to localhost (127.0.0.1) port 8000 (#0)
+  > POST /mn/replicate HTTP/1.1
+  > User-Agent: curl/7.19.7 (universal-apple-darwin10.0) libcurl/7.19.7 OpenSSL/0.9.8l zlib/1.2.3
+  > Host: localhost:8000
+  > Accept: */*
+  > Content-Length: 1021
+  > Expect: 100-continue
+  > Content-type: multipart/mixed; boundary=----------------------------88ffdd8070e9
+  > 
+  * Done waiting for 100-continue
+  * HTTP 1.0, assume close after body
+  < HTTP/1.0 200 OK
+  < Date: Fri, 14 Jan 2011 22:01:13 GMT
+  < Server: WSGIServer/0.1 Python/2.6.1
+  < Content-Type: text/xml
+  < 
+  < 
+  * Closing connection #0
