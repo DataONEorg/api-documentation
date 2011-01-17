@@ -10,6 +10,7 @@ GRAPHVIZ      = /usr/bin/dot
 #PLANTUML      = java -jar tools/plantuml.jar
 DOCGENERATOR  = python tools/ihwd/ihwd.py
 METHODXLS     = MethodCrossReference.xls
+ZIPHTML       = architecture.zip
 
 # Internal variables.
 PAPEROPT_a4     = -D latex_paper_size=a4
@@ -50,6 +51,8 @@ plantuml_usecase:
 
 html: 
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
+	zip -r $(BUILDDIR)/$(ZIPHTML) $(BUILDDIR)/html
+	mv $(BUILDDIR)/$(ZIPHTML) $(BUILDDIR)/html/
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 
