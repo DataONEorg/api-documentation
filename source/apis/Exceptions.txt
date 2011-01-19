@@ -11,14 +11,18 @@ Exceptions Raised by MN and CN APIs
 General
 ~~~~~~~
 
-All exceptions raised by APIS methods in DataONE cicore must include three
-basic elements of information and an optional element ``traceInformation`` as
+All exceptions raised by API methods in DataONE must include three basic
+elements of information and an optional element ``traceInformation`` as
 detailed in :class:`Types.ErrorMessage`, repeated here for convenience.
 
 ================= ==============================================================
 Element           Description
 ================= ==============================================================
-errorCode         The error code. This is the HTTP error code (i.e. 4xx)
+errorCode         The error code. This is the HTTP error code (i.e. 4xx). In 
+                  all cases, the HTTP Status Code value in the response headers
+                  *must* match this value. Note that this implies that any
+                  message with a HTTP 200 status (or similar OK status) is not 
+                  considered to be an Error by the receiver.
 detailCode        A code that can be mapped to a specific location in the 
                   source code of the implementation. Implemented as a string
                   with dot notation to indicate progressive levels of detail.
@@ -28,11 +32,6 @@ traceInformation  An optional dictionary of values that provides more
                   parameters). Note that traceInformation should never contain
                   sensitive information.
 ================= ==============================================================
-
-There will be conditions encountered where exceptions are raised in the APIs
-which are not exposed to HTTP. In these cases, the ``detailCode`` and
-``description`` values must be included, and the code should be set to an
-appropriate value.
 
 
 .. _ExceptionCodes:
@@ -46,11 +45,6 @@ convenience. Refer to the `HTTP specification`_ for a complete reference.
 ==== =================== =======================================================
 Code Meaning             Description
 ==== =================== =======================================================
-<100 Locally defined     The error refers to some condition that not related to
-                         the HTTP protocol. When such exceptions are transmitted
-                         the status code of 200 should be used since the error
-                         is an indication of some event or problem outside of 
-                         the transmission protocol.
 400  Bad Request         Bad request if the request REST operation is invalid,
                          serialization is erroneous, mime type is not supported, 
                          or resource is not supported.  
@@ -80,7 +74,7 @@ Code Meaning             Description
      Type                the entity of the request is in a format not supported 
                          by the requested resource for the requested method. 
 500  Internal Server     The server encountered an unexpected condition which 
-     Error               prevented it from fulfilling the request.
+     Error               prevented it from fulfilling the request. 
 501  Not Implemented     The server does not support the functionality required 
                          to fulfill the request. This is the appropriate
                          response  when the server does not recognize the
@@ -89,6 +83,7 @@ Code Meaning             Description
 ==== =================== =======================================================
 
 .. _HTTP specification: http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
+
 
 
 Serializing Exception Information
