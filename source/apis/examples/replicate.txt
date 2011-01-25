@@ -6,11 +6,12 @@ response must have a HTTP status code of 200. In case of an error condition,
 the appropriate HTTP status code must be set, and an exception or error
 information *may* be returned in the response.
 
+The outgoing request body *must* be encoded as `MIME multipart/form-data`_ with the system metadata portion as a file attachment and the sourceNode parameter as a form field.
 
 ::
 
   curl -v -X POST "http://localhost:8000/mn/replicate" \
-    -H "Content-type: multipart/mixed" \
+    -H "Content-type: multipart/form-data" \
     -F "sysmeta=@systemmetadata.xml" \
     -F "sourceNode=MN_B"
 
@@ -25,7 +26,7 @@ information *may* be returned in the response.
   > Accept: */*
   > Content-Length: 1021
   > Expect: 100-continue
-  > Content-type: multipart/mixed; boundary=----------------------------88ffdd8070e9
+  > Content-type: multipart/form-data; boundary=----------------------------88ffdd8070e9
   > 
   * Done waiting for 100-continue
   * HTTP 1.0, assume close after body
@@ -36,3 +37,5 @@ information *may* be returned in the response.
   < 
   < 
   * Closing connection #0
+
+.. _MIME multipart/form-data: http://www.ietf.org/rfc/rfc2388.txt

@@ -17,7 +17,7 @@
      - :func:`getSystemMetadata`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.SystemMetadata`
-   * - ``POST /object``
+   * - ``POST /object/{pid}``
      - :func:`create`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        ``object``, :class:`sysmeta<Types.SystemMetadata>`) ``->``
@@ -196,7 +196,7 @@
      :doc:`UC04 </design/UseCases/04_uc>`, :doc:`UC09 </design/UseCases/09_uc>`,
      :doc:`UC16 </design/UseCases/16_uc>`
 
-   :REST URL: ``POST /object``
+   :REST URL: ``POST /object/{pid}``
 
    :param token: The authentication token returned by ``login()``
 
