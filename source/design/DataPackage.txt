@@ -320,27 +320,35 @@ Classes, fields, and methods
 * DataPackage
    * Fields
        * identifier
-       * scimeta
-       * sysmeta 
-       * [dataObject]
+       * D1Object[] objects
    * Constructors
-       * DataPackage(identifier, scimeta, sysmeta)
+       * DataPackage(Identifier)
    * Methods
-       * addData(DataObject): DataPackage
-       * getDataObjectCount(): int
-       * getDataObject(index): DataObject
+       * add(DataObject): DataPackage
+       * size(): int
+       * get(Identifier): D1Object
+       * remove(Identifier): void
+       * identifiers(): List<Identifier>
        * getTitle(): String
        * getCreator(): String
        * getDisplayURL(): String
 
-* DataObject
+* D1Object
    * Fields
-       * sysmeta (contains the Identifier for this object)
-       * databytes (optional)
-
+       * SystemMetadata sysmeta (contains the Identifier for this object)
+       * byte[] data 
    * Constructors
-       * DataObject(SystemMetadata, databytes)
-   
+       * DataObject(Identifier)
+   * Methods
+       * getIdentifier(): Identifier
+       * getType(): ObjectFormat
+       * getSystemMetadata(): SystemMetadata
+       * setSystemMetadata(SystemMetadata): void
+       * getData(): byte[]
+       * setData(byte[]): void
+       * getDescribeList(): List<Identifier>
+       * getDescribeByList(): List<Identifier>
+       * getObsoltedByList(): List<Identifier>
 
 Algorithm for constructing Data Packages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
