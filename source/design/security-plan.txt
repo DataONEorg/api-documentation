@@ -1,0 +1,234 @@
+DataONE Cybersecurity Plan
+==========================
+
+:About: This document forms Appendix C of the `DataONE management plan`_, version 3.0
+
+.. _DataONE management plan: https://docs.dataone.org/member-area/documents/management/project-management-plans-pmp/
+
+
+General Principles
+------------------
+
+Cybersecurity for DataONE is predicated on the fact that DataONE is a
+collaboration of researchers, data providers, institutions, coordinating
+nodes, member nodes, data collections and other infrastructure components. As
+such it is inherently a virtual organization. DataONE as an entity spans many
+organizations and administrative domains. The goal of the cybersecurity in
+DataONE is to protect the infrastructure that those organizations and
+administrative domains contribute to DataONE as well as the data collections
+and the DataONE user community. DataONE, as a virtual organization, will
+naturally need to accommodate the highly variable security regimes that are in
+use in its various partners. In planning for cybersecurity in this
+environment, a layered approach must be used. Each DataONE entity must
+simultaneously meet requirements of its local institution and must also
+integrate into the DataONE cyberinfrastructure. DataONE is also a mixture of
+operational systems to accept and deliver scientific data and research
+endeavors to improve the overall data management lifecycle. The cybersecurity
+management for DataONE will need to be flexible enough to support the very
+different needs of research and operations. The cybersecurity posture of
+DataONE will evolve over time both because of continuing maturation of DataONE
+operational strategies and because of an ever-evolving cybersecurity
+landscape.
+
+
+DataONE Institutional Components
+--------------------------------
+
+DataONE consists of several types of components both in terms of humans,
+systems, institutions, and organizations. This section is a brief summary of
+those components and their DataONE roles in terms of cybersecurity:
+
+**Scientific Researchers**
+
+DataONE will host data and provide access to data for science researchers.
+DataONE will frame appropriate data curation policies as part of Partnership
+Agreements with Member Nodes. Data integrity must be maintained throughout the
+data life cycle when managed by DataONE.
+
+**DataONE staff and team members**
+
+DataONE funded staff will operate DataONE resources and develop DataONE
+software and tools in accordance with DataONE cybersecurity policies and the
+policies of their home institutions. DataONE coordinating nodes: A critical
+part of the DataONE physical cyber- infrastructure will be located at the
+Coordinating Nodes. These components will be operated within the current
+acceptable policy environments of these host institutions. In addition, these
+resources must meet the requirements for DataONE nodes.
+
+**DataONE member nodes**
+
+All data collectively managed by DataONE will be located at the member nodes.
+These components will be operated within the current acceptable policy
+environments of these host institutions. In addition, these resources must
+meet the requirements for DataONE nodes. Member nodes will vary in terms of
+size, sophistication, and current and future management that will be
+accommodated. Specific organizational data security policies and practices
+will be adhered to within DataONE in the process of sharing data through or
+within the DataONE network.
+
+**DataONE data collection owners/contributors/stewards**
+
+Data aggregated in DataONE will, in many cases, be delivered by or derived
+from existing datasets. The obligations and expectations of DataONE and these
+collections sources will be documented in Partnership Agreements by the
+involved organizations/institutions.
+
+**DataONE data collections**
+
+One of the key goals of the cybersecurity plan is protecting the integrity,
+availability and confidentiality of the data collections managed by DataONE.
+DataONE will develop the necessary policies, practices, and processes to
+insure data are properly protected and available only to those permitted
+access. 
+
+**Research organizations that generate long-lived data**
+
+DataONE will engage with data creators to host, replicate, and/or curate data
+collections. DataONE will use appropriate Partnership Agreements to specify
+how these activities will occur, including cybersecurity agreements.
+
+**Research Libraries**
+
+DataONE will engage with research libraries both as contributors of data
+provided by DataONE and as institutional users of DataONE digital data
+services. Appropriate Partnership Agreements will be created and executed in
+order to understand the agreed levels of mutual service between DataONE and
+research libraries. Educational Institutions: DataONE will view educational
+institutions as users and outreach and education opportunities. DataONE will
+engage with institutions and their students as individuals or a group to
+define user access rules and acceptable use policy
+
+**Standards Bodies**
+
+DataONE will use several data and computing standards both for operations and
+as cybersecurity policy and plan guidelines.
+
+**DataNet Partners**
+
+All DataNet awardees will, in concert, develop appropriate uniform approaches
+to data management and curation for the DataNet program. DataONE cybersecurity
+policies and posture will need to be compatible with DataNet guidelines.
+
+**The U.S. National Science Foundation (NSF)**
+
+DataONE and DataNet project and program sponsor. DataONE is responsible to NSF
+for cybersecurity operations and any Foundation specific policies or
+practices.
+
+
+Institutional Cybersecurity Requirements
+----------------------------------------
+
+Cyber-infrastructure resources in the form of data collections, access
+methods, data storage, and computational resources will need to operate within
+the established operational envelope of home institution of each DataONE
+component. In many instances this will be an institution of higher education
+where the operational envelope is defined by the institution in a process that
+may vary from informal to quite formal. In addition, some DataONE
+cyber-resources will originate within US agencies where FIPS and other NIST
+standards will need to be applied in order to receive a formal authorization
+for operations. Future DataONE cyber-resources will be located at institutions
+under foreign government institutions, where the governing laws, policies, and
+social practices may have significant differences from those at US
+institutions. In each instance, the home institution’s policy environment will
+be recognized and observed where possible. Where the home institution’s
+policies are not compatible with DataONE needs, home institution policy
+exceptions will be sought and obtained or we will find some other mechanism to
+address the incompatibility.
+
+Cybersecurity requirements will originate from the requirements of the data
+itself, primarily in the form of maintaining data integrity, but also
+availability and, in some cases, confidentiality.
+
+
+DataONE Wide Cybersecurity Requirements
+---------------------------------------
+
+In addition to the home institutions policy frameworks, DataONE resources as a
+collective entity will have an overlay cybersecurity framework that will
+integrate the diverse home institution policies in order to achieve DataONE
+goals. Specifically, DataONE will:
+
+  Initiate a DataONE cybersecurity coordination group. This group will help
+  develop and implement policy at all DataONE components. In general, this
+  policy will be guided by generally accepted best practices and is expected
+  to establish a set of base requirements and a means to map those
+  requirements to common frameworks (such as NIST and FIPS documents). This
+  policy will also provide a framework for the consistent application of
+  common policy guidelines, such as FIPS 199 information security
+  classification, by providing more specific examples of terms and
+  applications within the DataONE context.
+
+  Develop cybersecurity language (or appropriate pointers to such language)
+  within Partnership Agreements in order to document agreements and expected
+  service levels between DataONE and its fundamental entities:
+
+  - Users
+
+  - Data contributors 
+
+  - Coordinating nodes 
+
+  - Member nodes 
+
+  - DataONE staff at sub-awardee institutions 
+
+  - DataONE Collaboration and Public web presence
+
+  - Document DataONE uniform operational requirements and best practices as
+    appropriate
+
+  - Develop a DataONE-wide incidence response playbook, including a point of
+    contact at each DataONE component.
+
+  - Analyze the emergent behavior issues that, from a DataONE-wide point of
+    view, are highly important to DataONE’s success. Such issue will include,
+    among other things: data integrity and availability; data access control;
+    and federated identity.
+
+  - Develop an incident sharing mechanism and policy among DataONE components,
+    including real-time data sharing and available, sufficiently secure
+    communication means for during an incident.
+
+In this fashion, DataONE will attempt to create an integrated cybersecurity
+environment that meets its needs while not being overly burdensome.
+
+DataONE Cybersecurity Planning Posture Progression Through Project Lifetime
+---------------------------------------------------------------------------
+
+The DataONE cybersecurity plan and subsidiary documents are living efforts.
+They will be reviewed and potentially revised annually. In addition, annual
+assessments will focus on parts of the cybersecurity environment where issues
+or improvements can be made either because of identified vulnerabilities of
+because of evolving cybersecurity issues.
+
+Cybersecurity Milestones in DataONE Project Year One
+----------------------------------------------------
+
+The DataONE cybersecurity coordination group will be constituted. It will
+consist of the deputy director for operations, selected CCIT members,
+leadership team representation, working group leads from the Federated
+Security group, and other members as appropriate. This group will:
+
+- draft a charter and get it approved as a project document
+
+- Develop DataONE security policies for coordinating node, member nodes, and
+  data collection providers as part of their DataONE Partnership Agreements
+
+- Develop DataONE acceptable use policy and appropriate user access
+  acknowledgement format
+
+- Draft the initial DataONE cybersecurity plan. 
+
+- Plan for annual assessment and revision to include, for example, a DataONE
+  wide security incident response contact list and a DataONE wide security
+  incident playbook
+
+Approval Workflow
+-----------------
+
+This section is the initial cybersecurity plan for DataONE. Its approval
+process is via the DataONE leadership team and PI. This initial cybersecurity
+plan is part of the overall DataONE project management plan. Future annual
+revisions of the cybersecurity plan will be via a standalone document that
+will be drawn from this section of the project management plan.

@@ -58,7 +58,8 @@ try:
                 'rst2pdf.pdfbuilder', 
                 'sphinx.ext.todo',
                 'sphinx.ext.inheritance_diagram',
-                'plantuml',
+                'sphinx.ext.extlinks',
+                #'plantuml',
                 ]
 except:
   extensions = ['sphinx.ext.autodoc', 
@@ -69,10 +70,13 @@ except:
                 #'rst2pdf.pdfbuilder', 
                 'sphinx.ext.todo',
                 'sphinx.ext.inheritance_diagram',
-                'plantuml',
+                'sphinx.ext.extlinks',
+                #'plantuml',
                 ]
   
-  
+#
+extlinks = {'history': ('https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/%s', 'history: ')}
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
@@ -96,7 +100,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'DataONE Architecture'
-copyright = u'2010, DataONE'
+copyright = u'2009-2011, DataONE'
 #copyright = u'''- INTEROP: Creation of an International Virtual Data Center for the Biodiversity, 
 #Ecological and Environmental Sciences (NSF Award 0753138); 
 #

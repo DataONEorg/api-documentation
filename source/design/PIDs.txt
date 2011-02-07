@@ -459,8 +459,8 @@ persisted, however, it will be the primary identifier by which that content
 will be referenced, regardless of which node the object is located on.
 
 
-.. uml:: 
-
+.. 
+   @startuml images/resolve.png
    title Resolve PID
    actor User
    participant "CRUD API" as m_crud << Member Node >>
@@ -476,14 +476,17 @@ will be referenced, regardless of which node the object is located on.
    cn_crud --> m_crud: metadata
    m_crud --> m_cache: addEntry("A5548D", metadata)
    m_crud --> User: metadata
+   @enduml
 
-*Figure XX.* Resolving a PID. In this scenario a user is trying to determine
+.. image:: images/resolve.png
+
+*Figure 1.* Resolving a PID. In this scenario a user is trying to determine
 what the ID "A5548D" refers to, and uses the resolution service of a Member
 Node to that effect.
 
 
-.. uml::
-
+.. 
+   @startuml images/resolve-detail.png
    title Resolve PID Detail
    actor User
    participant "CRUD API" as m_crud << Member Node >>
@@ -513,14 +516,16 @@ Node to that effect.
    endnote
    User -> m_crud2: GET "http://mn2.dataone.org/objects/A4448D"
    m_crud2 --> User: bytes
+   @enduml
 
-*Figure XX.* Detail for object retrieval of an object identified by a PID. In
+.. image:: images/resolve-detail.png
+*Figure 2.* Detail for object retrieval of an object identified by a PID. In
 this case, the User is requesting a data object from MN 1, though the data is
 actually located on MN 2.
 
 
-.. uml::
-
+.. 
+   @startuml images/resolve-conflict.png
    title Conflicting IDs
    participant "MN_A" as mn_a
    participant "MN_B" as mn_b
@@ -541,7 +546,9 @@ actually located on MN 2.
    user -> cn: resolve("435")
    user <-- cn: "mn_a:435", "mn_b:435"
 
-*Figure XX.* A scenario where two MNs happen to add different content to the
+.. image:: images/resolve-conflict.png
+
+*Figure 3.* A scenario where two MNs happen to add different content to the
 system with the same identifier. Resolving the identifier without including
 the namespace results in two matches that must be interpreted by the client.
 The likelihood of such a scenario should be low, given that MNs should be

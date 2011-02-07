@@ -342,8 +342,8 @@ Interaction diagrams
 Phase 1
 ~~~~~~~
 
-.. uml::
-
+.. 
+   @startuml images/authorization_seq.png
    actor User
    participant MN1
    participant MN2
@@ -358,6 +358,9 @@ Phase 1
    MN1 -> MN1: isAuthorized(token, pid, OP_CREATE)
    MN1 --> User: pid
    deactivate MN1
+   @enduml
+
+.. image::  images/authorization_seq.png
 
 *Figure 1.* Only public objects are searchable and replicated in the system. 
 Create, Read, Update, and Delete operations are controlled by member nodes
