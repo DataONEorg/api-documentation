@@ -1,47 +1,63 @@
+.. _UC30:
+
 Use Case 30 - MN Outage Notification
 ------------------------------------
 
-Author
-  VDC TWG
+.. index:: Use Case 30, UC30, MN outage, health, notification
 
-Date
-  - 20090925 Adding to use case description and documentation
-  - 20090114 (TWG meeting).  Subsequent various modifications.
-
-Version 
-  Draft
+Revisions
+  View document revision history_.
 
 Goal
   MN can notify CN about pending outages, severity, and duration, and CNs may
   want to act on that knowledge to maintain seamless operation.
 
-Summary 
-
-  xxx
+Summary
+  It is likely that Member Nodes will need to be taken offline from time to 
+  time for maintenance or other planned outages. There should be a mechanism 
+  for Member Nodes to notify Coordinating Nodes of the impeding outage so that
+  the Coordinating Nodes can adjust replication of content to ensure ongoing
+  availability. The migration of content should be tempered with the duration
+  of the outage and the number of existing copies of content available on
+  other node. For short durations outages, the expense of moving the content
+  around may not be justified. However, for lengthy outages, it would be
+  preferable to replicate as much content as practical to ensure ongoing 
+  access.
 
 Actors
-  xxx
+  - Member Node
+  - Member Node administrator
+  - Coordinating Nodes
+  - Coordinating Node administrators
 
 Preconditions 
-  xxx
+  - Member Node is participating in the DataONE federation
+  - Content stored on the Member Node needs to be available while offline
   
 Triggers
-  xxx
+  - A Member Node needs to be taken offline
  
 Post Conditions
-  xxx
+  - A decision has been made on which content to replicate from the Member 
+    Node
+  - Content is replicated from the Member Node
+  - Notification to the Member Node operator of replication completion is
+    provided
 
 
-.. uml::
-
+.. 
+   @startuml images/30_seq.png
    participant "State of Health API" as c_health << Coordinating Node >>
    participant "State of Health API" as m_health << Member Node >>
    m_health -> c_health: reportPendingEvent ()
    m_health <-- c_health: ack
    c_health -> c_health: actOnPendingEvent (event)
+   @enduml
 
+.. image:: images/30_seq.png
 
 *Figure 1.* Interactions for use case 30. MN can notify CN about pending
-outages, severity and duration, and\nCNs may want to act on that knowledge to
+outages, severity and duration, and CNs may want to act on that knowledge to
 maintain seamless operation.
 
+.. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/30_uc.txt

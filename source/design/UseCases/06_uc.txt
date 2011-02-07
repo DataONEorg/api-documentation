@@ -3,49 +3,60 @@
 Use Case 06 - MN Synchronize
 ----------------------------
 
-Author
-  VDC TWG
+.. index:: Use Case 06, UC06, MN Synchronize, synchronize
 
-Date
-  - 20091127 [PEA] Made consistent with V0.3 APIs.
-  - 20090930 Filled out content, changed mode to pull from MN
-  - 20090925 Adding to use case description and documentation
-  - 20090114 (TWG meeting).  Subsequent various modifications.
+Revisions
+  View document revision history_.
 
 Goal
-
   Science metadata records present in a Member Node are synchronized to a
   Coordinating Node.
 
 Summary
-
   As content is added to Member Nodes, the associated system metadata and
   science metadata documents are copied to a Coordinating Node. Once the
   objects are registered with the Coordinating Node they are available for
   transfer to other Coordinating and Member nodes.
 
 Actors
-
   Member Node, Coordinating Node
 
 Preconditions 
-
   - CN and MN operational
   - New content available on a Member Node
 
 Triggers
-
   - Periodic polling of MNs
   - Signal to CN issued by a MN that is requesting synchronization
 
 Post Conditions
-
   - All system and science metadata records from a MN are also present on the
     CN
+  - The search index is updated with the new content
 
 
-.. uml::
+.. image:: images/06_uc.png
 
+*Figure 1.* Use case diagram indicating the components and other use cases
+involved in this use case.
+
+.. image:: images/06_seq.png
+
+
+*Figure 2.* Sequence diagram for use case 06. Synchronize metadata between
+Member and Coordinating Node. Note that the log messages record a REPLICATE
+rather than a READ event. The MN determines this through the User Agent header
+(NB - this assumes that CNs only call MN.get to do replication).
+
+
+.. image:: images/06_act.png
+
+*Figure 3.* Activity diagram indicating the execution flow after attempting to
+retrieve the system metadata for the object from the CN. 
+
+
+.. 
+  @startuml images/06_uc.png
   package "DataONE"
   actor "Coordinating Node" as CN
   actor "Member Node" as MN
@@ -56,13 +67,11 @@ Post Conditions
   MN -- SYNC
   SYNC ..> author: <<includes>>
   SYNC ..> NOTIFY: <<includes>>
-
-*Figure 1.* Use case diagram indicating the components and other use cases
-involved in this use case.
+  @enduml
 
 
-.. uml::
-
+.. 
+    @startuml images/06_seq.png
     participant "CRUD API" as c_crud << CN >>
     participant "Task Queue" as cn_queue << CN >>
     participant "Notification API" as c_notify << CN >>
@@ -123,16 +132,11 @@ involved in this use case.
     end
 
     deactivate c_sync
+    @enduml
 
 
-*Figure 2.* Sequence diagram for use case 06. Synchronize metadata between
-Member and Coordinating Node. Note that the log messages record a REPLICATE
-rather than a READ event. The MN determines this through the User Agent header
-(NB - this assumes that CNs only call MN.get to do replication).
-
-
-.. uml::
-
+.. 
+   @startuml images/06_act.png
    (*) --> if "CN_crud.getSystemMetadata(pid)" then
      if "Duplicate Object?" then
        -->[Yes] "Duplicate Content"
@@ -159,10 +163,7 @@ rather than a READ event. The MN determines this through the User Agent header
        -->[no] "Update Replica Info"
      endif
    endif
-
-
-*Figure 3.* Activity diagram indicating the execution flow after attempting to
-retrieve the system metadata for the object from the CN. 
+   @enduml
 
 
 Implementation
@@ -315,7 +316,4 @@ to a MN (later enhancement)::
 
 
 
-
-.. raw:: latex
-
-   \newpage
+.. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/06_uc.txt

@@ -1,20 +1,17 @@
+.. _UC36:
+
 Use Case 36 - Resolve an Object Location
 ----------------------------------------
 
-Author
-  Paul Allen
+.. index:: Use Case 36, UC36, resolve
 
-Date
-  - 20091204 Created.
-
-Version 
-  Draft
+Revisions
+  View document revision history_.
 
 Goal
   Communicate the locations where a DataONE object can be found
 
 Summary 
-
   Within DataONE, a registered object may be held on one or more Member Nodes
   (depending on replication policy) and in the case of science metadata, on
   Coordinating Nodes. Clients must be able to ask a Coordinating Node for
@@ -44,7 +41,8 @@ Post Conditions
   - Client has more information about the location of the object.
 
 
-.. uml:: 
+.. 
+   @startuml images/36_uc.png
 
    actor "User" as client
    usecase "12. Authentication" as authen
@@ -57,12 +55,15 @@ Post Conditions
      CN -- resolve
      resolve ..> author: <<includes>>
      resolve ..> authen: <<includes>>
+   @enduml
+
+.. image::  images/36_uc.png
 
 *Figure 1.* Use case diagram for Use Case 36.
 
 
-.. uml::
-
+.. 
+   @startuml images/36_seq.png
    participant "Client" as itk <<Investigator Toolkit>>
    participant "CRUD API" as c_crud << Coordinating Node >>
    participant "Authorization API" as c_authorize << Coordinating Node >>
@@ -82,6 +83,10 @@ Post Conditions
      c_crud -> itk: objectLocations
    end
    deactivate c_crud
+   @enduml
+
+.. image::  images/36_seq.png
 
 *Figure 2.* Sequence diagram for implementation of use case 36.
 
+.. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/36_uc.txt

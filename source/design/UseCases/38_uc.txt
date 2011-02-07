@@ -1,11 +1,12 @@
+.. _UC38:
+
 Use Case 38 - Reserve an Identifier
 -----------------------------------
 
-Author
-  VDC TWG
+.. index:: Use Case 38, UC38, reserve identifier
 
-Date
-  - 20100330 [DV] Added use case
+Revisions
+  View document revision history_.
 
 Goal 
   Reserve an identifier to ensure it is available at some reasonable time in
@@ -31,9 +32,8 @@ Post Conditions
   - An identifier is reserved and guaranteed to be unique for some finite
     period of time.
 
-
-.. uml::
-
+.. 
+   @startuml images/38_uc.png
    usecase "12. Authentication" as authen
    package "DataONE"
      actor "Coordinating Node" as CN
@@ -44,6 +44,9 @@ Post Conditions
      ITK -- RES
      RES ..> author: <<includes>>
      RES ..> authen: <<includes>>
+   @enduml
+
+.. image::  images/38_uc.png
 
 *Figure 1.* Use case 38. Note that id a Member Node needs to reserve an
 identifier then it would use the functioanlity of the Investigator Toolkit
@@ -51,8 +54,8 @@ Library - that is, the reserveIdentifier operation is not required for Member
 Node functionality.
 
 
-.. uml::
-
+.. 
+   @startuml images/38_seq.png
    participant "Client" as itk <<Investigator Toolkit>>
    participant "CRUD API" as c_crud << Coordinating Node >>
    itk -> c_crud: reserveIdentifier(token, pid, scope, format)
@@ -69,6 +72,9 @@ Node functionality.
    else ok
      c_crud -> itk: identifier
    end
+   @enduml
+
+.. image::  images/38_seq.png
 
 *Figure 2.* Sequence diagram for use case 38. The Coordinating Node needs to
 keep track of identifiers that have been reserved, and this information needs
@@ -76,3 +82,4 @@ to be replicated between Coordinating Nodes. The reserved identifier should
 not be discoverable and should not be involved with any Member Node
 synchronization or Member Node replication.
 
+.. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/38_uc.txt

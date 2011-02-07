@@ -1,46 +1,39 @@
+.. _UC19:
+
 Use Case 19 - Retrieve Object Download Summary
 ----------------------------------------------
 
-Author
-  VDC TWG
+.. index:: Use Case 19, UC19, object use summary, aggregation, use
 
-Date
-  - 20090925 Adding to use case description and documentation
-  - 20090114 (TWG meeting).  Subsequent various modifications.
-
-Version 
-  Draft
+Revisions
+  View document revision history_.
 
 Goal
   General public can request aggregated download usage information for any
   object ID (with anonymous read access)
 
 Summary 
-
   This operation provides an indication of the popularity for an object in
   DataONE, somewhat equivalent to a citation index for a publication.
 
 Actors
-
   - Anonymous user
 
   - Coordinating Node
 
 Preconditions 
-
   Use statistics have been recorded for a given object
   
 Triggers
   - Any user requests use logs for an object
 
 Post Conditions
-
   - Requesting user has a copy of use statistics for an object (if
     authorized).
 
 
-.. uml::
-
+.. 
+   @startuml images/19_seq.png
    actor User
    participant "Client" as app_client << Application >>
    User -> app_client
@@ -59,5 +52,11 @@ Post Conditions
    handled by another API?
    (e.g. "Report API"?)
    end note
+   @enduml
+
+.. image::  images/19_seq.png
 
 *Figure 1.* Interactions for use case 19.
+
+.. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/19_uc.txt
+

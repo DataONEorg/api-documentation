@@ -7,7 +7,8 @@ SPHINXBUILD   = sphinx-build
 PAPER         =
 BUILDDIR      = build
 GRAPHVIZ      = /usr/bin/dot
-#PLANTUML      = java -jar tools/plantuml.jar
+PLANTUMLCONF  = `pwd`/tools/docutils/plantuml.conf
+PLANTUML      = java -jar tools/docutils/plantuml.jar -config tools/docutils/plantuml.conf
 DOCGENERATOR  = python tools/ihwd/ihwd.py
 METHODXLS     = MethodCrossReference.xls
 ZIPHTML       = architecture.zip
@@ -47,7 +48,7 @@ plantuml_source:
 	GRAPHVIZ_DOT=$(GRAPHVIZ) $(PLANTUML) source source/design
 
 plantuml_usecase:
-	GRAPHVIZ_DOT=$(GRAPHVIZ) $(PLANTUML) source source/design/UseCases
+	GRAPHVIZ_DOT=$(GRAPHVIZ) $(PLANTUML) source/design/UseCases
 
 html: 
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html

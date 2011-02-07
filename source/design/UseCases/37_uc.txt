@@ -1,17 +1,17 @@
+.. _UC37:
+
 Use Case 37 - Get System Metadata for Object
 --------------------------------------------
 
-Author
-  VDC TWG
+.. index:: Use Case 37, UC37, getSystemMetadata, system metadata
 
-Date
-  - 20100323 [DV] Added new use case as retrieving system metadata was not previously described.
+Revisions
+  View document revision history_.
 
 Goal
   Retrieve the :term:`system metadata` for an object identified by some :term:`identifier`.
 
 Summary 
-
   A client has an identifier for some object within the DataONE system and is
   attempting to retrieve system metadata describing the object. If the object
   exists on the node and the user has READ permission on the object, then the
@@ -38,8 +38,8 @@ Post Conditions
     in the case of failure)
 
 
-.. uml::
-
+.. 
+   @startuml images/36_uc.png
    actor "User" as client
    usecase "12. Authentication" as authen
    note top of authen
@@ -57,12 +57,15 @@ Post Conditions
      MN -- GET
      GET ..> author: <<includes>>
      GET ..> authen: <<includes>>
+   @enduml
+
+.. image::  images/36_uc.png
 
 *Figure 1.* Use case 37 diagram showing actors and components involved in this action.
 
 
-.. uml::
-
+.. 
+   @startuml images/36_seq.png
    participant "Client" as app_client << Application >>
    participant "CRUD API" as n_crud << Node >>
    participant "Authorization API" as n_authorize <<  Node >>
@@ -84,8 +87,12 @@ Post Conditions
      deactivate n_crud
    end
    deactivate app_client
+   @enduml
+
+.. image::  images/36_seq.png
 
 *Figure 2.* Sequence diagram for Use Case 37 illustrating the sequence for
 retrieving the system metadata for an object identified by PID from a
 Coordinating Node.
 
+.. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/37_uc.txt

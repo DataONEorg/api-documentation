@@ -1,15 +1,13 @@
+.. _UC34:
+
 Use Case 34 - CNs Support Other Discovery Mechanisms (e.g. Google)
 ------------------------------------------------------------------
 
-Author
-  VDC TWG
+.. index:: Use Case 34, UC34, search, discovery, external search index
 
-Date
-  - 20090925 Adding to use case description and documentation
-  - 20090114 (TWG meeting).  Subsequent various modifications.
+Revisions
+  View document revision history_.
 
-Version 
-  Draft
 
 Goal
   Coordinating Nodes publish metadata in formats for other discovery services
@@ -17,17 +15,26 @@ Goal
 
 Summary 
 
-  xxx
+  This is a requirement, not a use case. DataONE needs to ensure that content
+  is suitably exposed by appropriate, and standard mechanisms to ensure that
+  non-DataONE indexing and search mechanisms can index and provide 
+  discovery functionality for content available in the DataONE system. Note 
+  that such indexing can not violate access control policies for the content, 
+  and so indexing of all content should only occur with trusted services, and
+  only public content should be accessible to services for which limited or
+  no trust relationships have been established.
 
 Actors
-  xxx
+  - NA
 
 Preconditions 
-  xxx
+  - NA
   
 Triggers
-  xxx
+  - NA
  
 Post Conditions
-  xxx
+  - NA
+
+.. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/34_uc.txt
 

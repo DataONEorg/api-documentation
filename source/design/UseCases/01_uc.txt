@@ -1,17 +1,12 @@
+.. _UC01:
+
 Use Case 01 - Get Object Identified by PID
 ------------------------------------------
 
 .. index:: Use Case 01, get, UC01
 
-Author
-  VDC TWG
-
-Date
-  - 20100323 [DV] Cleaned up diagrams, get operation consistent between MN and CN.
-  - 20091126 [PEA] Make consistent with V0.3 API documentation.
-  - 20091006 Added use case diagram
-  - 20090924 Adding to use case description and documentation
-  - 20090114 (TWG meeting).  Subsequent various modifications.
+Revisions
+  View document revision history_.
 
 Goal
   Retrieve an object identified by PID (authenticated or not, notify
@@ -44,9 +39,22 @@ Post Conditions
 
   - Watchers are notified of the event.
 
+.. image:: images/01_uc.png
 
-.. uml::
 
+*Figure 1.* Use case 01 diagram showing actors and components involved in this
+action.
+
+.. figure:: images/01_seq.png
+
+*Figure 2.* Sequence diagram for Use Case 01 illustrating the sequence for
+retrieving an object identified by a PID from the DataONE system. No
+distinction is made between Member Node and Coordinating Node implementation
+as they are identical at this level of detail.
+
+
+..
+   @startuml images/01_uc.png
    actor "User" as client
    usecase "12. Authentication" as authen
    note top of authen
@@ -68,13 +76,11 @@ Post Conditions
      GET ..> authen: <<includes>>
      GET ..> log: <<includes>>
      GET ..> subscribe: <<includes>>
-
-*Figure 1.* Use case 01 diagram showing actors and components involved in this
-action.
+   @enduml
 
 
-.. uml::
-
+.. 
+   @startuml images/01_seq.png
    participant "Client" as app_client << Application >>
    participant "CRUD API" as n_crud << Node >>
    participant "Authorization API" as n_authorize << Node >>
@@ -92,12 +98,8 @@ action.
      n_crud --> n_crud: log(READ)
      app_client <- n_crud: bytes
    end
+   @enduml
 
-
-*Figure 2.* Sequence diagram for Use Case 01 illustrating the sequence for
-retrieving an object identified by a PID from the DataONE system. No
-distinction is made between Member Node and Coordinating Node implementation
-as they are identical at this level of detail.
 
 
 **Notes**
@@ -112,3 +114,6 @@ as they are identical at this level of detail.
 
 2. Data sent to watchers might include: timestamp, object identifier, user id,
    IP of client.
+
+
+.. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/01_uc.txt

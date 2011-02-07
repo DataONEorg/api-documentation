@@ -1,40 +1,48 @@
+.. _UC31:
+
 Use Case 31 - Manage Access Policies
 ------------------------------------
 
-Author
-  VDC TWG
+.. index:: Use Case 31, UC31, authorization, access control, policies
 
-Date
-  - 20090925 Adding to use case description and documentation
-  - 20090114 (TWG meeting).  Subsequent various modifications.
-
-Version 
-  Draft
+Revisions
+  View document revision history_.
 
 Goal
   Manage Access Policies - Client can specify access restrictions for their
   data and metadata objects. Also supports release time embargoes.
 
-
 Summary 
-
-  xxx
+  It will be necessary to adjust access control policies for any object
+  in the system as its use progresses through the science data lifecycle. 
+  Note that it seems likely that in most cases, content will progress to less
+  restrictive permissions as the original researcher publishes or otherwise
+  completes activities that require some aspects of access control on the 
+  objects in question.
+  
+  There are many design aspects to be considered in setting and ensuring 
+  timely and complete propagation of changes to access control rules through the
+  system.
 
 Actors
-  xxx
+  - Data owners
+  - Member Nodes
+  - Investigator Toolkit
+  - Coordinating nodes
 
 Preconditions 
-  xxx
+  - Content is present on a system
+  - Access control editing facilities are available
   
 Triggers
-  xxx
+  - A data owner or manager needs to alter access control policies
  
 Post Conditions
-  xxx
+  - The access control policies associated with the object are updated 
+    throughout the system in a timely manner.
 
-
-
-.. uml::
+.. 
+   @startuml images/31_seq.png
 
    actor "User (Data Owner)" as user
    participant "Client" as app_client << Application >>
@@ -50,6 +58,9 @@ Post Conditions
    Users can be members of groups that can
    participate in access directives.
    end note
+   @enduml
+
+.. image:: images/31_seq.png
 
 *Figure 1.* Interactions for use case 31. Client can specify access and
 replication restrictions for their\ndata and metadata objects, and supported
@@ -70,3 +81,5 @@ timed embargoes
   and the user's identify with a token. Also "accessLevel" sounds very
   limited, and access policy implies a possibly more sophisticated access
   policy delineation, including embargoes.
+
+.. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/31_uc.txt

@@ -1,33 +1,28 @@
+.. _UC11:
+
 Use Case 11 - CRUD Workflow Objects
 -----------------------------------
 
-Author
-  VDC TWG
+.. index:: Use Case 11, UC11, CRUD Workflow, workflow
 
-Date
-  - 20090925 Adding to use case description and documentation
-  - 20090114 (TWG meeting).  Subsequent various modifications.
-
-Version 
-  Draft
+Revisions
+  View document revision history_.
 
 Goal
   Create / update / delete / search workflow objects.
 
 Summary 
-
   This use case describes the management of a workflow object within the
   DataONE infrastructure.
 
   *Note:* It is not clear why this should be treated any differently from the
-  management of regular objects. A workflow should be treated like any other
+  management of regular objects. A workflow could be treated like any other
   object within DataONE as far as object management, replication, preservation
   and discovery are concerned. Some additional features to support workflow
   staging and execution may emerge as separate use cases.
 
 
 Actors
-
   - User
 
   - Client application
@@ -37,21 +32,19 @@ Actors
   - Coordinating Node
 
 Preconditions 
-
   - DataONE system is operational
 
   - User has authenticated with the DataONE system
 
 Triggers
-
   - User adds, deletes, or modifies a workflow object
  
 Post Conditions
-
   - Workflow object is stored on a Member Node
 
   - Metadata about workflow object is stored on Coordinating Nodes
 
   - Replication of workflow object across multiple Member Nodes is initiated
 
+.. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/11_uc.txt
 

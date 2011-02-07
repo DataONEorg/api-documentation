@@ -1,22 +1,17 @@
+.. _UC17:
+
 Use Case 17 - CRUD Logs Aggregated at CNs
 -----------------------------------------
 
-Author
-  VDC TWG
+.. index:: Use Case 17, UC17, log aggregation, log summary
 
-Date
-  - 20091126 [PEA] Make consistent with V0.3 API documentation.
-  - 20090925 Adding to use case description and documentation
-  - 20090114 (TWG meeting).  Subsequent various modifications.
-
-Version 
-  0.3
+Revisions
+  View document revision history_.
 
 Goal
   All CRUD logs are aggregated at coordinating nodes.
 
 Summary 
-
   Aggregation of CRUD operation logs is used to compute use statistics and
   other summary types of information. The original log information should be
   viewable by administrators for some period of time.
@@ -25,46 +20,48 @@ Summary
   so that MNs know what specific information needs to be collected as part of 
   Use Case 16.
 
-
 Actors
-
   - Member Node(s)
 
   - Coordinating Node
 
-
 Preconditions 
-
   - CNs are operational
 
 Triggers
-
   - Timed event, logs are aggregated every 24 hours.
 
 Post Conditions
-
   - Aggregate logs are stored on Coordinating Node
 
   - Logs are synchronized between CNs
 
   - Log processing is triggered on CNs
 
-.. uml::
-
+.. 
+   @startuml images/17a_seq.png
    participant "CRUD API" as m_crud << Member Node >>
    participant "Synchronization API" as c_sync << Coordinating Node >>
    loop for each MN
      c_sync -> m_crud: getLogRecords (token, fromDate, toDate)
      c_sync <-- m_crud: records or fail
    end loop
+   @enduml
+
+.. image:: images/17a_seq.png
 
 *Figure 1.* Interactions for use case 17, part 1.
    
-.. uml::
-
+.. 
+   @startuml images/17b_seq.png
    participant "Admin" as app_admin << Application >>
    participant "Query Health API" as c_query << Coordinating Node >>
    app_admin -> c_query: getLogRecords (token, fromDate, toDate)
    c_query --> app_admin: logRecords
+   @enduml
+
+.. image:: images/17b_seq.png
 
 *Figure 2.* Interactions for use case 17, part 2.
+
+.. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/17_uc.txt

@@ -1,39 +1,43 @@
+.. _UC32:
+
 Use Case 32 - Transfer Object Ownership
 ---------------------------------------
 
-Author
-  VDC TWG
+.. index:: Use Case 32, UC32, ownership change
 
-Date
-  - 20090925 Adding to use case description and documentation
-  - 20090114 (TWG meeting).  Subsequent various modifications.
-
-Version 
-  Draft
+Revisions
+  View document revision history_.
 
 Goal
   User or organization takes over 'ownership' of a set of objects (write
-  access for orphaned records)
+  access for orphaned records), or the existing owner of an object would
+  like to transfer ownership to another principal.
 
 Summary 
-
-  xxx
+  Ownership transfer needs to be supported so that all there is always someone
+  that has the ability to manage the object. There are many circumstances w
+  where such changes are required, and the DataONE infrastructure should 
+  support this operation both technically and operationally.
 
 Actors
-  xxx
+  - Current and new data owner
+  - Data managers
 
 Preconditions 
-  xxx
+  - Content exists in the DataONE system
+  - Owner wants to transfer ownership role
+  - Organization needs to take control of objects (owner no longer filling 
+    that role)
   
 Triggers
-  xxx
+  - Current owner no longer able to fill that role
  
 Post Conditions
-  xxx
+  - Object ownership has been changed
+  - Updated to roles updated through the federation
 
-
-.. uml::
-
+.. 
+   @startuml images/32_seq.png
    actor "User (User or Organization)" as user
    participant "Client" as app_client << Application >>
    user -> app_client
@@ -48,10 +52,12 @@ Post Conditions
    Is there an authority for any
    given data / metadata object?
    end note
+   @enduml
+
+.. image::  images/32_seq.png
 
 *Figure 1.* Interactions for use case 32. User or organization takes over
 'ownership' of a set of objects\n(write access for orphaned records).
-
 
 **Notes**
 
@@ -59,4 +65,5 @@ Post Conditions
   authority for any object is expressed in the system metadata element
   :attr:`SystemMetadata.rightsHolder`.
 
+.. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/32_uc.txt
 

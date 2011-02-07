@@ -1,39 +1,57 @@
+.. _UC25: 
+
 Use Case 25 - Detect Damaged Content
 ------------------------------------
 
-Author
-  VDC TWG
+.. index:: Use Case 25, UC25, preservation, bit rot, damaged files
 
-Date
-  - 20090925 Adding to use case description and documentation
-  - 20090114 (TWG meeting).  Subsequent various modifications.
-
-Version 
-  Draft
+Revisions
+  View document revision history_.
 
 Goal
   System should scans for damaged/defaced data and metadata using some
   validation process.
 
 Summary 
+  All content being added or incorporated into the DataONE infrastructure has
+  checksums computed, providing a unique signature specific to the particular
+  sequence of bytes present in that object. Any change to the object will
+  result in a different checksum being calculated for that object.
 
-  xxx
+  It would be prohibitive to continually compute checksums for all content
+  contained in the system. Therefore, the system should have provision for 
+  periodic, random checks that compute the checksum for objects and compare
+  with the original.
+  
+  The system should automatically replace content determined to be incorrect,
+  and system content managers should be notified of such events. Alternatively,
+  bad content could be queued for processing, which is semi-automatically 
+  processed by the data managers.
 
 Actors
-  xxx
+  - Data manager
+  - Data owner
+  - Member Nodes
+  - Coordinating Nodes
+  - Content quality checking service
 
 Preconditions 
-  xxx
+  - Content present in DataONE
+  - Checksums for all content computed and preserved
+  - Mechanisms available for spot checks of checksum for any object held at
+    any location in the system
   
 Triggers
-  xxx
+  - Bad content is discovered by failing checksum comparison.
  
 Post Conditions
-  xxx
+  - Bad content present in the system has been replaced with known correct
+    objects
+  - Data managers are notified
+  - Data owners *may* be notified
 
-
-.. uml::
-
+.. 
+   @startuml images/25_seq.png
    participant "CRUD API" as m_crud_a << Member Node A >>
    participant "Synchronization API" as c_sync << Coordinating Node >>
    c_sync -> m_crud_a: getChecksum (PID)
@@ -41,6 +59,10 @@ Post Conditions
    participant "CRUD API" as m_crud_b << Member Node B >>
    c_sync -> m_crud_b: getChecksum (PID)
    c_sync <-- m_crud_b: checksum
+   @enduml
+
+.. image:: images/25_seq.png
 
 *Figure 1.* Interactions for use case 25, System validates metadata and data
 
+.. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/25_uc.txt

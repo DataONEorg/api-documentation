@@ -1,14 +1,11 @@
 What is Data (DataONE Perspective)?
 ===================================
 
-:Author: Initial version by Dave Vieglais <vieglais@ku.edu>
-
-:Status: DRAFT - comments, edits, even complete rewrites welcome and expected
-
+Revisions
+  View document revision history_.
 
 This document describes the concept of "data" within the first iteration of
 the DataONE system.
-
 
 Overview
 --------
@@ -50,31 +47,66 @@ description, and so where there is discrepancy, the referenced location (or
 the currently authoritative location) takes precedence.
 
 
-.. table:: Types of :term:`science metadata` and their corresponding
-   :attr:`SystemMetdata.ObjectFormat` identifier.
+.. list-table::   Types of :term:`science metadata` and their corresponding :attr:`SystemMetdata.ObjectFormat` identifier.
+   :widths: 10 30
+   :header-rows: 1
 
-  ============================ ==========================================================
-  Name                         Object Format
-  ============================ ==========================================================
-  Dublin Core                  .
-  Darwin Core                  .
-  EML                          .
-  FGDC CSDGM                   .
-  GCMD DIF                     .
-  ISO 19137                    .
-  NEXML                        .
-  Water ML                     .
-  Genbank internal format      .
-  ISO 19115                    .
-  Dryad Application Profile    .
-  ADN                          .
-  GML Profiles                 .
-  NetCDF-CF-OPeNDAP            .
-  DDI                          .
-  MAGE                         .
-  ESML                         .
-  CSR                          .
-  ============================ ==========================================================
+   * - Name
+     - Object Format
+   * - Dublin Core
+     - http://dublincore.org/documents/dces/
+   * - Darwin Core
+     - http://rs.tdwg.org/dwc/
+   * - EML
+     - - eml://ecoinformatics.org/eml-2.0.0
+       - eml://ecoinformatics.org/eml-2.0.1
+       - eml://ecoinformatics.org/eml-2.1.0
+   * - FGDC BPM
+     - FGDC-STD-001.1-1999
+   * - FGDC CSDGM
+     - FGDC-STD-001-1998
+   * - GCMD DIF
+     - 
+   * - ISO 19137
+     - 
+   * - NEXML
+     - 
+   * - Water ML
+     - - http://www.cuahsi.org/waterML/1.0/
+       - http://www.cuahsi.org/waterML/1.1/
+     
+   * - Genbank internal format
+     - 
+   * - ISO 19115
+     - INCITS 453-2009
+   * - Dryad Application Profile
+     - 
+   * - ADN
+     - 
+   * - GML Profiles
+     - 
+   * - NetCDF-CF-OPeNDAP
+     - - CF-1.0
+       - CF-1.1
+       - CF-1.2
+       - CF-1.3
+       - CF-1.4
+   * - NetCDF Classic and 64-bit offset formats
+     - netCDF-3
+   * - NetCDF-4 and netCDF-4 classic model formats
+     - netCDF-4
+   * - DDI
+     - 
+   * - MAGE
+     - 
+   * - ESML
+     - 
+   * - CSR
+     - 
+   * - NcML
+     - http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2
+   * - Dryad METS
+     - http://www.loc.gov/METS/
 
 
 Dublin Core
@@ -375,12 +407,7 @@ ANZLIC Metadata Profile
 A profile of ISO 19115 for Australia.  See:
 http://www.osdm.gov.au/ANZLIC_MetadataProfile_v1-1.pdf?ID=303
 
-.. raw:: latex
 
-   \newpage
-
-Additional Notes about Data
----------------------------
 
 Identifying Metadata Types
 --------------------------
@@ -482,3 +509,5 @@ DataONE system.
    point would be the union of the required search properties and the
    information required for accurate citation.
 
+
+.. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/01_uc.txt

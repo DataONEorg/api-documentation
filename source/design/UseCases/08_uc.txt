@@ -1,22 +1,18 @@
+.. _UC08:
+
 Use Case 08 - Replication Policy Communication
 ----------------------------------------------
 
-Author
-  VDC TWG
+.. index:: Use Case 08, UC08, Replication Policy, policy
 
-Date
-  - 20090925 Adding to use case description and documentation
-  - 20090114 (TWG meeting).  Subsequent various modifications.
-
-Version 
-  Draft
+Revisions
+  View document revision history_.
 
 Goal
   Communication of replication policy metadata between Member Nodes and
   Coordinating Nodes.
 
 Summary 
-
   The replication policy of Member Nodes (MN) indicates factors such as the
   amount of storage space available, bandwidth constraints, the types of data
   and metadata that can be managed, and perhaps access control restrictions.
@@ -36,12 +32,10 @@ Actors
   Member Node, Coordinating Node
 
 Preconditions 
-
   - Member Node is registered with a Coordinating Node
   - Member Node is operational
   
 Triggers
-
   - A Member Node changes available capacity, bandwidth or some other
     operating characteristic
 
@@ -61,9 +55,8 @@ Post Conditions
   - Watchers are notified in change in DataONE system property  
 
 
-.. uml::
-
-   @startuml
+..
+   @startuml images/08_uc.png
    package "DataONE"
      actor "Coordinating Node" as CN
      actor "Member Node" as MN
@@ -77,13 +70,13 @@ Post Conditions
      policy ..> NOTIFY: <<includes>>
      policy ..> CNSYNC: <<includes>>
    @enduml
-   
+
+.. image:: images/08_uc.png
+
 *Figure 1.* Use case 08.
 
-
-.. uml::
-
-   @startuml
+..
+   @startuml images/08_seq.png
    participant "Replication API" as c_rep << Coordinating Node >>
    participant "Replication API" as m_rep << Member Node >>
    c_rep -> m_rep: ping()
@@ -101,6 +94,8 @@ Post Conditions
    end note
    @enduml
 
+.. image:: images/08_seq.png
+
 *Figure 2.* Communication of Replication Policy Metadata
 
 
@@ -114,4 +109,5 @@ Post Conditions
   between significant differences in storage capacities (low to high, then low
   again).
 
+.. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/08_uc.txt
 

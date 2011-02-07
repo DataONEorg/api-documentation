@@ -3,14 +3,8 @@ Use Case 02 - List PIDs By Search
 
 .. index:: Use Case 02, List, Search, Query
 
-Author
-  VDC TWG
-
-Date
-  - 20091127 [PEA] Make consistent with V0.3 APIs
-  - 20090927 Provided more detail to use case
-  - 20090925 Adding to use case description and documentation
-  - 20090114 (TWG meeting).  Subsequent various modifications
+Revisions
+  View document revision history_.
 
 Goal
   Get list of PIDs from metadata search (anonymous and authenticated).
@@ -24,7 +18,8 @@ Summary
   Content discovery in DataONE is achieved primarily through the service
   interfaces provided by the Coordinating Nodes. Other systems may index
   content available in DataONE (:doc:`UC36<36_uc>`), though the
-  operation of those systems is out of scope for DataONE operations.
+  operation of those systems is out of scope for DataONE operations except 
+  that the exposed APIs enable such functionality.
 
 Actors
   - Client performing search operation
@@ -44,8 +39,16 @@ Post Conditions
 
   - The log is updated with information about the request
 
+.. image:: images/02_uc.png
 
-.. uml::
+*Figure 1.* Use case 02.
+
+.. image:: images/02_seq.png
+
+*Figure 2.* Interaction diagram for Use Case 02.
+
+..
+  @startuml images/02_uc.png
 
   actor User
   usecase "12. Authentication" as authen
@@ -58,11 +61,11 @@ Post Conditions
    CN -- SEARCH
    SEARCH ..> author: <<includes>>
    SEARCH ..> authen: <<includes>>
+  @enduml
 
-*Figure 1.* Use case 02.
 
-
-.. uml::
+..
+  @startuml images/02_seq.png
 
    participant "Client" as app_client << Application >>
    participant "Query API" as c_query << Coordinating Node >>
@@ -83,8 +86,7 @@ Post Conditions
    c_query --> c_crud: log
    app_client <-- c_query: objectList
    deactivate c_query
-
-*Figure 2.* Interaction diagram for Use Case 02.
+  @enduml
 
 
 
@@ -162,4 +164,6 @@ Post Conditions
 
 - What logging level is required for the operation? Should the search appear
   as a hit against each object? Just log the query (and perhaps who did it)?
+
+.. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/02_uc.txt
 

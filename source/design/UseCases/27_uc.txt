@@ -1,15 +1,12 @@
+.. _UC26:
+
 Use Case 27 - Metadata Version Migration
 ----------------------------------------
 
-Author
-  VDC TWG
+.. index:: Use Case 27, UC27, MN Status, status, health
 
-Date
-  - 20090925 Adding to use case description and documentation
-  - 20090114 (TWG meeting).  Subsequent various modifications.
-
-Version 
-  Draft
+Revisions
+  View document revision history_.
 
 Goal
   CN should support forward migration of metadata documents from one version
@@ -17,31 +14,43 @@ Goal
 
 Summary 
 
-  xxx
+  The standards to which science metadata are developed evolve over time, and
+  it should be possible to perform lossless update of science metadata to
+  ensure that content is kept up-to-date with current use standards.
+
+  Since Coordinating Nodes hold original copies of all science metadata, it
+  should be reasonably straight forward for a privileged service on a CN to
+  create new versions of science metadata given appropriate tools for 
+  performing the transforms. The original copies of the metadata should be
+  preserved and the associated system metadata references updated to indicate
+  the newer version of the science metadata.
+
+  Note that while technically feasible, such a service may not be desirable as
+  it implies a level of control exerted by the Coordinating Nodes that may be 
+  in conflict with data sharing and participation agreements.
 
 Actors
-  xxx
+  - Coordinating Nodes
+  - Science metadata
+  - Data managers
+  - Science metadata translation tools
 
 Preconditions 
-  xxx
+  - A new version of a science metadata standard exists
+  - Content exists in the deprecated version
+  - A translation tool exists for performing the migrations
+  - Agreements for the update have been secured
   
 Triggers
-  xxx
+  - A new metadata standard revision is released
  
 Post Conditions
-  xxx
+  - Copies of metadata in the new version are created
+  - References between the new and deprecated copies are created
+  - Watchers of the objects are notified of the changes
 
 **Notes**
 
 - Should this apply to data as well?
 
-
-..
-  @startuml images/27_interaction.png
-  !include ../plantuml.conf
-  title Interactions: 27 - Migration -- CN should support forward migration of
-  metadata\ndocuments from one version to another within a standard and to
-  other standards
-  @enduml
-  
-
+.. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/27_uc.txt

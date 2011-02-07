@@ -1,25 +1,26 @@
+.. _UC35:
+
 Use Case 35 - Query Coordinating Node for Metadata Describing a Member Node
 ---------------------------------------------------------------------------
 
-Author
-  Paul Allen
+.. index:: Use Case 35, UC35, registry, node status
 
-Date
-  - 20091204 Created
-  
-Version 
-  draft
+Revisions
+  View document revision history_.
+
+.. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/35_uc.txt
 
 Goal
   Describe a member node, especially API endpoints
 
 Summary 
-
   Naive clients may want to find out more about member nodes before 
   interacting with them. In particular, clients need to determine the 
   API endpoints for the Member Node. Information supplied might include 
   the capabilities supported and state of health summary.
 
+  Such information is also useful to Coordinating Nodes for determining 
+  content replication policies and rules.
 
 Actors
   - Coordinating Node
@@ -34,5 +35,5 @@ Triggers
 Post Conditions
   - Client has locations where data object can be retrieved
 
+.. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/35_uc.txt
 
-  

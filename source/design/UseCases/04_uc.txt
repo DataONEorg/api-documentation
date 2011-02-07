@@ -1,21 +1,15 @@
 Use Case 04 - Create New Object
 -------------------------------
 
-.. index:: Use Case 02, UC02, create
+.. index:: Use Case 04, UC04, create
 
-Author
-  VDC TWG
-
-Date
-  - 20090929 Filling out details
-  - 20090925 Adding to use case description and documentation
-  - 20090114 (TWG meeting).  Subsequent various modifications.
+Revisions
+  View document revision history_.
 
 Goal
   Create new content on a Member Node.
 
 Summary
-
   A user adds new content to a Member Node (MN). The operation of adding new
   content to a Member Node is atomic to the Member Node, meaning there is no
   dependency on the replication or synchronization processes for the
@@ -40,7 +34,6 @@ Actors
   
   
 Preconditions
-
   - Use is authenticated and so client application has an auth_token for the process.
 
   - DataONE system operational
@@ -49,7 +42,6 @@ Preconditions
   
   
 Triggers
-
   - New data package is present on Member Node
   
   - An existing data package is modified on a Member Node
@@ -58,7 +50,6 @@ Triggers
  
  
 Post Conditions
-  
   - New data package is replicated across MNs
   
   - Search metadata is updated
@@ -70,7 +61,6 @@ Post Conditions
   - CN replication of metadata 
 
   - Watchers notified of change
-  
 
 
 **Notes**
@@ -90,10 +80,17 @@ Post Conditions
 
 - Can data packages be deleted or modified?
 
+.. image:: images/04_uc.png
 
+*Figure 1.* Use case 04.
 
-.. uml::
+.. image:: images/04_seq.png
 
+*Figure 2.* Create, update, delete, science metadata or data object in Member 
+Node.
+
+.. 
+   @startuml images/04_uc.png
    actor "User" as client
    usecase "12. Authentication" as authen
 
@@ -109,12 +106,11 @@ Post Conditions
      create ..> author: <<includes>>
      create ..> authen: <<includes>>
      create ..> mn_sync: <<includes>>
-        
-*Figure 1.* Use case 04.
+   @enduml        
 
 
-.. uml::
-
+.. 
+   @startuml images/04_seq.png
    Actor User
    participant "Client" as app_client << Application >>
    User -> app_client
@@ -135,7 +131,7 @@ Post Conditions
    participant "Synchronization API" as c_sync << Coordinating Node >>
      c_health -> c_sync: scheduleSynch(MN_ID)
    deactivate c_health
-   
+   @enduml
 
-*Figure 2.* Create, update, delete, search metadata or data object in Member Node.
+.. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/04_uc.txt
 

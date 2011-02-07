@@ -1,52 +1,43 @@
+.. _UC20:
+
 Use Case 20 - Owner Retrieve Aggregate Logs
 -------------------------------------------
 
-Author
-  VDC TWG
+.. index:: Use Case 20, UC20, aggregate, log, owner logs
 
-Date
-  - 20090925 Adding to use case description and documentation
-  - 20090114 (TWG meeting).  Subsequent various modifications.
-
-Version 
-  Draft
+Revisions
+  View document revision history_.
 
 Goal
   Data owners can request aggregated CRUD log for {time period/pid} for
   all of 'their' objects.
 
 Summary 
-
   This operation provides a mechanism for data contributors to retrieve use
   information for content that they own. This is similar to :doc:`Use Case 19
   <19_uc>` except that the requesting use is authenticated, and a query on
   objects owned by the user is used to generate a list of PIDs that indicate
   log information to be retrieved.
 
-
 Actors
-
   - Data owner
 
   - Coordinating Node
 
 Preconditions 
-
   - User has authenticated
 
   - Log statistics are available
 
 Triggers
-
   - Authenticated user requests use information
 
 Post Conditions
-
   - User has a copy of use information
 
 
-.. uml::
-
+.. 
+   @startuml images/20_seq.png
    actor "User (Data Owner)" as user
    participant "Client" as app_client << Application >>
    user -> app_client
@@ -68,7 +59,10 @@ Post Conditions
    handled by another API?
    (e.g. "Report API"?)
    end note
-   
+   @enduml
+
+.. image::  images/20_seq.png
 
 *Figure 1.* Interactions for use case 20.
 
+.. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/20_uc.txt

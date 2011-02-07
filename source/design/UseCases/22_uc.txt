@@ -1,40 +1,45 @@
+.. _UC22:
+
 Use Case 22 - Link/Citation Report for Owner
 --------------------------------------------
 
-Author
-  VDC TWG
+.. index:: Use Case 22, UC22, report, citation, object reference report
 
-Date
-  - 20090925 Adding to use case description and documentation
-  - 20090114 (TWG meeting).  Subsequent various modifications.
-
-Version 
-  Draft
+Revisions
+  View document revision history_.
 
 Goal
-  User can get report of links/cites my data (also can view this as a referrer
-  log).
+  User can get report of links and citations to objects they own (also can 
+  view this as a referrer log).
 
 Summary 
 
-  xxx
-
+  A data owner would benefit from having a report that indicated the 
+  connections to objects they own. Within DataONE, this could be handled by
+  examining the object associations contained in the system metadata. For 
+  external references to content, DataONE could provide summaries generated 
+  from log reports, though with much greater uncertainty.
 
 Actors
-  xxx
+  - Data owner
+  - Data referrer
+  - Member Nodes
+  - Coordinating Node
 
 Preconditions 
-  xxx
+  - Owner has content in DataONE
+  - References to content appear directly in system metadata or in access logs
   
 Triggers
-  xxx
+  - Owner requests report for content citations and references
+  - Scheduled report generated for data owner
  
 Post Conditions
-  xxx
+  - Owner has a report on citations and references to their data
+  - System state is updated to enable reporting for the next time period
 
-
-.. uml::
-
+.. 
+   @startuml images/22_seq.png
    actor "User (Data Owner)" as user
    participant "Client" as app_client << Application >>
    user -> app_client
@@ -56,5 +61,11 @@ Post Conditions
    handled by another API?
    (e.g. "Report API"?)
    end note
+   @enduml
 
-*Figure 1.* Interactions for use case 22, User can get report of links, cites my data (also can view this as a\nreferrer log)
+.. image::  images/22_seq.png
+
+*Figure 1.* Interactions for use case 22, User can get report of links, cites
+my data (also can view this as a referrer log)
+
+.. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/22_uc.txt

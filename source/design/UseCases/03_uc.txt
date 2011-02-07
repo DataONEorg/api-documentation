@@ -3,16 +3,10 @@
 Use Case 03 - Register MN
 -------------------------
 
-Author
-  VDC TWG
+.. index:: Use Case 03, UC03, Register Node, Register
 
-Date
-  - 20090927 More detail added to use case description
-  - 20090925 Adding to use case description and documentation
-  - 20090114 (TWG meeting).  Subsequent various modifications.
-
-Version 
-  Draft
+Revisions
+  View document revision history_.
 
 Goal
   Register a new Member Node.
@@ -92,9 +86,19 @@ Post Conditions
 - Member node should be able to request the coordinating node to re-validate
   its capabilities list.
 
+.. image:: images/03_uc.png
 
-.. uml::
+*Figure 1.* Use Case 03.
 
+
+.. image:: images/03_seq.png
+
+*Figure 2.* Interactions for use case 03.
+
+
+..
+   @startuml images/03_uc.png
+   
    actor "User" as client
    usecase "12. Authentication" as authen
 
@@ -110,12 +114,11 @@ Post Conditions
      MN -- register
      register ..> author: <<includes>>
      register ..> authen: <<includes>>
-   
-*Figure 1.* Use Case 03.
+   @enduml
 
 
-.. uml::
-
+.. 
+   @startuml images/03_seq.png
    actor Admin
    participant "Admin" as app_admin << Application >>
    Admin -> app_admin
@@ -141,7 +144,7 @@ Post Conditions
    end note
    app_admin <-- c_reg: ack or fail
    deactivate c_reg
-   
+   @enduml
 
-*Figure 2.* Interactions for use case 03.
 
+.. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/03_uc.txt

@@ -1,16 +1,12 @@
+.. _UC16:
+
 Use Case 16 - Log CRUD Operations
 ---------------------------------
 
-Author
-  VDC TWG
+.. index:: Use Case 16, UC16, Log CRUD, logging, reporting
 
-Date
-  - 20091126 [PEA] Make consistent with V0.3 APIs documentation.
-  - 20090925 Adding to use case description and documentation
-  - 20090114 (TWG meeting). Subsequent various modifications.
-
-Version 
-  0.3
+Revisions
+  View document revision history_.
 
 Goal
   All CRUD operations on metadata and data are logged at each node (including
@@ -44,7 +40,8 @@ Post Conditions
   - The operation is recorded in the log for the node.
 
 
-.. uml::
+.. 
+   @startuml images/16_seq.png
 
    participant "Client" as app_client << Application >>
    participant "CRUD API" as m_crud << Node >>
@@ -54,6 +51,11 @@ Post Conditions
    end note
    m_crud -> m_crud: log (typeOfOperation, identifier, requestorIdentity, dateOfRequest, ...)
    m_crud --> app_client: response
+   @enduml
+
+.. image:: images/16_seq.png
 
 *Figure 1.* Interactions for use case 16.
 
+
+.. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/16_uc.txt

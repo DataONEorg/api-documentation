@@ -1,15 +1,12 @@
+.. _UC28:
+
 Use Case 28 - Derived Product Original Change Notification
 ----------------------------------------------------------
 
-Author
-  VDC TWG
+.. index:: Use Case 28, UC28, notification, object change, update, delete
 
-Date
-  - 20090925 Adding to use case description and documentation
-  - 20090114 (TWG meeting).  Subsequent various modifications.
-
-Version 
-  Draft
+Revisions
+  View document revision history_.
 
 Goal
   Relationships/Versioning - Derived products should be linked to source
@@ -17,20 +14,37 @@ Goal
   source products change.
 
 Summary 
+  Although content in DataONE is immutable, there are situations where the
+  original content can be updated, and in these cases a new copy of the
+  content is created for science metadata. The update process for data is
+  currently not defined, though for practical reasons it is unlikely to 
+  be feasible to preserve *all* copies of data, especially for particularly 
+  large data sets.
 
-  xxx
-
+  The premise is that owners of the derived products will be notified - for 
+  this to occur, the relationships between original and derived need to be 
+  recorded and discoverable. The mechanism for this requires further design.
+  It would be possible to record such relationships in the system metadata, 
+  or perhaps it may be necessary for a different class of object to be created
+  to specifically to support recordation of relationships between content.
+  
 Actors
-  xxx
+  - Data owners
+  - Derived products
+  - Original products
+  - Member Nodes
+  - Coordinating Nodes
+  - Notification system
 
 Preconditions 
-  xxx
+  - Relationships between objects are recorded and discoverable
+  - Derived products are stored in the DataONE infrastructure
   
 Triggers
-  xxx
+  - An object is updated.
  
 Post Conditions
-  xxx
+  - Derived product owners are notified of the change.
 
 **Notes**
 
@@ -38,9 +52,8 @@ Post Conditions
 
 - How are relationships removed?
 
-
-.. uml::
-
+.. 
+   @startuml images/28_seq.png
    actor User
    participant "Client" as app_client << Application >>
    User -> app_client
@@ -53,8 +66,12 @@ Post Conditions
    c_sync <-- c_crud: synchronize ()
    c_crud <-- c_sync: ack or fail
    app_client <-- c_crud: status
+   @enduml
+
+.. image:: images/28_seq.png
 
 *Figure 1.* Interactions for use case 28. Versioning -- Derived products
 should be linked to source objects so that notifications can be made to users
 of derived products when source products change
 
+.. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/28_uc.txt

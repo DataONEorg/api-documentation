@@ -3,20 +3,15 @@
 Use Case 05 - Update Science Metadata
 -------------------------------------
 
-Author
-  VDC TWG
+.. index:: Use Case 05, UC05, update
 
-Date
-  - 20101126 (DV) Updated to conform with expected system behavior
-  - 20090929 Filling out details
-  - 20090925 Adding to use case description and documentation
-  - 20090114 (TWG meeting).  Subsequent various modifications.
+Revisions
+  View document revision history_.
 
 Goal
   Update or delete science metadata record on a Member Node.
 
 Summary 
-
   Science metadata is immutable in DataONE. As such, modification involves
   generating a new science metadata record and indicating that the new record
   supersedes an existing record, and deletion involves deprecation so that the
@@ -41,7 +36,6 @@ Actors
   Member Node, additional Member Nodes, Coordinating Nodes
 
 Preconditions
-
   - User is authenticated
 
   - MN is registered and is monitored
@@ -49,13 +43,11 @@ Preconditions
   - Science metadata being deleted / updated document exists  
 
 Triggers
-
   - User calls :func:`MN_crud.update`
 
   - User calls :func:`MN_crud.delete`
 
 Post Conditions
-
   - System metadata for science metadata object(s) updated
 
   - Replacement science metadata propagated through the system
@@ -67,8 +59,18 @@ Post Conditions
   - Watchers notified of change
 
 
-.. uml::
+.. image:: images/05_uc.png
 
+*Figure 2.* Use case 04.
+
+.. image:: images/05_seq.png
+
+*Figure 3.* Create, update, delete, search metadata or data object in Member
+Node.
+
+
+.. 
+   @startuml images/05_uc.png
    actor "User" as client
    usecase "12. Authentication" as authen
 
@@ -84,12 +86,10 @@ Post Conditions
      update ..> author: <<includes>>
      update ..> authen: <<includes>>
      update ..> mn_sync: <<includes>>
+   @enduml
 
-*Figure 2.* Use case 04.
-
-
-.. uml::
-
+.. 
+   @startuml images/05_seq.png
    Actor User
    participant "Client" as app_client << Application >>
    User -> app_client
@@ -105,10 +105,7 @@ Post Conditions
      m_crud -> m_crud: store()
    m_crud -> app_client: OK
    deactivate m_crud
-
-*Figure 3.* Create, update, delete, search metadata or data object in Member
-Node.
-
+   @enduml
 
 **Notes**
 
@@ -124,3 +121,4 @@ Node.
   should be considered complete. The Member Node synchronization process will
   ensure that the changes are propagated to the wider system.
 
+.. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/05_uc.txt

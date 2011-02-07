@@ -1,11 +1,12 @@
+.. _UC39:
+
 Use Case 39 - Test Node APIs
 ----------------------------
 
-Author
-  VDC TWG
+.. index:: Use Case 39, UC39, test member Nodes, evaluation, monitor, health
 
-Date
-  - 20100712 Initial version
+Revisions
+  View document revision history_.
 
 Goal
   Execute a series of method calls against all member and coordinating nodes
@@ -16,7 +17,6 @@ Summary
   and coordinating nodes is to ensure that the responses to individual calls
   are as expected in the case of both successful requests and those that cause
   some failure.
-
 
 Actors
   - Coordinating Node
@@ -34,8 +34,8 @@ Post Conditions
   - All API methods of all coordinating nodes are tested
 
 
-.. uml::
-
+.. 
+   @startuml images/29_seq.png
    participant "Tester" as app_test << Application >>
    participant "CN" as cn << CN >>
    participant "API" as node << Node >>
@@ -47,5 +47,11 @@ Post Conditions
        node --> app_test: result
      end
    end
+   @enduml 
+
+
+.. image::  images/29_seq.png
 
 *Figure 1.* Interaction diagram for use case 39, Test Node APIs.
+
+.. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/39_uc.txt

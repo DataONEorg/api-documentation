@@ -1,29 +1,19 @@
+.. _UC12:
+
 Use Case 12 - User Authentication
 ---------------------------------
 
 .. index:: Use Case 12, authentication
 
-Author
-  VDC TWG
-
-Date
-  - 20091001 Filled out more details
-  - 20090925 Adding to use case description and documentation
-  - 20090114 (TWG meeting).  Subsequent various modifications.
-
-Version 
-  Draft
-
-Goal
-  User Authentication - Person via client software authenticates against an
-  identify provider to establish session token that can subsequently be used
-  as a proxy for the user.
+Goal 
+  User Authentication - Person or service via client software authenticates
+  against an identify provider to establish session token that can
+  subsequently be used as a proxy for the user.
 
 Summary
-
-  Many operations in the DataONE system require user identity to ensure that
-  the user's identity is known to the system, and that appropriate access
-  controls can be executed based on the identity.
+  Many operations in the DataONE system require affirmation of user identity
+  to ensure that appropriate access controls can be asserted and other
+  services such as citation and notification operate as expected.
 
   The actual identity and authentication framework may exist outside of
   DataONE, and the first version of the infrastructure will be utilizing the
@@ -31,14 +21,14 @@ Summary
 
   The user obtains a certificate from the CILogon service, then uses that
   certificate to obtain an authentication token that can be used in the
-  DataONE system. The authentication token is a SAML document that contains
-  information mapping the user to *n* identities that may be recognized by the
-  DataONE participant nodes.
+  DataONE system. The authentication token is (perhaps) a SAML_ document that
+  contains information mapping the user to *n* identities that may be
+  recognized by the DataONE participant nodes.
 
   .. figure:: ../images/uc_12_authentication.png
 
-    *Figure 1.* Note: This diagram is an initial draft subject to significant
-    change. Rough sketch of an authentication scenario augmented by a
+    *Figure 1.* (Note: This diagram is an initial draft subject to significant
+    change). Rough sketch of an authentication scenario augmented by a
     centralized identity mapping. A user logs on to the CILogon service (1)
     and retrieves a certificate (2). A later connection to login to the
     DataONE system uses the previously generated certificate to assert
@@ -72,8 +62,6 @@ Summary
     the identity of the user.
 
 
-
-
 Actors
   User, Member Node, Coordinating Node, Authentication System
 
@@ -86,7 +74,6 @@ Triggers
   - A user tries to perform an operation in the DataONE system that requires
     authentication.
 
- 
 Post Conditions
   - An *auth_token* is returned to the user (application) that can be used
     for future interactions with the DataONE system.
@@ -101,8 +88,8 @@ Post Conditions
     actual user.
 
 
-.. uml::
-   
+.. 
+   @startuml images/12_seq.png
    actor User
    participant CILogon
    User -> CILogon:login(credentials)
@@ -113,8 +100,9 @@ Post Conditions
    app_client -> cn_auth: login(certificate)
    cn_auth -> cn_auth: getAuthToken(certificate)
    cn_auth -> app_client: SAML_token
-   
-   
+   @enduml
+
+.. image:: images/12_seq.png
 
 *Figure 3.* Interactions for use case 12.
 
@@ -137,3 +125,6 @@ Post Conditions
 
 .. _CILogon service: http://www.cilogon.org/service
 
+.. _SAML: http://en.wikipedia.org/wiki/Security_Assertion_Markup_Language
+
+.. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/12_uc.txt

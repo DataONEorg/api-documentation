@@ -1,22 +1,17 @@
+.. _UC09:
+
 Use Case 09 - Replicate MN to MN
 --------------------------------
 
-Author
-  VDC TWG
+.. index:: Use Case 09, UC09, Replicate MN, replicate
 
-Date
-  - 20091001 Filled out description a bit more
-  - 20090925 Adding to use case description and documentation
-  - 20090114 (TWG meeting).  Subsequent various modifications.
-
-Version 
-  Draft
+Revisions
+  View document revision history_.
 
 Goal
   Replicate data from Member Node to Member Node.
 
 Summary 
-
   Replication of content between Member Nodes (MN) is done to improve
   persistence of information (avoid data loss with loss of MN) and to improve
   accessibility (more choices for content retrieval can lower bandwidth
@@ -45,7 +40,6 @@ Preconditions
     Synchronization has occurred for the data and metadata)
 
 Triggers
-
  - A Coordinating Node detects that there are insufficient copies of the
    object(s) in question.
 
@@ -68,8 +62,8 @@ Post Conditions
   - Member Node and Coordinating Node logs are updated
 
 
-.. uml::
-   
+.. 
+   @startuml images/09_uc.png
    usecase "12. Authentication" as authen
    package "DataONE"
      actor "Coordinating Node" as CN
@@ -93,11 +87,15 @@ Post Conditions
      CREATE ..> author: <<includes>>
      CREATE ..> log: <<includes>>
      CREATE ..> subscribe: <<includes>>
+    @enduml
+
+.. image:: images/09_uc.png
 
 *Figure 1.* Use case diagram indicating the actors involved in the process of
 Member Node replication.
 
-.. uml::
+..
+  @startuml images/09_seq.png
 
   title Interactions: 09 - Replicate data from Member Node A to Member Node B
 
@@ -153,7 +151,9 @@ Member Node replication.
     c_sync -> c_sync: Use case 06, synchronize content
     activate c_sync
     deactivate c_sync
+  @enduml
 
+.. image:: images/09_seq.png
 
 *Figure 2.* Interactions for use case 09. The diagram describes transfer of a
 single object from MN_A to MN_B as directed by a CN. It is assumed that the
@@ -176,3 +176,4 @@ Note that the call setReplicationStatus with a value of *COMPLETE* is
 functionally equivalent to the *notify(objectCreated, identifier)* call 
 indicated in use case 06.
 
+.. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/09_uc.txt

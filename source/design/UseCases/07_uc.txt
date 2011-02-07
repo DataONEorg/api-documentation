@@ -1,13 +1,10 @@
 Use Case 07 - CN Batch Upload (Dupe of :doc:`UC06<06_uc>`)
 ----------------------------------------------------------
 
-Author
-  VDC TWG
+.. index:: Use Case 07, UC07, Batch Upload, batch operations
 
-Date
-  - 20090930 Flagged as dupe
-  - 20090925 Adding to use case description and documentation
-  - 20090114 (TWG meeting).  Subsequent various modifications.
+Revisions
+  View document revision history_.
 
 Goal
   Batch Operations - Coordinating Node requests metadata /data list from new
@@ -15,36 +12,29 @@ Goal
   insert performance).
 
 Summary
-
-  This is a dupe of Use Case 06 after refactoring that
-  use case use a pull mechanism to retrieve changed records. The intent is to
-  streamline the retrieval of large amounts of content from a MN, which
-  perhaps involves turning of indexing and other potentially time consuming
-  operations to speed the upload process.
-
+  This is a dupe of Use Case 06 after refactoring that use case use a pull
+  mechanism to retrieve changed records. The intent is to streamline the
+  retrieval of large amounts of content from a MN, which perhaps involves
+  turning of indexing and other potentially time consuming operations to speed
+  the upload process.
 
 Actors
-
   - Coordinating Node
 
   - Member Node
 
 Preconditions 
-
   - Large amount of metadata data is required to be uploaded to the CN
   
 Triggers
-
   - Indication of a large amount of content to retrieves from a MN
 
 Post Conditions
-
   - The upload is completed, CN synchronization is completed, MN replication
     is scheduled.
 
-
-
-.. uml::
+.. 
+  @startuml images/07_uc.png
 
    title Interactions: 07 - Coordinating Node requests metadata, data list from new Member Node\nand then performs a batch upload.interaction
 
@@ -58,6 +48,11 @@ Post Conditions
    c_sync <-- m_crud: objects
    c_sync -> c_sync: verifyObjectsReceived ()
    c_sync -> c_crud: batchWrite (objectsList)
+  @enduml
+
+.. image:: images/07_uc.png
 
 *Figure 1.* Interactions for use case 07.
 
+
+.. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/07_uc.txt

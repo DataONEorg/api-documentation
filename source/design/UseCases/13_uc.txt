@@ -1,15 +1,12 @@
+.. _UC13:
+
 Use Case 13 - User Authorization
 --------------------------------
 
-Author
-  VDC TWG
+.. index:: Use Case 13, UC13, Authorization
 
-Date
-  - 20090925 Adding to use case description and documentation
-  - 20090114 (TWG meeting).  Subsequent various modifications.
-
-Version 
-  Draft
+Revisions
+  View document revision history_.
 
 Goal
   Determine if a user is authorized to perform some action on an object (e.g.
@@ -17,15 +14,13 @@ Goal
 
 Summary 
 
-  User authorization is the procedure that is followed to determine if the
-  authenticated user is authorized to perform some operation. The result will
-  always be True or False.
+  User authorization is the process followed to determine if the authenticated
+  user is permitted to perform some operation. The result will always be True
+  or False.
 
   Note: Need to define which objects require access control / authorization
 
-
 Actors
-
   - User
 
   - Client application
@@ -35,24 +30,21 @@ Actors
   - Coordinating Node
 
 Preconditions 
-
   - User is at some level of authentication (may be anonymous or logged in)
 
 Triggers
-
   - User is requesting some operation to be performed on an object
 
   - An operation acting as a proxy for a user performs some operation on an
     object
 
 Post Conditions
-
   - The operation continues if the user is authorized or terminates raising an
     unauthorized exception.
 
 
-.. uml::
-
+.. 
+   @startuml images/13_seq.png
    actor User
    participant "Client" as app_client << Application >>
    User -> app_client
@@ -65,6 +57,11 @@ Post Conditions
    end
    c_crud <-- c_authorize: T or F
    app_client <-- c_crud: resultset or raise NotAuthorized
-   
+   @enduml
+
+.. image:: images/13_seq.png
 
 *Figure 1.* Interactions for use case 13.
+
+
+.. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/13_uc.txt
