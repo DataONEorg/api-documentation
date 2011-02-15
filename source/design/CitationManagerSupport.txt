@@ -1,0 +1,80 @@
+Supporting Online Citation Managers through COinS
+=================================================
+
+
+OpenURL COinS_ (Context Objects in Spans) is a simple specification for
+publishing OpenURL references in HTML. DataONE can leverage this mechanism as
+a simple way to facilitate automated citation extraction from search results
+for example.
+
+Example, manually generated from the COinS generator at 
+http://generator.ocoins.info/ :
+
+.. list-table::
+   :header-rows: 1
+   :widths: 2 2 10
+
+   - * Key
+     * SOLR Field
+     * Value
+   - * ctx_ver
+     * N/A
+     * Z39.88-2004
+   - * rfr_id
+     * N/A
+     * info:sid/ocoins.info:generator
+   - * rft_val_fmt
+     * N/A
+     * info:ofi/fmt:kev:mtx:dc
+   - * rft.title     
+     * title
+     * eBird Reference Data Set Subsampled Demonstration Data
+   - * rft.creator     
+     * contactOrganization | investigator
+     * Cornell Lab of Ornithology
+   - * rft.subject
+     * keywords
+     * eBird
+   - * rft.description  
+     * abstract
+     * Data used by the DataONE Exploration, Visualization, and Analysis working group for predicting spatially and temporally explicit bird migration patterns.
+   - * rft.publisher
+     * datasource
+     * http://knb-mn.dataone.org
+   - * rft.date
+     * endDate     
+     * 2011-01-01
+   - * rft.type
+     * N/A     
+     * Dataset
+   - * rft.format
+     * objectFormat     
+     * eml://ecoinformatics.org/eml-2.1.0
+   - * rft.identifier
+     * identifier     
+     * erd.368.1
+   - * rft.source
+     * http://cn.dataone.org/cn/object/{IDENTIFIER}
+     * http://cn.dataone.org/cn/object/erd.368.1
+   - * rft.coverage
+     * westBoundCoord, southBoundCoord, northBoundCoord, eastBoundCoord
+     * POLYGON((-83.25 35.875, -83.25 46.75, -69.125 46.75, -69.125 35.875))
+
+::
+
+  ( NBC =  46.75
+    EBC = -69.125
+    WBC = -83.25
+    SBC =  35.875 )
+
+with a resulting COinS tag of::
+
+  <span 
+     class="Z3988" 
+     title="ctx_ver=Z39.88-2004&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Adc&amp;rfr_id=info%3Asid%2Focoins.info%3Agenerator&amp;rft.title=eBird+Reference+Data+Set+Subsampled+Demonstration+Data&amp;rft.creator=Cornell+Lab+of+Ornithology&amp;rft.subject=eBird&amp;rft.description=Data+used+by+the+DataONE+Exploration%2C+Visualization%2C+and+Analysis+working+group+for+predicting+spatially+and+temporally+explicit+bird+migration+patterns.&amp;rft.publisher=http%3A%2F%2Fknb-mn.dataone.org&amp;rft.date=2011-01-01&amp;rft.type=Dataset&amp;rft.format=eml%3A%2F%2Fecoinformatics.org%2Feml-2.1.0&amp;rft.identifier=erd.368.1&amp;rft.source=http%3A%2F%2Fcn.dataone.org%2Fknb%2Fmetacat%2Ferd.368.1&amp;rft.coverage=POLYGON%28%28-83.25+35.875%2C+-83.25+46.75%2C+-69.125+46.75%2C+-69.125+35.875%29%29">
+        (Insert Default Text Here)
+  </span>
+
+
+
+.. _COinS: http://ocoins.info/

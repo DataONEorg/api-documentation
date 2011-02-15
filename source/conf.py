@@ -99,7 +99,7 @@ source_suffix = '.txt'
 master_doc = 'index'
 
 # General information about the project.
-project = u'DataONE Architecture'
+project = u'' #u'DataONE Architecture'
 copyright = u'2009-2011, DataONE'
 #copyright = u'''- INTEROP: Creation of an International Virtual Data Center for the Biodiversity, 
 #Ecological and Environmental Sciences (NSF Award 0753138); 
@@ -184,7 +184,7 @@ todo_include_todos = True
 #html_theme = 'default'
 html_theme = 'dataone'
 #html_theme = 'nose'
-
+  
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
@@ -196,10 +196,10 @@ html_theme_path = ['../tools/docutils/sphinx_themes', ]
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
-#html_title = None
+html_title = "v0.5"
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
-#html_short_title = None
+html_short_title = ""
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
@@ -256,7 +256,7 @@ htmlhelp_basename = 'DataONEArchitecturedoc'
 # -- Options for PDF output  --------------------------------------------------
 
 pdf_documents = [
-  ('index', u'dataone_arch', u'DataONE Architecture', u'DataONE'),
+  ('index', u'dataone_arch', u'', u'DataONE'),
   ]
 
 # A comma-separated list of custom stylesheets. 
