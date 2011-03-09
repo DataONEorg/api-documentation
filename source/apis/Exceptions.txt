@@ -15,23 +15,65 @@ All exceptions raised by API methods in DataONE must include three basic
 elements of information and an optional element ``traceInformation`` as
 detailed in :class:`Types.ErrorMessage`, repeated here for convenience.
 
-================= ==============================================================
-Element           Description
-================= ==============================================================
-errorCode         The error code. This is the HTTP error code (i.e. 4xx). In 
-                  all cases, the HTTP Status Code value in the response headers
-                  *must* match this value. Note that this implies that any
-                  message with a HTTP 200 status (or similar OK status) is not 
-                  considered to be an Error by the receiver.
-detailCode        A code that can be mapped to a specific location in the 
-                  source code of the implementation. Implemented as a string
-                  with dot notation to indicate progressive levels of detail.
-description       A human readable message describing what happened
-traceInformation  An optional dictionary of values that provides more
-                  information about the error condition (e.g. calling
-                  parameters). Note that traceInformation should never contain
-                  sensitive information.
-================= ==============================================================
+.. list-table::
+   :widths: 2 2 10
+   :header-rows: 1
+
+   * - Element
+     - Cardinality
+     - Description
+   * - errorCode
+     - 1
+     - The error code. This is the HTTP error code (i.e. 4xx). In all cases,
+       the HTTP Status Code value in the response headers *should* match this
+       value.
+   * - detailcode
+     - 1
+     - A code that can be mapped to a specific location in the source code of
+       the implementation. Implemented as a string with dot notation to
+       indicate progressive levels of detail.
+   * - pid
+     - 0..1
+     - Required for exceptions that include an identifier in the constructor 
+       signature (e.g. NotFound, IdentifierNotUnique, SynchronizationFailed).
+   * - description
+     - 0..1
+     - A human readable message describing what happened
+   * - traceInformation
+     - 0..1
+     - Optional free text providing more information about the error
+       condition. The intent of this element is to assist with debugging. Note
+       that care should be taken to ensure senstive information is not 
+       accidentally exposed through error conditions.
+
+
+Expressed in xml-schema:
+
+.. code-block:: xml
+
+   <?xml version="1.0" encoding="UTF-8"?>
+   <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+       <!-- A derived string type with at least length 1 and it must contain non-whitespace -->
+       <xs:simpleType name="NonEmptyString">
+           <xs:restriction base="xs:string">
+               <xs:minLength value="1" />
+               <xs:pattern value="[\s]*[\S][\s\S]*" />
+           </xs:restriction>
+       </xs:simpleType>
+
+       <!-- Exception type for error serialization in DataONE -->
+       <xs:complexType name="DataONEException">
+           <xs:sequence>
+               <xs:element name="description" minOccurs="0" maxOccurs="1" type="xs:string"></xs:element>
+               <xs:element name="traceInformation" minOccurs="0" maxOccurs="1" type="xs:anyType"></xs:element>
+           </xs:sequence>
+           <xs:attribute name="name" type="NonEmptyString" use="required"></xs:attribute>
+           <xs:attribute name="errorCode" type="xs:integer" use="required"></xs:attribute>
+           <xs:attribute name="detailCode" type="NonEmptyString" use="required"></xs:attribute>
+           <xs:attribute name='identifier' type="NonEmptyString" use="optional"></xs:attribute>
+       </xs:complexType>
+   </xs:schema>
+
 
 
 .. _ExceptionCodes:
@@ -119,18 +161,15 @@ In HTML:
           <dd class='errorCode'>404</dd>
           <dt>Detail Code</dt>
           <dd class='detailCode'>1020.1</dd>
+          <dt>Identifier</dt>
+          <dd class='pid'>123XYZ</dd>
         </dl>
       </p>
       <p class='description'>The specified object does not exist on this node.</p>
-      <dl class='traceInformation'>
-        <dt>identifier</dt>
-        <dd>123XYZ</dd>
-        <dt>method</dt>
-        <dd>mn.get</dd>
-        <dt>hint</dt>
-        <dd>Please try <a href='http://cn.dataone.org/cn/resolve/123XYZ'> resolving</a> 
-            at a <a href='http://dataone.org'>DataONE</a> Coordinating Node.</dd>
-      </dl>
+      <pre class='traceInformation'>
+        method: mn.get
+        hint: Please try resolving http://cn.dataone.org/cn/resolve/123XYZ
+      </pre>
     </body>
   </html>
 
@@ -139,12 +178,14 @@ In XML:
 
 .. code-block:: xml
 
-  <error name="NotFound" errorCode='404' detailCode='1020.1'>
+  <error name='NotFound'
+         errorCode='404' 
+         detailCode='1020.1' 
+         pid='123XYZ'>
     <description>The specified object does not exist on this node.</description>
     <traceInformation>
-      <value key='identifier'>123XYZ</value>
-      <value key='method'>mn.get</value>
-      <value key='hint'>http://cn.dataone.org/cn/resolve/123XYZ</value>
+      method: mn.get
+      hint: http://cn.dataone.org/cn/resolve/123XYZ
     </traceInformation>
   </error>
 
@@ -155,13 +196,10 @@ In JSON::
     'name': 'NotFound',
     'errorCode':404,
     'detailCode': '1020.1',
+    'pid': '123XYZ',
     'description': 'The specified object does not exist on this node.',
-    'traceInformation':
-    {
-      'identifier':'123XYZ',
-      'method': 'mn.get',
-      'hint':'http://cn.dataone.org/cn/resolve/123XYZ'
-    }
+    'traceInformation': 'method: mn.get
+      hint: http://cn.dataone.org/cn/resolve/123XYZ'
   }
 
 
