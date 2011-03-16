@@ -36,6 +36,7 @@ Version   Structure
 .         :class:`NodeList`
 .         :class:`NodeReference`
 .         :class:`ObjectFormat`
+.         :class:`ObjectFormatList`
 .         :class:`ObjectList`
 .         :class:`ObjectLocationList`
 .         :class:`Permission`
@@ -50,7 +51,7 @@ Version   Structure
 
 .. class:: OctetStream
 
-   A series of 8-bit bytes which combined together for a digital object.
+   A series of 8-bit bytes which combined together form a digital object.
 
 ----
 
@@ -367,12 +368,60 @@ Version   Structure
 
 .. class:: ObjectFormat
 
-  One value from the DataONE Object Format Vocabulary, which may be an adopted
-  vocabulary maintained by another organization. ObjectFormatType is currently
-  (in the prototype implementation) a string, however it seems likely that this
-  will require a more structured type in the future as the requirements of this
-  type are better defined.
+  One value from the DataONE Object Format Vocabulary, which is returned by :func:`CN_crud.getFormat()`.
+  
+  ::
+  
+    message ObjectFormat
+    {
+      required IdentifierType identifier = 1;
+      required string formatName = 2;
+    }
+    
+  .. attribute:: identifier
+    
+     Unique identifer representing the object format.
+     
+  .. attribute:: formatName
+  
+     A human readable name that describes the object format
+  
 
+----
+
+.. class:: ObjectFormatList
+
+  A list of ObjectFormat entries that is returned by :func:`CN_crud.listFormats()`.
+  
+  ::
+  
+    message ObjectFormatList
+    {
+      required int start = 0;
+      required int count = 1;
+      required int total = 2;
+      repeated ObjectFormat objectFormat = 3;
+    }
+  
+  .. attribute:: start
+  
+     An integer that indicates zero-based offset of the first entry in
+     objectFormat from the start of the list of entries from which this 
+     list was drawn (such as the results of :func:`CN_crud.listFormats`)
+  
+  .. attribute:: count
+  
+     The total number of entries returned in :attr:`objectFormat`.
+  
+  .. attribute:: total
+  
+     The total number of entries in the list from which this list was drawn.
+  
+  
+  .. attribute:: objectFormat
+  
+     The ObjectFormat structure for each object format listed.
+     
 ----
 
 .. class:: ObjectList
