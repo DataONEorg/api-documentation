@@ -1,0 +1,75 @@
+**Response**
+
+:class:`Types.ObjectFormat` serialized according to the requested format as
+indicated in the ``Accept:`` HTTP header.
+
+The expected response when a user agent sends a GET request to a Coordinating 
+Node exposing the DataONE REST API ``/formats/{fmtid}`` is a single 
+object format from the Coordinating Node's list of registered object formats.
+
+Expressed in a JSON representation::
+
+  {
+    'identifier': <IdentifierType>,
+    'formatName': <string>
+  }
+        
+Expressed in a CSV representation, with one entry, comma delimited fields, and a
+new line character::
+
+  identifier, formatName
+  "<identifier>", "<object format name>"
+
+Expressed in an XML representation::
+
+  <?xml version="1.0" encoding="utf-8" ?>
+  <d1:objectFormat
+    xmlns:d1="http://dataone.org/service/types/ObjectFormat/0.6"
+    xmlns:common="http://dataone.org/service/types/common/0.6"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    identifier="_identifier_">
+      <formatName>_object format name_</formatName>
+  </d1:objectFormat>
+  
+Expressed in an RDF/XML representation::
+
+  <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:d1='http://ns.dataone.org/core/objects/'>
+    <rdf:Description rdf:about="http://cn.dataone.org/d1/formats/_identifier_">
+      <d1:formatName>_object format name_</d1:formatName>
+    </rdf:Description>
+  </rdf:RDF>
+
+**Examples**
+
+Retrieve an object format from a Coordinating Node in XML format::
+
+  curl -X GET -H "Accept: application/xml" \
+  http://cn.dataone.org/d1/formats/eml://ecoinformatics.org/eml-2.0.0
+  
+  <?xml version="1.0" encoding="utf-8" ?>
+  <d1:objectFormat
+    xmlns:d1="http://dataone.org/service/types/ObjectFormat/0.6"
+    xmlns:common="http://dataone.org/service/types/common/0.6"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    identifier="eml://ecoinformatics.org/eml-2.0.0">
+      <formatName>Ecological Metadata Language, version 2.0.0</formatName>
+  </d1:objectFormat>
+
+Retrieve an object format from a Coordinating Node in JSON format::
+
+  curl -X GET -H "Accept: application/json" \
+  http://cn.dataone.org/d1/formats/eml://ecoinformatics.org/eml-2.0.0
+  
+        {
+          'identifier': 'eml://ecoinformatics.org/eml-2.0.0',
+          'formatName': 'Ecological Metadata Language, version 2.0.0'
+        }
+
+Retrieve an object format from a Coordinating Node in CSV format::
+
+  curl -X GET -H "Accept: text/csv" \
+  http://cn.dataone.org/d1/formats/eml://ecoinformatics.org/eml-2.0.0
+
+  identifier, formatName
+  eml://ecoinformatics.org/eml-2.0.0, Ecological Metadata Language, version 2.0.0
