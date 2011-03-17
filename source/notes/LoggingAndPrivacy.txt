@@ -1,0 +1,73 @@
+Logging and Privacy concerns
+============================
+
+Design decisions for DataONE have until now been focused on comprehensive and
+universal logging for all operations performed on Member Nodes and Coordinating Nodes.
+One rationale for this is that data providers have traditionally been unwilling to
+replicate their data for distribution by other parties because they have been unable
+to get usage metrics for these data.  The current DataONE design for logging is based
+on 5 use cases that generally outline the need to provide log information to data
+providers (see :ref:`logging-use-case-synopsis` for summary of Use Cases 16, 17, 18, 
+19, and 20). Under the current :doc:`../design/LoggingSchema`, all operations are logged, 
+recording the user's IP address, browser agent, the date and time and type of the 
+operation, and the user's identity if they have authenticated to the system.
+
+Privacy concerns
+----------------
+Recently, discussions have pointed out that there are potential privacy concerns for
+data users associated with these logging policies, and that DataONE should consider
+cases where truly anonymous access to resources may be warranted.  A comparison has
+been made to libraries, whereby patron access to resources is not recorded in order to
+avoid having to expose these records to third parties. A similar situation may exist
+where a data user does not want a data provider or other third parties to know that
+they accessed data in DataONE.  Some example scenarios might include:
+
+* A scientist wants to analyze climate change data, but not have the set be traceable 
+  by regulatory bodies until they publish 
+* A scientist wants to analyze a set of data, but not have the set be visible to
+  possible colleagues
+
+There may be more compelling scenarios than these for privacy concerns.
+
+Potential designs
+-----------------
+* All Events Logged and users identified
+    - All MNs must implement logging, must provide user
+      identity in those logs if the user has been authenticated, and must provide
+      those logs to the CN log aggregation service.
+* Data Providers can require user identity
+    - Currently, DataONE access control directives (see
+      :doc:`../design/Authorization`) would allow a data provider to specify
+      that objects are only accessible to 'AuthenticatedUser's, which means that their
+      username, other identifying information, and their IP number are available.
+      Currently we do not have a specification about what this identifying information
+      would be, but a reasonable minimal set would be Name and Email.
+* Data Consumers can request anonymity
+    - Under this scenario, data consumers would not authenticate against DataONE, and
+      thus their identifying information would not be logged at MN or CN.  However,
+      under the current specification, their IP number would still be recorded, which
+      may be sufficient to identify the user.  The specification could be modified to
+      eliminate the collection of IP numbers for the non-authenticated users, but this
+      would significantly comprimise our ability to analyze anonymous download
+      statistics (e.g., geographic breakdown, differentiating web-crawler accesses
+      versus user accesses, etc.). An alternative would be to create a mechanism to
+      differentiate typical non-authenticated access (where IP numbers are recorded) 
+      from 'anonymous' access (where IP numbers are not recorded).
+* Both require identity and request anonymity
+    - A combination of the last two scenarios, where data providers can demand
+      identity through authentication, and consumers can insist upon anonymity.  In
+      this case, any data objects that would otherwise be available to the user but 
+      require identity logging would be omitted from access by anonymous users.
+
+Implications and Issues
+-----------------------
+* The addition of truly anonymous access complicates the design and implementation of
+  the APIs, and it makes implementation of the APIs considerably more burdensome for
+  MNs. This may reduce the number of participating member nodes.
+* The addition of anonymous access may deter MNs from joining DataONE if they can not
+  get usage tracking statistics for their data.  Experience with the KNB has indicated
+  that one of the main reasons that contributors only choose to share metadata and not
+  data is that they want to be able to guarantee uage reporting data for their data
+* We need to resolve whether our current concept of 'Public' access to data (see
+  :doc:`../design/Authorization`), which allows non-authenticated access, also implies that the
+  IP number of the requesting client not be recorded.
