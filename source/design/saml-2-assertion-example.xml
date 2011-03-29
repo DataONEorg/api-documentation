@@ -1,4 +1,4 @@
- <saml:Assertion
+<saml:Assertion
    xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
    xmlns:xs="http://www.w3.org/2001/XMLSchema"
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -10,24 +10,40 @@
      xmlns:ds="http://www.w3.org/2000/09/xmldsig#">...</ds:Signature>
    <saml:Subject>
      <saml:NameID
-       Format="urn:oasis:names:tc:SAML:1.1:nameid-format:X509SubjectName">
+       Format="urn:oasis:names:tc:SAML:1.1:nameid-format:X509SubjectName"
+       SPProvidedID="CN=Some User,O=University One,C=US">
        uid=testuser,o=NCEAS,dc=ecoinformatics,dc=org
      </saml:NameID>
      <saml:SubjectConfirmation
        Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
+         <!-- Recipient should be optional, and may not be desirable because
+         then clients will need a separate session for each node they want to
+         contact. This may be better as an AudienceRestriction element in
+         Conditions. Also, should te InResponseTo, NotBefore, and NotOnOrAfter
+         fields really be placed in the Conditions element?-->
        <saml:SubjectConfirmationData
-         InResponseTo="aaf23196-1773-2113-474a-fe114412ab72"
+         Address="10.0.45.21"
          Recipient="https://knb-mn.ecoinformatics.org/knb/d1"
+         InResponseTo="aaf23196-1773-2113-474a-fe114412ab72"
+         NotBefore="2004-12-05T09:17:05Z"
          NotOnOrAfter="2004-12-05T09:27:05Z"/>
      </saml:SubjectConfirmation>
    </saml:Subject>
    <saml:Conditions
      NotBefore="2004-12-05T09:17:05Z"
      NotOnOrAfter="2004-12-05T09:27:05Z">
-     <saml:AudienceRestriction>
-       <saml:Audience>https://knb-mn.ecoinformatics.org/knb/d1</saml:Audience>
-     </saml:AudienceRestriction>
    </saml:Conditions>
+   <saml:AuthnStatement AuthnInstant="2010-11-25T13:15:13Z">
+     <saml:AuthnContext>
+       <saml:AuthnContextClassRef>
+         urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport
+       </saml:AuthnContextClassRef>
+       <!-- Note: We might also use X509 certs to authenticate, in which case the
+       context class would be:
+         urn:oasis:names:tc:SAML:2.0:ac:classes:X509
+       -->
+     </saml:AuthnContext>
+   </saml:AuthnStatement>
    <saml:AttributeStatement>
      <saml:Attribute
        xmlns:x500="urn:oasis:names:tc:SAML:2.0:profiles:attribute:X500"
@@ -54,5 +70,25 @@
        FriendlyName="mail">
        <saml:AttributeValue xsi:type="xs:string">someone@gmail.com</saml:AttributeValue>
      </saml:Attribute>
+     <saml:Attribute 
+       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"
+       Name="urn:oasis:names:tc:SAML:2.0:profiles:session:sessionId"
+       xsi:type="xs:string">urn:uuid:f7eca768-59c0-11e0-bf7d-fbbaa0f3405c
+     </saml:Attribute>
+     <saml:Attribute 
+       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"
+       Name="urn:oasis:names:tc:SAML:2.0:profiles:session:AuthenticationStrength"
+       xsi:type="xs:integer">20
+     </saml:Attribute>
+     <saml:Attribute 
+       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"
+       Name="urn:oasis:names:tc:SAML:2.0:profiles:session:TimeLastActive"
+       xsi:type="xs:dateTime">2010-11-25T13:16:02Z
+     </saml:Attribute>
+     <saml:Attribute 
+       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"
+       Name="urn:oasis:names:tc:SAML:2.0:profiles:session:TokenFormatVersion"
+       xsi:type="xs:string">1.0
+     </saml:Attribute>
    </saml:AttributeStatement>
- </saml:Assertion>
+</saml:Assertion>
