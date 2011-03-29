@@ -1,0 +1,51 @@
+Selectors for Data Package Components
+=====================================
+
+Goal
+----
+
+Develop a generalized selector API and standard that can be used to
+identify granules within a data resource (data set, data package, composite
+object) that is managed by DataONE. The “selector” can be appended to an
+identifier or included with an API call to retrieve an object and the response
+is the sub-element or component specified by the selector.
+
+Types of selector are likely to vary with the types of composite objects being
+managed by DataONE. For example, a selector may be defined to return a range
+by bytes from a BLOB, or perhaps a single file from within a zip archive of a
+set of files.
+
+Some examples:
+
+- Byte range (first and last offset, or first offset and size)
+- Index range (offset into a list)
+- HTML fragment identifier
+- Time offset or range
+- Bounding box spatial range
+- Database record selection from a key
+
+
+Rationale
+---------
+
+There are practical limits to the total number of objects that may
+be effectively managed at the level of detail supported by the DataONE
+infrastructure. By managing content at the collection or package level, the
+total number of managed identifiers can be constrained to a more manageable
+range (e.g. a single collection may have >= 1e5 elements or records). Using
+selectors, this could be reduced to a single identifier for the collection
+plus support for the appropriate selector.
+
+So a "selector service" is implemented by a node as a mechanism for retrieving
+some object that exists as a sub-component of a larger object that is managed
+by the DataONE infrastructure.
+
+
+Implications for Implementation
+-------------------------------
+
+- Advertisement and discovery of selector services implemented by a node
+- Implementation overhead (processing, etc) for a Member Node
+- Representation formats for extracted information
+- Access control policies (managed parent object controls everything?)
+
