@@ -1,0 +1,139 @@
+Time and Bandwidth Constraints
+==============================
+
+Given the DataONE architecture, estimate the constraints on rates of data
+acquisition, the size of data objects, and the number of simultaneous users
+that may be supported. There are of course, interactions between each of these
+metrics
+
+CN - CN Transfer Rates
+----------------------
+
+Goal - what is the average rate of data transfer between each of the CNs.
+
+Four random files of sizes 1MB, 10MB, 100MB and 1GB were generated using
+variants of the command::
+
+   dd if=/dev/urandom of=test_100M.bin bs=1048576 count=100
+
+These were placed in a location (/var/www/test) that can be served by the apache
+web server running on each of the CNs, and a script to time retrieval of the
+documents from each node executed.
+
+.. graphviz::
+
+   graph {
+   
+     fontname = "Courier";
+     fontsize = 9;
+     
+
+     edge [
+       fontname = "Courier"
+       fontsize = 9
+       color = "#333333"
+       arrowhead = "open"
+       arrowsize = 0.5
+       len = 0.2
+       dir = forward
+       ljust = "l"
+       ];
+
+     node [
+       fontname = "Courier"
+       fontsize = 9
+       fontcolor = "black"
+       ljust = "l"];   
+
+
+   UNM -- UCSB [label="1.1 (0.89)\n5.4 (1.84)\n30 (3.29)\n284 (3.51)"]
+   UCSB -- UNM [label="1.0 (1.00)\n5.6 (1.76)\n25 (3.89)\n232 (4.30)"];
+   UNM -- ORC [label="9.2 (0.11)\n14.2 (0.71)\n62 (1.61)\n553 (1.81)"]
+   ORC -- UNM [label="0.9 (0.54)\n2.1 (1.4)\n19.2 (5.2)\n144 (6.93)"]
+   UCSB -- ORC [label="9.2 (0.11)\n14.2 (0.7)\n40 (2.5)\n255 (3.91)"]
+   ORC -- UCSB [label="1.1 (0.86)\n5.7 (1.74)\n26 (3.77)\n268 (3.72)"]
+   Home -- UNM [label="2.2 (0.44)\n14.3 (0.70)"]
+   Home -- UCSB [label="2.4 (0.40)\n14.5 (0.69)"]
+   Home -- ORC [label="1.4 (0.70)\n11.7 (0.86)"]
+   }
+
+Preliminary results are shown in diagram above. Numbers on left are seconds,
+numbers in parentheses are MB/sec. Each row represents average of three
+transfers for each of the four file sizes of 1MB, 10MB, 100MB, and 1GB
+respectively. For example, the time taken to transfer 100MB from UCSB to ORC
+was 40 seconds. Only first two values are shown for transfers to Home (Verizon
+FIOS in Annapolis).
+
+
+Transaction Rates
+-----------------
+
+::
+
+  nCN = # of coordinating nodes
+  nD = # of data objects
+  nM = # of science metadata objects
+  nY = # of system metadata objects
+  nr = # of replicas of each data object
+  n0 = total number of objects before synchronization or replication
+  n1 = total number of objects after synchronization
+  n2 = total number of objects after replication
+  D = difference in object count between start and steady state
+
+  nY = nM + nD
+
+  n0 = nY + nM + nD
+
+  n1 = nY*nCN + nM*nCN + n0
+
+  n2 = nY + nr * nD + n1
+
+  D = n2 - n0
+
+So, if::
+
+  nD = nM = 1, n0 = 4, n1 = 13, n2 = 18, D = 14
+
+If nD = 100,000 D = 1.4e6. The approximate (actually minimum) transaction rate
+(t) to reach steady state after d days for this number of new objects::
+
+  d = 1   t = 16.2
+  d = 7   t = 2.3
+  d = 30  t = 0.54
+  d = 365 t = 0.04
+
+if nD = 1,000,000::
+
+  d = 1   t = 162
+  d = 7   t = 23
+  d = 30  t = 5.4
+  d = 365 t = 0.44
+
+if nD = 1e9::
+
+  d = 1   t = 162000
+  d = 7   t = 23000
+  d = 30  t = 5400
+  d = 365 t = 443
+
+
+Note that there will be many small additions of content, not necessarily a
+single large chunk except in the case where a total rebuild is required. These
+figures provide a quantitative basis for some indication as to what sort of
+capacity can be handled by the infrastructure given the fundamental constraint
+of the performance of the Coordinating Node replicated object store and the
+overall latency of operations across the network. A few key observations:
+
+- Adding 1 data set along with its science and system metadata causes creation
+  of 14 new data objects in the system.
+
+- Refactoring the data store, system metadata can be a very expensive
+  operation.
+
+- Overall network impact must be taken into consideration when bringing on a
+  new Member Node or when a Member Node adds a significant volume of data. 
+
+- Preference should be towards less granularity of data. For example, a single
+  natural history collection alone may have several million records. These
+  should be contributed to DataONE as a collection not as individual data
+  objects per specimen.
