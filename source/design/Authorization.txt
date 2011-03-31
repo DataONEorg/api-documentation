@@ -279,10 +279,6 @@ An example instance of this syntax is:
 Managing Identities and Groups in DataONE
 -----------------------------------------
 
-.. Note::
-    InCommon does not provide group management that is under the control of DataONE
-    principals.  Need to define how we will manage groups and roles.
-
 DataONE users will have multiple identities from different participating member
 nodes, and their affiliations will change over time.  Because of this, DataONE
 needs a user Identity mapping system that allows users to authenticate using
@@ -297,6 +293,17 @@ create, store, and modify groups of users that can be used in access control
 directives.  Only the user creating a group will have access to changing the
 group.  Service APIs for group management are outlined below in the
 Authorization Services section.
+
+.. Note::
+    The Internet2 project has defined a product called Grouper that is a
+    standalone group management utility and that publishes a web interface for
+    interacting with the service.  It allows users and organizations to create
+    and manage groups.  See Grouper_ and earlier work from Internet2 on group
+    management through their MACE_ project.
+
+.. _Grouper: https://spaces.internet2.edu/display/Grouper/Grouper+Web+Services
+
+.. _MACE: http://middleware.internet2.edu/dir/groups/
 
 Authorization Services
 ----------------------
