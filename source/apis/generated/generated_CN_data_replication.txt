@@ -31,7 +31,8 @@
 
    :REST URL: ``POST /notify``
 
-   :param token:
+   :param token: The authentication token returned by
+     :func:`CN_authentication.getAuthToken`.
 
    :type token: :class:`Types.AuthToken`
 

@@ -53,7 +53,7 @@
    :REST URL: ``PUT /node/{pid}``
 
    :param token: The authentication token returned by
-     :func:`CN_authentication.login`
+     :func:`CN_authentication.getAuthToken`.
 
    :type token: :class:`Types.AuthToken`
 
@@ -88,7 +88,7 @@
    :REST URL: ``POST /node``
 
    :param token: The authentication token returned by
-     :func:`CN_authentication.login`
+     :func:`CN_authentication.getAuthToken`.
 
    :type token: :class:`Types.AuthToken`
 

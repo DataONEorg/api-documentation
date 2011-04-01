@@ -47,6 +47,12 @@
      - :func:`getChecksum`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.Checksum`
+   * - ``GET /formats``
+     - :func:`listFormats`
+     - () ``->`` :class:`Types.ObjectFormatList`
+   * - ``GET /formats/{fmtid}``
+     - :func:`getFormat`
+     - (:class:`fmtid<Types.Identifier>`) ``->`` :class:`Types.ObjectFormat`
 
 
 
@@ -271,9 +277,10 @@
 
    Given an optional scope and format, reserves and returns an identifier within
    that scope and format that is unique and will not be used by any other
-   sessions. Future calls to :func:`MN_crud.create` and :func:`MN_crud.update`
-   that reference this ID must originate from the :term:`session` in which the
-   identifier was reserved, otherwise an error is raised on those methods.
+   sessions. Future calls to :func:`MN_storage.create` and
+   :func:`MN_storage.update` that reference this ID must originate from the
+   :term:`session` in which the identifier was reserved, otherwise an error is
+   raised on those methods.
 
    :Use Cases:
 
@@ -470,6 +477,70 @@
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=1402)``
 
    :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=1430)``
+
+
+
+----
+
+.. function:: listFormats() -> ObjectFormatList
+
+   Returns a list of all object formats registered in the DataONE Object Format
+   Vocabulary.
+
+   :REST URL: ``GET /formats``
+
+   :returns: The list of object formats registered in the DataONE Object Format
+     Vocabulary
+
+   :rtype: :class:`Types.ObjectFormatList`
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4840)``
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4841)``
+
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4842)``
+
+   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=4843)``
+
+     The object formats collection could not be found at this node.
+
+
+
+.. include:: ../examples/cn_listObjectFormats.txt
+
+
+
+----
+
+.. function:: getFormat(fmtid) -> ObjectFormat
+
+   Returns the object format registered in the dataONE Object Format Vocabulary
+   for the given format identifier.
+
+   :REST URL: ``GET /formats/{fmtid}``
+
+   :param fmtid: Unique Identifier for the object format
+
+   :type fmtid: :class:`Types.Identifier`
+
+   :returns: The object format registered in the DataONE Object Format
+     Vocablulary
+
+   :rtype: :class:`Types.ObjectFormat`
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4844)``
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4845)``
+
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4846)``
+
+   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=4847)``
+
+     The format specified by *fmtid* does not exist at this node.
+
+
+
+.. include:: ../examples/cn_getFormat.txt
 
 
 

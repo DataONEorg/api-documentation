@@ -2,22 +2,22 @@
    :widths: 10 10 30
    :header-rows: 1
 
-   * - Method
-     - Path
+   * - Path
+     - Method
      - Description
-   * - :func:`CN_crud.get`
-     - GET /object/{pid}
+   * - GET /object/{pid}
+     - :func:`CN_crud.get`
      - Retrieves the object identified by *pid* from the node. If the object is
        not present on the node, then an :exc:`Exceptions.NotFound` error is
        raised (regardless of whether the object exists on another node in the
        DataONE system).
-   * - :func:`CN_crud.getSystemMetadata`
-     - GET /meta/{pid}
+   * - GET /meta/{pid}
+     - :func:`CN_crud.getSystemMetadata`
      - Returns the :term:`system metadata` that contains DataONE specific
        information about the object identified by *pid*. Note that authoritative
        copies of system metadata are only available from the Coordinating Nodes.
-   * - :func:`CN_crud.resolve`
-     - GET /resolve/{pid}
+   * - GET /resolve/{pid}
+     - :func:`CN_crud.resolve`
      - Implemented by CNs, returns the nodes (MNs or CNs) known to hold copies
        of the object identified by *<pid>*. The object resolution process is
        intended to provide a simple mechanism for a client to discover from
@@ -32,43 +32,51 @@
        discover the base URL from which the client can construct the *get()*
        URL. Resolve is provided for efficiency since the response size is much
        smaller.
-   * - :func:`CN_crud.reserveIdentifier`
-     - POST /reserve
+   * - POST /reserve
+     - :func:`CN_crud.reserveIdentifier`
      - Given an optional scope and format, reserves and returns an identifier
        within that scope and format that is unique and will not be used by any
-       other sessions. Future calls to :func:`MN_crud.create` and
-       :func:`MN_crud.update` that reference this ID must originate from the
+       other sessions. Future calls to :func:`MN_storage.create` and
+       :func:`MN_storage.update` that reference this ID must originate from the
        :term:`session` in which the identifier was reserved, otherwise an error
        is raised on those methods.
-   * - :func:`CN_crud.assertRelation`
-     - GET /assertRelation/{pidOfSubject}
+   * - GET /assertRelation/{pidOfSubject}
+     - :func:`CN_crud.assertRelation`
      - Tests that the specified relationship between *pidOfSubject* and
        *pidOfObject* exists.
-   * - :func:`CN_query.search`
-     - GET /object
+   * - GET /formats
+     - :func:`CN_crud.listFormats`
+     - Returns a list of all object formats registered in the DataONE Object
+       Format Vocabulary.
+   * - GET /formats/{fmtid}
+     - :func:`CN_crud.getFormat`
+     - Returns the object format registered in the dataONE Object Format
+       Vocabulary for the given format identifier.
+   * - GET /object
+     - :func:`CN_query.search`
      - Search the metadata catalog and return identifiers of metadata records
        that match the criteria.
-   * - :func:`CN_query.getLogRecords`
-     - GET /log
+   * - GET /log
+     - :func:`CN_query.getLogRecords`
      - Retrieves consolidated log information for the specified date range
        (inclusive) for the entire DataONE infrastructure
-   * - :func:`CN_authentication.getAuthToken`
-     - POST /account
+   * - POST /account
+     - :func:`CN_authentication.getAuthToken`
      - Retrieved credential information about a user, including a list of
        equivalent identities for the user and a list of groups in which the user
        is a member.
-   * - :func:`CN_authentication.setOwner`
-     - PUT /owner/{pid}
+   * - PUT /owner/{pid}
+     - :func:`CN_authentication.setOwner`
      - Changes ownership (RightsHolder) of the specified object to the
        :term:`principal` specified by `userId`
-   * - :func:`CN_authentication.newAccount`
-     - POST /account/login
+   * - POST /account/login
+     - :func:`CN_authentication.newAccount`
      - Create a new :term:`principal` in the DataONE system. Note that there
        should probably be a lot more metadata captured about the new user, and
        there should be a mechanism for specifying the default access control
        rules for the new account.
-   * - :func:`CN_authentication.verifyToken`
-     - GET /account/verifyToken
+   * - GET /account/verifyToken
+     - :func:`CN_authentication.verifyToken`
      - Test if the provided token is valid. The token is passed to the method
        end point using the normal authentication token transfer mechanism (e.g.
        HTTP Auth header). Note that there is a potential security issue here as
@@ -77,73 +85,73 @@
        and perhaps even generate a token that matches a system token. Hence
        another level of restriction (perhaps network level blocking / limiting)
        is necessary.
-   * - :func:`CN_authentication.mapIdentity`
-     - POST /account/map
+   * - POST /account/map
+     - :func:`CN_authentication.mapIdentity`
      - Map the two authenticated identities, asserting that they represent the
        same principal. The two identities are represented as AuthToken objects,
        which allows the CN to determine if both identities have been properly
        authenticated, which demonstrates that the user has control of both
        identities.
-   * - :func:`CN_authentication.createGroup`
-     - POST /groups/{groupName}
+   * - POST /groups/{groupName}
+     - :func:`CN_authentication.createGroup`
      - Create a group with the given name. Groups are lists of principals that
        allow all members of the group to be referenced by listing solely the
        subject name of the group.  Group names must be unique within the DataONE
        system, and can only be modified by their creator.
-   * - :func:`CN_authentication.addGroupMembers`
-     - PUT /groups/{groupName}
+   * - PUT /groups/{groupName}
+     - :func:`CN_authentication.addGroupMembers`
      - Add members to the named group. Group members can be added by the
        original creator of the group, otherwise a NotAuthorized exception is
        thrown.  Group members are provided as a list of principals to be added
        to the group.
-   * - :func:`CN_authentication.removeGroupMembers`
-     - DELETE /groups/{groupName}
+   * - DELETE /groups/{groupName}
+     - :func:`CN_authentication.removeGroupMembers`
      - Remove members to the named group. Group members can be removed by the
        original creator of the group, otherwise a NotAuthorized exception is
        thrown.  Group members are provided as a list of principals to be removed
        from the group.
-   * - :func:`CN_authorization.isAuthorized`
-     - GET /isAuthorized/{pid}
+   * - GET /isAuthorized/{pid}
+     - :func:`CN_authorization.isAuthorized`
      - Test if the user identified by the provided token has authorization for
        operation on the specified object. .. Note:: Should perhaps add
        convenience methods for "canRead()" and "canWrite()" to verify that a
        user is able to read / write an object. .. Note:: The token and operation
        parameters are not currently encoded in the REST URL, so unclear how they
        should be passed in.
-   * - :func:`CN_authorization.setAccess`
-     - PUT /accessRules/{pid}
+   * - PUT /accessRules/{pid}
+     - :func:`CN_authorization.setAccess`
      - Sets the access permissions for an object identified by *pid*. .. Note::
        The token and accessPolicy parameters are not currently encoded in the
        REST URL, so unclear how they should be passed in.
-   * - :func:`CN_data_replication.setReplicationStatus`
-     - POST /notify
+   * - POST /notify
+     - :func:`CN_data_replication.setReplicationStatus`
      - Update the replication status of the system metadata, ensuring that the
        change is appropriate for the given state of system metadata.  For
        example, a MN can not change the status to *COMPLETED* unless the CN
        previously requested replication of the object and the replications
        status of the object (as indicated in the system metadata) is set to
        *QUEUED*.
-   * - :func:`CN_register.listNodes`
-     - GET /node
+   * - GET /node
+     - :func:`CN_register.listNodes`
      - Returns a list of nodes that have been registered with the DataONE
        infrastructure.
-   * - :func:`CN_register.addNodeCapabilities`
-     - PUT /node/{pid}
+   * - PUT /node/{pid}
+     - :func:`CN_register.addNodeCapabilities`
      - 
-   * - :func:`CN_register.register`
-     - POST /node
+   * - POST /node
+     - :func:`CN_register.register`
      - 
 
 
-.. list-table:: REST URLs implemented on Memeber Nodes.
+.. list-table:: REST URLs implemented on Member Nodes.
    :widths: 10 10 30
    :header-rows: 1
 
-   * - Method
-     - Path
+   * - Path
+     - Method
      - Description
-   * - :func:`MN_crud.get`
-     - GET /object/{pid}
+   * - GET /object/{pid}
+     - :func:`MN_read.get`
      - Retrieve an object identified by *pid* from the node. The response must
        contain the bytes of the indicated object, and the checksum of the bytes
        retrieved must match the :attr:`SystemMetadata.checksum` recorded in the
@@ -152,45 +160,17 @@
        :exc:`Exceptions.NotFound` must be raised even if the object exists on
        another node in the DataONE system. Also implmented by Coordinating Nodes
        as :func:`CN_crud.get`.
-   * - :func:`MN_crud.getSystemMetadata`
-     - GET /meta/{pid}
+   * - GET /meta/{pid}
+     - :func:`MN_read.getSystemMetadata`
      - Describes the science metadata or data object (and likely other objects
        in the future) identified by *pid* by returning the associated system
        metadata object. If the object does not exist on the node servicing the
        request, then :exc:`Exceptions.NotFound` must be raised even if the
        object exists on another node in the DataONE system.
-   * - :func:`MN_crud.create`
-     - POST /object/{pid}
-     - Adds a new object to the Member Node, where the object is either a data
-       object or a science metadata object. This method is called by clients to
-       create new data objects on Member Nodes.  The *pid* must not exist in the
-       DataONE system or must have been previously reserved using
-       :func:`CN_crud.reserveIdentifier`.
-   * - :func:`MN_crud.update`
-     - PUT /object/{pid}
-     - Creates a new *object* on the Member Node that explicitly updates and
-       obsoletes a previous object (identified by *obsoletedPid*).    This
-       method is called by clients to update objects on Member Nodes.  The
-       object that is being obsoleted is passed in as a parameter, and the
-       Member Node should record the update by storing the
-       :attr:`SystemMetadata.obsoletes` and :attr:`SystemMetadata.obsoletedBy`
-       fields for the respective objects in their system metadata. The modified
-       system metadata entries must then be available in
-       :func:`MN_replication.listObjects` to ensure that a Coordinating Node
-       will pick up the changes.
-   * - :func:`MN_crud.delete`
-     - DELETE /object/{pid}
-     - Deletes an object from the Member Node, where the object is either a data
-       object or a science metadata object. This method is called by clients to
-       delete objects on Member nodes. Member Nodes must check that the caller
-       is authorized to perform this function. If the object does not exist on
-       the node servicing the request, then an :exc:`Exceptions.NotFound`
-       exception is raised. The message body of the exception should contain a
-       hint as to the location of the :func:`CN_crud.resolve` method.
-   * - :func:`MN_crud.describe`
-     - HEAD /object/{pid}
+   * - HEAD /object/{pid}
+     - :func:`MN_read.describe`
      - This method provides a lighter weight mechanism than
-       :func:`MN_crud.getSystemMetadata` for a client to determine basic
+       :func:`MN_read.getSystemMetadata` for a client to determine basic
        properties of the referenced object. The response should indicate
        properties that are typically returned in a HTTP HEAD request: the date
        late modified, the size of the object, the type of the object (the
@@ -201,20 +181,16 @@
        be raised even if the object exists on another node in the DataONE
        system.  Note that this method is likely to be called frequently and so
        efficiency should be taken into consideratin during implementation.
-   * - :func:`MN_crud.getChecksum`
-     - GET /checksum/{pid}
+   * - GET /checksum/{pid}
+     - :func:`MN_read.getChecksum`
      - Returns a :class:`Types.Checksum` for the specified object using an
        accepted hashing algorithm. The result is used to determine if two
        instances referenced by a PID are identical, hence it is necessary that
        MNs can ensure that the returned checksum is valid for the referenced
        object either by computing it on the fly or by using a cached value that
        is certain to be correct.
-   * - :func:`MN_crud.getLogRecords`
-     - GET /log
-     - Retrieve log information from the MN for the specified date range
-       (inclusive).
-   * - :func:`MN_replication.listObjects`
-     - GET /object
+   * - GET /object
+     - :func:`MN_read.listObjects`
      - Retrieve the list of objects present on the MN that match the calling
        parameters. This method is required to support the process of
        :term:`Member Node synchronization`. At a minimum, this method should be
@@ -224,36 +200,118 @@
        slicing of the matching set of records by indicating the starting *index*
        of the response (where 0 is the index of the first item) and the *count*
        of elements to be returned.
-   * - :func:`MN_replication.replicate`
-     - POST /replicate
-     - Called by a Coordinating Node to request that the Member Node create a
-       copy of the specified object by retrieving it from another Member Nodeode
-       and storing it locally so that it can be made accessible to the DataONE
-       system.
-   * - :func:`MN_replication.synchronizationFailed`
-     - POST /error
+   * - POST /error
+     - :func:`MN_read.synchronizationFailed`
      - This is a callback method used by a CN to indicate to a MN that it cannot
        complete synchronization of the science metadata identified by *pid*.
        When called, the MN should take steps to record the problem description
        and notify an administrator or the data owner of the issue.
-   * - :func:`MN_health.ping`
-     - GET /monitor/ping
+   * - POST /object/{pid}
+     - :func:`MN_storage.create`
+     - Adds a new object to the Member Node, where the object is either a data
+       object or a science metadata object. This method is called by clients to
+       create new data objects on Member Nodes.  The *pid* must not exist in the
+       DataONE system or must have been previously reserved using
+       :func:`CN_crud.reserveIdentifier`.
+   * - PUT /object/{pid}
+     - :func:`MN_storage.update`
+     - Creates a new *object* on the Member Node that explicitly updates and
+       obsoletes a previous object (identified by *obsoletedPid*).    This
+       method is called by clients to update objects on Member Nodes.  The
+       object that is being obsoleted is passed in as a parameter, and the
+       Member Node should record the update by storing the
+       :attr:`SystemMetadata.obsoletes` and :attr:`SystemMetadata.obsoletedBy`
+       fields for the respective objects in their system metadata. The modified
+       system metadata entries must then be available in
+       :func:`MN_read.listObjects` to ensure that a Coordinating Node will pick
+       up the changes.
+   * - DELETE /object/{pid}
+     - :func:`MN_storage.delete`
+     - Deletes an object from the Member Node, where the object is either a data
+       object or a science metadata object. This method is called by clients to
+       delete objects on Member nodes. Member Nodes must check that the caller
+       is authorized to perform this function. If the object does not exist on
+       the node servicing the request, then an :exc:`Exceptions.NotFound`
+       exception is raised. The message body of the exception should contain a
+       hint as to the location of the :func:`CN_crud.resolve` method.
+   * - GET /object/{pid}
+     - :func:`MN_read.get`
+     - Retrieve an object identified by *pid* from the node. The response must
+       contain the bytes of the indicated object, and the checksum of the bytes
+       retrieved must match the :attr:`SystemMetadata.checksum` recorded in the
+       :class:`Types.SystemMetadata` if the object is science data. If the
+       object does not exist on the node servicing the request, then
+       :exc:`Exceptions.NotFound` must be raised even if the object exists on
+       another node in the DataONE system. Also implmented by Coordinating Nodes
+       as :func:`CN_crud.get`.
+   * - GET /meta/{pid}
+     - :func:`MN_read.getSystemMetadata`
+     - Describes the science metadata or data object (and likely other objects
+       in the future) identified by *pid* by returning the associated system
+       metadata object. If the object does not exist on the node servicing the
+       request, then :exc:`Exceptions.NotFound` must be raised even if the
+       object exists on another node in the DataONE system.
+   * - HEAD /object/{pid}
+     - :func:`MN_read.describe`
+     - This method provides a lighter weight mechanism than
+       :func:`MN_read.getSystemMetadata` for a client to determine basic
+       properties of the referenced object. The response should indicate
+       properties that are typically returned in a HTTP HEAD request: the date
+       late modified, the size of the object, the type of the object (the
+       :attr:`SystemMetadata.objectFormat`). The principal indicated by *token*
+       must have read privileges on the object, otherwise
+       :exc:`Exceptions.NotAuthorized` is raised. If the object does not exist
+       on the node servicing the request, then :exc:`Exceptions.NotFound` must
+       be raised even if the object exists on another node in the DataONE
+       system.  Note that this method is likely to be called frequently and so
+       efficiency should be taken into consideratin during implementation.
+   * - GET /checksum/{pid}
+     - :func:`MN_read.getChecksum`
+     - Returns a :class:`Types.Checksum` for the specified object using an
+       accepted hashing algorithm. The result is used to determine if two
+       instances referenced by a PID are identical, hence it is necessary that
+       MNs can ensure that the returned checksum is valid for the referenced
+       object either by computing it on the fly or by using a cached value that
+       is certain to be correct.
+   * - GET /object
+     - :func:`MN_read.listObjects`
+     - Retrieve the list of objects present on the MN that match the calling
+       parameters. This method is required to support the process of
+       :term:`Member Node synchronization`. At a minimum, this method should be
+       able to return a list of objects that match::      startTime <=
+       SystemMetadata.dateSysMetadataModified    but is expected to also support
+       date range (by also specifying *endTime*), and should also support
+       slicing of the matching set of records by indicating the starting *index*
+       of the response (where 0 is the index of the first item) and the *count*
+       of elements to be returned.
+   * - POST /error
+     - :func:`MN_read.synchronizationFailed`
+     - This is a callback method used by a CN to indicate to a MN that it cannot
+       complete synchronization of the science metadata identified by *pid*.
+       When called, the MN should take steps to record the problem description
+       and notify an administrator or the data owner of the issue.
+   * - GET /log
+     - :func:`MN_core.getLogRecords`
+     - Retrieve log information from the MN for the specified date range
+       (inclusive).
+   * - GET /monitor/ping
+     - :func:`MN_core.ping`
      - Low level "are you alive" operation. Response is simple ACK, but may be
        reasonable to overload with a couple of flags that could indicate
        availability of new data or change in capabilities. The Member Node
        should perform some minimal internal functionality testing before
        answering. However, ping checks will be frequent (every few minutes) so
        the internal functionality test should not be high impact.
-   * - :func:`MN_health.getObjectStatistics`
-     - GET /monitor/object
+   * - GET /monitor/object
+     - :func:`MN_core.getObjectStatistics`
      - Called by the monitoring system to find how many objects are stored on
        the MN, cumulative or for each day in a given range.
-   * - :func:`MN_health.getOperationStatistics`
-     - GET /monitor/event
+   * - GET /monitor/event
+     - :func:`MN_core.getOperationStatistics`
      - Called by the monitoring system to find how many operations have been
        performed on the MN, cumulative or for each day in a given range.
-   * - :func:`MN_health.getStatus`
-     - GET /monitor/status
+   * - GET /monitor/status
+     - :func:`MN_core.getStatus`
      - This function is similar to :func:`MN_health.ping` but returns a more
        complete status which may include information such as planned service
        outages. This method provide a mechanism for notification to Coordinating
@@ -263,17 +321,201 @@
        used by the Coordinating Nodes for notification of pending outages,
        software changes, or other significant events as described in
        :doc:`/design/UseCases/10_uc`.
-   * - :func:`MN_authorization.isAuthorized`
-     - GET /isAuthorized/{pid}
+   * - GET /  or  GET /node
+     - :func:`MN_core.getCapabilities`
+     - Returns a document describing the capabilities of the Member Node.
+   * - GET /object/{pid}
+     - :func:`MN_read.get`
+     - Retrieve an object identified by *pid* from the node. The response must
+       contain the bytes of the indicated object, and the checksum of the bytes
+       retrieved must match the :attr:`SystemMetadata.checksum` recorded in the
+       :class:`Types.SystemMetadata` if the object is science data. If the
+       object does not exist on the node servicing the request, then
+       :exc:`Exceptions.NotFound` must be raised even if the object exists on
+       another node in the DataONE system. Also implmented by Coordinating Nodes
+       as :func:`CN_crud.get`.
+   * - GET /meta/{pid}
+     - :func:`MN_read.getSystemMetadata`
+     - Describes the science metadata or data object (and likely other objects
+       in the future) identified by *pid* by returning the associated system
+       metadata object. If the object does not exist on the node servicing the
+       request, then :exc:`Exceptions.NotFound` must be raised even if the
+       object exists on another node in the DataONE system.
+   * - HEAD /object/{pid}
+     - :func:`MN_read.describe`
+     - This method provides a lighter weight mechanism than
+       :func:`MN_read.getSystemMetadata` for a client to determine basic
+       properties of the referenced object. The response should indicate
+       properties that are typically returned in a HTTP HEAD request: the date
+       late modified, the size of the object, the type of the object (the
+       :attr:`SystemMetadata.objectFormat`). The principal indicated by *token*
+       must have read privileges on the object, otherwise
+       :exc:`Exceptions.NotAuthorized` is raised. If the object does not exist
+       on the node servicing the request, then :exc:`Exceptions.NotFound` must
+       be raised even if the object exists on another node in the DataONE
+       system.  Note that this method is likely to be called frequently and so
+       efficiency should be taken into consideratin during implementation.
+   * - GET /checksum/{pid}
+     - :func:`MN_read.getChecksum`
+     - Returns a :class:`Types.Checksum` for the specified object using an
+       accepted hashing algorithm. The result is used to determine if two
+       instances referenced by a PID are identical, hence it is necessary that
+       MNs can ensure that the returned checksum is valid for the referenced
+       object either by computing it on the fly or by using a cached value that
+       is certain to be correct.
+   * - GET /object
+     - :func:`MN_read.listObjects`
+     - Retrieve the list of objects present on the MN that match the calling
+       parameters. This method is required to support the process of
+       :term:`Member Node synchronization`. At a minimum, this method should be
+       able to return a list of objects that match::      startTime <=
+       SystemMetadata.dateSysMetadataModified    but is expected to also support
+       date range (by also specifying *endTime*), and should also support
+       slicing of the matching set of records by indicating the starting *index*
+       of the response (where 0 is the index of the first item) and the *count*
+       of elements to be returned.
+   * - POST /error
+     - :func:`MN_read.synchronizationFailed`
+     - This is a callback method used by a CN to indicate to a MN that it cannot
+       complete synchronization of the science metadata identified by *pid*.
+       When called, the MN should take steps to record the problem description
+       and notify an administrator or the data owner of the issue.
+   * - POST /replicate
+     - :func:`MN_replication.replicate`
+     - Called by a Coordinating Node to request that the Member Node create a
+       copy of the specified object by retrieving it from another Member Nodeode
+       and storing it locally so that it can be made accessible to the DataONE
+       system.
+   * - GET /object/{pid}
+     - :func:`MN_read.get`
+     - Retrieve an object identified by *pid* from the node. The response must
+       contain the bytes of the indicated object, and the checksum of the bytes
+       retrieved must match the :attr:`SystemMetadata.checksum` recorded in the
+       :class:`Types.SystemMetadata` if the object is science data. If the
+       object does not exist on the node servicing the request, then
+       :exc:`Exceptions.NotFound` must be raised even if the object exists on
+       another node in the DataONE system. Also implmented by Coordinating Nodes
+       as :func:`CN_crud.get`.
+   * - GET /meta/{pid}
+     - :func:`MN_read.getSystemMetadata`
+     - Describes the science metadata or data object (and likely other objects
+       in the future) identified by *pid* by returning the associated system
+       metadata object. If the object does not exist on the node servicing the
+       request, then :exc:`Exceptions.NotFound` must be raised even if the
+       object exists on another node in the DataONE system.
+   * - HEAD /object/{pid}
+     - :func:`MN_read.describe`
+     - This method provides a lighter weight mechanism than
+       :func:`MN_read.getSystemMetadata` for a client to determine basic
+       properties of the referenced object. The response should indicate
+       properties that are typically returned in a HTTP HEAD request: the date
+       late modified, the size of the object, the type of the object (the
+       :attr:`SystemMetadata.objectFormat`). The principal indicated by *token*
+       must have read privileges on the object, otherwise
+       :exc:`Exceptions.NotAuthorized` is raised. If the object does not exist
+       on the node servicing the request, then :exc:`Exceptions.NotFound` must
+       be raised even if the object exists on another node in the DataONE
+       system.  Note that this method is likely to be called frequently and so
+       efficiency should be taken into consideratin during implementation.
+   * - GET /checksum/{pid}
+     - :func:`MN_read.getChecksum`
+     - Returns a :class:`Types.Checksum` for the specified object using an
+       accepted hashing algorithm. The result is used to determine if two
+       instances referenced by a PID are identical, hence it is necessary that
+       MNs can ensure that the returned checksum is valid for the referenced
+       object either by computing it on the fly or by using a cached value that
+       is certain to be correct.
+   * - GET /object
+     - :func:`MN_read.listObjects`
+     - Retrieve the list of objects present on the MN that match the calling
+       parameters. This method is required to support the process of
+       :term:`Member Node synchronization`. At a minimum, this method should be
+       able to return a list of objects that match::      startTime <=
+       SystemMetadata.dateSysMetadataModified    but is expected to also support
+       date range (by also specifying *endTime*), and should also support
+       slicing of the matching set of records by indicating the starting *index*
+       of the response (where 0 is the index of the first item) and the *count*
+       of elements to be returned.
+   * - POST /error
+     - :func:`MN_read.synchronizationFailed`
+     - This is a callback method used by a CN to indicate to a MN that it cannot
+       complete synchronization of the science metadata identified by *pid*.
+       When called, the MN should take steps to record the problem description
+       and notify an administrator or the data owner of the issue.
+   * - GET /log
+     - :func:`MN_core.getLogRecords`
+     - Retrieve log information from the MN for the specified date range
+       (inclusive).
+   * - GET /monitor/ping
+     - :func:`MN_core.ping`
+     - Low level "are you alive" operation. Response is simple ACK, but may be
+       reasonable to overload with a couple of flags that could indicate
+       availability of new data or change in capabilities. The Member Node
+       should perform some minimal internal functionality testing before
+       answering. However, ping checks will be frequent (every few minutes) so
+       the internal functionality test should not be high impact.
+   * - GET /monitor/object
+     - :func:`MN_core.getObjectStatistics`
+     - Called by the monitoring system to find how many objects are stored on
+       the MN, cumulative or for each day in a given range.
+   * - GET /monitor/event
+     - :func:`MN_core.getOperationStatistics`
+     - Called by the monitoring system to find how many operations have been
+       performed on the MN, cumulative or for each day in a given range.
+   * - GET /monitor/status
+     - :func:`MN_core.getStatus`
+     - This function is similar to :func:`MN_health.ping` but returns a more
+       complete status which may include information such as planned service
+       outages. This method provide a mechanism for notification to Coordinating
+       Nodes at a higher frequency than through setting properties in the node
+       registry information. The response to a *getStatus* request is currently
+       undefined, but will be a structure containing information that can be
+       used by the Coordinating Nodes for notification of pending outages,
+       software changes, or other significant events as described in
+       :doc:`/design/UseCases/10_uc`.
+   * - GET /  or  GET /node
+     - :func:`MN_core.getCapabilities`
+     - Returns a document describing the capabilities of the Member Node.
+   * - GET /isAuthorized/{pid}
+     - :func:`MN_auth.isAuthorized`
      - Test if the user identified by the provided token has authorization for
        operation on the specified object. .. Note:: Should perhaps add
        convenience methods for "canRead()" and "canWrite()" to verify that a
        user is able to read / write an object.
-   * - :func:`MN_authorization.setAccess`
-     - PUT /accessRules/{pid}
-     - Sets the access permissions for an object identified by *pid*. .. Note::
-       The token and accessPolicy parameters are not currently encoded in the
-       REST URL, so unclear how they should be passed in.
-   * - :func:`MN_capabilities.getCapabilities`
-     - GET /  or  GET /node
+   * - PUT /accessRules/{pid}
+     - :func:`MN_auth.setAccess`
+     - Sets the access permissions for an object identified by *pid*.
+   * - GET /log
+     - :func:`MN_core.getLogRecords`
+     - Retrieve log information from the MN for the specified date range
+       (inclusive).
+   * - GET /monitor/ping
+     - :func:`MN_core.ping`
+     - Low level "are you alive" operation. Response is simple ACK, but may be
+       reasonable to overload with a couple of flags that could indicate
+       availability of new data or change in capabilities. The Member Node
+       should perform some minimal internal functionality testing before
+       answering. However, ping checks will be frequent (every few minutes) so
+       the internal functionality test should not be high impact.
+   * - GET /monitor/object
+     - :func:`MN_core.getObjectStatistics`
+     - Called by the monitoring system to find how many objects are stored on
+       the MN, cumulative or for each day in a given range.
+   * - GET /monitor/event
+     - :func:`MN_core.getOperationStatistics`
+     - Called by the monitoring system to find how many operations have been
+       performed on the MN, cumulative or for each day in a given range.
+   * - GET /monitor/status
+     - :func:`MN_core.getStatus`
+     - This function is similar to :func:`MN_health.ping` but returns a more
+       complete status which may include information such as planned service
+       outages. This method provide a mechanism for notification to Coordinating
+       Nodes at a higher frequency than through setting properties in the node
+       registry information. The response to a *getStatus* request is currently
+       undefined, but will be a structure containing information that can be
+       used by the Coordinating Nodes for notification of pending outages,
+       software changes, or other significant events as described in
+       :doc:`/design/UseCases/10_uc`.
+   * - GET /  or  GET /node
+     - :func:`MN_core.getCapabilities`
      - Returns a document describing the capabilities of the Member Node.

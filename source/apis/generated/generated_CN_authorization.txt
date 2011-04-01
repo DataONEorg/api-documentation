@@ -90,8 +90,8 @@
    :REST URL: ``PUT /accessRules/{pid}``
 
    :param token: The authentication token returned by
-     :func:`CN_authentication.login`. Used to verify that the calling user has
-     authority to modify access control for the object.
+     :func:`CN_authentication.getAuthToken`. Used to verify that the calling
+     user has authority to modify access control for the object.
 
    :type token: :class:`Types.AuthToken`
 

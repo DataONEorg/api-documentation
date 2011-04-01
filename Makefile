@@ -52,8 +52,8 @@ plantuml_usecase:
 
 html: 
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
-	zip -r $(BUILDDIR)/$(ZIPHTML) $(BUILDDIR)/html
-	mv $(BUILDDIR)/$(ZIPHTML) $(BUILDDIR)/html/
+	#zip -r $(BUILDDIR)/$(ZIPHTML) $(BUILDDIR)/html
+	#mv $(BUILDDIR)/$(ZIPHTML) $(BUILDDIR)/html/
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 

@@ -10,87 +10,227 @@
      - Function
      - Parameters
    * - ``GET /object/{pid}``
-     - :func:`MN_crud.get`
+     - :func:`MN_read.get`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.OctetStream`
    * - ``GET /meta/{pid}``
-     - :func:`MN_crud.getSystemMetadata`
+     - :func:`MN_read.getSystemMetadata`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.SystemMetadata`
-   * - ``POST /object/{pid}``
-     - :func:`MN_crud.create`
-     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
-       ``object``, :class:`sysmeta<Types.SystemMetadata>`) ``->``
-       :class:`Types.Identifier`
-   * - ``PUT /object/{pid}``
-     - :func:`MN_crud.update`
-     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
-       ``object``, :class:`obsoletedPid<Types.Identifier>`,
-       :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
-   * - ``DELETE /object/{pid}``
-     - :func:`MN_crud.delete`
-     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
-       :class:`Types.Identifier`
    * - ``HEAD /object/{pid}``
-     - :func:`MN_crud.describe`
+     - :func:`MN_read.describe`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.DescribeResponse`
    * - ``GET /checksum/{pid}``
-     - :func:`MN_crud.getChecksum`
+     - :func:`MN_read.getChecksum`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        ``[checksumAlgorithm]``) ``->`` :class:`Types.Checksum`
-   * - ``GET /log``
-     - :func:`MN_crud.getLogRecords`
-     - (:class:`token<Types.AuthToken>`, :class:`fromDate<Types.DateTime>`,
-       :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`) ``->``
-       :class:`Types.LogRecords`
-   * - n/a
-     - :func:`MN_crud.log`
-     - (:class:`typeOfOperation<Types.Event>`,
-       :class:`targetGuid<Types.Identifier>`,
-       :class:`requestorIdentitity<Types.Principal>`,
-       :class:`dateOfRequest<Types.DateTime>`) ``->``
-
    * - ``GET /object``
-     - :func:`MN_replication.listObjects`
+     - :func:`MN_read.listObjects`
      - (:class:`token<Types.AuthToken>`, :class:`[startTime]<Types.DateTime>`,
        :class:`[endTime]<Types.DateTime>`,
        :class:`[objectFormat]<Types.ObjectFormat>`, ``[replicaStatus]``,
        ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.ObjectList`
-   * - ``POST /replicate``
-     - :func:`MN_replication.replicate`
-     - (:class:`token<Types.AuthToken>`, :class:`sysmeta<Types.SystemMetadata>`,
-       :class:`sourceNode<Types.NodeReference>`) ``->`` :class:`Types.Boolean`
    * - ``POST /error``
-     - :func:`MN_replication.synchronizationFailed`
+     - :func:`MN_read.synchronizationFailed`
      - (:class:`token<Types.AuthToken>`, :class:`message<Types.Exception>`)
        ``->``
+
+   * - ``POST /object/{pid}``
+     - :func:`MN_storage.create`
+     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
+       ``object``, :class:`sysmeta<Types.SystemMetadata>`) ``->``
+       :class:`Types.Identifier`
+   * - ``PUT /object/{pid}``
+     - :func:`MN_storage.update`
+     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
+       ``object``, :class:`obsoletedPid<Types.Identifier>`,
+       :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
+   * - ``DELETE /object/{pid}``
+     - :func:`MN_storage.delete`
+     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
+       :class:`Types.Identifier`
+   * - ``GET /object/{pid}``
+     - :func:`MN_read.get`
+     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
+       :class:`Types.OctetStream`
+   * - ``GET /meta/{pid}``
+     - :func:`MN_read.getSystemMetadata`
+     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
+       :class:`Types.SystemMetadata`
+   * - ``HEAD /object/{pid}``
+     - :func:`MN_read.describe`
+     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
+       :class:`Types.DescribeResponse`
+   * - ``GET /checksum/{pid}``
+     - :func:`MN_read.getChecksum`
+     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
+       ``[checksumAlgorithm]``) ``->`` :class:`Types.Checksum`
+   * - ``GET /object``
+     - :func:`MN_read.listObjects`
+     - (:class:`token<Types.AuthToken>`, :class:`[startTime]<Types.DateTime>`,
+       :class:`[endTime]<Types.DateTime>`,
+       :class:`[objectFormat]<Types.ObjectFormat>`, ``[replicaStatus]``,
+       ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.ObjectList`
+   * - ``POST /error``
+     - :func:`MN_read.synchronizationFailed`
+     - (:class:`token<Types.AuthToken>`, :class:`message<Types.Exception>`)
+       ``->``
+   * - ``GET /log``
+     - :func:`MN_core.getLogRecords`
+     - (:class:`token<Types.AuthToken>`, :class:`fromDate<Types.DateTime>`,
+       :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`) ``->``
+       :class:`Types.LogRecords`
+   * - n/a
+     - :func:`MN_core.log`
+     - (:class:`typeOfOperation<Types.Event>`,
+       :class:`targetGuid<Types.Identifier>`,
+       :class:`requestorIdentitity<Types.Principal>`,
+       :class:`dateOfRequest<Types.DateTime>`) ``->``
    * - ``GET /monitor/ping``
-     - :func:`MN_health.ping`
+     - :func:`MN_core.ping`
      - () ``->`` :class:`Types.Boolean`
    * - ``GET /monitor/object``
-     - :func:`MN_health.getObjectStatistics`
+     - :func:`MN_core.getObjectStatistics`
      - (:class:`token<Types.AuthToken>`, :class:`[time]<Types.DateTime>`,
        :class:`[format]<Types.ObjectFormat>`, :class:`[day]<Types.Integer>`,
        :class:`[pid]<Types.Identifier>`) ``->`` :class:`Types.MonitorList`
    * - ``GET /monitor/event``
-     - :func:`MN_health.getOperationStatistics`
+     - :func:`MN_core.getOperationStatistics`
      - (:class:`token<Types.AuthToken>`, :class:`[time]<Types.DateTime>`,
        :class:`[requestor]<Types.Principal>`, :class:`[day]<Types.Integer>`,
        :class:`[event]<Types.Event>`, :class:`[eventTime]<Types.DateTime>`,
        :class:`[format]<Types.ObjectFormat>`) ``->`` :class:`Types.MonitorList`
    * - ``GET /monitor/status``
-     - :func:`MN_health.getStatus`
+     - :func:`MN_core.getStatus`
      - () ``->`` :class:`Types.StatusResponse`
+   * - ``GET /  or  GET /node``
+     - :func:`MN_core.getCapabilities`
+     - () ``->`` :class:`Types.NodeList`
+   * - ``GET /object/{pid}``
+     - :func:`MN_read.get`
+     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
+       :class:`Types.OctetStream`
+   * - ``GET /meta/{pid}``
+     - :func:`MN_read.getSystemMetadata`
+     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
+       :class:`Types.SystemMetadata`
+   * - ``HEAD /object/{pid}``
+     - :func:`MN_read.describe`
+     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
+       :class:`Types.DescribeResponse`
+   * - ``GET /checksum/{pid}``
+     - :func:`MN_read.getChecksum`
+     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
+       ``[checksumAlgorithm]``) ``->`` :class:`Types.Checksum`
+   * - ``GET /object``
+     - :func:`MN_read.listObjects`
+     - (:class:`token<Types.AuthToken>`, :class:`[startTime]<Types.DateTime>`,
+       :class:`[endTime]<Types.DateTime>`,
+       :class:`[objectFormat]<Types.ObjectFormat>`, ``[replicaStatus]``,
+       ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.ObjectList`
+   * - ``POST /error``
+     - :func:`MN_read.synchronizationFailed`
+     - (:class:`token<Types.AuthToken>`, :class:`message<Types.Exception>`)
+       ``->``
+   * - ``POST /replicate``
+     - :func:`MN_replication.replicate`
+     - (:class:`token<Types.AuthToken>`, :class:`sysmeta<Types.SystemMetadata>`,
+       :class:`sourceNode<Types.NodeReference>`) ``->`` :class:`Types.Boolean`
+   * - ``GET /object/{pid}``
+     - :func:`MN_read.get`
+     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
+       :class:`Types.OctetStream`
+   * - ``GET /meta/{pid}``
+     - :func:`MN_read.getSystemMetadata`
+     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
+       :class:`Types.SystemMetadata`
+   * - ``HEAD /object/{pid}``
+     - :func:`MN_read.describe`
+     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
+       :class:`Types.DescribeResponse`
+   * - ``GET /checksum/{pid}``
+     - :func:`MN_read.getChecksum`
+     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
+       ``[checksumAlgorithm]``) ``->`` :class:`Types.Checksum`
+   * - ``GET /object``
+     - :func:`MN_read.listObjects`
+     - (:class:`token<Types.AuthToken>`, :class:`[startTime]<Types.DateTime>`,
+       :class:`[endTime]<Types.DateTime>`,
+       :class:`[objectFormat]<Types.ObjectFormat>`, ``[replicaStatus]``,
+       ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.ObjectList`
+   * - ``POST /error``
+     - :func:`MN_read.synchronizationFailed`
+     - (:class:`token<Types.AuthToken>`, :class:`message<Types.Exception>`)
+       ``->``
+   * - ``GET /log``
+     - :func:`MN_core.getLogRecords`
+     - (:class:`token<Types.AuthToken>`, :class:`fromDate<Types.DateTime>`,
+       :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`) ``->``
+       :class:`Types.LogRecords`
+   * - n/a
+     - :func:`MN_core.log`
+     - (:class:`typeOfOperation<Types.Event>`,
+       :class:`targetGuid<Types.Identifier>`,
+       :class:`requestorIdentitity<Types.Principal>`,
+       :class:`dateOfRequest<Types.DateTime>`) ``->``
+   * - ``GET /monitor/ping``
+     - :func:`MN_core.ping`
+     - () ``->`` :class:`Types.Boolean`
+   * - ``GET /monitor/object``
+     - :func:`MN_core.getObjectStatistics`
+     - (:class:`token<Types.AuthToken>`, :class:`[time]<Types.DateTime>`,
+       :class:`[format]<Types.ObjectFormat>`, :class:`[day]<Types.Integer>`,
+       :class:`[pid]<Types.Identifier>`) ``->`` :class:`Types.MonitorList`
+   * - ``GET /monitor/event``
+     - :func:`MN_core.getOperationStatistics`
+     - (:class:`token<Types.AuthToken>`, :class:`[time]<Types.DateTime>`,
+       :class:`[requestor]<Types.Principal>`, :class:`[day]<Types.Integer>`,
+       :class:`[event]<Types.Event>`, :class:`[eventTime]<Types.DateTime>`,
+       :class:`[format]<Types.ObjectFormat>`) ``->`` :class:`Types.MonitorList`
+   * - ``GET /monitor/status``
+     - :func:`MN_core.getStatus`
+     - () ``->`` :class:`Types.StatusResponse`
+   * - ``GET /  or  GET /node``
+     - :func:`MN_core.getCapabilities`
+     - () ``->`` :class:`Types.NodeList`
    * - ``GET /isAuthorized/{pid}``
-     - :func:`MN_authorization.isAuthorized`
+     - :func:`MN_auth.isAuthorized`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        :class:`action<Types.Permission>`) ``->`` :class:`Types.Boolean`
    * - ``PUT /accessRules/{pid}``
-     - :func:`MN_authorization.setAccess`
+     - :func:`MN_auth.setAccess`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        :class:`accessPolicy<Types.AccessPolicy>`) ``->`` :class:`Types.Boolean`
+   * - ``GET /log``
+     - :func:`MN_core.getLogRecords`
+     - (:class:`token<Types.AuthToken>`, :class:`fromDate<Types.DateTime>`,
+       :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`) ``->``
+       :class:`Types.LogRecords`
+   * - n/a
+     - :func:`MN_core.log`
+     - (:class:`typeOfOperation<Types.Event>`,
+       :class:`targetGuid<Types.Identifier>`,
+       :class:`requestorIdentitity<Types.Principal>`,
+       :class:`dateOfRequest<Types.DateTime>`) ``->``
+   * - ``GET /monitor/ping``
+     - :func:`MN_core.ping`
+     - () ``->`` :class:`Types.Boolean`
+   * - ``GET /monitor/object``
+     - :func:`MN_core.getObjectStatistics`
+     - (:class:`token<Types.AuthToken>`, :class:`[time]<Types.DateTime>`,
+       :class:`[format]<Types.ObjectFormat>`, :class:`[day]<Types.Integer>`,
+       :class:`[pid]<Types.Identifier>`) ``->`` :class:`Types.MonitorList`
+   * - ``GET /monitor/event``
+     - :func:`MN_core.getOperationStatistics`
+     - (:class:`token<Types.AuthToken>`, :class:`[time]<Types.DateTime>`,
+       :class:`[requestor]<Types.Principal>`, :class:`[day]<Types.Integer>`,
+       :class:`[event]<Types.Event>`, :class:`[eventTime]<Types.DateTime>`,
+       :class:`[format]<Types.ObjectFormat>`) ``->`` :class:`Types.MonitorList`
+   * - ``GET /monitor/status``
+     - :func:`MN_core.getStatus`
+     - () ``->`` :class:`Types.StatusResponse`
    * - ``GET /  or  GET /node``
-     - :func:`MN_capabilities.getCapabilities`
+     - :func:`MN_core.getCapabilities`
      - () ``->`` :class:`Types.NodeList`
 

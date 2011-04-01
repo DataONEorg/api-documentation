@@ -47,6 +47,12 @@
      - :func:`CN_crud.getChecksum`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.Checksum`
+   * - ``GET /formats``
+     - :func:`CN_crud.listFormats`
+     - () ``->`` :class:`Types.ObjectFormatList`
+   * - ``GET /formats/{fmtid}``
+     - :func:`CN_crud.getFormat`
+     - (:class:`fmtid<Types.Identifier>`) ``->`` :class:`Types.ObjectFormat`
 
    * - ``GET /object``
      - :func:`CN_query.search`
@@ -68,7 +74,7 @@
      - :func:`CN_authentication.newAccount`
      - (``username``, ``password``,
        :class:`[authSystem]<Types.AuthenticationSystem>`) ``->``
-       :class:`Types.PrincipalType`
+       :class:`Types.Principal`
    * - ``GET /account/verifyToken``
      - :func:`CN_authentication.verifyToken`
      - (:class:`token<Types.AuthToken>`) ``->`` :class:`Types.Boolean`

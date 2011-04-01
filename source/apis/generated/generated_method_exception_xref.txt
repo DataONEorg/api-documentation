@@ -6,321 +6,821 @@
      - Exception
      - Code
      - Detail
-   * - :mod:`MN_crud`
-     - :func:`get <MN_crud.get>`
+   * - :mod:`MN_read`
+     - :func:`get <MN_read.get>`
      - NotAuthorized
      - 401
      - 1000
-   * - :mod:`MN_crud`
-     - :func:`get <MN_crud.get>`
+   * - :mod:`MN_read`
+     - :func:`get <MN_read.get>`
      - NotFound
      - 404
      - 1020
-   * - :mod:`MN_crud`
-     - :func:`get <MN_crud.get>`
+   * - :mod:`MN_read`
+     - :func:`get <MN_read.get>`
      - ServiceFailure
      - 500
      - 1030
-   * - :mod:`MN_crud`
-     - :func:`get <MN_crud.get>`
+   * - :mod:`MN_read`
+     - :func:`get <MN_read.get>`
      - InvalidToken
      - 401
      - 1010
-   * - :mod:`MN_crud`
-     - :func:`get <MN_crud.get>`
+   * - :mod:`MN_read`
+     - :func:`get <MN_read.get>`
      - NotImplemented
      - 501
      - 1001
-   * - :mod:`MN_crud`
-     - :func:`get <MN_crud.get>`
+   * - :mod:`MN_read`
+     - :func:`get <MN_read.get>`
      - InvalidRequest
      - 400
      - 1002
-   * - :mod:`MN_crud`
-     - :func:`getSystemMetadata <MN_crud.getSystemMetadata>`
+   * - :mod:`MN_read`
+     - :func:`getSystemMetadata <MN_read.getSystemMetadata>`
      - NotAuthorized
      - 401
      - 1040
-   * - :mod:`MN_crud`
-     - :func:`getSystemMetadata <MN_crud.getSystemMetadata>`
+   * - :mod:`MN_read`
+     - :func:`getSystemMetadata <MN_read.getSystemMetadata>`
      - NotImplemented
      - 501
      - 1041
-   * - :mod:`MN_crud`
-     - :func:`getSystemMetadata <MN_crud.getSystemMetadata>`
+   * - :mod:`MN_read`
+     - :func:`getSystemMetadata <MN_read.getSystemMetadata>`
      - NotFound
      - 404
      - 1060
-   * - :mod:`MN_crud`
-     - :func:`getSystemMetadata <MN_crud.getSystemMetadata>`
+   * - :mod:`MN_read`
+     - :func:`getSystemMetadata <MN_read.getSystemMetadata>`
      - InvalidRequest
      - 400
      - 1080
-   * - :mod:`MN_crud`
-     - :func:`getSystemMetadata <MN_crud.getSystemMetadata>`
+   * - :mod:`MN_read`
+     - :func:`getSystemMetadata <MN_read.getSystemMetadata>`
      - ServiceFailure
      - 500
      - 1090
-   * - :mod:`MN_crud`
-     - :func:`getSystemMetadata <MN_crud.getSystemMetadata>`
+   * - :mod:`MN_read`
+     - :func:`getSystemMetadata <MN_read.getSystemMetadata>`
      - InvalidToken
      - 401
      - 1050
-   * - :mod:`MN_crud`
-     - :func:`create <MN_crud.create>`
-     - NotAuthorized
-     - 401
-     - 1100
-   * - :mod:`MN_crud`
-     - :func:`create <MN_crud.create>`
-     - IdentifierNotUnique
-     - 409
-     - 1120
-   * - :mod:`MN_crud`
-     - :func:`create <MN_crud.create>`
-     - UnsupportedType
-     - 400
-     - 1140
-   * - :mod:`MN_crud`
-     - :func:`create <MN_crud.create>`
-     - InsufficientResources
-     - 413
-     - 1160
-   * - :mod:`MN_crud`
-     - :func:`create <MN_crud.create>`
-     - InvalidSystemMetadata
-     - 400
-     - 1180
-   * - :mod:`MN_crud`
-     - :func:`create <MN_crud.create>`
-     - ServiceFailure
-     - 500
-     - 1190
-   * - :mod:`MN_crud`
-     - :func:`create <MN_crud.create>`
-     - InvalidToken
-     - 401
-     - 1110
-   * - :mod:`MN_crud`
-     - :func:`create <MN_crud.create>`
-     - NotImplemented
-     - 501
-     - 1101
-   * - :mod:`MN_crud`
-     - :func:`create <MN_crud.create>`
-     - InvalidRequest
-     - 400
-     - 1102
-   * - :mod:`MN_crud`
-     - :func:`update <MN_crud.update>`
-     - NotAuthorized
-     - 401
-     - 1200
-   * - :mod:`MN_crud`
-     - :func:`update <MN_crud.update>`
-     - IdentifierNotUnique
-     - 409
-     - 1220
-   * - :mod:`MN_crud`
-     - :func:`update <MN_crud.update>`
-     - UnsupportedType
-     - 400
-     - 1240
-   * - :mod:`MN_crud`
-     - :func:`update <MN_crud.update>`
-     - InsufficientResources
-     - 413
-     - 1260
-   * - :mod:`MN_crud`
-     - :func:`update <MN_crud.update>`
-     - NotFound
-     - 404
-     - 1280
-   * - :mod:`MN_crud`
-     - :func:`update <MN_crud.update>`
-     - InvalidSystemMetadata
-     - 400
-     - 1300
-   * - :mod:`MN_crud`
-     - :func:`update <MN_crud.update>`
-     - ServiceFailure
-     - 500
-     - 1310
-   * - :mod:`MN_crud`
-     - :func:`update <MN_crud.update>`
-     - InvalidToken
-     - 401
-     - 1210
-   * - :mod:`MN_crud`
-     - :func:`update <MN_crud.update>`
-     - NotImplemented
-     - 501
-     - 1201
-   * - :mod:`MN_crud`
-     - :func:`update <MN_crud.update>`
-     - InvalidRequest
-     - 400
-     - 1202
-   * - :mod:`MN_crud`
-     - :func:`delete <MN_crud.delete>`
-     - NotAuthorized
-     - 401
-     - 1320
-   * - :mod:`MN_crud`
-     - :func:`delete <MN_crud.delete>`
-     - NotFound
-     - 404
-     - 1340
-   * - :mod:`MN_crud`
-     - :func:`delete <MN_crud.delete>`
-     - ServiceFailure
-     - 500
-     - 1350
-   * - :mod:`MN_crud`
-     - :func:`delete <MN_crud.delete>`
-     - InvalidToken
-     - 401
-     - 1330
-   * - :mod:`MN_crud`
-     - :func:`delete <MN_crud.delete>`
-     - NotImplemented
-     - 501
-     - 1321
-   * - :mod:`MN_crud`
-     - :func:`delete <MN_crud.delete>`
-     - InvalidRequest
-     - 400
-     - 1322
-   * - :mod:`MN_crud`
-     - :func:`describe <MN_crud.describe>`
+   * - :mod:`MN_read`
+     - :func:`describe <MN_read.describe>`
      - NotAuthorized
      - 401
      - 1360
-   * - :mod:`MN_crud`
-     - :func:`describe <MN_crud.describe>`
+   * - :mod:`MN_read`
+     - :func:`describe <MN_read.describe>`
      - NotFound
      - 404
      - 1380
-   * - :mod:`MN_crud`
-     - :func:`describe <MN_crud.describe>`
+   * - :mod:`MN_read`
+     - :func:`describe <MN_read.describe>`
      - ServiceFailure
      - 500
      - 1390
-   * - :mod:`MN_crud`
-     - :func:`describe <MN_crud.describe>`
+   * - :mod:`MN_read`
+     - :func:`describe <MN_read.describe>`
      - InvalidToken
      - 401
      - 1370
-   * - :mod:`MN_crud`
-     - :func:`describe <MN_crud.describe>`
+   * - :mod:`MN_read`
+     - :func:`describe <MN_read.describe>`
      - NotImplemented
      - 501
      - 1361
-   * - :mod:`MN_crud`
-     - :func:`describe <MN_crud.describe>`
+   * - :mod:`MN_read`
+     - :func:`describe <MN_read.describe>`
      - InvalidRequest
      - 400
      - 1362
-   * - :mod:`MN_crud`
-     - :func:`getChecksum <MN_crud.getChecksum>`
+   * - :mod:`MN_read`
+     - :func:`getChecksum <MN_read.getChecksum>`
      - NotAuthorized
      - 401
      - 1400
-   * - :mod:`MN_crud`
-     - :func:`getChecksum <MN_crud.getChecksum>`
+   * - :mod:`MN_read`
+     - :func:`getChecksum <MN_read.getChecksum>`
      - NotFound
      - 404
      - 1420
-   * - :mod:`MN_crud`
-     - :func:`getChecksum <MN_crud.getChecksum>`
+   * - :mod:`MN_read`
+     - :func:`getChecksum <MN_read.getChecksum>`
      - InvalidRequest
      - 400
      - 1402
-   * - :mod:`MN_crud`
-     - :func:`getChecksum <MN_crud.getChecksum>`
+   * - :mod:`MN_read`
+     - :func:`getChecksum <MN_read.getChecksum>`
      - ServiceFailure
      - 500
      - 1410
-   * - :mod:`MN_crud`
-     - :func:`getChecksum <MN_crud.getChecksum>`
+   * - :mod:`MN_read`
+     - :func:`getChecksum <MN_read.getChecksum>`
      - InvalidToken
      - 401
      - 1430
-   * - :mod:`MN_crud`
-     - :func:`getChecksum <MN_crud.getChecksum>`
+   * - :mod:`MN_read`
+     - :func:`getChecksum <MN_read.getChecksum>`
      - NotImplemented
      - 501
      - 1401
-   * - :mod:`MN_crud`
-     - :func:`getLogRecords <MN_crud.getLogRecords>`
-     - NotAuthorized
-     - 401
-     - 1460
-   * - :mod:`MN_crud`
-     - :func:`getLogRecords <MN_crud.getLogRecords>`
-     - InvalidRequest
-     - 400
-     - 1480
-   * - :mod:`MN_crud`
-     - :func:`getLogRecords <MN_crud.getLogRecords>`
-     - ServiceFailure
-     - 500
-     - 1490
-   * - :mod:`MN_crud`
-     - :func:`getLogRecords <MN_crud.getLogRecords>`
-     - InvalidToken
-     - 401
-     - 1470
-   * - :mod:`MN_crud`
-     - :func:`getLogRecords <MN_crud.getLogRecords>`
-     - NotImplemented
-     - 501
-     - 1461
-   * - :mod:`MN_crud`
-     - :func:`log <MN_crud.log>`
-     - InvalidRequest
-     - 400
-     - 1500
-   * - :mod:`MN_crud`
-     - :func:`log <MN_crud.log>`
-     - ServiceFailure
-     - 500
-     - 1510
-   * - :mod:`MN_crud`
-     - :func:`log <MN_crud.log>`
-     - NotImplemented
-     - 501
-     - 1501
-   * - :mod:`MN_replication`
-     - :func:`listObjects <MN_replication.listObjects>`
+   * - :mod:`MN_read`
+     - :func:`listObjects <MN_read.listObjects>`
      - NotAuthorized
      - 401
      - 1520
-   * - :mod:`MN_replication`
-     - :func:`listObjects <MN_replication.listObjects>`
+   * - :mod:`MN_read`
+     - :func:`listObjects <MN_read.listObjects>`
      - InvalidRequest
      - 400
      - 1540
-   * - :mod:`MN_replication`
-     - :func:`listObjects <MN_replication.listObjects>`
+   * - :mod:`MN_read`
+     - :func:`listObjects <MN_read.listObjects>`
      - NotImplemented
      - 501
      - 1560
-   * - :mod:`MN_replication`
-     - :func:`listObjects <MN_replication.listObjects>`
+   * - :mod:`MN_read`
+     - :func:`listObjects <MN_read.listObjects>`
      - ServiceFailure
      - 500
      - 1580
-   * - :mod:`MN_replication`
-     - :func:`listObjects <MN_replication.listObjects>`
+   * - :mod:`MN_read`
+     - :func:`listObjects <MN_read.listObjects>`
      - InvalidToken
      - 401
      - 1530
-   * - :mod:`MN_replication`
-     - :func:`listObjects <MN_replication.listObjects>`
+   * - :mod:`MN_read`
+     - :func:`listObjects <MN_read.listObjects>`
      - NotImplemented
      - 501
      - 1521
+   * - :mod:`MN_read`
+     - :func:`synchronizationFailed <MN_read.synchronizationFailed>`
+     - NotImplemented
+     - 501
+     - 2160
+   * - :mod:`MN_read`
+     - :func:`synchronizationFailed <MN_read.synchronizationFailed>`
+     - ServiceFailure
+     - 500
+     - 2161
+   * - :mod:`MN_read`
+     - :func:`synchronizationFailed <MN_read.synchronizationFailed>`
+     - NotAuthorized
+     - 401
+     - 2162
+   * - :mod:`MN_read`
+     - :func:`synchronizationFailed <MN_read.synchronizationFailed>`
+     - InvalidRequest
+     - 400
+     - 2163
+   * - :mod:`MN_storage`
+     - :func:`create <MN_storage.create>`
+     - NotAuthorized
+     - 401
+     - 1100
+   * - :mod:`MN_storage`
+     - :func:`create <MN_storage.create>`
+     - IdentifierNotUnique
+     - 409
+     - 1120
+   * - :mod:`MN_storage`
+     - :func:`create <MN_storage.create>`
+     - UnsupportedType
+     - 400
+     - 1140
+   * - :mod:`MN_storage`
+     - :func:`create <MN_storage.create>`
+     - InsufficientResources
+     - 413
+     - 1160
+   * - :mod:`MN_storage`
+     - :func:`create <MN_storage.create>`
+     - InvalidSystemMetadata
+     - 400
+     - 1180
+   * - :mod:`MN_storage`
+     - :func:`create <MN_storage.create>`
+     - ServiceFailure
+     - 500
+     - 1190
+   * - :mod:`MN_storage`
+     - :func:`create <MN_storage.create>`
+     - InvalidToken
+     - 401
+     - 1110
+   * - :mod:`MN_storage`
+     - :func:`create <MN_storage.create>`
+     - NotImplemented
+     - 501
+     - 1101
+   * - :mod:`MN_storage`
+     - :func:`create <MN_storage.create>`
+     - InvalidRequest
+     - 400
+     - 1102
+   * - :mod:`MN_storage`
+     - :func:`update <MN_storage.update>`
+     - NotAuthorized
+     - 401
+     - 1200
+   * - :mod:`MN_storage`
+     - :func:`update <MN_storage.update>`
+     - IdentifierNotUnique
+     - 409
+     - 1220
+   * - :mod:`MN_storage`
+     - :func:`update <MN_storage.update>`
+     - UnsupportedType
+     - 400
+     - 1240
+   * - :mod:`MN_storage`
+     - :func:`update <MN_storage.update>`
+     - InsufficientResources
+     - 413
+     - 1260
+   * - :mod:`MN_storage`
+     - :func:`update <MN_storage.update>`
+     - NotFound
+     - 404
+     - 1280
+   * - :mod:`MN_storage`
+     - :func:`update <MN_storage.update>`
+     - InvalidSystemMetadata
+     - 400
+     - 1300
+   * - :mod:`MN_storage`
+     - :func:`update <MN_storage.update>`
+     - ServiceFailure
+     - 500
+     - 1310
+   * - :mod:`MN_storage`
+     - :func:`update <MN_storage.update>`
+     - InvalidToken
+     - 401
+     - 1210
+   * - :mod:`MN_storage`
+     - :func:`update <MN_storage.update>`
+     - NotImplemented
+     - 501
+     - 1201
+   * - :mod:`MN_storage`
+     - :func:`update <MN_storage.update>`
+     - InvalidRequest
+     - 400
+     - 1202
+   * - :mod:`MN_storage`
+     - :func:`delete <MN_storage.delete>`
+     - NotAuthorized
+     - 401
+     - 1320
+   * - :mod:`MN_storage`
+     - :func:`delete <MN_storage.delete>`
+     - NotFound
+     - 404
+     - 1340
+   * - :mod:`MN_storage`
+     - :func:`delete <MN_storage.delete>`
+     - ServiceFailure
+     - 500
+     - 1350
+   * - :mod:`MN_storage`
+     - :func:`delete <MN_storage.delete>`
+     - InvalidToken
+     - 401
+     - 1330
+   * - :mod:`MN_storage`
+     - :func:`delete <MN_storage.delete>`
+     - NotImplemented
+     - 501
+     - 1321
+   * - :mod:`MN_storage`
+     - :func:`delete <MN_storage.delete>`
+     - InvalidRequest
+     - 400
+     - 1322
+   * - :mod:`MN_read`
+     - :func:`get <MN_read.get>`
+     - NotAuthorized
+     - 401
+     - 1000
+   * - :mod:`MN_read`
+     - :func:`get <MN_read.get>`
+     - NotFound
+     - 404
+     - 1020
+   * - :mod:`MN_read`
+     - :func:`get <MN_read.get>`
+     - ServiceFailure
+     - 500
+     - 1030
+   * - :mod:`MN_read`
+     - :func:`get <MN_read.get>`
+     - InvalidToken
+     - 401
+     - 1010
+   * - :mod:`MN_read`
+     - :func:`get <MN_read.get>`
+     - NotImplemented
+     - 501
+     - 1001
+   * - :mod:`MN_read`
+     - :func:`get <MN_read.get>`
+     - InvalidRequest
+     - 400
+     - 1002
+   * - :mod:`MN_read`
+     - :func:`getSystemMetadata <MN_read.getSystemMetadata>`
+     - NotAuthorized
+     - 401
+     - 1040
+   * - :mod:`MN_read`
+     - :func:`getSystemMetadata <MN_read.getSystemMetadata>`
+     - NotImplemented
+     - 501
+     - 1041
+   * - :mod:`MN_read`
+     - :func:`getSystemMetadata <MN_read.getSystemMetadata>`
+     - NotFound
+     - 404
+     - 1060
+   * - :mod:`MN_read`
+     - :func:`getSystemMetadata <MN_read.getSystemMetadata>`
+     - InvalidRequest
+     - 400
+     - 1080
+   * - :mod:`MN_read`
+     - :func:`getSystemMetadata <MN_read.getSystemMetadata>`
+     - ServiceFailure
+     - 500
+     - 1090
+   * - :mod:`MN_read`
+     - :func:`getSystemMetadata <MN_read.getSystemMetadata>`
+     - InvalidToken
+     - 401
+     - 1050
+   * - :mod:`MN_read`
+     - :func:`describe <MN_read.describe>`
+     - NotAuthorized
+     - 401
+     - 1360
+   * - :mod:`MN_read`
+     - :func:`describe <MN_read.describe>`
+     - NotFound
+     - 404
+     - 1380
+   * - :mod:`MN_read`
+     - :func:`describe <MN_read.describe>`
+     - ServiceFailure
+     - 500
+     - 1390
+   * - :mod:`MN_read`
+     - :func:`describe <MN_read.describe>`
+     - InvalidToken
+     - 401
+     - 1370
+   * - :mod:`MN_read`
+     - :func:`describe <MN_read.describe>`
+     - NotImplemented
+     - 501
+     - 1361
+   * - :mod:`MN_read`
+     - :func:`describe <MN_read.describe>`
+     - InvalidRequest
+     - 400
+     - 1362
+   * - :mod:`MN_read`
+     - :func:`getChecksum <MN_read.getChecksum>`
+     - NotAuthorized
+     - 401
+     - 1400
+   * - :mod:`MN_read`
+     - :func:`getChecksum <MN_read.getChecksum>`
+     - NotFound
+     - 404
+     - 1420
+   * - :mod:`MN_read`
+     - :func:`getChecksum <MN_read.getChecksum>`
+     - InvalidRequest
+     - 400
+     - 1402
+   * - :mod:`MN_read`
+     - :func:`getChecksum <MN_read.getChecksum>`
+     - ServiceFailure
+     - 500
+     - 1410
+   * - :mod:`MN_read`
+     - :func:`getChecksum <MN_read.getChecksum>`
+     - InvalidToken
+     - 401
+     - 1430
+   * - :mod:`MN_read`
+     - :func:`getChecksum <MN_read.getChecksum>`
+     - NotImplemented
+     - 501
+     - 1401
+   * - :mod:`MN_read`
+     - :func:`listObjects <MN_read.listObjects>`
+     - NotAuthorized
+     - 401
+     - 1520
+   * - :mod:`MN_read`
+     - :func:`listObjects <MN_read.listObjects>`
+     - InvalidRequest
+     - 400
+     - 1540
+   * - :mod:`MN_read`
+     - :func:`listObjects <MN_read.listObjects>`
+     - NotImplemented
+     - 501
+     - 1560
+   * - :mod:`MN_read`
+     - :func:`listObjects <MN_read.listObjects>`
+     - ServiceFailure
+     - 500
+     - 1580
+   * - :mod:`MN_read`
+     - :func:`listObjects <MN_read.listObjects>`
+     - InvalidToken
+     - 401
+     - 1530
+   * - :mod:`MN_read`
+     - :func:`listObjects <MN_read.listObjects>`
+     - NotImplemented
+     - 501
+     - 1521
+   * - :mod:`MN_read`
+     - :func:`synchronizationFailed <MN_read.synchronizationFailed>`
+     - NotImplemented
+     - 501
+     - 2160
+   * - :mod:`MN_read`
+     - :func:`synchronizationFailed <MN_read.synchronizationFailed>`
+     - ServiceFailure
+     - 500
+     - 2161
+   * - :mod:`MN_read`
+     - :func:`synchronizationFailed <MN_read.synchronizationFailed>`
+     - NotAuthorized
+     - 401
+     - 2162
+   * - :mod:`MN_read`
+     - :func:`synchronizationFailed <MN_read.synchronizationFailed>`
+     - InvalidRequest
+     - 400
+     - 2163
+   * - :mod:`MN_core`
+     - :func:`getLogRecords <MN_core.getLogRecords>`
+     - NotAuthorized
+     - 401
+     - 1460
+   * - :mod:`MN_core`
+     - :func:`getLogRecords <MN_core.getLogRecords>`
+     - InvalidRequest
+     - 400
+     - 1480
+   * - :mod:`MN_core`
+     - :func:`getLogRecords <MN_core.getLogRecords>`
+     - ServiceFailure
+     - 500
+     - 1490
+   * - :mod:`MN_core`
+     - :func:`getLogRecords <MN_core.getLogRecords>`
+     - InvalidToken
+     - 401
+     - 1470
+   * - :mod:`MN_core`
+     - :func:`getLogRecords <MN_core.getLogRecords>`
+     - NotImplemented
+     - 501
+     - 1461
+   * - :mod:`MN_core`
+     - :func:`log <MN_core.log>`
+     - InvalidRequest
+     - 400
+     - 1500
+   * - :mod:`MN_core`
+     - :func:`log <MN_core.log>`
+     - ServiceFailure
+     - 500
+     - 1510
+   * - :mod:`MN_core`
+     - :func:`log <MN_core.log>`
+     - NotImplemented
+     - 501
+     - 1501
+   * - :mod:`MN_core`
+     - :func:`ping <MN_core.ping>`
+     - NotImplemented
+     - 501
+     - 2041
+   * - :mod:`MN_core`
+     - :func:`ping <MN_core.ping>`
+     - ServiceFailure
+     - 500
+     - 2042
+   * - :mod:`MN_core`
+     - :func:`ping <MN_core.ping>`
+     - NotAuthorized
+     - 401
+     - 2043
+   * - :mod:`MN_core`
+     - :func:`ping <MN_core.ping>`
+     - InvalidRequest
+     - 400
+     - 2044
+   * - :mod:`MN_core`
+     - :func:`ping <MN_core.ping>`
+     - InsufficientResources
+     - 413
+     - 2045
+   * - :mod:`MN_core`
+     - :func:`ping <MN_core.ping>`
+     - UnsupportedType
+     - 400
+     - 2046
+   * - :mod:`MN_core`
+     - :func:`getObjectStatistics <MN_core.getObjectStatistics>`
+     - NotImplemented
+     - 501
+     - 2060
+   * - :mod:`MN_core`
+     - :func:`getObjectStatistics <MN_core.getObjectStatistics>`
+     - ServiceFailure
+     - 500
+     - 2061
+   * - :mod:`MN_core`
+     - :func:`getObjectStatistics <MN_core.getObjectStatistics>`
+     - NotAuthorized
+     - 401
+     - 2062
+   * - :mod:`MN_core`
+     - :func:`getObjectStatistics <MN_core.getObjectStatistics>`
+     - InvalidRequest
+     - 400
+     - 2063
+   * - :mod:`MN_core`
+     - :func:`getObjectStatistics <MN_core.getObjectStatistics>`
+     - InsufficientResources
+     - 413
+     - 2064
+   * - :mod:`MN_core`
+     - :func:`getObjectStatistics <MN_core.getObjectStatistics>`
+     - UnsupportedType
+     - 400
+     - 2065
+   * - :mod:`MN_core`
+     - :func:`getOperationStatistics <MN_core.getOperationStatistics>`
+     - NotImplemented
+     - 501
+     - 2080
+   * - :mod:`MN_core`
+     - :func:`getOperationStatistics <MN_core.getOperationStatistics>`
+     - ServiceFailure
+     - 500
+     - 2081
+   * - :mod:`MN_core`
+     - :func:`getOperationStatistics <MN_core.getOperationStatistics>`
+     - NotAuthorized
+     - 401
+     - 2082
+   * - :mod:`MN_core`
+     - :func:`getOperationStatistics <MN_core.getOperationStatistics>`
+     - InvalidRequest
+     - 400
+     - 2083
+   * - :mod:`MN_core`
+     - :func:`getOperationStatistics <MN_core.getOperationStatistics>`
+     - InsufficientResources
+     - 413
+     - 2084
+   * - :mod:`MN_core`
+     - :func:`getOperationStatistics <MN_core.getOperationStatistics>`
+     - UnsupportedType
+     - 400
+     - 2085
+   * - :mod:`MN_core`
+     - :func:`getStatus <MN_core.getStatus>`
+     - NotImplemented
+     - 501
+     - 2100
+   * - :mod:`MN_core`
+     - :func:`getStatus <MN_core.getStatus>`
+     - ServiceFailure
+     - 500
+     - 2101
+   * - :mod:`MN_core`
+     - :func:`getStatus <MN_core.getStatus>`
+     - NotAuthorized
+     - 401
+     - 2102
+   * - :mod:`MN_core`
+     - :func:`getStatus <MN_core.getStatus>`
+     - InvalidRequest
+     - 400
+     - 2103
+   * - :mod:`MN_core`
+     - :func:`getStatus <MN_core.getStatus>`
+     - InsufficientResources
+     - 413
+     - 2104
+   * - :mod:`MN_core`
+     - :func:`getStatus <MN_core.getStatus>`
+     - UnsupportedType
+     - 400
+     - 2105
+   * - :mod:`MN_core`
+     - :func:`getCapabilities <MN_core.getCapabilities>`
+     - NotImplemented
+     - 501
+     - 2160
+   * - :mod:`MN_core`
+     - :func:`getCapabilities <MN_core.getCapabilities>`
+     - NotAuthorized
+     - 401
+     - 2161
+   * - :mod:`MN_core`
+     - :func:`getCapabilities <MN_core.getCapabilities>`
+     - ServiceFailure
+     - 500
+     - 2162
+   * - :mod:`MN_core`
+     - :func:`getCapabilities <MN_core.getCapabilities>`
+     - InvalidRequest
+     - 400
+     - 2163
+   * - :mod:`MN_read`
+     - :func:`get <MN_read.get>`
+     - NotAuthorized
+     - 401
+     - 1000
+   * - :mod:`MN_read`
+     - :func:`get <MN_read.get>`
+     - NotFound
+     - 404
+     - 1020
+   * - :mod:`MN_read`
+     - :func:`get <MN_read.get>`
+     - ServiceFailure
+     - 500
+     - 1030
+   * - :mod:`MN_read`
+     - :func:`get <MN_read.get>`
+     - InvalidToken
+     - 401
+     - 1010
+   * - :mod:`MN_read`
+     - :func:`get <MN_read.get>`
+     - NotImplemented
+     - 501
+     - 1001
+   * - :mod:`MN_read`
+     - :func:`get <MN_read.get>`
+     - InvalidRequest
+     - 400
+     - 1002
+   * - :mod:`MN_read`
+     - :func:`getSystemMetadata <MN_read.getSystemMetadata>`
+     - NotAuthorized
+     - 401
+     - 1040
+   * - :mod:`MN_read`
+     - :func:`getSystemMetadata <MN_read.getSystemMetadata>`
+     - NotImplemented
+     - 501
+     - 1041
+   * - :mod:`MN_read`
+     - :func:`getSystemMetadata <MN_read.getSystemMetadata>`
+     - NotFound
+     - 404
+     - 1060
+   * - :mod:`MN_read`
+     - :func:`getSystemMetadata <MN_read.getSystemMetadata>`
+     - InvalidRequest
+     - 400
+     - 1080
+   * - :mod:`MN_read`
+     - :func:`getSystemMetadata <MN_read.getSystemMetadata>`
+     - ServiceFailure
+     - 500
+     - 1090
+   * - :mod:`MN_read`
+     - :func:`getSystemMetadata <MN_read.getSystemMetadata>`
+     - InvalidToken
+     - 401
+     - 1050
+   * - :mod:`MN_read`
+     - :func:`describe <MN_read.describe>`
+     - NotAuthorized
+     - 401
+     - 1360
+   * - :mod:`MN_read`
+     - :func:`describe <MN_read.describe>`
+     - NotFound
+     - 404
+     - 1380
+   * - :mod:`MN_read`
+     - :func:`describe <MN_read.describe>`
+     - ServiceFailure
+     - 500
+     - 1390
+   * - :mod:`MN_read`
+     - :func:`describe <MN_read.describe>`
+     - InvalidToken
+     - 401
+     - 1370
+   * - :mod:`MN_read`
+     - :func:`describe <MN_read.describe>`
+     - NotImplemented
+     - 501
+     - 1361
+   * - :mod:`MN_read`
+     - :func:`describe <MN_read.describe>`
+     - InvalidRequest
+     - 400
+     - 1362
+   * - :mod:`MN_read`
+     - :func:`getChecksum <MN_read.getChecksum>`
+     - NotAuthorized
+     - 401
+     - 1400
+   * - :mod:`MN_read`
+     - :func:`getChecksum <MN_read.getChecksum>`
+     - NotFound
+     - 404
+     - 1420
+   * - :mod:`MN_read`
+     - :func:`getChecksum <MN_read.getChecksum>`
+     - InvalidRequest
+     - 400
+     - 1402
+   * - :mod:`MN_read`
+     - :func:`getChecksum <MN_read.getChecksum>`
+     - ServiceFailure
+     - 500
+     - 1410
+   * - :mod:`MN_read`
+     - :func:`getChecksum <MN_read.getChecksum>`
+     - InvalidToken
+     - 401
+     - 1430
+   * - :mod:`MN_read`
+     - :func:`getChecksum <MN_read.getChecksum>`
+     - NotImplemented
+     - 501
+     - 1401
+   * - :mod:`MN_read`
+     - :func:`listObjects <MN_read.listObjects>`
+     - NotAuthorized
+     - 401
+     - 1520
+   * - :mod:`MN_read`
+     - :func:`listObjects <MN_read.listObjects>`
+     - InvalidRequest
+     - 400
+     - 1540
+   * - :mod:`MN_read`
+     - :func:`listObjects <MN_read.listObjects>`
+     - NotImplemented
+     - 501
+     - 1560
+   * - :mod:`MN_read`
+     - :func:`listObjects <MN_read.listObjects>`
+     - ServiceFailure
+     - 500
+     - 1580
+   * - :mod:`MN_read`
+     - :func:`listObjects <MN_read.listObjects>`
+     - InvalidToken
+     - 401
+     - 1530
+   * - :mod:`MN_read`
+     - :func:`listObjects <MN_read.listObjects>`
+     - NotImplemented
+     - 501
+     - 1521
+   * - :mod:`MN_read`
+     - :func:`synchronizationFailed <MN_read.synchronizationFailed>`
+     - NotImplemented
+     - 501
+     - 2160
+   * - :mod:`MN_read`
+     - :func:`synchronizationFailed <MN_read.synchronizationFailed>`
+     - ServiceFailure
+     - 500
+     - 2161
+   * - :mod:`MN_read`
+     - :func:`synchronizationFailed <MN_read.synchronizationFailed>`
+     - NotAuthorized
+     - 401
+     - 2162
+   * - :mod:`MN_read`
+     - :func:`synchronizationFailed <MN_read.synchronizationFailed>`
+     - InvalidRequest
+     - 400
+     - 2163
    * - :mod:`MN_replication`
      - :func:`replicate <MN_replication.replicate>`
      - NotImplemented
@@ -351,223 +851,593 @@
      - UnsupportedType
      - 400
      - 2155
-   * - :mod:`MN_replication`
-     - :func:`synchronizationFailed <MN_replication.synchronizationFailed>`
+   * - :mod:`MN_read`
+     - :func:`get <MN_read.get>`
+     - NotAuthorized
+     - 401
+     - 1000
+   * - :mod:`MN_read`
+     - :func:`get <MN_read.get>`
+     - NotFound
+     - 404
+     - 1020
+   * - :mod:`MN_read`
+     - :func:`get <MN_read.get>`
+     - ServiceFailure
+     - 500
+     - 1030
+   * - :mod:`MN_read`
+     - :func:`get <MN_read.get>`
+     - InvalidToken
+     - 401
+     - 1010
+   * - :mod:`MN_read`
+     - :func:`get <MN_read.get>`
+     - NotImplemented
+     - 501
+     - 1001
+   * - :mod:`MN_read`
+     - :func:`get <MN_read.get>`
+     - InvalidRequest
+     - 400
+     - 1002
+   * - :mod:`MN_read`
+     - :func:`getSystemMetadata <MN_read.getSystemMetadata>`
+     - NotAuthorized
+     - 401
+     - 1040
+   * - :mod:`MN_read`
+     - :func:`getSystemMetadata <MN_read.getSystemMetadata>`
+     - NotImplemented
+     - 501
+     - 1041
+   * - :mod:`MN_read`
+     - :func:`getSystemMetadata <MN_read.getSystemMetadata>`
+     - NotFound
+     - 404
+     - 1060
+   * - :mod:`MN_read`
+     - :func:`getSystemMetadata <MN_read.getSystemMetadata>`
+     - InvalidRequest
+     - 400
+     - 1080
+   * - :mod:`MN_read`
+     - :func:`getSystemMetadata <MN_read.getSystemMetadata>`
+     - ServiceFailure
+     - 500
+     - 1090
+   * - :mod:`MN_read`
+     - :func:`getSystemMetadata <MN_read.getSystemMetadata>`
+     - InvalidToken
+     - 401
+     - 1050
+   * - :mod:`MN_read`
+     - :func:`describe <MN_read.describe>`
+     - NotAuthorized
+     - 401
+     - 1360
+   * - :mod:`MN_read`
+     - :func:`describe <MN_read.describe>`
+     - NotFound
+     - 404
+     - 1380
+   * - :mod:`MN_read`
+     - :func:`describe <MN_read.describe>`
+     - ServiceFailure
+     - 500
+     - 1390
+   * - :mod:`MN_read`
+     - :func:`describe <MN_read.describe>`
+     - InvalidToken
+     - 401
+     - 1370
+   * - :mod:`MN_read`
+     - :func:`describe <MN_read.describe>`
+     - NotImplemented
+     - 501
+     - 1361
+   * - :mod:`MN_read`
+     - :func:`describe <MN_read.describe>`
+     - InvalidRequest
+     - 400
+     - 1362
+   * - :mod:`MN_read`
+     - :func:`getChecksum <MN_read.getChecksum>`
+     - NotAuthorized
+     - 401
+     - 1400
+   * - :mod:`MN_read`
+     - :func:`getChecksum <MN_read.getChecksum>`
+     - NotFound
+     - 404
+     - 1420
+   * - :mod:`MN_read`
+     - :func:`getChecksum <MN_read.getChecksum>`
+     - InvalidRequest
+     - 400
+     - 1402
+   * - :mod:`MN_read`
+     - :func:`getChecksum <MN_read.getChecksum>`
+     - ServiceFailure
+     - 500
+     - 1410
+   * - :mod:`MN_read`
+     - :func:`getChecksum <MN_read.getChecksum>`
+     - InvalidToken
+     - 401
+     - 1430
+   * - :mod:`MN_read`
+     - :func:`getChecksum <MN_read.getChecksum>`
+     - NotImplemented
+     - 501
+     - 1401
+   * - :mod:`MN_read`
+     - :func:`listObjects <MN_read.listObjects>`
+     - NotAuthorized
+     - 401
+     - 1520
+   * - :mod:`MN_read`
+     - :func:`listObjects <MN_read.listObjects>`
+     - InvalidRequest
+     - 400
+     - 1540
+   * - :mod:`MN_read`
+     - :func:`listObjects <MN_read.listObjects>`
+     - NotImplemented
+     - 501
+     - 1560
+   * - :mod:`MN_read`
+     - :func:`listObjects <MN_read.listObjects>`
+     - ServiceFailure
+     - 500
+     - 1580
+   * - :mod:`MN_read`
+     - :func:`listObjects <MN_read.listObjects>`
+     - InvalidToken
+     - 401
+     - 1530
+   * - :mod:`MN_read`
+     - :func:`listObjects <MN_read.listObjects>`
+     - NotImplemented
+     - 501
+     - 1521
+   * - :mod:`MN_read`
+     - :func:`synchronizationFailed <MN_read.synchronizationFailed>`
      - NotImplemented
      - 501
      - 2160
-   * - :mod:`MN_replication`
-     - :func:`synchronizationFailed <MN_replication.synchronizationFailed>`
+   * - :mod:`MN_read`
+     - :func:`synchronizationFailed <MN_read.synchronizationFailed>`
      - ServiceFailure
      - 500
      - 2161
-   * - :mod:`MN_replication`
-     - :func:`synchronizationFailed <MN_replication.synchronizationFailed>`
+   * - :mod:`MN_read`
+     - :func:`synchronizationFailed <MN_read.synchronizationFailed>`
      - NotAuthorized
      - 401
      - 2162
-   * - :mod:`MN_replication`
-     - :func:`synchronizationFailed <MN_replication.synchronizationFailed>`
+   * - :mod:`MN_read`
+     - :func:`synchronizationFailed <MN_read.synchronizationFailed>`
      - InvalidRequest
      - 400
      - 2163
-   * - :mod:`MN_health`
-     - :func:`ping <MN_health.ping>`
+   * - :mod:`MN_core`
+     - :func:`getLogRecords <MN_core.getLogRecords>`
+     - NotAuthorized
+     - 401
+     - 1460
+   * - :mod:`MN_core`
+     - :func:`getLogRecords <MN_core.getLogRecords>`
+     - InvalidRequest
+     - 400
+     - 1480
+   * - :mod:`MN_core`
+     - :func:`getLogRecords <MN_core.getLogRecords>`
+     - ServiceFailure
+     - 500
+     - 1490
+   * - :mod:`MN_core`
+     - :func:`getLogRecords <MN_core.getLogRecords>`
+     - InvalidToken
+     - 401
+     - 1470
+   * - :mod:`MN_core`
+     - :func:`getLogRecords <MN_core.getLogRecords>`
+     - NotImplemented
+     - 501
+     - 1461
+   * - :mod:`MN_core`
+     - :func:`log <MN_core.log>`
+     - InvalidRequest
+     - 400
+     - 1500
+   * - :mod:`MN_core`
+     - :func:`log <MN_core.log>`
+     - ServiceFailure
+     - 500
+     - 1510
+   * - :mod:`MN_core`
+     - :func:`log <MN_core.log>`
+     - NotImplemented
+     - 501
+     - 1501
+   * - :mod:`MN_core`
+     - :func:`ping <MN_core.ping>`
      - NotImplemented
      - 501
      - 2041
-   * - :mod:`MN_health`
-     - :func:`ping <MN_health.ping>`
+   * - :mod:`MN_core`
+     - :func:`ping <MN_core.ping>`
      - ServiceFailure
      - 500
      - 2042
-   * - :mod:`MN_health`
-     - :func:`ping <MN_health.ping>`
+   * - :mod:`MN_core`
+     - :func:`ping <MN_core.ping>`
      - NotAuthorized
      - 401
      - 2043
-   * - :mod:`MN_health`
-     - :func:`ping <MN_health.ping>`
+   * - :mod:`MN_core`
+     - :func:`ping <MN_core.ping>`
      - InvalidRequest
      - 400
      - 2044
-   * - :mod:`MN_health`
-     - :func:`ping <MN_health.ping>`
+   * - :mod:`MN_core`
+     - :func:`ping <MN_core.ping>`
      - InsufficientResources
      - 413
      - 2045
-   * - :mod:`MN_health`
-     - :func:`ping <MN_health.ping>`
+   * - :mod:`MN_core`
+     - :func:`ping <MN_core.ping>`
      - UnsupportedType
      - 400
      - 2046
-   * - :mod:`MN_health`
-     - :func:`getObjectStatistics <MN_health.getObjectStatistics>`
+   * - :mod:`MN_core`
+     - :func:`getObjectStatistics <MN_core.getObjectStatistics>`
      - NotImplemented
      - 501
      - 2060
-   * - :mod:`MN_health`
-     - :func:`getObjectStatistics <MN_health.getObjectStatistics>`
+   * - :mod:`MN_core`
+     - :func:`getObjectStatistics <MN_core.getObjectStatistics>`
      - ServiceFailure
      - 500
      - 2061
-   * - :mod:`MN_health`
-     - :func:`getObjectStatistics <MN_health.getObjectStatistics>`
+   * - :mod:`MN_core`
+     - :func:`getObjectStatistics <MN_core.getObjectStatistics>`
      - NotAuthorized
      - 401
      - 2062
-   * - :mod:`MN_health`
-     - :func:`getObjectStatistics <MN_health.getObjectStatistics>`
+   * - :mod:`MN_core`
+     - :func:`getObjectStatistics <MN_core.getObjectStatistics>`
      - InvalidRequest
      - 400
      - 2063
-   * - :mod:`MN_health`
-     - :func:`getObjectStatistics <MN_health.getObjectStatistics>`
+   * - :mod:`MN_core`
+     - :func:`getObjectStatistics <MN_core.getObjectStatistics>`
      - InsufficientResources
      - 413
      - 2064
-   * - :mod:`MN_health`
-     - :func:`getObjectStatistics <MN_health.getObjectStatistics>`
+   * - :mod:`MN_core`
+     - :func:`getObjectStatistics <MN_core.getObjectStatistics>`
      - UnsupportedType
      - 400
      - 2065
-   * - :mod:`MN_health`
-     - :func:`getOperationStatistics <MN_health.getOperationStatistics>`
+   * - :mod:`MN_core`
+     - :func:`getOperationStatistics <MN_core.getOperationStatistics>`
      - NotImplemented
      - 501
      - 2080
-   * - :mod:`MN_health`
-     - :func:`getOperationStatistics <MN_health.getOperationStatistics>`
+   * - :mod:`MN_core`
+     - :func:`getOperationStatistics <MN_core.getOperationStatistics>`
      - ServiceFailure
      - 500
      - 2081
-   * - :mod:`MN_health`
-     - :func:`getOperationStatistics <MN_health.getOperationStatistics>`
+   * - :mod:`MN_core`
+     - :func:`getOperationStatistics <MN_core.getOperationStatistics>`
      - NotAuthorized
      - 401
      - 2082
-   * - :mod:`MN_health`
-     - :func:`getOperationStatistics <MN_health.getOperationStatistics>`
+   * - :mod:`MN_core`
+     - :func:`getOperationStatistics <MN_core.getOperationStatistics>`
      - InvalidRequest
      - 400
      - 2083
-   * - :mod:`MN_health`
-     - :func:`getOperationStatistics <MN_health.getOperationStatistics>`
+   * - :mod:`MN_core`
+     - :func:`getOperationStatistics <MN_core.getOperationStatistics>`
      - InsufficientResources
      - 413
      - 2084
-   * - :mod:`MN_health`
-     - :func:`getOperationStatistics <MN_health.getOperationStatistics>`
+   * - :mod:`MN_core`
+     - :func:`getOperationStatistics <MN_core.getOperationStatistics>`
      - UnsupportedType
      - 400
      - 2085
-   * - :mod:`MN_health`
-     - :func:`getStatus <MN_health.getStatus>`
+   * - :mod:`MN_core`
+     - :func:`getStatus <MN_core.getStatus>`
      - NotImplemented
      - 501
      - 2100
-   * - :mod:`MN_health`
-     - :func:`getStatus <MN_health.getStatus>`
+   * - :mod:`MN_core`
+     - :func:`getStatus <MN_core.getStatus>`
      - ServiceFailure
      - 500
      - 2101
-   * - :mod:`MN_health`
-     - :func:`getStatus <MN_health.getStatus>`
+   * - :mod:`MN_core`
+     - :func:`getStatus <MN_core.getStatus>`
      - NotAuthorized
      - 401
      - 2102
-   * - :mod:`MN_health`
-     - :func:`getStatus <MN_health.getStatus>`
+   * - :mod:`MN_core`
+     - :func:`getStatus <MN_core.getStatus>`
      - InvalidRequest
      - 400
      - 2103
-   * - :mod:`MN_health`
-     - :func:`getStatus <MN_health.getStatus>`
+   * - :mod:`MN_core`
+     - :func:`getStatus <MN_core.getStatus>`
      - InsufficientResources
      - 413
      - 2104
-   * - :mod:`MN_health`
-     - :func:`getStatus <MN_health.getStatus>`
+   * - :mod:`MN_core`
+     - :func:`getStatus <MN_core.getStatus>`
      - UnsupportedType
      - 400
      - 2105
-   * - :mod:`MN_authorization`
-     - :func:`isAuthorized <MN_authorization.isAuthorized>`
-     - ServiceFailure
-     - 500
-     - 1760
-   * - :mod:`MN_authorization`
-     - :func:`isAuthorized <MN_authorization.isAuthorized>`
-     - NotImplemented
-     - 501
-     - 1780
-   * - :mod:`MN_authorization`
-     - :func:`isAuthorized <MN_authorization.isAuthorized>`
-     - NotFound
-     - 404
-     - 1800
-   * - :mod:`MN_authorization`
-     - :func:`isAuthorized <MN_authorization.isAuthorized>`
-     - NotAuthorized
-     - 401
-     - 1820
-   * - :mod:`MN_authorization`
-     - :func:`isAuthorized <MN_authorization.isAuthorized>`
-     - InvalidToken
-     - 401
-     - 1840
-   * - :mod:`MN_authorization`
-     - :func:`isAuthorized <MN_authorization.isAuthorized>`
-     - InvalidRequest
-     - 400
-     - 1761
-   * - :mod:`MN_authorization`
-     - :func:`setAccess <MN_authorization.setAccess>`
-     - InvalidToken
-     - 401
-     - 4410
-   * - :mod:`MN_authorization`
-     - :func:`setAccess <MN_authorization.setAccess>`
-     - ServiceFailure
-     - 500
-     - 4430
-   * - :mod:`MN_authorization`
-     - :func:`setAccess <MN_authorization.setAccess>`
-     - NotFound
-     - 404
-     - 4400
-   * - :mod:`MN_authorization`
-     - :func:`setAccess <MN_authorization.setAccess>`
-     - NotAuthorized
-     - 401
-     - 4420
-   * - :mod:`MN_authorization`
-     - :func:`setAccess <MN_authorization.setAccess>`
-     - NotImplemented
-     - 501
-     - 4401
-   * - :mod:`MN_authorization`
-     - :func:`setAccess <MN_authorization.setAccess>`
-     - InvalidRequest
-     - 400
-     - 4402
-   * - :mod:`MN_capabilities`
-     - :func:`getCapabilities <MN_capabilities.getCapabilities>`
+   * - :mod:`MN_core`
+     - :func:`getCapabilities <MN_core.getCapabilities>`
      - NotImplemented
      - 501
      - 2160
-   * - :mod:`MN_capabilities`
-     - :func:`getCapabilities <MN_capabilities.getCapabilities>`
+   * - :mod:`MN_core`
+     - :func:`getCapabilities <MN_core.getCapabilities>`
      - NotAuthorized
      - 401
      - 2161
-   * - :mod:`MN_capabilities`
-     - :func:`getCapabilities <MN_capabilities.getCapabilities>`
+   * - :mod:`MN_core`
+     - :func:`getCapabilities <MN_core.getCapabilities>`
      - ServiceFailure
      - 500
      - 2162
-   * - :mod:`MN_capabilities`
-     - :func:`getCapabilities <MN_capabilities.getCapabilities>`
+   * - :mod:`MN_core`
+     - :func:`getCapabilities <MN_core.getCapabilities>`
+     - InvalidRequest
+     - 400
+     - 2163
+   * - :mod:`MN_auth`
+     - :func:`isAuthorized <MN_auth.isAuthorized>`
+     - ServiceFailure
+     - 500
+     - 1760
+   * - :mod:`MN_auth`
+     - :func:`isAuthorized <MN_auth.isAuthorized>`
+     - NotImplemented
+     - 501
+     - 1780
+   * - :mod:`MN_auth`
+     - :func:`isAuthorized <MN_auth.isAuthorized>`
+     - NotFound
+     - 404
+     - 1800
+   * - :mod:`MN_auth`
+     - :func:`isAuthorized <MN_auth.isAuthorized>`
+     - NotAuthorized
+     - 401
+     - 1820
+   * - :mod:`MN_auth`
+     - :func:`isAuthorized <MN_auth.isAuthorized>`
+     - InvalidToken
+     - 401
+     - 1840
+   * - :mod:`MN_auth`
+     - :func:`isAuthorized <MN_auth.isAuthorized>`
+     - InvalidRequest
+     - 400
+     - 1761
+   * - :mod:`MN_auth`
+     - :func:`setAccess <MN_auth.setAccess>`
+     - InvalidToken
+     - 401
+     - 4410
+   * - :mod:`MN_auth`
+     - :func:`setAccess <MN_auth.setAccess>`
+     - ServiceFailure
+     - 500
+     - 4430
+   * - :mod:`MN_auth`
+     - :func:`setAccess <MN_auth.setAccess>`
+     - NotFound
+     - 404
+     - 4400
+   * - :mod:`MN_auth`
+     - :func:`setAccess <MN_auth.setAccess>`
+     - NotAuthorized
+     - 401
+     - 4420
+   * - :mod:`MN_auth`
+     - :func:`setAccess <MN_auth.setAccess>`
+     - NotImplemented
+     - 501
+     - 4401
+   * - :mod:`MN_auth`
+     - :func:`setAccess <MN_auth.setAccess>`
+     - InvalidRequest
+     - 400
+     - 4402
+   * - :mod:`MN_core`
+     - :func:`getLogRecords <MN_core.getLogRecords>`
+     - NotAuthorized
+     - 401
+     - 1460
+   * - :mod:`MN_core`
+     - :func:`getLogRecords <MN_core.getLogRecords>`
+     - InvalidRequest
+     - 400
+     - 1480
+   * - :mod:`MN_core`
+     - :func:`getLogRecords <MN_core.getLogRecords>`
+     - ServiceFailure
+     - 500
+     - 1490
+   * - :mod:`MN_core`
+     - :func:`getLogRecords <MN_core.getLogRecords>`
+     - InvalidToken
+     - 401
+     - 1470
+   * - :mod:`MN_core`
+     - :func:`getLogRecords <MN_core.getLogRecords>`
+     - NotImplemented
+     - 501
+     - 1461
+   * - :mod:`MN_core`
+     - :func:`log <MN_core.log>`
+     - InvalidRequest
+     - 400
+     - 1500
+   * - :mod:`MN_core`
+     - :func:`log <MN_core.log>`
+     - ServiceFailure
+     - 500
+     - 1510
+   * - :mod:`MN_core`
+     - :func:`log <MN_core.log>`
+     - NotImplemented
+     - 501
+     - 1501
+   * - :mod:`MN_core`
+     - :func:`ping <MN_core.ping>`
+     - NotImplemented
+     - 501
+     - 2041
+   * - :mod:`MN_core`
+     - :func:`ping <MN_core.ping>`
+     - ServiceFailure
+     - 500
+     - 2042
+   * - :mod:`MN_core`
+     - :func:`ping <MN_core.ping>`
+     - NotAuthorized
+     - 401
+     - 2043
+   * - :mod:`MN_core`
+     - :func:`ping <MN_core.ping>`
+     - InvalidRequest
+     - 400
+     - 2044
+   * - :mod:`MN_core`
+     - :func:`ping <MN_core.ping>`
+     - InsufficientResources
+     - 413
+     - 2045
+   * - :mod:`MN_core`
+     - :func:`ping <MN_core.ping>`
+     - UnsupportedType
+     - 400
+     - 2046
+   * - :mod:`MN_core`
+     - :func:`getObjectStatistics <MN_core.getObjectStatistics>`
+     - NotImplemented
+     - 501
+     - 2060
+   * - :mod:`MN_core`
+     - :func:`getObjectStatistics <MN_core.getObjectStatistics>`
+     - ServiceFailure
+     - 500
+     - 2061
+   * - :mod:`MN_core`
+     - :func:`getObjectStatistics <MN_core.getObjectStatistics>`
+     - NotAuthorized
+     - 401
+     - 2062
+   * - :mod:`MN_core`
+     - :func:`getObjectStatistics <MN_core.getObjectStatistics>`
+     - InvalidRequest
+     - 400
+     - 2063
+   * - :mod:`MN_core`
+     - :func:`getObjectStatistics <MN_core.getObjectStatistics>`
+     - InsufficientResources
+     - 413
+     - 2064
+   * - :mod:`MN_core`
+     - :func:`getObjectStatistics <MN_core.getObjectStatistics>`
+     - UnsupportedType
+     - 400
+     - 2065
+   * - :mod:`MN_core`
+     - :func:`getOperationStatistics <MN_core.getOperationStatistics>`
+     - NotImplemented
+     - 501
+     - 2080
+   * - :mod:`MN_core`
+     - :func:`getOperationStatistics <MN_core.getOperationStatistics>`
+     - ServiceFailure
+     - 500
+     - 2081
+   * - :mod:`MN_core`
+     - :func:`getOperationStatistics <MN_core.getOperationStatistics>`
+     - NotAuthorized
+     - 401
+     - 2082
+   * - :mod:`MN_core`
+     - :func:`getOperationStatistics <MN_core.getOperationStatistics>`
+     - InvalidRequest
+     - 400
+     - 2083
+   * - :mod:`MN_core`
+     - :func:`getOperationStatistics <MN_core.getOperationStatistics>`
+     - InsufficientResources
+     - 413
+     - 2084
+   * - :mod:`MN_core`
+     - :func:`getOperationStatistics <MN_core.getOperationStatistics>`
+     - UnsupportedType
+     - 400
+     - 2085
+   * - :mod:`MN_core`
+     - :func:`getStatus <MN_core.getStatus>`
+     - NotImplemented
+     - 501
+     - 2100
+   * - :mod:`MN_core`
+     - :func:`getStatus <MN_core.getStatus>`
+     - ServiceFailure
+     - 500
+     - 2101
+   * - :mod:`MN_core`
+     - :func:`getStatus <MN_core.getStatus>`
+     - NotAuthorized
+     - 401
+     - 2102
+   * - :mod:`MN_core`
+     - :func:`getStatus <MN_core.getStatus>`
+     - InvalidRequest
+     - 400
+     - 2103
+   * - :mod:`MN_core`
+     - :func:`getStatus <MN_core.getStatus>`
+     - InsufficientResources
+     - 413
+     - 2104
+   * - :mod:`MN_core`
+     - :func:`getStatus <MN_core.getStatus>`
+     - UnsupportedType
+     - 400
+     - 2105
+   * - :mod:`MN_core`
+     - :func:`getCapabilities <MN_core.getCapabilities>`
+     - NotImplemented
+     - 501
+     - 2160
+   * - :mod:`MN_core`
+     - :func:`getCapabilities <MN_core.getCapabilities>`
+     - NotAuthorized
+     - 401
+     - 2161
+   * - :mod:`MN_core`
+     - :func:`getCapabilities <MN_core.getCapabilities>`
+     - ServiceFailure
+     - 500
+     - 2162
+   * - :mod:`MN_core`
+     - :func:`getCapabilities <MN_core.getCapabilities>`
      - InvalidRequest
      - 400
      - 2163
@@ -791,6 +1661,46 @@
      - InvalidToken
      - 401
      - 1430
+   * - :mod:`CN_crud`
+     - :func:`listFormats <CN_crud.listFormats>`
+     - NotImplemented
+     - 501
+     - 4840
+   * - :mod:`CN_crud`
+     - :func:`listFormats <CN_crud.listFormats>`
+     - ServiceFailure
+     - 500
+     - 4841
+   * - :mod:`CN_crud`
+     - :func:`listFormats <CN_crud.listFormats>`
+     - InvalidRequest
+     - 400
+     - 4842
+   * - :mod:`CN_crud`
+     - :func:`listFormats <CN_crud.listFormats>`
+     - NotFound
+     - 404
+     - 4843
+   * - :mod:`CN_crud`
+     - :func:`getFormat <CN_crud.getFormat>`
+     - NotImplemented
+     - 501
+     - 4844
+   * - :mod:`CN_crud`
+     - :func:`getFormat <CN_crud.getFormat>`
+     - ServiceFailure
+     - 500
+     - 4845
+   * - :mod:`CN_crud`
+     - :func:`getFormat <CN_crud.getFormat>`
+     - InvalidRequest
+     - 400
+     - 4846
+   * - :mod:`CN_crud`
+     - :func:`getFormat <CN_crud.getFormat>`
+     - NotFound
+     - 404
+     - 4847
    * - :mod:`CN_query`
      - :func:`search <CN_query.search>`
      - InvalidToken
