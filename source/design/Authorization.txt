@@ -21,6 +21,15 @@ within the DataONE framework. Requirements for Authorization are listed here:
 
    AuthnAndAuthzRequirements
 
+Privacy and access control in DataONE are primarily for the protection and integrity of user contributed data and metadata via Member Nodes.  There are, however, other entities in DataONE that also need protection, including DataONE specific services and system resources, like system metadata and components of the general software stack (e.g., databases, web servers) for Coordinating and Member Nodes.  For this reason, all resources in DataONE, from data and metadata objects to system services, will have a rule, called an access control rule, that is used to determine who may access the resource.  The process of confirming whether a user has privileges to access a resource in DataONE is called "authorization".  The act of authorization uses attribute information contained in the security token and compares such information to the resource access control rule.  If the rule permits access by the principal requesting the resource, then authorization succeeds and permission is granted to access the resource.
+
+Because nodes that form the DataONE federation are managed by various administrative domains and may cross multiple political boundaries, a "trust" relationship is crucial for DataONE to succeed in its security plan.  In simple terms, this means that access control rules that are defined by one member of the federation are upheld be another member.  It also means that trust may be revoked if a particular member does not behave accordingly within the federation.  Access control rules may be dynamic and must be propagated with the resource they are designated to protect, as when data or metadata objects are replicated to another Member Node.
+
+The language that specifies the policy for a given access control rule dictates only whether a user is allowed access to a given resource; to include the ability to explicitly deny access to a resource overly complicates managing the authorization process and is seldom used in practice.  Rules will consist of the system identity of the user, also known as the "principal", the type of permission granted (e.g., read, write, and or execute), and the identifier of the resource being requested.  DataONE will provide, where reasonable, a conversion of the internal access control rule to a subset of one or more industry standard policy languages to support interoperability between different organizations.
+
+Implementation phases
+---------------------
+
 During the first DataONE Federated Security workshop, four phases for
 development were identified that involve increasingly sophisticated
 authorization and access control mechanisms. The four phases are:
@@ -121,47 +130,6 @@ bandwidth.
 .. Note::
     Add constraints and embargoes to the AccessPolicy language described below
 
-Representing Principals (aka Subjects)
---------------------------------------
-Principals need to be represented in access policies.  The current syntax of
-for the representation of principals as emitted from CILogon authentication
-service is:
-
-    ``/DC=org/DC=cilogon/C=US/O=ProtectNetwork/CN=Matthew Jones A332``
-
-For consistency over time, and to eliminate an artifact of using the CILogon
-service, it would be better to use the representation for a principal as
-returned directly from the IdentityProvider.  In the case of the Protect
-Network IdP, this might be:
-
-    ``/C=US/O=ProtectNetwork/CN=Matthew Jones``
-
-.. Note::
-    Resolve this discrepancy and decide on a course of action for
-    representation of principals in authorization rule statements.
-
-Symbolic Principals
-~~~~~~~~~~~~~~~~~~~
-Access policies will need to refer to several special symbolic groups of users
-that do not need to be explicitly maintained, but include all people in the
-system.  The two groups are:
-
-* Authenticated users
-    * Any user who has a valid authentication token is considered a member of
-      the authenticated users group.  This designation can be used in
-      particular to require that user identity information is known and logged
-      during read operations.
-    * Represented using the special principal 'AuthenticatedUser'
-* Public user
-    * The Public user represents any user accessing services that does not have
-      a valid session token, plus all of those who do have a valid token. 
-      If a token is found to be invalid, the user's
-      priveleges are immediately lowered to those of the symbolic 'Public'
-      user.  For create, update, and delete operations, this typically means
-      that the user has insufficient priveledges to access the service.  At
-      times providers may want to provide Public read access to resources.
-    * Represented using the special principal 'Public'
-
 Access Policy Language
 -----------------------
 Several existing authorization policy languages were evaluated for use in the
@@ -195,7 +163,7 @@ the elements in this AccessPolicy language are:
 
   :ValueSpace:
 
-    :class:`AccessPolicy.AccessPolicy`
+    :class:`Types.AccessPolicy`
 
   :Generated By: Client
 
@@ -214,7 +182,7 @@ the elements in this AccessPolicy language are:
     0..*
 
   :ValueSpace:
-    :class:`AccessPolicy.AccessRule`
+    :class:`Types.AccessRule`
 
   :Generated By: Client
 
@@ -252,7 +220,7 @@ the elements in this AccessPolicy language are:
     1..*
 
   :ValueSpace:
-    :class:`AccessPolicy.Permission`
+    :class:`Types.Permission`
 
   :Generated By: Client
 
@@ -276,39 +244,14 @@ An example instance of this syntax is:
 .. literalinclude:: /d1_schemas/accesspolicy-example.xml
    :language: xml
 
-Managing Identities and Groups in DataONE
------------------------------------------
-
-DataONE users will have multiple identities from different participating member
-nodes, and their affiliations will change over time.  Because of this, DataONE
-needs a user Identity mapping system that allows users to authenticate using
-one of their identities but still be recognized as equivalent in terms of
-access to their DataONE identity.  This IdentityManagement Service will provide a
-location to collect and store a user's idnetity information, including mappings
-to their multiple identities. Service APIs for managing identity mapping are
-outlined below in the Authorization Services section.
-
-In addition, the Identity Management service will provide a system for users to
-create, store, and modify groups of users that can be used in access control
-directives.  Only the user creating a group will have access to changing the
-group.  Service APIs for group management are outlined below in the
-Authorization Services section.
-
-.. Note::
-    The Internet2 project has defined a product called Grouper that is a
-    standalone group management utility and that publishes a web interface for
-    interacting with the service.  It allows users and organizations to create
-    and manage groups.  See Grouper_ and earlier work from Internet2 on group
-    management through their MACE_ project.
-
-.. _Grouper: https://spaces.internet2.edu/display/Grouper/Grouper+Web+Services
-
-.. _MACE: http://middleware.internet2.edu/dir/groups/
-
 Authorization Services
 ----------------------
 In this section, define a set of Authorization services to be implemented at CN
 and MN. The current Authorization Service is defined as a standalone service.
+
+.. TODO::
+    Link these methods to the generated methods in the API specifications,
+    eliminate redundancy of the description text between the two locations.
 
 isAuthorized(token, pid, action):: boolean
     Determine if the user authenticated by the token can take the action
@@ -326,22 +269,6 @@ setAccess(token, Types.AccessPolicy):: void
     not sufficient to have appropriate permissions on just one resource -- if
     permission is not present for all listed resources, then implementations
     must roll back any changes and return NotAuthorized.
-
-mapIdentity(token1, token2):: void
-    Create an equivalence mapping between the identities listed for the 
-    users authenticated and represented by token1 and token2.
-
-createGroup(token, groupName)
-    Create a named group of users.  Throws IdentifierNotUnique if the group
-    name is already in use.
-
-addGroupMembers(token, groupName, memberList)
-    Add the listed array of members to the named group, if and only if the user
-    represented in token originally created the group.
-
-removeGroupMembers(token, groupName, memberList)
-    Remove the listed array of members from the named group, if and only if the 
-    user represented in token originally created the group.
 
 Interaction diagrams
 --------------------

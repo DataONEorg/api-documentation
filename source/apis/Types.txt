@@ -19,6 +19,7 @@ Version   Structure
 .         :class:`AccessRule`
 .         :class:`AuthenticationSystem`
 .         :class:`AuthToken`
+.         :class:`AuthSession`
 .         :class:`Capabilities`
 .         :class:`Checksum`
 .         :class:`DateTime`
@@ -46,6 +47,102 @@ Version   Structure
 .         :class:`Status`
 .         :class:`SystemMetadata`
 ========= =============================
+
+----
+
+.. class:: AccessPolicy
+
+  A set of rules that specifies as a whole the allowable permissions that a
+  given user or system has for accessing a resource, including both data and
+  metadata resources and service resources. An access policy consists of a
+  sequence of allow rules that grant permissions to principals, which can be
+  individual users, groups of users, sympolic users, or systems and services.
+
+  :: 
+
+    message AccessPolicy {
+
+      repeated AccessRule allow = 0;
+    }
+
+----
+
+.. class:: AccessRule
+
+  A rule that is used to allow a principal to perform an action (such as read
+  or write) on an object in DataONE. Rules are three-tuples (principal,
+  permission, resource) specifying which permissions are allowed for the
+  principal(s) for the resource(s) listed. Access control rules are specified
+  by the OriginMemberNode when the object is first registered in DataONE. If
+  no rules are specified at that time, then the object is deemed to be private
+  and the only user with access to the object (read, write, or otherwise) is
+  the RightsHolder.
+
+  :: 
+
+    message AccessRule {
+
+      repeated Principal principal = 0;
+      repeated Permission permission = 1;
+      repeated Identifier resource = 2;
+    }
+
+----
+
+
+.. class:: AuthenticationSystem
+
+  Place holder for support of multiple authentication services for a single
+  user.
+
+
+----
+
+.. class:: AuthSession
+
+  An AuthSession represents the set of metadata attributes about an
+  authenticated session in DataONE.  An AuthSession is identified by its
+  identifier, which can be used to retrieve the AuthSession data structure that
+  serializes metadata attributes describing the session itself, the Principal
+  that was authenticated, and verification data such as digital signatures that
+  can be used to verify the validity of the session data.  AuthSession data in
+  DataONE are serialized as SAML 2 Assertions, and contain particular 
+  attributes.
+
+  .. attribute:: ID
+
+     The AuthToken identifying an authenticated session.  The ID is unique and will
+     not be reused for other sessions, and is returned as the result of a
+     successful session authentication service call to reference the
+     AuthSession.
+
+  .. attribute:: IssueInstant
+  .. attribute:: Issuer
+  .. attribute:: Subject
+  .. attribute:: Address
+  .. attribute:: NotBefore
+  .. attribute:: NotOnOrAfter
+  .. attribute:: AuthenticationContextClass
+  .. attribute:: Givenname
+  .. attribute:: Surname
+  .. attribute:: Email
+  .. attribute:: isMemberOf
+  .. attribute:: SessionId
+  .. attribute:: EquivalentSubject
+
+----
+
+.. class:: AuthToken
+
+  An AuthToken is an Identifier that is used to reference an authenticated
+  AuthSession that has been established via the act of authenticating a
+  Principal with a Coordinating Node.  The AuthToken identifier follows the same
+  formatting and content rules as the Identifier class, and should be
+  representable in simple 7-bit ASCII or as a UTF-8 string.  The value SHOULD
+  additionally be constrained to be less than 8K in order to be transportable in
+  typical HTTP header fields.  The AuthToken represents an AuthSession, which is
+  tied to an authenticated Principal and can only be used for requests from a
+  particular Address.
 
 ----
 
@@ -544,6 +641,28 @@ Version   Structure
 
 ----
 
+.. class:: Permission
+
+  A string value indicating the set of actions that can be performed on a
+  resource as specified in an access policy.  The set of permissions include
+  the ability to read a resource, modify a resource (write), and to change
+  the set of access control policies for a resource (changePermission).  In
+  addition, there is a permission that controls ability to execute a service
+  (execute). Permissions are cumulative, in that higher level permissions
+  include all of the priveledges of lower levels (e.g., given write access, one
+  also implicitly has read access).
+
+  ::
+
+    enum Permission {
+      READ = 0;
+      WRITE = 1;
+      CHANGEPERMISSION = 2;
+      EXECUTE = 3;
+    }
+
+----
+
 .. class:: OperationStatistics
 
    A summary of operation calls intended primarily for the monitoring service.
@@ -562,7 +681,10 @@ Version   Structure
 
   Person (user), group, or organization.
 
-  PrincipalIdentifier drawn from the DataONE IdentityProviderService/
+  The formal name identifiying a user or group from the DataONE 
+  IdentityProviderService. The principal is represented by a unique,
+  persistent, non-reassignable identifier string that follows the same
+  constraints as the Identifier.
 
   Used by :mod:`SystemMetadata`
 
@@ -630,10 +752,6 @@ Expressing a NVP query in a URL
   A set of low level information about an object in the DataONE system.
   SystemMetadata is described in :mod:`SystemMetadata`.
 
-
-----
-
-.. include:: types_auth.txt
 
 
 .. _Protocol Buffer Language: http://code.google.com/apis/protocolbuffers/docs/overview.html
