@@ -3,23 +3,27 @@
 
 
 .. list-table:: Functions defined in :mod:`MN_storage`
-   :widths: 10 10 30
+   :widths: 3 10 10 30
    :header-rows: 1
 
-   * - REST
+   * - Tier
+     - REST
      - Function
      - Parameters
-   * - ``POST /object/{pid}``
+   * - Tier 3
+     - ``POST /object/{pid}``
      - :func:`create`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        ``object``, :class:`sysmeta<Types.SystemMetadata>`) ``->``
        :class:`Types.Identifier`
-   * - ``PUT /object/{pid}``
+   * - Tier 3
+     - ``PUT /object/{pid}``
      - :func:`update`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        ``object``, :class:`obsoletedPid<Types.Identifier>`,
        :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
-   * - ``DELETE /object/{pid}``
+   * - Tier 3
+     - ``DELETE /object/{pid}``
      - :func:`delete`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.Identifier`
@@ -119,8 +123,9 @@
 
 .. function:: update(token,pid,object,obsoletedPid,sysmeta) -> Identifier
 
-   Creates a new *object* on the Member Node that explicitly updates and
-   obsoletes a previous object (identified by *obsoletedPid*).
+   Updates and existing object by creating a new *object* on the Member Node
+   that explicitly updates and obsoletes a previous object (identified by
+   *obsoletedPid*).
 
    This method is called by clients to update objects on Member Nodes.
 

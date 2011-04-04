@@ -3,54 +3,65 @@
 
 
 .. list-table:: Functions defined in :mod:`CN_crud`
-   :widths: 10 10 30
+   :widths: 3 10 10 30
    :header-rows: 1
 
-   * - REST
+   * - Tier
+     - REST
      - Function
      - Parameters
-   * - ``GET /object/{pid}``
+   * - 
+     - ``GET /object/{pid}``
      - :func:`get`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.OctetStream`
-   * - ``GET /meta/{pid}``
+   * - 
+     - ``GET /meta/{pid}``
      - :func:`getSystemMetadata`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.SystemMetadata`
-   * - ``GET /resolve/{pid}``
+   * - 
+     - ``GET /resolve/{pid}``
      - :func:`resolve`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.ObjectLocationList`
-   * - n/a
+   * - 
+     - n/a
      - :func:`create`
      - (:class:`pid<Types.Identifier>`,
        :class:`systemMetadata<Types.SystemMetadata>`,
        :class:`scienceMetadata<Types.OctetStream>`) ``->``
        :class:`Types.Boolean`
-   * - ``POST /reserve``
+   * - 
+     - ``POST /reserve``
      - :func:`reserveIdentifier`
      - (:class:`token<Types.AuthToken>`, :class:`[pid]<Types.Identifier>`,
        ``[scope]``, ``[format]``) ``->`` :class:`Types.Identifier`
-   * - ``GET /assertRelation/{pidOfSubject}``
+   * - 
+     - ``GET /assertRelation/{pidOfSubject}``
      - :func:`assertRelation`
      - (:class:`token<Types.AuthToken>`,
        :class:`pidOfSubject<Types.Identifier>`,
        :class:`relationship<Types.???>`, :class:`pidOfObject<Types.Identifier>`)
        ``->`` :class:`Types.Boolean`
-   * - n/a
+   * - 
+     - n/a
      - :func:`log`
      - (:class:`typeOfOperation<Types.Event>`,
        :class:`targetPid<Types.Identifier>`,
        :class:`requestorIdentitity<Types.Principal>`,
        :class:`dateOfRequest<Types.DateTime>`) ``->``
-   * - n/a
+   * - 
+     - n/a
      - :func:`getChecksum`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.Checksum`
-   * - ``GET /formats``
+   * - 
+     - ``GET /formats``
      - :func:`listFormats`
      - () ``->`` :class:`Types.ObjectFormatList`
-   * - ``GET /formats/{fmtid}``
+   * - 
+     - ``GET /formats/{fmtid}``
      - :func:`getFormat`
      - (:class:`fmtid<Types.Identifier>`) ``->`` :class:`Types.ObjectFormat`
 
@@ -170,7 +181,7 @@
    particular object may be retrieved, and this information is returned as a
    list of node identifiers. Details about method interfaces (i.e. REST URLs)
    exposed by a particular node can be determined by examining the response from
-   the *node* collection. For convenience, the `GET /object/<pid>`_ URL is
+   the *node* collection. For convenience, the :func:`MN_read.get` URL is
    included in the response as is the base URL of the node REST services.
 
    Note also that the same functionality as *resolve()* can be implemented by

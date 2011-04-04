@@ -3,46 +3,93 @@
 
 
 .. list-table:: Functions defined in :mod:`MN_core`
-   :widths: 10 10 30
+   :widths: 3 10 10 30
    :header-rows: 1
 
-   * - REST
+   * - Tier
+     - REST
      - Function
      - Parameters
-   * - ``GET /log``
+   * - Core
+     - ``GET /monitor/ping``
+     - :func:`ping`
+     - () ``->`` :class:`Types.Boolean`
+   * - Core
+     - ``GET /log``
      - :func:`getLogRecords`
      - (:class:`token<Types.AuthToken>`, :class:`fromDate<Types.DateTime>`,
        :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`) ``->``
        :class:`Types.LogRecords`
-   * - n/a
+   * - Core
+     - n/a
      - :func:`log`
      - (:class:`typeOfOperation<Types.Event>`,
        :class:`targetGuid<Types.Identifier>`,
        :class:`requestorIdentitity<Types.Principal>`,
        :class:`dateOfRequest<Types.DateTime>`) ``->``
-   * - ``GET /monitor/ping``
-     - :func:`ping`
-     - () ``->`` :class:`Types.Boolean`
-   * - ``GET /monitor/object``
+   * - Core
+     - ``GET /monitor/object``
      - :func:`getObjectStatistics`
      - (:class:`token<Types.AuthToken>`, :class:`[time]<Types.DateTime>`,
        :class:`[format]<Types.ObjectFormat>`, :class:`[day]<Types.Integer>`,
        :class:`[pid]<Types.Identifier>`) ``->`` :class:`Types.MonitorList`
-   * - ``GET /monitor/event``
+   * - Core
+     - ``GET /monitor/event``
      - :func:`getOperationStatistics`
      - (:class:`token<Types.AuthToken>`, :class:`[time]<Types.DateTime>`,
        :class:`[requestor]<Types.Principal>`, :class:`[day]<Types.Integer>`,
        :class:`[event]<Types.Event>`, :class:`[eventTime]<Types.DateTime>`,
        :class:`[format]<Types.ObjectFormat>`) ``->`` :class:`Types.MonitorList`
-   * - ``GET /monitor/status``
+   * - Core
+     - ``GET /monitor/status``
      - :func:`getStatus`
      - () ``->`` :class:`Types.StatusResponse`
-   * - ``GET /  or  GET /node``
+   * - Core
+     - ``GET /  or  GET /node``
      - :func:`getCapabilities`
      - () ``->`` :class:`Types.NodeList`
 
 
 
+
+.. function:: ping() -> Boolean
+
+   Low level "are you alive" operation. Response is simple ACK, but may be
+   reasonable to overload with a couple of flags that could indicate
+   availability of new data or change in capabilities.
+
+   The Member Node should perform some minimal internal functionality testing
+   before answering. However, ping checks will be frequent (every few minutes)
+   so the internal functionality test should not be high impact.
+
+   :Use Cases:
+
+     :doc:`UC10 </design/UseCases/10_uc>`
+
+   :REST URL: ``GET /monitor/ping``
+
+   :returns: Null body or Exception
+
+   :rtype: :class:`Types.Boolean`
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2041)``
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2042)``
+
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=2043)``
+
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=2044)``
+
+   :raises Exceptions.InsufficientResources: ``(errorCode=413, detailCode=2045)``
+
+   :raises Exceptions.UnsupportedType: ``(errorCode=400, detailCode=2046)``
+
+
+.. include:: ../examples/ping.txt
+
+
+
+----
 
 .. function:: getLogRecords(token,fromDate,[toDate],[event]) -> LogRecords
 
@@ -134,45 +181,6 @@
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=1510)``
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=1501)``
-
-
-
-----
-
-.. function:: ping() -> Boolean
-
-   Low level "are you alive" operation. Response is simple ACK, but may be
-   reasonable to overload with a couple of flags that could indicate
-   availability of new data or change in capabilities.
-
-   The Member Node should perform some minimal internal functionality testing
-   before answering. However, ping checks will be frequent (every few minutes)
-   so the internal functionality test should not be high impact.
-
-   :Use Cases:
-
-     :doc:`UC10 </design/UseCases/10_uc>`
-
-   :REST URL: ``GET /monitor/ping``
-
-   :returns: Null body or Exception
-
-   :rtype: :class:`Types.Boolean`
-
-   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2041)``
-
-   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2042)``
-
-   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=2043)``
-
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=2044)``
-
-   :raises Exceptions.InsufficientResources: ``(errorCode=413, detailCode=2045)``
-
-   :raises Exceptions.UnsupportedType: ``(errorCode=400, detailCode=2046)``
-
-
-.. include:: ../examples/ping.txt
 
 
 

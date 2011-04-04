@@ -5,6 +5,56 @@
    * - Module
      - Function
      - Description
+   * - :mod:`MN_core`
+     - :func:`MN_core.ping`
+     - Low level "are you alive" operation. Response is simple ACK, but may be
+       reasonable to overload with a couple of flags that could indicate
+       availability of new data or change in capabilities. The Member Node
+       should perform some minimal internal functionality testing before
+       answering. However, ping checks will be frequent (every few minutes) so
+       the internal functionality test should not be high impact.
+
+       Appears in functional use cases: :doc:`UC10 </design/UseCases/10_uc>`
+   * - \
+     - :func:`MN_core.getLogRecords`
+     - Retrieve log information from the MN for the specified date range
+       (inclusive).
+   * - \
+     - :func:`MN_core.log`
+     - This method is used exclusively internally by a MN. It really isn't part
+       of external the API that must be implemented. However, a MN will need to
+       implement some sort of logging infrastructure so that it can respond to
+       :func:`MN_core.getLogRecords()`.
+
+       Appears in functional use cases: :doc:`UC01 </design/UseCases/01_uc>`,
+       :doc:`UC06 </design/UseCases/06_uc>`, :doc:`UC04
+       </design/UseCases/04_uc>`, :doc:`UC09 </design/UseCases/09_uc>`,
+       :doc:`UC16 </design/UseCases/16_uc>`, :doc:`UC37
+       </design/UseCases/37_uc>`
+   * - \
+     - :func:`MN_core.getObjectStatistics`
+     - Called by the monitoring system to find how many objects are stored on
+       the MN, cumulative or for each day in a given range.
+   * - \
+     - :func:`MN_core.getOperationStatistics`
+     - Called by the monitoring system to find how many operations have been
+       performed on the MN, cumulative or for each day in a given range.
+   * - \
+     - :func:`MN_core.getStatus`
+     - This function is similar to :func:`MN_health.ping` but returns a more
+       complete status which may include information such as planned service
+       outages. This method provide a mechanism for notification to Coordinating
+       Nodes at a higher frequency than through setting properties in the node
+       registry information. The response to a *getStatus* request is currently
+       undefined, but will be a structure containing information that can be
+       used by the Coordinating Nodes for notification of pending outages,
+       software changes, or other significant events as described in
+       :doc:`/design/UseCases/10_uc`.
+
+       Appears in functional use cases: :doc:`UC10 </design/UseCases/10_uc>`
+   * - \
+     - :func:`MN_core.getCapabilities`
+     - Returns a document describing the capabilities of the Member Node.
    * - :mod:`MN_read`
      - :func:`MN_read.get`
      - Retrieve an object identified by *pid* from the node. The response must
@@ -78,6 +128,20 @@
        and notify an administrator or the data owner of the issue.
 
        Appears in functional use cases: :doc:`UC06 </design/UseCases/06_uc>`
+   * - :mod:`MN_auth`
+     - :func:`MN_auth.isAuthorized`
+     - Test if the user identified by the provided token has authorization for
+       operation on the specified object. .. Note:: Should perhaps add
+       convenience methods for "canRead()" and "canWrite()" to verify that a
+       user is able to read / write an object.
+
+       Appears in functional use cases: :doc:`UC01 </design/UseCases/01_uc>`,
+       :doc:`UC37 </design/UseCases/37_uc>`
+   * - \
+     - :func:`MN_auth.setAccess`
+     - Sets the access permissions for an object identified by *pid*.
+
+       Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
    * - :mod:`MN_storage`
      - :func:`MN_storage.create`
      - Adds a new object to the Member Node, where the object is either a data
@@ -92,11 +156,11 @@
        </design/UseCases/16_uc>`
    * - \
      - :func:`MN_storage.update`
-     - Creates a new *object* on the Member Node that explicitly updates and
-       obsoletes a previous object (identified by *obsoletedPid*).    This
-       method is called by clients to update objects on Member Nodes.  The
-       object that is being obsoleted is passed in as a parameter, and the
-       Member Node should record the update by storing the
+     - Updates and existing object by creating a new *object* on the Member Node
+       that explicitly updates and obsoletes a previous object (identified by
+       *obsoletedPid*).    This method is called by clients to update objects on
+       Member Nodes.  The object that is being obsoleted is passed in as a
+       parameter, and the Member Node should record the update by storing the
        :attr:`SystemMetadata.obsoletes` and :attr:`SystemMetadata.obsoletedBy`
        fields for the respective objects in their system metadata. The modified
        system metadata entries must then be available in
@@ -115,56 +179,6 @@
        hint as to the location of the :func:`CN_crud.resolve` method.
 
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
-   * - :mod:`MN_core`
-     - :func:`MN_core.getLogRecords`
-     - Retrieve log information from the MN for the specified date range
-       (inclusive).
-   * - \
-     - :func:`MN_core.log`
-     - This method is used exclusively internally by a MN. It really isn't part
-       of external the API that must be implemented. However, a MN will need to
-       implement some sort of logging infrastructure so that it can respond to
-       :func:`MN_core.getLogRecords()`.
-
-       Appears in functional use cases: :doc:`UC01 </design/UseCases/01_uc>`,
-       :doc:`UC06 </design/UseCases/06_uc>`, :doc:`UC04
-       </design/UseCases/04_uc>`, :doc:`UC09 </design/UseCases/09_uc>`,
-       :doc:`UC16 </design/UseCases/16_uc>`, :doc:`UC37
-       </design/UseCases/37_uc>`
-   * - \
-     - :func:`MN_core.ping`
-     - Low level "are you alive" operation. Response is simple ACK, but may be
-       reasonable to overload with a couple of flags that could indicate
-       availability of new data or change in capabilities. The Member Node
-       should perform some minimal internal functionality testing before
-       answering. However, ping checks will be frequent (every few minutes) so
-       the internal functionality test should not be high impact.
-
-       Appears in functional use cases: :doc:`UC10 </design/UseCases/10_uc>`
-   * - \
-     - :func:`MN_core.getObjectStatistics`
-     - Called by the monitoring system to find how many objects are stored on
-       the MN, cumulative or for each day in a given range.
-   * - \
-     - :func:`MN_core.getOperationStatistics`
-     - Called by the monitoring system to find how many operations have been
-       performed on the MN, cumulative or for each day in a given range.
-   * - \
-     - :func:`MN_core.getStatus`
-     - This function is similar to :func:`MN_health.ping` but returns a more
-       complete status which may include information such as planned service
-       outages. This method provide a mechanism for notification to Coordinating
-       Nodes at a higher frequency than through setting properties in the node
-       registry information. The response to a *getStatus* request is currently
-       undefined, but will be a structure containing information that can be
-       used by the Coordinating Nodes for notification of pending outages,
-       software changes, or other significant events as described in
-       :doc:`/design/UseCases/10_uc`.
-
-       Appears in functional use cases: :doc:`UC10 </design/UseCases/10_uc>`
-   * - \
-     - :func:`MN_core.getCapabilities`
-     - Returns a document describing the capabilities of the Member Node.
    * - :mod:`MN_replication`
      - :func:`MN_replication.replicate`
      - Called by a Coordinating Node to request that the Member Node create a
@@ -173,20 +187,6 @@
        system.
 
        Appears in functional use cases: :doc:`UC09 </design/UseCases/09_uc>`
-   * - :mod:`MN_auth`
-     - :func:`MN_auth.isAuthorized`
-     - Test if the user identified by the provided token has authorization for
-       operation on the specified object. .. Note:: Should perhaps add
-       convenience methods for "canRead()" and "canWrite()" to verify that a
-       user is able to read / write an object.
-
-       Appears in functional use cases: :doc:`UC01 </design/UseCases/01_uc>`,
-       :doc:`UC37 </design/UseCases/37_uc>`
-   * - \
-     - :func:`MN_auth.setAccess`
-     - Sets the access permissions for an object identified by *pid*.
-
-       Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
    * - :mod:`CN_crud`
      - :func:`CN_crud.get`
      - Retrieves the object identified by *pid* from the node. If the object is
@@ -215,7 +215,7 @@
        is returned as a list of node identifiers. Details about method
        interfaces (i.e. REST URLs) exposed by a particular node can be
        determined by examining the response from the *node* collection. For
-       convenience, the `GET /object/<pid>`_ URL is included in the response as
+       convenience, the :func:`MN_read.get` URL is included in the response as
        is the base URL of the node REST services. Note also that the same
        functionality as *resolve()* can be implemented by retrieving a copy of
        the system metadata for the object and utilizing the node registry to

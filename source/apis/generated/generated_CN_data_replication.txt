@@ -3,13 +3,15 @@
 
 
 .. list-table:: Functions defined in :mod:`CN_data_replication`
-   :widths: 10 10 30
+   :widths: 3 10 10 30
    :header-rows: 1
 
-   * - REST
+   * - Tier
+     - REST
      - Function
      - Parameters
-   * - ``POST /notify``
+   * - 
+     - ``POST /notify``
      - :func:`setReplicationStatus`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        :class:`status<Types.ReplicationStatus>`) ``->`` :class:`Types.Boolean`

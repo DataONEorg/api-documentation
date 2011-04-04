@@ -3,40 +3,49 @@
 
 
 .. list-table:: Functions defined in :mod:`CN_authentication`
-   :widths: 10 10 30
+   :widths: 3 10 10 30
    :header-rows: 1
 
-   * - REST
+   * - Tier
+     - REST
      - Function
      - Parameters
-   * - ``POST /account``
+   * - 
+     - ``POST /account``
      - :func:`getAuthToken`
      - (:class:`cert<Types.X.509Certificate>`) ``->`` :class:`Types.AuthToken`
-   * - ``PUT /owner/{pid}``
+   * - 
+     - ``PUT /owner/{pid}``
      - :func:`setOwner`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        :class:`userId<Types.Principal>`) ``->`` :class:`Types.Identifier`
-   * - ``POST /account/login``
+   * - 
+     - ``POST /account/login``
      - :func:`newAccount`
      - (``username``, ``password``,
        :class:`[authSystem]<Types.AuthenticationSystem>`) ``->``
        :class:`Types.Principal`
-   * - ``GET /account/verifyToken``
+   * - 
+     - ``GET /account/verifyToken``
      - :func:`verifyToken`
      - (:class:`token<Types.AuthToken>`) ``->`` :class:`Types.Boolean`
-   * - ``POST /account/map``
+   * - 
+     - ``POST /account/map``
      - :func:`mapIdentity`
      - (:class:`token1<Types.AuthToken>`, :class:`token2<Types.AuthToken>`)
        ``->`` :class:`Types.Boolean`
-   * - ``POST /groups/{groupName}``
+   * - 
+     - ``POST /groups/{groupName}``
      - :func:`createGroup`
      - (:class:`token<Types.AuthToken>`, :class:`groupName<Types.Principal>`)
        ``->`` :class:`Types.Identifier`
-   * - ``PUT /groups/{groupName}``
+   * - 
+     - ``PUT /groups/{groupName}``
      - :func:`addGroupMembers`
      - (:class:`token<Types.AuthToken>`, :class:`groupName<Types.Principal>`,
        :class:`members<Types.PrincipalList>`) ``->`` :class:`Types.Identifier`
-   * - ``DELETE /groups/{groupName}``
+   * - 
+     - ``DELETE /groups/{groupName}``
      - :func:`removeGroupMembers`
      - (:class:`token<Types.AuthToken>`, :class:`groupName<Types.Principal>`,
        :class:`members<Types.PrincipalList>`) ``->`` :class:`Types.Identifier`

@@ -3,17 +3,20 @@
 
 
 .. list-table:: Functions defined in :mod:`MN_auth`
-   :widths: 10 10 30
+   :widths: 3 10 10 30
    :header-rows: 1
 
-   * - REST
+   * - Tier
+     - REST
      - Function
      - Parameters
-   * - ``GET /isAuthorized/{pid}``
+   * - Tier 2
+     - ``GET /isAuthorized/{pid}``
      - :func:`isAuthorized`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        :class:`action<Types.Permission>`) ``->`` :class:`Types.Boolean`
-   * - ``PUT /accessRules/{pid}``
+   * - Tier 2
+     - ``PUT /accessRules/{pid}``
      - :func:`setAccess`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        :class:`accessPolicy<Types.AccessPolicy>`) ``->`` :class:`Types.Boolean`

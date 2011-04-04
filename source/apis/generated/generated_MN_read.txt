@@ -3,35 +3,42 @@
 
 
 .. list-table:: Functions defined in :mod:`MN_read`
-   :widths: 10 10 30
+   :widths: 3 10 10 30
    :header-rows: 1
 
-   * - REST
+   * - Tier
+     - REST
      - Function
      - Parameters
-   * - ``GET /object/{pid}``
+   * - Tier 1
+     - ``GET /object/{pid}``
      - :func:`get`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.OctetStream`
-   * - ``GET /meta/{pid}``
+   * - Tier 1
+     - ``GET /meta/{pid}``
      - :func:`getSystemMetadata`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.SystemMetadata`
-   * - ``HEAD /object/{pid}``
+   * - Tier 1
+     - ``HEAD /object/{pid}``
      - :func:`describe`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.DescribeResponse`
-   * - ``GET /checksum/{pid}``
+   * - Tier 1
+     - ``GET /checksum/{pid}``
      - :func:`getChecksum`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        ``[checksumAlgorithm]``) ``->`` :class:`Types.Checksum`
-   * - ``GET /object``
+   * - Tier 1
+     - ``GET /object``
      - :func:`listObjects`
      - (:class:`token<Types.AuthToken>`, :class:`[startTime]<Types.DateTime>`,
        :class:`[endTime]<Types.DateTime>`,
        :class:`[objectFormat]<Types.ObjectFormat>`, ``[replicaStatus]``,
        ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.ObjectList`
-   * - ``POST /error``
+   * - Tier 1
+     - ``POST /error``
      - :func:`synchronizationFailed`
      - (:class:`token<Types.AuthToken>`, :class:`message<Types.Exception>`)
        ``->``

@@ -3,13 +3,15 @@
 
 
 .. list-table:: Functions defined in :mod:`MN_replication`
-   :widths: 10 10 30
+   :widths: 3 10 10 30
    :header-rows: 1
 
-   * - REST
+   * - Tier
+     - REST
      - Function
      - Parameters
-   * - ``POST /replicate``
+   * - Tier 4
+     - ``POST /replicate``
      - :func:`replicate`
      - (:class:`token<Types.AuthToken>`, :class:`sysmeta<Types.SystemMetadata>`,
        :class:`sourceNode<Types.NodeReference>`) ``->`` :class:`Types.Boolean`

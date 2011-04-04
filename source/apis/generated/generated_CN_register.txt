@@ -3,20 +3,24 @@
 
 
 .. list-table:: Functions defined in :mod:`CN_register`
-   :widths: 10 10 30
+   :widths: 3 10 10 30
    :header-rows: 1
 
-   * - REST
+   * - Tier
+     - REST
      - Function
      - Parameters
-   * - ``GET /node``
+   * - 
+     - ``GET /node``
      - :func:`listNodes`
      - () ``->`` :class:`Types.NodeList`
-   * - ``PUT /node/{pid}``
+   * - 
+     - ``PUT /node/{pid}``
      - :func:`addNodeCapabilities`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.Boolean`
-   * - ``POST /node``
+   * - 
+     - ``POST /node``
      - :func:`register`
      - (:class:`token<Types.AuthToken>`) ``->`` :class:`Types.Identifier`
 

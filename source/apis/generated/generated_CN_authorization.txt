@@ -3,17 +3,20 @@
 
 
 .. list-table:: Functions defined in :mod:`CN_authorization`
-   :widths: 10 10 30
+   :widths: 3 10 10 30
    :header-rows: 1
 
-   * - REST
+   * - Tier
+     - REST
      - Function
      - Parameters
-   * - ``GET /isAuthorized/{pid}``
+   * - 
+     - ``GET /isAuthorized/{pid}``
      - :func:`isAuthorized`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        :class:`operation<Types.Event>`) ``->`` :class:`Types.Boolean`
-   * - ``PUT /accessRules/{pid}``
+   * - 
+     - ``PUT /accessRules/{pid}``
      - :func:`setAccess`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        :class:`accessPolicy<Types.AccessPolicy>`) ``->`` :class:`Types.Boolean`
