@@ -9,8 +9,12 @@ Revisions
   View document revision history_.
 
 Goal
-  All CRUD operations on metadata and data are logged at each node (including
-  both Member and Coordinating).
+
+  All create, read, update, and delete operations on metadata and data are
+  logged at nodes (both Member and Coordinating) so that summary statistics
+  may be derived for object access with grouping by node, object (identifier),
+  and object owner.
+
 
 Summary 
 
@@ -22,17 +26,27 @@ Summary
   This use case supports the reporting of log information as required by Use
   Case 17.
 
+  The information recorded by log operations should be sufficient to enable
+  grouping by node (node pid), object (pid), and by the object owner
+  (principal pid) over time ranges. The type of access (create, read, update,
+  or delete) should be recorded. The pid of the principal making the request
+  should also be recorded.
+
+
 Actors
+
   - User
   - Node (Member or Coordinating)
+
 
 Preconditions 
 
   - User has authenticated, and is authorized for requested operation
 
+
 Triggers
 
-  - Any of the CRUD operations (object access or modification)
+  - Any of the object access and modification operations are called.
 
 
 Post Conditions
@@ -44,13 +58,16 @@ Post Conditions
    @startuml images/16_seq.png
 
    participant "Client" as app_client << Application >>
-   participant "CRUD API" as m_crud << Node >>
+   participant "Read API\nStorage API\nReplication API" as m_crud << Node >>
+   participant "Log Service" as m_log << Node >>
    app_client -> m_crud: operation (token, parameters)
    note right
      See Use Case 1, Use Case 4
    end note
-   m_crud -> m_crud: log (typeOfOperation, identifier, requestorIdentity, dateOfRequest, ...)
+   activate m_crud
+   m_crud -> m_log: log (time, event, identifier, requestor)
    m_crud --> app_client: response
+   deactivate m_crud
    @enduml
 
 .. image:: images/16_seq.png
