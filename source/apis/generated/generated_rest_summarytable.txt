@@ -113,11 +113,11 @@
        :func:`CN_crud.reserveIdentifier`.
    * - PUT /object/{pid}
      - :func:`MN_storage.update`
-     - Updates and existing object by creating a new *object* on the Member Node
-       that explicitly updates and obsoletes a previous object (identified by
-       *obsoletedPid*).    This method is called by clients to update objects on
-       Member Nodes.  The object that is being obsoleted is passed in as a
-       parameter, and the Member Node should record the update by storing the
+     - Updates an existing object by creating a new *object* on the Member Node
+       that explicitly updates and obsoletes a previous object identified by
+       *pid*.    This method is called by clients to update objects on Member
+       Nodes.  The object that is being obsoleted is passed in as a parameter,
+       and the Member Node should record the update by storing the
        :attr:`SystemMetadata.obsoletes` and :attr:`SystemMetadata.obsoletedBy`
        fields for the respective objects in their system metadata. The modified
        system metadata entries must then be available in

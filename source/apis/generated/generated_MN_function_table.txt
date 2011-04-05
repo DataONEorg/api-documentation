@@ -101,7 +101,7 @@
      - ``PUT /object/{pid}``
      - :func:`MN_storage.update`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
-       ``object``, :class:`obsoletedPid<Types.Identifier>`,
+       ``object``, :class:`newPid<Types.Identifier>`,
        :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
    * - Tier 3
      - ``DELETE /object/{pid}``

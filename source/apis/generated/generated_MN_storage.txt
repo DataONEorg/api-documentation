@@ -20,7 +20,7 @@
      - ``PUT /object/{pid}``
      - :func:`update`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
-       ``object``, :class:`obsoletedPid<Types.Identifier>`,
+       ``object``, :class:`newPid<Types.Identifier>`,
        :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
    * - Tier 3
      - ``DELETE /object/{pid}``
@@ -121,11 +121,10 @@
 
 ----
 
-.. function:: update(token,pid,object,obsoletedPid,sysmeta) -> Identifier
+.. function:: update(token,pid,object,newPid,sysmeta) -> Identifier
 
-   Updates and existing object by creating a new *object* on the Member Node
-   that explicitly updates and obsoletes a previous object (identified by
-   *obsoletedPid*).
+   Updates an existing object by creating a new *object* on the Member Node that
+   explicitly updates and obsoletes a previous object identified by *pid*.
 
    This method is called by clients to update objects on Member Nodes.
 
@@ -144,26 +143,26 @@
 
    :REST URL: ``PUT /object/{pid}``
 
-   :param token: The authentication token returned by ``login()``
+   :param token: The authentication token returned by ``login()`` identifying
+     the user with update privileges on the object.
 
    :type token: :class:`Types.AuthToken`
 
-   :param pid: The globally unique identifier that should be used in DataONE to
-     identify and access the object. If the identifier is already in use, an
-     exception will be raised and the client should try again with a different,
-     unique identifier, or use :func:`CN_crud.reserveIdentifier` to reserve one.
+   :param pid: The identifier of the object that is being updated. If this
+     identifier does not exist in the system, an error is raised and the
+     operation does not complete.
 
    :type pid: :class:`Types.Identifier`
 
-   :param object: The bytes of the data or science metadata object.
+   :param object: The bytes of the data or science metadata object that will be
+     deprecating the exsting object.
 
    :type object: bytes
 
-   :param obsoletedPid: The identifier of the object that is being updated. If
-     this identifier does not exist in the system, an error is raised and the
-     operation does not complete.
+   :param newPid: The identifier that will become the replacement identifier for
+     the existing object after the update.
 
-   :type obsoletedPid: :class:`Types.Identifier`
+   :type newPid: :class:`Types.Identifier`
 
    :param sysmeta: The system metadata document that provides basic information
      about *object*, including a reference to its identifier, access control
