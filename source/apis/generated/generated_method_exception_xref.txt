@@ -882,27 +882,87 @@
      - 400
      - 1480
    * - :mod:`CN_authentication`
-     - :func:`getAuthToken <CN_authentication.getAuthToken>`
+     - :func:`login <CN_authentication.login>`
+     - ServiceFailure
+     - 500
+     - 1920
+   * - :mod:`CN_authentication`
+     - :func:`login <CN_authentication.login>`
+     - InvalidCredentials
+     - 401
+     - 1940
+   * - :mod:`CN_authentication`
+     - :func:`login <CN_authentication.login>`
+     - NotImplemented
+     - 501
+     - 1900
+   * - :mod:`CN_authentication`
+     - :func:`login <CN_authentication.login>`
+     - InvalidRequest
+     - 400
+     - 1901
+   * - :mod:`CN_authentication`
+     - :func:`sessionRequest <CN_authentication.sessionRequest>`
+     - ServiceFailure
+     - 500
+     - 2020
+   * - :mod:`CN_authentication`
+     - :func:`sessionRequest <CN_authentication.sessionRequest>`
+     - InvalidCredentials
+     - 401
+     - 2040
+   * - :mod:`CN_authentication`
+     - :func:`sessionRequest <CN_authentication.sessionRequest>`
+     - NotImplemented
+     - 501
+     - 2000
+   * - :mod:`CN_authentication`
+     - :func:`sessionRequest <CN_authentication.sessionRequest>`
+     - InvalidRequest
+     - 400
+     - 2001
+   * - :mod:`CN_authentication`
+     - :func:`challengeResponse <CN_authentication.challengeResponse>`
+     - ServiceFailure
+     - 500
+     - 1720
+   * - :mod:`CN_authentication`
+     - :func:`challengeResponse <CN_authentication.challengeResponse>`
+     - InvalidCredentials
+     - 401
+     - 1740
+   * - :mod:`CN_authentication`
+     - :func:`challengeResponse <CN_authentication.challengeResponse>`
+     - NotImplemented
+     - 501
+     - 1700
+   * - :mod:`CN_authentication`
+     - :func:`challengeResponse <CN_authentication.challengeResponse>`
+     - InvalidRequest
+     - 400
+     - 1701
+   * - :mod:`CN_authentication`
+     - :func:`getAuthSession <CN_authentication.getAuthSession>`
      - ServiceFailure
      - 500
      - 1620
    * - :mod:`CN_authentication`
-     - :func:`getAuthToken <CN_authentication.getAuthToken>`
-     - InvalidCredentials
+     - :func:`getAuthSession <CN_authentication.getAuthSession>`
+     - NotAuthorized
      - 401
      - 1640
    * - :mod:`CN_authentication`
-     - :func:`getAuthToken <CN_authentication.getAuthToken>`
-     - AuthenticationTimeout
-     - 408
-     - 1680
+     - :func:`getAuthSession <CN_authentication.getAuthSession>`
+     - NotFound
+     - 404
+     - 1660
    * - :mod:`CN_authentication`
-     - :func:`getAuthToken <CN_authentication.getAuthToken>`
+     - :func:`getAuthSession <CN_authentication.getAuthSession>`
      - NotImplemented
      - 501
      - 1600
    * - :mod:`CN_authentication`
-     - :func:`getAuthToken <CN_authentication.getAuthToken>`
+     - :func:`getAuthSession <CN_authentication.getAuthSession>`
      - InvalidRequest
      - 400
      - 1601

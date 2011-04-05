@@ -77,26 +77,41 @@
        :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`) ``->``
        :class:`Types.LogRecords`
    * - 
-     - ``POST /account``
-     - :func:`CN_authentication.getAuthToken`
-     - (:class:`cert<Types.X.509Certificate>`) ``->`` :class:`Types.AuthToken`
+     - ``POST /sessions``
+     - :func:`CN_authentication.login`
+     - (:class:`userId<Types.Principal>`, :class:`password<Types.String>`)
+       ``->`` :class:`Types.AuthToken`
+   * - 
+     - ``POST /sessions``
+     - :func:`CN_authentication.sessionRequest`
+     - (:class:`certificate<Types.X509Certificate>`) ``->``
+       :class:`Types.Challenge`
+   * - 
+     - ``POST /sessions``
+     - :func:`CN_authentication.challengeResponse`
+     - (:class:`userId<Types.Principal>`, :class:`password<Types.String>`)
+       ``->`` :class:`Types.AuthToken`
+   * - 
+     - ``GET /sessions/{token}``
+     - :func:`CN_authentication.getAuthSession`
+     - (:class:`token<Types.AuthToken>`) ``->`` :class:`Types.AuthSession`
    * - 
      - ``PUT /owner/{pid}``
      - :func:`CN_authentication.setOwner`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        :class:`userId<Types.Principal>`) ``->`` :class:`Types.Identifier`
    * - 
-     - ``POST /account/login``
+     - ``POST /accounts``
      - :func:`CN_authentication.newAccount`
      - (``username``, ``password``,
        :class:`[authSystem]<Types.AuthenticationSystem>`) ``->``
        :class:`Types.Principal`
    * - 
-     - ``GET /account/verifyToken``
+     - ``GET /sessions/verifyToken``
      - :func:`CN_authentication.verifyToken`
      - (:class:`token<Types.AuthToken>`) ``->`` :class:`Types.Boolean`
    * - 
-     - ``POST /account/map``
+     - ``POST /accounts/map``
      - :func:`CN_authentication.mapIdentity`
      - (:class:`token1<Types.AuthToken>`, :class:`token2<Types.AuthToken>`)
        ``->`` :class:`Types.Boolean`

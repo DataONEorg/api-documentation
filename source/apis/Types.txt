@@ -24,6 +24,7 @@ Version   Structure
 .         :class:`Checksum`
 .         :class:`DateTime`
 .         :class:`DescribeResponse`
+.         :class:`EncryptedNonce`
 .         :class:`ErrorMessage`
 .         :class:`Event`
 .         :class:`HeartbeatResponse`
@@ -181,6 +182,19 @@ Version   Structure
 
 ----
 
+.. class:: Challenge
+
+  The challenge data that is sent back to a client during two-phase
+  authentication.  The Challenge includes two pieces of data: an encrypted
+  Nonce, and an X.509 public key certificate for the session service.
+  The Nonce is encrypted using a client's public key and sent to the client,
+  where it is decryped by the client (proving access tot he associated private
+  key), and then re-encrypted using the server's public key.  When the server
+  decrypts the returned Nonce, if it matches then it establishes an
+  authenticated session.
+
+----
+
 .. class:: Checksum
 
   Represents the value of a computed checksum.
@@ -285,6 +299,18 @@ Version   Structure
 
 .. include:: types_errors.txt
 
+
+----
+
+.. class:: EncryptedNonce
+
+  A random number that has been encrypted as part of a two-phase authentication
+  protocol and that is only used once for session authentication.  The Nonce is 
+  initially encrypted using a client's public key and sent to the client,
+  where it is decryped by the client (proving access tot he associated private
+  key), and then re-encrypted using the server's public key.  When the server
+  decrypts the returned Nonce, if it matches then it establishes an
+  authenticated session.
 
 ----
 
@@ -751,6 +777,13 @@ Expressing a NVP query in a URL
 
   A set of low level information about an object in the DataONE system.
   SystemMetadata is described in :mod:`SystemMetadata`.
+
+----
+
+.. class:: X509Certificate
+
+   A public certificate conforming to the X.509 standard that is used in
+   two-phase authentication.
 
 
 

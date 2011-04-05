@@ -11,26 +11,41 @@
      - Function
      - Parameters
    * - 
-     - ``POST /account``
-     - :func:`getAuthToken`
-     - (:class:`cert<Types.X.509Certificate>`) ``->`` :class:`Types.AuthToken`
+     - ``POST /sessions``
+     - :func:`login`
+     - (:class:`userId<Types.Principal>`, :class:`password<Types.String>`)
+       ``->`` :class:`Types.AuthToken`
+   * - 
+     - ``POST /sessions``
+     - :func:`sessionRequest`
+     - (:class:`certificate<Types.X509Certificate>`) ``->``
+       :class:`Types.Challenge`
+   * - 
+     - ``POST /sessions``
+     - :func:`challengeResponse`
+     - (:class:`userId<Types.Principal>`, :class:`password<Types.String>`)
+       ``->`` :class:`Types.AuthToken`
+   * - 
+     - ``GET /sessions/{token}``
+     - :func:`getAuthSession`
+     - (:class:`token<Types.AuthToken>`) ``->`` :class:`Types.AuthSession`
    * - 
      - ``PUT /owner/{pid}``
      - :func:`setOwner`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        :class:`userId<Types.Principal>`) ``->`` :class:`Types.Identifier`
    * - 
-     - ``POST /account/login``
+     - ``POST /accounts``
      - :func:`newAccount`
      - (``username``, ``password``,
        :class:`[authSystem]<Types.AuthenticationSystem>`) ``->``
        :class:`Types.Principal`
    * - 
-     - ``GET /account/verifyToken``
+     - ``GET /sessions/verifyToken``
      - :func:`verifyToken`
      - (:class:`token<Types.AuthToken>`) ``->`` :class:`Types.Boolean`
    * - 
-     - ``POST /account/map``
+     - ``POST /accounts/map``
      - :func:`mapIdentity`
      - (:class:`token1<Types.AuthToken>`, :class:`token2<Types.AuthToken>`)
        ``->`` :class:`Types.Boolean`
@@ -53,37 +68,156 @@
 
 
 
-.. function:: getAuthToken(cert) -> AuthToken
+.. function:: login(userId,password) -> AuthToken
 
-   Retrieved credential information about a user, including a list of equivalent
-   identities for the user and a list of groups in which the user is a member.
+   Authenticate using a standard username and password to DataONE, which
+   validates the pair and if valid returns an AuthToken referencing an
+   AuthSession.
+
+   :Use Cases:
+
+     :doc:`UC12 </design/UseCases/12_uc>`
+
+   :REST URL: ``POST /sessions``
+
+   :param userId: The string identifying the Principal to be authenticated.
+
+   :type userId: :class:`Types.Principal`
+
+   :param password: The password to be used for authentication.
+
+   :type password: :class:`Types.String`
+
+   :returns: An identifier that uniquely identifies an authenticated session.
+
+   :rtype: :class:`Types.AuthToken`
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=1920)``
+
+   :raises Exceptions.InvalidCredentials: ``(errorCode=401, detailCode=1940)``
+
+     The requesting client credentials were not sufficent to authenticate.
+
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=1900)``
+
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=1901)``
+
+
+
+----
+
+.. function:: sessionRequest(certificate) -> Challenge
+
+   Authenticate using an X.509 certificate to DataONE, which validates
+   certificate using two-phase challenge/response.  This method is phase one,
+   which returns an ecrypted Challenge to the client.
+
+   :Use Cases:
+
+     :doc:`UC12 </design/UseCases/12_uc>`
+
+   :REST URL: ``POST /sessions``
+
+   :param certificate: The client's X.509 public certificate, to be used in two
+     phase authentication.
+
+   :type certificate: :class:`Types.X509Certificate`
+
+   :returns: The Challenge returned to the client, including both the server's
+     public key and an encrypted Nonce.
+
+   :rtype: :class:`Types.Challenge`
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2020)``
+
+   :raises Exceptions.InvalidCredentials: ``(errorCode=401, detailCode=2040)``
+
+     The requesting client credentials were not sufficent to authenticate.
+
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2000)``
+
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=2001)``
+
+
+
+----
+
+.. function:: challengeResponse(userId,password) -> AuthToken
+
+   The second phase of two-phase authentication, in which the client has
+   decrypted the challenge, and then re-encrypts it using the server's public
+   key.  If the response is validate, then the server returns an AuthToken
+   referencing an AuthSession.
+
+   :Use Cases:
+
+     :doc:`UC12 </design/UseCases/12_uc>`
+
+   :REST URL: ``POST /sessions``
+
+   :param userId: The string identifying the Principal to be authenticated.
+
+   :type userId: :class:`Types.Principal`
+
+   :param password: The password to be used for authentication.
+
+   :type password: :class:`Types.String`
+
+   :returns: An identifier that uniquely identifies an authenticated session.
+
+   :rtype: :class:`Types.AuthToken`
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=1720)``
+
+   :raises Exceptions.InvalidCredentials: ``(errorCode=401, detailCode=1740)``
+
+     The requesting client credentials were not sufficent to authenticate.
+
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=1700)``
+
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=1701)``
+
+
+
+----
+
+.. function:: getAuthSession(token) -> AuthSession
+
+   Retrieves information about an authenticated session, including the
+   Principal's identity, a list of equivalent identities for the user, and a
+   list of groups in which the user is a member.
 
    :Use Cases:
 
      :doc:`UC16 </design/UseCases/16_uc>`
 
-   :REST URL: ``POST /account``
+   :REST URL: ``GET /sessions/{token}``
 
-   :param cert: The X.509 certificate that validates the user's identify from CI
-     Logon.
+   :param token: An AuthToken identifier that references an authenticated
+     session. Note that, unlike most AuthToken parameters, this one is not
+     passed in the HTTP header because it does not reference the current session
+     (rather, it references a third party's session).
 
-   :type cert: :class:`Types.X.509Certificate`
+   :type token: :class:`Types.AuthToken`
 
    :returns: A SAML assertion comtaining the user identiites and groups.
 
-   :rtype: :class:`Types.AuthToken`
+   :rtype: :class:`Types.AuthSession`
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=1620)``
 
-   :raises Exceptions.InvalidCredentials: ``(errorCode=401, detailCode=1640)``
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=1640)``
 
-     The supplied certificate could not be validated.
+     The requesting client is not authorized to retrieve this session
+     information.
 
 
-   :raises Exceptions.AuthenticationTimeout: ``(errorCode=408, detailCode=1680)``
+   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=1660)``
 
-     A response from the authentication service was not received before the
-     operation timed out.
+     There is no session information available for the given AuthToken.
 
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=1600)``
@@ -158,7 +292,7 @@
 
      :doc:`UC16 </design/UseCases/16_uc>`
 
-   :REST URL: ``POST /account/login``
+   :REST URL: ``POST /accounts``
 
    :param username: Requested username.  Must be unique within the DataONE
      system.
@@ -212,7 +346,7 @@
    generate a token that matches a system token. Hence another level of
    restriction (perhaps network level blocking / limiting) is necessary.
 
-   :REST URL: ``GET /account/verifyToken``
+   :REST URL: ``GET /sessions/verifyToken``
 
    :param token: The token to be tested.
 
@@ -250,7 +384,7 @@
    to determine if both identities have been properly authenticated, which
    demonstrates that the user has control of both identities.
 
-   :REST URL: ``POST /account/map``
+   :REST URL: ``POST /accounts/map``
 
    :param token1: The authentication token returned by
      :func:`CN_authentication.getAuthToken`. Used to verify that the calling

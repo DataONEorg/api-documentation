@@ -202,22 +202,38 @@
      - :func:`CN_query.getLogRecords`
      - Retrieves consolidated log information for the specified date range
        (inclusive) for the entire DataONE infrastructure
-   * - POST /account
-     - :func:`CN_authentication.getAuthToken`
-     - Retrieved credential information about a user, including a list of
-       equivalent identities for the user and a list of groups in which the user
-       is a member.
+   * - POST /sessions
+     - :func:`CN_authentication.login`
+     - Authenticate using a standard username and password to DataONE, which
+       validates the pair and if valid returns an AuthToken referencing an
+       AuthSession.
+   * - POST /sessions
+     - :func:`CN_authentication.sessionRequest`
+     - Authenticate using an X.509 certificate to DataONE, which validates
+       certificate using two-phase challenge/response.  This method is phase
+       one, which returns an ecrypted Challenge to the client.
+   * - POST /sessions
+     - :func:`CN_authentication.challengeResponse`
+     - The second phase of two-phase authentication, in which the client has
+       decrypted the challenge, and then re-encrypts it using the server's
+       public key.  If the response is validate, then the server returns an
+       AuthToken referencing an AuthSession.
+   * - GET /sessions/{token}
+     - :func:`CN_authentication.getAuthSession`
+     - Retrieves information about an authenticated session, including the
+       Principal's identity, a list of equivalent identities for the user, and a
+       list of groups in which the user is a member.
    * - PUT /owner/{pid}
      - :func:`CN_authentication.setOwner`
      - Changes ownership (RightsHolder) of the specified object to the
        :term:`principal` specified by `userId`
-   * - POST /account/login
+   * - POST /accounts
      - :func:`CN_authentication.newAccount`
      - Create a new :term:`principal` in the DataONE system. Note that there
        should probably be a lot more metadata captured about the new user, and
        there should be a mechanism for specifying the default access control
        rules for the new account.
-   * - GET /account/verifyToken
+   * - GET /sessions/verifyToken
      - :func:`CN_authentication.verifyToken`
      - Test if the provided token is valid. The token is passed to the method
        end point using the normal authentication token transfer mechanism (e.g.
@@ -227,7 +243,7 @@
        and perhaps even generate a token that matches a system token. Hence
        another level of restriction (perhaps network level blocking / limiting)
        is necessary.
-   * - POST /account/map
+   * - POST /accounts/map
      - :func:`CN_authentication.mapIdentity`
      - Map the two authenticated identities, asserting that they represent the
        same principal. The two identities are represented as AuthToken objects,
