@@ -23,9 +23,10 @@
    * - Tier 1
      - ``GET /monitor/object``
      - :func:`MN_core.getObjectStatistics`
-     - (:class:`token<Types.AuthToken>`, :class:`[time]<Types.DateTime>`,
-       :class:`[format]<Types.ObjectFormat>`, :class:`[day]<Types.Integer>`,
-       :class:`[pid]<Types.Identifier>`) ``->`` :class:`Types.MonitorList`
+     - (:class:`token<Types.AuthToken>`, :class:`[fromDate]<Types.DateTime>`,
+       :class:`[toDate]<Types.DateTime>`, :class:`[format]<Types.ObjectFormat>`,
+       :class:`[day]<Types.Integer>`, :class:`[pid]<Types.Identifier>`) ``->``
+       :class:`Types.MonitorList`
    * - Tier 1
      - ``GET /monitor/event``
      - :func:`MN_core.getOperationStatistics`

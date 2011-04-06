@@ -23,9 +23,10 @@
    * - Tier 1
      - ``GET /monitor/object``
      - :func:`getObjectStatistics`
-     - (:class:`token<Types.AuthToken>`, :class:`[time]<Types.DateTime>`,
-       :class:`[format]<Types.ObjectFormat>`, :class:`[day]<Types.Integer>`,
-       :class:`[pid]<Types.Identifier>`) ``->`` :class:`Types.MonitorList`
+     - (:class:`token<Types.AuthToken>`, :class:`[fromDate]<Types.DateTime>`,
+       :class:`[toDate]<Types.DateTime>`, :class:`[format]<Types.ObjectFormat>`,
+       :class:`[day]<Types.Integer>`, :class:`[pid]<Types.Identifier>`) ``->``
+       :class:`Types.MonitorList`
    * - Tier 1
      - ``GET /monitor/event``
      - :func:`getOperationStatistics`
@@ -131,7 +132,7 @@
 
 ----
 
-.. function:: getObjectStatistics(token,[time],[format],[day],[pid]) -> MonitorList
+.. function:: getObjectStatistics(token,[fromDate],[toDate],[format],[day],[pid]) -> MonitorList
 
    Called by the monitoring system to find how many objects are stored on the
    MN, cumulative or for each day in a given range.
@@ -142,10 +143,14 @@
 
    :type token: :class:`Types.AuthToken`
 
-   :param time: An ISO8601 compatible DateTime range specifying the time range
-     for which to return object statistics.
+   :param fromDate: An ISO8601 compatible DateTime range specifying the time
+     range for which to return object statistics.
 
-   :type time: :class:`Types.DateTime`
+   :type fromDate: :class:`Types.DateTime`
+
+   :param toDate:
+
+   :type toDate: :class:`Types.DateTime`
 
    :param format: Limit to objects of given format.
 
