@@ -10,41 +10,41 @@
      - REST
      - Function
      - Parameters
-   * - Core
+   * - Tier 1
      - ``GET /monitor/ping``
      - :func:`MN_core.ping`
      - () ``->`` :class:`Types.Boolean`
-   * - Core
+   * - Tier 1
      - ``GET /log``
      - :func:`MN_core.getLogRecords`
      - (:class:`token<Types.AuthToken>`, :class:`fromDate<Types.DateTime>`,
        :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`) ``->``
        :class:`Types.LogRecords`
-   * - Core
+   * - Tier 1
      - n/a
      - :func:`MN_core.log`
      - (:class:`typeOfOperation<Types.Event>`,
        :class:`targetGuid<Types.Identifier>`,
        :class:`requestorIdentitity<Types.Principal>`,
        :class:`dateOfRequest<Types.DateTime>`) ``->``
-   * - Core
+   * - Tier 1
      - ``GET /monitor/object``
      - :func:`MN_core.getObjectStatistics`
      - (:class:`token<Types.AuthToken>`, :class:`[time]<Types.DateTime>`,
        :class:`[format]<Types.ObjectFormat>`, :class:`[day]<Types.Integer>`,
        :class:`[pid]<Types.Identifier>`) ``->`` :class:`Types.MonitorList`
-   * - Core
+   * - Tier 1
      - ``GET /monitor/event``
      - :func:`MN_core.getOperationStatistics`
      - (:class:`token<Types.AuthToken>`, :class:`[time]<Types.DateTime>`,
        :class:`[requestor]<Types.Principal>`, :class:`[day]<Types.Integer>`,
        :class:`[event]<Types.Event>`, :class:`[eventTime]<Types.DateTime>`,
        :class:`[format]<Types.ObjectFormat>`) ``->`` :class:`Types.MonitorList`
-   * - Core
+   * - Tier 1
      - ``GET /monitor/status``
      - :func:`MN_core.getStatus`
      - () ``->`` :class:`Types.StatusResponse`
-   * - Core
+   * - Tier 1
      - ``GET /  or  GET /node``
      - :func:`MN_core.getCapabilities`
      - () ``->`` :class:`Types.NodeList`

@@ -1,148 +1,50 @@
 Coordinating Node APIs
 ----------------------
 
+The service interfaces described here are exposed through the Coordinating
+Node REST interface to support interactions with Member Nodes and DataONE
+clients.
+
+
 .. include:: generated/generated_CN_function_table.txt
 
 
-Coordinating Node Authentication API
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. module:: CN_authentication
-   :synopsis: Methods for authentication
-
-
-.. include:: generated/generated_CN_authentication.txt
-
-
-Coordinating Node Authorization API
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. module:: CN_authorization
-   :synopsis: Methods for authorization
-
-
-.. include:: generated/generated_CN_authorization.txt
-
-
-----
-
-
-.. function:: requestToken ()
-
-   This operation is used by CN applications to obtain a token for system
-   level operations.
-
-   .. Note:: 
-      This could be a normal :func:`login` operation using a system user and
-      secret that is stored in a secure location.
-
-
-CRUD API
+Core API
 ~~~~~~~~
 
-.. module:: CN_crud
-   :synopsis: Create, read, update, and delete operations for Coordinating Nodes
+.. module:: CN_core
+   :synopsis: Core operations necessary for basic interaction with
+     Coordinating Nodes
 
-The ``CN_crud`` API implements methods that enable object management
-operations on a :term:`Coordinating Node`.
-
-
-.. include:: generated/generated_CN_crud.txt
-
-----
-
-.. TODO:: Clean up this cruft.
-
-----
+.. include:: generated/generated_CN_core.txt
 
 
-.. function:: batchWrite (objectsList)
+Read API
+~~~~~~~~
 
-.. function:: deleteRecords (token, listOfPIDs)
+.. module:: CN_read
+   :synopsis: Data read operations for Coordinating Nodes
 
-.. function:: register (memberToken, ID, metadata)
+The *CN_read* API implements methods that enable object retrieval operations
+on a :term:`Coordinating Node`. It includes searches of science metadata and
+system metadata and exposes log records held by CNs.
 
-.. function:: storeRecords ()
-
-.. function:: update()
-
-
-Query API
-~~~~~~~~~
-
-.. module:: CN_query
-   :synopsis: 
-     Handles queries against science metadata, system metdata, and log
-     records held by CNs
-
-The Query API handles searches of science metadata and system metadata. It also 
-exposes log records held by CNs. This log-related functionality probably needs
-to be split out into the Logging and Alert API (not yet defined).
+.. include:: generated/generated_CN_read.txt
 
 
-.. include:: generated/generated_CN_query.txt
+Authentication and Authorization API
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. module:: CN_auth
+   :synopsis: Methods for authentication
+
+.. include:: generated/generated_CN_auth.txt
 
 
-----
+Storage API
+~~~~~~~~~~~
 
-.. TODO:: Flesh these out...
-
-----
-
-.. function:: getAllCopies (token, ownerID)
-
-.. function:: getLinksAndCites (PID, fromDate, toDate)
-
-.. function:: getLogRecords (nodeID, fromDate, toDate)
-
-.. function:: query (token, query)
-    This is a DUPE of search(). Clean up use cases.
-
-.. function:: searchForData ()
-    This is a DUPE of search(). Clean up use cases.
-
-.. function:: usageQuery (token, PID)
-
-
-Replication API
-~~~~~~~~~~~~~~~
-
-The Replication API manages :term:`replication` of system metadata and science
-metadata among Coordinating Nodes to ensure that complete copies of those
-objects are maintained on all Coordinating Nodes.
-
-
-.. Note:: Since this will be handled out-of-band with respect to the CN APIs
-  for V0.3, there are no Replication API methods required for V0.3.
-
-.. module:: CN_replication
-   :synopsis: Manages replication of content between Coordinating Nodes.
-
-.. TODO:: flesh these out.
-
-   
-.. function:: pollForNewIDs() -> PidList
-
-.. function:: synchronize ()
-
-.. function:: verifyAllRecordsReceived ()
-
-
-
-
-.. function:: scheduleSync(nodeID)
-
-   Schedules synchronization operation on the specified Member Node.
-
-   :param nodeID:  The Member Node that is being scheduled for synchronization.
-
-   :raises Exceptions.NotFound: The specified Member Node ID is invalid.
-
-
-Data Replication API
-~~~~~~~~~~~~~~~~~~~~
-
-.. module:: CN_data_replication
+.. module:: CN_storage
    :synopsis: 
      Supports operations for replication of content between Member Nodes.
 
@@ -152,27 +54,25 @@ The Data Replication API operates in conjunction with the
 science metadata content between Member Nodes to ensure that copies of data
 and metadata can be retrieved from more than one Member Node where possible.
 
+.. include:: generated/generated_CN_storage.txt
 
-.. include:: generated/generated_CN_data_replication.txt
+..
+  
+  This old stuff is commented out but kept here for revisiting later
+  .. function:: getDefaultReplicationPolicy (sess)
 
+  .. function:: getMNReplicateList()
 
-----
+  .. function:: getReplicationPolicy (sess, ID)
 
-.. TODO:: flesh these out...
-   
-.. function:: getDefaultReplicationPolicy (sess)
+  .. function:: isReplicationNeeded ()
 
-.. function:: getMNReplicateList()
+  .. function:: replicateMetadata ()
 
-.. function:: getReplicationPolicy (sess, ID)
+  .. function:: setDefaultReplicationPolicy (sess, policy)
 
-.. function:: isReplicationNeeded ()
+  .. function:: setReplicationPolicy (sess, policy, ID)
 
-.. function:: replicateMetadata ()
-
-.. function:: setDefaultReplicationPolicy (sess, policy)
-
-.. function:: setReplicationPolicy (sess, policy, ID)
 
 
 Register API
@@ -196,99 +96,98 @@ registration information including node capabilities, scheduling and so forth.
 .. include:: generated/generated_CN_register.txt
 
 
-----
-
-xxxx notes xxxx
-
-
-.. function:: addNodeCapabilities (nodeID, capabilities) -> boolean
-
-   Adds the supplied capabilities to the system metadata describing the Member Node.
-
-   :param nodeID: A PID that identifies the Member Node.
-
-   :param capabilities: 
-     A capabilities document that describes the resources and supported
-     services of the Member Node.
-
-   :returns: True if the operation succeeds
-
-   :rtype: Boolean
+..
+  xxxx notes xxxx
 
 
-.. function:: register (token, capabilitiesURL) -> boolean
+  .. function:: addNodeCapabilities (nodeID, capabilities) -> boolean
 
-   Used to register a new Member Node.
+     Adds the supplied capabilities to the system metadata describing the Member Node.
 
-   :param token: An authentication token with priviledges to rgister a new Member Node.
+     :param nodeID: A PID that identifies the Member Node.
 
-   :param capabilitiesURL: The URL from which capabilities will be retrieved.
+     :param capabilities: 
+       A capabilities document that describes the resources and supported
+       services of the Member Node.
 
-   :raises exceptions.NotAuthorized: The supplied identity does not have
-     authority to register a node.
+     :returns: True if the operation succeeds
 
-   :raises Exceptions.NotFound: The supplied capabilitiesURL does not resolve
-     to a capabilities document
-
-   :rtype: Boolean
-
-   :returns: True if the registration operation succeeds
+     :rtype: Boolean
 
 
+  .. function:: register (token, capabilitiesURL) -> boolean
 
-.. function:: registerForNotification (token, dataOwnerID)
+     Used to register a new Member Node.
+
+     :param token: An authentication token with priviledges to rgister a new Member Node.
+
+     :param capabilitiesURL: The URL from which capabilities will be retrieved.
+
+     :raises exceptions.NotAuthorized: The supplied identity does not have
+       authority to register a node.
+
+     :raises Exceptions.NotFound: The supplied capabilitiesURL does not resolve
+       to a capabilities document
+
+     :rtype: Boolean
+
+     :returns: True if the registration operation succeeds
 
 
 
-.. function:: verifyCapabilities (nodeID, capabilities) -> boolean
-
-   Evaluates the supplied capabilities document. This may involve additional
-   interaction with the MN as various aspects are evaluated.
+  .. function:: registerForNotification (token, dataOwnerID)
 
 
-.. todo:: 
-   The :func:`verifyCapabilities` will need to check functionality of the MN so
-   need to define a few service hooks for checking these properties.
+
+  .. function:: verifyCapabilities (nodeID, capabilities) -> boolean
+
+     Evaluates the supplied capabilities document. This may involve additional
+     interaction with the MN as various aspects are evaluated.
 
 
-State of Health API
-~~~~~~~~~~~~~~~~~~~
-
-The Health API contains methods for determining the status of the DataONE
-infrastructure, including both the CNs and MNs.
-
-.. module:: CN_health
-   :synopsis: Methods for reporting on the state of health of a CN and on the entire DataONE infrastructure
-
-:: 
-
-  generateReport(token) -> statusReport
+  .. todo:: 
+     The :func:`verifyCapabilities` will need to check functionality of the MN so
+     need to define a few service hooks for checking these properties.
 
 
-.. function:: actOnPendingEvent (event)
+  State of Health API
+  ~~~~~~~~~~~~~~~~~~~
 
-.. function:: reportPendingEvent (event)
+  The Health API contains methods for determining the status of the DataONE
+  infrastructure, including both the CNs and MNs.
 
-.. function:: Admin Application
+  .. module:: CN_health
+     :synopsis: Methods for reporting on the state of health of a CN and on the entire DataONE infrastructure
 
-.. function:: notify (adminID, nodeID, service)
+  :: 
+
+    generateReport(token) -> statusReport
 
 
-.. function:: generateReport(token) -> statusReport
+  .. function:: actOnPendingEvent (event)
 
-   Returns a status report for all of the registered Member Nodes. The
-   informatio returned is used to give administrators information necessary to
-   maintain the infrastructure.
+  .. function:: reportPendingEvent (event)
 
-   .. note:: 
-      This method is used by Use Case 10 "MN Status Reports" for V0.3. However
-      instead of a complete set of detailed status reports, the V0.3
-      implementation of the use case will utilize the ``MN_health.heartbeat()``
-      method to compile very basic information about the MNs. Later versions of
-      this method will use the richer ``MN_health.getStatus(token)`` method.
+  .. function:: Admin Application
 
-   :param token: Identity with authority to generate reports.
+  .. function:: notify (adminID, nodeID, service)
+
+
+  .. function:: generateReport(token) -> statusReport
+
+     Returns a status report for all of the registered Member Nodes. The
+     informatio returned is used to give administrators information necessary to
+     maintain the infrastructure.
+
+     .. note:: 
+        This method is used by Use Case 10 "MN Status Reports" for V0.3. However
+        instead of a complete set of detailed status reports, the V0.3
+        implementation of the use case will utilize the ``MN_health.heartbeat()``
+        method to compile very basic information about the MNs. Later versions of
+        this method will use the richer ``MN_health.getStatus(token)`` method.
+
+     :param token: Identity with authority to generate reports.
    
-   :rtype: Status report, ideally in XML + stylsheet or at least XHTML.
+     :rtype: Status report, ideally in XML + stylsheet or at least XHTML.
 
 

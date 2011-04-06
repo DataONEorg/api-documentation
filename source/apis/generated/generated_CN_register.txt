@@ -10,45 +10,18 @@
      - REST
      - Function
      - Parameters
-   * - 
-     - ``GET /node``
-     - :func:`listNodes`
-     - () ``->`` :class:`Types.NodeList`
-   * - 
+   * - Tier 2
      - ``PUT /node/{pid}``
      - :func:`addNodeCapabilities`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.Boolean`
-   * - 
+   * - Tier 2
      - ``POST /node``
      - :func:`register`
      - (:class:`token<Types.AuthToken>`) ``->`` :class:`Types.Identifier`
 
 
 
-
-.. function:: listNodes() -> NodeList
-
-   Returns a list of nodes that have been registered with the DataONE
-   infrastructure.
-
-   :Use Cases:
-
-     :doc:`UC39 </design/UseCases/39_uc>`
-
-   :REST URL: ``GET /node``
-
-   :returns: List of nodes
-
-   :rtype: :class:`Types.NodeList`
-
-   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4800)``
-
-   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4801)``
-
-
-
-----
 
 .. function:: addNodeCapabilities(token,pid,capabilities) -> Boolean
 

@@ -571,96 +571,211 @@
      - UnsupportedType
      - 400
      - 2155
-   * - :mod:`CN_crud`
-     - :func:`get <CN_crud.get>`
+   * - :mod:`CN_read`
+     - :func:`get <CN_read.get>`
      - NotAuthorized
      - 401
      - 1000
-   * - :mod:`CN_crud`
-     - :func:`get <CN_crud.get>`
+   * - :mod:`CN_read`
+     - :func:`get <CN_read.get>`
      - NotImplemented
      - 501
      - 1001
-   * - :mod:`CN_crud`
-     - :func:`get <CN_crud.get>`
+   * - :mod:`CN_read`
+     - :func:`get <CN_read.get>`
      - NotFound
      - 404
      - 1020
-   * - :mod:`CN_crud`
-     - :func:`get <CN_crud.get>`
+   * - :mod:`CN_read`
+     - :func:`get <CN_read.get>`
      - ServiceFailure
      - 500
      - 1030
-   * - :mod:`CN_crud`
-     - :func:`get <CN_crud.get>`
+   * - :mod:`CN_read`
+     - :func:`get <CN_read.get>`
      - InvalidToken
      - 401
      - 1010
-   * - :mod:`CN_crud`
-     - :func:`get <CN_crud.get>`
+   * - :mod:`CN_read`
+     - :func:`get <CN_read.get>`
      - InvalidRequest
      - 400
      - 1002
-   * - :mod:`CN_crud`
-     - :func:`getSystemMetadata <CN_crud.getSystemMetadata>`
+   * - :mod:`CN_read`
+     - :func:`getSystemMetadata <CN_read.getSystemMetadata>`
      - InvalidToken
      - 401
      - 1050
-   * - :mod:`CN_crud`
-     - :func:`getSystemMetadata <CN_crud.getSystemMetadata>`
+   * - :mod:`CN_read`
+     - :func:`getSystemMetadata <CN_read.getSystemMetadata>`
      - NotImplemented
      - 501
      - 1041
-   * - :mod:`CN_crud`
-     - :func:`getSystemMetadata <CN_crud.getSystemMetadata>`
+   * - :mod:`CN_read`
+     - :func:`getSystemMetadata <CN_read.getSystemMetadata>`
      - ServiceFailure
      - 500
      - 1090
-   * - :mod:`CN_crud`
-     - :func:`getSystemMetadata <CN_crud.getSystemMetadata>`
+   * - :mod:`CN_read`
+     - :func:`getSystemMetadata <CN_read.getSystemMetadata>`
      - NotAuthorized
      - 401
      - 1040
-   * - :mod:`CN_crud`
-     - :func:`getSystemMetadata <CN_crud.getSystemMetadata>`
+   * - :mod:`CN_read`
+     - :func:`getSystemMetadata <CN_read.getSystemMetadata>`
      - NotFound
      - 404
      - 1060
-   * - :mod:`CN_crud`
-     - :func:`getSystemMetadata <CN_crud.getSystemMetadata>`
+   * - :mod:`CN_read`
+     - :func:`getSystemMetadata <CN_read.getSystemMetadata>`
      - InvalidRequest
      - 400
      - 1080
-   * - :mod:`CN_crud`
-     - :func:`resolve <CN_crud.resolve>`
+   * - :mod:`CN_read`
+     - :func:`resolve <CN_read.resolve>`
      - InvalidToken
      - 401
      - 4130
-   * - :mod:`CN_crud`
-     - :func:`resolve <CN_crud.resolve>`
+   * - :mod:`CN_read`
+     - :func:`resolve <CN_read.resolve>`
      - ServiceFailure
      - 500
      - 4150
-   * - :mod:`CN_crud`
-     - :func:`resolve <CN_crud.resolve>`
+   * - :mod:`CN_read`
+     - :func:`resolve <CN_read.resolve>`
      - NotAuthorized
      - 401
      - 4120
-   * - :mod:`CN_crud`
-     - :func:`resolve <CN_crud.resolve>`
+   * - :mod:`CN_read`
+     - :func:`resolve <CN_read.resolve>`
      - NotFound
      - 404
      - 4140
-   * - :mod:`CN_crud`
-     - :func:`resolve <CN_crud.resolve>`
+   * - :mod:`CN_read`
+     - :func:`resolve <CN_read.resolve>`
      - NotImplemented
      - 501
      - 4131
-   * - :mod:`CN_crud`
-     - :func:`resolve <CN_crud.resolve>`
+   * - :mod:`CN_read`
+     - :func:`resolve <CN_read.resolve>`
      - InvalidRequest
      - 400
      - 4132
+   * - :mod:`CN_read`
+     - :func:`reserveIdentifier <CN_read.reserveIdentifier>`
+     - InvalidToken
+     - 401
+     - 4190
+   * - :mod:`CN_read`
+     - :func:`reserveIdentifier <CN_read.reserveIdentifier>`
+     - ServiceFailure
+     - 500
+     - 4210
+   * - :mod:`CN_read`
+     - :func:`reserveIdentifier <CN_read.reserveIdentifier>`
+     - NotAuthorized
+     - 401
+     - 4180
+   * - :mod:`CN_read`
+     - :func:`reserveIdentifier <CN_read.reserveIdentifier>`
+     - InvalidRequest
+     - 400
+     - 4200
+   * - :mod:`CN_read`
+     - :func:`reserveIdentifier <CN_read.reserveIdentifier>`
+     - IdentifierNotUnique
+     - 409
+     - 4210
+   * - :mod:`CN_read`
+     - :func:`reserveIdentifier <CN_read.reserveIdentifier>`
+     - NotImplemented
+     - 501
+     - 4191
+   * - :mod:`CN_read`
+     - :func:`assertRelation <CN_read.assertRelation>`
+     - InvalidToken
+     - 401
+     - 4230
+   * - :mod:`CN_read`
+     - :func:`assertRelation <CN_read.assertRelation>`
+     - ServiceFailure
+     - 500
+     - 4270
+   * - :mod:`CN_read`
+     - :func:`assertRelation <CN_read.assertRelation>`
+     - NotAuthorized
+     - 401
+     - 4220
+   * - :mod:`CN_read`
+     - :func:`assertRelation <CN_read.assertRelation>`
+     - NotFound
+     - 404
+     - 4240
+   * - :mod:`CN_read`
+     - :func:`assertRelation <CN_read.assertRelation>`
+     - InvalidRequest
+     - 400
+     - 4260
+   * - :mod:`CN_read`
+     - :func:`assertRelation <CN_read.assertRelation>`
+     - NotImplemented
+     - 501
+     - 4221
+   * - :mod:`CN_read`
+     - :func:`getChecksum <CN_read.getChecksum>`
+     - NotImplemented
+     - 501
+     - 1402
+   * - :mod:`CN_read`
+     - :func:`getChecksum <CN_read.getChecksum>`
+     - ServiceFailure
+     - 500
+     - 1410
+   * - :mod:`CN_read`
+     - :func:`getChecksum <CN_read.getChecksum>`
+     - NotFound
+     - 404
+     - 1420
+   * - :mod:`CN_read`
+     - :func:`getChecksum <CN_read.getChecksum>`
+     - NotAuthorized
+     - 401
+     - 1400
+   * - :mod:`CN_read`
+     - :func:`getChecksum <CN_read.getChecksum>`
+     - InvalidRequest
+     - 400
+     - 1402
+   * - :mod:`CN_read`
+     - :func:`getChecksum <CN_read.getChecksum>`
+     - InvalidToken
+     - 401
+     - 1430
+   * - :mod:`CN_read`
+     - :func:`search <CN_read.search>`
+     - InvalidToken
+     - 401
+     - 4290
+   * - :mod:`CN_read`
+     - :func:`search <CN_read.search>`
+     - ServiceFailure
+     - 500
+     - 4310
+   * - :mod:`CN_read`
+     - :func:`search <CN_read.search>`
+     - NotAuthorized
+     - 401
+     - 4280
+   * - :mod:`CN_read`
+     - :func:`search <CN_read.search>`
+     - InvalidRequest
+     - 400
+     - 4300
+   * - :mod:`CN_read`
+     - :func:`search <CN_read.search>`
+     - NotImplemented
+     - 501
+     - 4281
    * - :mod:`CN_crud`
      - :func:`create <CN_crud.create>`
      - ServiceFailure
@@ -687,66 +802,6 @@
      - 400
      - 4102
    * - :mod:`CN_crud`
-     - :func:`reserveIdentifier <CN_crud.reserveIdentifier>`
-     - InvalidToken
-     - 401
-     - 4190
-   * - :mod:`CN_crud`
-     - :func:`reserveIdentifier <CN_crud.reserveIdentifier>`
-     - ServiceFailure
-     - 500
-     - 4210
-   * - :mod:`CN_crud`
-     - :func:`reserveIdentifier <CN_crud.reserveIdentifier>`
-     - NotAuthorized
-     - 401
-     - 4180
-   * - :mod:`CN_crud`
-     - :func:`reserveIdentifier <CN_crud.reserveIdentifier>`
-     - InvalidRequest
-     - 400
-     - 4200
-   * - :mod:`CN_crud`
-     - :func:`reserveIdentifier <CN_crud.reserveIdentifier>`
-     - IdentifierNotUnique
-     - 409
-     - 4210
-   * - :mod:`CN_crud`
-     - :func:`reserveIdentifier <CN_crud.reserveIdentifier>`
-     - NotImplemented
-     - 501
-     - 4191
-   * - :mod:`CN_crud`
-     - :func:`assertRelation <CN_crud.assertRelation>`
-     - InvalidToken
-     - 401
-     - 4230
-   * - :mod:`CN_crud`
-     - :func:`assertRelation <CN_crud.assertRelation>`
-     - ServiceFailure
-     - 500
-     - 4270
-   * - :mod:`CN_crud`
-     - :func:`assertRelation <CN_crud.assertRelation>`
-     - NotAuthorized
-     - 401
-     - 4220
-   * - :mod:`CN_crud`
-     - :func:`assertRelation <CN_crud.assertRelation>`
-     - NotFound
-     - 404
-     - 4240
-   * - :mod:`CN_crud`
-     - :func:`assertRelation <CN_crud.assertRelation>`
-     - InvalidRequest
-     - 400
-     - 4260
-   * - :mod:`CN_crud`
-     - :func:`assertRelation <CN_crud.assertRelation>`
-     - NotImplemented
-     - 501
-     - 4221
-   * - :mod:`CN_crud`
      - :func:`log <CN_crud.log>`
      - InvalidRequest
      - 400
@@ -761,516 +816,471 @@
      - NotImplemented
      - 501
      - 1501
-   * - :mod:`CN_crud`
-     - :func:`getChecksum <CN_crud.getChecksum>`
-     - NotImplemented
-     - 501
-     - 1402
-   * - :mod:`CN_crud`
-     - :func:`getChecksum <CN_crud.getChecksum>`
-     - ServiceFailure
-     - 500
-     - 1410
-   * - :mod:`CN_crud`
-     - :func:`getChecksum <CN_crud.getChecksum>`
-     - NotFound
-     - 404
-     - 1420
-   * - :mod:`CN_crud`
-     - :func:`getChecksum <CN_crud.getChecksum>`
-     - NotAuthorized
-     - 401
-     - 1400
-   * - :mod:`CN_crud`
-     - :func:`getChecksum <CN_crud.getChecksum>`
-     - InvalidRequest
-     - 400
-     - 1402
-   * - :mod:`CN_crud`
-     - :func:`getChecksum <CN_crud.getChecksum>`
-     - InvalidToken
-     - 401
-     - 1430
-   * - :mod:`CN_crud`
-     - :func:`listFormats <CN_crud.listFormats>`
+   * - :mod:`CN_core`
+     - :func:`listFormats <CN_core.listFormats>`
      - NotImplemented
      - 501
      - 4840
-   * - :mod:`CN_crud`
-     - :func:`listFormats <CN_crud.listFormats>`
+   * - :mod:`CN_core`
+     - :func:`listFormats <CN_core.listFormats>`
      - ServiceFailure
      - 500
      - 4841
-   * - :mod:`CN_crud`
-     - :func:`listFormats <CN_crud.listFormats>`
+   * - :mod:`CN_core`
+     - :func:`listFormats <CN_core.listFormats>`
      - InvalidRequest
      - 400
      - 4842
-   * - :mod:`CN_crud`
-     - :func:`listFormats <CN_crud.listFormats>`
+   * - :mod:`CN_core`
+     - :func:`listFormats <CN_core.listFormats>`
      - NotFound
      - 404
      - 4843
-   * - :mod:`CN_crud`
-     - :func:`getFormat <CN_crud.getFormat>`
+   * - :mod:`CN_core`
+     - :func:`listFormats <CN_core.listFormats>`
+     - InsufficientResources
+     - 413
+     - 4844
+   * - :mod:`CN_core`
+     - :func:`getFormat <CN_core.getFormat>`
      - NotImplemented
      - 501
-     - 4844
-   * - :mod:`CN_crud`
-     - :func:`getFormat <CN_crud.getFormat>`
+     - 4845
+   * - :mod:`CN_core`
+     - :func:`getFormat <CN_core.getFormat>`
      - ServiceFailure
      - 500
-     - 4845
-   * - :mod:`CN_crud`
-     - :func:`getFormat <CN_crud.getFormat>`
+     - 4846
+   * - :mod:`CN_core`
+     - :func:`getFormat <CN_core.getFormat>`
      - InvalidRequest
      - 400
-     - 4846
-   * - :mod:`CN_crud`
-     - :func:`getFormat <CN_crud.getFormat>`
+     - 4847
+   * - :mod:`CN_core`
+     - :func:`getFormat <CN_core.getFormat>`
      - NotFound
      - 404
-     - 4847
-   * - :mod:`CN_query`
-     - :func:`search <CN_query.search>`
-     - InvalidToken
-     - 401
-     - 4290
-   * - :mod:`CN_query`
-     - :func:`search <CN_query.search>`
-     - ServiceFailure
-     - 500
-     - 4310
-   * - :mod:`CN_query`
-     - :func:`search <CN_query.search>`
-     - NotAuthorized
-     - 401
-     - 4280
-   * - :mod:`CN_query`
-     - :func:`search <CN_query.search>`
-     - InvalidRequest
-     - 400
-     - 4300
-   * - :mod:`CN_query`
-     - :func:`search <CN_query.search>`
-     - NotImplemented
-     - 501
-     - 4281
-   * - :mod:`CN_query`
-     - :func:`getLogRecords <CN_query.getLogRecords>`
+     - 4848
+   * - :mod:`CN_core`
+     - :func:`getFormat <CN_core.getFormat>`
+     - InsufficientResources
+     - 413
+     - 4849
+   * - :mod:`CN_core`
+     - :func:`getLogRecords <CN_core.getLogRecords>`
      - InvalidToken
      - 401
      - 1470
-   * - :mod:`CN_query`
-     - :func:`getLogRecords <CN_query.getLogRecords>`
+   * - :mod:`CN_core`
+     - :func:`getLogRecords <CN_core.getLogRecords>`
      - ServiceFailure
      - 500
      - 1490
-   * - :mod:`CN_query`
-     - :func:`getLogRecords <CN_query.getLogRecords>`
+   * - :mod:`CN_core`
+     - :func:`getLogRecords <CN_core.getLogRecords>`
      - NotAuthorized
      - 401
      - 1460
-   * - :mod:`CN_query`
-     - :func:`getLogRecords <CN_query.getLogRecords>`
+   * - :mod:`CN_core`
+     - :func:`getLogRecords <CN_core.getLogRecords>`
      - NotImplemented
      - 501
      - 1461
-   * - :mod:`CN_query`
-     - :func:`getLogRecords <CN_query.getLogRecords>`
+   * - :mod:`CN_core`
+     - :func:`getLogRecords <CN_core.getLogRecords>`
      - InvalidRequest
      - 400
      - 1480
-   * - :mod:`CN_authentication`
-     - :func:`login <CN_authentication.login>`
-     - ServiceFailure
-     - 500
-     - 1920
-   * - :mod:`CN_authentication`
-     - :func:`login <CN_authentication.login>`
-     - InvalidCredentials
-     - 401
-     - 1940
-   * - :mod:`CN_authentication`
-     - :func:`login <CN_authentication.login>`
-     - NotImplemented
-     - 501
-     - 1900
-   * - :mod:`CN_authentication`
-     - :func:`login <CN_authentication.login>`
-     - InvalidRequest
-     - 400
-     - 1901
-   * - :mod:`CN_authentication`
-     - :func:`sessionRequest <CN_authentication.sessionRequest>`
-     - ServiceFailure
-     - 500
-     - 2020
-   * - :mod:`CN_authentication`
-     - :func:`sessionRequest <CN_authentication.sessionRequest>`
-     - InvalidCredentials
-     - 401
-     - 2040
-   * - :mod:`CN_authentication`
-     - :func:`sessionRequest <CN_authentication.sessionRequest>`
-     - NotImplemented
-     - 501
-     - 2000
-   * - :mod:`CN_authentication`
-     - :func:`sessionRequest <CN_authentication.sessionRequest>`
-     - InvalidRequest
-     - 400
-     - 2001
-   * - :mod:`CN_authentication`
-     - :func:`challengeResponse <CN_authentication.challengeResponse>`
-     - ServiceFailure
-     - 500
-     - 1720
-   * - :mod:`CN_authentication`
-     - :func:`challengeResponse <CN_authentication.challengeResponse>`
-     - InvalidCredentials
-     - 401
-     - 1740
-   * - :mod:`CN_authentication`
-     - :func:`challengeResponse <CN_authentication.challengeResponse>`
-     - NotImplemented
-     - 501
-     - 1700
-   * - :mod:`CN_authentication`
-     - :func:`challengeResponse <CN_authentication.challengeResponse>`
-     - InvalidRequest
-     - 400
-     - 1701
-   * - :mod:`CN_authentication`
-     - :func:`getAuthSession <CN_authentication.getAuthSession>`
-     - ServiceFailure
-     - 500
-     - 1620
-   * - :mod:`CN_authentication`
-     - :func:`getAuthSession <CN_authentication.getAuthSession>`
-     - NotAuthorized
-     - 401
-     - 1640
-   * - :mod:`CN_authentication`
-     - :func:`getAuthSession <CN_authentication.getAuthSession>`
-     - NotFound
-     - 404
-     - 1660
-   * - :mod:`CN_authentication`
-     - :func:`getAuthSession <CN_authentication.getAuthSession>`
-     - NotImplemented
-     - 501
-     - 1600
-   * - :mod:`CN_authentication`
-     - :func:`getAuthSession <CN_authentication.getAuthSession>`
-     - InvalidRequest
-     - 400
-     - 1601
-   * - :mod:`CN_authentication`
-     - :func:`setOwner <CN_authentication.setOwner>`
-     - ServiceFailure
-     - 500
-     - 4490
-   * - :mod:`CN_authentication`
-     - :func:`setOwner <CN_authentication.setOwner>`
-     - InvalidToken
-     - 401
-     - 4480
-   * - :mod:`CN_authentication`
-     - :func:`setOwner <CN_authentication.setOwner>`
-     - NotAuthorized
-     - 401
-     - 4440
-   * - :mod:`CN_authentication`
-     - :func:`setOwner <CN_authentication.setOwner>`
-     - NotFound
-     - 404
-     - 4460
-   * - :mod:`CN_authentication`
-     - :func:`setOwner <CN_authentication.setOwner>`
-     - NotImplemented
-     - 501
-     - 4441
-   * - :mod:`CN_authentication`
-     - :func:`setOwner <CN_authentication.setOwner>`
-     - InvalidRequest
-     - 400
-     - 4442
-   * - :mod:`CN_authentication`
-     - :func:`newAccount <CN_authentication.newAccount>`
-     - ServiceFailure
-     - 500
-     - 4530
-   * - :mod:`CN_authentication`
-     - :func:`newAccount <CN_authentication.newAccount>`
-     - IdentifierNotUnique
-     - 409
-     - 4500
-   * - :mod:`CN_authentication`
-     - :func:`newAccount <CN_authentication.newAccount>`
-     - InvalidCredentials
-     - 401
-     - 4520
-   * - :mod:`CN_authentication`
-     - :func:`newAccount <CN_authentication.newAccount>`
-     - NotImplemented
-     - 501
-     - 4501
-   * - :mod:`CN_authentication`
-     - :func:`newAccount <CN_authentication.newAccount>`
-     - InvalidRequest
-     - 400
-     - 4502
-   * - :mod:`CN_authentication`
-     - :func:`verifyToken <CN_authentication.verifyToken>`
-     - ServiceFailure
-     - 500
-     - 4550
-   * - :mod:`CN_authentication`
-     - :func:`verifyToken <CN_authentication.verifyToken>`
-     - NotAuthorized
-     - 401
-     - 4540
-   * - :mod:`CN_authentication`
-     - :func:`verifyToken <CN_authentication.verifyToken>`
-     - NotImplemented
-     - 501
-     - 4541
-   * - :mod:`CN_authentication`
-     - :func:`verifyToken <CN_authentication.verifyToken>`
-     - InvalidToken
-     - 401
-     - 4555
-   * - :mod:`CN_authentication`
-     - :func:`verifyToken <CN_authentication.verifyToken>`
-     - InvalidRequest
-     - 400
-     - 4542
-   * - :mod:`CN_authentication`
-     - :func:`mapIdentity <CN_authentication.mapIdentity>`
-     - ServiceFailure
-     - 500
-     - 
-   * - :mod:`CN_authentication`
-     - :func:`mapIdentity <CN_authentication.mapIdentity>`
-     - InvalidToken
-     - 401
-     - 
-   * - :mod:`CN_authentication`
-     - :func:`mapIdentity <CN_authentication.mapIdentity>`
-     - NotAuthorized
-     - 401
-     - 
-   * - :mod:`CN_authentication`
-     - :func:`mapIdentity <CN_authentication.mapIdentity>`
-     - NotFound
-     - 404
-     - 
-   * - :mod:`CN_authentication`
-     - :func:`mapIdentity <CN_authentication.mapIdentity>`
-     - NotImplemented
-     - 501
-     - 
-   * - :mod:`CN_authentication`
-     - :func:`mapIdentity <CN_authentication.mapIdentity>`
-     - InvalidRequest
-     - 400
-     - 
-   * - :mod:`CN_authentication`
-     - :func:`createGroup <CN_authentication.createGroup>`
-     - ServiceFailure
-     - 500
-     - 
-   * - :mod:`CN_authentication`
-     - :func:`createGroup <CN_authentication.createGroup>`
-     - InvalidToken
-     - 401
-     - 
-   * - :mod:`CN_authentication`
-     - :func:`createGroup <CN_authentication.createGroup>`
-     - NotAuthorized
-     - 401
-     - 
-   * - :mod:`CN_authentication`
-     - :func:`createGroup <CN_authentication.createGroup>`
-     - NotFound
-     - 404
-     - 
-   * - :mod:`CN_authentication`
-     - :func:`createGroup <CN_authentication.createGroup>`
-     - NotImplemented
-     - 501
-     - 
-   * - :mod:`CN_authentication`
-     - :func:`createGroup <CN_authentication.createGroup>`
-     - InvalidRequest
-     - 400
-     - 
-   * - :mod:`CN_authentication`
-     - :func:`createGroup <CN_authentication.createGroup>`
-     - IdentifierNotUnique
-     - 409
-     - 
-   * - :mod:`CN_authentication`
-     - :func:`addGroupMembers <CN_authentication.addGroupMembers>`
-     - ServiceFailure
-     - 500
-     - 
-   * - :mod:`CN_authentication`
-     - :func:`addGroupMembers <CN_authentication.addGroupMembers>`
-     - InvalidToken
-     - 401
-     - 
-   * - :mod:`CN_authentication`
-     - :func:`addGroupMembers <CN_authentication.addGroupMembers>`
-     - NotAuthorized
-     - 401
-     - 
-   * - :mod:`CN_authentication`
-     - :func:`addGroupMembers <CN_authentication.addGroupMembers>`
-     - NotFound
-     - 404
-     - 
-   * - :mod:`CN_authentication`
-     - :func:`addGroupMembers <CN_authentication.addGroupMembers>`
-     - NotImplemented
-     - 501
-     - 
-   * - :mod:`CN_authentication`
-     - :func:`addGroupMembers <CN_authentication.addGroupMembers>`
-     - InvalidRequest
-     - 400
-     - 
-   * - :mod:`CN_authentication`
-     - :func:`removeGroupMembers <CN_authentication.removeGroupMembers>`
-     - ServiceFailure
-     - 500
-     - 
-   * - :mod:`CN_authentication`
-     - :func:`removeGroupMembers <CN_authentication.removeGroupMembers>`
-     - InvalidToken
-     - 401
-     - 
-   * - :mod:`CN_authentication`
-     - :func:`removeGroupMembers <CN_authentication.removeGroupMembers>`
-     - NotAuthorized
-     - 401
-     - 
-   * - :mod:`CN_authentication`
-     - :func:`removeGroupMembers <CN_authentication.removeGroupMembers>`
-     - NotFound
-     - 404
-     - 
-   * - :mod:`CN_authentication`
-     - :func:`removeGroupMembers <CN_authentication.removeGroupMembers>`
-     - NotImplemented
-     - 501
-     - 
-   * - :mod:`CN_authentication`
-     - :func:`removeGroupMembers <CN_authentication.removeGroupMembers>`
-     - InvalidRequest
-     - 400
-     - 
-   * - :mod:`CN_authorization`
-     - :func:`isAuthorized <CN_authorization.isAuthorized>`
-     - ServiceFailure
-     - 500
-     - 1760
-   * - :mod:`CN_authorization`
-     - :func:`isAuthorized <CN_authorization.isAuthorized>`
-     - InvalidToken
-     - 401
-     - 1840
-   * - :mod:`CN_authorization`
-     - :func:`isAuthorized <CN_authorization.isAuthorized>`
-     - NotFound
-     - 404
-     - 1800
-   * - :mod:`CN_authorization`
-     - :func:`isAuthorized <CN_authorization.isAuthorized>`
-     - NotAuthorized
-     - 401
-     - 1820
-   * - :mod:`CN_authorization`
-     - :func:`isAuthorized <CN_authorization.isAuthorized>`
-     - NotImplemented
-     - 501
-     - 1780
-   * - :mod:`CN_authorization`
-     - :func:`isAuthorized <CN_authorization.isAuthorized>`
-     - InvalidRequest
-     - 400
-     - 1761
-   * - :mod:`CN_authorization`
-     - :func:`setAccess <CN_authorization.setAccess>`
-     - InvalidToken
-     - 401
-     - 4410
-   * - :mod:`CN_authorization`
-     - :func:`setAccess <CN_authorization.setAccess>`
-     - ServiceFailure
-     - 500
-     - 4430
-   * - :mod:`CN_authorization`
-     - :func:`setAccess <CN_authorization.setAccess>`
-     - NotFound
-     - 404
-     - 4400
-   * - :mod:`CN_authorization`
-     - :func:`setAccess <CN_authorization.setAccess>`
-     - NotAuthorized
-     - 401
-     - 4420
-   * - :mod:`CN_authorization`
-     - :func:`setAccess <CN_authorization.setAccess>`
-     - NotImplemented
-     - 501
-     - 4401
-   * - :mod:`CN_authorization`
-     - :func:`setAccess <CN_authorization.setAccess>`
-     - InvalidRequest
-     - 400
-     - 4402
-   * - :mod:`CN_data_replication`
-     - :func:`setReplicationStatus <CN_data_replication.setReplicationStatus>`
-     - ServiceFailure
-     - 500
-     - 4700
-   * - :mod:`CN_data_replication`
-     - :func:`setReplicationStatus <CN_data_replication.setReplicationStatus>`
-     - NotImplemented
-     - 501
-     - 4701
-   * - :mod:`CN_data_replication`
-     - :func:`setReplicationStatus <CN_data_replication.setReplicationStatus>`
-     - InvalidToken
-     - 401
-     - 4710
-   * - :mod:`CN_data_replication`
-     - :func:`setReplicationStatus <CN_data_replication.setReplicationStatus>`
-     - NotAuthorized
-     - 401
-     - 4720
-   * - :mod:`CN_data_replication`
-     - :func:`setReplicationStatus <CN_data_replication.setReplicationStatus>`
-     - InvalidRequest
-     - 400
-     - 4730
-   * - :mod:`CN_data_replication`
-     - :func:`setReplicationStatus <CN_data_replication.setReplicationStatus>`
-     - NotFound
-     - 404
-     - 4740
-   * - :mod:`CN_register`
-     - :func:`listNodes <CN_register.listNodes>`
+   * - :mod:`CN_core`
+     - :func:`listNodes <CN_core.listNodes>`
      - NotImplemented
      - 501
      - 4800
-   * - :mod:`CN_register`
-     - :func:`listNodes <CN_register.listNodes>`
+   * - :mod:`CN_core`
+     - :func:`listNodes <CN_core.listNodes>`
      - ServiceFailure
      - 500
      - 4801
+   * - :mod:`CN_auth`
+     - :func:`login <CN_auth.login>`
+     - ServiceFailure
+     - 500
+     - 1920
+   * - :mod:`CN_auth`
+     - :func:`login <CN_auth.login>`
+     - InvalidCredentials
+     - 401
+     - 1940
+   * - :mod:`CN_auth`
+     - :func:`login <CN_auth.login>`
+     - NotImplemented
+     - 501
+     - 1900
+   * - :mod:`CN_auth`
+     - :func:`login <CN_auth.login>`
+     - InvalidRequest
+     - 400
+     - 1901
+   * - :mod:`CN_auth`
+     - :func:`sessionRequest <CN_auth.sessionRequest>`
+     - ServiceFailure
+     - 500
+     - 2020
+   * - :mod:`CN_auth`
+     - :func:`sessionRequest <CN_auth.sessionRequest>`
+     - InvalidCredentials
+     - 401
+     - 2040
+   * - :mod:`CN_auth`
+     - :func:`sessionRequest <CN_auth.sessionRequest>`
+     - NotImplemented
+     - 501
+     - 2000
+   * - :mod:`CN_auth`
+     - :func:`sessionRequest <CN_auth.sessionRequest>`
+     - InvalidRequest
+     - 400
+     - 2001
+   * - :mod:`CN_auth`
+     - :func:`challengeResponse <CN_auth.challengeResponse>`
+     - ServiceFailure
+     - 500
+     - 1720
+   * - :mod:`CN_auth`
+     - :func:`challengeResponse <CN_auth.challengeResponse>`
+     - InvalidCredentials
+     - 401
+     - 1740
+   * - :mod:`CN_auth`
+     - :func:`challengeResponse <CN_auth.challengeResponse>`
+     - NotImplemented
+     - 501
+     - 1700
+   * - :mod:`CN_auth`
+     - :func:`challengeResponse <CN_auth.challengeResponse>`
+     - InvalidRequest
+     - 400
+     - 1701
+   * - :mod:`CN_auth`
+     - :func:`getAuthSession <CN_auth.getAuthSession>`
+     - ServiceFailure
+     - 500
+     - 1620
+   * - :mod:`CN_auth`
+     - :func:`getAuthSession <CN_auth.getAuthSession>`
+     - NotAuthorized
+     - 401
+     - 1640
+   * - :mod:`CN_auth`
+     - :func:`getAuthSession <CN_auth.getAuthSession>`
+     - NotFound
+     - 404
+     - 1660
+   * - :mod:`CN_auth`
+     - :func:`getAuthSession <CN_auth.getAuthSession>`
+     - NotImplemented
+     - 501
+     - 1600
+   * - :mod:`CN_auth`
+     - :func:`getAuthSession <CN_auth.getAuthSession>`
+     - InvalidRequest
+     - 400
+     - 1601
+   * - :mod:`CN_auth`
+     - :func:`setOwner <CN_auth.setOwner>`
+     - ServiceFailure
+     - 500
+     - 4490
+   * - :mod:`CN_auth`
+     - :func:`setOwner <CN_auth.setOwner>`
+     - InvalidToken
+     - 401
+     - 4480
+   * - :mod:`CN_auth`
+     - :func:`setOwner <CN_auth.setOwner>`
+     - NotAuthorized
+     - 401
+     - 4440
+   * - :mod:`CN_auth`
+     - :func:`setOwner <CN_auth.setOwner>`
+     - NotFound
+     - 404
+     - 4460
+   * - :mod:`CN_auth`
+     - :func:`setOwner <CN_auth.setOwner>`
+     - NotImplemented
+     - 501
+     - 4441
+   * - :mod:`CN_auth`
+     - :func:`setOwner <CN_auth.setOwner>`
+     - InvalidRequest
+     - 400
+     - 4442
+   * - :mod:`CN_auth`
+     - :func:`newAccount <CN_auth.newAccount>`
+     - ServiceFailure
+     - 500
+     - 4530
+   * - :mod:`CN_auth`
+     - :func:`newAccount <CN_auth.newAccount>`
+     - IdentifierNotUnique
+     - 409
+     - 4500
+   * - :mod:`CN_auth`
+     - :func:`newAccount <CN_auth.newAccount>`
+     - InvalidCredentials
+     - 401
+     - 4520
+   * - :mod:`CN_auth`
+     - :func:`newAccount <CN_auth.newAccount>`
+     - NotImplemented
+     - 501
+     - 4501
+   * - :mod:`CN_auth`
+     - :func:`newAccount <CN_auth.newAccount>`
+     - InvalidRequest
+     - 400
+     - 4502
+   * - :mod:`CN_auth`
+     - :func:`verifyToken <CN_auth.verifyToken>`
+     - ServiceFailure
+     - 500
+     - 4550
+   * - :mod:`CN_auth`
+     - :func:`verifyToken <CN_auth.verifyToken>`
+     - NotAuthorized
+     - 401
+     - 4540
+   * - :mod:`CN_auth`
+     - :func:`verifyToken <CN_auth.verifyToken>`
+     - NotImplemented
+     - 501
+     - 4541
+   * - :mod:`CN_auth`
+     - :func:`verifyToken <CN_auth.verifyToken>`
+     - InvalidToken
+     - 401
+     - 4555
+   * - :mod:`CN_auth`
+     - :func:`verifyToken <CN_auth.verifyToken>`
+     - InvalidRequest
+     - 400
+     - 4542
+   * - :mod:`CN_auth`
+     - :func:`mapIdentity <CN_auth.mapIdentity>`
+     - ServiceFailure
+     - 500
+     - 
+   * - :mod:`CN_auth`
+     - :func:`mapIdentity <CN_auth.mapIdentity>`
+     - InvalidToken
+     - 401
+     - 
+   * - :mod:`CN_auth`
+     - :func:`mapIdentity <CN_auth.mapIdentity>`
+     - NotAuthorized
+     - 401
+     - 
+   * - :mod:`CN_auth`
+     - :func:`mapIdentity <CN_auth.mapIdentity>`
+     - NotFound
+     - 404
+     - 
+   * - :mod:`CN_auth`
+     - :func:`mapIdentity <CN_auth.mapIdentity>`
+     - NotImplemented
+     - 501
+     - 
+   * - :mod:`CN_auth`
+     - :func:`mapIdentity <CN_auth.mapIdentity>`
+     - InvalidRequest
+     - 400
+     - 
+   * - :mod:`CN_auth`
+     - :func:`createGroup <CN_auth.createGroup>`
+     - ServiceFailure
+     - 500
+     - 
+   * - :mod:`CN_auth`
+     - :func:`createGroup <CN_auth.createGroup>`
+     - InvalidToken
+     - 401
+     - 
+   * - :mod:`CN_auth`
+     - :func:`createGroup <CN_auth.createGroup>`
+     - NotAuthorized
+     - 401
+     - 
+   * - :mod:`CN_auth`
+     - :func:`createGroup <CN_auth.createGroup>`
+     - NotFound
+     - 404
+     - 
+   * - :mod:`CN_auth`
+     - :func:`createGroup <CN_auth.createGroup>`
+     - NotImplemented
+     - 501
+     - 
+   * - :mod:`CN_auth`
+     - :func:`createGroup <CN_auth.createGroup>`
+     - InvalidRequest
+     - 400
+     - 
+   * - :mod:`CN_auth`
+     - :func:`createGroup <CN_auth.createGroup>`
+     - IdentifierNotUnique
+     - 409
+     - 
+   * - :mod:`CN_auth`
+     - :func:`addGroupMembers <CN_auth.addGroupMembers>`
+     - ServiceFailure
+     - 500
+     - 
+   * - :mod:`CN_auth`
+     - :func:`addGroupMembers <CN_auth.addGroupMembers>`
+     - InvalidToken
+     - 401
+     - 
+   * - :mod:`CN_auth`
+     - :func:`addGroupMembers <CN_auth.addGroupMembers>`
+     - NotAuthorized
+     - 401
+     - 
+   * - :mod:`CN_auth`
+     - :func:`addGroupMembers <CN_auth.addGroupMembers>`
+     - NotFound
+     - 404
+     - 
+   * - :mod:`CN_auth`
+     - :func:`addGroupMembers <CN_auth.addGroupMembers>`
+     - NotImplemented
+     - 501
+     - 
+   * - :mod:`CN_auth`
+     - :func:`addGroupMembers <CN_auth.addGroupMembers>`
+     - InvalidRequest
+     - 400
+     - 
+   * - :mod:`CN_auth`
+     - :func:`removeGroupMembers <CN_auth.removeGroupMembers>`
+     - ServiceFailure
+     - 500
+     - 
+   * - :mod:`CN_auth`
+     - :func:`removeGroupMembers <CN_auth.removeGroupMembers>`
+     - InvalidToken
+     - 401
+     - 
+   * - :mod:`CN_auth`
+     - :func:`removeGroupMembers <CN_auth.removeGroupMembers>`
+     - NotAuthorized
+     - 401
+     - 
+   * - :mod:`CN_auth`
+     - :func:`removeGroupMembers <CN_auth.removeGroupMembers>`
+     - NotFound
+     - 404
+     - 
+   * - :mod:`CN_auth`
+     - :func:`removeGroupMembers <CN_auth.removeGroupMembers>`
+     - NotImplemented
+     - 501
+     - 
+   * - :mod:`CN_auth`
+     - :func:`removeGroupMembers <CN_auth.removeGroupMembers>`
+     - InvalidRequest
+     - 400
+     - 
+   * - :mod:`CN_auth`
+     - :func:`isAuthorized <CN_auth.isAuthorized>`
+     - ServiceFailure
+     - 500
+     - 1760
+   * - :mod:`CN_auth`
+     - :func:`isAuthorized <CN_auth.isAuthorized>`
+     - InvalidToken
+     - 401
+     - 1840
+   * - :mod:`CN_auth`
+     - :func:`isAuthorized <CN_auth.isAuthorized>`
+     - NotFound
+     - 404
+     - 1800
+   * - :mod:`CN_auth`
+     - :func:`isAuthorized <CN_auth.isAuthorized>`
+     - NotAuthorized
+     - 401
+     - 1820
+   * - :mod:`CN_auth`
+     - :func:`isAuthorized <CN_auth.isAuthorized>`
+     - NotImplemented
+     - 501
+     - 1780
+   * - :mod:`CN_auth`
+     - :func:`isAuthorized <CN_auth.isAuthorized>`
+     - InvalidRequest
+     - 400
+     - 1761
+   * - :mod:`CN_auth`
+     - :func:`setAccess <CN_auth.setAccess>`
+     - InvalidToken
+     - 401
+     - 4410
+   * - :mod:`CN_auth`
+     - :func:`setAccess <CN_auth.setAccess>`
+     - ServiceFailure
+     - 500
+     - 4430
+   * - :mod:`CN_auth`
+     - :func:`setAccess <CN_auth.setAccess>`
+     - NotFound
+     - 404
+     - 4400
+   * - :mod:`CN_auth`
+     - :func:`setAccess <CN_auth.setAccess>`
+     - NotAuthorized
+     - 401
+     - 4420
+   * - :mod:`CN_auth`
+     - :func:`setAccess <CN_auth.setAccess>`
+     - NotImplemented
+     - 501
+     - 4401
+   * - :mod:`CN_auth`
+     - :func:`setAccess <CN_auth.setAccess>`
+     - InvalidRequest
+     - 400
+     - 4402
+   * - :mod:`CN_storage`
+     - :func:`setReplicationStatus <CN_storage.setReplicationStatus>`
+     - ServiceFailure
+     - 500
+     - 4700
+   * - :mod:`CN_storage`
+     - :func:`setReplicationStatus <CN_storage.setReplicationStatus>`
+     - NotImplemented
+     - 501
+     - 4701
+   * - :mod:`CN_storage`
+     - :func:`setReplicationStatus <CN_storage.setReplicationStatus>`
+     - InvalidToken
+     - 401
+     - 4710
+   * - :mod:`CN_storage`
+     - :func:`setReplicationStatus <CN_storage.setReplicationStatus>`
+     - NotAuthorized
+     - 401
+     - 4720
+   * - :mod:`CN_storage`
+     - :func:`setReplicationStatus <CN_storage.setReplicationStatus>`
+     - InvalidRequest
+     - 400
+     - 4730
+   * - :mod:`CN_storage`
+     - :func:`setReplicationStatus <CN_storage.setReplicationStatus>`
+     - NotFound
+     - 404
+     - 4740
    * - :mod:`CN_register`
      - :func:`addNodeCapabilities <CN_register.addNodeCapabilities>`
      - NotImplemented

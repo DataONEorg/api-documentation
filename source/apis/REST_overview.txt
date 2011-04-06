@@ -106,14 +106,20 @@ the HTTP error code set to 406.
 
 **Parameters in Requests**
 
-Many of the URL patterns described here accept parameters in the URL. Unless otherwise indicated, parameter names and values are case sensitive.
+Many of the URL patterns described here accept parameters in the URL. Unless
+otherwise indicated, parameter names and values are case sensitive.
 
 Parameter names are identical to the parameter names as described in the
 corresponding method signature.
 
-Many requests accept an authorization token, i.e. the *token* parameter listed in method signatures. In all cases, the authorization token will be transmitted as a HTTP "Authorization" header.
+Many requests accept an authorization token, i.e. the *token* parameter listed
+in method signatures. In all cases, the authorization token will be
+transmitted as a HTTP "Authorization" header.
 
-Requests sent using the HTTP POST or PUT verbs must use MIME multipart-mixed encoding of the message body as described in RFC2046_. In most cases and unless otherwise indicated, all the parameters except the authorization token will be sent in the message body (as opposed to URL parameters).
+Requests sent using the HTTP POST or PUT verbs must use MIME multipart-mixed
+encoding of the message body as described in RFC2046_. In most cases and
+unless otherwise indicated, all the parameters except the authorization token
+will be sent in the message body (as opposed to URL parameters).
 
 .. _RFC2046: http://tools.ietf.org/html/rfc2046#section-5.1.3
 

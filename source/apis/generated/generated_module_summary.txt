@@ -187,8 +187,8 @@
        system.
 
        Appears in functional use cases: :doc:`UC09 </design/UseCases/09_uc>`
-   * - :mod:`CN_crud`
-     - :func:`CN_crud.get`
+   * - :mod:`CN_read`
+     - :func:`CN_read.get`
      - Retrieves the object identified by *pid* from the node. If the object is
        not present on the node, then an :exc:`Exceptions.NotFound` error is
        raised (regardless of whether the object exists on another node in the
@@ -198,7 +198,7 @@
        :doc:`UC16 </design/UseCases/16_uc>`, :doc:`UC09
        </design/UseCases/09_uc>`
    * - \
-     - :func:`CN_crud.getSystemMetadata`
+     - :func:`CN_read.getSystemMetadata`
      - Returns the :term:`system metadata` that contains DataONE specific
        information about the object identified by *pid*. Note that authoritative
        copies of system metadata are only available from the Coordinating Nodes.
@@ -207,7 +207,7 @@
        :doc:`UC37 </design/UseCases/37_uc>`, :doc:`UC16
        </design/UseCases/16_uc>`
    * - \
-     - :func:`CN_crud.resolve`
+     - :func:`CN_read.resolve`
      - Implemented by CNs, returns the nodes (MNs or CNs) known to hold copies
        of the object identified by *<pid>*. The object resolution process is
        intended to provide a simple mechanism for a client to discover from
@@ -226,6 +226,33 @@
         Appears in functional use cases: :doc:`UC36 </design/UseCases/36_uc>`,
        :doc:`UC16 </design/UseCases/16_uc>`
    * - \
+     - :func:`CN_read.reserveIdentifier`
+     - Given an optional scope and format, reserves and returns an identifier
+       within that scope and format that is unique and will not be used by any
+       other sessions. Future calls to :func:`MN_storage.create` and
+       :func:`MN_storage.update` that reference this ID must originate from the
+       :term:`session` in which the identifier was reserved, otherwise an error
+       is raised on those methods.
+
+       Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
+   * - \
+     - :func:`CN_read.assertRelation`
+     - Tests that the specified relationship between *pidOfSubject* and
+       *pidOfObject* exists.
+   * - \
+     - :func:`CN_read.getChecksum`
+     - Returns the checksum for the specified object as reported in the system
+       metadata.
+
+       Appears in functional use cases: :doc:`UC09 </design/UseCases/09_uc>`
+   * - \
+     - :func:`CN_read.search`
+     - Search the metadata catalog and return identifiers of metadata records
+       that match the criteria.
+
+       Appears in functional use cases: :doc:`UC02 </design/UseCases/02_uc>`,
+       :doc:`UC16 </design/UseCases/16_uc>`
+   * - :mod:`CN_crud`
      - :func:`CN_crud.create`
      - This is a method used internally by the CN, not exposed to MNs or the
        world. Stores the two given objects (system metadata, science metadata)
@@ -237,20 +264,6 @@
        Appears in functional use cases: :doc:`UC06 </design/UseCases/06_uc>`,
        :doc:`UC16 </design/UseCases/16_uc>`
    * - \
-     - :func:`CN_crud.reserveIdentifier`
-     - Given an optional scope and format, reserves and returns an identifier
-       within that scope and format that is unique and will not be used by any
-       other sessions. Future calls to :func:`MN_storage.create` and
-       :func:`MN_storage.update` that reference this ID must originate from the
-       :term:`session` in which the identifier was reserved, otherwise an error
-       is raised on those methods.
-
-       Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
-   * - \
-     - :func:`CN_crud.assertRelation`
-     - Tests that the specified relationship between *pidOfSubject* and
-       *pidOfObject* exists.
-   * - \
      - :func:`CN_crud.log`
      - This method is used exclusively internally by a CN. It really isn't part
        of external the API that must be implemented. However, a CN will need to
@@ -261,49 +274,42 @@
        :doc:`UC02 </design/UseCases/02_uc>`, :doc:`UC06
        </design/UseCases/06_uc>`, :doc:`UC16 </design/UseCases/16_uc>`,
        :doc:`UC09 </design/UseCases/09_uc>`
-   * - \
-     - :func:`CN_crud.getChecksum`
-     - Returns the checksum for the specified object as reported in the system
-       metadata.
-
-       Appears in functional use cases: :doc:`UC09 </design/UseCases/09_uc>`
-   * - \
-     - :func:`CN_crud.listFormats`
+   * - :mod:`CN_core`
+     - :func:`CN_core.listFormats`
      - Returns a list of all object formats registered in the DataONE Object
        Format Vocabulary.
    * - \
-     - :func:`CN_crud.getFormat`
+     - :func:`CN_core.getFormat`
      - Returns the object format registered in the dataONE Object Format
        Vocabulary for the given format identifier.
-   * - :mod:`CN_query`
-     - :func:`CN_query.search`
-     - Search the metadata catalog and return identifiers of metadata records
-       that match the criteria.
-
-       Appears in functional use cases: :doc:`UC02 </design/UseCases/02_uc>`,
-       :doc:`UC16 </design/UseCases/16_uc>`
    * - \
-     - :func:`CN_query.getLogRecords`
+     - :func:`CN_core.getLogRecords`
      - Retrieves consolidated log information for the specified date range
        (inclusive) for the entire DataONE infrastructure
 
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
-   * - :mod:`CN_authentication`
-     - :func:`CN_authentication.login`
+   * - \
+     - :func:`CN_core.listNodes`
+     - Returns a list of nodes that have been registered with the DataONE
+       infrastructure.
+
+       Appears in functional use cases: :doc:`UC39 </design/UseCases/39_uc>`
+   * - :mod:`CN_auth`
+     - :func:`CN_auth.login`
      - Authenticate using a standard username and password to DataONE, which
        validates the pair and if valid returns an AuthToken referencing an
        AuthSession.
 
        Appears in functional use cases: :doc:`UC12 </design/UseCases/12_uc>`
    * - \
-     - :func:`CN_authentication.sessionRequest`
+     - :func:`CN_auth.sessionRequest`
      - Authenticate using an X.509 certificate to DataONE, which validates
        certificate using two-phase challenge/response.  This method is phase
        one, which returns an ecrypted Challenge to the client.
 
        Appears in functional use cases: :doc:`UC12 </design/UseCases/12_uc>`
    * - \
-     - :func:`CN_authentication.challengeResponse`
+     - :func:`CN_auth.challengeResponse`
      - The second phase of two-phase authentication, in which the client has
        decrypted the challenge, and then re-encrypts it using the server's
        public key.  If the response is validate, then the server returns an
@@ -311,20 +317,20 @@
 
        Appears in functional use cases: :doc:`UC12 </design/UseCases/12_uc>`
    * - \
-     - :func:`CN_authentication.getAuthSession`
+     - :func:`CN_auth.getAuthSession`
      - Retrieves information about an authenticated session, including the
        Principal's identity, a list of equivalent identities for the user, and a
        list of groups in which the user is a member.
 
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
    * - \
-     - :func:`CN_authentication.setOwner`
+     - :func:`CN_auth.setOwner`
      - Changes ownership (RightsHolder) of the specified object to the
        :term:`principal` specified by `userId`
 
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
    * - \
-     - :func:`CN_authentication.newAccount`
+     - :func:`CN_auth.newAccount`
      - Create a new :term:`principal` in the DataONE system. Note that there
        should probably be a lot more metadata captured about the new user, and
        there should be a mechanism for specifying the default access control
@@ -332,7 +338,7 @@
 
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
    * - \
-     - :func:`CN_authentication.verifyToken`
+     - :func:`CN_auth.verifyToken`
      - Test if the provided token is valid. The token is passed to the method
        end point using the normal authentication token transfer mechanism (e.g.
        HTTP Auth header). Note that there is a potential security issue here as
@@ -342,32 +348,32 @@
        another level of restriction (perhaps network level blocking / limiting)
        is necessary.
    * - \
-     - :func:`CN_authentication.mapIdentity`
+     - :func:`CN_auth.mapIdentity`
      - Map the two authenticated identities, asserting that they represent the
        same principal. The two identities are represented as AuthToken objects,
        which allows the CN to determine if both identities have been properly
        authenticated, which demonstrates that the user has control of both
        identities.
    * - \
-     - :func:`CN_authentication.createGroup`
+     - :func:`CN_auth.createGroup`
      - Create a group with the given name. Groups are lists of principals that
        allow all members of the group to be referenced by listing solely the
        subject name of the group.  Group names must be unique within the DataONE
        system, and can only be modified by their creator.
    * - \
-     - :func:`CN_authentication.addGroupMembers`
+     - :func:`CN_auth.addGroupMembers`
      - Add members to the named group. Group members can be added by the
        original creator of the group, otherwise a NotAuthorized exception is
        thrown.  Group members are provided as a list of principals to be added
        to the group.
    * - \
-     - :func:`CN_authentication.removeGroupMembers`
+     - :func:`CN_auth.removeGroupMembers`
      - Remove members to the named group. Group members can be removed by the
        original creator of the group, otherwise a NotAuthorized exception is
        thrown.  Group members are provided as a list of principals to be removed
        from the group.
-   * - :mod:`CN_authorization`
-     - :func:`CN_authorization.isAuthorized`
+   * - \
+     - :func:`CN_auth.isAuthorized`
      - Test if the user identified by the provided token has authorization for
        operation on the specified object. .. Note:: Should perhaps add
        convenience methods for "canRead()" and "canWrite()" to verify that a
@@ -379,14 +385,14 @@
        :doc:`UC02 </design/UseCases/02_uc>`, :doc:`UC36
        </design/UseCases/36_uc>`, :doc:`UC37 </design/UseCases/37_uc>`
    * - \
-     - :func:`CN_authorization.setAccess`
+     - :func:`CN_auth.setAccess`
      - Sets the access permissions for an object identified by *pid*. .. Note::
        The token and accessPolicy parameters are not currently encoded in the
        REST URL, so unclear how they should be passed in.
 
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
-   * - :mod:`CN_data_replication`
-     - :func:`CN_data_replication.setReplicationStatus`
+   * - :mod:`CN_storage`
+     - :func:`CN_storage.setReplicationStatus`
      - Update the replication status of the system metadata, ensuring that the
        change is appropriate for the given state of system metadata.  For
        example, a MN can not change the status to *COMPLETED* unless the CN
@@ -396,12 +402,6 @@
 
        Appears in functional use cases: :doc:`UC09 </design/UseCases/09_uc>`
    * - :mod:`CN_register`
-     - :func:`CN_register.listNodes`
-     - Returns a list of nodes that have been registered with the DataONE
-       infrastructure.
-
-       Appears in functional use cases: :doc:`UC39 </design/UseCases/39_uc>`
-   * - \
      - :func:`CN_register.addNodeCapabilities`
      - 
    * - \

@@ -10,21 +10,44 @@
      - REST
      - Function
      - Parameters
-   * - 
+   * - Tier 1
      - ``GET /object/{pid}``
-     - :func:`CN_crud.get`
+     - :func:`CN_read.get`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.OctetStream`
-   * - 
+   * - Tier 1
      - ``GET /meta/{pid}``
-     - :func:`CN_crud.getSystemMetadata`
+     - :func:`CN_read.getSystemMetadata`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.SystemMetadata`
-   * - 
+   * - Tier 1
      - ``GET /resolve/{pid}``
-     - :func:`CN_crud.resolve`
+     - :func:`CN_read.resolve`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.ObjectLocationList`
+   * - Tier 1
+     - ``POST /reserve``
+     - :func:`CN_read.reserveIdentifier`
+     - (:class:`token<Types.AuthToken>`, :class:`[pid]<Types.Identifier>`,
+       ``[scope]``, ``[format]``) ``->`` :class:`Types.Identifier`
+   * - Tier 1
+     - ``GET /assertRelation/{pidOfSubject}``
+     - :func:`CN_read.assertRelation`
+     - (:class:`token<Types.AuthToken>`,
+       :class:`pidOfSubject<Types.Identifier>`,
+       :class:`relationship<Types.???>`, :class:`pidOfObject<Types.Identifier>`)
+       ``->`` :class:`Types.Boolean`
+   * - Tier 1
+     - n/a
+     - :func:`CN_read.getChecksum`
+     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
+       :class:`Types.Checksum`
+   * - Tier 1
+     - ``GET /object``
+     - :func:`CN_read.search`
+     - (:class:`token<Types.AuthToken>`, :class:`query<Types.QueryType>`) ``->``
+       :class:`Types.ObjectList`
+
    * - 
      - n/a
      - :func:`CN_crud.create`
@@ -33,128 +56,105 @@
        :class:`scienceMetadata<Types.OctetStream>`) ``->``
        :class:`Types.Boolean`
    * - 
-     - ``POST /reserve``
-     - :func:`CN_crud.reserveIdentifier`
-     - (:class:`token<Types.AuthToken>`, :class:`[pid]<Types.Identifier>`,
-       ``[scope]``, ``[format]``) ``->`` :class:`Types.Identifier`
-   * - 
-     - ``GET /assertRelation/{pidOfSubject}``
-     - :func:`CN_crud.assertRelation`
-     - (:class:`token<Types.AuthToken>`,
-       :class:`pidOfSubject<Types.Identifier>`,
-       :class:`relationship<Types.???>`, :class:`pidOfObject<Types.Identifier>`)
-       ``->`` :class:`Types.Boolean`
-   * - 
      - n/a
      - :func:`CN_crud.log`
      - (:class:`typeOfOperation<Types.Event>`,
        :class:`targetPid<Types.Identifier>`,
        :class:`requestorIdentitity<Types.Principal>`,
        :class:`dateOfRequest<Types.DateTime>`) ``->``
-   * - 
-     - n/a
-     - :func:`CN_crud.getChecksum`
-     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
-       :class:`Types.Checksum`
-   * - 
+   * - Tier 1
      - ``GET /formats``
-     - :func:`CN_crud.listFormats`
+     - :func:`CN_core.listFormats`
      - () ``->`` :class:`Types.ObjectFormatList`
-   * - 
+   * - Tier 1
      - ``GET /formats/{fmtid}``
-     - :func:`CN_crud.getFormat`
+     - :func:`CN_core.getFormat`
      - (:class:`fmtid<Types.Identifier>`) ``->`` :class:`Types.ObjectFormat`
-
-   * - 
-     - ``GET /object``
-     - :func:`CN_query.search`
-     - (:class:`token<Types.AuthToken>`, :class:`query<Types.QueryType>`) ``->``
-       :class:`Types.ObjectList`
-   * - 
+   * - Tier 1
      - ``GET /log``
-     - :func:`CN_query.getLogRecords`
+     - :func:`CN_core.getLogRecords`
      - (:class:`token<Types.AuthToken>`, :class:`fromDate<Types.DateTime>`,
        :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`) ``->``
        :class:`Types.LogRecords`
-   * - 
+   * - Tier 1
+     - ``GET /node``
+     - :func:`CN_core.listNodes`
+     - () ``->`` :class:`Types.NodeList`
+   * - Tier 2
      - ``POST /sessions``
-     - :func:`CN_authentication.login`
+     - :func:`CN_auth.login`
      - (:class:`userId<Types.Principal>`, :class:`password<Types.String>`)
        ``->`` :class:`Types.AuthToken`
-   * - 
+   * - Tier 2
      - ``POST /sessions``
-     - :func:`CN_authentication.sessionRequest`
+     - :func:`CN_auth.sessionRequest`
      - (:class:`certificate<Types.X509Certificate>`) ``->``
        :class:`Types.Challenge`
-   * - 
+   * - Tier 2
      - ``POST /sessions``
-     - :func:`CN_authentication.challengeResponse`
+     - :func:`CN_auth.challengeResponse`
      - (:class:`userId<Types.Principal>`, :class:`password<Types.String>`)
        ``->`` :class:`Types.AuthToken`
-   * - 
+   * - Tier 2
      - ``GET /sessions/{token}``
-     - :func:`CN_authentication.getAuthSession`
+     - :func:`CN_auth.getAuthSession`
      - (:class:`token<Types.AuthToken>`) ``->`` :class:`Types.AuthSession`
-   * - 
+   * - Tier 2
      - ``PUT /owner/{pid}``
-     - :func:`CN_authentication.setOwner`
+     - :func:`CN_auth.setOwner`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        :class:`userId<Types.Principal>`) ``->`` :class:`Types.Identifier`
-   * - 
+   * - Tier 2
      - ``POST /accounts``
-     - :func:`CN_authentication.newAccount`
+     - :func:`CN_auth.newAccount`
      - (``username``, ``password``,
        :class:`[authSystem]<Types.AuthenticationSystem>`) ``->``
        :class:`Types.Principal`
-   * - 
+   * - Tier 2
      - ``GET /sessions/verifyToken``
-     - :func:`CN_authentication.verifyToken`
+     - :func:`CN_auth.verifyToken`
      - (:class:`token<Types.AuthToken>`) ``->`` :class:`Types.Boolean`
-   * - 
+   * - Tier 2
      - ``POST /accounts/map``
-     - :func:`CN_authentication.mapIdentity`
+     - :func:`CN_auth.mapIdentity`
      - (:class:`token1<Types.AuthToken>`, :class:`token2<Types.AuthToken>`)
        ``->`` :class:`Types.Boolean`
-   * - 
+   * - Tier 2
      - ``POST /groups/{groupName}``
-     - :func:`CN_authentication.createGroup`
+     - :func:`CN_auth.createGroup`
      - (:class:`token<Types.AuthToken>`, :class:`groupName<Types.Principal>`)
        ``->`` :class:`Types.Identifier`
-   * - 
+   * - Tier 2
      - ``PUT /groups/{groupName}``
-     - :func:`CN_authentication.addGroupMembers`
+     - :func:`CN_auth.addGroupMembers`
      - (:class:`token<Types.AuthToken>`, :class:`groupName<Types.Principal>`,
        :class:`members<Types.PrincipalList>`) ``->`` :class:`Types.Identifier`
-   * - 
+   * - Tier 2
      - ``DELETE /groups/{groupName}``
-     - :func:`CN_authentication.removeGroupMembers`
+     - :func:`CN_auth.removeGroupMembers`
      - (:class:`token<Types.AuthToken>`, :class:`groupName<Types.Principal>`,
        :class:`members<Types.PrincipalList>`) ``->`` :class:`Types.Identifier`
-   * - 
+   * - Tier 2
      - ``GET /isAuthorized/{pid}``
-     - :func:`CN_authorization.isAuthorized`
+     - :func:`CN_auth.isAuthorized`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        :class:`operation<Types.Event>`) ``->`` :class:`Types.Boolean`
-   * - 
+   * - Tier 2
      - ``PUT /accessRules/{pid}``
-     - :func:`CN_authorization.setAccess`
+     - :func:`CN_auth.setAccess`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        :class:`accessPolicy<Types.AccessPolicy>`) ``->`` :class:`Types.Boolean`
-   * - 
+   * - Tier 4
      - ``POST /notify``
-     - :func:`CN_data_replication.setReplicationStatus`
+     - :func:`CN_storage.setReplicationStatus`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
        :class:`status<Types.ReplicationStatus>`) ``->`` :class:`Types.Boolean`
-   * - 
-     - ``GET /node``
-     - :func:`CN_register.listNodes`
-     - () ``->`` :class:`Types.NodeList`
-   * - 
+   * - Tier 2
      - ``PUT /node/{pid}``
      - :func:`CN_register.addNodeCapabilities`
      - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
        :class:`Types.Boolean`
-   * - 
+   * - Tier 2
      - ``POST /node``
      - :func:`CN_register.register`
      - (:class:`token<Types.AuthToken>`) ``->`` :class:`Types.Identifier`
