@@ -21,13 +21,6 @@
        :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`) ``->``
        :class:`Types.LogRecords`
    * - Tier 1
-     - n/a
-     - :func:`log`
-     - (:class:`typeOfOperation<Types.Event>`,
-       :class:`targetGuid<Types.Identifier>`,
-       :class:`requestorIdentitity<Types.Principal>`,
-       :class:`dateOfRequest<Types.DateTime>`) ``->``
-   * - Tier 1
      - ``GET /monitor/object``
      - :func:`getObjectStatistics`
      - (:class:`token<Types.AuthToken>`, :class:`[time]<Types.DateTime>`,
@@ -133,54 +126,6 @@
    :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=1470)``
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=1461)``
-
-
-
-----
-
-.. function:: log(typeOfOperation,targetGuid,requestorIdentitity,dateOfRequest) -> 
-
-   This method is used exclusively internally by a MN. It really isn't part of
-   external the API that must be implemented. However, a MN will need to
-   implement some sort of logging infrastructure so that it can respond to
-   :func:`MN_core.getLogRecords()`.
-
-   :Use Cases:
-
-     :doc:`UC01 </design/UseCases/01_uc>`, :doc:`UC06 </design/UseCases/06_uc>`,
-     :doc:`UC04 </design/UseCases/04_uc>`, :doc:`UC09 </design/UseCases/09_uc>`,
-     :doc:`UC16 </design/UseCases/16_uc>`, :doc:`UC37 </design/UseCases/37_uc>`
-
-   :REST URL: N/A
-
-   :param typeOfOperation: Enumerated value
-
-   :type typeOfOperation: :class:`Types.Event`
-
-   :param targetGuid: The target of the operation
-
-   :type targetGuid: :class:`Types.Identifier`
-
-   :param requestorIdentitity: Who invoked the operation
-
-   :type requestorIdentitity: :class:`Types.Principal`
-
-   :param dateOfRequest: Time stamp
-
-   :type dateOfRequest: :class:`Types.DateTime`
-
-   :returns:
-
-   :rtype: 
-
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=1500)``
-
-     Define the type of the Log Event
-
-
-   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=1510)``
-
-   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=1501)``
 
 
 

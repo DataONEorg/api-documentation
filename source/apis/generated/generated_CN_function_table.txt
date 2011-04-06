@@ -48,20 +48,6 @@
      - (:class:`token<Types.AuthToken>`, :class:`query<Types.QueryType>`) ``->``
        :class:`Types.ObjectList`
 
-   * - 
-     - n/a
-     - :func:`CN_crud.create`
-     - (:class:`pid<Types.Identifier>`,
-       :class:`systemMetadata<Types.SystemMetadata>`,
-       :class:`scienceMetadata<Types.OctetStream>`) ``->``
-       :class:`Types.Boolean`
-   * - 
-     - n/a
-     - :func:`CN_crud.log`
-     - (:class:`typeOfOperation<Types.Event>`,
-       :class:`targetPid<Types.Identifier>`,
-       :class:`requestorIdentitity<Types.Principal>`,
-       :class:`dateOfRequest<Types.DateTime>`) ``->``
    * - Tier 1
      - ``GET /formats``
      - :func:`CN_core.listFormats`

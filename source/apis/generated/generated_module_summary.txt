@@ -20,18 +20,6 @@
      - Retrieve log information from the MN for the specified date range
        (inclusive).
    * - \
-     - :func:`MN_core.log`
-     - This method is used exclusively internally by a MN. It really isn't part
-       of external the API that must be implemented. However, a MN will need to
-       implement some sort of logging infrastructure so that it can respond to
-       :func:`MN_core.getLogRecords()`.
-
-       Appears in functional use cases: :doc:`UC01 </design/UseCases/01_uc>`,
-       :doc:`UC06 </design/UseCases/06_uc>`, :doc:`UC04
-       </design/UseCases/04_uc>`, :doc:`UC09 </design/UseCases/09_uc>`,
-       :doc:`UC16 </design/UseCases/16_uc>`, :doc:`UC37
-       </design/UseCases/37_uc>`
-   * - \
      - :func:`MN_core.getObjectStatistics`
      - Called by the monitoring system to find how many objects are stored on
        the MN, cumulative or for each day in a given range.
@@ -252,28 +240,6 @@
 
        Appears in functional use cases: :doc:`UC02 </design/UseCases/02_uc>`,
        :doc:`UC16 </design/UseCases/16_uc>`
-   * - :mod:`CN_crud`
-     - :func:`CN_crud.create`
-     - This is a method used internally by the CN, not exposed to MNs or the
-       world. Stores the two given objects (system metadata, science metadata)
-       in a single atomic action. The science metadata document is optional as
-       *pid* may refer to science data which is not retrieved to the
-       Coordinating Node. This method is used as part of the :term:`Member Node
-       synchronization` of science metadata between a MN and a CN.
-
-       Appears in functional use cases: :doc:`UC06 </design/UseCases/06_uc>`,
-       :doc:`UC16 </design/UseCases/16_uc>`
-   * - \
-     - :func:`CN_crud.log`
-     - This method is used exclusively internally by a CN. It really isn't part
-       of external the API that must be implemented. However, a CN will need to
-       implement some sort of logging infrastructure so that it can respond to
-       :func:`CN_crud.getLogRecords()`.
-
-       Appears in functional use cases: :doc:`UC01 </design/UseCases/01_uc>`,
-       :doc:`UC02 </design/UseCases/02_uc>`, :doc:`UC06
-       </design/UseCases/06_uc>`, :doc:`UC16 </design/UseCases/16_uc>`,
-       :doc:`UC09 </design/UseCases/09_uc>`
    * - :mod:`CN_core`
      - :func:`CN_core.listFormats`
      - Returns a list of all object formats registered in the DataONE Object
