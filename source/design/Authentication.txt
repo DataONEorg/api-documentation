@@ -1,10 +1,6 @@
 Identity Management and Authenticated Session Management
 ========================================================
 
-:Authors: Matt Jones and Mark Servilla
-:Status: Incomplete Draft, Work in Progress being Edited
-
-
 The planning and design for DataONE cybersecurity is predicated on the fact that DataONE is a collaboration of researchers, data providers, institutions, coordinating nodes, member nodes, data collections and other infrastructure components. As such, DataONE is inherently a virtual organization (VO). DataONE, as an entity, spans many physical organizations and administrative domains. For this reason, the primary goal of DataONE cybersecurity is to protect the data and metadata collections that those organizations and administrative domains contribute to the VO, as well as their infrastructure and the DataONE user community. DataONE will necessarily need to accommodate the highly variable security protocols that are in use by its various partners. In planning for cybersecurity in this environment, a layered approach must be used. Each DataONE partner must simultaneously meet requirements of its local institution and must also integrate into the DataONE cyberinfrastructure. DataONE is also a mixture of operational systems that accept and deliver scientific data and support research endeavors to improve the overall data management life-cycle. Cybersecurity management for DataONE will need to be flexible enough to support the very different needs of partner operations and related research. The cybersecurity posture of DataONE will evolve over time both because of continuing maturation of DataONE operational strategies and because of an ever-evolving cybersecurity landscape.
 
 The approach that DataONE will follow for cybersecurity is one in which all sensitive operations and or data/metadata resources within the DataONE VO will require users requesting access to the operation/resource to register and authenticate with the DataONE system before an evaluation of rights to the operation/resource can/will be performed.  DataONE will support authentication through three mechanisms: (1) an internal identity password challenge managed by DataONE, (2) an external identity password challenge managed by one or more trusted 3rd parties, or (3) the verification of a trusted CILogon X.509 certificate.  In all cases, the identity that is verified through the authentication mechanism is mapped to an internal DataONE user identity.  Once a user is authenticated and mapped to their DataONE identity, a short-lived authentication token is generated and used for the duration of the user's DataONE session.  Individual users may also associate multiple external identities to their unique DataONE identity.
@@ -74,7 +70,7 @@ Conventions in widespread use include:
       
 The LDAP DN can easily be used within an LDAP directory server as the DN, and
 therefore would make implementation of such a system easier.  The CILogon DN
-could also be used in this way, but its order or relative DNs is opposite from
+could also be used in this way, but its order of relative DNs is opposite from
 LDAP, and the separator is a / rather than a comma (,), so some representation
 changes would be needed to store this in LDAP.
 
@@ -118,29 +114,25 @@ Identity Management Service
 
 The DataONE Identity Management service provides individuals with the ability to register a "new" DataONE user account with the system and to set information into their profile.  This process creates a new identifier value for the user that uniquely identifies them in the DataONE VO from other DataONE users.  This identifier is critical because it associates the user with an authenticated session for use when requesting services and or data/metadata resources from the DataONE VO.  Account creation also requires that the individual provide credential information to DataONE so that DataONE may establish their identity during user authentication.  Credential information consists of either a username/password combination that will be verified internally, through a trusted 3rd party LDAP registry or by providing a CILogon X.509 certificate that is verified through a 2-phase handshake between DataONE and the client application.
 
-.. TODO::
-    Link these methods to the generated methods in the API specifications,
-    eliminate redundancy of the description text between the two locations.
+* :func:`CN_auth.newAccount`
+    Create an identity.
 
-newAccount(userId, password, [AuthenticationSystem]):: Principal
+* :func:`CN_auth.verifyToken`
+    Validate that a given AuthToken is legitimate and current.
 
-newAccount(certificate, [AuthenticationSystem]):: Principal
-
-verifyToken(token):: Boolean
-
-mapIdentity(token1, token2):: void
+* :func:`CN_auth.mapIdentity`
     Create an equivalence mapping between the identities listed for the 
     users authenticated and represented by token1 and token2.
 
-createGroup(token, groupName)
+* :func:`CN_auth.createGroup`
     Create a named group of users.  Throws IdentifierNotUnique if the group
     name is already in use.
 
-addGroupMembers(token, groupName, memberList)
+* :func:`CN_auth.addGroupMembers`
     Add the listed array of members to the named group, if and only if the user
     represented in token originally created the group.
 
-removeGroupMembers(token, groupName, memberList)
+* :func:`CN_auth.removeGroupMembers`
     Remove the listed array of members from the named group, if and only if the 
     user represented in token originally created the group.
 
@@ -180,15 +172,13 @@ Processing the CILogon X.509 certificate requires an verification exchange betwe
 .. image::  images/DataONEAuthN-X509Validation.png
 
 
-
 Service Methods
 ~~~~~~~~~~~~~~~
 
-* login(username, password):: :class:`Types.AuthToken`
-* sessionRequest(certificate):: :class:`Types.Challenge`
-* challengeResponse(encryptedNonce):: :class:`Types.AuthToken`
-* login(certificate):: :class:`Types.AuthToken`
-* getAuthSession(authToken):: :class:`Types.AuthSession`
+* :func:`CN_auth.login` returns :class:`Types.AuthToken`
+* :func:`CN_auth.sessionRequest` returns :class:`Types.Challenge`
+* :func:`CN_auth.challengeResponse` returns :class:`Types.AuthToken`
+* :func:`CN_auth.getAuthSession` returns :class:`SAML.Assertion`
 
 Authenticated Session Management
 --------------------------------
@@ -198,8 +188,8 @@ For DataONE, identity management and verification is only the first step in ensu
 Services internal to the DataONE system may operate autonomously to perform maintenance tasks or other asynchronous activities that are not bound to a particular user.  In these cases, a security token will still be generated, but without the prerequisite identity verification.  Such tokens will have a special system identity that signifies it is a "trusted" principal of the DataONE system.  For most instances, this token will serve identically to one generated during the authentication process of normal user.
 
 
-AuthToken references to an AuthSession
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AuthToken references to an Authenticated Session
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Each DataONE :class:`Types.AuthToken` is a unique identifier that is affiliated
 with and specifies the authentication session associated with a particular
 request.  DataONE AuthToken References are UUID values that are created by the
@@ -231,7 +221,7 @@ service providers.
 
 If a Node or other data one service provider receives a service request with
 the DataONE x-AuthToken header, then the service SHOULD retrieve the associated
-:class:`Types.AuthSession` data in order to confirm that the client has 
+:class:`SAML.Assertion` data in order to confirm that the client has 
 appropriately authenticated with the DataONE session service. If the service
 needs to make authorization decisions, the service MUST validate the the
 associated session data, check validity constraints on the session, and then
@@ -257,15 +247,16 @@ denied access to certain services as determined by appropriate access policies,
 or it may be granted access to services when appropriate (e.g., to perform a
 :func:`MN_read.get` operation on a data set marked for Public read access).
 
-AuthSession structure
-~~~~~~~~~~~~~~~~~~~~~
-:class:`Types.AuthSession` metadata are represented as a SAML assertion.  
-Details of the fields to be included in an :class:`Types.AuthSession` include
-Subject, Address, givenName, familyName, email, equivalentIdentities, and group
+Structure of metadata about Authenticated Sessions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Metadata about authenticated sessions are represented as a :class:`SAML.Assertion`.
+Details of the fields to be included in an :class:`SAML.Assertion` include
+Subject, Address, givenName, sn, mail, equivalentIdentity, and group
 membership, among other fields.  These fields are all mapped to SAML2 Assertion
-elements, as illustrated in the following example of an AuthSession represented
-by a SAML Assertion. Note that these SAML Assertion messages are returned when
-Member Nodes and Coordinating Nodes make calls to :func:`CN_auth.getAuthSession`.
+elements, as illustrated in the following example of an authenticated session 
+represented by a SAML Assertion. Note that these SAML Assertion messages are 
+returned when Member Nodes and Coordinating Nodes make calls 
+to :func:`CN_auth.getAuthSession`.
 
 .. literalinclude:: ./saml-2-assertion-example.xml
    :language: xml

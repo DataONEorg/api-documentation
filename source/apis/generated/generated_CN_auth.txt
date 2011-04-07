@@ -29,7 +29,7 @@
      - ``GET /sessions/{token}``
      - :func:`getAuthSession`
      - (:class:`token<Types.AuthToken>`, :class:`sessionToken<Types.AuthToken>`)
-       ``->`` :class:`Types.AuthSession`
+       ``->`` :class:`Types.SAML.Assertion`
    * - Tier 2
      - ``PUT /owner/{pid}``
      - :func:`setOwner`
@@ -200,7 +200,7 @@
 
 ----
 
-.. function:: getAuthSession(token,sessionToken) -> AuthSession
+.. function:: getAuthSession(token,sessionToken) -> SAML.Assertion
 
    Retrieves information about an authenticated session, including the
    Principal's identity, a list of equivalent identities for the user, and a
@@ -225,9 +225,10 @@
 
    :type sessionToken: :class:`Types.AuthToken`
 
-   :returns: A SAML assertion comtaining the user identiites and groups.
+   :returns: A SAML assertion comtaining metadata about an authenticated
+     session, including information about user identiites and groups.
 
-   :rtype: :class:`Types.AuthSession`
+   :rtype: :class:`Types.SAML.Assertion`
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=1620)``
 

@@ -19,7 +19,6 @@ Version   Structure
 .         :class:`AccessRule`
 .         :class:`AuthenticationSystem`
 .         :class:`AuthToken`
-.         :class:`AuthSession`
 .         :class:`Capabilities`
 .         :class:`Challenge`
 .         :class:`Checksum`
@@ -98,110 +97,6 @@ Version   Structure
 
   Place holder for support of multiple authentication services for a single
   user.
-
-
-----
-
-.. class:: AuthSession
-
-  An AuthSession represents the set of metadata attributes about an
-  authenticated session in DataONE.  An AuthSession is identified by its
-  identifier, which can be used to retrieve the AuthSession data structure that
-  serializes metadata attributes describing the session itself, the Principal
-  that was authenticated, and verification data such as digital signatures that
-  can be used to verify the validity of the session data.  AuthSession data in
-  DataONE are serialized as SAML 2 Assertions, and contain particular 
-  attributes.
-
-  .. attribute:: ID
-
-     The AuthToken identifying an authenticated session.  The ID is unique and will
-     not be reused for other sessions, and is returned as the result of a
-     successful session authentication service call to reference the
-     AuthSession.
-
-  .. attribute:: IssueInstant
-
-     A date-time value in ISO 8601 format indicating when the session was
-     created.
-
-  .. attribute:: Issuer
-     
-     A URI of a the service that issued the AuthSession.
-
-  .. attribute:: Subject
-
-     An identifier of a Principal that is the subject of this AuthSession.
-
-  .. attribute:: Address
-
-     The Internet Protocol address from which the authenticated session was
-     established, and from which all subsequent requests that utilize this
-     AuthSession must originate.  IPv4 addresses should be represented their
-     dotted decimal format (e.g., 10.0.10.1), while IPv6 addresses are
-     represented as their hex values (e.g., fe80::6232:4bfe:fe61:a211).
-
-  .. attribute:: NotBefore
-
-     The date-time value in ISO8601 format before which this session is
-     invalid.
-
-  .. attribute:: NotOnOrAfter
-
-     The date-time value in ISO8601 format on which this session is
-     invalid.
-
-  .. attribute:: AuthenticationContextClass
-
-     An indication of the mechanism used to perform authentication.
-
-  .. attribute:: GivenName
-
-     The given name of the Person.
-
-  .. attribute:: FamilyName
-
-     The family name of the Person.
-
-  .. attribute:: Email
-
-     The email address of the Person.
-
-  .. attribute:: isMemberOf
-
-     A group or role in which the Principal is a member, expressed using the
-     unique Principal identifier for that group.
-
-  .. attribute:: SessionId
-
-     The AuthToken identifying an authenticated session.  The ID is unique and will
-     not be reused for other sessions, and is returned as the result of a
-     successful session authentication service call to reference the
-     AuthSession.
-
-  .. attribute:: EquivalentIdentity
-
-     An alternative but equivalent identity for the principal that has been
-     used in alternate identity systems.
-
-   ::
-
-    message AuthSession {
-      required string ID = 1;
-      required string IssueInstant = 2;
-      required string Issuer = 3;
-      required string Subject = 4;
-      required string Address = 5;
-      required string NotBefore = 6;
-      required string NotOnOrAfter = 7;
-      required string AuthenticationContextClass = 8;
-      repeated string givenName = 9;
-      required string familyName = 10;
-      required string email = 11;
-      repeated string isMemberOf = 12;
-      required string sessionId = 13;
-      repeated string equivalentIdentity = 14;
-    }
 
 ----
 
@@ -865,6 +760,7 @@ Version   Structure
   constraints as the Identifier.
 
   Used by :mod:`SystemMetadata`
+
 ----
 
 .. class:: PrincipalList

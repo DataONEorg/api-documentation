@@ -85,7 +85,7 @@
      - ``GET /sessions/{token}``
      - :func:`CN_auth.getAuthSession`
      - (:class:`token<Types.AuthToken>`, :class:`sessionToken<Types.AuthToken>`)
-       ``->`` :class:`Types.AuthSession`
+       ``->`` :class:`Types.SAML.Assertion`
    * - Tier 2
      - ``PUT /owner/{pid}``
      - :func:`CN_auth.setOwner`

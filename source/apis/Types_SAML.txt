@@ -1,0 +1,139 @@
+Data Types from SAML used in CICore
+-----------------------------------
+
+.. module:: SAML
+   :synopsis: Catalog of data types (structures) from the SAML V2.0 standard that are used by the DataONE cicore. 
+
+Catalog of data types (structures) from the `SAML V2.0`_ standard that
+are used by the DataONE cicore. The Assertion class from SAML2 is used, with
+most of the SAML Attributes being represented in terms of their names as
+found in the `SAML V2.0 X.500/LDAP Attribute Profile`_.
+
+.. _SAML V2.0: http://saml.xml.org/saml-specifications#samlv20
+
+.. _SAML V2.0 X.500/LDAP Attribute Profile: http://www.oasis-open.org/committees/download.php/28042/sstc-saml-attribute-x500-cs-01.pdf
+
+.. Note:: Here we use the Sphinx ``class`` directives to identify data
+  structures. This is not meant to imply that these structures are implemented
+  as classes - it is merely a convenience mechanism for documentation.
+
+========= =============================
+Version   Structure
+========= =============================
+.         :class:`Assertion`
+========= =============================
+
+----
+
+.. class:: Assertion
+
+  An Assertion represents the set of metadata attributes about an
+  authenticated session in DataONE.  An Assertion is identified by its
+  identifier, which can be used to retrieve the Assertion data structure that
+  serializes metadata attributes describing the session itself, the Principal
+  that was authenticated, and verification data such as digital signatures that
+  can be used to verify the validity of the session data.  Assertion data in
+  DataONE are serialized as a SAML 2 Assertion, and contain particular 
+  elements from the SAML specifications. Not all SAML2 compliant elements can
+  be used in DataONE.  Instead, the following elements from SAML are used as
+  metadata about the authenticated DataONE session.
+
+  .. attribute:: ID
+
+     The AuthToken identifying an authenticated session.  The ID is unique and will
+     not be reused for other sessions, and is returned as the result of a
+     successful session authentication service call to reference the
+     Assertion.
+
+  .. attribute:: IssueInstant
+
+     A date-time value in ISO 8601 format indicating when the session was
+     created.
+
+  .. attribute:: Issuer
+     
+     A URI of a the service that issued the Assertion. For DataONE, this will
+     be fixed to the URI of the session management service.
+
+  .. attribute:: Subject
+
+     An identifier of a Principal that is the subject of this Assertion.
+
+  .. attribute:: Address
+
+     The Internet Protocol address from which the authenticated session was
+     established, and from which all subsequent requests that utilize this
+     Assertion must originate.  IPv4 addresses should be represented their
+     dotted decimal format (e.g., 10.0.10.1), while IPv6 addresses are
+     represented as their hex values (e.g., fe80::6232:4bfe:fe61:a211).
+
+  .. attribute:: NotBefore
+
+     The date-time value in ISO8601 format before which this session is
+     invalid.
+
+  .. attribute:: NotOnOrAfter
+
+     The date-time value in ISO8601 format on which this session is
+     invalid.
+
+  .. attribute:: AuthenticationContextClass
+
+     An indication of the mechanism used to perform authentication. Values are
+     drawn from known context classes provided in the SAML specifications.
+
+  .. attribute:: GivenName
+
+     The given name of the Person, encoded as a SAML Attribute using LDAP field
+     semantics.
+
+  .. attribute:: sn
+
+     The family name of the Person, encoded as a SAML Attribute using LDAP
+     field semantics.
+
+  .. attribute:: mail
+
+     The email address of the Person, encoded as a SAML Attribute using LDAP
+     field semantics.
+
+  .. attribute:: isMemberOf
+
+     A group or role in which the Principal is a member, expressed using the
+     unique Principal identifier for that group, and encoded as a SAML Attribute
+     using LDAP field semantics..
+
+  .. attribute:: SessionId
+
+     The AuthToken identifying an authenticated session.  The ID is unique and will
+     not be reused for other sessions, and is returned as the result of a
+     successful session authentication service call to reference the
+     Assertion. Encoded as an a SAML Attribute.
+
+  .. attribute:: EquivalentIdentity
+
+     An alternative but equivalent identity for the principal that has been
+     used in alternate identity systems. Encoded as a SAML Attribute with the
+     Name of the Attribute set to 'urn:dataone:attributenames:equivalentIdentity'.
+
+   ::
+
+    message Assertion {
+      required string ID = 1;
+      required string IssueInstant = 2;
+      required string Issuer = 3;
+      required string Subject = 4;
+      required string Address = 5;
+      required string NotBefore = 6;
+      required string NotOnOrAfter = 7;
+      required string AuthenticationContextClass = 8;
+      repeated string givenName = 9;
+      required string sn = 10;
+      required string mail = 11;
+      repeated string isMemberOf = 12;
+      required string sessionId = 13;
+      repeated string equivalentIdentity = 14;
+    }
+
+
+
