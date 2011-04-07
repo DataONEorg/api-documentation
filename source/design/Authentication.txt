@@ -1,44 +1,28 @@
 Identity Management and Authenticated Session Management
 ========================================================
 
-The primary purpose of security in DataONE is to protect Member Node data that reside within the system from intentional and or non-intentional harm; for example, DataONE security will prevent the unauthorized viewing of private data and or alteration or deletion of another user's data within the system.  DataONE computational services also benefit from security by protecting services and other system resources from malicious activity that often occurs on the Internet. Security for DataONE is part of the initial system planning and design, thereby providing solid integration to all services - it's not simply an "add-on" wrapper that occurs as an after thought.
+:Authors: Matt Jones and Mark Servilla
+:Status: Incomplete Draft, Work in Progress being Edited
 
-Cybersecurity for DataONE is predicated on the fact that DataONE is a collaboration of researchers, data providers, institutions, coordinating nodes, member nodes, data collections and other infrastructure components. As such it is inherently a virtual organization. DataONE as an entity spans many organizations and administrative domains. The goal of the cybersecurity in DataONE is to protect the infrastructure that those organizations and administrative domains contribute to DataONE as well as the data collections and the DataONE user community. DataONE, as a virtual organization, will naturally need to accommodate the highly variable security regimes that are in use in its various partners. In planning for cybersecurity in this environment, a layered approach must be used. Each DataONE entity must simultaneously meet requirements of its local institution and must also integrate into the DataONE cyberinfrastructure. DataONE is also a mixture of operational systems to accept and deliver scientific data and research endeavors to improve the overall data management lifecycle. The cybersecurity management for DataONE will need to be flexible enough to support the very different needs of research and operations. The cybersecurity posture of DataONE will evolve over time both because of continuing maturation of DataONE operational strategies and because of an ever-evolving cybersecurity landscape.
+
+The planning and design for DataONE cybersecurity is predicated on the fact that DataONE is a collaboration of researchers, data providers, institutions, coordinating nodes, member nodes, data collections and other infrastructure components. As such, DataONE is inherently a virtual organization (VO). DataONE, as an entity, spans many physical organizations and administrative domains. For this reason, the primary goal of DataONE cybersecurity is to protect the data and metadata collections that those organizations and administrative domains contribute to the VO, as well as their infrastructure and the DataONE user community. DataONE will necessarily need to accommodate the highly variable security protocols that are in use by its various partners. In planning for cybersecurity in this environment, a layered approach must be used. Each DataONE partner must simultaneously meet requirements of its local institution and must also integrate into the DataONE cyberinfrastructure. DataONE is also a mixture of operational systems that accept and deliver scientific data and support research endeavors to improve the overall data management life-cycle. Cybersecurity management for DataONE will need to be flexible enough to support the very different needs of partner operations and related research. The cybersecurity posture of DataONE will evolve over time both because of continuing maturation of DataONE operational strategies and because of an ever-evolving cybersecurity landscape.
+
+The approach that DataONE will follow for cybersecurity is one in which all sensitive operations and or data/metadata resources within the DataONE VO will require users requesting access to the operation/resource to register and authenticate with the DataONE system before an evaluation of rights to the operation/resource can/will be performed.  DataONE will support authentication through three mechanisms: (1) an internal identity password challenge managed by DataONE, (2) an external identity password challenge managed by one or more trusted 3rd parties, or (3) the verification of a trusted CILogon X.509 certificate.  In all cases, the identity that is verified through the authentication mechanism is mapped to an internal DataONE user identity.  Once a user is authenticated and mapped to their DataONE identity, a short-lived authentication token is generated and used for the duration of the user's DataONE session.  Individual users may also associate multiple external identities to their unique DataONE identity.
+
+To this end, three services will support identity management and authentication:
+
+ * Identity Management - user account registration, identity mapping, and group management
+ * Authentication - establishing the identity of a user and mapping the identity to a DataONE identity
+ * Authenticated Session Management - establishing a timed-session that identifies a DataONE user
 
 Identity Management
 -------------------
 
-Current practice for Internet sites requires users to create new identities (i.e., user name and password) for each domain they interact with when they wish to access protected or sensitive resources so that resource providers can confidently verify the principal behind the request.  Unfortunately, this process has led to an over abundance of user identities and, ultimately, a user "identity" crisis - that is, it has now become a huge burden for users to keep track of all their identities necessary for traversing the Internet successfully.  One approach to mitigate this crisis is to utilize a single identity for all Internet services by adopting a standard mechanism for asserting a user’s identity.  In other words, a "single sign-on" verification that is recognized and trusted by resource service providers on the Internet.
+Identity Management for DataONE addresses the need to identify users that request the use of services and or data/metadata resources within the DataONE VO (DataONE does recognize that not all services/resources require user identification, thus provisional support for anonymous access to certain services/resources).  To achieve this requirement, DataONE will provide services for users to register their identity with DataONE in a user account so as to create a unique DataONE identifier, along with other attributes, that may be used for authorization and tracking DataONE transactions. 
 
-For DataONE identity management, support of a single sign-on (SSO) capability
-is paramount because users will span numerous and multiple domains across the
-globe, and they will need to collaborate and share data across the myriad of
-Member Nodes in the federation.  Simplifying the process to access DataONE resources is one way to reduce unnecessary barriers for the end user.  To this end, DataONE is working closely with the CILogon project at the National Center for Supercomputer Applications located at the University of Illinois at Urbana-Champaign to streamline and incorporate user identities that originate from academic and commercial institutions in the U.S. that are members of the InCommon federation or through more globally accessible identity providers like Google, Facebook, and Yahoo.  CILogon acts as an intermediary broker of "short-lived" identity assertions that are made by users verifying their identity through their home institution or identity provider service.  These assertions are converted by CILogon into a longer-lived and more commonly recognized X.509 identity certificate, which can then be reused a number of times when interacting with DataONE.  Benefits of adopting an SSO approach to identity management through CILogon are two-fold: 1) users who regularly identify themselves through their home institution or other identity service will now be able to access DataONE resources without yet another identity to manage and 2) DataONE does not have to become yet another identity provider.
+It is also expected that users may have multiple identities as a result of distributed research endeavors at different participating organizations and or changes in organization affiliations. Because of this, the DataONE Identity Management service will support user identity mappings, which allows users to authenticate using any one of their multiple identities, but still be recognized as the same DataONE identity. When a DataONE authenticated session begins, information pertaining to the user's idenity is available for authorization purposes, which includes a listing of all mapped identities associated with that user; these mapped identities serve equally well for authorization decisions as if using the DataONE identity - that is, within DataONE access control policies, reference to any mapped identity is the same as if using the user's DataONE identity.
 
-That said, DataONE users will already have multiple identities from different
-participating member nodes, and their affiliations will change over time.
-Because of this, DataONE needs a user Identity mapping system that allows users
-to authenticate using one of their identities but still be recognized as
-equivalent in terms of access to their DataONE identity.  This
-Identity Management Service will provide a location to collect and store a user's
-identity information, including mappings to their multiple identities.  Because
-DataONE will not know these mappings in advance, users will still be required to
-register with DataONE so that new mapping may be assigned to their unique
-profile when they attempt to authenticate.  This registration process, however,
-does not require the need for a new identity; external identities suffice.
-Service APIs for managing identity mapping are outlined below in the  Identity
-Management Service section. When an authenticated session is started in
-DataONE, the AuthSession description of that session will include a listing of
-all of the identities associated with that user, and these should be handled as
-equivalent for the purposes of authentication and authorization decisions.
-Within access policies, references to any of a Principal's identities are
-equivalent.
-
-In addition, the Identity Management service will provide a system for users to
-create, store, and modify groups of users that can be used in access control
-directives.  Only the user creating a group will have access to changing the
-group.  Service APIs for group management are outlined below in the
-Identity Management Service section.
+In addition, the Identity Management service will provide a system for users to create, store, and modify groups of users that can be used in access control directives.  Only the user creating a group will be allowed to delete the group or to change the group's membership.  Service APIs for group management are outlined below in the Identity Management Service section.
 
 .. Note::
     The Internet2 project has defined a product called Grouper that is a
@@ -58,7 +42,7 @@ system.  They need to be represented in access policies, authentication
 sessions, and other places within the system.  
 
 The values for identifiers representing principals are unique, persistent, 
-non-reassignable strings that follow the length and chanacter constraints of
+non-reassignable strings that follow the length and character constraints of
 DataONE Identifiers.  Within those constraints, it is useful to use a
 common convention for representing and scoping these principal names.
 Conventions in widespread use include:
@@ -87,7 +71,7 @@ Conventions in widespread use include:
   implying a central authority. An example is:
 
       ``http://www.personexample.org/foaf.rdf#MattJones``
-
+      
 The LDAP DN can easily be used within an LDAP directory server as the DN, and
 therefore would make implementation of such a system easier.  The CILogon DN
 could also be used in this way, but its order or relative DNs is opposite from
@@ -98,7 +82,7 @@ The eduPersonPrincipalName_ approach is commonly used in the InCommon Federation
 as an attribute within SAML Assertions, and is meant to provide a scoped
 identifier that is more compact because it only has one level of hierarchy,
 whereas the DNs provide arbitrary depth for scoping the names. The TeraGrid
-initiative has standardized on this approach for representign subjects (see
+initiative has standardized on this approach for representing subjects (see
 TeraGridPrincipalNames_).
 
 .. _eduPersonPrincipalName: http://middleware.internet2.edu/eduperson/docs/internet2-mace-dir-eduperson-200806.html#eduPersonPrincipalName
@@ -123,20 +107,24 @@ system.  The reserved symbolic principals are:
     * The Public user represents any user accessing services that does not have
       a valid session token, plus all of those who do have a valid token. 
       If a token is found to be invalid, the user's
-      priveleges are immediately lowered to those of the symbolic 'Public'
+      privileges are immediately lowered to those of the symbolic 'Public'
       user.  For create, update, and delete operations, this typically means
-      that the user has insufficient priveledges to access the service.  At
+      that the user has insufficient privileges to access the service.  At
       times providers may want to provide Public read access to resources.
     * Represented using the special principal 'Public'
 
 Identity Management Service
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+The DataONE Identity Management service provides individuals with the ability to register a "new" DataONE user account with the system and to set information into their profile.  This process creates a new identifier value for the user that uniquely identifies them in the DataONE VO from other DataONE users.  This identifier is critical because it associates the user with an authenticated session for use when requesting services and or data/metadata resources from the DataONE VO.  Account creation also requires that the individual provide credential information to DataONE so that DataONE may establish their identity during user authentication.  Credential information consists of either a username/password combination that will be verified internally, through a trusted 3rd party LDAP registry or by providing a CILogon X.509 certificate that is verified through a 2-phase handshake between DataONE and the client application.
+
 .. TODO::
     Link these methods to the generated methods in the API specifications,
     eliminate redundancy of the description text between the two locations.
 
 newAccount(userId, password, [AuthenticationSystem]):: Principal
+
+newAccount(certificate, [AuthenticationSystem]):: Principal
 
 verifyToken(token):: Boolean
 
@@ -156,42 +144,56 @@ removeGroupMembers(token, groupName, memberList)
     Remove the listed array of members from the named group, if and only if the 
     user represented in token originally created the group.
 
-listPrincipals(token, query, start, count)
-    Generate a list of Principals to be used by clients for exposing the list
-    for creating AccessPolicies in client software.
+
+Authentication Service
+~~~~~~~~~~~~~~~~~~~~~~
+The DataONE Authentication Service provides a set of services for validating
+the identity of users and services and then establishing AuthTokens that can be
+used to identify the sessions associated with these authenticated users.  A
+single AuthToken is always associated with a single user and a single request
+address.  The Authentication Service uses various methods to validate the
+identity of a user in the system, and then produces an AuthToken in the form of
+a SAML assertion that contains the relevant properties for that session.  Two
+principal mechanisms are used to authenticate DataONE users: a login service
+that takes a DataONE-specific username/password pair as input and returns an
+AuthToken reference on success, and an alternate two-phase authentication
+service that takes a CILogon X.509 certificate as input and returns an AuthToken 
+reference on success.
+
+In general, the user will initiate the request for a session from DataONE through either a dedicated DataONE desktop application or through a web-browser connected to a DataONE web server.  A “valid session” is represented by a digitally signed  “authentication token” (see below) that is generated by DataONE upon authenticating the user by one of the above mechanisms.  The token is then returned to the user for subsequent interactions with DataONE.  The authentication token allows DataONE services to request identity information necessary to perform authorization processing.
+
+.. image::  images/DataONEAuthN-general.png
+
+CILogon X.509 Certificates
+..........................
+
+DataONE is working closely with the CILogon project at the National Center for Supercomputer Applications located at the University of Illinois at Urbana-Champaign to streamline and incorporate user identities that originate from academic and commercial institutions in the U.S. that are members of the InCommon federation or through more globally accessible identity providers like Google, Facebook, and Yahoo!.  CILogon acts as an intermediary broker of "short-lived" identity assertions that are made by users verifying their identity through their home institution or identity provider service.  These assertions are converted by CILogon into a longer-lived and more commonly recognized X.509 identity certificate, which can then be reused a number of times when interacting with DataONE.  Benefits of adopting an SSO approach to identity management through CILogon are two-fold: 1) users who regularly identify themselves through their home institution or other identity service will now be able to access DataONE resources without yet another identity to manage and 2) DataONE does not have to become yet another identity provider.
+
+Obtaining a CILogon X.509 certificate requires that the user authenticate through the CILogon InCommon identity services as outlined in the following diagram.
+
+.. image:: images/CILogonAuthN.png
+
+The CILogon X.509 certificate provides a portable credential that binds a user’s public key to their distinguished name or another significant identifier (e.g., email) that is stored in the “subject” field of the certificate.  Once generated, the CILogon X.509 certificate has a specified span of time in which it is considered valid; this information is stored in the “valid not before” and “valid not after” fields of the certificate.
+
+Processing the CILogon X.509 certificate requires an verification exchange between the service provider (DataONE) and the external user.  Upon receiving a “session request” from the user, the DataONE Authentication service will first determine that the user’s CILogon X.509 certificate sent with the request is valid (i.e., verify issuer signature and confirm valid date span).  The service will next generate a secure random one-time number (NOnce - Number used only Once) and register the user’s CILogon X.509 certificate using the NOnce as an index for use at a later time.  The NOnce is then encrypted with the user’s public key and sent back to the user, along with a DataONE X.509 certificate.  The user will then validate the DataONE certificate, decrypt the NOnce with their private key, re-encrypt it with the DataONE public key, and then send it back to DataONE - this last step proves that the user is in command of their private key, and therefore, is the same user identified by their CIlogon X.509 certificate.  Finally, DataONE will decrypt the NOnce with their public key and verify that it is the same number previously sent to the user.  The DataONE Authentication service will then generate the appropriate authentication token and send this back to the user to complete the request.
+
+.. image::  images/DataONEAuthN-X509Validation.png
+
+
+
+Service Methods
+~~~~~~~~~~~~~~~
+
+* login(username, password):: :class:`Types.AuthToken`
+* sessionRequest(certificate):: :class:`Types.Challenge`
+* challengeResponse(encryptedNonce):: :class:`Types.AuthToken`
+* login(certificate):: :class:`Types.AuthToken`
+* getAuthSession(authToken):: :class:`Types.AuthSession`
 
 Authenticated Session Management
 --------------------------------
 
-For DataONE, identity management and verification is only the first step in
-ensuring system-wide security.  Many service calls within DataONE will require
-authentication of the caller to create an authenticated session with a limited
-duration for access to DataONE services.  The process of authentication for most
-users will begin with identity verification and downloading of the X.509
-certificate from CILogon.  The user will then initiate an authentication action
-with DataONE in which a local desktop DataONE application, which is acting on
-behalf of the user, will perform a sequence of credential exchanges between the
-DataONE authentication service and the application.  This exchange sequence
-verifies (1) that the certificate originated from CILogon and (2) that the owner
-of the certificate, the user, is the actual party requesting authentication with
-DataONE (user identity verification is performed as prerequisite of the
-certificate).  An alternate pathway for establishing an authenticated session
-based on username and password pairs will also be provided for the core DataONE
-Principal identity. Once user authentication succeeds, the DataONE
-authentication service will generate an internal representation of a "security
-token" that links to an authenticated session that contains DataONE specific
-attributes, which uniquely identifies the user in the DataONE system (e.g., user
-identity, names, and associated groups of the user).  Passed from DataONE
-system to DataONE system, such as making requests from a client application to a
-Member Node, the token is a reference to an authenticated session that
-contains all the necessary information identifying the user of the original
-service call and other attributes used to determine authorization in the DataONE
-system.  The token itself will have a short "time to live", thereby limiting the
-duration of malicious activity if a rogue application or user were to intercept
-the token.  The token will also have limited applicability, in that it will be
-intended to be used from a particular host location on the internet, and have
-other restrictions that prevent it from being broadly used as a surrogate for
-the user.
+For DataONE, identity management and verification is only the first step in ensuring system-wide security.  Many service calls within DataONE will require authentication of the caller to create an authenticated session with a limited duration for access to DataONE services.  The process of authentication for most users will begin with identity verification and downloading of the X.509 certificate from CILogon.  The user will then initiate an authentication action with DataONE in which a local desktop DataONE application, which is acting on behalf of the user, will perform a sequence of credential exchanges between the DataONE authentication service and the application.  This exchange sequence verifies (1) that the certificate originated from CILogon and (2) that the owner of the certificate, the user, is the actual party requesting authentication with DataONE (user identity verification is performed as prerequisite of the certificate).  An alternate pathway for establishing an authenticated session based on username and password pairs will also be provided for the core DataONE Principal identity. Once user authentication succeeds, the DataONE authentication service will generate an internal representation of a "security token" that links to an authenticated session that contains DataONE specific attributes, which uniquely identifies the user in the DataONE system (e.g., user identity, names, and associated groups of the user).  Passed from DataONE system to DataONE system, such as making requests from a client application to a Member Node, the token is a reference to an authenticated session that contains all the necessary information identifying the user of the original service call and other attributes used to determine authorization in the DataONE system.  The token itself will have a short "time to live", thereby limiting the duration of malicious activity if a rogue application or user were to intercept the token.  The token will also have limited applicability, in that it will be intended to be used from a particular host location on the internet, and have other restrictions that prevent it from being broadly used as a surrogate for the user.
 
 Services internal to the DataONE system may operate autonomously to perform maintenance tasks or other asynchronous activities that are not bound to a particular user.  In these cases, a security token will still be generated, but without the prerequisite identity verification.  Such tokens will have a special system identity that signifies it is a "trusted" principal of the DataONE system.  For most instances, this token will serve identically to one generated during the authentication process of normal user.
 
@@ -267,28 +269,4 @@ Member Nodes and Coordinating Nodes make calls to :func:`CN_auth.getAuthSession`
 
 .. literalinclude:: ./saml-2-assertion-example.xml
    :language: xml
-
-Authentication Service
-~~~~~~~~~~~~~~~~~~~~~~
-The DataONE Authentication Service provides a set of services for validating
-the identity of users and services and then establishing AuthTokens that can be
-used to identify the sessions associated with these authenticated users.  A
-single AuthToken is always associated with a single user and a single request
-address.  The Authentication Service uses various methods to validate the
-identity of a user in the system, and then produces an AuthToken in the form of
-a SAML assertion that contains the relevant properties for that session.  Two
-principal mechanisms are used to authenitcate DataONE users: a login service
-that takes a DataONE-specific username/password pair as input and returns an
-AuthToken reference on success, and an alternate two-phase authentication
-service that takes a CILogon X.509 certificate as input and returns an AuthToken 
-reference on success.
-
-Service Methods
-~~~~~~~~~~~~~~~
-
-* login(username, password):: :class:`Types.AuthToken`
-* sessionRequest(certificate):: :class:`Types.Challenge`
-* challengeResponse(encryptedNonce):: :class:`Types.AuthToken`
-* login(certificate):: :class:`Types.AuthToken`
-* getAuthSession(authToken):: :class:`Types.AuthSession`
 
