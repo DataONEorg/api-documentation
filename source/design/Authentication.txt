@@ -164,7 +164,7 @@ Authenticated Session Management
 --------------------------------
 
 For DataONE, identity management and verification is only the first step in
-ensuring system-wide security.  All service calls within DataONE will require
+ensuring system-wide security.  Many service calls within DataONE will require
 authentication of the caller to create an authenticated session with a limited
 duration for access to DataONE services.  The process of authentication for most
 users will begin with identity verification and downloading of the X.509
@@ -182,8 +182,8 @@ authentication service will generate an internal representation of a "security
 token" that links to an authenticated session that contains DataONE specific
 attributes, which uniquely identifies the user in the DataONE system (e.g., user
 identity, names, and associated groups of the user).  Passed from DataONE
-service to DataONE service, such as making requests from a Member Node to a
-Coordinating Node, the token is a reference to an authenticated session that
+system to DataONE system, such as making requests from a client application to a
+Member Node, the token is a reference to an authenticated session that
 contains all the necessary information identifying the user of the original
 service call and other attributes used to determine authorization in the DataONE
 system.  The token itself will have a short "time to live", thereby limiting the
@@ -212,7 +212,7 @@ particular DataONE service providers. DataONE AuthTokens are generally
 passed in the header of an HTTP request to a service, thereby supporting clients 
 that utilize authentication and those that do not, as well as Member Nodes that
 support authentication and those that don't.  Any Member Nodes or clients that
-do not support authentication and access contral will simply ignore the
+do not support authentication and access control will simply ignore the
 presence of the AuthToken in the HTTP header information if one is 
 present. 
 
@@ -229,15 +229,41 @@ service providers.
 
 If a Node or other data one service provider receives a service request with
 the DataONE x-AuthToken header, then the service SHOULD retrieve the associated
-AuthToken data in order to confirm that the client has appropriately
-authenitcated with the DataONE session service.
+:class:`Types.AuthSession` data in order to confirm that the client has 
+appropriately authenticated with the DataONE session service. If the service
+needs to make authorization decisions, the service MUST validate the the
+associated session data, check validity constraints on the session, and then
+proceed to make authorization decisions.
+
+While making authorization decisions, the service should apply any
+AccessPolicy rules that reference the identifier for the Principal, any 
+identifier in the 'equivalentIdentity' attributes in the session, any groups
+that are referenced in an 'isMemberOf' attribute in the session, and any
+polices that reference the DataONE 'AuthenticatedUser' identity. All of these
+identities are valid identities for the authenticated session.
+
+If a Member Node or Coordinating Node receives an AuthToken that is invalid,
+can not be found using the :func:`CN_auth.getAuthSession` method, or is
+determined to not be satisfying the constraints of the session (such as wrong
+source IP Address), then the service MUST return an
+:class:`Exceptions.InvalidToken` exception.
+
+If a Member Node or Coordinating Node receives a service request in which there
+is no x-AuthToken header, or if the header is empty, then the request should
+be considered to be validated as the DataONE 'Public' user.  This user may be
+denied access to certain services as determined by appropriate access policies,
+or it may be granted access to services when appropriate (e.g., to perform a
+:func:`MN_read.get` operation on a data set marked for Public read access).
 
 AuthSession structure
 ~~~~~~~~~~~~~~~~~~~~~
 :class:`Types.AuthSession` metadata are represented as a SAML assertion.  
-Details to follow -- see definitions in types.txt.
-
-.. Note:: Descibe SAML Assertion propoerties here, including Subject, SubjectConfirmationData, Constraints, and Attributes.
+Details of the fields to be included in an :class:`Types.AuthSession` include
+Subject, Address, givenName, familyName, email, equivalentIdentities, and group
+membership, among other fields.  These fields are all mapped to SAML2 Assertion
+elements, as illustrated in the following example of an AuthSession represented
+by a SAML Assertion. Note that these SAML Assertion messages are returned when
+Member Nodes and Coordinating Nodes make calls to :func:`CN_auth.getAuthSession`.
 
 .. literalinclude:: ./saml-2-assertion-example.xml
    :language: xml
