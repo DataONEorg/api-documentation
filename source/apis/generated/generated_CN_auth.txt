@@ -28,7 +28,8 @@
    * - Tier 2
      - ``GET /sessions/{token}``
      - :func:`getAuthSession`
-     - (:class:`token<Types.AuthToken>`) ``->`` :class:`Types.AuthSession`
+     - (:class:`token<Types.AuthToken>`, :class:`sessionToken<Types.AuthToken>`)
+       ``->`` :class:`Types.AuthSession`
    * - Tier 2
      - ``PUT /owner/{pid}``
      - :func:`setOwner`
@@ -37,13 +38,18 @@
    * - Tier 2
      - ``POST /accounts``
      - :func:`newAccount`
-     - (``username``, ``password``,
+     - (:class:`userId<Types.Principal>`, ``password``,
        :class:`[authSystem]<Types.AuthenticationSystem>`) ``->``
        :class:`Types.Principal`
    * - Tier 2
      - ``GET /sessions/verifyToken``
      - :func:`verifyToken`
      - (:class:`token<Types.AuthToken>`) ``->`` :class:`Types.Boolean`
+   * - Tier 2
+     - ``GET /accounts``
+     - :func:`listPrincipals`
+     - (:class:`token<Types.AuthToken>`, :class:`query<Types.String>`,
+       ``start``, ``count``) ``->`` :class:`Types.PrincipalList`
    * - Tier 2
      - ``POST /accounts/map``
      - :func:`mapIdentity`
@@ -194,7 +200,7 @@
 
 ----
 
-.. function:: getAuthSession(token) -> AuthSession
+.. function:: getAuthSession(token,sessionToken) -> AuthSession
 
    Retrieves information about an authenticated session, including the
    Principal's identity, a list of equivalent identities for the user, and a
@@ -206,12 +212,18 @@
 
    :REST URL: ``GET /sessions/{token}``
 
-   :param token: An AuthToken identifier that references an authenticated
+   :param token: The authentication token returned by :func:`CN_auth.login` or
+     :func:`CN_auth.sessionRequest` tat is associated with a session. Used to
+     identify the caller to enable authorization decisions.
+
+   :type token: :class:`Types.AuthToken`
+
+   :param sessionToken: An AuthToken identifier that references an authenticated
      session. Note that, unlike most AuthToken parameters, this one is not
      passed in the HTTP header because it does not reference the current session
      (rather, it references a third party's session).
 
-   :type token: :class:`Types.AuthToken`
+   :type sessionToken: :class:`Types.AuthToken`
 
    :returns: A SAML assertion comtaining the user identiites and groups.
 
@@ -249,9 +261,9 @@
 
    :REST URL: ``PUT /owner/{pid}``
 
-   :param token: The authentication token returned by
-     :func:`CN_authentication.login`. Used to verify that the calling user has
-     authority to modify access control for the object.
+   :param token: The authentication token returned by :func:`CN_auth.login` or
+     :func:`CN_auth.sessionRequest` tat is associated with a session. Used to
+     identify the caller to enable authorization decisions.
 
    :type token: :class:`Types.AuthToken`
 
@@ -291,7 +303,7 @@
 
 ----
 
-.. function:: newAccount(username,password,[authSystem]) -> Principal
+.. function:: newAccount(userId,password,[authSystem]) -> Principal
 
    Create a new :term:`principal` in the DataONE system. Note that there should
    probably be a lot more metadata captured about the new user, and there should
@@ -304,10 +316,9 @@
 
    :REST URL: ``POST /accounts``
 
-   :param username: Requested username.  Must be unique within the DataONE
-     system.
+   :param userId: Requested username.  Must be unique within the DataONE system.
 
-   :type username: string
+   :type userId: :class:`Types.Principal`
 
    :param password: Secret that conforms to appropriate standards
 
@@ -385,6 +396,53 @@
 
 ----
 
+.. function:: listPrincipals(token,query,start,count) -> PrincipalList
+
+   List the principals, including users, groups, and systems, that match search
+   criteria.
+
+   The list can be restricted to principals whose identifier matches certain
+   substrings, and the size of the resultset can be paged through.
+
+   :REST URL: ``GET /accounts``
+
+   :param token: The authentication token returned by :func:`CN_auth.login` or
+     :func:`CN_auth.sessionRequest` tat is associated with a session. Used to
+     identify the caller to enable authorization decisions.
+
+   :type token: :class:`Types.AuthToken`
+
+   :param query: A query string criteria to be matched using a case-insensitive
+     substring match against the identifier for the principal, the givenName or
+     familyName of users, and the groupName of groups.  The function returns the
+     union of all successful matches against these fields.
+
+   :type query: :class:`Types.String`
+
+   :param start: The starting record number for the records to be returned.
+
+   :type start: integer
+
+   :param count: The number of records to be returned.
+
+   :type count: integer
+
+   :returns: The list of people and groups that match the query.
+
+   :rtype: :class:`Types.PrincipalList`
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2290)``
+
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=2270)``
+
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=2260)``
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2261)``
+
+
+
+----
+
 .. function:: mapIdentity(token1,token2) -> Boolean
 
    Map the two authenticated identities, asserting that they represent the same
@@ -396,15 +454,14 @@
 
    :REST URL: ``POST /accounts/map``
 
-   :param token1: The authentication token returned by
-     :func:`CN_authentication.getAuthToken`. Used to verify that the calling
-     user has control of this identity.
+   :param token1: The authentication token returned by :func:`CN_auth.login` or
+     :func:`CN_auth.sessionRequest` tat is associated with a session. Used to
+     identify the caller to enable authorization decisions.
 
    :type token1: :class:`Types.AuthToken`
 
-   :param token2: The authentication token returned by
-     :func:`CN_authentication.getAuthToken`. Used to verify that the calling
-     user has control of this identity.
+   :param token2: The authentication token associated with a session. Used to
+     identify the caller to enable authorization decisions.
 
    :type token2: :class:`Types.AuthToken`
 
@@ -412,27 +469,23 @@
 
    :rtype: :class:`Types.Boolean`
 
-   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=)``
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2390)``
 
-   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=)``
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=2370)``
 
-   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=)``
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=2360)``
 
      The supplied principal does not have permission to map these two identities
 
 
-   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=)``
+   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=2340)``
 
      The specified principal does not exist in the DataONE system
 
 
-   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=)``
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2361)``
 
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=)``
-
-.. TODO::
-    Detail codes have not been properly mapped for this method.  Need to
-    reassign them.
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=2342)``
 
 
 
@@ -449,9 +502,9 @@
 
    :REST URL: ``POST /groups/{groupName}``
 
-   :param token: The authentication token returned by
-     :func:`CN_authentication.getAuthToken`. Used to verify that the calling
-     user has rights to create a group.
+   :param token: The authentication token returned by :func:`CN_auth.login` or
+     :func:`CN_auth.sessionRequest` tat is associated with a session. Used to
+     identify the caller to enable authorization decisions.
 
    :type token: :class:`Types.AuthToken`
 
@@ -463,32 +516,28 @@
 
    :rtype: :class:`Types.Identifier`
 
-   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=)``
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2490)``
 
-   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=)``
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=2470)``
 
-   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=)``
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=2460)``
 
      The supplied principal does not have permission to create a group
 
 
-   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=)``
+   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=2440)``
 
      The specified principal does not exist in the DataONE system
 
 
-   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=)``
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2461)``
 
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=)``
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=2442)``
 
-   :raises Exceptions.IdentifierNotUnique: ``(errorCode=409, detailCode=)``
+   :raises Exceptions.IdentifierNotUnique: ``(errorCode=409, detailCode=2400)``
 
      A group by this name already exists
 
-
-.. TODO::
-    Detail codes have not been properly mapped for this method.  Need to
-    reassign them.
 
 
 
@@ -504,9 +553,9 @@
 
    :REST URL: ``PUT /groups/{groupName}``
 
-   :param token: The authentication token returned by
-     :func:`CN_authentication.getAuthToken`. Used to verify that the calling
-     user has rights to modify a group.
+   :param token: The authentication token returned by :func:`CN_auth.login` or
+     :func:`CN_auth.sessionRequest` tat is associated with a session. Used to
+     identify the caller to enable authorization decisions.
 
    :type token: :class:`Types.AuthToken`
 
@@ -522,27 +571,23 @@
 
    :rtype: :class:`Types.Identifier`
 
-   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=)``
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2590)``
 
-   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=)``
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=2570)``
 
-   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=)``
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=2560)``
 
      The supplied principal does not have permission to add to a group
 
 
-   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=)``
+   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=2540)``
 
      The specified group does not exist in the DataONE system
 
 
-   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=)``
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2561)``
 
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=)``
-
-.. TODO::
-    Detail codes have not been properly mapped for this method.  Need to
-    reassign them.
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=2542)``
 
 
 
@@ -558,9 +603,9 @@
 
    :REST URL: ``DELETE /groups/{groupName}``
 
-   :param token: The authentication token returned by
-     :func:`CN_authentication.login`. Used to verify that the calling user has
-     rights to modify a group.
+   :param token: The authentication token returned by :func:`CN_auth.login` or
+     :func:`CN_auth.sessionRequest` tat is associated with a session. Used to
+     identify the caller to enable authorization decisions.
 
    :type token: :class:`Types.AuthToken`
 
@@ -576,27 +621,23 @@
 
    :rtype: :class:`Types.Identifier`
 
-   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=)``
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2690)``
 
-   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=)``
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=2670)``
 
-   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=)``
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=2660)``
 
      The supplied principal does not have permission to remove from a group
 
 
-   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=)``
+   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=2640)``
 
      The specified group does not exist in the DataONE system
 
 
-   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=)``
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2661)``
 
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=)``
-
-.. TODO::
-    Detail codes have not been properly mapped for this method.  Need to
-    reassign them.
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=2642)``
 
 .. TODO::
     Evaluate the REST endpoint for this method and determine if DELETE is the
@@ -624,15 +665,18 @@
 
    :REST URL: ``GET /isAuthorized/{pid}``
 
-   :param token:
+   :param token: The authentication token returned by :func:`CN_auth.login` or
+     :func:`CN_auth.sessionRequest` tat is associated with a session. Used to
+     identify the caller to enable authorization decisions.
 
    :type token: :class:`Types.AuthToken`
 
-   :param pid:
+   :param pid: The identifer of the resource for which access is being checked.
 
    :type pid: :class:`Types.Identifier`
 
-   :param operation:
+   :param operation: The type of operation which is being requested for the
+     given pid.
 
    :type operation: :class:`Types.Event`
 
@@ -674,9 +718,9 @@
 
    :REST URL: ``PUT /accessRules/{pid}``
 
-   :param token: The authentication token returned by
-     :func:`CN_authentication.getAuthToken`. Used to verify that the calling
-     user has authority to modify access control for the object.
+   :param token: The authentication token returned by :func:`CN_auth.login` or
+     :func:`CN_auth.sessionRequest` tat is associated with a session. Used to
+     identify the caller to enable authorization decisions.
 
    :type token: :class:`Types.AuthToken`
 

@@ -29,8 +29,9 @@
 
    :REST URL: ``PUT /node/{pid}``
 
-   :param token: The authentication token returned by
-     :func:`CN_authentication.getAuthToken`.
+   :param token: The authentication token returned by :func:`CN_auth.login` or
+     :func:`CN_auth.sessionRequest` tat is associated with a session. Used to
+     identify the caller to enable authorization decisions.
 
    :type token: :class:`Types.AuthToken`
 
@@ -64,8 +65,9 @@
 
    :REST URL: ``POST /node``
 
-   :param token: The authentication token returned by
-     :func:`CN_authentication.getAuthToken`.
+   :param token: The authentication token returned by :func:`CN_auth.login` or
+     :func:`CN_auth.sessionRequest` tat is associated with a session. Used to
+     identify the caller to enable authorization decisions.
 
    :type token: :class:`Types.AuthToken`
 

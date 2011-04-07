@@ -85,9 +85,8 @@
 
    :REST URL: ``PUT /accessRules/{pid}``
 
-   :param token: Authentication token to verify that the calling user has
-     authority to modify access control for the object. The token is always
-     passed as a HTTP header value.
+   :param token: The authentication token associated with a session. Used to
+     identify the caller to enable authorization decisions.
 
    :type token: :class:`Types.AuthToken`
 

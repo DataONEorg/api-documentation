@@ -92,7 +92,8 @@
 
    :REST URL: ``GET /log``
 
-   :param token: The authentication token returned by ``login()``
+   :param token: The authentication token associated with a session. Used to
+     identify the caller to enable authorization decisions.
 
    :type token: :class:`Types.AuthToken`
 
@@ -139,7 +140,8 @@
 
    :REST URL: ``GET /monitor/object``
 
-   :param token: Identity with authority to retrieve the statistics.
+   :param token: The authentication token associated with a session. Used to
+     identify the caller to enable authorization decisions.
 
    :type token: :class:`Types.AuthToken`
 
@@ -196,7 +198,8 @@
 
    :REST URL: ``GET /monitor/event``
 
-   :param token: Identity with authority to retrieve the statistics.
+   :param token: The authentication token associated with a session. Used to
+     identify the caller to enable authorization decisions.
 
    :type token: :class:`Types.AuthToken`
 

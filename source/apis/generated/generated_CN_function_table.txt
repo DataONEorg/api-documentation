@@ -84,7 +84,8 @@
    * - Tier 2
      - ``GET /sessions/{token}``
      - :func:`CN_auth.getAuthSession`
-     - (:class:`token<Types.AuthToken>`) ``->`` :class:`Types.AuthSession`
+     - (:class:`token<Types.AuthToken>`, :class:`sessionToken<Types.AuthToken>`)
+       ``->`` :class:`Types.AuthSession`
    * - Tier 2
      - ``PUT /owner/{pid}``
      - :func:`CN_auth.setOwner`
@@ -93,13 +94,18 @@
    * - Tier 2
      - ``POST /accounts``
      - :func:`CN_auth.newAccount`
-     - (``username``, ``password``,
+     - (:class:`userId<Types.Principal>`, ``password``,
        :class:`[authSystem]<Types.AuthenticationSystem>`) ``->``
        :class:`Types.Principal`
    * - Tier 2
      - ``GET /sessions/verifyToken``
      - :func:`CN_auth.verifyToken`
      - (:class:`token<Types.AuthToken>`) ``->`` :class:`Types.Boolean`
+   * - Tier 2
+     - ``GET /accounts``
+     - :func:`CN_auth.listPrincipals`
+     - (:class:`token<Types.AuthToken>`, :class:`query<Types.String>`,
+       ``start``, ``count``) ``->`` :class:`Types.PrincipalList`
    * - Tier 2
      - ``POST /accounts/map``
      - :func:`CN_auth.mapIdentity`

@@ -249,6 +249,12 @@
        and perhaps even generate a token that matches a system token. Hence
        another level of restriction (perhaps network level blocking / limiting)
        is necessary.
+   * - GET /accounts
+     - :func:`CN_auth.listPrincipals`
+     - List the principals, including users, groups, and systems, that match
+       search criteria. The list can be restricted to principals whose
+       identifier matches certain substrings, and the size of the resultset can
+       be paged through.
    * - POST /accounts/map
      - :func:`CN_auth.mapIdentity`
      - Map the two authenticated identities, asserting that they represent the

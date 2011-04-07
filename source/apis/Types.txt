@@ -21,6 +21,7 @@ Version   Structure
 .         :class:`AuthToken`
 .         :class:`AuthSession`
 .         :class:`Capabilities`
+.         :class:`Challenge`
 .         :class:`Checksum`
 .         :class:`DateTime`
 .         :class:`DescribeResponse`
@@ -44,9 +45,11 @@ Version   Structure
 .         :class:`Permission`
 .         :class:`PingResponse`
 .         :class:`Principal`
+.         :class:`PrincipalInfo`
 .         :class:`Query`
 .         :class:`Status`
 .         :class:`SystemMetadata`
+.         :class:`X509Certificate`
 ========= =============================
 
 ----
@@ -118,18 +121,87 @@ Version   Structure
      AuthSession.
 
   .. attribute:: IssueInstant
+
+     A date-time value in ISO 8601 format indicating when the session was
+     created.
+
   .. attribute:: Issuer
+     
+     A URI of a the service that issued the AuthSession.
+
   .. attribute:: Subject
+
+     An identifier of a Principal that is the subject of this AuthSession.
+
   .. attribute:: Address
+
+     The Internet Protocol address from which the authenticated session was
+     established, and from which all subsequent requests that utilize this
+     AuthSession must originate.  IPv4 addresses should be represented their
+     dotted decimal format (e.g., 10.0.10.1), while IPv6 addresses are
+     represented as their hex values (e.g., fe80::6232:4bfe:fe61:a211).
+
   .. attribute:: NotBefore
+
+     The date-time value in ISO8601 format before which this session is
+     invalid.
+
   .. attribute:: NotOnOrAfter
+
+     The date-time value in ISO8601 format on which this session is
+     invalid.
+
   .. attribute:: AuthenticationContextClass
-  .. attribute:: Givenname
-  .. attribute:: Surname
+
+     An indication of the mechanism used to perform authentication.
+
+  .. attribute:: GivenName
+
+     The given name of the Person.
+
+  .. attribute:: FamilyName
+
+     The family name of the Person.
+
   .. attribute:: Email
+
+     The email address of the Person.
+
   .. attribute:: isMemberOf
+
+     A group or role in which the Principal is a member, expressed using the
+     unique Principal identifier for that group.
+
   .. attribute:: SessionId
-  .. attribute:: EquivalentSubject
+
+     The AuthToken identifying an authenticated session.  The ID is unique and will
+     not be reused for other sessions, and is returned as the result of a
+     successful session authentication service call to reference the
+     AuthSession.
+
+  .. attribute:: EquivalentIdentity
+
+     An alternative but equivalent identity for the principal that has been
+     used in alternate identity systems.
+
+   ::
+
+    message AuthSession {
+      required string ID = 1;
+      required string IssueInstant = 2;
+      required string Issuer = 3;
+      required string Subject = 4;
+      required string Address = 5;
+      required string NotBefore = 6;
+      required string NotOnOrAfter = 7;
+      required string AuthenticationContextClass = 8;
+      repeated string givenName = 9;
+      required string familyName = 10;
+      required string email = 11;
+      repeated string isMemberOf = 12;
+      required string sessionId = 13;
+      repeated string equivalentIdentity = 14;
+    }
 
 ----
 
@@ -188,10 +260,17 @@ Version   Structure
   authentication.  The Challenge includes two pieces of data: an encrypted
   Nonce, and an X.509 public key certificate for the session service.
   The Nonce is encrypted using a client's public key and sent to the client,
-  where it is decryped by the client (proving access tot he associated private
+  where it is decrytped by the client (proving access to the associated private
   key), and then re-encrypted using the server's public key.  When the server
   decrypts the returned Nonce, if it matches then it establishes an
   authenticated session.
+
+   ::
+
+    message Challenge {
+      required string certificate = 1;
+      required string encryptedNonce = 1;
+    }
 
 ----
 
@@ -330,6 +409,35 @@ Version   Structure
       CHANGEOWNER = 5;
     }
 
+
+----
+
+.. class:: Group
+
+  Group represents metadata about a Principal that is a group of other
+  Principals and that can be used by clients and nodes for displaying 
+  AccessPolicy information.
+
+  .. attribute:: Principal
+
+     The unique identifier of the group.
+
+  .. attribute:: GroupName
+
+     The name of the Group.
+
+  .. attribute:: hasMember
+
+     A Principal that is a member of this group, expressed using the
+     unique identifier for that Principal.
+
+   ::
+
+    message Group {
+      required string principal = 1;
+      required string groupName = 2;
+      repeated string hasMember = 3;
+    }
 
 ----
 
@@ -696,6 +804,50 @@ Version   Structure
 
 ----
 
+.. class:: Person
+
+  Person represents metadata about a Principal that is a person and that 
+  can be used by clients and nodes for displaying AccessPolicy information.
+
+  .. attribute:: Principal
+
+     The unique identifier for the person.
+
+  .. attribute:: GivenName
+
+     The given name of the Person.
+
+  .. attribute:: FamilyName
+
+     The family name of the Person.
+
+  .. attribute:: Email
+
+     The email address of the Person.
+
+  .. attribute:: isMemberOf
+
+     A group or role in which the Principal is a member, expressed using the
+     unique Principal identifier for that group.
+
+  .. attribute:: EquivalentIdentity
+
+     An alternative but equivalent identity for the principal that has been
+     used in alternate identity systems.
+
+   ::
+
+    message Person {
+      required string principal = 1;
+      repeated string givenName = 2;
+      required string familyName = 3;
+      repeated string email = 4;
+      repeated string isMemberOf = 5;
+      repeated string equivalentIdentity = 6;
+    }
+
+----
+
 .. class:: PingResponse
 
   The response from :func:`MN_health.ping`
@@ -705,14 +857,27 @@ Version   Structure
 
 .. class:: Principal
 
-  Person (user), group, or organization.
+  Person (user), Group, or Organization, or System.
 
   The formal name identifiying a user or group from the DataONE 
-  IdentityProviderService. The principal is represented by a unique,
+  Identity Management Service. The principal is represented by a unique,
   persistent, non-reassignable identifier string that follows the same
   constraints as the Identifier.
 
   Used by :mod:`SystemMetadata`
+----
+
+.. class:: PrincipalList
+
+  A List of Principals, including both persons and groups, that is returned
+  from the listPrincipals service.
+
+   ::
+
+    message PrincipalList {
+      repeated Group  group = 1;
+      repeated Person person = 2;
+    }
 
 ----
 

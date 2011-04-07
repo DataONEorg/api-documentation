@@ -65,8 +65,9 @@
 
    :REST URL: ``GET /object/{pid}``
 
-   :param token: The authentication token to veriy the caller has access to the
-     object.
+   :param token: The authentication token returned by :func:`CN_auth.login` or
+     :func:`CN_auth.sessionRequest` tat is associated with a session. Used to
+     identify the caller to enable authorization decisions.
 
    :type token: :class:`Types.AuthToken`
 
@@ -116,8 +117,9 @@
 
    :REST URL: ``GET /meta/{pid}``
 
-   :param token: The authentication token to veriy the caller has access to the
-     object.
+   :param token: The authentication token returned by :func:`CN_auth.login` or
+     :func:`CN_auth.sessionRequest` tat is associated with a session. Used to
+     identify the caller to enable authorization decisions.
 
    :type token: :class:`Types.AuthToken`
 
@@ -179,7 +181,9 @@
 
    :REST URL: ``GET /resolve/{pid}``
 
-   :param token: An authentication token to be used for making the request.
+   :param token: The authentication token returned by :func:`CN_auth.login` or
+     :func:`CN_auth.sessionRequest` tat is associated with a session. Used to
+     identify the caller to enable authorization decisions.
 
    :type token: :class:`Types.AuthToken`
 
@@ -229,8 +233,9 @@
 
    :REST URL: ``POST /reserve``
 
-   :param token: The authentication token returned by
-     :func:`CN_authentication.login`
+   :param token: The authentication token returned by :func:`CN_auth.login` or
+     :func:`CN_auth.sessionRequest` tat is associated with a session. Used to
+     identify the caller to enable authorization decisions.
 
    :type token: :class:`Types.AuthToken`
 
@@ -290,8 +295,9 @@
 
    :REST URL: ``GET /assertRelation/{pidOfSubject}``
 
-   :param token: The authentication token returned by
-     :func:`CN_authentication.login`
+   :param token: The authentication token returned by :func:`CN_auth.login` or
+     :func:`CN_auth.sessionRequest` tat is associated with a session. Used to
+     identify the caller to enable authorization decisions.
 
    :type token: :class:`Types.AuthToken`
 
@@ -346,8 +352,9 @@
 
    :REST URL: N/A
 
-   :param token: The authentication token returned by
-     :func:`CN_authentication.login`
+   :param token: The authentication token returned by :func:`CN_auth.login` or
+     :func:`CN_auth.sessionRequest` tat is associated with a session. Used to
+     identify the caller to enable authorization decisions.
 
    :type token: :class:`Types.AuthToken`
 
@@ -386,8 +393,9 @@
 
    :REST URL: ``GET /object``
 
-   :param token: The authentication token returned by
-     :func:`CN_authentication.login`
+   :param token: The authentication token returned by :func:`CN_auth.login` or
+     :func:`CN_auth.sessionRequest` tat is associated with a session. Used to
+     identify the caller to enable authorization decisions.
 
    :type token: :class:`Types.AuthToken`
 

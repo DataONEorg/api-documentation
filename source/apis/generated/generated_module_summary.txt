@@ -316,6 +316,12 @@
        another level of restriction (perhaps network level blocking / limiting)
        is necessary.
    * - \
+     - :func:`CN_auth.listPrincipals`
+     - List the principals, including users, groups, and systems, that match
+       search criteria. The list can be restricted to principals whose
+       identifier matches certain substrings, and the size of the resultset can
+       be paged through.
+   * - \
      - :func:`CN_auth.mapIdentity`
      - Map the two authenticated identities, asserting that they represent the
        same principal. The two identities are represented as AuthToken objects,
