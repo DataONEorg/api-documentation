@@ -15,7 +15,7 @@
      <saml:NameID
        Format="urn:oasis:names:tc:SAML:1.1:nameid-format:X509SubjectName"
        SPProvidedID="CN=Some User,O=University One,C=US">
-       uid=testuser,o=NCEAS,dc=ecoinformatics,dc=org
+       uid=jones,o=NCEAS,dc=ecoinformatics,dc=org
      </saml:NameID>
      <saml:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
        <saml:SubjectConfirmationData Address="10.0.45.21" />
@@ -74,7 +74,21 @@
      <saml:Attribute 
        NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"
        Name="urn:oasis:names:tc:SAML:2.0:profiles:session:sessionId"
+       FriendlyName="sessionId"
        xsi:type="xs:string">urn:uuid:f7eca768-59c0-11e0-bf7d-fbbaa0f3405c
+     </saml:Attribute>
+     <saml:Attribute 
+       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"
+       Name="urn:dataone:attributenames:equivalentIdentity"
+       FriendlyName="equivalentIdentity"
+       xsi:type="xs:string">mbjones@NCEAS
+     </saml:Attribute>
+     <saml:Attribute 
+       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"
+       Name="urn:dataone:attributenames:equivalentIdentity"
+       FriendlyName="equivalentIdentity"
+       xsi:type="xs:string">
+         /DC=org/DC=cilogon/C=US/O=ProtectNetwork/CN=Matthew Jones A332
      </saml:Attribute>
    </saml:AttributeStatement>
 </saml:Assertion>
