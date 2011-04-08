@@ -14,6 +14,44 @@ Toolkit.
    method on the target.
 
 
+Node Tiers
+----------
+
+Member Nodes can expose different levels of functionality while participating
+in the DataONE network. Five tiers of MN functionality have been identified:
+
+.. list-table::
+   :widths: 1 5 5 5
+   :header-rows: 1
+   
+   * - Tier
+     - Description
+     - MN APIs
+     - CN APIs
+   * - 1
+     - Public read, no Authn/Authz
+     - :mod:`MN_core` + :mod:`MN_read`
+     - :mod:`CN_core`, :mod:`CN_read`, :mod:`CN_storage`
+   * - 2
+     - Read/Resolve with Authn/Authz
+     - Tier 1 + :mod:`MN_auth`
+     - :mod:`CN_auth`, :mod:`CN_register`
+   * - 3
+     - Write (create, update, delete), possibly limited support for data types
+     - Tier 2 + :mod:`MN_storage`
+     - *No additional APIs*
+   * - 4
+     - Limited Replication target (specific data types)
+     - Tier 3 + :mod:`MN_replication`
+     - :mod:`CN_storage` (setReplicationStatus)
+   * - 5
+     - Replication target, any data types
+     - Tier 4 + additional capabilities
+     - *No additional APIs*
+
+
+
+
 .. toctree::
    :maxdepth: 1
    

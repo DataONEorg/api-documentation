@@ -51,6 +51,7 @@ sys.path.append( os.path.abspath('../tools/docutils/rst_directives') )
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 try:
   extensions = ['sphinx.ext.autodoc', 
+                'sphinx.ext.autosummary',
                 'sphinx.ext.todo', 
                 'sphinx.ext.pngmath', 
                 'sphinx.ext.ifconfig',
@@ -63,6 +64,7 @@ try:
                 ]
 except:
   extensions = ['sphinx.ext.autodoc', 
+                'sphinx.ext.autosummary',
                 'sphinx.ext.todo', 
                 'sphinx.ext.pngmath', 
                 'sphinx.ext.ifconfig',
