@@ -13,18 +13,18 @@
    * - Tier 2
      - ``GET /isAuthorized/{pid}``
      - :func:`isAuthorized`
-     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
+     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`,
        :class:`action<Types.Permission>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``PUT /accessRules/{pid}``
      - :func:`setAccess`
-     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
+     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`,
        :class:`accessPolicy<Types.AccessPolicy>`) ``->`` :class:`Types.Boolean`
 
 
 
 
-.. function:: isAuthorized(token,pid,action) -> Boolean
+.. function:: isAuthorized(cert,pid,action) -> Boolean
 
    Test if the user identified by the provided token has authorization for
    operation on the specified object.
@@ -38,9 +38,14 @@
 
    :REST URL: ``GET /isAuthorized/{pid}``
 
-   :param token:
+   :param cert: X.509 Certificate, passed to the system via SSL client-side
+     authentication, and used to identiy and validate the identity of the
+     Principal making the call.  The X.509 certificate should be traceable to
+     the CILogon service, and provides various attributes for authorization
+     decisions.  If the X.509 certificate is not provided, then the request
+     should be considered to have originated from the DataONE 'Public' user.
 
-   :type token: :class:`Types.AuthToken`
+   :type cert: :class:`Types.X509Certificate`
 
    :param pid:
 
@@ -75,7 +80,7 @@
 
 ----
 
-.. function:: setAccess(token,pid,accessPolicy) -> Boolean
+.. function:: setAccess(cert,pid,accessPolicy) -> Boolean
 
    Sets the access permissions for an object identified by *pid*.
 
@@ -85,10 +90,14 @@
 
    :REST URL: ``PUT /accessRules/{pid}``
 
-   :param token: The authentication token associated with a session. Used to
-     identify the caller to enable authorization decisions.
+   :param cert: X.509 Certificate, passed to the system via SSL client-side
+     authentication, and used to identiy and validate the identity of the
+     Principal making the call.  The X.509 certificate should be traceable to
+     the CILogon service, and provides various attributes for authorization
+     decisions.  If the X.509 certificate is not provided, then the request
+     should be considered to have originated from the DataONE 'Public' user.
 
-   :type token: :class:`Types.AuthToken`
+   :type cert: :class:`Types.X509Certificate`
 
    :param pid: The object for which access control is being edited.
 

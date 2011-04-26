@@ -1,7 +1,7 @@
 Identity Management and Authenticated Session Management
 ========================================================
 
-The planning and design for DataONE cybersecurity is predicated on the fact that DataONE is a collaboration of researchers, data providers, institutions, coordinating nodes, member nodes, data collections and other infrastructure components. As such, DataONE is inherently a virtual organization (VO). DataONE, as an entity, spans many physical organizations and administrative domains. For this reason, the primary goal of DataONE cybersecurity is to protect the data and metadata collections that those organizations and administrative domains contribute to the VO, as well as their infrastructure and the DataONE user community. DataONE will necessarily need to accommodate the highly variable security protocols that are in use by its various partners. In planning for cybersecurity in this environment, a layered approach must be used. Each DataONE partner must simultaneously meet requirements of its local institution and must also integrate into the DataONE cyberinfrastructure. DataONE is also a mixture of operational systems that accept and deliver scientific data and support research endeavors to improve the overall data management life-cycle. Cybersecurity management for DataONE will need to be flexible enough to support the very different needs of partner operations and related research. The cybersecurity posture of DataONE will evolve over time both because of continuing maturation of DataONE operational strategies and because of an ever-evolving cybersecurity landscape.
+The planning and design for DataONE cybersecurity is predicated on the fact that DataONE is a collaboration of researchers, data providers, institutions, coordinating nodes, member nodes, data collections and other infrastructure components. As such, DataONE is inherently a virtual organization (VO). DataONE, as an entity, spans many physical organizations and administrative domains. For this reason, the primary goal of DataONE cybersecurity is to protect the data and metadata collections that those organizations and administrative domains contribute to the VO, as well as their infrastructure and the DataONE user community. DataONE will need to accommodate the highly variable security protocols that are in use by its various partners. In planning for cybersecurity in this environment, a layered approach must be used. Each DataONE partner must simultaneously meet requirements of its local institution and must also integrate into the DataONE cyberinfrastructure. DataONE is also a mixture of operational systems that accept and deliver scientific data and support research endeavors to improve the overall data management life-cycle. Cybersecurity management for DataONE will need to be flexible enough to support the very different needs of partner operations and related research. The cybersecurity posture of DataONE will evolve over time both because of continuing maturation of DataONE operational strategies and because of an ever-evolving cybersecurity landscape.
 
 The approach that DataONE will follow for cybersecurity is one in which all sensitive operations and or data/metadata resources within the DataONE VO will require users requesting access to the operation/resource to register and authenticate with the DataONE system before an evaluation of rights to the operation/resource can/will be performed.  DataONE will support authentication through three mechanisms: (1) an internal identity password challenge managed by DataONE, (2) an external identity password challenge managed by one or more trusted 3rd parties, or (3) the verification of a trusted CILogon X.509 certificate.  In all cases, the identity that is verified through the authentication mechanism is mapped to an internal DataONE user identity.  Once a user is authenticated and mapped to their DataONE identity, a short-lived authentication token is generated and used for the duration of the user's DataONE session.  Individual users may also associate multiple external identities to their unique DataONE identity.
 
@@ -14,11 +14,26 @@ To this end, three services will support identity management and authentication:
 Identity Management
 -------------------
 
-Identity Management for DataONE addresses the need to identify users that request the use of services and or data/metadata resources within the DataONE VO (DataONE does recognize that not all services/resources require user identification, thus provisional support for anonymous access to certain services/resources).  To achieve this requirement, DataONE will provide services for users to register their identity with DataONE in a user account so as to create a unique DataONE identifier, along with other attributes, that may be used for authorization and tracking DataONE transactions. 
+Identity Management for DataONE addresses the need to identify users that
+request the use of services and or data/metadata resources within the DataONE
+VO (DataONE does recognize that not all services/resources require user
+identification, thus support for anonymous access to certain services/resources
+is possible using a Public identity).  DataONE provides services for users to
+register their identity with DataONE in a user account so as to create a unique
+DataONE identifier, along with other attributes about that user. This account
+information may be used for authorization and logging DataONE transactions. 
 
-It is also expected that users may have multiple identities as a result of distributed research endeavors at different participating organizations and or changes in organization affiliations. Because of this, the DataONE Identity Management service will support user identity mappings, which allows users to authenticate using any one of their multiple identities, but still be recognized as the same DataONE identity. When a DataONE authenticated session begins, information pertaining to the user's idenity is available for authorization purposes, which includes a listing of all mapped identities associated with that user; these mapped identities serve equally well for authorization decisions as if using the DataONE identity - that is, within DataONE access control policies, reference to any mapped identity is the same as if using the user's DataONE identity.
+Users may have multiple identities as a result of distributed research
+endeavors at different participating organizations and or changes in
+organizational affiliation. Because of this, the DataONE Identity Management
+service will support user identity mappings, which allows users to authenticate
+using any one of their multiple identities, but still be recognized as the same
+DataONE identity. When a DataONE authenticated session begins, information
+pertaining to the user's idenity is available for authorization purposes, which
+includes a listing of all mapped identities associated with that user; these
+mapped identities serve equally well for authorization decisions - that is, within DataONE access control policies, reference to any mapped identity is the same as using any other of the user's identities.
 
-In addition, the Identity Management service will provide a system for users to create, store, and modify groups of users that can be used in access control directives.  Only the user creating a group will be allowed to delete the group or to change the group's membership.  Service APIs for group management are outlined below in the Identity Management Service section.
+In addition, the Identity Management service provides a system for users to create, store, and modify groups of users that can be used in access control directives.  Only the user creating a group will be allowed to delete the group or to change the group's membership.  Service APIs for group management are outlined below in the Identity Management Service section.
 
 .. Note::
     The Internet2 project has defined a product called Grouper that is a
@@ -112,17 +127,52 @@ system.  The reserved symbolic principals are:
 Identity Management Service
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The DataONE Identity Management service provides individuals with the ability to register a "new" DataONE user account with the system and to set information into their profile.  This process creates a new identifier value for the user that uniquely identifies them in the DataONE VO from other DataONE users.  This identifier is critical because it associates the user with an authenticated session for use when requesting services and or data/metadata resources from the DataONE VO.  Account creation also requires that the individual provide credential information to DataONE so that DataONE may establish their identity during user authentication.  Credential information consists of either a username/password combination that will be verified internally, through a trusted 3rd party LDAP registry or by providing a CILogon X.509 certificate that is verified through a 2-phase handshake between DataONE and the client application.
+The DataONE Identity Management service provides individuals with the ability
+to register a DataONE user account with the system and to set information into
+their profile.  This process creates a new identifier value for the user that
+uniquely identifies them in the DataONE VO from other DataONE users.  This
+identifier is critical because it associates the user with an authenticated
+session for use when requesting services and or data/metadata resources from
+the DataONE VO.  
+
+The general application flow for a user to use DataONE services is to first
+log into CILogon with an identity of their choice, then to register that
+identity with DataONE by calling the :func:`CN_auth.newAccount` service. A
+authorized third party (such as a site manager) can then call 
+:func:`CN_auth.verifyAccount` to verify that the real name, email address, 
+and other biographical information about the Person are correct.  A user with
+more than one Identity can call :func:`CN_auth.mapIdentity` to link those two
+identities together as equivalent identities. Once this registration process is
+complete, future authentication steps with CILogon will produce X.509
+certificates that contain this biographical and account information in the
+returned certficate, all of which can be used by services to make authorization
+decisions.
 
 * :func:`CN_auth.newAccount`
-    Create an identity.
+    Register an identity with the DataONE IdentityService. When a user attempts
+    to use a given identity at DataONE, the user must first register the
+    identity and provide biographical information including their real name,
+    real email address, and other identifying attributes.  
+    Takes a Person description including principal, givenName, familyName, 
+    and email address as input (other elements from the Person
+    description such as isMemberOf, equivalentIdentity, and verifiedBy are
+    ignored during registration because these elements are populated by other
+    services).
 
-* :func:`CN_auth.verifyToken`
-    Validate that a given AuthToken is legitimate and current.
+* :func:`CN_auth.verifyAccount`
+    Verify that an Person is an accurate portrayal of the real-life name and
+    identity of the named individual. 
 
 * :func:`CN_auth.mapIdentity`
     Create an equivalence mapping between the identities listed for the 
     users authenticated and represented by token1 and token2.
+
+* :func:`CN_auth.getPrincipalInfo`
+    Get the information about a Person, their equivalent identities, and the
+    Groups to which they belong.
+
+* :func:`CN_auth.listPrincipals`
+    Query for a matching set of users, groups, and systems.
 
 * :func:`CN_auth.createGroup`
     Create a named group of users.  Throws IdentifierNotUnique if the group
@@ -134,8 +184,8 @@ The DataONE Identity Management service provides individuals with the ability to
 
 * :func:`CN_auth.removeGroupMembers`
     Remove the listed array of members from the named group, if and only if the 
-    user represented in token originally created the group.
-
+    user represented in token originally created the group or is an equivalent
+    identity of the user who created the group.
 
 Authentication Service
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -263,4 +313,58 @@ to :func:`CN_auth.getAuthSession`.
 
 .. literalinclude:: ./saml-2-assertion-example.xml
    :language: xml
+
+
+Interaction diagrams
+--------------------
+
+.. image:: images/auth_01.png
+
+
+*Figure 1.* Authentication and session management assuming that the CN runs a
+seperate SessionService that creates and tracks sessions.
+
+.. figure:: images/auth_02.png
+
+*Figure 2.* Authentication and session management assuming that the CN only
+runs an Identity service, and that the CILogon server runs the session
+management service as part of the authentication process.
+
+.. 
+   @startuml images/auth_01.png
+   participant "CILogon" as cilogon << CNode >>
+   participant "Client" as app_client << Application >>
+   participant "MN" as mn << MNode >>
+   participant "SessionService" as session << CNode >>
+   participant "IdentityService" as ident << CNode >>
+
+   app_client -> cilogon: authenticate()
+   app_client <- cilogon: X.509
+   app_client -> session: newSession(X.509)
+   session -> ident: getPrincipalInfo(Principal)
+   session <- ident: PrincipalList
+   app_client <- session: token
+
+   app_client -> mn: get(token, pid)
+   mn -> session: getAuthSession(token)
+   mn <- session: AuthSession Assertion
+   mn -> mn: isAuthorized()
+   app_client <- mn: object
+   @enduml
+
+.. 
+   @startuml images/auth_02.png
+   participant "MN" as mn << MNode >>
+   participant "Client" as app_client << Application >>
+   participant "CILogon" as cilogon << CNode >>
+   participant "IdentityService" as ident << CNode >>
+
+   app_client -> cilogon: authenticate()
+   cilogon -> ident: getPrincipalInfo(Principal)
+   cilogon <- ident: PrincipalList
+   app_client <- cilogon: X.509
+   app_client -> mn: get(X.509, pid)
+   mn -> mn: isAuthorized()
+   app_client <- mn: object
+   @enduml
 

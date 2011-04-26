@@ -17,20 +17,20 @@
    * - Tier 1
      - ``GET /log``
      - :func:`getLogRecords`
-     - (:class:`token<Types.AuthToken>`, :class:`fromDate<Types.DateTime>`,
+     - (:class:`cert<Types.X509Certificate>`, :class:`fromDate<Types.DateTime>`,
        :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`) ``->``
        :class:`Types.LogRecords`
    * - Tier 1
      - ``GET /monitor/object``
      - :func:`getObjectStatistics`
-     - (:class:`token<Types.AuthToken>`, :class:`[fromDate]<Types.DateTime>`,
-       :class:`[toDate]<Types.DateTime>`, :class:`[format]<Types.ObjectFormat>`,
-       :class:`[day]<Types.Integer>`, :class:`[pid]<Types.Identifier>`) ``->``
-       :class:`Types.MonitorList`
+     - (:class:`cert<Types.X509Certificate>`,
+       :class:`[fromDate]<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`,
+       :class:`[format]<Types.ObjectFormat>`, :class:`[day]<Types.Integer>`,
+       :class:`[pid]<Types.Identifier>`) ``->`` :class:`Types.MonitorList`
    * - Tier 1
      - ``GET /monitor/event``
      - :func:`getOperationStatistics`
-     - (:class:`token<Types.AuthToken>`, :class:`[time]<Types.DateTime>`,
+     - (:class:`cert<Types.X509Certificate>`, :class:`[time]<Types.DateTime>`,
        :class:`[requestor]<Types.Principal>`, :class:`[day]<Types.Integer>`,
        :class:`[event]<Types.Event>`, :class:`[eventTime]<Types.DateTime>`,
        :class:`[format]<Types.ObjectFormat>`) ``->`` :class:`Types.MonitorList`
@@ -85,17 +85,21 @@
 
 ----
 
-.. function:: getLogRecords(token,fromDate,[toDate],[event]) -> LogRecords
+.. function:: getLogRecords(cert,fromDate,[toDate],[event]) -> LogRecords
 
    Retrieve log information from the MN for the specified date range
    (inclusive).
 
    :REST URL: ``GET /log``
 
-   :param token: The authentication token associated with a session. Used to
-     identify the caller to enable authorization decisions.
+   :param cert: X.509 Certificate, passed to the system via SSL client-side
+     authentication, and used to identiy and validate the identity of the
+     Principal making the call.  The X.509 certificate should be traceable to
+     the CILogon service, and provides various attributes for authorization
+     decisions.  If the X.509 certificate is not provided, then the request
+     should be considered to have originated from the DataONE 'Public' user.
 
-   :type token: :class:`Types.AuthToken`
+   :type cert: :class:`Types.X509Certificate`
 
    :param fromDate: Starting time for records in response
 
@@ -133,17 +137,21 @@
 
 ----
 
-.. function:: getObjectStatistics(token,[fromDate],[toDate],[format],[day],[pid]) -> MonitorList
+.. function:: getObjectStatistics(cert,[fromDate],[toDate],[format],[day],[pid]) -> MonitorList
 
    Called by the monitoring system to find how many objects are stored on the
    MN, cumulative or for each day in a given range.
 
    :REST URL: ``GET /monitor/object``
 
-   :param token: The authentication token associated with a session. Used to
-     identify the caller to enable authorization decisions.
+   :param cert: X.509 Certificate, passed to the system via SSL client-side
+     authentication, and used to identiy and validate the identity of the
+     Principal making the call.  The X.509 certificate should be traceable to
+     the CILogon service, and provides various attributes for authorization
+     decisions.  If the X.509 certificate is not provided, then the request
+     should be considered to have originated from the DataONE 'Public' user.
 
-   :type token: :class:`Types.AuthToken`
+   :type cert: :class:`Types.X509Certificate`
 
    :param fromDate: An ISO8601 compatible DateTime range specifying the time
      range for which to return object statistics.
@@ -191,17 +199,21 @@
 
 ----
 
-.. function:: getOperationStatistics(token,[time],[requestor],[day],[event],[eventTime],[format]) -> MonitorList
+.. function:: getOperationStatistics(cert,[time],[requestor],[day],[event],[eventTime],[format]) -> MonitorList
 
    Called by the monitoring system to find how many operations have been
    performed on the MN, cumulative or for each day in a given range.
 
    :REST URL: ``GET /monitor/event``
 
-   :param token: The authentication token associated with a session. Used to
-     identify the caller to enable authorization decisions.
+   :param cert: X.509 Certificate, passed to the system via SSL client-side
+     authentication, and used to identiy and validate the identity of the
+     Principal making the call.  The X.509 certificate should be traceable to
+     the CILogon service, and provides various attributes for authorization
+     decisions.  If the X.509 certificate is not provided, then the request
+     should be considered to have originated from the DataONE 'Public' user.
 
-   :type token: :class:`Types.AuthToken`
+   :type cert: :class:`Types.X509Certificate`
 
    :param time: An ISO8601 compatible DateTime range specifying the time range
      for which to return operation statistics.

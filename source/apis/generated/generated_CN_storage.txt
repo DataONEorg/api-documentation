@@ -13,13 +13,13 @@
    * - Tier 4
      - ``POST /notify``
      - :func:`setReplicationStatus`
-     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
+     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`,
        :class:`status<Types.ReplicationStatus>`) ``->`` :class:`Types.Boolean`
 
 
 
 
-.. function:: setReplicationStatus(token,pid,status) -> Boolean
+.. function:: setReplicationStatus(cert,pid,status) -> Boolean
 
    Update the replication status of the system metadata, ensuring that the
    change is appropriate for the given state of system metadata.  For example, a
@@ -33,11 +33,14 @@
 
    :REST URL: ``POST /notify``
 
-   :param token: The authentication token returned by :func:`CN_auth.login` or
-     :func:`CN_auth.sessionRequest` tat is associated with a session. Used to
-     identify the caller to enable authorization decisions.
+   :param cert: X.509 Certificate, passed to the system via SSL client-side
+     authentication, and used to identiy and validate the identity of the
+     Principal making the call.  The X.509 certificate should be traceable to
+     the CILogon service, and provides various attributes for authorization
+     decisions.  If the X.509 certificate is not provided, then the request
+     should be considered to have originated from the DataONE 'Public' user.
 
-   :type token: :class:`Types.AuthToken`
+   :type cert: :class:`Types.X509Certificate`
 
    :param pid: Identifier of the object to be replicated between Member Nodes
 

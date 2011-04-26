@@ -208,27 +208,6 @@
      - :func:`CN_core.listNodes`
      - Returns a list of nodes that have been registered with the DataONE
        infrastructure.
-   * - POST /sessions
-     - :func:`CN_auth.login`
-     - Authenticate using a standard username and password to DataONE, which
-       validates the pair and if valid returns an AuthToken referencing an
-       AuthSession.
-   * - POST /sessions
-     - :func:`CN_auth.sessionRequest`
-     - Authenticate using an X.509 certificate to DataONE, which validates
-       certificate using two-phase challenge/response.  This method is phase
-       one, which returns an ecrypted Challenge to the client.
-   * - POST /sessions
-     - :func:`CN_auth.challengeResponse`
-     - The second phase of two-phase authentication, in which the client has
-       decrypted the challenge, and then re-encrypts it using the server's
-       public key.  If the response is validate, then the server returns an
-       AuthToken referencing an AuthSession.
-   * - GET /sessions/{token}
-     - :func:`CN_auth.getAuthSession`
-     - Retrieves information about an authenticated session, including the
-       Principal's identity, a list of equivalent identities for the user, and a
-       list of groups in which the user is a member.
    * - PUT /owner/{pid}
      - :func:`CN_auth.setOwner`
      - Changes ownership (RightsHolder) of the specified object to the
@@ -249,6 +228,10 @@
        and perhaps even generate a token that matches a system token. Hence
        another level of restriction (perhaps network level blocking / limiting)
        is necessary.
+   * - GET /accounts/{principal}
+     - :func:`CN_auth.getPrincipalInfo`
+     - Get the information about a Person, their equivalent identities, and the
+       Groups to which they belong.
    * - GET /accounts
      - :func:`CN_auth.listPrincipals`
      - List the principals, including users, groups, and systems, that match

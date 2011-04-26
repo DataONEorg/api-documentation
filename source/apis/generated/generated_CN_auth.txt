@@ -11,44 +11,28 @@
      - Function
      - Parameters
    * - Tier 2
-     - ``POST /sessions``
-     - :func:`login`
-     - (:class:`userId<Types.Principal>`, :class:`password<Types.String>`)
-       ``->`` :class:`Types.AuthToken`
-   * - Tier 2
-     - ``POST /sessions``
-     - :func:`sessionRequest`
-     - (:class:`certificate<Types.X509Certificate>`) ``->``
-       :class:`Types.Challenge`
-   * - Tier 2
-     - ``POST /sessions``
-     - :func:`challengeResponse`
-     - (:class:`userId<Types.Principal>`, :class:`password<Types.String>`)
-       ``->`` :class:`Types.AuthToken`
-   * - Tier 2
-     - ``GET /sessions/{token}``
-     - :func:`getAuthSession`
-     - (:class:`token<Types.AuthToken>`, :class:`sessionToken<Types.AuthToken>`)
-       ``->`` :class:`Types.SAML.Assertion`
-   * - Tier 2
      - ``PUT /owner/{pid}``
      - :func:`setOwner`
-     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
+     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`,
        :class:`userId<Types.Principal>`) ``->`` :class:`Types.Identifier`
    * - Tier 2
      - ``POST /accounts``
      - :func:`newAccount`
-     - (:class:`userId<Types.Principal>`, ``password``,
-       :class:`[authSystem]<Types.AuthenticationSystem>`) ``->``
-       :class:`Types.Principal`
+     - (:class:`cert<Types.X509Certificate>`, :class:`person<Types.Person>`)
+       ``->`` :class:`Types.Principal`
    * - Tier 2
      - ``GET /sessions/verifyToken``
      - :func:`verifyToken`
      - (:class:`token<Types.AuthToken>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
+     - ``GET /accounts/{principal}``
+     - :func:`getPrincipalInfo`
+     - (:class:`cert<Types.X509Certificate>`, :class:`query<Types.String>`,
+       ``start``, ``count``) ``->`` :class:`Types.PrincipalList`
+   * - Tier 2
      - ``GET /accounts``
      - :func:`listPrincipals`
-     - (:class:`token<Types.AuthToken>`, :class:`query<Types.String>`,
+     - (:class:`cert<Types.X509Certificate>`, :class:`query<Types.String>`,
        ``start``, ``count``) ``->`` :class:`Types.PrincipalList`
    * - Tier 2
      - ``POST /accounts/map``
@@ -58,200 +42,35 @@
    * - Tier 2
      - ``POST /groups/{groupName}``
      - :func:`createGroup`
-     - (:class:`token<Types.AuthToken>`, :class:`groupName<Types.Principal>`)
-       ``->`` :class:`Types.Identifier`
+     - (:class:`cert<Types.X509Certificate>`,
+       :class:`groupName<Types.Principal>`) ``->`` :class:`Types.Identifier`
    * - Tier 2
      - ``PUT /groups/{groupName}``
      - :func:`addGroupMembers`
-     - (:class:`token<Types.AuthToken>`, :class:`groupName<Types.Principal>`,
+     - (:class:`cert<Types.X509Certificate>`,
+       :class:`groupName<Types.Principal>`,
        :class:`members<Types.PrincipalList>`) ``->`` :class:`Types.Identifier`
    * - Tier 2
      - ``DELETE /groups/{groupName}``
      - :func:`removeGroupMembers`
-     - (:class:`token<Types.AuthToken>`, :class:`groupName<Types.Principal>`,
+     - (:class:`cert<Types.X509Certificate>`,
+       :class:`groupName<Types.Principal>`,
        :class:`members<Types.PrincipalList>`) ``->`` :class:`Types.Identifier`
    * - Tier 2
      - ``GET /isAuthorized/{pid}``
      - :func:`isAuthorized`
-     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
+     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`,
        :class:`operation<Types.Event>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``PUT /accessRules/{pid}``
      - :func:`setAccess`
-     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
+     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`,
        :class:`accessPolicy<Types.AccessPolicy>`) ``->`` :class:`Types.Boolean`
 
 
 
 
-.. function:: login(userId,password) -> AuthToken
-
-   Authenticate using a standard username and password to DataONE, which
-   validates the pair and if valid returns an AuthToken referencing an
-   AuthSession.
-
-   :Use Cases:
-
-     :doc:`UC12 </design/UseCases/12_uc>`
-
-   :REST URL: ``POST /sessions``
-
-   :param userId: The string identifying the Principal to be authenticated.
-
-   :type userId: :class:`Types.Principal`
-
-   :param password: The password to be used for authentication.
-
-   :type password: :class:`Types.String`
-
-   :returns: An identifier that uniquely identifies an authenticated session.
-
-   :rtype: :class:`Types.AuthToken`
-
-   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=1920)``
-
-   :raises Exceptions.InvalidCredentials: ``(errorCode=401, detailCode=1940)``
-
-     The requesting client credentials were not sufficent to authenticate.
-
-
-   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=1900)``
-
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=1901)``
-
-
-
-----
-
-.. function:: sessionRequest(certificate) -> Challenge
-
-   Authenticate using an X.509 certificate to DataONE, which validates
-   certificate using two-phase challenge/response.  This method is phase one,
-   which returns an ecrypted Challenge to the client.
-
-   :Use Cases:
-
-     :doc:`UC12 </design/UseCases/12_uc>`
-
-   :REST URL: ``POST /sessions``
-
-   :param certificate: The client's X.509 public certificate, to be used in two
-     phase authentication.
-
-   :type certificate: :class:`Types.X509Certificate`
-
-   :returns: The Challenge returned to the client, including both the server's
-     public key and an encrypted Nonce.
-
-   :rtype: :class:`Types.Challenge`
-
-   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2020)``
-
-   :raises Exceptions.InvalidCredentials: ``(errorCode=401, detailCode=2040)``
-
-     The requesting client credentials were not sufficent to authenticate.
-
-
-   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2000)``
-
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=2001)``
-
-
-
-----
-
-.. function:: challengeResponse(userId,password) -> AuthToken
-
-   The second phase of two-phase authentication, in which the client has
-   decrypted the challenge, and then re-encrypts it using the server's public
-   key.  If the response is validate, then the server returns an AuthToken
-   referencing an AuthSession.
-
-   :Use Cases:
-
-     :doc:`UC12 </design/UseCases/12_uc>`
-
-   :REST URL: ``POST /sessions``
-
-   :param userId: The string identifying the Principal to be authenticated.
-
-   :type userId: :class:`Types.Principal`
-
-   :param password: The password to be used for authentication.
-
-   :type password: :class:`Types.String`
-
-   :returns: An identifier that uniquely identifies an authenticated session.
-
-   :rtype: :class:`Types.AuthToken`
-
-   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=1720)``
-
-   :raises Exceptions.InvalidCredentials: ``(errorCode=401, detailCode=1740)``
-
-     The requesting client credentials were not sufficent to authenticate.
-
-
-   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=1700)``
-
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=1701)``
-
-
-
-----
-
-.. function:: getAuthSession(token,sessionToken) -> SAML.Assertion
-
-   Retrieves information about an authenticated session, including the
-   Principal's identity, a list of equivalent identities for the user, and a
-   list of groups in which the user is a member.
-
-   :Use Cases:
-
-     :doc:`UC16 </design/UseCases/16_uc>`
-
-   :REST URL: ``GET /sessions/{token}``
-
-   :param token: The authentication token returned by :func:`CN_auth.login` or
-     :func:`CN_auth.sessionRequest` tat is associated with a session. Used to
-     identify the caller to enable authorization decisions.
-
-   :type token: :class:`Types.AuthToken`
-
-   :param sessionToken: An AuthToken identifier that references an authenticated
-     session. Note that, unlike most AuthToken parameters, this one is not
-     passed in the HTTP header because it does not reference the current session
-     (rather, it references a third party's session).
-
-   :type sessionToken: :class:`Types.AuthToken`
-
-   :returns: A SAML assertion comtaining metadata about an authenticated
-     session, including information about user identiites and groups.
-
-   :rtype: :class:`Types.SAML.Assertion`
-
-   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=1620)``
-
-   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=1640)``
-
-     The requesting client is not authorized to retrieve this session
-     information.
-
-
-   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=1660)``
-
-     There is no session information available for the given AuthToken.
-
-
-   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=1600)``
-
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=1601)``
-
-
-
-----
-
-.. function:: setOwner(token,pid,userId) -> Identifier
+.. function:: setOwner(cert,pid,userId) -> Identifier
 
    Changes ownership (RightsHolder) of the specified object to the
    :term:`principal` specified by `userId`
@@ -262,11 +81,14 @@
 
    :REST URL: ``PUT /owner/{pid}``
 
-   :param token: The authentication token returned by :func:`CN_auth.login` or
-     :func:`CN_auth.sessionRequest` tat is associated with a session. Used to
-     identify the caller to enable authorization decisions.
+   :param cert: X.509 Certificate, passed to the system via SSL client-side
+     authentication, and used to identiy and validate the identity of the
+     Principal making the call.  The X.509 certificate should be traceable to
+     the CILogon service, and provides various attributes for authorization
+     decisions.  If the X.509 certificate is not provided, then the request
+     should be considered to have originated from the DataONE 'Public' user.
 
-   :type token: :class:`Types.AuthToken`
+   :type cert: :class:`Types.X509Certificate`
 
    :param pid: Identifier of the object to be modified
 
@@ -304,7 +126,7 @@
 
 ----
 
-.. function:: newAccount(userId,password,[authSystem]) -> Principal
+.. function:: newAccount(cert,person) -> Principal
 
    Create a new :term:`principal` in the DataONE system. Note that there should
    probably be a lot more metadata captured about the new user, and there should
@@ -317,17 +139,22 @@
 
    :REST URL: ``POST /accounts``
 
-   :param userId: Requested username.  Must be unique within the DataONE system.
+   :param cert: X.509 Certificate, passed to the system via SSL client-side
+     authentication, and used to identiy and validate the identity of the
+     Principal making the call.  The X.509 certificate should be traceable to
+     the CILogon service, and provides various attributes for authorization
+     decisions.  If the X.509 certificate is not provided, then the request
+     should be considered to have originated from the DataONE 'Public' user.
 
-   :type userId: :class:`Types.Principal`
+   :type cert: :class:`Types.X509Certificate`
 
-   :param password: Secret that conforms to appropriate standards
+   :param person: Information about the Person to be registered with the
+     account, including the real name and email address for the individual.  The
+     Principal with the Person must match the subject of the X.509 certificate
+     associated with the authenticated SSL session via client-side
+     authentication, and must not have been registered previously.
 
-   :type password: string
-
-   :param authSystem: Selection from potentially multiple authentication systems
-
-   :type authSystem: :class:`Types.AuthenticationSystem`
+   :type person: :class:`Types.Person`
 
    :returns: The new principal in the DataONE system.  This may be a simple
      identifier.
@@ -343,8 +170,8 @@
 
    :raises Exceptions.InvalidCredentials: ``(errorCode=401, detailCode=4520)``
 
-     Raised if the supplied credentials are invalid, such asa password that is
-     too weak or inappropriate user name.
+     Raised if the supplied credentials are invalid, such as an invalid X.509
+     certificate.
 
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4501)``
@@ -397,7 +224,54 @@
 
 ----
 
-.. function:: listPrincipals(token,query,start,count) -> PrincipalList
+.. function:: getPrincipalInfo(cert,query,start,count) -> PrincipalList
+
+   Get the information about a Person, their equivalent identities, and the
+   Groups to which they belong.
+
+   :REST URL: ``GET /accounts/{principal}``
+
+   :param cert: X.509 Certificate, passed to the system via SSL client-side
+     authentication, and used to identiy and validate the identity of the
+     Principal making the call.  The X.509 certificate should be traceable to
+     the CILogon service, and provides various attributes for authorization
+     decisions.  If the X.509 certificate is not provided, then the request
+     should be considered to have originated from the DataONE 'Public' user.
+
+   :type cert: :class:`Types.X509Certificate`
+
+   :param query: A query string criteria to be matched using a case-insensitive
+     substring match against the identifier for the principal, the givenName or
+     familyName of users, and the groupName of groups.  The function returns the
+     union of all successful matches against these fields.
+
+   :type query: :class:`Types.String`
+
+   :param start: The starting record number for the records to be returned.
+
+   :type start: integer
+
+   :param count: The number of records to be returned.
+
+   :type count: integer
+
+   :returns: The list of people and groups that match the query.
+
+   :rtype: :class:`Types.PrincipalList`
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2290)``
+
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=2270)``
+
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=2260)``
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2261)``
+
+
+
+----
+
+.. function:: listPrincipals(cert,query,start,count) -> PrincipalList
 
    List the principals, including users, groups, and systems, that match search
    criteria.
@@ -407,11 +281,14 @@
 
    :REST URL: ``GET /accounts``
 
-   :param token: The authentication token returned by :func:`CN_auth.login` or
-     :func:`CN_auth.sessionRequest` tat is associated with a session. Used to
-     identify the caller to enable authorization decisions.
+   :param cert: X.509 Certificate, passed to the system via SSL client-side
+     authentication, and used to identiy and validate the identity of the
+     Principal making the call.  The X.509 certificate should be traceable to
+     the CILogon service, and provides various attributes for authorization
+     decisions.  If the X.509 certificate is not provided, then the request
+     should be considered to have originated from the DataONE 'Public' user.
 
-   :type token: :class:`Types.AuthToken`
+   :type cert: :class:`Types.X509Certificate`
 
    :param query: A query string criteria to be matched using a case-insensitive
      substring match against the identifier for the principal, the givenName or
@@ -492,7 +369,7 @@
 
 ----
 
-.. function:: createGroup(token,groupName) -> Identifier
+.. function:: createGroup(cert,groupName) -> Identifier
 
    Create a group with the given name.
 
@@ -503,11 +380,14 @@
 
    :REST URL: ``POST /groups/{groupName}``
 
-   :param token: The authentication token returned by :func:`CN_auth.login` or
-     :func:`CN_auth.sessionRequest` tat is associated with a session. Used to
-     identify the caller to enable authorization decisions.
+   :param cert: X.509 Certificate, passed to the system via SSL client-side
+     authentication, and used to identiy and validate the identity of the
+     Principal making the call.  The X.509 certificate should be traceable to
+     the CILogon service, and provides various attributes for authorization
+     decisions.  If the X.509 certificate is not provided, then the request
+     should be considered to have originated from the DataONE 'Public' user.
 
-   :type token: :class:`Types.AuthToken`
+   :type cert: :class:`Types.X509Certificate`
 
    :param groupName: The name of the group to be created.
 
@@ -544,7 +424,7 @@
 
 ----
 
-.. function:: addGroupMembers(token,groupName,members) -> Identifier
+.. function:: addGroupMembers(cert,groupName,members) -> Identifier
 
    Add members to the named group.
 
@@ -554,11 +434,14 @@
 
    :REST URL: ``PUT /groups/{groupName}``
 
-   :param token: The authentication token returned by :func:`CN_auth.login` or
-     :func:`CN_auth.sessionRequest` tat is associated with a session. Used to
-     identify the caller to enable authorization decisions.
+   :param cert: X.509 Certificate, passed to the system via SSL client-side
+     authentication, and used to identiy and validate the identity of the
+     Principal making the call.  The X.509 certificate should be traceable to
+     the CILogon service, and provides various attributes for authorization
+     decisions.  If the X.509 certificate is not provided, then the request
+     should be considered to have originated from the DataONE 'Public' user.
 
-   :type token: :class:`Types.AuthToken`
+   :type cert: :class:`Types.X509Certificate`
 
    :param groupName: The identifier of the group to be modified.
 
@@ -594,7 +477,7 @@
 
 ----
 
-.. function:: removeGroupMembers(token,groupName,members) -> Identifier
+.. function:: removeGroupMembers(cert,groupName,members) -> Identifier
 
    Remove members to the named group.
 
@@ -604,11 +487,14 @@
 
    :REST URL: ``DELETE /groups/{groupName}``
 
-   :param token: The authentication token returned by :func:`CN_auth.login` or
-     :func:`CN_auth.sessionRequest` tat is associated with a session. Used to
-     identify the caller to enable authorization decisions.
+   :param cert: X.509 Certificate, passed to the system via SSL client-side
+     authentication, and used to identiy and validate the identity of the
+     Principal making the call.  The X.509 certificate should be traceable to
+     the CILogon service, and provides various attributes for authorization
+     decisions.  If the X.509 certificate is not provided, then the request
+     should be considered to have originated from the DataONE 'Public' user.
 
-   :type token: :class:`Types.AuthToken`
+   :type cert: :class:`Types.X509Certificate`
 
    :param groupName: The identifier of the group to be modified.
 
@@ -648,7 +534,7 @@
 
 ----
 
-.. function:: isAuthorized(token,pid,operation) -> Boolean
+.. function:: isAuthorized(cert,pid,operation) -> Boolean
 
    Test if the user identified by the provided token has authorization for
    operation on the specified object.
@@ -666,11 +552,14 @@
 
    :REST URL: ``GET /isAuthorized/{pid}``
 
-   :param token: The authentication token returned by :func:`CN_auth.login` or
-     :func:`CN_auth.sessionRequest` tat is associated with a session. Used to
-     identify the caller to enable authorization decisions.
+   :param cert: X.509 Certificate, passed to the system via SSL client-side
+     authentication, and used to identiy and validate the identity of the
+     Principal making the call.  The X.509 certificate should be traceable to
+     the CILogon service, and provides various attributes for authorization
+     decisions.  If the X.509 certificate is not provided, then the request
+     should be considered to have originated from the DataONE 'Public' user.
 
-   :type token: :class:`Types.AuthToken`
+   :type cert: :class:`Types.X509Certificate`
 
    :param pid: The identifer of the resource for which access is being checked.
 
@@ -706,7 +595,7 @@
 
 ----
 
-.. function:: setAccess(token,pid,accessPolicy) -> Boolean
+.. function:: setAccess(cert,pid,accessPolicy) -> Boolean
 
    Sets the access permissions for an object identified by *pid*.
 
@@ -719,11 +608,14 @@
 
    :REST URL: ``PUT /accessRules/{pid}``
 
-   :param token: The authentication token returned by :func:`CN_auth.login` or
-     :func:`CN_auth.sessionRequest` tat is associated with a session. Used to
-     identify the caller to enable authorization decisions.
+   :param cert: X.509 Certificate, passed to the system via SSL client-side
+     authentication, and used to identiy and validate the identity of the
+     Principal making the call.  The X.509 certificate should be traceable to
+     the CILogon service, and provides various attributes for authorization
+     decisions.  If the X.509 certificate is not provided, then the request
+     should be considered to have originated from the DataONE 'Public' user.
 
-   :type token: :class:`Types.AuthToken`
+   :type cert: :class:`Types.X509Certificate`
 
    :param pid: The object for which access control is being edited.
 

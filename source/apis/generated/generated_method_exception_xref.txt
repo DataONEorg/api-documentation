@@ -847,91 +847,6 @@
      - 500
      - 4801
    * - :mod:`CN_auth`
-     - :func:`login <CN_auth.login>`
-     - ServiceFailure
-     - 500
-     - 1920
-   * - :mod:`CN_auth`
-     - :func:`login <CN_auth.login>`
-     - InvalidCredentials
-     - 401
-     - 1940
-   * - :mod:`CN_auth`
-     - :func:`login <CN_auth.login>`
-     - NotImplemented
-     - 501
-     - 1900
-   * - :mod:`CN_auth`
-     - :func:`login <CN_auth.login>`
-     - InvalidRequest
-     - 400
-     - 1901
-   * - :mod:`CN_auth`
-     - :func:`sessionRequest <CN_auth.sessionRequest>`
-     - ServiceFailure
-     - 500
-     - 2020
-   * - :mod:`CN_auth`
-     - :func:`sessionRequest <CN_auth.sessionRequest>`
-     - InvalidCredentials
-     - 401
-     - 2040
-   * - :mod:`CN_auth`
-     - :func:`sessionRequest <CN_auth.sessionRequest>`
-     - NotImplemented
-     - 501
-     - 2000
-   * - :mod:`CN_auth`
-     - :func:`sessionRequest <CN_auth.sessionRequest>`
-     - InvalidRequest
-     - 400
-     - 2001
-   * - :mod:`CN_auth`
-     - :func:`challengeResponse <CN_auth.challengeResponse>`
-     - ServiceFailure
-     - 500
-     - 1720
-   * - :mod:`CN_auth`
-     - :func:`challengeResponse <CN_auth.challengeResponse>`
-     - InvalidCredentials
-     - 401
-     - 1740
-   * - :mod:`CN_auth`
-     - :func:`challengeResponse <CN_auth.challengeResponse>`
-     - NotImplemented
-     - 501
-     - 1700
-   * - :mod:`CN_auth`
-     - :func:`challengeResponse <CN_auth.challengeResponse>`
-     - InvalidRequest
-     - 400
-     - 1701
-   * - :mod:`CN_auth`
-     - :func:`getAuthSession <CN_auth.getAuthSession>`
-     - ServiceFailure
-     - 500
-     - 1620
-   * - :mod:`CN_auth`
-     - :func:`getAuthSession <CN_auth.getAuthSession>`
-     - NotAuthorized
-     - 401
-     - 1640
-   * - :mod:`CN_auth`
-     - :func:`getAuthSession <CN_auth.getAuthSession>`
-     - NotFound
-     - 404
-     - 1660
-   * - :mod:`CN_auth`
-     - :func:`getAuthSession <CN_auth.getAuthSession>`
-     - NotImplemented
-     - 501
-     - 1600
-   * - :mod:`CN_auth`
-     - :func:`getAuthSession <CN_auth.getAuthSession>`
-     - InvalidRequest
-     - 400
-     - 1601
-   * - :mod:`CN_auth`
      - :func:`setOwner <CN_auth.setOwner>`
      - ServiceFailure
      - 500
@@ -1011,6 +926,26 @@
      - InvalidRequest
      - 400
      - 4542
+   * - :mod:`CN_auth`
+     - :func:`getPrincipalInfo <CN_auth.getPrincipalInfo>`
+     - ServiceFailure
+     - 500
+     - 2290
+   * - :mod:`CN_auth`
+     - :func:`getPrincipalInfo <CN_auth.getPrincipalInfo>`
+     - InvalidToken
+     - 401
+     - 2270
+   * - :mod:`CN_auth`
+     - :func:`getPrincipalInfo <CN_auth.getPrincipalInfo>`
+     - NotAuthorized
+     - 401
+     - 2260
+   * - :mod:`CN_auth`
+     - :func:`getPrincipalInfo <CN_auth.getPrincipalInfo>`
+     - NotImplemented
+     - 501
+     - 2261
    * - :mod:`CN_auth`
      - :func:`listPrincipals <CN_auth.listPrincipals>`
      - ServiceFailure

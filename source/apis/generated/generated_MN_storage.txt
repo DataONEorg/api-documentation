@@ -13,25 +13,25 @@
    * - Tier 3
      - ``POST /object/{pid}``
      - :func:`create`
-     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
+     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`,
        ``object``, :class:`sysmeta<Types.SystemMetadata>`) ``->``
        :class:`Types.Identifier`
    * - Tier 3
      - ``PUT /object/{pid}``
      - :func:`update`
-     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
+     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`,
        ``object``, :class:`newPid<Types.Identifier>`,
        :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
    * - Tier 3
      - ``DELETE /object/{pid}``
      - :func:`delete`
-     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
-       :class:`Types.Identifier`
+     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`)
+       ``->`` :class:`Types.Identifier`
 
 
 
 
-.. function:: create(token,pid,object,sysmeta) -> Identifier
+.. function:: create(cert,pid,object,sysmeta) -> Identifier
 
    Adds a new object to the Member Node, where the object is either a data
    object or a science metadata object. This method is called by clients to
@@ -47,11 +47,14 @@
 
    :REST URL: ``POST /object/{pid}``
 
-   :param token: The authentication token returned by :func:`CN_auth.login` or
-     :func:`CN_auth.sessionRequest` tat is associated with a session. Used to
-     identify the caller to enable authorization decisions.
+   :param cert: X.509 Certificate, passed to the system via SSL client-side
+     authentication, and used to identiy and validate the identity of the
+     Principal making the call.  The X.509 certificate should be traceable to
+     the CILogon service, and provides various attributes for authorization
+     decisions.  If the X.509 certificate is not provided, then the request
+     should be considered to have originated from the DataONE 'Public' user.
 
-   :type token: :class:`Types.AuthToken`
+   :type cert: :class:`Types.X509Certificate`
 
    :param pid: The identifier that should be used in DataONE to identify and
      access the object. This is an Unicode string that follows the constraints
@@ -123,7 +126,7 @@
 
 ----
 
-.. function:: update(token,pid,object,newPid,sysmeta) -> Identifier
+.. function:: update(cert,pid,object,newPid,sysmeta) -> Identifier
 
    Updates an existing object by creating a new object identified by *newPid* on
    the Member Node which explicitly obsoletes the object identified by *pid*
@@ -146,11 +149,14 @@
 
    :REST URL: ``PUT /object/{pid}``
 
-   :param token: The authentication token returned by :func:`CN_auth.login` or
-     :func:`CN_auth.sessionRequest` tat is associated with a session. Used to
-     identify the caller to enable authorization decisions.
+   :param cert: X.509 Certificate, passed to the system via SSL client-side
+     authentication, and used to identiy and validate the identity of the
+     Principal making the call.  The X.509 certificate should be traceable to
+     the CILogon service, and provides various attributes for authorization
+     decisions.  If the X.509 certificate is not provided, then the request
+     should be considered to have originated from the DataONE 'Public' user.
 
-   :type token: :class:`Types.AuthToken`
+   :type cert: :class:`Types.X509Certificate`
 
    :param pid: The identifier of the object that is being updated. If this
      identifier does not exist in the system, an error is raised and the
@@ -228,7 +234,7 @@
 
 ----
 
-.. function:: delete(token,pid) -> Identifier
+.. function:: delete(cert,pid) -> Identifier
 
    Deletes an object from the Member Node, where the object is either a data
    object or a science metadata object. This method is called by clients to
@@ -246,11 +252,14 @@
 
    :REST URL: ``DELETE /object/{pid}``
 
-   :param token: The authentication token returned by :func:`CN_auth.login` or
-     :func:`CN_auth.sessionRequest` tat is associated with a session. Used to
-     identify the caller to enable authorization decisions.
+   :param cert: X.509 Certificate, passed to the system via SSL client-side
+     authentication, and used to identiy and validate the identity of the
+     Principal making the call.  The X.509 certificate should be traceable to
+     the CILogon service, and provides various attributes for authorization
+     decisions.  If the X.509 certificate is not provided, then the request
+     should be considered to have originated from the DataONE 'Public' user.
 
-   :type token: :class:`Types.AuthToken`
+   :type cert: :class:`Types.X509Certificate`
 
    :param pid: The identifier of the object to be deleted.
 

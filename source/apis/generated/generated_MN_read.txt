@@ -13,40 +13,40 @@
    * - Tier 1
      - ``GET /object/{pid}``
      - :func:`get`
-     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
-       :class:`Types.OctetStream`
+     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`)
+       ``->`` :class:`Types.OctetStream`
    * - Tier 1
      - ``GET /meta/{pid}``
      - :func:`getSystemMetadata`
-     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
-       :class:`Types.SystemMetadata`
+     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`)
+       ``->`` :class:`Types.SystemMetadata`
    * - Tier 1
      - ``HEAD /object/{pid}``
      - :func:`describe`
-     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`) ``->``
-       :class:`Types.DescribeResponse`
+     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`)
+       ``->`` :class:`Types.DescribeResponse`
    * - Tier 1
      - ``GET /checksum/{pid}``
      - :func:`getChecksum`
-     - (:class:`token<Types.AuthToken>`, :class:`pid<Types.Identifier>`,
+     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`,
        ``[checksumAlgorithm]``) ``->`` :class:`Types.Checksum`
    * - Tier 1
      - ``GET /object``
      - :func:`listObjects`
-     - (:class:`token<Types.AuthToken>`, :class:`[startTime]<Types.DateTime>`,
-       :class:`[endTime]<Types.DateTime>`,
+     - (:class:`cert<Types.X509Certificate>`,
+       :class:`[startTime]<Types.DateTime>`, :class:`[endTime]<Types.DateTime>`,
        :class:`[objectFormat]<Types.ObjectFormat>`, ``[replicaStatus]``,
        ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.ObjectList`
    * - Tier 1
      - ``POST /error``
      - :func:`synchronizationFailed`
-     - (:class:`token<Types.AuthToken>`, :class:`message<Types.Exception>`)
+     - (:class:`cert<Types.X509Certificate>`, :class:`message<Types.Exception>`)
        ``->``
 
 
 
 
-.. function:: get(token,pid) -> OctetStream
+.. function:: get(cert,pid) -> OctetStream
 
    Retrieve an object identified by *pid* from the node.
 
@@ -67,10 +67,14 @@
 
    :REST URL: ``GET /object/{pid}``
 
-   :param token: The authentication token associated with a session. Used to
-     identify the caller to enable authorization decisions.
+   :param cert: X.509 Certificate, passed to the system via SSL client-side
+     authentication, and used to identiy and validate the identity of the
+     Principal making the call.  The X.509 certificate should be traceable to
+     the CILogon service, and provides various attributes for authorization
+     decisions.  If the X.509 certificate is not provided, then the request
+     should be considered to have originated from the DataONE 'Public' user.
 
-   :type token: :class:`Types.AuthToken`
+   :type cert: :class:`Types.X509Certificate`
 
    :param pid: The identifier for the object to be retrieved.
 
@@ -121,7 +125,7 @@
 
 ----
 
-.. function:: getSystemMetadata(token,pid) -> SystemMetadata
+.. function:: getSystemMetadata(cert,pid) -> SystemMetadata
 
    Describes the science metadata or data object (and likely other objects in
    the future) identified by *pid* by returning the associated system metadata
@@ -138,10 +142,14 @@
 
    :REST URL: ``GET /meta/{pid}``
 
-   :param token: The authentication token associated with a session. Used to
-     identify the caller to enable authorization decisions.
+   :param cert: X.509 Certificate, passed to the system via SSL client-side
+     authentication, and used to identiy and validate the identity of the
+     Principal making the call.  The X.509 certificate should be traceable to
+     the CILogon service, and provides various attributes for authorization
+     decisions.  If the X.509 certificate is not provided, then the request
+     should be considered to have originated from the DataONE 'Public' user.
 
-   :type token: :class:`Types.AuthToken`
+   :type cert: :class:`Types.X509Certificate`
 
    :param pid: Identifier for the science data or science metedata object of
      interest.
@@ -176,7 +184,7 @@
 
 ----
 
-.. function:: describe(token,pid) -> DescribeResponse
+.. function:: describe(cert,pid) -> DescribeResponse
 
    This method provides a lighter weight mechanism than
    :func:`MN_read.getSystemMetadata` for a client to determine basic properties
@@ -201,10 +209,14 @@
 
    :REST URL: ``HEAD /object/{pid}``
 
-   :param token: The authentication token associated with a session. Used to
-     identify the caller to enable authorization decisions.
+   :param cert: X.509 Certificate, passed to the system via SSL client-side
+     authentication, and used to identiy and validate the identity of the
+     Principal making the call.  The X.509 certificate should be traceable to
+     the CILogon service, and provides various attributes for authorization
+     decisions.  If the X.509 certificate is not provided, then the request
+     should be considered to have originated from the DataONE 'Public' user.
 
-   :type token: :class:`Types.AuthToken`
+   :type cert: :class:`Types.X509Certificate`
 
    :param pid: Identifier for the object in question.
 
@@ -233,7 +245,7 @@
 
 ----
 
-.. function:: getChecksum(token,pid,[checksumAlgorithm]) -> Checksum
+.. function:: getChecksum(cert,pid,[checksumAlgorithm]) -> Checksum
 
    Returns a :class:`Types.Checksum` for the specified object using an accepted
    hashing algorithm. The result is used to determine if two instances
@@ -244,10 +256,14 @@
 
    :REST URL: ``GET /checksum/{pid}``
 
-   :param token: The authentication token associated with a session. Used to
-     identify the caller to enable authorization decisions.
+   :param cert: X.509 Certificate, passed to the system via SSL client-side
+     authentication, and used to identiy and validate the identity of the
+     Principal making the call.  The X.509 certificate should be traceable to
+     the CILogon service, and provides various attributes for authorization
+     decisions.  If the X.509 certificate is not provided, then the request
+     should be considered to have originated from the DataONE 'Public' user.
 
-   :type token: :class:`Types.AuthToken`
+   :type cert: :class:`Types.X509Certificate`
 
    :param pid: The identifier of the object the operation is being performed on.
 
@@ -286,7 +302,7 @@
 
 ----
 
-.. function:: listObjects(token,[startTime],[endTime],[objectFormat],[replicaStatus],[start=0],[count=1000]) -> ObjectList
+.. function:: listObjects(cert,[startTime],[endTime],[objectFormat],[replicaStatus],[start=0],[count=1000]) -> ObjectList
 
    Retrieve the list of objects present on the MN that match the calling
    parameters. This method is required to support the process of :term:`Member
@@ -310,10 +326,14 @@
 
    :REST URL: ``GET /object``
 
-   :param token: The authentication token associated with a session. Used to
-     identify the caller to enable authorization decisions.
+   :param cert: X.509 Certificate, passed to the system via SSL client-side
+     authentication, and used to identiy and validate the identity of the
+     Principal making the call.  The X.509 certificate should be traceable to
+     the CILogon service, and provides various attributes for authorization
+     decisions.  If the X.509 certificate is not provided, then the request
+     should be considered to have originated from the DataONE 'Public' user.
 
-   :type token: :class:`Types.AuthToken`
+   :type cert: :class:`Types.X509Certificate`
 
    :param startTime: Specifies the beginning of the time range from which to
      return object (>=). Queries against
@@ -381,7 +401,7 @@
 
 ----
 
-.. function:: synchronizationFailed(token,message) -> 
+.. function:: synchronizationFailed(cert,message) -> 
 
    This is a callback method used by a CN to indicate to a MN that it cannot
    complete synchronization of the science metadata identified by *pid*. When
@@ -394,10 +414,14 @@
 
    :REST URL: ``POST /error``
 
-   :param token: The authentication token associated with a session. Used to
-     identify the caller to enable authorization decisions.
+   :param cert: X.509 Certificate, passed to the system via SSL client-side
+     authentication, and used to identiy and validate the identity of the
+     Principal making the call.  The X.509 certificate should be traceable to
+     the CILogon service, and provides various attributes for authorization
+     decisions.  If the X.509 certificate is not provided, then the request
+     should be considered to have originated from the DataONE 'Public' user.
 
-   :type token: :class:`Types.AuthToken`
+   :type cert: :class:`Types.X509Certificate`
 
    :param message: An instance of the :exc:`Exceptions.SynchronizationFailed`
      exception with body appropriately filled.
