@@ -21,9 +21,10 @@
      - (:class:`cert<Types.X509Certificate>`, :class:`person<Types.Person>`)
        ``->`` :class:`Types.Principal`
    * - Tier 2
-     - ``GET /sessions/verifyToken``
-     - :func:`verifyToken`
-     - (:class:`token<Types.AuthToken>`) ``->`` :class:`Types.Boolean`
+     - ``POST /accounts/{principal}``
+     - :func:`verifyAccount`
+     - (:class:`cert<Types.X509Certificate>`,
+       :class:`principal<Types.Principal>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``GET /accounts/{principal}``
      - :func:`getPrincipalInfo`
@@ -182,26 +183,32 @@
 
 ----
 
-.. function:: verifyToken(token) -> Boolean
+.. function:: verifyAccount(cert,principal) -> Boolean
 
-   Test if the provided token is valid.
+   Verify that the Person data associated with this Principal is a true
+   representation of the real world person.
 
-   The token is passed to the method end point using the normal authentication
-   token transfer mechanism (e.g. HTTP Auth header).
+   This service can only be called byt users who have an administrative role for
+   the domain of users in question.
 
-   Note that there is a potential security issue here as open access to this
-   method enables a malicious user to potentially probe a large number of
-   generated tokens to determine properties of the system, and perhaps even
-   generate a token that matches a system token. Hence another level of
-   restriction (perhaps network level blocking / limiting) is necessary.
+   :REST URL: ``POST /accounts/{principal}``
 
-   :REST URL: ``GET /sessions/verifyToken``
+   :param cert: X.509 Certificate, passed to the system via SSL client-side
+     authentication, and used to identiy and validate the identity of the
+     Principal making the call.  The X.509 certificate should be traceable to
+     the CILogon service, and provides various attributes for authorization
+     decisions.  If the X.509 certificate is not provided, then the request
+     should be considered to have originated from the DataONE 'Public' user.
 
-   :param token: The token to be tested.
+   :type cert: :class:`Types.X509Certificate`
 
-   :type token: :class:`Types.AuthToken`
+   :param principal: The Principal identifier of the Person to be verified.
+     After this service is called for a principal by an authorized user, the
+     account is marked as verified by this user.
 
-   :returns: True if the supplied token is valid, otherwise False.
+   :type principal: :class:`Types.Principal`
+
+   :returns: True if the account verification succeeds, otherwise false.
 
    :rtype: :class:`Types.Boolean`
 
@@ -209,9 +216,8 @@
 
    :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=4540)``
 
-     This error is raised if the request comes from a black listed source (e.g.
-     a temporary block may be imposed on a source that calls this method too
-     many times within some time interval)
+     This error is raised if the person attempting to validate the account is
+     not authorized to verify accounts.
 
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4541)``

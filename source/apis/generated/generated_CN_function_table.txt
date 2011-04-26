@@ -77,9 +77,10 @@
      - (:class:`cert<Types.X509Certificate>`, :class:`person<Types.Person>`)
        ``->`` :class:`Types.Principal`
    * - Tier 2
-     - ``GET /sessions/verifyToken``
-     - :func:`CN_auth.verifyToken`
-     - (:class:`token<Types.AuthToken>`) ``->`` :class:`Types.Boolean`
+     - ``POST /accounts/{principal}``
+     - :func:`CN_auth.verifyAccount`
+     - (:class:`cert<Types.X509Certificate>`,
+       :class:`principal<Types.Principal>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``GET /accounts/{principal}``
      - :func:`CN_auth.getPrincipalInfo`

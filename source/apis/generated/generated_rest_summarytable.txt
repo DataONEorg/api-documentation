@@ -218,16 +218,12 @@
        should probably be a lot more metadata captured about the new user, and
        there should be a mechanism for specifying the default access control
        rules for the new account.
-   * - GET /sessions/verifyToken
-     - :func:`CN_auth.verifyToken`
-     - Test if the provided token is valid. The token is passed to the method
-       end point using the normal authentication token transfer mechanism (e.g.
-       HTTP Auth header). Note that there is a potential security issue here as
-       open access to this method enables a malicious user to potentially probe
-       a large number of generated tokens to determine properties of the system,
-       and perhaps even generate a token that matches a system token. Hence
-       another level of restriction (perhaps network level blocking / limiting)
-       is necessary.
+   * - POST /accounts/{principal}
+     - :func:`CN_auth.verifyAccount`
+     - Verify that the Person data associated with this Principal is a true
+       representation of the real world person. This service can only be called
+       byt users who have an administrative role for the domain of users in
+       question.
    * - GET /accounts/{principal}
      - :func:`CN_auth.getPrincipalInfo`
      - Get the information about a Person, their equivalent identities, and the
