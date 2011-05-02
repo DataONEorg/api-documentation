@@ -1,0 +1,37 @@
+Node Tiers
+----------
+
+Member Nodes can expose different levels of functionality while participating
+in the DataONE network. Four tiers of MN functionality have been identified, The tiers and Member Node APIs necessary to support are summarized in the table below. Also indicated are the corresponding Coordinating Node APIs required for each tier.
+
+.. list-table::
+   :widths: 1 5 5 5
+   :header-rows: 1
+   
+   * - Tier
+     - Description
+     - MN APIs
+     - CN APIs
+   * - 1
+     - Public read, no authentication or access control of content. No content
+       can be created through the DataONE service interfaces. The node can not
+       act as a replication target.
+     - :mod:`MN_core` + :mod:`MN_read`
+     - :mod:`CN_core`, :mod:`CN_read`, :mod:`CN_storage`
+   * - 2
+     - Read and resolve with access control support.
+     - Tier 1 + :mod:`MN_auth`
+     - :mod:`CN_auth`, :mod:`CN_register`
+   * - 3
+     - Write (create, update, delete), possibly limited support for data types
+     - Tier 2 + :mod:`MN_storage`
+     - *No additional APIs*
+   * - 4
+     - Replication target. The types of content supported by the node may be
+       limited to a subset of object formats.
+     - Tier 3 + :mod:`MN_replication`
+     - :mod:`CN_storage` (setReplicationStatus)
+
+The specific methods that must be implemented for each tier are listed in the
+respective APIs.
+

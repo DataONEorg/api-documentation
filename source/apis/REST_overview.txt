@@ -1,6 +1,9 @@
+REST Interface Overview
+-----------------------
 
-Overview
-~~~~~~~~
+This document describes how the Member (:doc:`MN_APIs`) and Coordinating
+(:doc:`CN_APIs`) Node APIs are implemented using a Representational State
+Transfer (REST) approach over HTTP.
 
 - Content is modeled as collections, with :class:`PIDs <Types.Identifier>`
   identifying individual items of a collection.
@@ -59,7 +62,8 @@ REST Endpoint Summary
 .. include:: generated/generated_rest_summarytable.txt
 
 
-**Serialization**
+Message Serialization
+~~~~~~~~~~~~~~~~~~~~~
 
 The format of the response (except for responses from :func:`MN_read.get` or
 :func:`CN_crud.get`) is determined by the ``Accept:`` header provided in the
@@ -103,7 +107,8 @@ the HTTP error code set to 406.
 .. _JSON: http://www.json.org/
 
 
-**Parameters in Requests**
+Parameters in Requests
+~~~~~~~~~~~~~~~~~~~~~~
 
 Many of the URL patterns described here accept parameters in the URL. Unless
 otherwise indicated, parameter names and values are case sensitive.
@@ -123,7 +128,8 @@ will be sent in the message body (as opposed to URL parameters).
 .. _RFC2046: http://tools.ietf.org/html/rfc2046#section-5.1.3
 
 
-**Authorization Token**
+Authorization Token
+~~~~~~~~~~~~~~~~~~~
 
 The authorization token is generated in response to an authentication
 operation and is used to indicate the principal that is performing the
@@ -145,52 +151,53 @@ limit HTTP header field sizes for Apache is `8190 bytes`_.
 .. _8190 bytes: http://httpd.apache.org/docs/2.2/mod/core.html#limitrequestfieldsize
 
 
-Wildcards and Range Operators
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. 
+  Wildcards and Range Operators
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Several of the REST calls support filtering using wildcards and/or range
-operators. When such filtering is supported, it is explicitly noted in the
-documentation for a given REST call.
+  Several of the REST calls support filtering using wildcards and/or range
+  operators. When such filtering is supported, it is explicitly noted in the
+  documentation for a given REST call.
 
-The basic approach is the use of name/value pairs (NVPs) in the URL to
-construct a filter for restricting results to a portion of a data set. All
-NVPs are combined using the AND operator.
+  The basic approach is the use of name/value pairs (NVPs) in the URL to
+  construct a filter for restricting results to a portion of a data set. All
+  NVPs are combined using the AND operator.
 
-Wildcards are typically supported for string values and allow substring
-filters to be specified by including one or more of the following wildcard
-characters in the string.
+  Wildcards are typically supported for string values and allow substring
+  filters to be specified by including one or more of the following wildcard
+  characters in the string.
 
-:\*: Match a string of zero or more random characters
-:\?: Match a single random character
+  :\*: Match a string of zero or more random characters
+  :\?: Match a single random character
 
-Range operators are typically supported for values that represent a continuous
-series, such as byte sizes and datetimes. A range operator is specified by
-appending it to a name. Valid range operators are:
+  Range operators are typically supported for values that represent a continuous
+  series, such as byte sizes and datetimes. A range operator is specified by
+  appending it to a name. Valid range operators are:
 
-======= ===========================
-Suffix  Range Operator
-======= ===========================
-None    Equals (==) (default)
-_eq     Equals (==)
-_lt     Less than (<)
-_le     Less than or equals (<=)
-_gt     Greater than (>)
-_ge     Greater than or equals (>=)
-======= ===========================
+  ======= ===========================
+  Suffix  Range Operator
+  ======= ===========================
+  None    Equals (==) (default)
+  _eq     Equals (==)
+  _lt     Less than (<)
+  _le     Less than or equals (<=)
+  _gt     Greater than (>)
+  _ge     Greater than or equals (>=)
+  ======= ===========================
 
-Wildcards and range operators cannot be combined in a single NVP.
+  Wildcards and range operators cannot be combined in a single NVP.
 
-**Examples**
+  **Examples**
 
-Return only objects that have been modified since 6AM on the first of January,
-2010 UTC::
+  Return only objects that have been modified since 6AM on the first of January,
+  2010 UTC::
 
-  ../object?qt=nvp&lastModified_gt=2010-01-01T06:00:00Z
+    ../object?qt=nvp&lastModified_gt=2010-01-01T06:00:00Z
 
-Return only objects that were last modified in 2005::
+  Return only objects that were last modified in 2005::
 
-  ../object?qt=nvp&lastModified_ge=2005-01-01-T00:00:00Z&lastModified_lt=2006-01-01-T00:00:00Z
+    ../object?qt=nvp&lastModified_ge=2005-01-01-T00:00:00Z&lastModified_lt=2006-01-01-T00:00:00Z
 
-.. TODO:: Define the fields that should be supported for filtering for each type of collection.
+  .. TODO:: Define the fields that should be supported for filtering for each type of collection.
 
 

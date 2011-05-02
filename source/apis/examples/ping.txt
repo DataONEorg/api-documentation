@@ -2,8 +2,8 @@
 
 The response should be a valid HTTP response with a blank or arbitrary body.
 Only the HTTP header information is considered by the requestor. A successful
-response must have a HTTP status code of 200. In case of an error condition,
-the appropriate HTTP status code must be set, and an exception or error
+response *must* have a HTTP status code of 200. In case of an error condition,
+the appropriate HTTP status code *must* be set, and an exception or error
 information *may* be returned in the response.
 
 **Example**
@@ -12,8 +12,8 @@ Example of ping request and response for a Member Node. Lines prefixed with
 “>” indicate outgoing information, lines prefixed with “<” show content
 returned from the server. Note that the actual response headers may vary, the
 only required header is the first status line. However, in order to fully
-support clients that may cache the response, the *Date*, *Expires*, and
-*Cache-Control* headers should also be included.
+support clients that may cache the response, it is recommended that the
+*Date*, *Expires*, and *Cache-Control* headers are returned.
 
 ::
 

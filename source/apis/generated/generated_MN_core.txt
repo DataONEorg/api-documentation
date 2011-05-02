@@ -18,15 +18,12 @@
      - ``GET /log``
      - :func:`getLogRecords`
      - (:class:`cert<Types.X509Certificate>`, :class:`fromDate<Types.DateTime>`,
-       :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`) ``->``
-       :class:`Types.LogRecords`
+       :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`,
+       ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.LogRecords`
    * - Tier 1
      - ``GET /monitor/object``
      - :func:`getObjectStatistics`
-     - (:class:`cert<Types.X509Certificate>`,
-       :class:`[fromDate]<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`,
-       :class:`[format]<Types.ObjectFormat>`, :class:`[day]<Types.Integer>`,
-       :class:`[pid]<Types.Identifier>`) ``->`` :class:`Types.MonitorList`
+     - (``[format]``, ``[pid]``) ``->`` :class:`Types.ObjectStatistics`
    * - Tier 1
      - ``GET /monitor/event``
      - :func:`getOperationStatistics`
@@ -48,9 +45,8 @@
 
 .. function:: ping() -> Boolean
 
-   Low level "are you alive" operation. Response is simple ACK, but may be
-   reasonable to overload with a couple of flags that could indicate
-   availability of new data or change in capabilities.
+   Low level "are you alive" operation. A valid ping response is indicated by a
+   HTTP status of 200.
 
    The Member Node should perform some minimal internal functionality testing
    before answering. However, ping checks will be frequent (every few minutes)
@@ -85,35 +81,49 @@
 
 ----
 
-.. function:: getLogRecords(cert,fromDate,[toDate],[event]) -> LogRecords
+.. function:: getLogRecords(cert,fromDate,[toDate],[event],[start=0],[count=1000]) -> LogRecords
 
-   Retrieve log information from the MN for the specified date range
-   (inclusive).
+   Retrieve log information from the Member Node for the specified date range
+   and even type.
+
+   This method is used primarily by the log aggregator to generate aggregate
+   statistics for nodes, objects, and the methods of access.
 
    :REST URL: ``GET /log``
 
    :param cert: X.509 Certificate, passed to the system via SSL client-side
      authentication, and used to identiy and validate the identity of the
      Principal making the call.  The X.509 certificate should be traceable to
-     the CILogon service, and provides various attributes for authorization
+     the CILogon service and provides various attributes for authorization
      decisions.  If the X.509 certificate is not provided, then the request
      should be considered to have originated from the DataONE 'Public' user.
 
    :type cert: :class:`Types.X509Certificate`
 
-   :param fromDate: Starting time for records in response
+   :param fromDate: Records with dateSystemMetadatModified greater than this
+     value will be returned.
 
    :type fromDate: :class:`Types.DateTime`
 
-   :param toDate: End time for records in response. If not specified, then
-     defaults to now.
+   :param toDate: Records with dateSystemMetadatModified less than or equal to
+     this value will be returned. If not specified, then defaults to *now*.
 
    :type toDate: :class:`Types.DateTime`
 
    :param event: Return only log records for the specified type of event.
-     Default is all.
+     Default is *all*.
 
    :type event: :class:`Types.Event`
+
+   :param start=0: Optional zero based offset from the first record in the set
+     of matching log records. Used to assist with paging the response.
+
+   :type start=0: integer
+
+   :param count=1000: Optional maximum number of log records to return in the
+     response. Used to assist with paging the response.
+
+   :type count=1000: integer
 
    :returns:
 
@@ -134,51 +144,46 @@
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=1461)``
 
 
+.. include:: ../examples/getLogRecords.txt
+
+
 
 ----
 
-.. function:: getObjectStatistics(cert,[fromDate],[toDate],[format],[day],[pid]) -> MonitorList
+.. function:: getObjectStatistics([format],[pid]) -> ObjectStatistics
 
-   Called by the monitoring system to find how many objects are stored on the
-   MN, cumulative or for each day in a given range.
+   Returns the number of objects stored on the Member Node at the time the call
+   is serviced. The count may be restricted to a particular object format or a
+   filter on the PID.
+
+   Access control rules are not applied to the count, so the actual record count
+   may differ from the number of records that are accessible through other calls
+   such as :func:`MN.listObjects`, however the response *must* be indicative of
+   the number of objects available through the DataONE service interfaces.
+
+   .. Note:: Functionality of this method has been simplfiied from the 0.5
+     description so that the response reflects the current state of the Member
+     Node. Historical information should be collated by a monitoring service if
+     necessary. This change was made to reduce the operational requirements for
+     Member Node services.
 
    :REST URL: ``GET /monitor/object``
 
-   :param cert: X.509 Certificate, passed to the system via SSL client-side
-     authentication, and used to identiy and validate the identity of the
-     Principal making the call.  The X.509 certificate should be traceable to
-     the CILogon service, and provides various attributes for authorization
-     decisions.  If the X.509 certificate is not provided, then the request
-     should be considered to have originated from the DataONE 'Public' user.
-
-   :type cert: :class:`Types.X509Certificate`
-
-   :param fromDate: An ISO8601 compatible DateTime range specifying the time
-     range for which to return object statistics.
-
-   :type fromDate: :class:`Types.DateTime`
-
-   :param toDate:
-
-   :type toDate: :class:`Types.DateTime`
-
    :param format: Limit to objects of given format.
 
-   :type format: :class:`Types.ObjectFormat`
+   :type format: string
 
-   :param day: Flag that causes a separate set of statistics to be returned for
-     each day. Without this flag, a single, cumulative set of statistics is
-     returned.
+   :param pid: Filter on identifier. Wildcards characters (?: match any single
+     character; *: match any sequence of characters) *should* be supported by
+     this method. If the implementation does not support wildcard characters for
+     filtering PIDs, then an InvalidRequest exception *must* be raised if such
+     characters are present unescaped in the request.
 
-   :type day: :class:`Types.Integer`
+   :type pid: string
 
-   :param pid: Filter on identifier (with wildcards)
+   :returns: Number of objects available on the node that match the request.
 
-   :type pid: :class:`Types.Identifier`
-
-   :returns: List of statistics.
-
-   :rtype: :class:`Types.MonitorList`
+   :rtype: :class:`Types.ObjectStatistics`
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2060)``
 
@@ -201,8 +206,7 @@
 
 .. function:: getOperationStatistics(cert,[time],[requestor],[day],[event],[eventTime],[format]) -> MonitorList
 
-   Called by the monitoring system to find how many operations have been
-   performed on the MN, cumulative or for each day in a given range.
+   Returns the number of operations that have been serviced by the node.
 
    :REST URL: ``GET /monitor/event``
 

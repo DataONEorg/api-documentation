@@ -80,6 +80,14 @@ Version   Structure
   no rules are specified at that time, then the object is deemed to be private
   and the only user with access to the object (read, write, or otherwise) is
   the RightsHolder.
+  
+  :param principal: The principal
+  :type principal: Types.Principal
+  :param permission: 
+  :type permission: Types.Permission
+  :param resource:
+  :type resource: Types.Identifier
+  
 
   :: 
 
@@ -104,13 +112,13 @@ Version   Structure
 
   An AuthToken is an Identifier that is used to reference an authenticated
   AuthSession that has been established via the act of authenticating a
-  Principal with a Coordinating Node.  The AuthToken identifier follows the same
-  formatting and content rules as the Identifier class, and should be
-  representable in simple 7-bit ASCII or as a UTF-8 string.  The value SHOULD
-  additionally be constrained to be less than 8K in order to be transportable in
-  typical HTTP header fields.  The AuthToken represents an AuthSession, which is
-  tied to an authenticated Principal and can only be used for requests from a
-  particular Address.
+  Principal with a Coordinating Node. The AuthToken identifier follows the
+  same formatting and content rules as the Identifier class, and should be
+  representable in simple 7-bit ASCII or as a UTF-8 string. The value SHOULD
+  additionally be constrained to be less than 8K in order to be transportable
+  in typical HTTP header fields. The AuthToken represents an AuthSession,
+  which is tied to an authenticated Principal and can only be used for
+  requests from a particular Address.
 
 ----
 
@@ -152,11 +160,11 @@ Version   Structure
 .. class:: Challenge
 
   The challenge data that is sent back to a client during two-phase
-  authentication.  The Challenge includes two pieces of data: an encrypted
-  Nonce, and an X.509 public key certificate for the session service.
-  The Nonce is encrypted using a client's public key and sent to the client,
-  where it is decrytped by the client (proving access to the associated private
-  key), and then re-encrypted using the server's public key.  When the server
+  authentication. The Challenge includes two pieces of data: an encrypted
+  Nonce, and an X.509 public key certificate for the session service. The
+  Nonce is encrypted using a client's public key and sent to the client, where
+  it is decrytped by the client (proving access to the associated private
+  key), and then re-encrypted using the server's public key. When the server
   decrypts the returned Nonce, if it matches then it establishes an
   authenticated session.
 
@@ -278,13 +286,13 @@ Version   Structure
 
 .. class:: EncryptedNonce
 
-  A random number that has been encrypted as part of a two-phase authentication
-  protocol and that is only used once for session authentication.  The Nonce is 
-  initially encrypted using a client's public key and sent to the client,
-  where it is decryped by the client (proving access tot he associated private
-  key), and then re-encrypted using the server's public key.  When the server
-  decrypts the returned Nonce, if it matches then it establishes an
-  authenticated session.
+  A random number that has been encrypted as part of a two-phase
+  authentication protocol and that is only used once for session
+  authentication. The Nonce is initially encrypted using a client's public key
+  and sent to the client, where it is decryped by the client (proving access
+  tot he associated private key), and then re-encrypted using the server's
+  public key. When the server decrypts the returned Nonce, if it matches then
+  it establishes an authenticated session.
 
 ----
 
@@ -851,3 +859,8 @@ Expressing a NVP query in a URL
 .. _Protocol Buffer Language: http://code.google.com/apis/protocolbuffers/docs/overview.html
 
 
+----
+
+.. py:module:: STypes
+
+.. include:: generated/stypes.txt

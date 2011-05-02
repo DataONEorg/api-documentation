@@ -2,8 +2,8 @@ DataONE APIs
 ============
 
 This document describes the outward facing application programming interfaces
-(APIs) available for the Coordinating and Member Nodes and the Investigator
-Toolkit.
+(APIs) available for the three major components of the DataONE infrastructure:
+Coordinating and Member Nodes and the Investigator Toolkit.
 
 
 .. figure:: images/componentMethods.png 
@@ -13,71 +13,23 @@ Toolkit.
    by each component. An arrow to a target indicates the origin is calling the
    method on the target.
 
-
-Node Tiers
-----------
-
-Member Nodes can expose different levels of functionality while participating
-in the DataONE network. Five tiers of MN functionality have been identified:
-
-.. list-table::
-   :widths: 1 5 5 5
-   :header-rows: 1
-   
-   * - Tier
-     - Description
-     - MN APIs
-     - CN APIs
-   * - 1
-     - Public read, no Authn/Authz
-     - :mod:`MN_core` + :mod:`MN_read`
-     - :mod:`CN_core`, :mod:`CN_read`, :mod:`CN_storage`
-   * - 2
-     - Read/Resolve with Authn/Authz
-     - Tier 1 + :mod:`MN_auth`
-     - :mod:`CN_auth`, :mod:`CN_register`
-   * - 3
-     - Write (create, update, delete), possibly limited support for data types
-     - Tier 2 + :mod:`MN_storage`
-     - *No additional APIs*
-   * - 4
-     - Limited Replication target (specific data types)
-     - Tier 3 + :mod:`MN_replication`
-     - :mod:`CN_storage` (setReplicationStatus)
-   * - 5
-     - Replication target, any data types
-     - Tier 4 + additional capabilities
-     - *No additional APIs*
+Services are implemented using a RESTful model using HTTP as the transport
+protocol and XML for encoding messages.
 
 
-
+**Contents**
 
 .. toctree::
    :maxdepth: 1
    
-   REST_interface
-   Types
-   Types_SAML
+   node_tiers_
+   REST_overview
    MN_APIs
    CN_APIs
    ITK_APIs
+   Types
+   Types_SAML
    Exceptions
+   monitoring
 
-
-Summary of API Functions
-------------------------
-
-.. include:: generated/generated_module_summary.txt
-
-
-Summary of Exceptions
----------------------
-
-.. include:: generated/generated_exception_summary.txt
-
-
-Method, Exception Cross Reference
----------------------------------
-
-.. include:: generated/generated_method_exception_xref.txt
 

@@ -131,7 +131,6 @@ today_fmt = '%Y-%m-%d'
 unused_docs = [
                'design/UseCases/uc_template', 
                'design/usecasesoverview',
-               'apis/REST_overview',
                'apis/REST_object',
                'apis/REST_meta',
                'apis/REST_resolve',

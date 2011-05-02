@@ -7,24 +7,34 @@
      - Description
    * - GET /monitor/ping
      - :func:`MN_core.ping`
-     - Low level "are you alive" operation. Response is simple ACK, but may be
-       reasonable to overload with a couple of flags that could indicate
-       availability of new data or change in capabilities. The Member Node
-       should perform some minimal internal functionality testing before
-       answering. However, ping checks will be frequent (every few minutes) so
-       the internal functionality test should not be high impact.
+     - Low level "are you alive" operation. A valid ping response is indicated
+       by a HTTP status of 200.  The Member Node should perform some minimal
+       internal functionality testing before answering. However, ping checks
+       will be frequent (every few minutes) so the internal functionality test
+       should not be high impact.
    * - GET /log
      - :func:`MN_core.getLogRecords`
-     - Retrieve log information from the MN for the specified date range
-       (inclusive).
+     - Retrieve log information from the Member Node for the specified date
+       range and even type. This method is used primarily by the log aggregator
+       to generate aggregate statistics for nodes, objects, and the methods of
+       access.
    * - GET /monitor/object
      - :func:`MN_core.getObjectStatistics`
-     - Called by the monitoring system to find how many objects are stored on
-       the MN, cumulative or for each day in a given range.
+     - Returns the number of objects stored on the Member Node at the time the
+       call is serviced. The count may be restricted to a particular object
+       format or a filter on the PID. Access control rules are not applied to
+       the count, so the actual record count may differ from the number of
+       records that are accessible through other calls such as
+       :func:`MN.listObjects`, however the response *must* be indicative of the
+       number of objects available through the DataONE service interfaces. ..
+       Note:: Functionality of this method has been simplfiied from the 0.5
+       description so that the response reflects the current state of the Member
+       Node. Historical information should be collated by a monitoring service
+       if necessary. This change was made to reduce the operational requirements
+       for Member Node services.
    * - GET /monitor/event
      - :func:`MN_core.getOperationStatistics`
-     - Called by the monitoring system to find how many operations have been
-       performed on the MN, cumulative or for each day in a given range.
+     - Returns the number of operations that have been serviced by the node.
    * - GET /monitor/status
      - :func:`MN_core.getStatus`
      - This function is similar to :func:`MN_health.ping` but returns a more

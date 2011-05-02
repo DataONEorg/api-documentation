@@ -18,15 +18,12 @@
      - ``GET /log``
      - :func:`MN_core.getLogRecords`
      - (:class:`cert<Types.X509Certificate>`, :class:`fromDate<Types.DateTime>`,
-       :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`) ``->``
-       :class:`Types.LogRecords`
+       :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`,
+       ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.LogRecords`
    * - Tier 1
      - ``GET /monitor/object``
      - :func:`MN_core.getObjectStatistics`
-     - (:class:`cert<Types.X509Certificate>`,
-       :class:`[fromDate]<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`,
-       :class:`[format]<Types.ObjectFormat>`, :class:`[day]<Types.Integer>`,
-       :class:`[pid]<Types.Identifier>`) ``->`` :class:`Types.MonitorList`
+     - (``[format]``, ``[pid]``) ``->`` :class:`Types.ObjectStatistics`
    * - Tier 1
      - ``GET /monitor/event``
      - :func:`MN_core.getOperationStatistics`

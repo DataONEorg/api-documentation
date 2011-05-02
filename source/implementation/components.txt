@@ -5,6 +5,58 @@ This document outlines the major components of the DataONE core
 infrastructure, and indicates the dependencies between them. The component
 names listed here are used to categorize issues in the `issue tracking system`_.
 
+Products
+--------
+
+Required for 2011 public release
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Coordinating Nodes
+
+  Tiers 1, 2, 3, 4.
+
+Member Nodes
+
+  MN testing Service
+
+  KNB
+
+  GMN
+
+  Dryad
+
+  DAAC
+
+  NBII
+
+  AKN
+
+  CUAHSI
+
+  Merritt
+
+  (Fedora)
+
+
+Investigator Toolkit
+
+  Mercury
+
+  CLI
+
+  FUSE
+
+  R
+
+  Morpho
+
+  VisTrails
+
+
+
+
+
+
 Dependency Graph
 -----------------
 
@@ -60,8 +112,12 @@ Dependency Graph
        gmn [label="d1_mn_generic"];
        mndaac [label="d1_mn_daac"];
        mndryad [label="d1_mn_dryad"];
+       mndryad_native [label="dryad_native"];
        mnfedora [label="d1_mn_fedora"];
        metacat [label="metacat"];
+       mncuahsi [label="CUAHSI"];
+       mnnbii [label="NBII"];
+       mnmerritt [label="Merritt"];
      }
 
      subgraph cluster_ITK {

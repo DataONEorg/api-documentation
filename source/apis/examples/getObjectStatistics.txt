@@ -1,0 +1,61 @@
+**Examples**
+
+Retrieve a count of all objects on MN::
+
+  curl -X GET -H "Accept: text/xml" http://mn1.dataone.org/monitor/object
+
+  <?xml version="1.0"?>
+  <d1:objectStatistics xmlns:d1="REPLACE WITH CURRENT NAMESPACE">
+    <count>199211</count>
+  </d1:objectStatistics>
+
+
+
+..<?xml version="1.0" ?>
+  <ns1:monitorList xmlns:ns1="http://dataone.org/service/types/monitorList/0.1">
+    <monitorInfo>
+      <date>2010-07-23</date>
+      <count>100</count>
+    </monitorInfo>
+  </ns1:monitorList>
+
+Retrieve a count of objects based on EML::
+
+  curl -X GET -H "Accept: text/xml" \
+    http://mn1.dataone.org/monitor/object?objectFormat=eml:*
+
+  <?xml version="1.0"?>
+  <d1:objectStatistics xmlns:d1="REPLACE WITH CURRENT NAMESPACE">
+    <count>5567</count>
+  </d1:objectStatistics>
+
+
+  
+..  <?xml version="1.0" ?>
+   <ns1:monitorList xmlns:ns1="http://dataone.org/service/types/monitorList/0.1">
+    <monitorInfo>
+      <date>1980-01-19</date>
+      <count>1</count>
+    </monitorInfo>
+    <monitorInfo>
+      <date>1980-02-08</date>
+      <count>1</count>
+    </monitorInfo>
+    <monitorInfo>
+      <date>1980-03-22</date>
+      <count>1</count>
+    </monitorInfo>
+    <monitorInfo>
+      <date>1980-04-20</date>
+      <count>1</count>
+    </monitorInfo>
+    <monitorInfo>
+      <date>1980-05-06</date>
+      <count>1</count>
+    </monitorInfo>
+    <monitorInfo>
+      <date>1980-08-29</date>
+      <count>1</count>
+    </monitorInfo>
+  </ns1:monitorList>
+
