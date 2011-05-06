@@ -123,7 +123,6 @@
 
 
 
-----
 
 .. function:: getSystemMetadata(cert,pid) -> SystemMetadata
 
@@ -182,7 +181,6 @@
 
 
 
-----
 
 .. function:: describe(cert,pid) -> DescribeResponse
 
@@ -243,7 +241,6 @@
 
 
 
-----
 
 .. function:: getChecksum(cert,pid,[checksumAlgorithm]) -> Checksum
 
@@ -300,7 +297,6 @@
 
 
 
-----
 
 .. function:: listObjects(cert,[startTime],[endTime],[objectFormat],[replicaStatus],[start=0],[count=1000]) -> ObjectList
 
@@ -399,7 +395,6 @@
 
 
 
-----
 
 .. function:: synchronizationFailed(cert,message) -> 
 
@@ -441,5 +436,3 @@
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=2163)``
 
 
-
-----

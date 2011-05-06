@@ -1,0 +1,86 @@
+Proposal for API Refactoring
+============================
+
+The DataONE service APIs currently contain methods that are grouped by the
+general category of functionality provided. For example, the CRUD API contains
+methods that support create, read, update, and delete operations against the
+Member Nodes. Such a grouping is convenient for development activities,
+however does not relate well to the overall functionality that must be
+expressed by a Member Node to participate at different "tiers" within the
+DataONE federation. A particular MN might operate in a read-only manner and so
+must express only a small selection of methods pulled from several different
+APIs as they are currently defined.
+
+Further complicating the division of methods between APIs is the need to
+support versioning of services. Current versioning operates across the entire
+set of APIs and thus requires that a service implements all methods of a
+single version. A more granular approach would versioning at the API level, so
+that in many cases (where there are no inter-dependencies) it will be possible
+to update a set of methods without affecting other methods, and so service
+update on a particular node can be more progressive, and so less disruptive to
+ongoing operations.
+
+Grouping the methods into API definitions more aligned with the functionality
+that should be exposed by different classes or tiers of nodes should also
+simplify the overall process of node service updates since the entire group of
+methods can be updated rather than working with methods pulled from different
+method groups of different versions to define the service that must be
+implemented by a particular Member Node.
+
+This document outlines a strategy for refactoring the APIs to better align
+with the tiers of Member Nodes that are likely to participate in the DataONE
+federation.
+
+
+Member Node Tiers
+-----------------
+
+Five tiers of Member Node functionality have currently been identified:
+
+:Tier 1: Public read, no Authn/Authz
+:Tier 2: Read/Resolve with Authn/Authz
+:Tier 3: Write (create, update, delete), possibly limited support for data types
+:Tier 4: Limited Replication target (specified data types)
+:Tier 5: Replication target, any data types
+
+The methods that must be supported by each of these are indicated in Table 1.
+
+.. list-table:: 
+                **Table 1.** DataONE service methods supported at different
+                tiers of Member Node functionality. (*)Authentication and
+                Authorization APIs are under active development and may change
+                from the specifications listed here.
+   :header-rows: 1
+   :widths: 1 1 1 10
+   
+   * - Tier
+     - Existing APIs
+     - Proposed API
+     - Methods
+   * - Core
+     - MN_health, MN_crud
+     - MN_core
+     - ping, getCapabilities, getStatus, [getObjectStatistics], 
+       [getOperationStatistics], [getLogRecords]
+   * - Tier 1
+     - MN_crud, MN_replication, MN_health
+     - MN_read
+     - get, getSystemMetadata, listObjects, describe, getChecksum,
+       synchronizationFailed
+   * - Tier 2
+     - MN_authorization, MN_authentication
+     - MN_auth
+     - MNCore + login(*), logout(*), isAuthorized(*), setAccess(*)
+   * - Tier 3
+     - MN_crud
+     - MN_storage
+     - MNAuth + create, update, delete, 
+   * - Tier 4
+     - MN_replication
+     - MN_replication
+     - MNStorage + replicate
+   * - Tier 5
+     - 
+     - 
+     - MNReplicationCore (no additional methods)
+

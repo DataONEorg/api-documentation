@@ -105,7 +105,6 @@
 
 
 
-----
 
 .. function:: getSystemMetadata(cert,pid) -> SystemMetadata
 
@@ -162,7 +161,6 @@
 
 
 
-----
 
 .. function:: resolve(cert,pid) -> ObjectLocationList
 
@@ -225,7 +223,6 @@
 
 
 
-----
 
 .. function:: reserveIdentifier(cert,[pid],[scope],[format]) -> Identifier
 
@@ -298,7 +295,6 @@
 
 
 
-----
 
 .. function:: assertRelation(cert,pidOfSubject,relationship,pidOfObject) -> Boolean
 
@@ -354,7 +350,6 @@
 
 
 
-----
 
 .. function:: getChecksum(cert,pid) -> Checksum
 
@@ -398,7 +393,6 @@
 
 
 
-----
 
 .. function:: search(cert,query) -> ObjectList
 
@@ -440,5 +434,3 @@
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4281)``
 
 
-
-----

@@ -34,7 +34,12 @@
        for Member Node services.
    * - GET /monitor/event
      - :func:`MN_core.getOperationStatistics`
-     - Returns the number of operations that have been serviced by the node.
+     - Returns the number of operations that have been serviced by the node over
+       time periods of one and 24 hours. .. Note:: Functionality of this method
+       has been simplfiied from the 0.5 description so that the response
+       reflects the current state of the Member Node. Historical information
+       should be collated by a monitoring service if necessary. This change was
+       made to reduce the operational requirements for Member Node services.
    * - GET /monitor/status
      - :func:`MN_core.getStatus`
      - This function is similar to :func:`MN_health.ping` but returns a more

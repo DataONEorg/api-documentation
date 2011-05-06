@@ -12,6 +12,9 @@ PLANTUML      = java -jar tools/docutils/plantuml.jar -config tools/docutils/pla
 DOCGENERATOR  = python tools/ihwd/ihwd.py
 METHODXLS     = MethodCrossReference.xls
 ZIPHTML       = architecture.zip
+XSLTPROC      = /usr/bin/xsltproc
+SCHEMADIR     = `pwd`/source/d1_schemas
+#SCHEMADIR     = /Users/vieglais/Workspaces/DataONE_trunk/d1_schemas
 
 # Internal variables.
 PAPEROPT_a4     = -D latex_paper_size=a4
@@ -41,6 +44,7 @@ clean:
 
 generate: $(METHODXLS)
 	$(DOCGENERATOR) -s $(METHODXLS) -d ./source/apis/generated
+	$(XSLTPROC) --path ".:$(SCHEMADIR)" types2rst.xsl dataoneTypes.xsd > ./source/apis/generated/generated_schema_types.txt
 
 plantuml: plantuml_source plantuml_usecase
 

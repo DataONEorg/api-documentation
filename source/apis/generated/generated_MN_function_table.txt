@@ -27,9 +27,8 @@
    * - Tier 1
      - ``GET /monitor/event``
      - :func:`MN_core.getOperationStatistics`
-     - (:class:`cert<Types.X509Certificate>`, :class:`[time]<Types.DateTime>`,
-       :class:`[requestor]<Types.Principal>`, :class:`[day]<Types.Integer>`,
-       :class:`[event]<Types.Event>`, :class:`[eventTime]<Types.DateTime>`,
+     - (:class:`cert<Types.X509Certificate>`, ``[period]``,
+       :class:`[requestor]<Types.Principal>`, :class:`[event]<Types.Event>`,
        :class:`[format]<Types.ObjectFormat>`) ``->`` :class:`Types.MonitorList`
    * - Tier 1
      - ``GET /monitor/status``

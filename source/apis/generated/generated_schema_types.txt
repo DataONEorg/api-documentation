@@ -1,0 +1,1380 @@
+.. WARNING: This file is generated. Any edits will be lost upon regeneration.
+  
+  .. py:class:: AuthToken(STypes.NonEmptyString)
+
+   An AuthToken is an Identifier that is used to reference an authenticated AuthSession that has been established via the act of authenticating a Principal with a Coordinating Node. The AuthToken identifier follows the same formatting and content rules as the Identifier class, and should be representable in simple 7-bit ASCII or as a UTF-8 string. The value SHOULD additionally be constrained to be less than 8K in order to be transportable in typical HTTP header fields. The AuthToken represents an AuthSession, which is tied to an authenticated Principal and can only be used for requests from a particular Address.    
+
+
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="AuthToken">
+   
+      <xs:restriction base="d1:NonEmptyString"/>
+    </xs:simpleType>
+
+
+
+.. py:class:: ChecksumAlgorithm(xs:string)
+
+   Enumerated values::
+
+     ( 'SHA-1' |
+       'SHA-224' |
+       'SHA-256' |
+       'SHA-384' |
+       'SHA-512' |
+       'MD5' )
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ChecksumAlgorithm">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="SHA-1"/>
+            <xs:enumeration value="SHA-224"/>
+            <xs:enumeration value="SHA-256"/>
+            <xs:enumeration value="SHA-384"/>
+            <xs:enumeration value="SHA-512"/>
+            <xs:enumeration value="MD5"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+
+.. py:class:: ComponentName(xs:string)
+
+   Enumerated values::
+
+     ( 'Apache' |
+       'CoordinatingNode' |
+       'Django' |
+       'LinuxUbuntu' |
+       'LinuxDebian' |
+       'MemberNode' |
+       'Mercury' |
+       'Metacat' )
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ComponentName">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Apache"/>
+            <xs:enumeration value="CoordinatingNode"/>
+            <xs:enumeration value="Django"/>
+            <xs:enumeration value="LinuxUbuntu"/>
+            <xs:enumeration value="LinuxDebian"/>
+            <xs:enumeration value="MemberNode"/>
+            <xs:enumeration value="Mercury"/>
+            <xs:enumeration value="Metacat"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+
+.. py:class:: ComponentVersion(STypes.NonEmptyString)
+
+
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ComponentVersion">
+        <xs:restriction base="d1:NonEmptyString"/>
+    </xs:simpleType>
+
+
+
+.. py:class:: CrontabEntry(xs:token)
+
+
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="CrontabEntry">
+        <xs:restriction base="xs:token">
+            <xs:pattern value="([\*\d]{1,2}[\-,]?)+"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+
+.. py:class:: EncryptedNonce(STypes.NonEmptyString)
+
+   A random number that has been encrypted as part of a two-phase   authentication protocol and that is only used once for session   authentication. The Nonce is initially encrypted using a client's public key   and sent to the client, where it is decrypted by the client (proving access   that he associated private key), and then re-encrypted using the server's   public key. When the server decrypts the returned Nonce, if it matches then   it establishes an authenticated session.
+
+
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="EncryptedNonce">
+      
+      <xs:restriction base="d1:NonEmptyString"/>
+    </xs:simpleType>
+
+
+
+.. py:class:: Event(xs:string)
+
+   The controlled list of events that are logged,        which will include 'CREATE', 'UPDATE', 'DELETE', 'READ', 'REPLICATE'        events.
+
+   Enumerated values::
+
+     ( 'create' |
+       'read' |
+       'update' |
+       'delete' |
+       'replicate' )
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Event">
+      
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="create"/>
+            <xs:enumeration value="read"/>
+            <xs:enumeration value="update"/>
+            <xs:enumeration value="delete"/>
+            <xs:enumeration value="replicate"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+
+.. py:class:: Environment(xs:NMTOKEN)
+
+   Enumerated values::
+
+     ( 'dev' |
+       'test' |
+       'staging' |
+       'prod' )
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Environment">
+        <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="dev"/>
+            <xs:enumeration value="test"/>
+            <xs:enumeration value="staging"/>
+            <xs:enumeration value="prod"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+
+.. py:class:: NodeState(xs:NMTOKEN)
+
+   Enumerated values::
+
+     ( 'up' |
+       'down' |
+       'unknown' )
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="NodeState">
+        <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="up"/>
+            <xs:enumeration value="down"/>
+            <xs:enumeration value="unknown"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+
+.. py:class:: NodeReference(STypes.NonEmptyString)
+
+   Member Node identifier drawn from the DataONE :mod:`cn_register &lt;registry service&gt;`.
+
+
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="NodeReference">
+      
+        <xs:restriction base="d1:NonEmptyString"/>
+    </xs:simpleType>
+
+
+
+.. py:class:: NodeType(xs:NMTOKEN)
+
+   Enumerated values::
+
+     ( 'mn' |
+       'cn' |
+       'Monitor' )
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="NodeType">
+        <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="mn"/>
+            <xs:enumeration value="cn"/>
+            <xs:enumeration value="Monitor"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+
+.. py:class:: NonEmptyString(xs:string)
+
+   A derived string type with at least length 1 and it must contain non-whitespace.
+
+
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="NonEmptyString">
+      
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:pattern value="[\s]*[\S][\s\S]*"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+
+.. py:class:: Identifier(STypes.NonEmptyString)
+
+   An :term:`identifier` (:term:`PID`) in the DataONE system. This is   equivalent to a Unicode string of printable characters, excluding   whitespace. All representations of identifiers must be encoded in 7-bit   ASCII or UTF-8.
+
+   Identifiers have a maximum length of 800 characters. Some discussion on this   is described in `ticket 577`_.         
+
+   .. _ticket 577: https://redmine.dataone.org/issues/577         
+
+
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Identifier">
+      
+      <xs:restriction base="d1:NonEmptyString"/>
+    </xs:simpleType>
+
+
+
+.. py:class:: Permission(xs:string)
+
+   A string value indicating the set of actions that can be performed on a   resource as specified in an access policy.  The set of permissions include   the ability to read a resource, modify a resource (write), and to change   the set of access control policies for a resource (changePermission).  In   addition, there is a permission that controls ability to execute a service   (execute). Permissions are cumulative, in that higher level permissions   include all of the priveledges of lower levels (e.g., given write access, one   also implicitly has read access).
+
+   Enumerated values::
+
+     ( 'read' |
+       'write' |
+       'changePermission' |
+       'execute' )
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Permission">
+    
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="read"/>
+            <xs:enumeration value="write"/>
+            <xs:enumeration value="changePermission"/>
+            <xs:enumeration value="execute"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+
+.. py:class:: Principal(STypes.NonEmptyString)
+
+   Person (user), Group, or Organization, or System.
+
+   The formal name identifiying a user or group from the DataONE    Identity Management Service. The principal is represented by a unique,   persistent, non-reassignable identifier string that follows the same   constraints as the Identifier.
+
+   Used by :mod:`SystemMetadata`
+
+
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Principal">
+      
+        <xs:restriction base="d1:NonEmptyString"/>
+        <!-- Note: Can also be special names:
+             AuthenticatedUser: anyone with checked credentials
+             Public: anyone, whether authenticated or not
+        -->
+    </xs:simpleType>
+
+
+
+.. py:class:: ReplicationStatus(xs:string)
+
+   Enumerated values::
+
+     ( 'queued' |
+       'requested' |
+       'completed' |
+       'invalidated' )
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ReplicationStatus">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="queued"/>
+            <xs:enumeration value="requested"/>
+            <xs:enumeration value="completed"/>
+            <xs:enumeration value="invalidated"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+
+.. py:class:: IdentifierFormat(xs:string)
+
+   Initially an enumerated list of strings that specify different types of identifiers.         
+
+   Enumerated values::
+
+     ( 'OID' |
+       'LSID' |
+       'UUID' |
+       'LSRN' |
+       'DOI' |
+       'URI' |
+       'STRING' )
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="IdentifierFormat">
+      
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="OID"/>
+            <xs:enumeration value="LSID"/>
+            <xs:enumeration value="UUID"/>
+            <xs:enumeration value="LSRN"/>
+            <xs:enumeration value="DOI"/>
+            <xs:enumeration value="URI"/>
+            <xs:enumeration value="STRING"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+
+.. py:class:: ServiceName(STypes.NonEmptyString)
+
+
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ServiceName">
+        <xs:restriction base="d1:NonEmptyString"/>
+    </xs:simpleType>
+
+
+
+.. py:class:: ServiceVersion(STypes.NonEmptyString)
+
+
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ServiceVersion">
+        <xs:restriction base="d1:NonEmptyString"/>
+    </xs:simpleType>
+
+
+
+.. py:class:: X509Certificate(STypes.NonEmptyString)
+
+
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="X509Certificate">
+      <xs:restriction base="d1:NonEmptyString"/>
+    </xs:simpleType>
+
+
+
+.. py:class:: AccessPolicy()
+
+   **Sequence Elements**
+
+   :param allow: ``1..*`` 
+   :type allow: STypes.AccessRule
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="AccessPolicy">
+        <xs:sequence>
+            <xs:element name="allow" type="d1:AccessRule" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+.. py:class:: AccessRule()
+
+   **Sequence Elements**
+
+   :param principal: ``1..*`` 
+   :type principal: STypes.Principal
+   :param permission: ``1..*`` 
+   :type permission: STypes.Permission
+   :param resource: ``1..*`` 
+   :type resource: STypes.Identifier
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="AccessRule">
+        <xs:sequence>
+        <xs:element name="principal" type="d1:Principal" maxOccurs="unbounded"/>
+        <xs:element name="permission" type="d1:Permission" maxOccurs="unbounded"/>
+        <xs:element name="resource" type="d1:Identifier" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+.. py:class:: Challenge()
+
+   **Sequence Elements**
+
+   :param certificate: ``1..1`` 
+   :type certificate: STypes.X509Certificate
+   :param encryptedNonce: ``1..1`` 
+   :type encryptedNonce: STypes.EncryptedNonce
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Challenge">
+       <xs:sequence>
+         <xs:element name="certificate" type="d1:X509Certificate" minOccurs="1" maxOccurs="1"/>
+         <xs:element name="encryptedNonce" type="d1:EncryptedNonce" minOccurs="1" maxOccurs="1"/>
+       </xs:sequence>
+    </xs:complexType>
+
+
+.. py:class:: Checksum(xs:string)
+
+   **Attributes**
+
+   :param algorithm:  (required) 
+   :type algorithm: STypes.ChecksumAlgorithm
+
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Checksum">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="algorithm" type="d1:ChecksumAlgorithm" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+
+.. py:class:: Component()
+
+   Name and version of a DataONE software stack component.             
+
+   **Attributes**
+
+   :param name:  (required) 
+   :type name: STypes.ComponentName
+   :param version:  (required) 
+   :type version: STypes.ComponentVersion
+
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Component">
+        
+        <xs:attribute name="name" type="d1:ComponentName" use="required"/>
+        <xs:attribute name="version" type="d1:ComponentVersion" use="required"/>
+    </xs:complexType>
+
+
+.. py:class:: ComponentList()
+
+   A ComponentList is the structure returned                 from the version() method. It provides a list of DataONE software stack                 components and their corresponding version numbers.             
+
+   **Sequence Elements**
+
+   :param component: ``1..1`` 
+   :type component: STypes.Component
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ComponentList">
+        
+        <xs:sequence>
+            <xs:element name="component" type="d1:Component"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+.. py:class:: Group()
+
+   **Sequence Elements**
+
+   :param principal: ``1..1`` 
+   :type principal: STypes.Principal
+   :param groupName: ``1..1`` 
+   :type groupName: STypes.NonEmptyString
+   :param hasMember: ``0..*`` 
+   :type hasMember: STypes.Principal
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Group">
+        <xs:sequence>
+            <xs:element name="principal" type="d1:Principal" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="groupName" type="d1:NonEmptyString" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="hasMember" type="d1:Principal" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+.. py:class:: LogEntry()
+
+   **Sequence Elements**
+
+   :param entryId: ``1..1`` 
+   :type entryId: STypes.Identifier
+   :param identifier: ``1..1`` 
+   :type identifier: STypes.Identifier
+   :param ipAddress: ``1..1`` 
+   :type ipAddress: xs:string
+   :param userAgent: ``1..1`` 
+   :type userAgent: xs:string
+   :param principal: ``1..1`` 
+   :type principal: STypes.Principal
+   :param event: ``1..1`` 
+   :type event: STypes.Event
+   :param dateLogged: ``1..1`` 
+   :type dateLogged: xs:dateTime
+   :param memberNode: ``1..1`` 
+   :type memberNode: STypes.NodeReference
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="LogEntry">
+        <xs:sequence>
+            <xs:element name="entryId" type="d1:Identifier" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="identifier" type="d1:Identifier" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="ipAddress" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="userAgent" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="principal" type="d1:Principal" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="event" type="d1:Event" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="dateLogged" type="xs:dateTime" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="memberNode" type="d1:NodeReference" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+.. py:class:: MonitorInfo()
+
+   **Sequence Elements**
+
+   :param date: ``1..1`` 
+   :type date: xs:date
+   :param count: ``1..1`` 
+   :type count: xs:int
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="MonitorInfo">
+        <xs:sequence>
+            <xs:element name="date" type="xs:date" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="count" type="xs:int" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+.. py:class:: MonitorList()
+
+   **Sequence Elements**
+
+   :param monitorInfo: ``0..*`` 
+   :type monitorInfo: STypes.MonitorInfo
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="MonitorList">
+        <xs:sequence>
+            <xs:element name="monitorInfo" type="d1:MonitorInfo" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+.. py:class:: Node()
+
+   A unique implementation of the member node or coordination node software                 stack. several nodes may exist on a single physical device or hostname              
+
+   **Attributes**
+
+   :param replicate:  (required) 
+   :type replicate: xs:boolean
+   :param synchronize:  (required) 
+   :type synchronize: xs:boolean
+   :param type:  (required) 
+   :type type: STypes.NodeType
+   :param environment:  (optional) 
+   :type environment: STypes.Environment
+
+   **Sequence Elements**
+
+   :param identifier: ``1..1``    A unique identifier for the node. This may initially be the same as the                         baseURL, however this value should not change for future implementations of the same                         node, whereas the baseURL may change in the future.                      
+   :type identifier: STypes.NodeReference
+   :param name: ``1..1``    A human readable name of the Node.                          The name of the node is being used in Mercury currently to assign a path,                         so format should be consistent with dataone directory naming conventions                     
+   :type name: STypes.NonEmptyString
+   :param description: ``1..1``    Description of content maintained by this node and any other free style                         notes. May be we should allow CDATA element with the purpose of using for display                     
+   :type description: STypes.NonEmptyString
+   :param baseURL: ``1..1`` 
+   :type baseURL: xs:anyURI
+   :param services: ``0..1`` 
+   :type services: STypes.Services
+   :param synchronization: ``0..1`` 
+   :type synchronization: STypes.Synchronization
+   :param health: ``0..1``    The name of the node is being used in Mercury currently to assign a                         path, so format should be consistent with dataone directory naming conventions                     
+   :type health: STypes.NodeHealth
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Node">
+        
+        
+        <xs:sequence>
+            <xs:element name="identifier" type="d1:NodeReference" minOccurs="1" maxOccurs="1">
+                
+            </xs:element>
+            <xs:element name="name" type="d1:NonEmptyString" minOccurs="1" maxOccurs="1">
+                
+            </xs:element>
+            
+            <xs:element name="description" type="d1:NonEmptyString">
+                
+            </xs:element>
+            <xs:element name="baseURL" type="xs:anyURI"/>
+            <xs:element name="services" type="d1:Services" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="synchronization" type="d1:Synchronization" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="health" type="d1:NodeHealth" minOccurs="0" maxOccurs="1">
+                
+            </xs:element>
+        </xs:sequence>
+        
+        <xs:attribute name="replicate" use="required" type="xs:boolean"/>
+        <xs:attribute name="synchronize" use="required" type="xs:boolean"/>
+        <xs:attribute name="type" use="required" type="d1:NodeType"/>
+        <xs:attribute name="environment" use="optional" type="d1:Environment"/>
+        
+    </xs:complexType>
+
+
+.. py:class:: NodeHealth()
+
+   The schedule on which MnSynchronization will run for a particular run             
+
+   **Attributes**
+
+   :param state:  (required) 
+   :type state: STypes.NodeState
+
+   **Sequence Elements**
+
+   :param ping: ``1..1`` 
+   :type ping: STypes.Ping
+   :param status: ``1..1`` 
+   :type status: STypes.Status
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="NodeHealth">
+        
+        <xs:sequence>
+            <xs:element name="ping" type="d1:Ping"/>
+            <xs:element name="status" type="d1:Status"/>
+        </xs:sequence>
+        
+        <xs:attribute name="state" type="d1:NodeState" use="required"/>
+    </xs:complexType>
+
+
+.. py:class:: NodeList()
+
+   **Sequence Elements**
+
+   :param node: ``1..*`` 
+   :type node: STypes.Node
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="NodeList">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" name="node" type="d1:Node" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+.. py:class:: ObjectInfo()
+
+   **Sequence Elements**
+
+   :param identifier: ``1..1`` 
+   :type identifier: STypes.Identifier
+   :param objectFormat: ``1..1`` 
+   :type objectFormat: STypes.ObjectFormat
+   :param checksum: ``1..1`` 
+   :type checksum: STypes.Checksum
+   :param dateSysMetadataModified: ``1..1`` 
+   :type dateSysMetadataModified: xs:dateTime
+   :param size: ``1..1`` 
+   :type size: xs:long
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ObjectInfo">
+        <xs:sequence>
+            <xs:element name="identifier" type="d1:Identifier" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="objectFormat" type="d1:ObjectFormat"/>
+            <xs:element name="checksum" type="d1:Checksum" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="dateSysMetadataModified" type="xs:dateTime"/>
+            <xs:element name="size" type="xs:long"/>
+            
+        </xs:sequence>
+        <!--        <xs:attribute name="identifier" use="required" type="common:Identifier"/> -->
+    </xs:complexType>
+
+
+.. py:class:: ObjectList(STypes.Slice)
+
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ObjectList">
+        <xs:complexContent>
+            <xs:extension base="d1:Slice">
+                <xs:sequence>
+                    <xs:element name="objectInfo" type="d1:ObjectInfo" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+
+.. py:class:: ObjectLocation()
+
+   **Sequence Elements**
+
+   :param nodeIdentifier: ``1..1``    Identifier of the node (the same identifier used                         in the node registry for identifying the node.                     
+   :type nodeIdentifier: STypes.Identifier
+   :param baseURL: ``1..1``    The current base URL for services implemented on the target node.                     
+   :type baseURL: xs:anyURI
+   :param url: ``1..1``    The full (absolute) URL that can be used to                         retrieve the object using the get() method of the rest interface.                     
+   :type url: xs:anyURI
+   :param preference: ``0..1``    A weighting parameter that provides a hint to the caller                          for the relative preference for nodes from which the content should be retrieved.                     
+   :type preference: xs:integer
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ObjectLocation">
+        <xs:sequence>
+            <xs:element name="nodeIdentifier" type="d1:Identifier" minOccurs="1" maxOccurs="1">
+                
+            </xs:element>
+            <xs:element name="baseURL" minOccurs="1" maxOccurs="1" type="xs:anyURI">
+                
+            </xs:element>
+            <xs:element name="url" minOccurs="1" maxOccurs="1" type="xs:anyURI">
+                
+            </xs:element>
+            <xs:element name="preference" minOccurs="0" maxOccurs="1" type="xs:integer">
+                
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+.. py:class:: ObjectLocationList()
+
+   An ObjectLocationList is the structure returned                 from the resolve() method of the CN REST interface. It provides a                 list of locations from which the specified object can be retrieved.             
+
+   **Sequence Elements**
+
+   :param identifier: ``1..1``    The identifier of the object being resolved.                     
+   :type identifier: STypes.Identifier
+   :param objectLocation: ``0..*``    List of nodes from which the object can be                         retrieved
+   :type objectLocation: STypes.ObjectLocation
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ObjectLocationList">
+        
+        <xs:sequence>
+            <xs:element name="identifier" type="d1:Identifier" minOccurs="1" maxOccurs="1">
+                
+            </xs:element>
+            <xs:element name="objectLocation" type="d1:ObjectLocation" minOccurs="0" maxOccurs="unbounded">
+                
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+.. py:class:: ObjectFormat()
+
+   An ObjectFormat is the structure returned from the getFormat()           method of the CN REST interface.  It provides the unique identifier           and the name associated with the object format.  Future            versions may contain additional structured content from external           common typing systems.         
+
+   **Sequence Elements**
+
+   :param fmtid: ``1..1``    The unique identifier of the object format in the                DataONE Object Format Vocabulary.  The identifier should comply                with DataONE Identifier rules, i.e. no whitespace, UTF-8 or                US-ASCII printable characters.             
+   :type fmtid: xs:string
+   :param formatName: ``1..1``    The human-readable name for the format.  The                name should be a descriptive string based on the well-known and                accepted title and version of the format.             
+   :type formatName: xs:string
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ObjectFormat">
+      
+      <xs:sequence>
+        <xs:element name="fmtid" type="xs:string" minOccurs="1" maxOccurs="1">
+          
+        </xs:element>
+        <xs:element name="formatName" type="xs:string" minOccurs="1" maxOccurs="1">
+          
+        </xs:element>
+        <xs:any minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+
+
+.. py:class:: ObjectFormatList(STypes.Slice)
+
+   An ObjectFormatList is the structure returned from the listFormats()            method of the CN REST interface.  It provides a list of named object           formats defined in the DataONE system.  Each ObjectFormat returned in            the list describes the object format via its name, and future            versions may contain additional structured content from common            external typing systems.         
+
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ObjectFormatList">
+       
+      <xs:complexContent>
+        <xs:extension base="d1:Slice">
+          <xs:sequence>
+            <xs:element name="objectFormat" type="d1:ObjectFormat" minOccurs="1" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent> 
+    </xs:complexType>
+
+
+.. py:class:: Person()
+
+   **Sequence Elements**
+
+   :param principal: ``1..1`` 
+   :type principal: STypes.Principal
+   :param givenName: ``1..*`` 
+   :type givenName: STypes.NonEmptyString
+   :param familyName: ``1..1`` 
+   :type familyName: STypes.NonEmptyString
+   :param email: ``1..*`` 
+   :type email: STypes.NonEmptyString
+   :param isMemberOf: ``0..*`` 
+   :type isMemberOf: STypes.Principal
+   :param equivalentIdentity: ``0..*`` 
+   :type equivalentIdentity: STypes.Principal
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Person">
+        <xs:sequence>
+            <xs:element name="principal" type="d1:Principal" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="givenName" type="d1:NonEmptyString" minOccurs="1" maxOccurs="unbounded"/>
+            <xs:element name="familyName" type="d1:NonEmptyString" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="email" type="d1:NonEmptyString" minOccurs="1" maxOccurs="unbounded"/>
+            <xs:element name="isMemberOf" type="d1:Principal" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="equivalentIdentity" type="d1:Principal" minOccurs="0" maxOccurs="unbounded"/>
+            <!-- Do we need further Person metadata?
+            <xs:element name="institution" type="d1:NonEmptyString"
+                minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="department" type="d1:NonEmptyString"
+                minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="address1" type="d1:NonEmptyString"
+                minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="address2" type="d1:NonEmptyString"
+                minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="city" type="d1:NonEmptyString"
+                minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="state" type="d1:NonEmptyString"
+                minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="zip" type="d1:NonEmptyString"
+                minOccurs="0" maxOccurs="unbounded"/>
+            -->
+        </xs:sequence>
+    </xs:complexType>
+
+
+.. py:class:: Ping()
+
+   Store results from the Mn_Health.ping method             
+
+   **Attributes**
+
+   :param success:  (optional) 
+   :type success: xs:boolean
+   :param lastSuccess:  (optional) 
+   :type lastSuccess: xs:dateTime
+
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Ping">
+        
+        <xs:attribute name="success" type="xs:boolean"/>
+        <xs:attribute name="lastSuccess" type="xs:dateTime"/>
+    </xs:complexType>
+
+
+.. py:class:: PrincipalList()
+
+   **One Of**
+
+   :param person: ``0..*`` 
+   :type person: STypes.Person
+   :param group: ``0..*`` 
+   :type group: STypes.Group
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="PrincipalList">
+        <xs:choice>
+            <xs:element name="person" type="d1:Person" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="group" type="d1:Group" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:choice>
+    </xs:complexType>
+
+
+.. py:class:: Replica()
+
+   **Sequence Elements**
+
+   :param replicaMemberNode: ``1..1`` 
+   :type replicaMemberNode: STypes.NodeReference
+   :param replicationStatus: ``1..1`` 
+   :type replicationStatus: STypes.ReplicationStatus
+   :param replicaVerified: ``1..1`` 
+   :type replicaVerified: xs:dateTime
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Replica">
+        <xs:sequence>
+            <xs:element name="replicaMemberNode" type="d1:NodeReference"/>
+            <xs:element name="replicationStatus" type="d1:ReplicationStatus"/>
+            <xs:element name="replicaVerified" type="xs:dateTime"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+.. py:class:: ReplicationPolicy()
+
+   **Attributes**
+
+   :param replicationAllowed:  (optional) 
+   :type replicationAllowed: xs:boolean
+   :param numberReplicas:  (optional) 
+   :type numberReplicas: xs:int
+
+   **Sequence Elements**
+
+   :param preferredMemberNode: ``0..*`` 
+   :type preferredMemberNode: STypes.NodeReference
+   :param blockedMemberNode: ``0..*`` 
+   :type blockedMemberNode: STypes.NodeReference
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ReplicationPolicy">
+        <xs:sequence>
+            <xs:element name="preferredMemberNode" type="d1:NodeReference" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="blockedMemberNode" type="d1:NodeReference" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="replicationAllowed" type="xs:boolean"/>
+        <xs:attribute name="numberReplicas" type="xs:int"/>
+    </xs:complexType>
+
+
+.. py:class:: Service()
+
+   Name and version of a DataONE software stack component are                 equivalent to the statusresponselist.xsd name and version.                  (-rpw notes from meeting 9/25/2010, but Component Name and Version is different than                 Service API name and version!)                 A process should check  MN_health.getStatus()  periodically and                   update the version, availability and dateChecked for each service.                 May need to update method definitions at same time             
+
+   **Attributes**
+
+   :param version:  (required) 
+   :type version: STypes.ServiceVersion
+   :param available:  (optional) 
+   :type available: xs:boolean
+
+   **Sequence Elements**
+
+   :param name: ``1..1`` 
+   :type name: STypes.ServiceName
+   :param method: ``0..*`` 
+   :type method: STypes.ServiceMethod
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Service">
+        
+        <xs:sequence>
+            <xs:element name="name" type="d1:ServiceName" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="method" type="d1:ServiceMethod" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="version" type="d1:ServiceVersion" use="required"/>
+        <xs:attribute name="available" type="xs:boolean"/>
+        
+    </xs:complexType>
+
+
+.. py:class:: ServiceMethod()
+
+   Describes individual methods and their rest paths from the version of the API.                  Rest paths are relative to the baseURL, and determine which method has been implemented by                 hitting the url. For an MN, calling an un-implemented method of an API version will raise                 NotImplemented.             
+
+   **Attributes**
+
+   :param name:  (optional) 
+   :type name: xs:NMTOKEN
+   :param rest:  (required) 
+   :type rest: xs:token
+   :param implemented:  (required) 
+   :type implemented: xs:boolean
+
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ServiceMethod">
+        
+        
+        <xs:attribute name="name" type="xs:NMTOKEN"/>
+        <xs:attribute name="rest" use="required" type="xs:token"/>
+        <xs:attribute name="implemented" use="required" type="xs:boolean"/>
+        
+    </xs:complexType>
+
+
+.. py:class:: Services()
+
+   **Sequence Elements**
+
+   :param service: ``1..*`` 
+   :type service: STypes.Service
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Services">
+        <xs:sequence>
+            <xs:element name="service" type="d1:Service" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+.. py:class:: Schedule()
+
+   The schedule on which MnSynchronization will run for a particular run             
+
+   **Attributes**
+
+   :param hour:  (required) 
+   :type hour: STypes.CrontabEntry
+   :param mday:  (required) 
+   :type mday: STypes.CrontabEntry
+   :param min:  (required) 
+   :type min: STypes.CrontabEntry
+   :param mon:  (required) 
+   :type mon: STypes.CrontabEntry
+   :param sec:  (required) 
+   :type sec: STypes.CrontabEntry
+   :param wday:  (required) 
+   :type wday: STypes.CrontabEntry
+   :param year:  (required) 
+   :type year: STypes.CrontabEntry
+
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Schedule">
+        
+        <xs:attribute name="hour" use="required" type="d1:CrontabEntry"/>
+        <xs:attribute name="mday" use="required" type="d1:CrontabEntry"/>
+        <xs:attribute name="min" use="required" type="d1:CrontabEntry"/>
+        <xs:attribute name="mon" use="required" type="d1:CrontabEntry"/>
+        <xs:attribute name="sec" use="required" type="d1:CrontabEntry"/>
+        <xs:attribute name="wday" use="required" type="d1:CrontabEntry"/>
+        <xs:attribute name="year" use="required" type="d1:CrontabEntry"/>
+    </xs:complexType>
+
+
+.. py:class:: Slice()
+
+   **Attributes**
+
+   :param count:  (required) 
+   :type count: xs:int
+   :param start:  (required) 
+   :type start: xs:int
+   :param total:  (required) 
+   :type total: xs:int
+
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Slice">
+        <xs:attribute name="count" use="required" type="xs:int"/>
+        <xs:attribute name="start" use="required" type="xs:int"/>
+        <xs:attribute name="total" use="required" type="xs:int"/>
+    </xs:complexType>
+
+
+.. py:class:: Status()
+
+   Store last time checked information from the Mn_Health.status method                 Other information from status will be stored in the Service Node                 A process should check  MN_health.getStatus()  periodically and                   update the version and availability  for each service.             
+
+   **Attributes**
+
+   :param success:  (optional) 
+   :type success: xs:boolean
+   :param dateChecked:  (required) 
+   :type dateChecked: xs:dateTime
+
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Status">
+        
+        <xs:attribute name="success" type="xs:boolean"/>
+        <xs:attribute name="dateChecked" use="required" type="xs:dateTime"/>
+    </xs:complexType>
+
+
+.. py:class:: Synchronization()
+
+   The process by which data is pulled from membernodes down                 to the coordinating node             
+
+   **Sequence Elements**
+
+   :param schedule: ``1..1`` 
+   :type schedule: STypes.Schedule
+   :param lastHarvested: ``1..1``    The last time the mn sychronization daemon ran and found new data to synchronize                     
+   :type lastHarvested: xs:dateTime
+   :param lastCompleteHarvest: ``1..1``    The last time all the data from a node was pulled from a member node                     
+   :type lastCompleteHarvest: xs:dateTime
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Synchronization">
+        
+        <xs:sequence>
+            <xs:element name="schedule" type="d1:Schedule"/>
+            <xs:element name="lastHarvested" type="xs:dateTime">
+                
+            </xs:element>
+            <xs:element name="lastCompleteHarvest" type="xs:dateTime">
+                
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+.. py:class:: SystemMetadata()
+
+   **Sequence Elements**
+
+   :param identifier: ``1..1`` 
+   :type identifier: STypes.Identifier
+   :param objectFormat: ``1..1`` 
+   :type objectFormat: STypes.ObjectFormat
+   :param size: ``1..1`` 
+   :type size: xs:long
+   :param submitter: ``1..1`` 
+   :type submitter: STypes.Principal
+   :param rightsHolder: ``1..1`` 
+   :type rightsHolder: STypes.Principal
+   :param accessPolicy: ``0..*`` 
+   :type accessPolicy: STypes.AccessPolicy
+   :param replicationPolicy: ``0..1`` 
+   :type replicationPolicy: STypes.ReplicationPolicy
+   :param obsoletes: ``0..*`` 
+   :type obsoletes: STypes.Identifier
+   :param obsoletedBy: ``0..*`` 
+   :type obsoletedBy: STypes.Identifier
+   :param derivedFrom: ``0..*`` 
+   :type derivedFrom: STypes.Identifier
+   :param describes: ``0..*`` 
+   :type describes: STypes.Identifier
+   :param describedBy: ``0..*`` 
+   :type describedBy: STypes.Identifier
+   :param checksum: ``1..1`` 
+   :type checksum: STypes.Checksum
+   :param embargoExpires: ``0..1`` 
+   :type embargoExpires: xs:dateTime
+   :param dateUploaded: ``1..1`` 
+   :type dateUploaded: xs:dateTime
+   :param dateSysMetadataModified: ``1..1`` 
+   :type dateSysMetadataModified: xs:dateTime
+   :param originMemberNode: ``1..1`` 
+   :type originMemberNode: STypes.NodeReference
+   :param authoritativeMemberNode: ``1..1`` 
+   :type authoritativeMemberNode: STypes.NodeReference
+   :param replica: ``0..*`` 
+   :type replica: STypes.Replica
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="SystemMetadata">
+        <xs:sequence>
+            <!-- Client Provided system metadata fields -->
+            <xs:element name="identifier" type="d1:Identifier" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="objectFormat" type="d1:ObjectFormat"/>
+            <xs:element name="size" type="xs:long"/>
+            <xs:element name="submitter" type="d1:Principal"/>
+            <xs:element name="rightsHolder" type="d1:Principal"/>
+            <xs:element name="accessPolicy" type="d1:AccessPolicy" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="replicationPolicy" type="d1:ReplicationPolicy" minOccurs="0" maxOccurs="1"/>
+            
+            <!-- Client provided relationship fields -->
+            <xs:element name="obsoletes" type="d1:Identifier" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="obsoletedBy" type="d1:Identifier" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="derivedFrom" type="d1:Identifier" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="describes" type="d1:Identifier" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="describedBy" type="d1:Identifier" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="checksum" type="d1:Checksum" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="embargoExpires" type="xs:dateTime" minOccurs="0"/>
+            
+            <!-- Fields provided by Member Node and Coordinating Node -->
+            <xs:element name="dateUploaded" type="xs:dateTime"/>
+            <xs:element name="dateSysMetadataModified" type="xs:dateTime"/>
+            
+            <xs:element name="originMemberNode" type="d1:NodeReference"/>
+            <xs:element name="authoritativeMemberNode" type="d1:NodeReference"/>
+            <xs:element name="replica" maxOccurs="unbounded" minOccurs="0" type="d1:Replica"/>
+            
+        </xs:sequence>
+    </xs:complexType>
+
+
+.. py:class:: (STypes.Slice)
+
+
+   Schema Source:
+
+   .. code-block:: xml
+
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema">
+            <xs:complexContent>
+                <xs:extension base="d1:Slice">
+                    <xs:sequence>
+                        <xs:element name="logEntry" type="d1:LogEntry" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+
+
+

@@ -125,7 +125,6 @@
 
 
 
-----
 
 .. function:: newAccount(cert,person) -> Principal
 
@@ -181,7 +180,6 @@
 
 
 
-----
 
 .. function:: verifyAccount(cert,principal) -> Boolean
 
@@ -228,7 +226,6 @@
 
 
 
-----
 
 .. function:: getPrincipalInfo(cert,query,start,count) -> PrincipalList
 
@@ -275,7 +272,6 @@
 
 
 
-----
 
 .. function:: listPrincipals(cert,query,start,count) -> PrincipalList
 
@@ -325,7 +321,6 @@
 
 
 
-----
 
 .. function:: mapIdentity(token1,token2) -> Boolean
 
@@ -373,7 +368,6 @@
 
 
 
-----
 
 .. function:: createGroup(cert,groupName) -> Identifier
 
@@ -428,7 +422,6 @@
 
 
 
-----
 
 .. function:: addGroupMembers(cert,groupName,members) -> Identifier
 
@@ -481,7 +474,6 @@
 
 
 
-----
 
 .. function:: removeGroupMembers(cert,groupName,members) -> Identifier
 
@@ -538,7 +530,6 @@
 
 
 
-----
 
 .. function:: isAuthorized(cert,pid,operation) -> Boolean
 
@@ -599,7 +590,6 @@
 
 
 
-----
 
 .. function:: setAccess(cert,pid,accessPolicy) -> Boolean
 
@@ -666,5 +656,3 @@
       to the CNs and to all MNs holding a copy of the object
 
 
-
-----

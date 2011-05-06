@@ -1,6 +1,13 @@
 Data Types in CICore
 --------------------
 
+.. py:module:: STypes
+
+.. include:: generated/generated_schema_types.txt
+
+
+----
+
 .. module:: Types
    :synopsis: Catalog of data types (structures) used by the DataONE cicore.
 
@@ -11,6 +18,8 @@ Data Types in CICore
 .. Note:: Class structures are described using the Google `Protocol Buffer
   Language`_ . This is for convenience only, and the IDL used will probably
   change in the future.
+
+
 
 ========= =============================
 Version   Structure
@@ -858,9 +867,3 @@ Expressing a NVP query in a URL
 
 .. _Protocol Buffer Language: http://code.google.com/apis/protocolbuffers/docs/overview.html
 
-
-----
-
-.. py:module:: STypes
-
-.. include:: generated/stypes.txt

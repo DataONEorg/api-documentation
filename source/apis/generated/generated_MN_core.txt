@@ -27,9 +27,8 @@
    * - Tier 1
      - ``GET /monitor/event``
      - :func:`getOperationStatistics`
-     - (:class:`cert<Types.X509Certificate>`, :class:`[time]<Types.DateTime>`,
-       :class:`[requestor]<Types.Principal>`, :class:`[day]<Types.Integer>`,
-       :class:`[event]<Types.Event>`, :class:`[eventTime]<Types.DateTime>`,
+     - (:class:`cert<Types.X509Certificate>`, ``[period]``,
+       :class:`[requestor]<Types.Principal>`, :class:`[event]<Types.Event>`,
        :class:`[format]<Types.ObjectFormat>`) ``->`` :class:`Types.MonitorList`
    * - Tier 1
      - ``GET /monitor/status``
@@ -79,7 +78,6 @@
 
 
 
-----
 
 .. function:: getLogRecords(cert,fromDate,[toDate],[event],[start=0],[count=1000]) -> LogRecords
 
@@ -148,7 +146,6 @@
 
 
 
-----
 
 .. function:: getObjectStatistics([format],[pid]) -> ObjectStatistics
 
@@ -202,11 +199,17 @@
 
 
 
-----
 
-.. function:: getOperationStatistics(cert,[time],[requestor],[day],[event],[eventTime],[format]) -> MonitorList
+.. function:: getOperationStatistics(cert,[period],[requestor],[event],[format]) -> MonitorList
 
-   Returns the number of operations that have been serviced by the node.
+   Returns the number of operations that have been serviced by the node over
+   time periods of one and 24 hours.
+
+   .. Note:: Functionality of this method has been simplfiied from the 0.5
+     description so that the response reflects the current state of the Member
+     Node. Historical information should be collated by a monitoring service if
+     necessary. This change was made to reduce the operational requirements for
+     Member Node services.
 
    :REST URL: ``GET /monitor/event``
 
@@ -219,30 +222,18 @@
 
    :type cert: :class:`Types.X509Certificate`
 
-   :param time: An ISO8601 compatible DateTime range specifying the time range
+   :param period: An ISO8601 compatible DateTime range specifying the time range
      for which to return operation statistics.
 
-   :type time: :class:`Types.DateTime`
+   :type period: integer
 
    :param requestor: Limit to operations performed by given requestor identity.
 
    :type requestor: :class:`Types.Principal`
 
-   :param day: A non-zero value causes a separate set of statistics to be
-     returned for each day, otherwise a single, cumulative set of statistics is
-     returned. Default=0
-
-   :type day: :class:`Types.Integer`
-
-   :param event: Enumerated value
+   :param event: Enumerated value indicating the type of event being examined
 
    :type event: :class:`Types.Event`
-
-   :param eventTime: An ISO8601 compatible DateTime range specifying the time
-     range that that objects were created for which to return operation
-     statistics.
-
-   :type eventTime: :class:`Types.DateTime`
 
    :param format: Limit to events involving objects of the specified format.
 
@@ -269,7 +260,6 @@
 
 
 
-----
 
 .. function:: getStatus() -> StatusResponse
 
@@ -310,7 +300,6 @@
 
 
 
-----
 
 .. function:: getCapabilities() -> NodeList
 
@@ -331,5 +320,3 @@
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=2163)``
 
 
-
-----
