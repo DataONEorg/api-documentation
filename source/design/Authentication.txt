@@ -199,44 +199,55 @@ The user must then confirm this equivalence between the two identities.
 
 .. 
 	@startuml images/ident_01.png
-	title Register two existing accounts as one identity within DataONE
-	actor User as user
+	title Register two existing accounts as equivalent identities
 	participant "CILogon" as cilogon
 	participant "Client" as client << Application >>
+		note right of client
+			Client controlled by User
+			who has two identities
+		end note	
 	participant "IdentityService" as ident << CNode >>
 	
-	group id1
-	'authenticate as primary id
-	user -> cilogon:authenticate with primary identity
-	client <- cilogon: X.509
-	'register this identity with DataONE
-	client -> ident: registerAccount(Types.X509Certificate, Types.Person)
-	ident --> client: Types.Principal
-	user -> cilogon:logout()
+	group username@NCEAS
+		'authenticate as primary id
+		client -> cilogon:authenticate with primary identity
+		client <- cilogon: X.509
+		'register this identity with DataONE
+		client -> ident: registerAccount(Types.X509Certificate, Types.Person)
+		ident --> client: Types.Principal
+		client -> client:logout (dispose X.509)
 	end
 	...
-	group id2
-	'authenticate as secondary id
-	user -> cilogon:authenticate with secondary indentity
-	client <- cilogon: X.509
-	'list existing Principals
-	client -> ident:listPrincipals()
-	ident --> client:Types.PrincipalList
-	user -> client:select equivalent Types.Principal
-	'request to map identity with existing Principal
-	client -> ident: mapIdentity(Types.X509Certificate, Types.Principal)
-	ident --> client: Types.Boolean
-	user -> cilogon:logout()
+	group username@UCSB
+		'authenticate as secondary id
+		client -> cilogon:authenticate with secondary indentity
+		client <- cilogon: X.509
+		'list existing Principals
+		client -> ident:listPrincipals()
+		ident --> client:Types.PrincipalList
+		client -> client:select equivalent Types.Principal
+		'request to map identity with existing Principal
+		client -> ident: mapIdentity(Types.X509Certificate, Types.Principal)
+		ident --> client: Types.Boolean
+		note left
+			request must be
+			confirmed before
+			equivalence is final
+		end note
+		client -> client:logout (dispose X.509)
 	end
 	...
-	group id1
-	'authenticate as primary id
-	user -> cilogon:authenticate with primary identity
-	client <- cilogon: X.509
-	'confirm mapping identity with DataONE
-	client -> ident: confirmMapIdentity(Types.X509Certificate, Types.Person)
-	ident --> client: Types.Boolean
-	user -> cilogon:logout()
+	group username@NCEAS
+		'authenticate as primary id
+		client -> cilogon:authenticate with primary identity
+		client <- cilogon: X.509
+		'confirm mapping identity with DataONE
+		client -> ident: mapIdentity(Types.X509Certificate, Types.Principal)
+		ident --> client: Types.Boolean
+		note left
+			equivalence is confirmed
+		end note
+		client -> client:logout (dispose X.509)
 	end
 	
    @enduml
