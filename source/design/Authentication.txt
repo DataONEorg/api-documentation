@@ -148,7 +148,7 @@ certificates that contain this biographical and account information in the
 returned certficate, all of which can be used by services to make authorization
 decisions.
 
-* :func:`CN_auth.newAccount`
+* :func:`CN_auth.registerAccount`
     Register an identity with the DataONE IdentityService. When a user attempts
     to use a given identity at DataONE, the user must first register the
     identity and provide biographical information including their real name,
@@ -186,6 +186,62 @@ decisions.
     Remove the listed array of members from the named group, if and only if the 
     user represented in token originally created the group or is an equivalent
     identity of the user who created the group.
+    
+    
+
+.. figure:: images/ident_01.png
+
+*Figure 1.* Identity Service is used to register an existing identity with DataONE.
+In this example, the same user has two distinct pre-existing identities.
+We register the primary identity with DataONE.
+We then request that a secondary identity is mapped to the same Types.Principal.
+The user must then confirm this equivalence between the two identities.
+
+.. 
+	@startuml images/ident_01.png
+	title Register two existing accounts as one identity within DataONE
+	actor User as user
+	participant "CILogon" as cilogon
+	participant "Client" as client << Application >>
+	participant "IdentityService" as ident << CNode >>
+	
+	group id1
+	'authenticate as primary id
+	user -> cilogon:authenticate with primary identity
+	client <- cilogon: X.509
+	'register this identity with DataONE
+	client -> ident: registerAccount(Types.X509Certificate, Types.Person)
+	ident --> client: Types.Principal
+	user -> cilogon:logout()
+	end
+	...
+	group id2
+	'authenticate as secondary id
+	user -> cilogon:authenticate with secondary indentity
+	client <- cilogon: X.509
+	'list existing Principals
+	client -> ident:listPrincipals()
+	ident --> client:Types.PrincipalList
+	user -> client:select equivalent Types.Principal
+	'request to map identity with existing Principal
+	client -> ident: mapIdentity(Types.X509Certificate, Types.Principal)
+	ident --> client: Types.Boolean
+	user -> cilogon:logout()
+	end
+	...
+	group id1
+	'authenticate as primary id
+	user -> cilogon:authenticate with primary identity
+	client <- cilogon: X.509
+	'confirm mapping identity with DataONE
+	client -> ident: confirmMapIdentity(Types.X509Certificate, Types.Person)
+	ident --> client: Types.Boolean
+	user -> cilogon:logout()
+	end
+	
+   @enduml
+
+    
 
 Authentication Service
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -258,9 +314,9 @@ valid (i.e., verify issuer signature and confirm valid date span) and then use
 the attributes in the certificate to make authorization decisions regarding the
 request.  
 
-.. image:: images/auth_01.png
+.. image:: images/auth_02.png
 
-*Figure 1.* Authentication and session management assuming that the CN only
+*Figure 2.* Authentication and session management assuming that the CN only
 runs an Identity service, and that the CILogon server runs the session
 management service as part of the authentication process.
 
@@ -386,9 +442,9 @@ represented by a SAML Assertion. Note that these SAML Assertion messages are
 returned when Member Nodes and Coordinating Nodes make calls 
 to :func:`CN_auth.getAuthSession`.
 
-.. figure:: images/auth_02.png
+.. figure:: images/auth_03.png
 
-*Figure 2.* Authentication and session management assuming that the CN runs a
+*Figure 3.* Authentication and session management assuming that the CN runs a
 seperate SessionService that creates and tracks sessions. This is an
 alternative scenario based on the idea that CILogon may not be able to make
 calls to the Identity Service, in which case the separate Session Service would
@@ -398,7 +454,7 @@ need to be created.
    :language: xml
 
 .. 
-   @startuml images/auth_01.png
+   @startuml images/auth_02.png
    participant "MN" as mn << MNode >>
    participant "Client" as app_client << Application >>
    participant "CILogon" as cilogon << CNode >>
@@ -414,7 +470,7 @@ need to be created.
    @enduml
 
 .. 
-   @startuml images/auth_02.png
+   @startuml images/auth_03.png
    participant "CILogon" as cilogon << CNode >>
    participant "Client" as app_client << Application >>
    participant "MN" as mn << MNode >>
