@@ -314,7 +314,7 @@ valid (i.e., verify issuer signature and confirm valid date span) and then use
 the attributes in the certificate to make authorization decisions regarding the
 request.  
 
-.. image:: images/auth_02.png
+.. image:: images/auth_01.png
 
 *Figure 2.* Authentication and session management assuming that the CN only
 runs an Identity service, and that the CILogon server runs the session
@@ -442,7 +442,7 @@ represented by a SAML Assertion. Note that these SAML Assertion messages are
 returned when Member Nodes and Coordinating Nodes make calls 
 to :func:`CN_auth.getAuthSession`.
 
-.. figure:: images/auth_03.png
+.. figure:: images/auth_02.png
 
 *Figure 3.* Authentication and session management assuming that the CN runs a
 seperate SessionService that creates and tracks sessions. This is an
@@ -454,7 +454,7 @@ need to be created.
    :language: xml
 
 .. 
-   @startuml images/auth_02.png
+   @startuml images/auth_01.png
    participant "MN" as mn << MNode >>
    participant "Client" as app_client << Application >>
    participant "CILogon" as cilogon << CNode >>
@@ -470,7 +470,7 @@ need to be created.
    @enduml
 
 .. 
-   @startuml images/auth_03.png
+   @startuml images/auth_02.png
    participant "CILogon" as cilogon << CNode >>
    participant "Client" as app_client << Application >>
    participant "MN" as mn << MNode >>
