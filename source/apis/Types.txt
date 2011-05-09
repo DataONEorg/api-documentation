@@ -1,9 +1,10 @@
 Data Types in CICore
 --------------------
 
-.. py:module:: STypes
-
-.. include:: generated/generated_schema_types.txt
+.. 
+   To be included when stylsheet issues are sorted out
+   .. py:module:: STypes
+   .. include:: generated/generated_schema_types.txt
 
 
 ----
@@ -60,7 +61,6 @@ Version   Structure
 .         :class:`X509Certificate`
 ========= =============================
 
-----
 
 .. class:: AccessPolicy
 
@@ -77,7 +77,6 @@ Version   Structure
       repeated AccessRule allow = 0;
     }
 
-----
 
 .. class:: AccessRule
 
@@ -107,15 +106,12 @@ Version   Structure
       repeated Identifier resource = 2;
     }
 
-----
-
 
 .. class:: AuthenticationSystem
 
   Place holder for support of multiple authentication services for a single
   user.
 
-----
 
 .. class:: AuthToken
 
@@ -129,20 +125,17 @@ Version   Structure
   which is tied to an authenticated Principal and can only be used for
   requests from a particular Address.
 
-----
 
 .. class:: OctetStream
 
    A series of 8-bit bytes which combined together form a digital object.
 
-----
 
 .. class:: Integer
 
    A simple integer. The range of expected values should be described with the
    accompanying API call.
 
-----
 
 .. class:: Boolean
 
@@ -157,14 +150,12 @@ Version   Structure
    must set the appropriate HTTP status code on the response to indicate a 
    failure.
 
-----
 
 .. class:: Capabilities
 
   This class has been deprecated by :class:`Node`
 
 
-----
 
 .. class:: Challenge
 
@@ -184,7 +175,6 @@ Version   Structure
       required string encryptedNonce = 1;
     }
 
-----
 
 .. class:: Checksum
 
@@ -208,7 +198,6 @@ Version   Structure
       required string value = 2;
     }
 
-----
 
 
 .. class:: DateTime
@@ -231,7 +220,6 @@ Version   Structure
 
 .. _HTTP Full Date: http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.3.1
 
-----
 
 .. class:: DescribeResponse  
 
@@ -286,12 +274,8 @@ Version   Structure
     DataONE-Checksum: SHA-1,2e01e17467891f7c933dbaa00e1459d23db3fe4f
 
 
-----
-
 .. include:: types_errors.txt
 
-
-----
 
 .. class:: EncryptedNonce
 
@@ -303,7 +287,6 @@ Version   Structure
   public key. When the server decrypts the returned Nonce, if it matches then
   it establishes an authenticated session.
 
-----
 
 .. class:: Event
 
@@ -321,8 +304,6 @@ Version   Structure
       CHANGEOWNER = 5;
     }
 
-
-----
 
 .. class:: Group
 
@@ -351,7 +332,6 @@ Version   Structure
       repeated string hasMember = 3;
     }
 
-----
 
 .. class:: PingResponse
 
@@ -359,15 +339,12 @@ Version   Structure
   HTTP response with status code 200 and no payload.
 
 
-----
-
 .. class:: StatusResponse
 
   The response from :func:`MN_health.getStatus`. This is currently
   (2010-10-21) undefined. This opertation *may* replace ping() on closer
   evaluation of the design notes.
 
-----
 
 .. class:: IdentifierFormat
 
@@ -386,7 +363,6 @@ Version   Structure
 
 .. TODO:: There's a few more of these that need to be specified.
 
-----
 
 .. class:: Identifier
 
@@ -401,7 +377,6 @@ Version   Structure
 
 .. _ticket 577: https://redmine.dataone.org/issues/577
 
-----
 
 .. class:: IdentifierList
 
@@ -413,7 +388,6 @@ Version   Structure
        repeated IdentifierType identifier = 1;
      }
 
-----
 
 .. class:: LogRecord
 
@@ -442,7 +416,6 @@ Version   Structure
       required NodeReference memberNode = 7;
     }
 
-----
 
 .. class:: LogRecords
 
@@ -457,7 +430,6 @@ Version   Structure
       repeated LogRecord entry = 3;
     }
 
-----
 
 .. class:: MonitorList
 
@@ -469,7 +441,6 @@ Version   Structure
       repeated LogRecord entry = 0;
     }
 
-----
 
 .. class:: MonitorInfo
 
@@ -483,7 +454,6 @@ Version   Structure
       required uint64 size = 1;
     }
 
-----
 
 .. class:: Node
 
@@ -491,7 +461,6 @@ Version   Structure
   supports and its replication policy.
 
 
-----
 
 .. class:: NodeList
 
@@ -500,14 +469,10 @@ Version   Structure
   NodeList is described in :mod:`NodeList`.
 
 
-----
-
 .. class:: NodeReference
 
   Member Node identifier drawn from the DataONE :mod:`cn_register <registry service>`.
 
-
-----
 
 .. class:: ObjectFormat
 
@@ -530,7 +495,6 @@ Version   Structure
      A human readable name that describes the object format
   
 
-----
 
 .. class:: ObjectFormatList
 
@@ -565,7 +529,6 @@ Version   Structure
   
      The ObjectFormat structure for each object format listed.
      
-----
 
 .. class:: ObjectList
 
@@ -613,8 +576,6 @@ Version   Structure
 
      List of ObjectInfo structures, which are an extension of :class:`DescribeResponse`
 
-
-----
 
 .. class:: ObjectLocationList
 
@@ -678,14 +639,11 @@ Version   Structure
      values have higher preference. Values are only relative to each other in
      a particular response. Nodes with equal weight get equal values.
 
-----
 
 .. class:: ObjectStatistics
 
    A summary of object use information intended primarily for the monitoring service.
 
-
-----
 
 .. class:: Permission
 
@@ -707,14 +665,11 @@ Version   Structure
       EXECUTE = 3;
     }
 
-----
 
 .. class:: OperationStatistics
 
    A summary of operation calls intended primarily for the monitoring service.
 
-
-----
 
 .. class:: Person
 
@@ -758,14 +713,11 @@ Version   Structure
       repeated string equivalentIdentity = 6;
     }
 
-----
 
 .. class:: PingResponse
 
   The response from :func:`MN_health.ping`
 
-
-----
 
 .. class:: Principal
 
@@ -778,7 +730,6 @@ Version   Structure
 
   Used by :mod:`SystemMetadata`
 
-----
 
 .. class:: PrincipalList
 
@@ -792,7 +743,6 @@ Version   Structure
       repeated Person person = 2;
     }
 
-----
 
 .. class:: Query
 
@@ -843,20 +793,16 @@ Version   Structure
 Expressing a NVP query in a URL
 
 
-----
-
 .. class:: Status
 
   The response from :func:`MN_health.getStatus`
 
-----
 
 .. class:: SystemMetadata
 
   A set of low level information about an object in the DataONE system.
   SystemMetadata is described in :mod:`SystemMetadata`.
 
-----
 
 .. class:: X509Certificate
 

@@ -2,7 +2,7 @@
   
   .. py:class:: AuthToken(STypes.NonEmptyString)
 
-   An AuthToken is an Identifier that is used to reference an authenticated AuthSession that has been established via the act of authenticating a Principal with a Coordinating Node. The AuthToken identifier follows the same formatting and content rules as the Identifier class, and should be representable in simple 7-bit ASCII or as a UTF-8 string. The value SHOULD additionally be constrained to be less than 8K in order to be transportable in typical HTTP header fields. The AuthToken represents an AuthSession, which is tied to an authenticated Principal and can only be used for requests from a particular Address.    
+   An AuthToken is an Identifier that is used to reference an authenticated AuthSession that has been established via the act of authenticating a Principal with a Coordinating Node. The AuthToken identifier follows the same formatting and content rules as the Identifier class, and should be representable in simple 7-bit ASCII or as a UTF-8 string. The value SHOULD additionally be constrained to be less than 8K in order to be transportable in typical HTTP header fields. The AuthToken represents an AuthSession, which is tied to an authenticated Principal and can only be used for requests from a particular Address.
 
 
 
@@ -11,13 +11,15 @@
    .. code-block:: xml
 
       <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="AuthToken">
-   
-      <xs:restriction base="d1:NonEmptyString"/>
-    </xs:simpleType>
+    
+    <xs:restriction base="d1:NonEmptyString"/>
+  </xs:simpleType>
 
 
 
 .. py:class:: ChecksumAlgorithm(xs:string)
+
+   An enumerated value that indicates the algorithm used to compute a checksum value.
 
    Enumerated values::
 
@@ -33,19 +35,22 @@
    .. code-block:: xml
 
       <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ChecksumAlgorithm">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="SHA-1"/>
-            <xs:enumeration value="SHA-224"/>
-            <xs:enumeration value="SHA-256"/>
-            <xs:enumeration value="SHA-384"/>
-            <xs:enumeration value="SHA-512"/>
-            <xs:enumeration value="MD5"/>
-        </xs:restriction>
-    </xs:simpleType>
+    
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SHA-1"/>
+      <xs:enumeration value="SHA-224"/>
+      <xs:enumeration value="SHA-256"/>
+      <xs:enumeration value="SHA-384"/>
+      <xs:enumeration value="SHA-512"/>
+      <xs:enumeration value="MD5"/>
+    </xs:restriction>
+  </xs:simpleType>
 
 
 
 .. py:class:: ComponentName(xs:string)
+
+          
 
    Enumerated values::
 
@@ -63,21 +68,24 @@
    .. code-block:: xml
 
       <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ComponentName">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="Apache"/>
-            <xs:enumeration value="CoordinatingNode"/>
-            <xs:enumeration value="Django"/>
-            <xs:enumeration value="LinuxUbuntu"/>
-            <xs:enumeration value="LinuxDebian"/>
-            <xs:enumeration value="MemberNode"/>
-            <xs:enumeration value="Mercury"/>
-            <xs:enumeration value="Metacat"/>
-        </xs:restriction>
-    </xs:simpleType>
+    
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Apache"/>
+      <xs:enumeration value="CoordinatingNode"/>
+      <xs:enumeration value="Django"/>
+      <xs:enumeration value="LinuxUbuntu"/>
+      <xs:enumeration value="LinuxDebian"/>
+      <xs:enumeration value="MemberNode"/>
+      <xs:enumeration value="Mercury"/>
+      <xs:enumeration value="Metacat"/>
+    </xs:restriction>
+  </xs:simpleType>
 
 
 
 .. py:class:: ComponentVersion(STypes.NonEmptyString)
+
+          
 
 
 
@@ -86,12 +94,15 @@
    .. code-block:: xml
 
       <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ComponentVersion">
-        <xs:restriction base="d1:NonEmptyString"/>
-    </xs:simpleType>
+    
+    <xs:restriction base="d1:NonEmptyString"/>
+  </xs:simpleType>
 
 
 
 .. py:class:: CrontabEntry(xs:token)
+
+          
 
 
 
@@ -100,16 +111,17 @@
    .. code-block:: xml
 
       <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="CrontabEntry">
-        <xs:restriction base="xs:token">
-            <xs:pattern value="([\*\d]{1,2}[\-,]?)+"/>
-        </xs:restriction>
-    </xs:simpleType>
+    
+    <xs:restriction base="xs:token">
+      <xs:pattern value="([\*\d]{1,2}[\-,]?)+"/>
+    </xs:restriction>
+  </xs:simpleType>
 
 
 
 .. py:class:: EncryptedNonce(STypes.NonEmptyString)
 
-   A random number that has been encrypted as part of a two-phase   authentication protocol and that is only used once for session   authentication. The Nonce is initially encrypted using a client's public key   and sent to the client, where it is decrypted by the client (proving access   that he associated private key), and then re-encrypted using the server's   public key. When the server decrypts the returned Nonce, if it matches then   it establishes an authenticated session.
+   A random number that has been encrypted as part of a two-phase authentication protocol and that is only used once for session  authentication. The Nonce is initially encrypted using a client's public key  and sent to the client, where it is decrypted by the client (proving access  that he associated private key), and then re-encrypted using the server's public key. When the server decrypts the returned Nonce, if it matches then it establishes an authenticated session.
 
 
 
@@ -118,15 +130,15 @@
    .. code-block:: xml
 
       <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="EncryptedNonce">
-      
-      <xs:restriction base="d1:NonEmptyString"/>
-    </xs:simpleType>
+    
+    <xs:restriction base="d1:NonEmptyString"/>
+  </xs:simpleType>
 
 
 
 .. py:class:: Event(xs:string)
 
-   The controlled list of events that are logged,        which will include 'CREATE', 'UPDATE', 'DELETE', 'READ', 'REPLICATE'        events.
+   The controlled list of events that are logged, which will include 'CREATE', 'UPDATE', 'DELETE', 'READ', 'REPLICATE' events.
 
    Enumerated values::
 
@@ -141,19 +153,21 @@
    .. code-block:: xml
 
       <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Event">
-      
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="create"/>
-            <xs:enumeration value="read"/>
-            <xs:enumeration value="update"/>
-            <xs:enumeration value="delete"/>
-            <xs:enumeration value="replicate"/>
-        </xs:restriction>
-    </xs:simpleType>
+    
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="create"/>
+      <xs:enumeration value="read"/>
+      <xs:enumeration value="update"/>
+      <xs:enumeration value="delete"/>
+      <xs:enumeration value="replicate"/>
+    </xs:restriction>
+  </xs:simpleType>
 
 
 
 .. py:class:: Environment(xs:NMTOKEN)
+
+          
 
    Enumerated values::
 
@@ -167,17 +181,20 @@
    .. code-block:: xml
 
       <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Environment">
-        <xs:restriction base="xs:NMTOKEN">
-            <xs:enumeration value="dev"/>
-            <xs:enumeration value="test"/>
-            <xs:enumeration value="staging"/>
-            <xs:enumeration value="prod"/>
-        </xs:restriction>
-    </xs:simpleType>
+    
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="dev"/>
+      <xs:enumeration value="test"/>
+      <xs:enumeration value="staging"/>
+      <xs:enumeration value="prod"/>
+    </xs:restriction>
+  </xs:simpleType>
 
 
 
 .. py:class:: NodeState(xs:NMTOKEN)
+
+          
 
    Enumerated values::
 
@@ -190,12 +207,13 @@
    .. code-block:: xml
 
       <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="NodeState">
-        <xs:restriction base="xs:NMTOKEN">
-            <xs:enumeration value="up"/>
-            <xs:enumeration value="down"/>
-            <xs:enumeration value="unknown"/>
-        </xs:restriction>
-    </xs:simpleType>
+    
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="up"/>
+      <xs:enumeration value="down"/>
+      <xs:enumeration value="unknown"/>
+    </xs:restriction>
+  </xs:simpleType>
 
 
 
@@ -210,13 +228,15 @@
    .. code-block:: xml
 
       <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="NodeReference">
-      
-        <xs:restriction base="d1:NonEmptyString"/>
-    </xs:simpleType>
+    
+    <xs:restriction base="d1:NonEmptyString"/>
+  </xs:simpleType>
 
 
 
 .. py:class:: NodeType(xs:NMTOKEN)
+
+          
 
    Enumerated values::
 
@@ -229,18 +249,19 @@
    .. code-block:: xml
 
       <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="NodeType">
-        <xs:restriction base="xs:NMTOKEN">
-            <xs:enumeration value="mn"/>
-            <xs:enumeration value="cn"/>
-            <xs:enumeration value="Monitor"/>
-        </xs:restriction>
-    </xs:simpleType>
+    
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="mn"/>
+      <xs:enumeration value="cn"/>
+      <xs:enumeration value="Monitor"/>
+    </xs:restriction>
+  </xs:simpleType>
 
 
 
 .. py:class:: NonEmptyString(xs:string)
 
-   A derived string type with at least length 1 and it must contain non-whitespace.
+   A derived string type with length of at least 1 and must contain non-whitespace.
 
 
 
@@ -249,22 +270,22 @@
    .. code-block:: xml
 
       <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="NonEmptyString">
-      
-        <xs:restriction base="xs:string">
-            <xs:minLength value="1"/>
-            <xs:pattern value="[\s]*[\S][\s\S]*"/>
-        </xs:restriction>
-    </xs:simpleType>
+    
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:pattern value="[\s]*[\S][\s\S]*"/>
+    </xs:restriction>
+  </xs:simpleType>
 
 
 
 .. py:class:: Identifier(STypes.NonEmptyString)
 
-   An :term:`identifier` (:term:`PID`) in the DataONE system. This is   equivalent to a Unicode string of printable characters, excluding   whitespace. All representations of identifiers must be encoded in 7-bit   ASCII or UTF-8.
+   An :term:`identifier` (:term:`PID`) in the DataONE system. This is equivalent to a Unicode string of printable characters, excluding whitespace. All representations of identifiers must be encoded in 7-bit ASCII or UTF-8.
 
-   Identifiers have a maximum length of 800 characters. Some discussion on this   is described in `ticket 577`_.         
+   Identifiers have a maximum length of 800 characters. Some discussion on this is described in `ticket 577`_.
 
-   .. _ticket 577: https://redmine.dataone.org/issues/577         
+   .. _ticket 577: https://redmine.dataone.org/issues/577
 
 
 
@@ -273,15 +294,15 @@
    .. code-block:: xml
 
       <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Identifier">
-      
-      <xs:restriction base="d1:NonEmptyString"/>
-    </xs:simpleType>
+    
+    <xs:restriction base="d1:NonEmptyString"/>
+  </xs:simpleType>
 
 
 
 .. py:class:: Permission(xs:string)
 
-   A string value indicating the set of actions that can be performed on a   resource as specified in an access policy.  The set of permissions include   the ability to read a resource, modify a resource (write), and to change   the set of access control policies for a resource (changePermission).  In   addition, there is a permission that controls ability to execute a service   (execute). Permissions are cumulative, in that higher level permissions   include all of the priveledges of lower levels (e.g., given write access, one   also implicitly has read access).
+   A string value indicating the set of actions that can be performed on a resource as specified in an access policy. The set of permissions include the ability to read a resource, modify a resource (write), and to change the set of access control policies for a resource (changePermission). In addition, there is a permission that controls ability to execute a service (execute). Permissions are cumulative, in that higher level permissions include all of the priveledges of lower levels (e.g., given write access, one also implicitly has read access).
 
    Enumerated values::
 
@@ -296,13 +317,13 @@
 
       <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Permission">
     
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="read"/>
-            <xs:enumeration value="write"/>
-            <xs:enumeration value="changePermission"/>
-            <xs:enumeration value="execute"/>
-        </xs:restriction>
-    </xs:simpleType>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="read"/>
+      <xs:enumeration value="write"/>
+      <xs:enumeration value="changePermission"/>
+      <xs:enumeration value="execute"/>
+    </xs:restriction>
+  </xs:simpleType>
 
 
 
@@ -310,7 +331,7 @@
 
    Person (user), Group, or Organization, or System.
 
-   The formal name identifiying a user or group from the DataONE    Identity Management Service. The principal is represented by a unique,   persistent, non-reassignable identifier string that follows the same   constraints as the Identifier.
+   The formal name identifiying a user or group from the DataONE Identity Management Service. The principal is represented by a unique, persistent, non-reassignable identifier string that follows the same         constraints as the Identifier.
 
    Used by :mod:`SystemMetadata`
 
@@ -321,17 +342,19 @@
    .. code-block:: xml
 
       <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Principal">
-      
-        <xs:restriction base="d1:NonEmptyString"/>
-        <!-- Note: Can also be special names:
-             AuthenticatedUser: anyone with checked credentials
-             Public: anyone, whether authenticated or not
-        -->
+    
+      <xs:restriction base="d1:NonEmptyString"/>
+      <!-- Note: Can also be special names:
+      AuthenticatedUser: anyone with checked credentials
+      Public: anyone, whether authenticated or not
+      -->
     </xs:simpleType>
 
 
 
 .. py:class:: ReplicationStatus(xs:string)
+
+   Enumerated values indicating the replication status of an object.
 
    Enumerated values::
 
@@ -345,19 +368,20 @@
    .. code-block:: xml
 
       <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ReplicationStatus">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="queued"/>
-            <xs:enumeration value="requested"/>
-            <xs:enumeration value="completed"/>
-            <xs:enumeration value="invalidated"/>
-        </xs:restriction>
+      
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="queued"/>
+        <xs:enumeration value="requested"/>
+        <xs:enumeration value="completed"/>
+        <xs:enumeration value="invalidated"/>
+      </xs:restriction>
     </xs:simpleType>
 
 
 
 .. py:class:: IdentifierFormat(xs:string)
 
-   Initially an enumerated list of strings that specify different types of identifiers.         
+   An enumerated list of strings that specify different types of identifiers.
 
    Enumerated values::
 
@@ -375,20 +399,22 @@
 
       <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="IdentifierFormat">
       
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="OID"/>
-            <xs:enumeration value="LSID"/>
-            <xs:enumeration value="UUID"/>
-            <xs:enumeration value="LSRN"/>
-            <xs:enumeration value="DOI"/>
-            <xs:enumeration value="URI"/>
-            <xs:enumeration value="STRING"/>
-        </xs:restriction>
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="OID"/>
+        <xs:enumeration value="LSID"/>
+        <xs:enumeration value="UUID"/>
+        <xs:enumeration value="LSRN"/>
+        <xs:enumeration value="DOI"/>
+        <xs:enumeration value="URI"/>
+        <xs:enumeration value="STRING"/>
+      </xs:restriction>
     </xs:simpleType>
 
 
 
 .. py:class:: ServiceName(STypes.NonEmptyString)
+
+            
 
 
 
@@ -397,12 +423,15 @@
    .. code-block:: xml
 
       <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ServiceName">
-        <xs:restriction base="d1:NonEmptyString"/>
+      
+      <xs:restriction base="d1:NonEmptyString"/>
     </xs:simpleType>
 
 
 
 .. py:class:: ServiceVersion(STypes.NonEmptyString)
+
+            
 
 
 
@@ -411,12 +440,15 @@
    .. code-block:: xml
 
       <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ServiceVersion">
-        <xs:restriction base="d1:NonEmptyString"/>
+      
+      <xs:restriction base="d1:NonEmptyString"/>
     </xs:simpleType>
 
 
 
 .. py:class:: X509Certificate(STypes.NonEmptyString)
+
+            
 
 
 
@@ -425,6 +457,7 @@
    .. code-block:: xml
 
       <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="X509Certificate">
+      
       <xs:restriction base="d1:NonEmptyString"/>
     </xs:simpleType>
 

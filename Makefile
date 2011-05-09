@@ -44,7 +44,10 @@ clean:
 
 generate: $(METHODXLS)
 	$(DOCGENERATOR) -s $(METHODXLS) -d ./source/apis/generated
+
+generate_schema: 
 	$(XSLTPROC) --path ".:$(SCHEMADIR)" types2rst.xsl dataoneTypes.xsd > ./source/apis/generated/generated_schema_types.txt
+	#$(XSLTPROC) --path ".:$(SCHEMADIR)" xsd2rst.xsl dataoneTypes.xsd > ./source/apis/generated/generated_schema_types2.txt
 
 plantuml: plantuml_source plantuml_usecase
 
