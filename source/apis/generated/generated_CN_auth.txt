@@ -17,7 +17,7 @@
        :class:`userId<Types.Principal>`) ``->`` :class:`Types.Identifier`
    * - Tier 2
      - ``POST /accounts``
-     - :func:`newAccount`
+     - :func:`registerAccount`
      - (:class:`cert<Types.X509Certificate>`, :class:`person<Types.Person>`)
        ``->`` :class:`Types.Principal`
    * - Tier 2
@@ -126,7 +126,7 @@
 
 
 
-.. function:: newAccount(cert,person) -> Principal
+.. function:: registerAccount(cert,person) -> Principal
 
    Create a new :term:`principal` in the DataONE system. Note that there should
    probably be a lot more metadata captured about the new user, and there should

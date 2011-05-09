@@ -228,7 +228,7 @@
      - Changes ownership (RightsHolder) of the specified object to the
        :term:`principal` specified by `userId`
    * - POST /accounts
-     - :func:`CN_auth.newAccount`
+     - :func:`CN_auth.registerAccount`
      - Create a new :term:`principal` in the DataONE system. Note that there
        should probably be a lot more metadata captured about the new user, and
        there should be a mechanism for specifying the default access control
