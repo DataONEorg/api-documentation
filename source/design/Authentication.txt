@@ -220,7 +220,7 @@ The user must then confirm this equivalence between the two identities.
 	...
 	group username@UCSB
 		'authenticate as secondary id
-		client -> cilogon:authenticate with secondary indentity
+		client -> cilogon:authenticate with secondary identity
 		client <- cilogon: X.509
 		'list existing Principals
 		client -> ident:listPrincipals()
@@ -252,7 +252,93 @@ The user must then confirm this equivalence between the two identities.
 	
    @enduml
 
-    
+
+.. figure:: images/ident_02.png
+
+*Figure 2.* Identity Service is used to register an existing identity with DataONE.
+In this example, the user has an identity affiliation that is not initially trusted.
+We register the identity with DataONE as unverified.
+An administrator needs to verify the Person details before the identity is considered 
+fully verified. Some DataONE actions will be restricted until verification is completed.
+
+.. 
+	@startuml images/ident_02.png
+	title Register untrusted account and verify it
+	participant "CILogon" as cilogon
+	participant "Client" as client << Application >>
+		note right of client
+			Client controlled by User
+			and by Admin
+		end note	
+	participant "IdentityService" as ident << CNode >>
+	
+	group username@google
+		'authenticate as primary id
+		client -> cilogon:authenticate with untrusted identity
+		client <- cilogon: X.509
+		'register this identity with DataONE
+		client -> ident: registerAccount(Types.X509Certificate, Types.Person)
+		ident --> client: Types.Principal
+		client -> client:logout (dispose X.509)
+	end
+	...
+	group admin@UCSB
+		'authenticate as secondary id
+		client -> cilogon:administrator authenticate
+		client <- cilogon: X.509
+		client -> ident:getPrincipalInfo(Types.X509Certificate, Types.Principal)
+		ident --> client:Types.Person
+		note left
+			Administrator must 
+			verify Person details 
+		end note
+		'request to map identity with existing Principal
+		client -> ident: verifyIdentity(Types.X509Certificate, Types.Principal)
+		ident --> client: Types.Boolean
+		client -> client:logout (dispose X.509)
+	end
+	
+   @enduml
+
+.. figure:: images/ident_03.png
+
+*Figure 3.* Identity Service is used to manage groups.
+The group creator is initially the only user able to 
+add and remove group members. List editing permissions
+must be granted for other group members to edit the group.
+
+.. 
+	@startuml images/ident_03.png
+	title Register untrusted account and verify it
+	participant "CILogon" as cilogon
+	participant "Client" as client << Application >>
+		note right of client
+			Client controlled by 
+			group administrator
+		end note	
+	participant "IdentityService" as ident << CNode >>
+	
+	group admin@UCSB
+		'authenticate as admin id
+		client -> cilogon:authenticate admin identity
+		client <- cilogon: X.509
+		'create group
+		client -> ident: createGroup(Types.X509Certificate, Types.Principal)
+		ident --> client: Types.Identifier
+		'add members
+		client -> ident: addGroupMembers(Types.X509Certificate, Types.Principal, Types.PrincipalList)
+		ident --> client: Types.Identifier
+		note left
+			Administrator can 
+			edit group
+		end note
+		'remove members
+		client -> ident: removeGroupMembers(Types.X509Certificate, Types.Principal, Types.PrincipalList)
+		ident --> client: Types.Identifier
+		client -> client:logout (dispose X.509)
+	end
+	
+   @enduml    
 
 Authentication Service
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -327,7 +413,7 @@ request.
 
 .. image:: images/auth_01.png
 
-*Figure 2.* Authentication and session management assuming that the CN only
+*Figure 4.* Authentication and session management assuming that the CN only
 runs an Identity service, and that the CILogon server runs the session
 management service as part of the authentication process.
 
@@ -455,7 +541,7 @@ to :func:`CN_auth.getAuthSession`.
 
 .. figure:: images/auth_02.png
 
-*Figure 3.* Authentication and session management assuming that the CN runs a
+*Figure 5.* Authentication and session management assuming that the CN runs a
 seperate SessionService that creates and tracks sessions. This is an
 alternative scenario based on the idea that CILogon may not be able to make
 calls to the Identity Service, in which case the separate Session Service would
