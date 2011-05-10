@@ -21,6 +21,11 @@
      - (:class:`cert<Types.X509Certificate>`, :class:`person<Types.Person>`)
        ``->`` :class:`Types.Principal`
    * - Tier 2
+     - ``POST /accounts``
+     - :func:`updateAccount`
+     - (:class:`cert<Types.X509Certificate>`, :class:`person<Types.Person>`)
+       ``->`` :class:`Types.Principal`
+   * - Tier 2
      - ``POST /accounts/{principal}``
      - :func:`verifyAccount`
      - (:class:`cert<Types.X509Certificate>`,
@@ -167,6 +172,54 @@
 
      The chosen identity already exists in the system
 
+
+   :raises Exceptions.InvalidCredentials: ``(errorCode=401, detailCode=4520)``
+
+     Raised if the supplied credentials are invalid, such as an invalid X.509
+     certificate.
+
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4501)``
+
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4502)``
+
+
+
+
+.. function:: updateAccount(cert,person) -> Principal
+
+   Update an existing :term:`principal` in the DataONE system. Note that there
+   should probably be a policy for verifying the details that change via this
+   method.
+
+   :Use Cases:
+
+     :doc:`UC16 </design/UseCases/16_uc>`
+
+   :REST URL: ``POST /accounts``
+
+   :param cert: X.509 Certificate, passed to the system via SSL client-side
+     authentication, and used to identiy and validate the identity of the
+     Principal making the call.  The X.509 certificate should be traceable to
+     the CILogon service, and provides various attributes for authorization
+     decisions.  If the X.509 certificate is not provided, then the request
+     should be considered to have originated from the DataONE 'Public' user
+     which will likely not be able to update the account details.
+
+   :type cert: :class:`Types.X509Certificate`
+
+   :param person: New information about the Person. The principal of the Person
+     cannot be updated with this method and must match the subject of the X.509
+     certificate associated with the authenticated SSL session via client-side
+     authentication.
+
+   :type person: :class:`Types.Person`
+
+   :returns: The Principal in the DataONE system that was updated.
+
+   :rtype: :class:`Types.Principal`
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4530)``
 
    :raises Exceptions.InvalidCredentials: ``(errorCode=401, detailCode=4520)``
 

@@ -77,6 +77,11 @@
      - (:class:`cert<Types.X509Certificate>`, :class:`person<Types.Person>`)
        ``->`` :class:`Types.Principal`
    * - Tier 2
+     - ``POST /accounts``
+     - :func:`CN_auth.updateAccount`
+     - (:class:`cert<Types.X509Certificate>`, :class:`person<Types.Person>`)
+       ``->`` :class:`Types.Principal`
+   * - Tier 2
      - ``POST /accounts/{principal}``
      - :func:`CN_auth.verifyAccount`
      - (:class:`cert<Types.X509Certificate>`,

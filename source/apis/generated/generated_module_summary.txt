@@ -292,6 +292,13 @@
 
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
    * - \
+     - :func:`CN_auth.updateAccount`
+     - Update an existing :term:`principal` in the DataONE system. Note that
+       there should probably be a policy for verifying the details that change
+       via this method.
+
+       Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
+   * - \
      - :func:`CN_auth.verifyAccount`
      - Verify that the Person data associated with this Principal is a true
        representation of the real world person. This service can only be called

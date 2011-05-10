@@ -233,6 +233,11 @@
        should probably be a lot more metadata captured about the new user, and
        there should be a mechanism for specifying the default access control
        rules for the new account.
+   * - POST /accounts
+     - :func:`CN_auth.updateAccount`
+     - Update an existing :term:`principal` in the DataONE system. Note that
+       there should probably be a policy for verifying the details that change
+       via this method.
    * - POST /accounts/{principal}
      - :func:`CN_auth.verifyAccount`
      - Verify that the Person data associated with this Principal is a true
