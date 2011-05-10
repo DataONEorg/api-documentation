@@ -28,8 +28,8 @@
    * - Tier 2
      - ``GET /accounts/{principal}``
      - :func:`getPrincipalInfo`
-     - (:class:`cert<Types.X509Certificate>`, :class:`query<Types.String>`,
-       ``start``, ``count``) ``->`` :class:`Types.PrincipalList`
+     - (:class:`cert<Types.X509Certificate>`,
+       :class:`principal<Types.Principal>`) ``->`` :class:`Types.Person`
    * - Tier 2
      - ``GET /accounts``
      - :func:`listPrincipals`
@@ -227,10 +227,10 @@
 
 
 
-.. function:: getPrincipalInfo(cert,query,start,count) -> PrincipalList
+.. function:: getPrincipalInfo(cert,principal) -> Person
 
-   Get the information about a Person, their equivalent identities, and the
-   Groups to which they belong.
+   Get the information about a Person (their equivalent identities, and the
+   Groups to which they belong).
 
    :REST URL: ``GET /accounts/{principal}``
 
@@ -243,32 +243,18 @@
 
    :type cert: :class:`Types.X509Certificate`
 
-   :param query: A query string criteria to be matched using a case-insensitive
-     substring match against the identifier for the principal, the givenName or
-     familyName of users, and the groupName of groups.  The function returns the
-     union of all successful matches against these fields.
+   :param principal: The Principal identifier of the Person information to be
+     returned.
 
-   :type query: :class:`Types.String`
+   :type principal: :class:`Types.Principal`
 
-   :param start: The starting record number for the records to be returned.
+   :returns: The Person details for the given Principal
 
-   :type start: integer
-
-   :param count: The number of records to be returned.
-
-   :type count: integer
-
-   :returns: The list of people and groups that match the query.
-
-   :rtype: :class:`Types.PrincipalList`
+   :rtype: :class:`Types.Person`
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2290)``
 
    :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=2270)``
-
-   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=2260)``
-
-   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2261)``
 
 
 
