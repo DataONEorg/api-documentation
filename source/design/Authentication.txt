@@ -108,12 +108,21 @@ Access policies will need to refer to several special symbolic groups of users
 that do not need to be explicitly enumerated, but define classes of people in the
 system.  The reserved symbolic principals are:
 
+* Verified authenticated users
+    * A user who has a valid authentication token and an 'isVerified' flag. 
+    This designation should be used to ensure that
+	users are in fact who they claim to be. These accounts have originated from
+	trusted affiliate organizations or identity services or have been manually verified
+	by an administrator. The identity information when logged
+	during read operations should be fully trusted.
+    * Represented using the special principal 'VerifiedUser'
 * Authenticated users
     * Any user who has a valid authentication token is considered a member of
       the authenticated users group.  This designation can be used in
-      particular to require that user identity information is known and logged
-      during read operations.
-    * Represented using the special principal 'AuthenticatedUser'
+      particular to require that user identity has been established, but not necessarily
+      verified as accurate. Authenticated users may be restricted from certain [read] operations
+      depending on the data owners' policy regarding access for untrusted identities.
+    * Represented using the special principal 'AuthenticatedUser'    
 * Public user
     * The Public user represents any user accessing services that does not have
       a valid session token, plus all of those who do have a valid token. 
@@ -509,8 +518,8 @@ While making authorization decisions, the service should apply any
 AccessPolicy rules that reference the identifier for the Principal, any 
 identifier in the 'equivalentIdentity' attributes in the session, any groups
 that are referenced in an 'isMemberOf' attribute in the session, and any
-polices that reference the DataONE 'AuthenticatedUser' identity. All of these
-identities are valid identities for the authenticated session.
+polices that reference the DataONE 'AuthenticatedUser' or 'VerifiedUser' identities. 
+All of these identities are valid identities for the authenticated session.
 
 If a Member Node or Coordinating Node receives an AuthToken that is invalid,
 can not be found using the :func:`CN_auth.getAuthSession` method, or is
