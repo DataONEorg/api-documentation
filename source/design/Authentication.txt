@@ -399,13 +399,50 @@ mechanisms.  The certificate is then returned to the user for subsequent
 interactions with DataONE, and can be provided to services that need identity
 information information necessary to perform authorization processing.
 
-Obtaining a CILogon X.509 certificate requires that the user authenticate through the CILogon InCommon identity services as outlined in the following diagram.
+Obtaining a CILogon X.509 certificate requires that the user authenticate through the CILogon InCommon identity services as outlined in Figure 4.
 
-.. Note::
-    The figure below showing authentication is not quite right and needs to be
-    updated to show that an X.509 certificate is returned.
+.. image:: images/auth_03.png
 
-.. image:: images/CILogonAuthN.png
+*Figure 4.*  Detailed sequence of events for authentication through CILogon - 
+Client authentication through the CILogon service; CILogon, using
+Shibboleth, requests a SAML authentication through a registered *Identity
+Provider* (IdP); the IdP confirms identity and returns SAML response to CILogon;
+client continues process with download of Java Web Start application, which
+generates a PKI Key Pair and send Certificate Request to CILogon; CILogon 
+generates X509 certificate and returns to client for use with DataONE.
+
+..
+    @startuml images/auth_03.png
+    title Detailed CILogon Authentication Sequence
+    participant "IdentityService" as IS << CNode >>
+    participant "Client Browser" as D1 << Application >>
+    participant "CILogon" as CI
+    participant "Identity Provider" as IP
+
+    D1->CI: Select IdP
+    CI-->D1: IdP Redirect
+    note right
+        CIlogon redirect to IdP using
+        "document.forms[0].submit()"
+        posting SAML request to IdP
+    end note
+    D1->IP: Identity Verification
+    IP-->D1: CILogon Redirect
+    note right
+        IdP redirect to CILogon using
+        "document.forms[0].submit()"
+        posting SAML response to CILogon
+    end note
+    D1->>CI: SAML assertion
+    D1->CI: "Download Certificate"
+    CI-->D1: JWS App
+    D1->D1: JWS Generate Key Pair
+    D1->CI: JWS Cert Request
+    CI->IS: getPrincipalInfo(Principal)
+    IS-->CI: PrincipalList
+    CI->CI: Generate and Sign X.509
+    CI-->D1: X.509
+    @enduml
 
 The CILogon X.509 certificate provides a portable credential that binds a user’s public key to their distinguished name or another significant identifier (e.g., email) that is stored in the “subject” field of the certificate.  Once generated, the CILogon X.509 certificate has a specified span of time in which it is considered valid; this information is stored in the “valid not before” and “valid not after” fields of the certificate.
 
@@ -422,7 +459,7 @@ request.
 
 .. image:: images/auth_01.png
 
-*Figure 4.* Authentication and session management assuming that the CN only
+*Figure 5.* Authentication and session management assuming that the CN only
 runs an Identity service, and that the CILogon server runs the session
 management service as part of the authentication process.
 
@@ -550,7 +587,7 @@ to :func:`CN_auth.getAuthSession`.
 
 .. figure:: images/auth_02.png
 
-*Figure 5.* Authentication and session management assuming that the CN runs a
+*Figure 6.* Authentication and session management assuming that the CN runs a
 seperate SessionService that creates and tracks sessions. This is an
 alternative scenario based on the idea that CILogon may not be able to make
 calls to the Identity Service, in which case the separate Session Service would
