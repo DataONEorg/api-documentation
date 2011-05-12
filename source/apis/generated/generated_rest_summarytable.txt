@@ -257,10 +257,10 @@
    * - POST /accounts/map
      - :func:`CN_auth.mapIdentity`
      - Map the two authenticated identities, asserting that they represent the
-       same principal. The two identities are represented as AuthToken objects,
-       which allows the CN to determine if both identities have been properly
-       authenticated, which demonstrates that the user has control of both
-       identities.
+       same principal. Mapping identities is a two-step process wherein a map
+       request is made by a primary Principal and a subsequent (confirmation)
+       map request is made by the secondary Principal. This ensures that
+       mappings are performed only by those that have authority to do so.
    * - POST /groups/{groupName}
      - :func:`CN_auth.createGroup`
      - Create a group with the given name. Groups are lists of principals that

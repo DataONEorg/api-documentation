@@ -99,25 +99,25 @@
    * - Tier 2
      - ``POST /accounts/map``
      - :func:`CN_auth.mapIdentity`
-     - (:class:`token1<Types.AuthToken>`, :class:`token2<Types.AuthToken>`)
-       ``->`` :class:`Types.Boolean`
+     - (:class:`cert<Types.X509Certificate>`,
+       :class:`principal<Types.Principal>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``POST /groups/{groupName}``
      - :func:`CN_auth.createGroup`
      - (:class:`cert<Types.X509Certificate>`,
-       :class:`groupName<Types.Principal>`) ``->`` :class:`Types.Identifier`
+       :class:`groupName<Types.Principal>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``PUT /groups/{groupName}``
      - :func:`CN_auth.addGroupMembers`
      - (:class:`cert<Types.X509Certificate>`,
        :class:`groupName<Types.Principal>`,
-       :class:`members<Types.PrincipalList>`) ``->`` :class:`Types.Identifier`
+       :class:`members<Types.PrincipalList>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``DELETE /groups/{groupName}``
      - :func:`CN_auth.removeGroupMembers`
      - (:class:`cert<Types.X509Certificate>`,
        :class:`groupName<Types.Principal>`,
-       :class:`members<Types.PrincipalList>`) ``->`` :class:`Types.Identifier`
+       :class:`members<Types.PrincipalList>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``GET /isAuthorized/{pid}``
      - :func:`CN_auth.isAuthorized`

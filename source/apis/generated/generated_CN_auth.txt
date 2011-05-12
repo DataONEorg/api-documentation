@@ -43,25 +43,25 @@
    * - Tier 2
      - ``POST /accounts/map``
      - :func:`mapIdentity`
-     - (:class:`token1<Types.AuthToken>`, :class:`token2<Types.AuthToken>`)
-       ``->`` :class:`Types.Boolean`
+     - (:class:`cert<Types.X509Certificate>`,
+       :class:`principal<Types.Principal>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``POST /groups/{groupName}``
      - :func:`createGroup`
      - (:class:`cert<Types.X509Certificate>`,
-       :class:`groupName<Types.Principal>`) ``->`` :class:`Types.Identifier`
+       :class:`groupName<Types.Principal>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``PUT /groups/{groupName}``
      - :func:`addGroupMembers`
      - (:class:`cert<Types.X509Certificate>`,
        :class:`groupName<Types.Principal>`,
-       :class:`members<Types.PrincipalList>`) ``->`` :class:`Types.Identifier`
+       :class:`members<Types.PrincipalList>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``DELETE /groups/{groupName}``
      - :func:`removeGroupMembers`
      - (:class:`cert<Types.X509Certificate>`,
        :class:`groupName<Types.Principal>`,
-       :class:`members<Types.PrincipalList>`) ``->`` :class:`Types.Identifier`
+       :class:`members<Types.PrincipalList>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``GET /isAuthorized/{pid}``
      - :func:`isAuthorized`
@@ -361,27 +361,30 @@
 
 
 
-.. function:: mapIdentity(token1,token2) -> Boolean
+.. function:: mapIdentity(cert,principal) -> Boolean
 
    Map the two authenticated identities, asserting that they represent the same
    principal.
 
-   The two identities are represented as AuthToken objects, which allows the CN
-   to determine if both identities have been properly authenticated, which
-   demonstrates that the user has control of both identities.
+   Mapping identities is a two-step process wherein a map request is made by a
+   primary Principal and a subsequent (confirmation) map request is made by the
+   secondary Principal. This ensures that mappings are performed only by those
+   that have authority to do so.
 
    :REST URL: ``POST /accounts/map``
 
-   :param token1: The authentication token returned by :func:`CN_auth.login` or
-     :func:`CN_auth.sessionRequest` tat is associated with a session. Used to
-     identify the caller to enable authorization decisions.
+   :param cert: X.509 Certificate, passed to the system via SSL client-side
+     authentication, and used to identiy and validate the identity of the
+     Principal making the call.  The X.509 certificate should be traceable to
+     the CILogon service, and provides various attributes for authorization
+     decisions.
 
-   :type token1: :class:`Types.AuthToken`
+   :type cert: :class:`Types.X509Certificate`
 
-   :param token2: The authentication token associated with a session. Used to
-     identify the caller to enable authorization decisions.
+   :param principal: The Principal identifier to be used for equivalentIdentity.
+     This Principal will not match the Principal named in the certificate.
 
-   :type token2: :class:`Types.AuthToken`
+   :type principal: :class:`Types.Principal`
 
    :returns: True if the map was successfully created, false otherwise.
 
@@ -408,7 +411,7 @@
 
 
 
-.. function:: createGroup(cert,groupName) -> Identifier
+.. function:: createGroup(cert,groupName) -> Boolean
 
    Create a group with the given name.
 
@@ -432,9 +435,9 @@
 
    :type groupName: :class:`Types.Principal`
 
-   :returns: Identifier of the group that was modified
+   :returns: True if group was created successfully, false otherwise
 
-   :rtype: :class:`Types.Identifier`
+   :rtype: :class:`Types.Boolean`
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2490)``
 
@@ -462,7 +465,7 @@
 
 
 
-.. function:: addGroupMembers(cert,groupName,members) -> Identifier
+.. function:: addGroupMembers(cert,groupName,members) -> Boolean
 
    Add members to the named group.
 
@@ -489,9 +492,9 @@
 
    :type members: :class:`Types.PrincipalList`
 
-   :returns: Identifier of the group that was modified
+   :returns: True if the group that was modified successfully, false otherwise
 
-   :rtype: :class:`Types.Identifier`
+   :rtype: :class:`Types.Boolean`
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2590)``
 
@@ -514,7 +517,7 @@
 
 
 
-.. function:: removeGroupMembers(cert,groupName,members) -> Identifier
+.. function:: removeGroupMembers(cert,groupName,members) -> Boolean
 
    Remove members to the named group.
 
@@ -541,9 +544,9 @@
 
    :type members: :class:`Types.PrincipalList`
 
-   :returns: Identifier of the group that was modified
+   :returns: True if the group that was modified successfully, false otherwise
 
-   :rtype: :class:`Types.Identifier`
+   :rtype: :class:`Types.Boolean`
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2690)``
 
