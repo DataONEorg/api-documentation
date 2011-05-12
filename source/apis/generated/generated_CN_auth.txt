@@ -34,7 +34,7 @@
      - ``GET /accounts/{principal}``
      - :func:`getPrincipalInfo`
      - (:class:`cert<Types.X509Certificate>`,
-       :class:`principal<Types.Principal>`) ``->`` :class:`Types.Person`
+       :class:`principal<Types.Principal>`) ``->`` :class:`Types.PrincipalList`
    * - Tier 2
      - ``GET /accounts``
      - :func:`listPrincipals`
@@ -280,10 +280,10 @@
 
 
 
-.. function:: getPrincipalInfo(cert,principal) -> Person
+.. function:: getPrincipalInfo(cert,principal) -> PrincipalList
 
    Get the information about a Person (their equivalent identities, and the
-   Groups to which they belong).
+   Groups to which they belong) or the Group (including members).
 
    :REST URL: ``GET /accounts/{principal}``
 
@@ -296,14 +296,15 @@
 
    :type cert: :class:`Types.X509Certificate`
 
-   :param principal: The Principal identifier of the Person information to be
-     returned.
+   :param principal: The Principal identifier of the Person or Group details to
+     be returned.
 
    :type principal: :class:`Types.Principal`
 
-   :returns: The Person details for the given Principal
+   :returns: The Person or Group details are contained in the returned
+     PrincipalList for the given Principal
 
-   :rtype: :class:`Types.Person`
+   :rtype: :class:`Types.PrincipalList`
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2290)``
 

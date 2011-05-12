@@ -90,7 +90,7 @@
      - ``GET /accounts/{principal}``
      - :func:`CN_auth.getPrincipalInfo`
      - (:class:`cert<Types.X509Certificate>`,
-       :class:`principal<Types.Principal>`) ``->`` :class:`Types.Person`
+       :class:`principal<Types.Principal>`) ``->`` :class:`Types.PrincipalList`
    * - Tier 2
      - ``GET /accounts``
      - :func:`CN_auth.listPrincipals`
