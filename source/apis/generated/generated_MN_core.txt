@@ -19,7 +19,7 @@
      - :func:`getLogRecords`
      - (:class:`cert<Types.X509Certificate>`, :class:`fromDate<Types.DateTime>`,
        :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`,
-       ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.LogRecords`
+       ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.Log`
    * - Tier 1
      - ``GET /monitor/object``
      - :func:`getObjectStatistics`
@@ -79,7 +79,7 @@
 
 
 
-.. function:: getLogRecords(cert,fromDate,[toDate],[event],[start=0],[count=1000]) -> LogRecords
+.. function:: getLogRecords(cert,fromDate,[toDate],[event],[start=0],[count=1000]) -> Log
 
    Retrieve log information from the Member Node for the specified date range
    and even type.
@@ -125,7 +125,7 @@
 
    :returns:
 
-   :rtype: :class:`Types.LogRecords`
+   :rtype: :class:`Types.Log`
 
    :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=1460)``
 

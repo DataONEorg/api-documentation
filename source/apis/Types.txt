@@ -41,8 +41,8 @@ Version   Structure
 .         :class:`IdentifierFormat`
 .         :class:`IdentifierList`
 .         :class:`Identifier`
-.         :class:`LogRecord`
-.         :class:`LogRecords`
+.         :class:`LogEntry`
+.         :class:`Log`
 .         :class:`MonitorList`
 .         :class:`Node`
 .         :class:`NodeList`
@@ -389,14 +389,14 @@ Version   Structure
      }
 
 
-.. class:: LogRecord
+.. class:: LogEntry
 
   A single log entry as reported by a Member Node or Coordinating Node through
   the getLogRecords methods.
 
   :: 
 
-    message LogRecord {
+    message LogEntry {
 
       enum EventType {
         create = 0;
@@ -417,13 +417,13 @@ Version   Structure
     }
 
 
-.. class:: LogRecords
+.. class:: Log
 
-  A list of LogRecord instances.
+  A list of LogEntry instances.
 
   ::
 
-    message LogRecords {
+    message Log {
       required int start = 0;
       required int count = 1;
       required int total = 2;
