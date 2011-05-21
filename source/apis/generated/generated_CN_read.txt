@@ -13,75 +13,49 @@
    * - Tier 1
      - ``GET /object/{pid}``
      - :func:`get`
-     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`)
-       ``->`` :class:`Types.OctetStream`
+     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.OctetStream`
    * - Tier 1
      - ``GET /meta/{pid}``
      - :func:`getSystemMetadata`
-     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`)
-       ``->`` :class:`Types.SystemMetadata`
+     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.SystemMetadata`
    * - Tier 1
      - ``GET /resolve/{pid}``
      - :func:`resolve`
-     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`)
-       ``->`` :class:`Types.ObjectLocationList`
+     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.ObjectLocationList`
    * - Tier 1
      - ``POST /reserve``
      - :func:`reserveIdentifier`
-     - (:class:`cert<Types.X509Certificate>`, :class:`[pid]<Types.Identifier>`,
-       ``[scope]``, ``[format]``) ``->`` :class:`Types.Identifier`
+     - (:class:`cert<Types.X509Certificate>`, :class:`[pid]<Types.Identifier>`, ``[scope]``, ``[format]``) ``->`` :class:`Types.Identifier`
    * - Tier 1
-     - ``GET /assertRelation/{pidOfSubject}``
+     - ``GET /assertRelation/{pidOfSubject}?relationship={relationship}&pidofobject={pidOfObject}``
      - :func:`assertRelation`
-     - (:class:`cert<Types.X509Certificate>`,
-       :class:`pidOfSubject<Types.Identifier>`,
-       :class:`relationship<Types.???>`, :class:`pidOfObject<Types.Identifier>`)
-       ``->`` :class:`Types.Boolean`
+     - (:class:`cert<Types.X509Certificate>`, :class:`pidOfSubject<Types.Identifier>`, :class:`relationship<Types.???>`, :class:`pidOfObject<Types.Identifier>`) ``->`` :class:`Types.Boolean`
    * - Tier 1
-     - n/a
+     - ``GET /checksum/{pid}``
      - :func:`getChecksum`
-     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`)
-       ``->`` :class:`Types.Checksum`
+     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Checksum`
    * - Tier 1
-     - ``GET /object``
+     - ``GET /object?querytype={queryType}&query={query}``
      - :func:`search`
-     - (:class:`cert<Types.X509Certificate>`, :class:`query<Types.QueryType>`)
-       ``->`` :class:`Types.ObjectList`
+     - (:class:`cert<Types.X509Certificate>`, :class:`queryType<Types.QueryType>`, ``query``) ``->`` :class:`Types.ObjectList`
 
 
 
 
 .. function:: get(cert,pid) -> OctetStream
 
-   Retrieves the object identified by *pid* from the node. If the object is not
-   present on the node, then an :exc:`Exceptions.NotFound` error is raised
-   (regardless of whether the object exists on another node in the DataONE
-   system).
+   Retrieves the object identified by *pid* from the node. If the object is not present on the node, then an :exc:`Exceptions.NotFound` error is raised (regardless of whether the object exists on another node in the DataONE system).
 
    :Use Cases:
-
-     :doc:`UC01 </design/UseCases/01_uc>`, :doc:`UC16 </design/UseCases/16_uc>`,
-     :doc:`UC09 </design/UseCases/09_uc>`
-
+     :doc:`UC01 </design/UseCases/01_uc>`, :doc:`UC16 </design/UseCases/16_uc>`, :doc:`UC09 </design/UseCases/09_uc>`
    :REST URL: ``GET /object/{pid}``
-
-   :param cert: X.509 Certificate, passed to the system via SSL client-side
-     authentication, and used to identiy and validate the identity of the
-     Principal making the call.  The X.509 certificate should be traceable to
-     the CILogon service, and provides various attributes for authorization
-     decisions.  If the X.509 certificate is not provided, then the request
-     should be considered to have originated from the DataONE 'Public' user.
-
+   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identiy and validate the identity of the Principal making the call.  The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
    :type cert: :class:`Types.X509Certificate`
 
    :param pid: Identifier of the object to be retrieved
-
    :type pid: :class:`Types.Identifier`
 
-   :returns: For science metadata objects, this will be the exact byte stream of
-     the science metadata object as it was original ingested. Note that
-     additional object types may in the future be returned by the get method.
-
+   :returns: For science metadata objects, this will be the exact byte stream of the science metadata object as it was original ingested. Note that additional object types may in the future be returned by the get method.
    :rtype: :class:`Types.OctetStream`
 
    :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=1000)``
@@ -90,9 +64,7 @@
 
    :raises Exceptions.NotFound: ``(errorCode=404, detailCode=1020)``
 
-     The object specified by the identifier is not present on this (or any) CN.
-     The response body should contain a reference to :func:`CN_crud.resolve`.
-
+     The object specified by the identifier is not present on this (or any) CN. The response body should contain a reference to :func:`CN_crud.resolve`.
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=1030)``
 
@@ -108,32 +80,18 @@
 
 .. function:: getSystemMetadata(cert,pid) -> SystemMetadata
 
-   Returns the :term:`system metadata` that contains DataONE specific
-   information about the object identified by *pid*. Note that authoritative
-   copies of system metadata are only available from the Coordinating Nodes.
+   Returns the :term:`system metadata` that contains DataONE specific information about the object identified by *pid*. Note that authoritative copies of system metadata are only available from the Coordinating Nodes.
 
    :Use Cases:
-
-     :doc:`UC36 </design/UseCases/36_uc>`, :doc:`UC37 </design/UseCases/37_uc>`,
-     :doc:`UC16 </design/UseCases/16_uc>`
-
+     :doc:`UC36 </design/UseCases/36_uc>`, :doc:`UC37 </design/UseCases/37_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
    :REST URL: ``GET /meta/{pid}``
-
-   :param cert: X.509 Certificate, passed to the system via SSL client-side
-     authentication, and used to identiy and validate the identity of the
-     Principal making the call.  The X.509 certificate should be traceable to
-     the CILogon service, and provides various attributes for authorization
-     decisions.  If the X.509 certificate is not provided, then the request
-     should be considered to have originated from the DataONE 'Public' user.
-
+   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
    :type cert: :class:`Types.X509Certificate`
 
    :param pid: Identifier for the object of interest.
-
    :type pid: :class:`Types.Identifier`
 
    :returns: A system metadata document describing the object.
-
    :rtype: :class:`Types.SystemMetadata`
 
    :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=1050)``
@@ -144,15 +102,11 @@
 
    :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=1040)``
 
-     The principal identified by token does not have READ permission on the
-     object.
-
+     The principal identified by token does not have READ permission on the object.
 
    :raises Exceptions.NotFound: ``(errorCode=404, detailCode=1060)``
 
-     There is no object identified by *pid* and so no system metadata can be
-     returned.
-
+     There is no object identified by *pid* and so no system metadata can be returned.
 
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=1080)``
 
@@ -164,43 +118,20 @@
 
 .. function:: resolve(cert,pid) -> ObjectLocationList
 
-   Implemented by CNs, returns the nodes (MNs or CNs) known to hold copies of
-   the object identified by *<pid>*. The object resolution process is intended
-   to provide a simple mechanism for a client to discover from which node(s) a
-   particular object may be retrieved, and this information is returned as a
-   list of node identifiers. Details about method interfaces (i.e. REST URLs)
-   exposed by a particular node can be determined by examining the response from
-   the *node* collection. For convenience, the :func:`MN_read.get` URL is
-   included in the response as is the base URL of the node REST services.
+   Implemented by CNs, returns the nodes (MNs or CNs) known to hold copies of the object identified by *pid*. The object resolution process is intended to provide a simple mechanism for a client to discover from which node(s) a particular object may be retrieved, and this information is returned as a list of node identifiers. Details about method interfaces (i.e. REST URLs) exposed by a particular node can be determined by examining the response from the *node* collection. For convenience, the :func:`MN_read.get` URL is included in the response as is the base URL of the node REST services.
 
-   Note also that the same functionality as *resolve()* can be implemented by
-   retrieving a copy of the system metadata for the object and utilizing the
-   node registry to discover the base URL from which the client can construct
-   the *get()* URL. Resolve is provided for efficiency since the response size
-   is much smaller.
+   Note also that the same functionality as *resolve()* can be implemented by retrieving a copy of the system metadata for the object and utilizing the node registry to discover the base URL from which the client can construct the *get()* URL. Resolve is provided for efficiency since the response size is much smaller.
 
    :Use Cases:
-
      :doc:`UC36 </design/UseCases/36_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
-
    :REST URL: ``GET /resolve/{pid}``
-
-   :param cert: X.509 Certificate, passed to the system via SSL client-side
-     authentication, and used to identiy and validate the identity of the
-     Principal making the call.  The X.509 certificate should be traceable to
-     the CILogon service, and provides various attributes for authorization
-     decisions.  If the X.509 certificate is not provided, then the request
-     should be considered to have originated from the DataONE 'Public' user.
-
+   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
    :type cert: :class:`Types.X509Certificate`
 
    :param pid: Identifier for the object of interest.
-
    :type pid: :class:`Types.Identifier`
 
-   :returns: A list of nodes known to contain copies of the target object, plus
-     the URLs known to resolve to the node get methods.
-
+   :returns: A list of nodes known to contain copies of the target object, plus the URLs known to resolve to the node get methods.
    :rtype: :class:`Types.ObjectLocationList`
 
    :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=4130)``
@@ -212,7 +143,6 @@
    :raises Exceptions.NotFound: ``(errorCode=404, detailCode=4140)``
 
      There is no object identified by the given identifier
-
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4131)``
 
@@ -226,49 +156,24 @@
 
 .. function:: reserveIdentifier(cert,[pid],[scope],[format]) -> Identifier
 
-   Given an optional scope and format, reserves and returns an identifier within
-   that scope and format that is unique and will not be used by any other
-   sessions. Future calls to :func:`MN_storage.create` and
-   :func:`MN_storage.update` that reference this ID must originate from the
-   :term:`session` in which the identifier was reserved, otherwise an error is
-   raised on those methods.
+   Given an optional scope and format, reserves and returns an identifier within that scope and format that is unique and will not be used by any other sessions. Future calls to :func:`MN_storage.create` and :func:`MN_storage.update` that reference this ID must originate from the :term:`session` in which the identifier was reserved, otherwise an error is raised on those methods.
 
    :Use Cases:
-
      :doc:`UC16 </design/UseCases/16_uc>`
-
    :REST URL: ``POST /reserve``
-
-   :param cert: X.509 Certificate, passed to the system via SSL client-side
-     authentication, and used to identiy and validate the identity of the
-     Principal making the call.  The X.509 certificate should be traceable to
-     the CILogon service, and provides various attributes for authorization
-     decisions.  If the X.509 certificate is not provided, then the request
-     should be considered to have originated from the DataONE 'Public' user.
-
+   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
    :type cert: :class:`Types.X509Certificate`
 
-   :param pid: An optional identifier proposed by the client. If no identifier
-     is provided then one will be automatically generated.
-
+   :param pid: An optional identifier proposed by the client. If no identifier is provided then one will be automatically generated.
    :type pid: :class:`Types.Identifier`
 
-   :param scope: An optional string to be used to qualify the scope of the
-     identifier namespace, which is applied differently depending on the format
-     requested. If scope is not supplied, a default scope will be used.
-
+   :param scope: An optional string to be used to qualify the scope of the identifier namespace, which is applied differently depending on the format requested. If scope is not supplied, a default scope will be used.
    :type scope: string
 
-   :param format: The optional name of the identifier format to be used, drawn
-     from a DataONE-specific vocabulary of identifier format names, including
-     several common syntaxes such as DOI, LSID, UUID, and LSRN, among others. If
-     the format is not supplied by the caller, the CN service will use a default
-     identifier format, which may change over time.
-
+   :param format: The optional name of the identifier format to be used, drawn from a DataONE-specific vocabulary of identifier format names, including several common syntaxes such as DOI, LSID, UUID, and LSRN, among others. If the format is not supplied by the caller, the CN service will use a default identifier format, which may change over time.
    :type format: string
 
    :returns: The identifier that was reserved
-
    :rtype: :class:`Types.Identifier`
 
    :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=4190)``
@@ -279,17 +184,13 @@
 
      Supplied credentials does not have WRITE permission
 
-
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4200)``
 
      The format requested is not a valid format accepted by this service
 
-
    :raises Exceptions.IdentifierNotUnique: ``(errorCode=409, detailCode=4210)``
 
-     The requested identifier can not be reserved because it already exists in
-     the DataONE system or has already been reserved.
-
+     The requested identifier can not be reserved because it already exists in the DataONE system or has already been reserved.
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4191)``
 
@@ -298,35 +199,22 @@
 
 .. function:: assertRelation(cert,pidOfSubject,relationship,pidOfObject) -> Boolean
 
-   Tests that the specified relationship between *pidOfSubject* and
-   *pidOfObject* exists.
+   Tests that the specified relationship between *pidOfSubject* and *pidOfObject* exists.
 
-   :REST URL: ``GET /assertRelation/{pidOfSubject}``
-
-   :param cert: X.509 Certificate, passed to the system via SSL client-side
-     authentication, and used to identiy and validate the identity of the
-     Principal making the call.  The X.509 certificate should be traceable to
-     the CILogon service, and provides various attributes for authorization
-     decisions.  If the X.509 certificate is not provided, then the request
-     should be considered to have originated from the DataONE 'Public' user.
-
+   :REST URL: ``GET /assertRelation/{pidOfSubject}?relationship={relationship}&pidofobject={pidOfObject}``
+   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
    :type cert: :class:`Types.X509Certificate`
 
    :param pidOfSubject: The subject of the relationship being tested
-
    :type pidOfSubject: :class:`Types.Identifier`
 
-   :param relationship: Relationship between *pidOfSubject* and *pidOfObject*
-     being evaluated
-
+   :param relationship: Relationship between *pidOfSubject* and *pidOfObject* being evaluated
    :type relationship: ???
 
    :param pidOfObject: The object of the relationship
-
    :type pidOfObject: :class:`Types.Identifier`
 
    :returns: True if the relationship exists.
-
    :rtype: :class:`Types.Boolean`
 
    :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=4230)``
@@ -339,9 +227,7 @@
 
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4260)``
 
-     Raised if the parameters are incorrect (e.g. unknown relationship type
-     specified)
-
+     Raised if the parameters are incorrect (e.g. unknown relationship type specified)
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4221)``
 
@@ -350,33 +236,20 @@
 
 
 
-
 .. function:: getChecksum(cert,pid) -> Checksum
 
-   Returns the checksum for the specified object as reported in the system
-   metadata.
+   Returns the checksum for the specified object as reported in the system metadata.
 
    :Use Cases:
-
      :doc:`UC09 </design/UseCases/09_uc>`
-
-   :REST URL: N/A
-
-   :param cert: X.509 Certificate, passed to the system via SSL client-side
-     authentication, and used to identiy and validate the identity of the
-     Principal making the call.  The X.509 certificate should be traceable to
-     the CILogon service, and provides various attributes for authorization
-     decisions.  If the X.509 certificate is not provided, then the request
-     should be considered to have originated from the DataONE 'Public' user.
-
+   :REST URL: ``GET /checksum/{pid}``
+   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
    :type cert: :class:`Types.X509Certificate`
 
    :param pid: Identifier of the object
-
    :type pid: :class:`Types.Identifier`
 
    :returns: The checksum of the specified object
-
    :rtype: :class:`Types.Checksum`
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=1402)``
@@ -394,33 +267,23 @@
 
 
 
-.. function:: search(cert,query) -> ObjectList
+.. function:: search(cert,queryType,query) -> ObjectList
 
-   Search the metadata catalog and return identifiers of metadata records that
-   match the criteria.
+   Search the metadata catalog and return identifiers of metadata records that match the criteria.
 
    :Use Cases:
-
      :doc:`UC02 </design/UseCases/02_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
-
-   :REST URL: ``GET /object``
-
-   :param cert: X.509 Certificate, passed to the system via SSL client-side
-     authentication, and used to identiy and validate the identity of the
-     Principal making the call.  The X.509 certificate should be traceable to
-     the CILogon service, and provides various attributes for authorization
-     decisions.  If the X.509 certificate is not provided, then the request
-     should be considered to have originated from the DataONE 'Public' user.
-
+   :REST URL: ``GET /object?querytype={queryType}&query={query}``
+   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
    :type cert: :class:`Types.X509Certificate`
 
-   :param query: The criteria for matching the characteristics of the metadata
-     objects of interest.
+   :param queryType: An identifier for the type of query expression provided in the query.
+   :type queryType: :class:`Types.QueryType`
 
-   :type query: :class:`Types.QueryType`
+   :param query: The criteria for matching the characteristics of the metadata objects of interest.
+   :type query: string
 
    :returns: A list of objects that match the specified search criteria
-
    :rtype: :class:`Types.ObjectList`
 
    :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=4290)``

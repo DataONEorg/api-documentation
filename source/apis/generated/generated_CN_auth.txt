@@ -13,100 +13,72 @@
    * - Tier 2
      - ``PUT /owner/{pid}``
      - :func:`setOwner`
-     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`,
-       :class:`userId<Types.Principal>`) ``->`` :class:`Types.Identifier`
+     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`, :class:`userId<Types.Subject>`) ``->`` :class:`Types.Identifier`
    * - Tier 2
      - ``POST /accounts``
      - :func:`registerAccount`
-     - (:class:`cert<Types.X509Certificate>`, :class:`person<Types.Person>`)
-       ``->`` :class:`Types.Principal`
+     - (:class:`cert<Types.X509Certificate>`, :class:`person<Types.Person>`) ``->`` :class:`Types.Subject`
    * - Tier 2
      - ``POST /accounts``
      - :func:`updateAccount`
-     - (:class:`cert<Types.X509Certificate>`, :class:`person<Types.Person>`)
-       ``->`` :class:`Types.Principal`
+     - (:class:`cert<Types.X509Certificate>`, :class:`person<Types.Person>`) ``->`` :class:`Types.Subject`
    * - Tier 2
-     - ``POST /accounts/{principal}``
+     - ``POST /accounts/{subject}``
      - :func:`verifyAccount`
-     - (:class:`cert<Types.X509Certificate>`,
-       :class:`principal<Types.Principal>`) ``->`` :class:`Types.Boolean`
+     - (:class:`cert<Types.X509Certificate>`, :class:`subject<Types.Subject>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
-     - ``GET /accounts/{principal}``
+     - ``GET /accounts/{subject}``
      - :func:`getPrincipalInfo`
-     - (:class:`cert<Types.X509Certificate>`,
-       :class:`principal<Types.Principal>`) ``->`` :class:`Types.PrincipalList`
+     - (:class:`cert<Types.X509Certificate>`, :class:`subject<Types.Subject>`) ``->`` :class:`Types.SubjectList`
    * - Tier 2
-     - ``GET /accounts``
+     - ``GET /accounts?query={query}[&start={start}&count={count}]``
      - :func:`listPrincipals`
-     - (:class:`cert<Types.X509Certificate>`, :class:`query<Types.String>`,
-       ``start``, ``count``) ``->`` :class:`Types.PrincipalList`
+     - (:class:`cert<Types.X509Certificate>`, :class:`query<Types.String>`, ``start``, ``count``) ``->`` :class:`Types.SubjectList`
    * - Tier 2
      - ``POST /accounts/map``
      - :func:`mapIdentity`
-     - (:class:`cert<Types.X509Certificate>`,
-       :class:`principal<Types.Principal>`) ``->`` :class:`Types.Boolean`
+     - (:class:`cert<Types.X509Certificate>`, :class:`subject<Types.Subject>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``POST /groups/{groupName}``
      - :func:`createGroup`
-     - (:class:`cert<Types.X509Certificate>`,
-       :class:`groupName<Types.Principal>`) ``->`` :class:`Types.Boolean`
+     - (:class:`cert<Types.X509Certificate>`, :class:`groupName<Types.Subject>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``PUT /groups/{groupName}``
      - :func:`addGroupMembers`
-     - (:class:`cert<Types.X509Certificate>`,
-       :class:`groupName<Types.Principal>`,
-       :class:`members<Types.PrincipalList>`) ``->`` :class:`Types.Boolean`
+     - (:class:`cert<Types.X509Certificate>`, :class:`groupName<Types.Subject>`, :class:`members<Types.SubjectList>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``DELETE /groups/{groupName}``
      - :func:`removeGroupMembers`
-     - (:class:`cert<Types.X509Certificate>`,
-       :class:`groupName<Types.Principal>`,
-       :class:`members<Types.PrincipalList>`) ``->`` :class:`Types.Boolean`
+     - (:class:`cert<Types.X509Certificate>`, :class:`groupName<Types.Subject>`, :class:`members<Types.SubjectList>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``GET /isAuthorized/{pid}``
      - :func:`isAuthorized`
-     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`,
-       :class:`operation<Types.Event>`) ``->`` :class:`Types.Boolean`
+     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`, :class:`operation<Types.Event>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``PUT /accessRules/{pid}``
      - :func:`setAccess`
-     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`,
-       :class:`accessPolicy<Types.AccessPolicy>`) ``->`` :class:`Types.Boolean`
+     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`, :class:`accessPolicy<Types.AccessPolicy>`) ``->`` :class:`Types.Boolean`
 
 
 
 
 .. function:: setOwner(cert,pid,userId) -> Identifier
 
-   Changes ownership (RightsHolder) of the specified object to the
-   :term:`principal` specified by `userId`
+   Changes ownership (RightsHolder) of the specified object to the :term:`subject` specified by `userId`
 
    :Use Cases:
-
      :doc:`UC16 </design/UseCases/16_uc>`
-
    :REST URL: ``PUT /owner/{pid}``
-
-   :param cert: X.509 Certificate, passed to the system via SSL client-side
-     authentication, and used to identiy and validate the identity of the
-     Principal making the call.  The X.509 certificate should be traceable to
-     the CILogon service, and provides various attributes for authorization
-     decisions.  If the X.509 certificate is not provided, then the request
-     should be considered to have originated from the DataONE 'Public' user.
-
+   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
    :type cert: :class:`Types.X509Certificate`
 
    :param pid: Identifier of the object to be modified
-
    :type pid: :class:`Types.Identifier`
 
-   :param userId: The principal that will be taking ownership of the specified
-     object.
-
-   :type userId: :class:`Types.Principal`
+   :param userId: The subject that will be taking ownership of the specified object.
+   :type userId: :class:`Types.Subject`
 
    :returns: Identifier of the object that was modified
-
    :rtype: :class:`Types.Identifier`
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4490)``
@@ -115,14 +87,11 @@
 
    :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=4440)``
 
-     The supplied principal does not have permission to change ownership of the
-     object
-
+     The supplied subject does not have permission to change ownership of the object
 
    :raises Exceptions.NotFound: ``(errorCode=404, detailCode=4460)``
 
      The specified object does not exist in the DataONE system
-
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4441)``
 
@@ -131,40 +100,21 @@
 
 
 
-.. function:: registerAccount(cert,person) -> Principal
+.. function:: registerAccount(cert,person) -> Subject
 
-   Create a new :term:`principal` in the DataONE system. Note that there should
-   probably be a lot more metadata captured about the new user, and there should
-   be a mechanism for specifying the default access control rules for the new
-   account.
+   Create a new :term:`subject` in the DataONE system. Note that there should probably be a lot more metadata captured about the new user, and there should be a mechanism for specifying the default access control rules for the new account.
 
    :Use Cases:
-
      :doc:`UC16 </design/UseCases/16_uc>`
-
    :REST URL: ``POST /accounts``
-
-   :param cert: X.509 Certificate, passed to the system via SSL client-side
-     authentication, and used to identiy and validate the identity of the
-     Principal making the call.  The X.509 certificate should be traceable to
-     the CILogon service, and provides various attributes for authorization
-     decisions.  If the X.509 certificate is not provided, then the request
-     should be considered to have originated from the DataONE 'Public' user.
-
+   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
    :type cert: :class:`Types.X509Certificate`
 
-   :param person: Information about the Person to be registered with the
-     account, including the real name and email address for the individual.  The
-     Principal with the Person must match the subject of the X.509 certificate
-     associated with the authenticated SSL session via client-side
-     authentication, and must not have been registered previously.
-
+   :param person: Information about the Person to be registered with the account, including the real name and email address for the individual.  The Subject with the Person must match the subject of the X.509 certificate associated with the authenticated SSL session via client-side authentication, and must not have been registered previously.
    :type person: :class:`Types.Person`
 
-   :returns: The new principal in the DataONE system.  This may be a simple
-     identifier.
-
-   :rtype: :class:`Types.Principal`
+   :returns: The new subject in the DataONE system.  This may be a simple identifier.
+   :rtype: :class:`Types.Subject`
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4530)``
 
@@ -172,12 +122,9 @@
 
      The chosen identity already exists in the system
 
-
    :raises Exceptions.InvalidCredentials: ``(errorCode=401, detailCode=4520)``
 
-     Raised if the supplied credentials are invalid, such as an invalid X.509
-     certificate.
-
+     Raised if the supplied credentials are invalid, such as an invalid X.509 certificate.
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4501)``
 
@@ -186,46 +133,27 @@
 
 
 
-.. function:: updateAccount(cert,person) -> Principal
+.. function:: updateAccount(cert,person) -> Subject
 
-   Update an existing :term:`principal` in the DataONE system. Note that there
-   should probably be a policy for verifying the details that change via this
-   method.
+   Update an existing :term:`subject` in the DataONE system. Note that there should probably be a policy for verifying the details that change via this method.
 
    :Use Cases:
-
      :doc:`UC16 </design/UseCases/16_uc>`
-
    :REST URL: ``POST /accounts``
-
-   :param cert: X.509 Certificate, passed to the system via SSL client-side
-     authentication, and used to identiy and validate the identity of the
-     Principal making the call.  The X.509 certificate should be traceable to
-     the CILogon service, and provides various attributes for authorization
-     decisions.  If the X.509 certificate is not provided, then the request
-     should be considered to have originated from the DataONE 'Public' user
-     which will likely not be able to update the account details.
-
+   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user which will likely not be able to update the details.
    :type cert: :class:`Types.X509Certificate`
 
-   :param person: New information about the Person. The principal of the Person
-     cannot be updated with this method and must match the subject of the X.509
-     certificate associated with the authenticated SSL session via client-side
-     authentication.
-
+   :param person: New information about the Person. The subject of the Person cannot be updated with this method and must match the subject of the X.509 certificate associated with the authenticated SSL session via client-side authentication.
    :type person: :class:`Types.Person`
 
-   :returns: The Principal in the DataONE system that was updated.
-
-   :rtype: :class:`Types.Principal`
+   :returns: The Subject in the DataONE system that was updated.
+   :rtype: :class:`Types.Subject`
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4530)``
 
    :raises Exceptions.InvalidCredentials: ``(errorCode=401, detailCode=4520)``
 
-     Raised if the supplied credentials are invalid, such as an invalid X.509
-     certificate.
-
+     Raised if the supplied credentials are invalid, such as an invalid X.509 certificate.
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4501)``
 
@@ -234,42 +162,27 @@
 
 
 
-.. function:: verifyAccount(cert,principal) -> Boolean
+.. function:: verifyAccount(cert,subject) -> Boolean
 
-   Verify that the Person data associated with this Principal is a true
-   representation of the real world person.
+   Verify that the Person data associated with this Subject is a true representation of the real world person.
 
-   This service can only be called byt users who have an administrative role for
-   the domain of users in question.
+   This service can only be called byt users who have an administrative role for the domain of users in question.
 
-   :REST URL: ``POST /accounts/{principal}``
-
-   :param cert: X.509 Certificate, passed to the system via SSL client-side
-     authentication, and used to identiy and validate the identity of the
-     Principal making the call.  The X.509 certificate should be traceable to
-     the CILogon service, and provides various attributes for authorization
-     decisions.  If the X.509 certificate is not provided, then the request
-     should be considered to have originated from the DataONE 'Public' user.
-
+   :REST URL: ``POST /accounts/{subject}``
+   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
    :type cert: :class:`Types.X509Certificate`
 
-   :param principal: The Principal identifier of the Person to be verified.
-     After this service is called for a principal by an authorized user, the
-     account is marked as verified by this user.
-
-   :type principal: :class:`Types.Principal`
+   :param subject: The Subject identifier of the Person to be verified.  After this service is called for a subject by an authorized user, the account is marked as verified by this user.
+   :type subject: :class:`Types.Subject`
 
    :returns: True if the account verification succeeds, otherwise false.
-
    :rtype: :class:`Types.Boolean`
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4550)``
 
    :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=4540)``
 
-     This error is raised if the person attempting to validate the account is
-     not authorized to verify accounts.
-
+     This error is raised if the person attempting to validate the account is not authorized to verify accounts.
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4541)``
 
@@ -280,31 +193,19 @@
 
 
 
-.. function:: getPrincipalInfo(cert,principal) -> PrincipalList
+.. function:: getPrincipalInfo(cert,subject) -> SubjectList
 
-   Get the information about a Person (their equivalent identities, and the
-   Groups to which they belong) or the Group (including members).
+   Get the information about a Person (their equivalent identities, and the Groups to which they belong) or the Group (including members).
 
-   :REST URL: ``GET /accounts/{principal}``
-
-   :param cert: X.509 Certificate, passed to the system via SSL client-side
-     authentication, and used to identiy and validate the identity of the
-     Principal making the call.  The X.509 certificate should be traceable to
-     the CILogon service, and provides various attributes for authorization
-     decisions.  If the X.509 certificate is not provided, then the request
-     should be considered to have originated from the DataONE 'Public' user.
-
+   :REST URL: ``GET /accounts/{subject}``
+   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
    :type cert: :class:`Types.X509Certificate`
 
-   :param principal: The Principal identifier of the Person or Group details to
-     be returned.
+   :param subject: The Subject identifier of the Person or Group details to be returned.
+   :type subject: :class:`Types.Subject`
 
-   :type principal: :class:`Types.Principal`
-
-   :returns: The Person or Group details are contained in the returned
-     PrincipalList for the given Principal
-
-   :rtype: :class:`Types.PrincipalList`
+   :returns: The Person or Group details are contained in the returned SubjectList for the given Subject
+   :rtype: :class:`Types.SubjectList`
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2290)``
 
@@ -313,43 +214,27 @@
 
 
 
-.. function:: listPrincipals(cert,query,start,count) -> PrincipalList
+.. function:: listPrincipals(cert,query,start,count) -> SubjectList
 
-   List the principals, including users, groups, and systems, that match search
-   criteria.
+   List the subjects, including users, groups, and systems, that match search criteria.
 
-   The list can be restricted to principals whose identifier matches certain
-   substrings, and the size of the resultset can be paged through.
+   The list can be restricted to subjects whose identifier matches certain substrings, and the size of the resultset can be paged through.
 
-   :REST URL: ``GET /accounts``
-
-   :param cert: X.509 Certificate, passed to the system via SSL client-side
-     authentication, and used to identiy and validate the identity of the
-     Principal making the call.  The X.509 certificate should be traceable to
-     the CILogon service, and provides various attributes for authorization
-     decisions.  If the X.509 certificate is not provided, then the request
-     should be considered to have originated from the DataONE 'Public' user.
-
+   :REST URL: ``GET /accounts?query={query}[&start={start}&count={count}]``
+   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
    :type cert: :class:`Types.X509Certificate`
 
-   :param query: A query string criteria to be matched using a case-insensitive
-     substring match against the identifier for the principal, the givenName or
-     familyName of users, and the groupName of groups.  The function returns the
-     union of all successful matches against these fields.
-
+   :param query: A query string criteria to be matched using a case-insensitive substring match against the identifier for the principal, the givenName or familyName of users, and the groupName of groups.  The function returns the union of all successful matches against these fields.
    :type query: :class:`Types.String`
 
    :param start: The starting record number for the records to be returned.
-
    :type start: integer
 
    :param count: The number of records to be returned.
-
    :type count: integer
 
    :returns: The list of people and groups that match the query.
-
-   :rtype: :class:`Types.PrincipalList`
+   :rtype: :class:`Types.SubjectList`
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2290)``
 
@@ -362,33 +247,20 @@
 
 
 
-.. function:: mapIdentity(cert,principal) -> Boolean
+.. function:: mapIdentity(cert,subject) -> Boolean
 
-   Map the two authenticated identities, asserting that they represent the same
-   principal.
+   Map the two authenticated identities, asserting that they represent the same subject.
 
-   Mapping identities is a two-step process wherein a map request is made by a
-   primary Principal and a subsequent (confirmation) map request is made by the
-   secondary Principal. This ensures that mappings are performed only by those
-   that have authority to do so.
+   Mapping identities is a two-step process wherein a map request is made by a primary Subject and a subsequent (confirmation) map request is made by the secondary Subject. This ensures that mappings are performed only by those that have authority to do so.
 
    :REST URL: ``POST /accounts/map``
-
-   :param cert: X.509 Certificate, passed to the system via SSL client-side
-     authentication, and used to identiy and validate the identity of the
-     Principal making the call.  The X.509 certificate should be traceable to
-     the CILogon service, and provides various attributes for authorization
-     decisions.
-
+   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.
    :type cert: :class:`Types.X509Certificate`
 
-   :param principal: The Principal identifier to be used for equivalentIdentity.
-     This Principal will not match the Principal named in the certificate.
-
-   :type principal: :class:`Types.Principal`
+   :param subject: The Subject identifier to be used for equivalentIdentity. This Subject will not match the Subject named in the certificate.
+   :type subject: :class:`Types.Subject`
 
    :returns: True if the map was successfully created, false otherwise.
-
    :rtype: :class:`Types.Boolean`
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2390)``
@@ -399,11 +271,9 @@
 
      The supplied principal does not have permission to map these two identities
 
-
    :raises Exceptions.NotFound: ``(errorCode=404, detailCode=2340)``
 
      The specified principal does not exist in the DataONE system
-
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2361)``
 
@@ -416,28 +286,16 @@
 
    Create a group with the given name.
 
-   Groups are lists of principals that allow all members of the group to be
-   referenced by listing solely the subject name of the group.  Group names must
-   be unique within the DataONE system, and can only be modified by their
-   creator.
+   Groups are lists of subjects that allow all members of the group to be referenced by listing solely the subject name of the group.  Group names must be unique within the DataONE system, and can only be modified by their creator.
 
    :REST URL: ``POST /groups/{groupName}``
-
-   :param cert: X.509 Certificate, passed to the system via SSL client-side
-     authentication, and used to identiy and validate the identity of the
-     Principal making the call.  The X.509 certificate should be traceable to
-     the CILogon service, and provides various attributes for authorization
-     decisions.  If the X.509 certificate is not provided, then the request
-     should be considered to have originated from the DataONE 'Public' user.
-
+   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
    :type cert: :class:`Types.X509Certificate`
 
    :param groupName: The name of the group to be created.
-
-   :type groupName: :class:`Types.Principal`
+   :type groupName: :class:`Types.Subject`
 
    :returns: True if group was created successfully, false otherwise
-
    :rtype: :class:`Types.Boolean`
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2490)``
@@ -448,11 +306,9 @@
 
      The supplied principal does not have permission to create a group
 
-
    :raises Exceptions.NotFound: ``(errorCode=404, detailCode=2440)``
 
      The specified principal does not exist in the DataONE system
-
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2461)``
 
@@ -465,36 +321,23 @@
 
 
 
-
 .. function:: addGroupMembers(cert,groupName,members) -> Boolean
 
    Add members to the named group.
 
-   Group members can be added by the original creator of the group, otherwise a
-   NotAuthorized exception is thrown.  Group members are provided as a list of
-   principals to be added to the group.
+   Group members can be added by the original creator of the group, otherwise a NotAuthorized exception is thrown.  Group members are provided as a list of subjects to be added to the group.
 
    :REST URL: ``PUT /groups/{groupName}``
-
-   :param cert: X.509 Certificate, passed to the system via SSL client-side
-     authentication, and used to identiy and validate the identity of the
-     Principal making the call.  The X.509 certificate should be traceable to
-     the CILogon service, and provides various attributes for authorization
-     decisions.  If the X.509 certificate is not provided, then the request
-     should be considered to have originated from the DataONE 'Public' user.
-
+   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
    :type cert: :class:`Types.X509Certificate`
 
    :param groupName: The identifier of the group to be modified.
-
-   :type groupName: :class:`Types.Principal`
+   :type groupName: :class:`Types.Subject`
 
    :param members: The list of members to be added to the group.
-
-   :type members: :class:`Types.PrincipalList`
+   :type members: :class:`Types.SubjectList`
 
    :returns: True if the group that was modified successfully, false otherwise
-
    :rtype: :class:`Types.Boolean`
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2590)``
@@ -505,11 +348,9 @@
 
      The supplied principal does not have permission to add to a group
 
-
    :raises Exceptions.NotFound: ``(errorCode=404, detailCode=2540)``
 
      The specified group does not exist in the DataONE system
-
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2561)``
 
@@ -522,31 +363,19 @@
 
    Remove members to the named group.
 
-   Group members can be removed by the original creator of the group, otherwise
-   a NotAuthorized exception is thrown.  Group members are provided as a list of
-   principals to be removed from the group.
+   Group members can be removed by the original creator of the group, otherwise a NotAuthorized exception is thrown.  Group members are provided as a list of subjects to be removed from the group.
 
    :REST URL: ``DELETE /groups/{groupName}``
-
-   :param cert: X.509 Certificate, passed to the system via SSL client-side
-     authentication, and used to identiy and validate the identity of the
-     Principal making the call.  The X.509 certificate should be traceable to
-     the CILogon service, and provides various attributes for authorization
-     decisions.  If the X.509 certificate is not provided, then the request
-     should be considered to have originated from the DataONE 'Public' user.
-
+   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
    :type cert: :class:`Types.X509Certificate`
 
    :param groupName: The identifier of the group to be modified.
-
-   :type groupName: :class:`Types.Principal`
+   :type groupName: :class:`Types.Subject`
 
    :param members: The list of members to be removed from the group.
-
-   :type members: :class:`Types.PrincipalList`
+   :type members: :class:`Types.SubjectList`
 
    :returns: True if the group that was modified successfully, false otherwise
-
    :rtype: :class:`Types.Boolean`
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2690)``
@@ -557,61 +386,38 @@
 
      The supplied principal does not have permission to remove from a group
 
-
    :raises Exceptions.NotFound: ``(errorCode=404, detailCode=2640)``
 
      The specified group does not exist in the DataONE system
-
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2661)``
 
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=2642)``
 
 .. TODO::
-    Evaluate the REST endpoint for this method and determine if DELETE is the
-    appropriate http method.
-
+    Evaluate the REST endpoint for this method and determine if DELETE is the appropriate http method.
 
 
 
 .. function:: isAuthorized(cert,pid,operation) -> Boolean
 
-   Test if the user identified by the provided token has authorization for
-   operation on the specified object.
+   Test if the user identified by the provided token has authorization for operation on the specified object.
 
-   .. Note:: Should perhaps add convenience methods for "canRead()" and
-     "canWrite()" to verify that a user is able to read / write an object.
-
-   .. Note:: The token and operation parameters are not currently encoded in the
-     REST URL, so unclear how they should be passed in.
+   .. Note:: Should perhaps add convenience methods for "canRead()" and "canWrite()" to verify that a user is able to read / write an object.
 
    :Use Cases:
-
-     :doc:`UC01 </design/UseCases/01_uc>`, :doc:`UC02 </design/UseCases/02_uc>`,
-     :doc:`UC36 </design/UseCases/36_uc>`, :doc:`UC37 </design/UseCases/37_uc>`
-
+     :doc:`UC01 </design/UseCases/01_uc>`, :doc:`UC02 </design/UseCases/02_uc>`, :doc:`UC36 </design/UseCases/36_uc>`, :doc:`UC37 </design/UseCases/37_uc>`
    :REST URL: ``GET /isAuthorized/{pid}``
-
-   :param cert: X.509 Certificate, passed to the system via SSL client-side
-     authentication, and used to identiy and validate the identity of the
-     Principal making the call.  The X.509 certificate should be traceable to
-     the CILogon service, and provides various attributes for authorization
-     decisions.  If the X.509 certificate is not provided, then the request
-     should be considered to have originated from the DataONE 'Public' user.
-
+   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
    :type cert: :class:`Types.X509Certificate`
 
    :param pid: The identifer of the resource for which access is being checked.
-
    :type pid: :class:`Types.Identifier`
 
-   :param operation: The type of operation which is being requested for the
-     given pid.
-
+   :param operation: The type of operation which is being requested for the given pid.
    :type operation: :class:`Types.Event`
 
    :returns: True if the operation is allowed
-
    :rtype: :class:`Types.Boolean`
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=1760)``
@@ -622,10 +428,7 @@
 
    :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=1820)``
 
-     This error is raised if the request comes from a black listed source (e.g.
-     a temporary block may be imposed on a source that calls this method too
-     many times within some time interval)
-
+     This error is raised if the request comes from a black listed source (e.g. a temporary block may be imposed on a source that calls this method too many times within some time interval)
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=1780)``
 
@@ -638,40 +441,24 @@
 
    Sets the access permissions for an object identified by *pid*.
 
-   .. Note:: The token and accessPolicy parameters are not currently encoded in
-     the REST URL, so unclear how they should be passed in.
-
    :Use Cases:
-
      :doc:`UC16 </design/UseCases/16_uc>`
-
    :REST URL: ``PUT /accessRules/{pid}``
-
-   :param cert: X.509 Certificate, passed to the system via SSL client-side
-     authentication, and used to identiy and validate the identity of the
-     Principal making the call.  The X.509 certificate should be traceable to
-     the CILogon service, and provides various attributes for authorization
-     decisions.  If the X.509 certificate is not provided, then the request
-     should be considered to have originated from the DataONE 'Public' user.
-
+   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
    :type cert: :class:`Types.X509Certificate`
 
    :param pid: The object for which access control is being edited.
-
    :type pid: :class:`Types.Identifier`
 
    :param accessPolicy: The desired privileges to be assigned to the object.
-
    :type accessPolicy: :class:`Types.AccessPolicy`
 
    :returns: True if the operation succeeds, otherwise false.
-
    :rtype: :class:`Types.Boolean`
 
    :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=4410)``
 
      The supplied token is invalid
-
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4430)``
 
@@ -679,23 +466,16 @@
 
      The specified object does not exist in the DataONE system
 
-
    :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=4420)``
 
-     The :term:`principal` does not have permission to alter access control
-     rules for the object.
-
+     The :term:`principal` does not have permission to alter access control rules for the object.
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4401)``
 
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4402)``
 
 .. TODO::
-    Should permissions cascade? e.g. Should setting permission on a Data Package
-    cascade to the contained objects as well (the experiment metadata and data)?
-
+    Should permissions cascade? e.g. Should setting permission on a Data Package cascade to the contained objects as well (the experiment metadata and data)?
 .. TODO::
-    .. Note:: Setting access rules on a CN implies that the rules are propogated
-      to the CNs and to all MNs holding a copy of the object
-
+    .. Note:: Setting access rules on a CN implies that the rules are propogated to the CNs and to all MNs holding a copy of the object
 

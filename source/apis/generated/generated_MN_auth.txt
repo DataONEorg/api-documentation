@@ -11,52 +11,36 @@
      - Function
      - Parameters
    * - Tier 2
-     - ``GET /isAuthorized/{pid}``
+     - ``GET /isAuthorized/{pid}?action={action}``
      - :func:`isAuthorized`
-     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`,
-       :class:`action<Types.Permission>`) ``->`` :class:`Types.Boolean`
+     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`, :class:`action<Types.Permission>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``PUT /accessRules/{pid}``
      - :func:`setAccess`
-     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`,
-       :class:`accessPolicy<Types.AccessPolicy>`) ``->`` :class:`Types.Boolean`
+     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`, :class:`accessPolicy<Types.AccessPolicy>`) ``->`` :class:`Types.Boolean`
 
 
 
 
 .. function:: isAuthorized(cert,pid,action) -> Boolean
 
-   Test if the user identified by the provided token has authorization for
-   operation on the specified object.
+   Test if the user identified by the provided token has authorization for operation on the specified object.
 
-   .. Note:: Should perhaps add convenience methods for "canRead()" and
-     "canWrite()" to verify that a user is able to read / write an object.
+   .. Note:: Should perhaps add convenience methods for "canRead()" and "canWrite()" to verify that a user is able to read / write an object.
 
    :Use Cases:
-
      :doc:`UC01 </design/UseCases/01_uc>`, :doc:`UC37 </design/UseCases/37_uc>`
-
-   :REST URL: ``GET /isAuthorized/{pid}``
-
-   :param cert: X.509 Certificate, passed to the system via SSL client-side
-     authentication, and used to identiy and validate the identity of the
-     Principal making the call.  The X.509 certificate should be traceable to
-     the CILogon service, and provides various attributes for authorization
-     decisions.  If the X.509 certificate is not provided, then the request
-     should be considered to have originated from the DataONE 'Public' user.
-
+   :REST URL: ``GET /isAuthorized/{pid}?action={action}``
+   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
    :type cert: :class:`Types.X509Certificate`
 
    :param pid:
-
    :type pid: :class:`Types.Identifier`
 
    :param action:
-
    :type action: :class:`Types.Permission`
 
    :returns: True if the operation is allowed
-
    :rtype: :class:`Types.Boolean`
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=1760)``
@@ -67,10 +51,7 @@
 
    :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=1820)``
 
-     This error is raised if the request comes from a black listed source (e.g.
-     a temporary block may be imposed on a source that calls this method too
-     many times within some time interval)
-
+     This error is raised if the request comes from a black listed source (e.g. a temporary block may be imposed on a source that calls this method too many times within some time interval)
 
    :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=1840)``
 
@@ -84,37 +65,23 @@
    Sets the access permissions for an object identified by *pid*.
 
    :Use Cases:
-
      :doc:`UC16 </design/UseCases/16_uc>`
-
    :REST URL: ``PUT /accessRules/{pid}``
-
-   :param cert: X.509 Certificate, passed to the system via SSL client-side
-     authentication, and used to identiy and validate the identity of the
-     Principal making the call.  The X.509 certificate should be traceable to
-     the CILogon service, and provides various attributes for authorization
-     decisions.  If the X.509 certificate is not provided, then the request
-     should be considered to have originated from the DataONE 'Public' user.
-
+   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
    :type cert: :class:`Types.X509Certificate`
 
    :param pid: The object for which access control is being edited.
-
    :type pid: :class:`Types.Identifier`
 
-   :param accessPolicy: The desired privileges to be assigned to the object,
-     sent in the message body.
-
+   :param accessPolicy: The desired privileges to be assigned to the object, sent in the message body.
    :type accessPolicy: :class:`Types.AccessPolicy`
 
    :returns: True if the operation succeeds, otherwise false.
-
    :rtype: :class:`Types.Boolean`
 
    :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=4410)``
 
      The supplied token is invalid
-
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4430)``
 
@@ -122,23 +89,16 @@
 
      The specified object does not exist in the DataONE system
 
-
    :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=4420)``
 
-     The :term:`principal` does not have permission to alter access control
-     rules for the object.
-
+     The :term:`principal` does not have permission to alter access control rules for the object.
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4401)``
 
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4402)``
 
 .. TODO::
-    Should permissions cascade? e.g. Should setting permission on a Data Package
-    cascade to the contained objects as well (the experiment metadata and data)?
-
+    Should permissions cascade? e.g. Should setting permission on a Data Package cascade to the contained objects as well (the experiment metadata and data)?
 .. TODO::
-    .. Note:: Setting access rules on a MN implies that the rules are propogated
-      to the CNs and to all MNs holding a copy of the object
-
+    .. Note:: Setting access rules on a MN implies that the rules are propogated to the CNs and to all MNs holding a copy of the object
 

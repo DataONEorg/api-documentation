@@ -17,9 +17,7 @@
    * - Tier 1
      - ``GET /log``
      - :func:`getLogRecords`
-     - (:class:`cert<Types.X509Certificate>`, :class:`fromDate<Types.DateTime>`,
-       :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`,
-       ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.Log`
+     - (:class:`cert<Types.X509Certificate>`, :class:`fromDate<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.Log`
    * - Tier 1
      - ``GET /monitor/object``
      - :func:`getObjectStatistics`
@@ -27,9 +25,7 @@
    * - Tier 1
      - ``GET /monitor/event``
      - :func:`getOperationStatistics`
-     - (:class:`cert<Types.X509Certificate>`, ``[period]``,
-       :class:`[requestor]<Types.Principal>`, :class:`[event]<Types.Event>`,
-       :class:`[format]<Types.ObjectFormat>`) ``->`` :class:`Types.MonitorList`
+     - (:class:`cert<Types.X509Certificate>`, ``[period]``, :class:`[requestor]<Types.Subject>`, :class:`[event]<Types.Event>`, :class:`[format]<Types.ObjectFormat>`) ``->`` :class:`Types.MonitorList`
    * - Tier 1
      - ``GET /monitor/status``
      - :func:`getStatus`
@@ -44,21 +40,14 @@
 
 .. function:: ping() -> Boolean
 
-   Low level "are you alive" operation. A valid ping response is indicated by a
-   HTTP status of 200.
+   Low level "are you alive" operation. A valid ping response is indicated by a HTTP status of 200.
 
-   The Member Node should perform some minimal internal functionality testing
-   before answering. However, ping checks will be frequent (every few minutes)
-   so the internal functionality test should not be high impact.
+   The Member Node should perform some minimal internal functionality testing before answering. However, ping checks will be frequent (every few minutes) so the internal functionality test should not be high impact.
 
    :Use Cases:
-
      :doc:`UC10 </design/UseCases/10_uc>`
-
    :REST URL: ``GET /monitor/ping``
-
    :returns: Null body or Exception
-
    :rtype: :class:`Types.Boolean`
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2041)``
@@ -81,59 +70,37 @@
 
 .. function:: getLogRecords(cert,fromDate,[toDate],[event],[start=0],[count=1000]) -> Log
 
-   Retrieve log information from the Member Node for the specified date range
-   and even type.
+   Retrieve log information from the Member Node for the specified date range and even type.
 
-   This method is used primarily by the log aggregator to generate aggregate
-   statistics for nodes, objects, and the methods of access.
+   This method is used primarily by the log aggregator to generate aggregate statistics for nodes, objects, and the methods of access.
 
    :REST URL: ``GET /log``
-
-   :param cert: X.509 Certificate, passed to the system via SSL client-side
-     authentication, and used to identiy and validate the identity of the
-     Principal making the call.  The X.509 certificate should be traceable to
-     the CILogon service and provides various attributes for authorization
-     decisions.  If the X.509 certificate is not provided, then the request
-     should be considered to have originated from the DataONE 'Public' user.
-
+   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
    :type cert: :class:`Types.X509Certificate`
 
-   :param fromDate: Records with dateSystemMetadatModified greater than this
-     value will be returned.
-
+   :param fromDate: Records with dateSystemMetadatModified greater than this value will be returned.
    :type fromDate: :class:`Types.DateTime`
 
-   :param toDate: Records with dateSystemMetadatModified less than or equal to
-     this value will be returned. If not specified, then defaults to *now*.
-
+   :param toDate: Records with dateSystemMetadatModified less than or equal to this value will be returned. If not specified, then defaults to *now*.
    :type toDate: :class:`Types.DateTime`
 
-   :param event: Return only log records for the specified type of event.
-     Default is *all*.
-
+   :param event: Return only log records for the specified type of event.  Default is *all*.
    :type event: :class:`Types.Event`
 
-   :param start=0: Optional zero based offset from the first record in the set
-     of matching log records. Used to assist with paging the response.
-
+   :param start=0: Optional zero based offset from the first record in the set of matching log records. Used to assist with paging the response.
    :type start=0: integer
 
-   :param count=1000: Optional maximum number of log records to return in the
-     response. Used to assist with paging the response.
-
+   :param count=1000: Optional maximum number of log records to return in the response. Used to assist with paging the response.
    :type count=1000: integer
 
    :returns:
-
    :rtype: :class:`Types.Log`
 
    :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=1460)``
 
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=1480)``
 
-     The request parameters were malformed or an invalid date range was
-     specified.
-
+     The request parameters were malformed or an invalid date range was specified.
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=1490)``
 
@@ -149,37 +116,20 @@
 
 .. function:: getObjectStatistics([format],[pid]) -> ObjectStatistics
 
-   Returns the number of objects stored on the Member Node at the time the call
-   is serviced. The count may be restricted to a particular object format or a
-   filter on the PID.
+   Returns the number of objects stored on the Member Node at the time the call is serviced. The count may be restricted to a particular object format or a filter on the PID.
 
-   Access control rules are not applied to the count, so the actual record count
-   may differ from the number of records that are accessible through other calls
-   such as :func:`MN.listObjects`, however the response *must* be indicative of
-   the number of objects available through the DataONE service interfaces.
+   Access control rules are not applied to the count, so the actual record count may differ from the number of records that are accessible through other calls such as :func:`MN.listObjects`, however the response MUST be indicative of the number of objects available through the DataONE service interfaces.
 
-   .. Note:: Functionality of this method has been simplfiied from the 0.5
-     description so that the response reflects the current state of the Member
-     Node. Historical information should be collated by a monitoring service if
-     necessary. This change was made to reduce the operational requirements for
-     Member Node services.
+   .. Note:: Functionality of this method has been simplfiied from the 0.5 description so that the response reflects the current state of the Member Node. Historical information should be collated by a monitoring service if necessary. This change was made to reduce the operational requirements for Member Node services.
 
    :REST URL: ``GET /monitor/object``
-
    :param format: Limit to objects of given format.
-
    :type format: string
 
-   :param pid: Filter on identifier. Wildcards characters (?: match any single
-     character; *: match any sequence of characters) *should* be supported by
-     this method. If the implementation does not support wildcard characters for
-     filtering PIDs, then an InvalidRequest exception *must* be raised if such
-     characters are present unescaped in the request.
-
+   :param pid: Filter on identifier. Wildcards characters (?: match any single character; \*: match any sequence of characters) SHOULD be supported by this method. If the implementation does not support wildcard characters for filtering PIDs, then an :exc:`InvalidRequest` MUST be raised if such characters are present unescaped in the request.
    :type pid: string
 
    :returns: Number of objects available on the node that match the request.
-
    :rtype: :class:`Types.ObjectStatistics`
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2060)``
@@ -202,45 +152,27 @@
 
 .. function:: getOperationStatistics(cert,[period],[requestor],[event],[format]) -> MonitorList
 
-   Returns the number of operations that have been serviced by the node over
-   time periods of one and 24 hours.
+   Returns the number of operations that have been serviced by the node over time periods of one and 24 hours.
 
-   .. Note:: Functionality of this method has been simplfiied from the 0.5
-     description so that the response reflects the current state of the Member
-     Node. Historical information should be collated by a monitoring service if
-     necessary. This change was made to reduce the operational requirements for
-     Member Node services.
+   .. Note:: Functionality of this method has been simplfiied from the 0.5 description so that the response reflects the current state of the Member Node. Historical information should be collated by a monitoring service if necessary. This change was made to reduce the operational requirements for Member Node services.
 
    :REST URL: ``GET /monitor/event``
-
-   :param cert: X.509 Certificate, passed to the system via SSL client-side
-     authentication, and used to identiy and validate the identity of the
-     Principal making the call.  The X.509 certificate should be traceable to
-     the CILogon service, and provides various attributes for authorization
-     decisions.  If the X.509 certificate is not provided, then the request
-     should be considered to have originated from the DataONE 'Public' user.
-
+   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
    :type cert: :class:`Types.X509Certificate`
 
-   :param period: An ISO8601 compatible DateTime range specifying the time range
-     for which to return operation statistics.
-
+   :param period: An ISO8601 compatible DateTime range specifying the time range for which to return operation statistics.
    :type period: integer
 
    :param requestor: Limit to operations performed by given requestor identity.
-
-   :type requestor: :class:`Types.Principal`
+   :type requestor: :class:`Types.Subject`
 
    :param event: Enumerated value indicating the type of event being examined
-
    :type event: :class:`Types.Event`
 
    :param format: Limit to events involving objects of the specified format.
-
    :type format: :class:`Types.ObjectFormat`
 
    :returns: List of statistics.
-
    :rtype: :class:`Types.MonitorList`
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2080)``
@@ -263,27 +195,16 @@
 
 .. function:: getStatus() -> StatusResponse
 
-   This function is similar to :func:`MN_health.ping` but returns a more
-   complete status which may include information such as planned service
-   outages.
+   This function is similar to :func:`MN_health.ping` but returns a more complete status which may include information such as planned service outages.
 
-   This method provide a mechanism for notification to Coordinating Nodes at a
-   higher frequency than through setting properties in the node registry
-   information.
+   This method provide a mechanism for notification to Coordinating Nodes at a higher frequency than through setting properties in the node registry information.
 
-   The response to a *getStatus* request is currently undefined, but will be a
-   structure containing information that can be used by the Coordinating Nodes
-   for notification of pending outages, software changes, or other significant
-   events as described in :doc:`/design/UseCases/10_uc`.
+   The response to a *getStatus* request is currently undefined, but will be a structure containing information that can be used by the Coordinating Nodes for notification of pending outages, software changes, or other significant events as described in :doc:`/design/UseCases/10_uc`.
 
    :Use Cases:
-
      :doc:`UC10 </design/UseCases/10_uc>`
-
    :REST URL: ``GET /monitor/status``
-
    :returns: Undefined
-
    :rtype: :class:`Types.StatusResponse`
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2100)``
@@ -306,9 +227,7 @@
    Returns a document describing the capabilities of the Member Node.
 
    :REST URL: ``GET /  or  GET /node``
-
    :returns: The technical capabilities of the Member Node
-
    :rtype: :class:`Types.NodeList`
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2160)``

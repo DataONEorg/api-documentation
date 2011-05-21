@@ -13,46 +13,28 @@
    * - Tier 4
      - ``POST /replicate``
      - :func:`replicate`
-     - (:class:`cert<Types.X509Certificate>`,
-       :class:`sysmeta<Types.SystemMetadata>`,
-       :class:`sourceNode<Types.NodeReference>`) ``->`` :class:`Types.Boolean`
+     - (:class:`cert<Types.X509Certificate>`, :class:`sysmeta<Types.SystemMetadata>`, :class:`sourceNode<Types.NodeReference>`) ``->`` :class:`Types.Boolean`
 
 
 
 
 .. function:: replicate(cert,sysmeta,sourceNode) -> Boolean
 
-   Called by a Coordinating Node to request that the Member Node create a copy
-   of the specified object by retrieving it from another Member Nodeode and
-   storing it locally so that it can be made accessible to the DataONE system.
+   Called by a Coordinating Node to request that the Member Node create a copy of the specified object by retrieving it from another Member Nodeode and storing it locally so that it can be made accessible to the DataONE system.
 
    :Use Cases:
-
      :doc:`UC09 </design/UseCases/09_uc>`
-
    :REST URL: ``POST /replicate``
-
-   :param cert: X.509 Certificate, passed to the system via SSL client-side
-     authentication, and used to identiy and validate the identity of the
-     Principal making the call.  The X.509 certificate should be traceable to
-     the CILogon service, and provides various attributes for authorization
-     decisions.  If the X.509 certificate is not provided, then the request
-     should be considered to have originated from the DataONE 'Public' user.
-
+   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
    :type cert: :class:`Types.X509Certificate`
 
    :param sysmeta: Copy of the CN held system metadata for the object.
-
    :type sysmeta: :class:`Types.SystemMetadata`
 
-   :param sourceNode: A reference to node from which the content should be
-     retrieved. The reference should be resolved by checking the CN node
-     registry.
-
+   :param sourceNode: A reference to node from which the content should be retrieved. The reference should be resolved by checking the CN node registry.
    :type sourceNode: :class:`Types.NodeReference`
 
    :returns: True if everything works OK, otherwise an error is returned.
-
    :rtype: :class:`Types.Boolean`
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2150)``
