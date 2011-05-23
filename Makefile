@@ -49,13 +49,16 @@ generate_schema:
 	$(XSLTPROC) --path ".:$(SCHEMADIR)" types2rst.xsl dataoneTypes.xsd > ./source/apis/generated/generated_schema_types.txt
 	#$(XSLTPROC) --path ".:$(SCHEMADIR)" xsd2rst.xsl dataoneTypes.xsd > ./source/apis/generated/generated_schema_types2.txt
 
-plantuml: plantuml_source plantuml_usecase
+plantuml: plantuml_source plantuml_usecase plantuml_types
 
 plantuml_source:
 	GRAPHVIZ_DOT=$(GRAPHVIZ) $(PLANTUML) source source/design
 
 plantuml_usecase:
 	GRAPHVIZ_DOT=$(GRAPHVIZ) $(PLANTUML) source/design/UseCases
+
+plantuml_types:
+	GRAPHVIZ_DOT=$(GRAPHVIZ) $(PLANTUML) source/apis
 
 html: 
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html

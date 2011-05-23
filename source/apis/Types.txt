@@ -68,7 +68,12 @@ Version   Structure
   given user or system has for accessing a resource, including both data and
   metadata resources and service resources. An access policy consists of a
   sequence of allow rules that grant permissions to principals, which can be
-  individual users, groups of users, sympolic users, or systems and services.
+  individual users, groups of users, symbolic users, or systems and services.
+
+  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+     :language: xml
+     :start-after: <!-- AccessPolicy -->
+     :end-before: <!-- AccessRule -->
 
   :: 
 
@@ -77,25 +82,33 @@ Version   Structure
       repeated AccessRule allow = 0;
     }
 
+  .. image:: images/class_accesspolicy.png
+
+  .. 
+    @startuml images/class_accesspolicy.png
+    class AccessPolicy {
+      + allow : AccessRule[0..n]
+    }
+    AccessPolicy o-- AccessRule
+    @enduml
+
+
 
 .. class:: AccessRule
 
-  A rule that is used to allow a principal to perform an action (such as read
-  or write) on an object in DataONE. Rules are three-tuples (principal,
+  A rule that is used to allow a :term:`subject` to perform an action (such as
+  read or write) on an object in DataONE. Rules are three-tuples (subject,
   permission, resource) specifying which permissions are allowed for the
-  principal(s) for the resource(s) listed. Access control rules are specified
-  by the OriginMemberNode when the object is first registered in DataONE. If
-  no rules are specified at that time, then the object is deemed to be private
-  and the only user with access to the object (read, write, or otherwise) is
-  the RightsHolder.
+  subjects(s) for the resource(s) listed. Access control rules are specified by
+  the OriginMemberNode when the object is first registered in DataONE. If no
+  rules are specified at that time, then the object is deemed to be private and
+  the only user with access to the object (read, write, or otherwise) is the
+  RightsHolder.
   
-  :param principal: The principal
-  :type principal: Types.Principal
-  :param permission: 
-  :type permission: Types.Permission
-  :param resource:
-  :type resource: Types.Identifier
-  
+  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+     :language: xml
+     :start-after: <!-- AccessRule -->
+     :end-before: <!-- AuthToken  -->
 
   :: 
 
@@ -106,6 +119,21 @@ Version   Structure
       repeated Identifier resource = 2;
     }
 
+  .. image:: images/class_accessrule.png
+
+  ..
+    @startuml images/class_accessrule.png
+    class AccessRule {
+      + subject : Subject
+      + permission : Permission
+      + resource : Identifier
+    }
+    AccessRule -- Subject
+    AccessRule -- Permission
+    AccessRule -- Identifier
+    @enduml
+
+
 
 .. class:: AuthenticationSystem
 
@@ -113,11 +141,12 @@ Version   Structure
   user.
 
 
+
 .. class:: AuthToken
 
   An AuthToken is an Identifier that is used to reference an authenticated
   AuthSession that has been established via the act of authenticating a
-  Principal with a Coordinating Node. The AuthToken identifier follows the
+  subject with a Coordinating Node. The AuthToken identifier follows the
   same formatting and content rules as the Identifier class, and should be
   representable in simple 7-bit ASCII or as a UTF-8 string. The value SHOULD
   additionally be constrained to be less than 8K in order to be transportable
@@ -126,9 +155,13 @@ Version   Structure
   requests from a particular Address.
 
 
+
 .. class:: OctetStream
 
    A series of 8-bit bytes which combined together form a digital object.
+   *OctetStream* is used to transfer object bytes such as the response to
+   :func:`MN_read.get`.
+
 
 
 .. class:: Integer
@@ -136,19 +169,35 @@ Version   Structure
    A simple integer. The range of expected values should be described with the
    accompanying API call.
 
+   The Integer type is serialized over XML using the predefined XMLSchema
+   *integer_* type, the value space of which is the infinite series
+   {...,-2,-1,0,1,2,...}.
+   
+.. _integer: http://www.w3.org/TR/xmlschema-2/#integer
+
+
 
 .. class:: Boolean
 
-   A boolean response is commonly used in the DataONE service APIs to indicte
+   .. Method cross ref OK
+
+   A boolean response is commonly used in the DataONE service APIs to indicate
    success or otherwise of an operation. For operations that are called 
    through the service interfaces, a positive boolean response (i.e. True) is
    indicated by returning a HTTP response with a status code of "200". The 
    body of the message may contain additional content, but this should be 
    ignored by the receiver.
-   
+
    A False or failure response must return an appropriate Error message and 
    must set the appropriate HTTP status code on the response to indicate a 
    failure.
+
+   The Boolean type is serialized over XML using the predefined XMLSchema
+   `boolean`_ type, an instance of which can have the following legal literals
+   {true, false, 1, 0}.
+
+.. _boolean: http://www.w3.org/TR/xmlschema-2/#boolean
+
 
 
 .. class:: Capabilities
@@ -157,46 +206,63 @@ Version   Structure
 
 
 
-.. class:: Challenge
+.. class:: ChecksumAlgorithm
 
-  The challenge data that is sent back to a client during two-phase
-  authentication. The Challenge includes two pieces of data: an encrypted
-  Nonce, and an X.509 public key certificate for the session service. The
-  Nonce is encrypted using a client's public key and sent to the client, where
-  it is decrytped by the client (proving access to the associated private
-  key), and then re-encrypted using the server's public key. When the server
-  decrypts the returned Nonce, if it matches then it establishes an
-  authenticated session.
+   An enumeration of checksum types supported by the DataONE infrastructure.
+
+   The default checksum is *SHA-1*.
+
+   As represented in XMLSchema:
+
+   .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+        :language: xml
+        :start-after: <!-- Checksum Algorithm -->
+        :end-before: <!-- ComponentName -->
 
    ::
 
-    message Challenge {
-      required string certificate = 1;
-      required string encryptedNonce = 1;
-    }
+     enum ChecksumAlgorithmEnum 
+     {
+       SHA-1 = 0;
+       SHA-224 = 1;
+       SHA-356 = 2;
+       SHA-384 = 3;
+       SHA-512 = 4;
+       MD5 = 5;
+     }
+
 
 
 .. class:: Checksum
 
   Represents the value of a computed checksum.
 
-  ::
+  As represented in XMLSchema:
 
-    enum ChecksumAlgorithmEnum 
-    {
-      SHA-1 = 0;
-      SHA-224 = 1;
-      SHA-356 = 2;
-      SHA-384 = 3;
-      SHA-512 = 4;
-      MD5 = 5;
-    }
+  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+       :language: xml
+       :start-after: <!-- Checksum -->
+       :end-before: <!-- Component -->
+
+
+  ::
 
     message Checksum 
     {
-      required ChecksumAlgorithmEnum algorithm = 1  [default = SHA-1];
+      required ChecksumAlgorithmEnum algorithm = 1;
       required string value = 2;
     }
+
+  .. image:: images/class_checksum.png
+
+  ..
+    @startuml images/class_checksum.png
+    class Checksum {
+      +algorithm : ChecksumAlgorithm
+      +value : string
+    }
+    Checksum -- ChecksumAlgorithm
+    @enduml
 
 
 
@@ -217,15 +283,25 @@ Version   Structure
 
   The milliseconds may be left off if that precision is not available.
 
+  See also the `XMLSchema dateTime`_ type which is used for serializing DateTime
+  values in XML transmitted between DataONE components.
 
 .. _HTTP Full Date: http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.3.1
+
+.. _XMLSchema dateTime: http://www.w3.org/TR/xmlschema-2/#dateTime
+
 
 
 .. class:: DescribeResponse  
 
-  Provides a low cost hint about the type, size and state of an object.
-  Describe responses are encoded in the header of the HTTP response and so
-  differ in the serialization mechanism used by other REST calls.
+  .. method cross ref OK
+
+  The :func:`MN_read.describe` method provides a low cost hint about the type,
+  size and state of an object.
+
+  The *DescribeResponse* is returned from the server in a HTTP HEAD response,
+  and hence the values must be represented in the HTTP response headers. There
+  is no XML serialization of a *DescribeResponse*.
 
   ::
 
@@ -237,6 +313,19 @@ Version   Structure
       required Checksum DataONE-Checksum = 4;
     }
 
+  .. image:: images/class_describeresponse.png
+
+  ..
+    @startuml images/class_describeresponse.png
+    class DescribeResponse {
+      +DataONE-ObjectFormat : ObjectFormat
+      +Content-Length : integer
+      +Last-Modified : DateTime
+      +DataONE-Checksum : Checksum
+    }
+    DescribeResponse --> ObjectFormat
+    DescribeResponse --> Checksum
+    @enduml
 
   .. attribute:: DataONE-ObjectFormat
 
@@ -256,10 +345,9 @@ Version   Structure
 
   .. attribute:: DataONE-Checksum
 
-     The algorithm (:attr:`SystemMetadata.algorithm`) and :class:`Checksum`
-     (:attr:`SystemMetadata.checksum`) of the object being examined, drawn
-     from the :class:`SystemMetadata`. The algorithm and checksum are
-     separated by a single comma with the algorithm first.
+     The ChecksumAlgorithm and Checksum value of the object being examined. The
+     algorithm and checksum values are separated by a single comma with the
+     algorithm first.
 
 
   Example of a HEAD response on object "ABC123"::
@@ -277,20 +365,12 @@ Version   Structure
 .. include:: types_errors.txt
 
 
-.. class:: EncryptedNonce
-
-  A random number that has been encrypted as part of a two-phase
-  authentication protocol and that is only used once for session
-  authentication. The Nonce is initially encrypted using a client's public key
-  and sent to the client, where it is decryped by the client (proving access
-  tot he associated private key), and then re-encrypted using the server's
-  public key. When the server decrypts the returned Nonce, if it matches then
-  it establishes an authenticated session.
-
 
 .. class:: Event
 
-  The contolled list of events that are logged, which will include 'CREATE',
+  .. method cross ref OK
+
+  The controlled list of events that are logged, which will include 'CREATE',
   'UPDATE', 'DELETE', 'READ', 'REPLICATE' events
 
   ::
@@ -304,14 +384,22 @@ Version   Structure
       CHANGEOWNER = 5;
     }
 
+  As represented in XML Schema:
+
+  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+     :language: xml
+     :start-after: <!-- Event Enumeration -->
+     :end-before: <!-- Environment Enumeration -->
+
+
 
 .. class:: Group
 
-  Group represents metadata about a Principal that is a group of other
-  Principals and that can be used by clients and nodes for displaying 
-  AccessPolicy information.
+  Group represents metadata about a Subject that is a group of other Subjectss
+  and that can be used by clients and nodes for displaying AccessPolicy
+  information.
 
-  .. attribute:: Principal
+  .. attribute:: Subject
 
      The unique identifier of the group.
 
@@ -321,22 +409,43 @@ Version   Structure
 
   .. attribute:: hasMember
 
-     A Principal that is a member of this group, expressed using the
-     unique identifier for that Principal.
+     A Subject that is a member of this group, expressed using the
+     unique identifier for that Subject.
 
-   ::
+  As represented in XML Schema:
 
-    message Group {
-      required string principal = 1;
-      required string groupName = 2;
-      repeated string hasMember = 3;
-    }
+  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+     :language: xml
+     :start-after: <!-- Group -->
+     :end-before: <!-- Identifier  -->
+
+  ::
+
+      message Group {
+        required string principal = 1;
+        required string groupName = 2;
+        repeated string hasMember = 3;
+      }
+
+   .. image:: images/class_group.png
+
+   .. 
+     @startuml images/class_group.png
+     class Group {
+       + subject : Subject
+       + groupName : NonEmptyString
+       + hasMember : Subject[0..*]
+     }
+     Group o-- Subject
+     @enduml
+
 
 
 .. class:: PingResponse
 
   The response from :func:`MN_health.ping`. This is currently (2010-10-21) a
   HTTP response with status code 200 and no payload.
+
 
 
 .. class:: StatusResponse
@@ -346,22 +455,18 @@ Version   Structure
   evaluation of the design notes.
 
 
+
 .. class:: IdentifierFormat
 
   Initially an enumerated list of strings that specify different types of identifiers.
 
-  ::
+  As represented in XML Schema:
 
-    message IdentifierFormat {
-      enum IdentifierFormat {
-        OID = 0;
-        LSID = 1;
-        UUID = 2;
-        LSRN = 3;
-      }
-    }
+  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+     :language: xml
+     :start-after: <!-- Identifier Format enumeration -->
+     :end-before: <!-- Service Name -->
 
-.. TODO:: There's a few more of these that need to be specified.
 
 
 .. class:: Identifier
@@ -374,8 +479,15 @@ Version   Structure
   Identifiers have a maximum length of 800 characters. Some discussion on this
   is described in `ticket 577`_.
 
+  As represented in XML Schema:
+
+  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+     :language: xml
+     :start-after: <!-- Identifier  -->
+     :end-before: <!--  Log -->
 
 .. _ticket 577: https://redmine.dataone.org/issues/577
+
 
 
 .. class:: IdentifierList
@@ -389,7 +501,10 @@ Version   Structure
      }
 
 
+
 .. class:: LogEntry
+
+  .. TODO:: describe attributes
 
   A single log entry as reported by a Member Node or Coordinating Node through
   the getLogRecords methods.
@@ -410,16 +525,47 @@ Version   Structure
       required Identifier identifier = 1;
       required ipAddress = 2;
       required userAgent = 3;
-      required Principal principal = 4;
+      required Subject subject = 4;
       required EventType event = 5;
       required dateTime dateLogged = 6;
       required NodeReference memberNode = 7;
     }
 
+  As represented in XMLSchema:
+
+  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+       :language: xml
+       :start-after: <!-- Log Entry -->
+       :end-before: <!-- Monitor Info -->
+
+  .. image:: images/class_logentry.png
+
+  .. 
+    @startuml images/class_logentry.png
+    class LogEntry {
+      + entryID : Identifier
+      + identifier : Identifier
+      + ipAddress : string
+      + userAgent : string
+      + subject : Subject
+      + event : Event
+      + dateLogged : DateTime
+      + memberNode : Identifier
+    }
+    LogEntry -- Identifier
+    LogEntry -- Subject
+    LogEntry -- Event
+    LogEntry -- DateTime
+    @enduml
+
+
 
 .. class:: Log
 
-  A list of LogEntry instances.
+  .. method cross ref ok
+
+  Represents a collection of LogEntry elements, used to transfer log information
+  between DataONE components.
 
   ::
 
@@ -429,6 +575,44 @@ Version   Structure
       required int total = 2;
       repeated LogRecord entry = 3;
     }
+
+  As represented in XMLSchema:
+  
+  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+     :language: xml
+     :start-after: <!--  Log -->
+     :end-before: <!-- Log Entry -->
+
+  .. image:: images/class_log.png
+
+  .. 
+    @startuml images/class_log.png
+    class Log {
+      + start : integer
+      + count : integer
+      + total : integer
+      + logEntry : LogEntry[0..]
+    }
+    Log o-- LogEntry
+    @enduml
+
+  .. attribute:: start
+
+     The zero based index of the first logEntry in the list relative to the
+     first available.
+
+  .. attribute:: count
+
+     The number of logEntry values present in the message.
+
+  .. attribute:: total
+
+     The total number of logEntry values available on the server.
+
+  .. attribute:: logEntry
+
+     A list of zero or more instances of :class:`Types.LogEntry`.
+
 
 
 .. class:: MonitorList
@@ -442,6 +626,7 @@ Version   Structure
     }
 
 
+
 .. class:: MonitorInfo
 
   A single log entry as reported by a Member Node or Coordinating Node through
@@ -453,6 +638,7 @@ Version   Structure
       required DateTime time = 0;
       required uint64 size = 1;
     }
+
 
 
 .. class:: Node
@@ -469,9 +655,11 @@ Version   Structure
   NodeList is described in :mod:`NodeList`.
 
 
+
 .. class:: NodeReference
 
   Member Node identifier drawn from the DataONE :mod:`cn_register <registry service>`.
+
 
 
 .. class:: ObjectFormat
@@ -493,7 +681,7 @@ Version   Structure
   .. attribute:: formatName
   
      A human readable name that describes the object format
-  
+
 
 
 .. class:: ObjectFormatList
@@ -532,26 +720,57 @@ Version   Structure
 
 .. class:: ObjectList
 
-  A list of objects. This provides more information than the :class:`IdentifierList` by
-  adding an identifier to the :class:`DescribeResponse`.
+  A list of object descriptions. This provides more information than the
+  :class:`IdentifierList` by adding an identifier to the
+  :class:`DescribeResponse`.
   
+  As represented in XMLSchema:
+  
+  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+     :language: xml
+     :start-after: <!-- Object Info -->
+     :end-before: <!-- Object Location -->
+ 
   ::
   
-    message ObjectInfo
-    {
-      extend DescribeResponse
-      {
-        required string identifier = 5
-      }
-    }
+   message ObjectInfo { 
+     extend DescribeResponse { 
+       required string identifier = 5
+     } 
+   }
   
-    message ObjectList 
-    {
-      required int start = 0;
-      required int count = 1;
-      required int total = 2;
-      repeated ObjectInfo objectInfo = 3;
+   message ObjectList { 
+     required int start = 0; 
+     required int count = 1; 
+     required int total = 2; 
+     repeated ObjectInfo objectInfo = 3; 
+   }
+
+  .. image:: images/class_objectlist.png
+
+  .. 
+    @startuml images/class_objectlist.png
+    class DescribeResponse {
+      +DataONE-ObjectFormat : ObjectFormat
+      +Content-Length : integer
+      +Last-Modified : DateTime
+      +DataONE-Checksum : Checksum
     }
+    
+    DescribeResponse -- ObjectFormat
+    DescribeResponse -- Checksum
+    
+    class ObjectInfo {
+      + identifier : Identifier
+    }
+    ObjectInfo -- Identifier
+    DescribeResponse <|-- ObjectInfo
+    
+    class ObjectList {
+    
+    }
+    ObjectList o-- ObjectInfo
+    @enduml
 
   .. attribute:: identifier
 
@@ -577,10 +796,18 @@ Version   Structure
      List of ObjectInfo structures, which are an extension of :class:`DescribeResponse`
 
 
+
 .. class:: ObjectLocationList
 
    A list of nodes and node service base URLs known to hold a copy of an
    object.
+
+   As represented in XMLSchema:
+
+   .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+      :language: xml
+      :start-after: <!-- Object Location -->
+      :end-before: <!-- Object Location List -->
 
   ::
   
@@ -589,21 +816,41 @@ Version   Structure
       repeated ObjectLocation locations = 2;
     }
 
-.. attribute:: identifier
+  .. attribute:: identifier
 
-   The identifier that this ObjectLocationList refers to (e.g. the
-   identifier for the science metadata or data object).
+     The identifier that this ObjectLocationList refers to (e.g. the identifier
+     for the science metadata or data object).
 
-.. attribute:: locations
+  .. attribute:: locations
 
-   List of ``ObjectLocation`` entries that indicate the nodes on which the
-   object is located.
+     List of ``ObjectLocation`` entries that indicate the nodes on which the
+     object is located.
+
+  .. image:: images/class_objectlocationlist.png
+
+  ..
+    @startuml images/class_objectlocationlist.png
+      class ObjectLocationList {
+        + identifier : Identifier
+        + locations : ObjectLocation[0..*]
+      }
+      ObjectLocationList o-- ObjectLocation
+      ObjectLocationList -- Identifier
+    @enduml
+
 
 
 .. class:: ObjectLocation
 
    Portion of an ObjectLocationList indicating the node from which the object
    can be retrieved. 
+
+   As represented in XMLSchema:
+
+   .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+      :language: xml
+      :start-after: <!-- Object Location List -->
+      :end-before: <!-- Person -->
 
    ::
 
@@ -639,10 +886,24 @@ Version   Structure
      values have higher preference. Values are only relative to each other in
      a particular response. Nodes with equal weight get equal values.
 
+  .. image::images/class_objectlocation.png
+
+  .. 
+    @startuml images/class_objectlocation.png
+    class ObjectLocation {
+      + nodeIdentifier : string
+      + baseURL : string
+      + url : string
+      + preference : integer
+    }
+    @enduml
+
+
 
 .. class:: ObjectStatistics
 
    A summary of object use information intended primarily for the monitoring service.
+
 
 
 .. class:: Permission
@@ -656,6 +917,13 @@ Version   Structure
   include all of the priveledges of lower levels (e.g., given write access, one
   also implicitly has read access).
 
+  As represented in XMLSchema:
+
+  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+     :language: xml
+     :start-after: <!-- Permission = permitted action -->
+     :end-before: <!-- QueryType = named types of search query formats -->
+
   ::
 
     enum Permission {
@@ -666,9 +934,11 @@ Version   Structure
     }
 
 
+
 .. class:: OperationStatistics
 
    A summary of operation calls intended primarily for the monitoring service.
+
 
 
 .. class:: Person
@@ -676,19 +946,26 @@ Version   Structure
   Person represents metadata about a Principal that is a person and that 
   can be used by clients and nodes for displaying AccessPolicy information.
 
-  .. attribute:: Principal
+  As represented in XMLSchema:
+
+  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+     :language: xml
+     :start-after: <!-- Person -->
+     :end-before: <!-- Ping -->
+
+  .. attribute:: subject
 
      The unique identifier for the person.
 
-  .. attribute:: GivenName
+  .. attribute:: givenName
 
      The given name of the Person.
 
-  .. attribute:: FamilyName
+  .. attribute:: familyName
 
      The family name of the Person.
 
-  .. attribute:: Email
+  .. attribute:: email
 
      The email address of the Person.
 
@@ -697,7 +974,7 @@ Version   Structure
      A group or role in which the Principal is a member, expressed using the
      unique Principal identifier for that group.
 
-  .. attribute:: EquivalentIdentity
+  .. attribute:: equivalentIdentity
 
      An alternative but equivalent identity for the principal that has been
      used in alternate identity systems.
@@ -705,7 +982,7 @@ Version   Structure
    ::
 
     message Person {
-      required string principal = 1;
+      required string subject = 1;
       repeated string givenName = 2;
       required string familyName = 3;
       repeated string email = 4;
@@ -713,35 +990,88 @@ Version   Structure
       repeated string equivalentIdentity = 6;
     }
 
+  .. image:: images/class_person.png
+
+  ..
+    @startuml images/class_person.png
+    class Person {
+      subject : Subject
+      givenName : NonEmptyString
+      familyName : NonEmptyString
+      email : NonEmptyString
+      isMemberOf : Subject
+    }
+    Person -- Subject
+    @enduml
+
+
 
 .. class:: PingResponse
 
   The response from :func:`MN_health.ping`
 
 
-.. class:: Principal
+.. class:: Subject
 
   Person (user), Group, or Organization, or System.
 
-  The formal name identifiying a user or group from the DataONE 
-  Identity Management Service. The principal is represented by a unique,
-  persistent, non-reassignable identifier string that follows the same
-  constraints as the Identifier.
+  The formal name identifying a user or group from the DataONE Identity
+  Management Service. The subject is represented by a unique, persistent,
+  non-reassignable identifier string that follows the same constraints as the
+  Identifier.
 
   Used by :mod:`SystemMetadata`
 
+  As represented in XMLSchema:
+  
+  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+     :language: xml
+     :start-after: <!-- Subject = user identity -->
+     :end-before: <!-- SubjectList -->
 
-.. class:: PrincipalList
+  .. image:: images/class_subject.png
 
-  A List of Principals, including both persons and groups, that is returned
-  from the listPrincipals service.
+  ..
+    @startuml images/class_subject.png
+    class Subject {
+      + person : Person[0..*]
+      + group : Group[0..*]
+    }
+    Subject -- Person
+    Subject -- Group
+    @enduml
+
+
+
+.. class:: SubjectList
+
+  A List of Subjects, including both persons and groups, that is returned
+  from the listSubjects service.
 
    ::
 
-    message PrincipalList {
+    message SubjectList {
       repeated Group  group = 1;
       repeated Person person = 2;
     }
+
+  As represented in XMLSchema:
+
+  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+     :language: xml
+     :start-after: <!-- SubjectList -->
+     :end-before: <!-- Definition of the SystemMetdata element -->
+
+  .. image:: images/class_subjectlist.png
+
+  ..
+    @startuml images/class_subjectlist.png
+    class SubjectList {
+      + person : Person[0..*]
+      + group : Group[0..*]
+    }
+    @enduml
+
 
 
 .. class:: Query
@@ -802,6 +1132,48 @@ Expressing a NVP query in a URL
 
   A set of low level information about an object in the DataONE system.
   SystemMetadata is described in :mod:`SystemMetadata`.
+
+  As represented in XMLSchema:
+
+  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+     :language: xml
+     :start-after: <!-- Definition of the SystemMetdata element -->
+     :end-before: <!-- ****************************
+
+  .. image:: images/class_systemmetadata.png
+
+  ..
+    @startuml images/class_systemmetadata.png
+    class SystemMetadata {
+      + identifier : Identifier
+      + objectFormat : ObjectFormat
+      + size : integer
+      + submitter : Subject
+      + rightsHolder : Subject
+      + accessPolicy : AccessPolicy[0..*]
+      + replicationPolicy : ReplicationPolicy[0..*]
+      + obsoletes : Identifier[0..*]
+      + obsoletedBy : Identifier[0..*]
+      + derivedFrom : Identifier[0..*]
+      + describes : Identifier[0..*]
+      + describedBy : Identifier[0..*]
+      + checksum : Checksum
+      + embargoExpires : dateTime
+      + dateUploaded : dateTime
+      + dateSysMetadataModified : dateTime
+      + originMemberNode : NodeReference
+      + authoritativeMemberNode : NodeReference
+      + replica : Replica[0...*]
+    }
+    SystemMetadata o-- Identifier
+    SystemMetadata -- ObjectFormat
+    SystemMetadata -- Subject
+    SystemMetadata o-- AccessPolicy
+    SystemMetadata o-- ReplicationPolicy
+    SystemMetadata -- Checksum
+    SystemMetadata -- NodeReference
+    @enduml
+
 
 
 .. class:: X509Certificate
