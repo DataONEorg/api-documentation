@@ -141,7 +141,8 @@ unused_docs = [
                'apis/REST_monitor',
                'apis/REST_replicate',
                'apis/types_auth',
-               'apis/types_errors',]
+               'apis/types_errors',
+               'apis/node_tiers',]
 
 # List of directories, relative to source directory, that shouldn't be searched
 # for source files.

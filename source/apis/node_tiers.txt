@@ -19,21 +19,21 @@ required for each tier.
      - Public read, no authentication or access control of content. No content
        can be created through the DataONE service interfaces. The node can not
        act as a replication target.
-     - :mod:`MN_core` + :mod:`MN_read`
-     - :mod:`CN_core`, :mod:`CN_read`, :mod:`CN_storage`
+     - :mod:`MNCore`, :mod:`MNRead`
+     - :mod:`CNCore`, :mod:`CNRead`
    * - 2
      - Read and resolve with access control support.
-     - Tier 1 + :mod:`MN_auth`
-     - :mod:`CN_auth`, :mod:`CN_register`
+     - Tier 1 + :mod:`MNAuthorization`
+     - Tier 1 + :mod:`CNAuthorization`, :mod:`CNRegister`, :mod:`CNIdentity`
    * - 3
      - Write (create, update, delete), possibly limited support for data types
-     - Tier 2 + :mod:`MN_storage`
+     - Tier 2 + :mod:`MNStorage`
      - *No additional APIs*
    * - 4
      - Replication target. The types of content supported by the node may be
        limited to a subset of object formats.
-     - Tier 3 + :mod:`MN_replication`
-     - :mod:`CN_storage` (setReplicationStatus)
+     - Tier 3 + :mod:`MNReplication`
+     - Tier 2 + :mod:`CNReplication`
 
 The specific methods that must be implemented for each tier are listed in the
 respective APIs.
