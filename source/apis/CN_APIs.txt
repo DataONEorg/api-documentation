@@ -12,49 +12,58 @@ clients.
 Core API
 ~~~~~~~~
 
-.. module:: CN_core
+.. module:: CNCore
    :synopsis: Core operations necessary for basic interaction with
      Coordinating Nodes
 
-.. include:: generated/generated_CN_core.txt
+.. include:: generated/generated_CNCore.txt
 
 
 Read API
 ~~~~~~~~
 
-.. module:: CN_read
+.. module:: CNRead
    :synopsis: Data read operations for Coordinating Nodes
 
 The *CN_read* API implements methods that enable object retrieval operations
 on a :term:`Coordinating Node`. It includes searches of science metadata and
 system metadata and exposes log records held by CNs.
 
-.. include:: generated/generated_CN_read.txt
+.. include:: generated/generated_CNRead.txt
 
 
-Authentication and Authorization API
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Authorization API
+~~~~~~~~~~~~~~~~~
 
-.. module:: CN_auth
-   :synopsis: Methods for authentication
+.. module:: CNAuthorization
+   :synopsis: Methods for authorization and access control
 
-.. include:: generated/generated_CN_auth.txt
+.. include:: generated/generated_CNAuthorization.txt
 
 
-Storage API
-~~~~~~~~~~~
+Identity API
+~~~~~~~~~~~~
 
-.. module:: CN_storage
+.. module:: CNIdentity
+   :synopsis: Methods for account management and identity mapping.
+
+.. include:: generated/generated_CNIdentity.txt
+
+
+Replication API
+~~~~~~~~~~~~~~~
+
+.. module:: CNReplication
    :synopsis: 
      Supports operations for replication of content between Member Nodes.
 
 
 The Data Replication API operates in conjunction with the
-:mod:`MN_api_replcation` API to assist with the replication of data and
+:mod:`MNReplcation` API to assist with the replication of data and
 science metadata content between Member Nodes to ensure that copies of data
 and metadata can be retrieved from more than one Member Node where possible.
 
-.. include:: generated/generated_CN_storage.txt
+.. include:: generated/generated_CNReplication.txt
 
 ..
   
@@ -78,11 +87,11 @@ and metadata can be retrieved from more than one Member Node where possible.
 Register API
 ~~~~~~~~~~~~
 
-.. module:: CN_register
+.. module:: CNRegister
    :synopsis: Register nodes and their capabilities, retrieve node list
 
-The register API methods are used to maintain a registry of nodes
-participating in the DataONE infrastructure.
+The register API methods are used to maintain a registry of nodes participating
+in the DataONE infrastructure.
 
 Note that the node registry is much the same as the Object collection with a
 restriction on the returned object formats to be Member Nodes or Coordinating
@@ -93,7 +102,7 @@ be a DC description of the node, and the "data" might be the detailed
 registration information including node capabilities, scheduling and so forth.
 
 
-.. include:: generated/generated_CN_register.txt
+.. include:: generated/generated_CNRegister.txt
 
 
 ..

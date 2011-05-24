@@ -7,7 +7,7 @@ Member Node APIs
 Core API
 ~~~~~~~~
 
-.. module:: MN_core
+.. module:: MNCore
    :synopsis: Base operations for Member Nodes
 
 The *MN_core* API provides mechanisms for a Member Node to report on the level
@@ -20,61 +20,54 @@ to report on the current state of the DataONE infrastructure and for the
 Coordinating Nodes to track the current operating state of the Member Node.
 
 
-.. include:: generated/generated_MN_core.txt
+.. include:: generated/generated_MNCore.txt
 
 
 Read API
 ~~~~~~~~
 
-.. module:: MN_read
+.. module:: MNRead
    :synopsis: Provide tier 1 operations for sharing content from a Member Node.
 
 The *MN_read* API implements methods that enable object management
 operations on a :term:`Member Node`.  
 
-.. include:: generated/generated_MN_read.txt
+.. include:: generated/generated_MNRead.txt
 
 
-Authentication API
-~~~~~~~~~~~~~~~~~~
+Authorization API
+~~~~~~~~~~~~~~~~~
 
-.. module:: MN_auth
-   :synopsis: Authentication and authorization operations for Member Nodes
+.. module:: MNAuthorization
+   :synopsis: Authorization and access control operations for Member Nodes
 
-Provides a mechanism for a User (:term:`principal`) to authenticate themselves
-with the DataONE system. See the document :doc:`/design/Authentication` for
-more details on some authentication options. Also provides a mechanism for a
-User (:term:`principal`) to verify that an operation is permitted for an
-authenticated User. See the document :doc:`/design/Authentication` for more
-details on some authentication and authorization options.
+Provides mechanisms Member Nodes to verify access to resources for users
+(:term:`subject`). See the document :doc:`/design/Authentication` for more
+details on some authentication options.
 
-
-.. include:: generated/generated_MN_auth.txt
+.. include:: generated/generated_MNAuthorization.txt
 
 
 Storage API
 ~~~~~~~~~~~
 
-.. module:: MN_storage
+.. module:: MNStorage
+   :synopsis: Methods for manipulating (changing) content on a Member Node
 
-
-.. include:: generated/generated_MN_storage.txt
+.. include:: generated/generated_MNStorage.txt
 
 
 
 Replication API
 ~~~~~~~~~~~~~~~
 
-The Replication API handles CN-directed replication of content between MNs and
-also supports the initial harvesting of science metadata from a MN by a CN.
-Method names used for the former (MN-to-MN replication) include some form of
-"replication" in their name. Method names used for the latter (MN-to-CN
-synchronization) include some form of "synchronize" in their name. 
+The Replication API provides methods to support CN-directed replication of
+content between MNs.
 
 
-.. module:: MN_replication
+.. module:: MNReplication
    :synopsis: Handles CN directed replication of content between Member Nodes.
 
 
-.. include:: generated/generated_MN_replication.txt
+.. include:: generated/generated_MNReplication.txt
 

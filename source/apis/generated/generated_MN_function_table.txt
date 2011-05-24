@@ -12,75 +12,75 @@
      - Parameters
    * - Tier 1
      - ``GET /monitor/ping``
-     - :func:`MN_core.ping`
+     - :func:`MNCore.ping`
      - () ``->`` :class:`Types.Boolean`
    * - Tier 1
      - ``GET /log``
-     - :func:`MN_core.getLogRecords`
+     - :func:`MNCore.getLogRecords`
      - (:class:`cert<Types.X509Certificate>`, :class:`fromDate<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.Log`
    * - Tier 1
      - ``GET /monitor/object``
-     - :func:`MN_core.getObjectStatistics`
+     - :func:`MNCore.getObjectStatistics`
      - (``[format]``, ``[pid]``) ``->`` :class:`Types.ObjectStatistics`
    * - Tier 1
      - ``GET /monitor/event``
-     - :func:`MN_core.getOperationStatistics`
+     - :func:`MNCore.getOperationStatistics`
      - (:class:`cert<Types.X509Certificate>`, ``[period]``, :class:`[requestor]<Types.Subject>`, :class:`[event]<Types.Event>`, :class:`[format]<Types.ObjectFormat>`) ``->`` :class:`Types.MonitorList`
    * - Tier 1
      - ``GET /monitor/status``
-     - :func:`MN_core.getStatus`
+     - :func:`MNCore.getStatus`
      - () ``->`` :class:`Types.StatusResponse`
    * - Tier 1
      - ``GET /  or  GET /node``
-     - :func:`MN_core.getCapabilities`
+     - :func:`MNCore.getCapabilities`
      - () ``->`` :class:`Types.NodeList`
 
    * - Tier 1
      - ``GET /object/{pid}``
-     - :func:`MN_read.get`
+     - :func:`MNRead.get`
      - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.OctetStream`
    * - Tier 1
      - ``GET /meta/{pid}``
-     - :func:`MN_read.getSystemMetadata`
+     - :func:`MNRead.getSystemMetadata`
      - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.SystemMetadata`
    * - Tier 1
      - ``HEAD /object/{pid}``
-     - :func:`MN_read.describe`
+     - :func:`MNRead.describe`
      - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.DescribeResponse`
    * - Tier 1
      - ``GET /checksum/{pid}[?checksumAlgorithm={checksumAlgorithm}]``
-     - :func:`MN_read.getChecksum`
+     - :func:`MNRead.getChecksum`
      - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`, ``[checksumAlgorithm]``) ``->`` :class:`Types.Checksum`
    * - Tier 1
      - ``GET /object[?starttime={startTime}&endtime={endTime}&objectformat={objectFormat}&replicastatus={replicaStatus}&start={start}&count={count}]``
-     - :func:`MN_read.listObjects`
+     - :func:`MNRead.listObjects`
      - (:class:`cert<Types.X509Certificate>`, :class:`[startTime]<Types.DateTime>`, :class:`[endTime]<Types.DateTime>`, :class:`[objectFormat]<Types.ObjectFormat>`, ``[replicaStatus]``, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.ObjectList`
    * - Tier 1
      - ``POST /error``
-     - :func:`MN_read.synchronizationFailed`
+     - :func:`MNRead.synchronizationFailed`
      - (:class:`cert<Types.X509Certificate>`, :class:`message<Types.Exception>`) ``->``
    * - Tier 2
      - ``GET /isAuthorized/{pid}?action={action}``
-     - :func:`MN_auth.isAuthorized`
+     - :func:`MNAuthorization.isAuthorized`
      - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`, :class:`action<Types.Permission>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``PUT /accessRules/{pid}``
-     - :func:`MN_auth.setAccess`
+     - :func:`MNAuthorization.setAccess`
      - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`, :class:`accessPolicy<Types.AccessPolicy>`) ``->`` :class:`Types.Boolean`
    * - Tier 3
      - ``POST /object/{pid}``
-     - :func:`MN_storage.create`
+     - :func:`MNStorage.create`
      - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`, ``object``, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
    * - Tier 3
      - ``PUT /object/{pid}``
-     - :func:`MN_storage.update`
+     - :func:`MNStorage.update`
      - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`, ``object``, :class:`newPid<Types.Identifier>`, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
    * - Tier 3
      - ``DELETE /object/{pid}``
-     - :func:`MN_storage.delete`
+     - :func:`MNStorage.delete`
      - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Identifier`
    * - Tier 4
      - ``POST /replicate``
-     - :func:`MN_replication.replicate`
+     - :func:`MNReplication.replicate`
      - (:class:`cert<Types.X509Certificate>`, :class:`sysmeta<Types.SystemMetadata>`, :class:`sourceNode<Types.NodeReference>`) ``->`` :class:`Types.Boolean`
 
