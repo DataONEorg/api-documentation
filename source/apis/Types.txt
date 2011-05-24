@@ -53,7 +53,7 @@ Data Types in CICore
 ..
   @startuml images/classes_combined.png
   class AccessPolicy {
-    + allow : AccessRule[0..n]
+    + allow : AccessRule[0..*]
   }
   AccessPolicy o-- AccessRule
   
@@ -104,6 +104,7 @@ Data Types in CICore
     + hasMember : Subject[0..*]
   }
   Group o-- Subject
+  Group -- NonEmptystring
 
   NonEmptyString <|-- Identifier
 
@@ -196,16 +197,17 @@ Data Types in CICore
   DescribeResponse <|-- ObjectInfo
   
   class ObjectList {
-  
+    objectInfo : ObjectInfo[0..*]
   }
   ObjectList o-- ObjectInfo
 
   class ObjectLocation {
-    + nodeIdentifier : string
+    + nodeIdentifier : Identifier
     + baseURL : anyURI
     + url : anyURI
     + preference : integer[0..1]
   }
+  ObjectLocation -- Identifier
 
   class ObjectLocationList {
     + identifier : Identifier
@@ -298,7 +300,7 @@ Data Types in CICore
   .. 
     @startuml images/class_accesspolicy.png
     class AccessPolicy {
-      + allow : AccessRule[0..n]
+      + allow : AccessRule[0..*]
     }
     AccessPolicy o-- AccessRule    
     @enduml
@@ -626,6 +628,7 @@ Data Types in CICore
        + hasMember : Subject[0..*]
      }
      Group o-- Subject
+     Group -- NonEmptystring
      @enduml
 
 
@@ -659,7 +662,7 @@ Data Types in CICore
      :start-after: <!-- Identifier Format enumeration -->
      :end-before: <!-- Service Name -->
 
-  .. images:: images/class_identifierformat.png
+  .. images:: image/class_identifierformat.png
 
   ..
     @startuml images/class_identifierformat.png
@@ -710,28 +713,6 @@ Data Types in CICore
   A single log entry as reported by a Member Node or Coordinating Node through
   the getLogRecords methods.
 
-  :: 
-
-    message LogEntry {
-
-      enum EventType {
-        create = 0;
-        read = 1;
-        update = 2;
-        delete = 3;
-        replicate = 4;
-      }
-      
-      required Identifier entryID = 0;
-      required Identifier identifier = 1;
-      required ipAddress = 2;
-      required userAgent = 3;
-      required Subject subject = 4;
-      required EventType event = 5;
-      required dateTime dateLogged = 6;
-      required NodeReference memberNode = 7;
-    }
-
   As represented in XMLSchema:
 
   .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
@@ -770,15 +751,6 @@ Data Types in CICore
   Represents a collection of LogEntry elements, used to transfer log information
   between DataONE components.
 
-  ::
-
-    message Log {
-      required int start = 0;
-      required int count = 1;
-      required int total = 2;
-      repeated LogRecord entry = 3;
-    }
-
   As represented in XMLSchema:
 
   .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
@@ -794,7 +766,7 @@ Data Types in CICore
       + start : integer
       + count : integer
       + total : integer
-      + logEntry : LogEntry[0..]
+      + logEntry : LogEntry[0..*]
     }
     Log o-- LogEntry
     @enduml
@@ -949,7 +921,7 @@ Data Types in CICore
 
 
 ..                                    ######
-..class:: ObjectFormatIdentifier
+.. class:: ObjectFormatIdentifier
 
   A string used to identify an instance of :class:`Types.ObjectFormat` and MUST
   be unique within an instance of :class:`Types.ObjectFormatList`.
@@ -1083,7 +1055,7 @@ Data Types in CICore
     DescribeResponse <|-- ObjectInfo
     
     class ObjectList {
-    
+      objectInfo : ObjectInfo[0..*]
     }
     ObjectList o-- ObjectInfo
     @enduml
@@ -1160,8 +1132,8 @@ Data Types in CICore
 
    .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
       :language: xml
-      :start-after: <!-- Object Location List -->
-      :end-before: <!-- Person -->
+      :start-after: <!-- Object Location -->
+      :end-before: <!-- Object Location List -->
 
   .. attribute:: nodeIdentifier
 
@@ -1187,16 +1159,17 @@ Data Types in CICore
      values have higher preference. Values are only relative to each other in
      a particular response. Nodes with equal weight get equal values.
 
-  .. image::images/class_objectlocation.png
+  .. image:: images/class_objectlocation.png
 
   .. 
     @startuml images/class_objectlocation.png
     class ObjectLocation {
-      + nodeIdentifier : string
+      + nodeIdentifier : Identifier
       + baseURL : anyURI
       + url : anyURI
       + preference : integer[0..1]
     }
+    ObjectLocation -- Identifier
     @enduml
 
 
