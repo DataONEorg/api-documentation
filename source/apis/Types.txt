@@ -1,67 +1,285 @@
 Data Types in CICore
 --------------------
 
-.. 
-   To be included when stylsheet issues are sorted out
-   .. py:module:: STypes
-   .. include:: generated/generated_schema_types.txt
-
-
-----
-
 .. module:: Types
    :synopsis: Catalog of data types (structures) used by the DataONE cicore.
+
+**Quick Reference**
+
+- :class:`Types.AccessPolicy`
+- :class:`Types.AccessRule`
+- :class:`Types.OctetStream`
+- :class:`Types.Integer`
+- :class:`Types.Boolean`
+- :class:`Types.ChecksumAlgorithm`
+- :class:`Types.Checksum`
+- :class:`Types.DateTime`
+- :class:`Types.DescribeResponse`
+- :class:`Types.Event`
+- :class:`Types.Group`
+- :class:`Types.IdentifierFormat`
+- :class:`Types.Identifier`
+- :class:`Types.LogEntry`
+- :class:`Types.Log`
+- :class:`Types.MonitorList`
+- :class:`Types.MonitorInfo`
+- :class:`Types.Node`
+- :class:`Types.NodeHealth`
+- :class:`Types.NodeList`
+- :class:`Types.NodeReference`
+- :class:`Types.ObjectFormatIdentifier`
+- :class:`Types.ObjectFormat`
+- :class:`Types.ObjectFormatList`
+- :class:`Types.ObjectList`
+- :class:`Types.ObjectLocationList`
+- :class:`Types.ObjectLocation`
+- :class:`Types.ObjectStatistics`
+- :class:`Types.OperationStatistics`
+- :class:`Types.Permission`
+- :class:`Types.Person`
+- :class:`Types.PingResponse`
+- :class:`Types.Subject`
+- :class:`Types.SubjectList`
+- :class:`Types.Query`
+- :class:`Types.Status`
+- :class:`Types.SystemMetadata`
+- :class:`Types.X509Certificate`
+
+
+**Overview Diagram**
+
+.. image:: images/classes_combined.png
+
+..
+  @startuml images/classes_combined.png
+  class AccessPolicy {
+    + allow : AccessRule[0..n]
+  }
+  AccessPolicy o-- AccessRule
+  
+  class AccessRule {
+    + subject : Subject[1..*]
+    + permission : Permission[1..*]
+    + resource : Identifier[1..*]
+  }
+  AccessRule o-- Subject
+  AccessRule o-- Permission
+  AccessRule o-- Identifier
+
+  enum ChecksumAlgorithm
+  ChecksumAlgorithm : SHA-1
+  ChecksumAlgorithm : SHA-224
+  ChecksumAlgorithm : SHA-356
+  ChecksumAlgorithm : SHA-384
+  ChecksumAlgorithm : SHA-512
+  ChecksumAlgorithm : MD5
+
+  class Checksum {
+      +algorithm : ChecksumAlgorithm
+      +value : string
+  }
+  Checksum -- ChecksumAlgorithm
+
+  class DescribeResponse {
+    +DataONE-ObjectFormat : ObjectFormat
+    +Content-Length : integer
+    +Last-Modified : DateTime
+    +DataONE-Checksum : Checksum
+  }
+  DescribeResponse -- ObjectFormat
+  DescribeResponse -- Checksum
+  DescribeResponse -- DateTime
+
+  enum Event
+  Event : CREATE
+  Event : READ
+  Event : UPDATE
+  Event : DELETE
+  Event : REPLICATE
+  Event : CHANGEOWNER
+
+  class Group {
+    + subject : Subject
+    + groupName : NonEmptyString
+    + hasMember : Subject[0..*]
+  }
+  Group o-- Subject
+
+  NonEmptyString <|-- Identifier
+
+  enum IdentifierFormat
+  IdentifierFormat : OID
+  IdentifierFormat : LSID
+  IdentifierFormat : UUID
+  IdentifierFormat : LSRN
+  IdentifierFormat : DOI
+  IdentifierFormat : URI
+  IdentifierFormat : STRING
+
+  class LogEntry {
+    + entryID : Identifier
+    + identifier : Identifier
+    + ipAddress : string
+    + userAgent : string
+    + subject : Subject
+    + event : Event
+    + dateLogged : DateTime
+    + memberNode : NodeReference
+  }
+  LogEntry -- Identifier
+  LogEntry -- Subject
+  LogEntry -- Event
+  LogEntry -- DateTime
+  LogEntry -- NodeReference
+
+  class Log {
+    + start : integer
+    + count : integer
+    + total : integer
+    + logEntry : LogEntry[0..]
+  }
+  Log o-- LogEntry
+
+  NonEmptyString <|-- NodeReference
+
+  class Node {
+    name : NonEmptyString
+    description : NonEmptyString
+    baseURL : anyURI
+    services : Services[0..1]
+    synchronization : Synchronization[0..1]
+    health : Nodehealth[0..1]
+    replicate : boolean
+    synchronize : boolean
+    type : NodeType
+    environment : Environment[0..1]
+  }
+  Node -- NonEmptyString
+  Node o-- Services
+  Node o-- Synchronization
+  Node o-- NodeHealth
+  Node -- NodeType
+  Node o-- Environment
+
+  class NodeHealth {
+    ping : Ping
+    status : Status
+  }
+  NodeHealth -- Ping
+  NodeHealth -- Status
+
+  class NodeList {
+    node : Node[1..*]
+  }
+  NodeList o-- Node
+  
+  NonEmptyString <|-- ObjectFormatIdentifier
+
+  class ObjectFormat {
+    fmtid : ObjectFormatIdentifier
+    formatName : string
+  }
+  ObjectFormat -- ObjectFormatIdentifier
+
+  class ObjectFormatList {
+    start : integer
+    count : integer
+    total : integer
+    objectFormat : ObjectFormat[1..*]
+  }
+  ObjectFormatList o-- ObjectFormat
+
+  class ObjectInfo {
+    + identifier : Identifier
+  }
+  ObjectInfo -- Identifier
+  DescribeResponse <|-- ObjectInfo
+  
+  class ObjectList {
+  
+  }
+  ObjectList o-- ObjectInfo
+
+  class ObjectLocation {
+    + nodeIdentifier : string
+    + baseURL : anyURI
+    + url : anyURI
+    + preference : integer[0..1]
+  }
+
+  class ObjectLocationList {
+    + identifier : Identifier
+    + locations : ObjectLocation[0..*]
+  }
+  ObjectLocationList o-- ObjectLocation
+  ObjectLocationList -- Identifier
+
+  enum Permission
+  Permission : READ
+  Permission : WRITE
+  Permission : CHANGEPERMISSION
+  Permission : EXECUTE
+
+  class Person {
+    + subject : Subject
+    + givenName : NonEmptyString
+    + familyName : NonEmptyString
+    + email : NonEmptyString
+    + isMemberOf : Subject
+    + equivalentIdentity : Subject[0..*]
+  }
+  Person o-- Subject
+  Person -- NonEmptyString
+
+  NonEmptyString <|-- Subject
+
+  class SubjectList {
+    + person : Person[0..*]
+    + group : Group[0..*]
+  }
+  SubjectList o-- Person
+  SubjectList o-- Group
+
+  class SystemMetadata {
+    + identifier : Identifier
+    + objectFormat : ObjectFormat
+    + size : integer
+    + submitter : Subject
+    + rightsHolder : Subject
+    + accessPolicy : AccessPolicy[0..*]
+    + replicationPolicy : ReplicationPolicy[0..*]
+    + obsoletes : Identifier[0..*]
+    + obsoletedBy : Identifier[0..*]
+    + derivedFrom : Identifier[0..*]
+    + describes : Identifier[0..*]
+    + describedBy : Identifier[0..*]
+    + checksum : Checksum
+    + embargoExpires : dateTime
+    + dateUploaded : dateTime
+    + dateSysMetadataModified : dateTime
+    + originMemberNode : NodeReference
+    + authoritativeMemberNode : NodeReference
+    + replica : Replica[0...*]
+  }
+  SystemMetadata o-- Identifier
+  SystemMetadata -- ObjectFormat
+  SystemMetadata -- Subject
+  SystemMetadata o-- AccessPolicy
+  SystemMetadata o-- ReplicationPolicy
+  SystemMetadata -- Checksum
+  SystemMetadata -- NodeReference
+
+  @enduml
+
+
 
 .. Note:: Here we use the Sphinx ``class`` directives to identify data
   structures. This is not meant to imply that these structures are implemented
   as classes - it is merely a convenience mechanism for documentation.
 
-.. Note:: Class structures are described using the Google `Protocol Buffer
-  Language`_ . This is for convenience only, and the IDL used will probably
-  change in the future.
 
 
-
-========= =============================
-Version   Structure
-========= =============================
-.         :class:`AccessPolicy`
-.         :class:`AccessRule`
-.         :class:`AuthenticationSystem`
-.         :class:`AuthToken`
-.         :class:`Capabilities`
-.         :class:`Challenge`
-.         :class:`Checksum`
-.         :class:`DateTime`
-.         :class:`DescribeResponse`
-.         :class:`EncryptedNonce`
-.         :class:`ErrorMessage`
-.         :class:`Event`
-.         :class:`HeartbeatResponse`
-.         :class:`IdentifierFormat`
-.         :class:`IdentifierList`
-.         :class:`Identifier`
-.         :class:`LogEntry`
-.         :class:`Log`
-.         :class:`MonitorList`
-.         :class:`Node`
-.         :class:`NodeList`
-.         :class:`NodeReference`
-.         :class:`ObjectFormat`
-.         :class:`ObjectFormatList`
-.         :class:`ObjectList`
-.         :class:`ObjectLocationList`
-.         :class:`Permission`
-.         :class:`PingResponse`
-.         :class:`Principal`
-.         :class:`PrincipalInfo`
-.         :class:`Query`
-.         :class:`Status`
-.         :class:`SystemMetadata`
-.         :class:`X509Certificate`
-========= =============================
-
-
+..                                    ######
 .. class:: AccessPolicy
 
   A set of rules that specifies as a whole the allowable permissions that a
@@ -75,13 +293,6 @@ Version   Structure
      :start-after: <!-- AccessPolicy -->
      :end-before: <!-- AccessRule -->
 
-  :: 
-
-    message AccessPolicy {
-
-      repeated AccessRule allow = 0;
-    }
-
   .. image:: images/class_accesspolicy.png
 
   .. 
@@ -89,11 +300,12 @@ Version   Structure
     class AccessPolicy {
       + allow : AccessRule[0..n]
     }
-    AccessPolicy o-- AccessRule
+    AccessPolicy o-- AccessRule    
     @enduml
 
 
 
+..                                    ######
 .. class:: AccessRule
 
   A rule that is used to allow a :term:`subject` to perform an action (such as
@@ -110,31 +322,23 @@ Version   Structure
      :start-after: <!-- AccessRule -->
      :end-before: <!-- AuthToken  -->
 
-  :: 
-
-    message AccessRule {
-
-      repeated Principal principal = 0;
-      repeated Permission permission = 1;
-      repeated Identifier resource = 2;
-    }
-
   .. image:: images/class_accessrule.png
 
   ..
     @startuml images/class_accessrule.png
     class AccessRule {
-      + subject : Subject
-      + permission : Permission
-      + resource : Identifier
+      + subject : Subject[1..*]
+      + permission : Permission[1..*]
+      + resource : Identifier[1..*]
     }
-    AccessRule -- Subject
-    AccessRule -- Permission
-    AccessRule -- Identifier
+    AccessRule o-- Subject
+    AccessRule o-- Permission
+    AccessRule o-- Identifier
     @enduml
 
 
 
+..                                    ######
 .. class:: AuthenticationSystem
 
   Place holder for support of multiple authentication services for a single
@@ -142,6 +346,7 @@ Version   Structure
 
 
 
+..                                    ######
 .. class:: AuthToken
 
   An AuthToken is an Identifier that is used to reference an authenticated
@@ -156,6 +361,7 @@ Version   Structure
 
 
 
+..                                    ######
 .. class:: OctetStream
 
    A series of 8-bit bytes which combined together form a digital object.
@@ -164,6 +370,7 @@ Version   Structure
 
 
 
+..                                    ######
 .. class:: Integer
 
    A simple integer. The range of expected values should be described with the
@@ -177,6 +384,7 @@ Version   Structure
 
 
 
+..                                    ######
 .. class:: Boolean
 
    .. Method cross ref OK
@@ -200,39 +408,43 @@ Version   Structure
 
 
 
+..                                    ######
 .. class:: Capabilities
 
   This class has been deprecated by :class:`Node`
 
 
 
+..                                    ######
 .. class:: ChecksumAlgorithm
 
-   An enumeration of checksum types supported by the DataONE infrastructure.
+  An enumeration of checksum types supported by the DataONE infrastructure.
 
-   The default checksum is *SHA-1*.
+  The default checksum is *SHA-1*.
 
-   As represented in XMLSchema:
+  As represented in XMLSchema:
 
-   .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
-        :language: xml
-        :start-after: <!-- Checksum Algorithm -->
-        :end-before: <!-- ComponentName -->
+  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+     :language: xml
+     :start-after: <!-- Checksum Algorithm -->
+     :end-before: <!-- ComponentName -->
 
-   ::
+  .. image:: images/class_checksumalgorithm.png
 
-     enum ChecksumAlgorithmEnum 
-     {
-       SHA-1 = 0;
-       SHA-224 = 1;
-       SHA-356 = 2;
-       SHA-384 = 3;
-       SHA-512 = 4;
-       MD5 = 5;
-     }
+  ..
+    @startuml images/class_checksumalgorithm.png
+    enum ChecksumAlgorithm
+      ChecksumAlgorithm : SHA-1
+      ChecksumAlgorithm : SHA-224
+      ChecksumAlgorithm : SHA-356
+      ChecksumAlgorithm : SHA-384
+      ChecksumAlgorithm : SHA-512
+      ChecksumAlgorithm : MD5
+    @enduml
 
 
 
+..                                    ######
 .. class:: Checksum
 
   Represents the value of a computed checksum.
@@ -243,15 +455,6 @@ Version   Structure
        :language: xml
        :start-after: <!-- Checksum -->
        :end-before: <!-- Component -->
-
-
-  ::
-
-    message Checksum 
-    {
-      required ChecksumAlgorithmEnum algorithm = 1;
-      required string value = 2;
-    }
 
   .. image:: images/class_checksum.png
 
@@ -292,6 +495,7 @@ Version   Structure
 
 
 
+..                                    ######
 .. class:: DescribeResponse  
 
   .. method cross ref OK
@@ -303,16 +507,6 @@ Version   Structure
   and hence the values must be represented in the HTTP response headers. There
   is no XML serialization of a *DescribeResponse*.
 
-  ::
-
-    message DescribeResponse 
-    {
-      required ObjectFormat DataONE-ObjectFormat = 1;
-      required uint64 Content-Length = 2;
-      required DateTime Last-Modified = 3;
-      required Checksum DataONE-Checksum = 4;
-    }
-
   .. image:: images/class_describeresponse.png
 
   ..
@@ -323,8 +517,9 @@ Version   Structure
       +Last-Modified : DateTime
       +DataONE-Checksum : Checksum
     }
-    DescribeResponse --> ObjectFormat
-    DescribeResponse --> Checksum
+    DescribeResponse -- ObjectFormat
+    DescribeResponse -- Checksum
+    DescribeResponse -- DateTime
     @enduml
 
   .. attribute:: DataONE-ObjectFormat
@@ -365,7 +560,7 @@ Version   Structure
 .. include:: types_errors.txt
 
 
-
+..                                    ######
 .. class:: Event
 
   .. method cross ref OK
@@ -373,16 +568,18 @@ Version   Structure
   The controlled list of events that are logged, which will include 'CREATE',
   'UPDATE', 'DELETE', 'READ', 'REPLICATE' events
 
-  ::
+  .. image:: images/class_event.png
 
-    message Event {
-      CREATE = 0;
-      READ = 1;
-      UPDATE = 2;
-      DELETE = 3;
-      REPLICATE = 4;
-      CHANGEOWNER = 5;
-    }
+  ..
+    @startuml images/class_event.png
+    enum Event
+    Event : CREATE
+    Event : READ
+    Event : UPDATE
+    Event : DELETE
+    Event : REPLICATE
+    Event : CHANGEOWNER
+    @enduml
 
   As represented in XML Schema:
 
@@ -392,7 +589,7 @@ Version   Structure
      :end-before: <!-- Environment Enumeration -->
 
 
-
+..                                    ######
 .. class:: Group
 
   Group represents metadata about a Subject that is a group of other Subjectss
@@ -419,17 +616,9 @@ Version   Structure
      :start-after: <!-- Group -->
      :end-before: <!-- Identifier  -->
 
-  ::
+  .. image:: images/class_group.png
 
-      message Group {
-        required string principal = 1;
-        required string groupName = 2;
-        repeated string hasMember = 3;
-      }
-
-   .. image:: images/class_group.png
-
-   .. 
+  .. 
      @startuml images/class_group.png
      class Group {
        + subject : Subject
@@ -441,6 +630,7 @@ Version   Structure
 
 
 
+..                                    ######
 .. class:: PingResponse
 
   The response from :func:`MN_health.ping`. This is currently (2010-10-21) a
@@ -448,6 +638,7 @@ Version   Structure
 
 
 
+..                                    ######
 .. class:: StatusResponse
 
   The response from :func:`MN_health.getStatus`. This is currently
@@ -456,6 +647,7 @@ Version   Structure
 
 
 
+..                                    ######
 .. class:: IdentifierFormat
 
   Initially an enumerated list of strings that specify different types of identifiers.
@@ -467,8 +659,22 @@ Version   Structure
      :start-after: <!-- Identifier Format enumeration -->
      :end-before: <!-- Service Name -->
 
+  .. images:: images/class_identifierformat.png
+
+  ..
+    @startuml images/class_identifierformat.png
+    enum IdentifierFormat
+    IdentifierFormat : OID
+    IdentifierFormat : LSID
+    IdentifierFormat : UUID
+    IdentifierFormat : LSRN
+    IdentifierFormat : DOI
+    IdentifierFormat : URI
+    IdentifierFormat : STRING
+    @enduml
 
 
+..                                    ######
 .. class:: Identifier
 
   An :term:`identifier` (:term:`PID`) in the DataONE system. This is
@@ -486,25 +692,20 @@ Version   Structure
      :start-after: <!-- Identifier  -->
      :end-before: <!--  Log -->
 
+  .. image:: images/class_identifier.png
+
+  ..
+     @startuml images/class_identifier.png
+     NonEmptyString <|-- Identifier
+     @enduml
+
+
 .. _ticket 577: https://redmine.dataone.org/issues/577
 
 
 
-.. class:: IdentifierList
-
-   A list of identifiers, so a list of Unicode strings.
-
-   ::
-   
-     message IdentifierList {
-       repeated IdentifierType identifier = 1;
-     }
-
-
-
+..                                    ######
 .. class:: LogEntry
-
-  .. TODO:: describe attributes
 
   A single log entry as reported by a Member Node or Coordinating Node through
   the getLogRecords methods.
@@ -550,16 +751,18 @@ Version   Structure
       + subject : Subject
       + event : Event
       + dateLogged : DateTime
-      + memberNode : Identifier
+      + memberNode : NodeReference
     }
     LogEntry -- Identifier
     LogEntry -- Subject
     LogEntry -- Event
     LogEntry -- DateTime
+    LogEntry -- NodeReference
     @enduml
 
 
 
+..                                    ######
 .. class:: Log
 
   .. method cross ref ok
@@ -577,7 +780,7 @@ Version   Structure
     }
 
   As represented in XMLSchema:
-  
+
   .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
      :language: xml
      :start-after: <!--  Log -->
@@ -615,6 +818,7 @@ Version   Structure
 
 
 
+..                                    ######
 .. class:: MonitorList
 
   A list of MonitorInfo instances.
@@ -627,6 +831,7 @@ Version   Structure
 
 
 
+..                                    ######
 .. class:: MonitorInfo
 
   A single log entry as reported by a Member Node or Coordinating Node through
@@ -641,13 +846,65 @@ Version   Structure
 
 
 
+..                                    ######
 .. class:: Node
 
   A set of values that describe a node, its Internet location, the services it
   supports and its replication policy.
 
+  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+     :language: xml
+     :start-after: <!-- Node -->
+     :end-before: <!-- Node Health -->
+
+  .. image:: images/class_node.png
+
+  ..
+    @startuml images/class_node.png
+    class Node {
+      name : NonEmptyString
+      description : NonEmptyString
+      baseURL : anyURI
+      services : Services[0..1]
+      synchronization : Synchronization[0..1]
+      health : Nodehealth[0..1]
+      replicate : boolean
+      synchronize : boolean
+      type : NodeType
+      environment : Environment[0..1]
+    }
+    Node -- NonEmptyString
+    Node o-- Services
+    Node o-- Synchronization
+    Node o-- NodeHealth
+    Node -- NodeType
+    Node o-- Environment
+    @enduml
 
 
+
+..                                    ######
+.. class:: NodeHealth
+
+  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+     :language: xml
+     :start-after: <!-- Node Health -->
+     :end-before: <!-- Node List -->
+
+  .. image:: images/class_nodehealth.png
+
+  ..
+    @startuml images/class_nodehealth.png
+    class NodeHealth {
+      ping : Ping
+      status : Status
+    }
+    NodeHealth -- Ping
+    NodeHealth -- Status
+    @enduml
+   
+
+..                                    ######
 .. class:: NodeList
 
   A list of Node entries that is returned by :func:`cn_register.listNodes()`.
@@ -655,25 +912,75 @@ Version   Structure
   NodeList is described in :mod:`NodeList`.
 
 
+  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+     :language: xml
+     :start-after: <!-- Node List -->
+     :end-before: <!-- Object Info -->
 
+  .. image:: images/class_nodelist.png
+
+  ..
+    @startuml images/class_nodelist.png
+    class NodeList {
+      node : Node[1..*]
+    }
+    NodeList o-- Node
+    @enduml
+
+
+..                                    ######
 .. class:: NodeReference
 
   Member Node identifier drawn from the DataONE :mod:`cn_register <registry service>`.
 
+  As represented in XMLSchema:
+
+  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+     :language: xml
+     :start-after: <!-- NodeReference -->
+     :end-before: <!-- Node Type Enumeration -->
+
+  .. image:: images/class_nodereference.png
+
+  .. 
+    @startuml images/class_nodereference.png
+    NonEmptyString <|-- NodeReference
+    @enduml
 
 
+..                                    ######
+..class:: ObjectFormatIdentifier
+
+  A string used to identify an instance of :class:`Types.ObjectFormat` and MUST
+  be unique within an instance of :class:`Types.ObjectFormatList`.
+
+  As represented in XMLSchema:
+
+  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+     :language: xml
+     :start-after: <!-- Object Format Identifier -->
+     :end-before: <!-- Permission = permitted action -->
+
+  .. image:: images/class_objectformatidentifier.png
+  
+  ..
+    @startuml images/class_objectformatidentifier.png
+    NonEmptyString <|-- ObjectFormatIdentifier
+    @enduml
+
+
+..                                    ######
 .. class:: ObjectFormat
 
   One value from the DataONE Object Format Vocabulary, which is returned by :func:`CN_crud.getFormat()`.
+
+  As represented in XMLSchema:
+
+  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+     :language: xml
+     :start-after: <!-- Object Format -->
+     :end-before: <!--  Object Format List -->
   
-  ::
-  
-    message ObjectFormat
-    {
-      required IdentifierType identifier = 1;
-      required string formatName = 2;
-    }
-    
   .. attribute:: identifier
     
      Unique identifer representing the object format.
@@ -682,11 +989,30 @@ Version   Structure
   
      A human readable name that describes the object format
 
+  .. image:: images/class_objectformat.png
+
+  ..
+    @startuml images/class_objectformat.png
+    class ObjectFormat {
+      fmtid : ObjectFormatIdentifier
+      formatName : string
+    }
+    ObjectFormat -- ObjectFormatIdentifier
+    @enduml
 
 
+
+..                                    ######
 .. class:: ObjectFormatList
 
   A list of ObjectFormat entries that is returned by :func:`CN_crud.listFormats()`.
+
+  As represented in XMLSchema:
+
+  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+     :language: xml
+     :start-after: <!--  Object Format List -->
+     :end-before: <!-- Object Info -->
   
   ::
   
@@ -716,8 +1042,23 @@ Version   Structure
   .. attribute:: objectFormat
   
      The ObjectFormat structure for each object format listed.
-     
 
+   .. image:: images/class_objectformatlist.png
+
+   ..
+     @startuml images/class_objectformatlist.png
+     class ObjectFormatList {
+       start : integer
+       count : integer
+       total : integer
+       objectFormat : ObjectFormat[1..*]
+     }
+     ObjectFormatList o-- ObjectFormat
+     @enduml
+
+
+
+..                                    ######
 .. class:: ObjectList
 
   A list of object descriptions. This provides more information than the
@@ -731,35 +1072,10 @@ Version   Structure
      :start-after: <!-- Object Info -->
      :end-before: <!-- Object Location -->
  
-  ::
-  
-   message ObjectInfo { 
-     extend DescribeResponse { 
-       required string identifier = 5
-     } 
-   }
-  
-   message ObjectList { 
-     required int start = 0; 
-     required int count = 1; 
-     required int total = 2; 
-     repeated ObjectInfo objectInfo = 3; 
-   }
-
   .. image:: images/class_objectlist.png
 
   .. 
     @startuml images/class_objectlist.png
-    class DescribeResponse {
-      +DataONE-ObjectFormat : ObjectFormat
-      +Content-Length : integer
-      +Last-Modified : DateTime
-      +DataONE-Checksum : Checksum
-    }
-    
-    DescribeResponse -- ObjectFormat
-    DescribeResponse -- Checksum
-    
     class ObjectInfo {
       + identifier : Identifier
     }
@@ -797,6 +1113,7 @@ Version   Structure
 
 
 
+..                                    ######
 .. class:: ObjectLocationList
 
    A list of nodes and node service base URLs known to hold a copy of an
@@ -808,13 +1125,6 @@ Version   Structure
       :language: xml
       :start-after: <!-- Object Location -->
       :end-before: <!-- Object Location List -->
-
-  ::
-  
-    message ObjectLocationList {
-      required IdentifierType identifier = 1;
-      repeated ObjectLocation locations = 2;
-    }
 
   .. attribute:: identifier
 
@@ -840,6 +1150,7 @@ Version   Structure
 
 
 
+..                                    ######
 .. class:: ObjectLocation
 
    Portion of an ObjectLocationList indicating the node from which the object
@@ -851,16 +1162,6 @@ Version   Structure
       :language: xml
       :start-after: <!-- Object Location List -->
       :end-before: <!-- Person -->
-
-   ::
-
-    message ObjectLocation {
-      required string nodeIdentifier = 1;
-      required string baseURL = 2;
-      required string url = 3;
-      optional integer preference = 4;
-    }
-
 
   .. attribute:: nodeIdentifier
 
@@ -892,20 +1193,22 @@ Version   Structure
     @startuml images/class_objectlocation.png
     class ObjectLocation {
       + nodeIdentifier : string
-      + baseURL : string
-      + url : string
-      + preference : integer
+      + baseURL : anyURI
+      + url : anyURI
+      + preference : integer[0..1]
     }
     @enduml
 
 
 
+..                                    ######
 .. class:: ObjectStatistics
 
    A summary of object use information intended primarily for the monitoring service.
 
 
 
+..                                    ######
 .. class:: Permission
 
   A string value indicating the set of actions that can be performed on a
@@ -924,23 +1227,27 @@ Version   Structure
      :start-after: <!-- Permission = permitted action -->
      :end-before: <!-- QueryType = named types of search query formats -->
 
-  ::
+  .. image:: images/class_permission.png
 
-    enum Permission {
-      READ = 0;
-      WRITE = 1;
-      CHANGEPERMISSION = 2;
-      EXECUTE = 3;
-    }
+  .. 
+    @startuml images/class_permission.png
+    enum Permission
+    Permission : READ
+    Permission : WRITE
+    Permission : CHANGEPERMISSION
+    Permission : EXECUTE
+    @enduml
 
 
 
+..                                    ######
 .. class:: OperationStatistics
 
    A summary of operation calls intended primarily for the monitoring service.
 
 
 
+..                                    ######
 .. class:: Person
 
   Person represents metadata about a Principal that is a person and that 
@@ -979,38 +1286,32 @@ Version   Structure
      An alternative but equivalent identity for the principal that has been
      used in alternate identity systems.
 
-   ::
-
-    message Person {
-      required string subject = 1;
-      repeated string givenName = 2;
-      required string familyName = 3;
-      repeated string email = 4;
-      repeated string isMemberOf = 5;
-      repeated string equivalentIdentity = 6;
-    }
-
   .. image:: images/class_person.png
 
   ..
     @startuml images/class_person.png
     class Person {
-      subject : Subject
-      givenName : NonEmptyString
-      familyName : NonEmptyString
-      email : NonEmptyString
-      isMemberOf : Subject
+      + subject : Subject
+      + givenName : NonEmptyString
+      + familyName : NonEmptyString
+      + email : NonEmptyString
+      + isMemberOf : Subject
+      + equivalentIdentity : Subject[0..*]
     }
-    Person -- Subject
+    Person o-- Subject
+    Person -- NonEmptyString
     @enduml
 
 
 
+..                                    ######
 .. class:: PingResponse
 
   The response from :func:`MN_health.ping`
 
 
+
+..                                    ######
 .. class:: Subject
 
   Person (user), Group, or Organization, or System.
@@ -1033,27 +1334,16 @@ Version   Structure
 
   ..
     @startuml images/class_subject.png
-    class Subject {
-      + person : Person[0..*]
-      + group : Group[0..*]
-    }
-    Subject -- Person
-    Subject -- Group
+    NonEmptyString <|-- Subject
     @enduml
 
 
 
+..                                    ######
 .. class:: SubjectList
 
   A List of Subjects, including both persons and groups, that is returned
   from the listSubjects service.
-
-   ::
-
-    message SubjectList {
-      repeated Group  group = 1;
-      repeated Person person = 2;
-    }
 
   As represented in XMLSchema:
 
@@ -1070,6 +1360,8 @@ Version   Structure
       + person : Person[0..*]
       + group : Group[0..*]
     }
+    SubjectList o-- Person
+    SubjectList o-- Group
     @enduml
 
 
@@ -1120,14 +1412,15 @@ Version   Structure
      }
 
 
-Expressing a NVP query in a URL
 
 
+..                                    ######
 .. class:: Status
 
   The response from :func:`MN_health.getStatus`
 
 
+..                                    ######
 .. class:: SystemMetadata
 
   A set of low level information about an object in the DataONE system.
