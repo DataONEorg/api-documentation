@@ -368,7 +368,7 @@ Data Types in CICore
 
    A series of 8-bit bytes which combined together form a digital object.
    *OctetStream* is used to transfer object bytes such as the response to
-   :func:`MN_read.get`.
+   :func:`MNRead.get`.
 
 
 
@@ -388,8 +388,6 @@ Data Types in CICore
 
 ..                                    ######
 .. class:: Boolean
-
-   .. Method cross ref OK
 
    A boolean response is commonly used in the DataONE service APIs to indicate
    success or otherwise of an operation. For operations that are called 
@@ -500,9 +498,7 @@ Data Types in CICore
 ..                                    ######
 .. class:: DescribeResponse  
 
-  .. method cross ref OK
-
-  The :func:`MN_read.describe` method provides a low cost hint about the type,
+  The :func:`MNRead.describe` method provides a low cost hint about the type,
   size and state of an object.
 
   The *DescribeResponse* is returned from the server in a HTTP HEAD response,
@@ -559,13 +555,14 @@ Data Types in CICore
     DataONE-Checksum: SHA-1,2e01e17467891f7c933dbaa00e1459d23db3fe4f
 
 
+
+..                                    ######
 .. include:: types_errors.txt
+
 
 
 ..                                    ######
 .. class:: Event
-
-  .. method cross ref OK
 
   The controlled list of events that are logged, which will include 'CREATE',
   'UPDATE', 'DELETE', 'READ', 'REPLICATE' events
@@ -591,10 +588,11 @@ Data Types in CICore
      :end-before: <!-- Environment Enumeration -->
 
 
+
 ..                                    ######
 .. class:: Group
 
-  Group represents metadata about a Subject that is a group of other Subjectss
+  Group represents metadata about a Subject that is a group of other Subjects
   and that can be used by clients and nodes for displaying AccessPolicy
   information.
 
@@ -636,17 +634,17 @@ Data Types in CICore
 ..                                    ######
 .. class:: PingResponse
 
-  The response from :func:`MN_health.ping`. This is currently (2010-10-21) a
-  HTTP response with status code 200 and no payload.
+  The response from :func:`MNCore.ping` which is a HTTP response with status
+  code 200 and arbitrary, preferably empty payload (ignored by the caller).
 
 
 
 ..                                    ######
 .. class:: StatusResponse
 
-  The response from :func:`MN_health.getStatus`. This is currently
-  (2010-10-21) undefined. This opertation *may* replace ping() on closer
-  evaluation of the design notes.
+  The response from :func:`MNCore.getStatus`. This is currently (2011-05-24)
+  undefined. This operation *may* replace ping() on closer evaluation of the
+  design notes.
 
 
 
@@ -677,13 +675,13 @@ Data Types in CICore
     @enduml
 
 
+
 ..                                    ######
 .. class:: Identifier
 
-  An :term:`identifier` (:term:`PID`) in the DataONE system. This is
-  equivalent to a Unicode string of printable characters, excluding
-  whitespace. All representations of identifiers must be encoded in 7-bit
-  ASCII or UTF-8.
+  An :term:`identifier` (:term:`PID`) in the DataONE system. This is equivalent
+  to a Unicode string of printable characters, excluding whitespace. All
+  representations of identifiers must be encoded in 7-bit ASCII or UTF-8.
 
   Identifiers have a maximum length of 800 characters. Some discussion on this
   is described in `ticket 577`_.
@@ -711,7 +709,7 @@ Data Types in CICore
 .. class:: LogEntry
 
   A single log entry as reported by a Member Node or Coordinating Node through
-  the getLogRecords methods.
+  the :func:`MNCore.getLogRecords` and :func:`CNCore.getLogRecords` methods.
 
   As represented in XMLSchema:
 
@@ -745,8 +743,6 @@ Data Types in CICore
 
 ..                                    ######
 .. class:: Log
-
-  .. method cross ref ok
 
   Represents a collection of LogEntry elements, used to transfer log information
   between DataONE components.
@@ -874,12 +870,13 @@ Data Types in CICore
     NodeHealth -- Ping
     NodeHealth -- Status
     @enduml
-   
+
+
 
 ..                                    ######
 .. class:: NodeList
 
-  A list of Node entries that is returned by :func:`cn_register.listNodes()`.
+  A list of Node entries that is returned by :func:`CNCore.listNodes()`.
 
   NodeList is described in :mod:`NodeList`.
 
@@ -900,10 +897,11 @@ Data Types in CICore
     @enduml
 
 
+
 ..                                    ######
 .. class:: NodeReference
 
-  Member Node identifier drawn from the DataONE :mod:`cn_register <registry service>`.
+  Member Node identifier drawn from the DataONE :mod:`CNRegister <registry service>`.
 
   As represented in XMLSchema:
 
@@ -918,6 +916,7 @@ Data Types in CICore
     @startuml images/class_nodereference.png
     NonEmptyString <|-- NodeReference
     @enduml
+
 
 
 ..                                    ######
@@ -941,10 +940,11 @@ Data Types in CICore
     @enduml
 
 
+
 ..                                    ######
 .. class:: ObjectFormat
 
-  One value from the DataONE Object Format Vocabulary, which is returned by :func:`CN_crud.getFormat()`.
+  One value from the DataONE Object Format Vocabulary, which is returned by :func:`CNCore.getFormat()`.
 
   As represented in XMLSchema:
 
@@ -955,7 +955,7 @@ Data Types in CICore
   
   .. attribute:: identifier
     
-     Unique identifer representing the object format.
+     Unique identifier representing the object format.
      
   .. attribute:: formatName
   
@@ -977,7 +977,7 @@ Data Types in CICore
 ..                                    ######
 .. class:: ObjectFormatList
 
-  A list of ObjectFormat entries that is returned by :func:`CN_crud.listFormats()`.
+  A list of ObjectFormat entries that is returned by :func:`CNCore.listFormats()`.
 
   As represented in XMLSchema:
 
@@ -987,7 +987,7 @@ Data Types in CICore
      :end-before: <!-- Object Info -->
   
   ::
-  
+
     message ObjectFormatList
     {
       required int start = 0;
@@ -995,24 +995,23 @@ Data Types in CICore
       required int total = 2;
       repeated ObjectFormat objectFormat = 3;
     }
-  
+
   .. attribute:: start
-  
+
      An integer that indicates zero-based offset of the first entry in
      objectFormat from the start of the list of entries from which this 
-     list was drawn (such as the results of :func:`CN_crud.listFormats`)
-  
+     list was drawn (such as the results of :func:`CNCore.listFormats`)
+
   .. attribute:: count
-  
+
      The total number of entries returned in :attr:`objectFormat`.
-  
+
   .. attribute:: total
-  
+
      The total number of entries in the list from which this list was drawn.
-  
-  
+
   .. attribute:: objectFormat
-  
+
      The ObjectFormat structure for each object format listed.
 
    .. image:: images/class_objectformatlist.png
@@ -1036,9 +1035,9 @@ Data Types in CICore
   A list of object descriptions. This provides more information than the
   :class:`IdentifierList` by adding an identifier to the
   :class:`DescribeResponse`.
-  
+
   As represented in XMLSchema:
-  
+
   .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
      :language: xml
      :start-after: <!-- Object Info -->
@@ -1068,8 +1067,8 @@ Data Types in CICore
 
      An integer that indicates zero-based offset of the first entry in
      objectInfo from the start of the list of entries from which this list was
-     drawn (such as the results of :func:`CN_query.search` or
-     :func:`MN_replication.listObjects`)
+     drawn (such as the results of :func:`CNRead.search` or
+     :func:`MNRead.listObjects`)
 
   .. attribute:: count
 
@@ -1089,7 +1088,7 @@ Data Types in CICore
 .. class:: ObjectLocationList
 
    A list of nodes and node service base URLs known to hold a copy of an
-   object.
+   object, returned by :func:`CNRead.resolve`.
 
    As represented in XMLSchema:
 
@@ -1185,13 +1184,13 @@ Data Types in CICore
 .. class:: Permission
 
   A string value indicating the set of actions that can be performed on a
-  resource as specified in an access policy.  The set of permissions include
-  the ability to read a resource, modify a resource (write), and to change
-  the set of access control policies for a resource (changePermission).  In
-  addition, there is a permission that controls ability to execute a service
-  (execute). Permissions are cumulative, in that higher level permissions
-  include all of the priveledges of lower levels (e.g., given write access, one
-  also implicitly has read access).
+  resource as specified in an access policy. The set of permissions include the
+  ability to read a resource, modify a resource (write), and to change the set
+  of access control policies for a resource (changePermission). In addition,
+  there is a permission that controls ability to execute a service (execute).
+  Permissions are cumulative, in that higher level permissions include all of
+  the privileges of lower levels (e.g., given write access, one also implicitly
+  has read access).
 
   As represented in XMLSchema:
 
@@ -1280,7 +1279,7 @@ Data Types in CICore
 ..                                    ######
 .. class:: PingResponse
 
-  The response from :func:`MN_health.ping`
+  The response from :func:`MNCore.ping`
 
 
 
@@ -1390,7 +1389,7 @@ Data Types in CICore
 ..                                    ######
 .. class:: Status
 
-  The response from :func:`MN_health.getStatus`
+  The response from :func:`MNCore.getStatus`
 
 
 ..                                    ######
