@@ -13,22 +13,22 @@
    * - Tier 2
      - ``PUT /node/{pid}``
      - :func:`addNodeCapabilities`
-     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``POST /node``
      - :func:`register`
-     - (:class:`cert<Types.X509Certificate>`) ``->`` :class:`Types.Identifier`
+     - (:class:`session<Types.Session>`) ``->`` :class:`Types.Identifier`
 
 
 
 
-.. function:: addNodeCapabilities(cert,pid,capabilities) -> Boolean
+.. function:: addNodeCapabilities(session,pid,capabilities) -> Boolean
 
    
 
    :REST URL: ``PUT /node/{pid}``
-   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
-   :type cert: :class:`Types.X509Certificate`
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :type session: :class:`Types.Session`
 
    :param pid:
    :type pid: :class:`Types.Identifier`
@@ -50,13 +50,13 @@
 
 
 
-.. function:: register(cert,capabilities) -> Identifier
+.. function:: register(session,capabilities) -> Identifier
 
    
 
    :REST URL: ``POST /node``
-   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
-   :type cert: :class:`Types.X509Certificate`
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :type session: :class:`Types.Session`
 
    :param capabilities:
    :type capabilities: 

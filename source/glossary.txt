@@ -109,6 +109,12 @@ Glossary
     The node event log is implemented on Coordinating Nodes and Member Nodes
     and should record all object access and manipulation events.
 
+  public user
+    The default user identity used when a service is called without supplying 
+    user credentials. The public user SHOULD never have write access to any 
+    services and MAY be limited access to some services in addition to the 
+    usual restrictions imposed by access control.
+
   principal
     See :term:`subject`. The use of the term "principal" is being deprecated in the documentation.
 

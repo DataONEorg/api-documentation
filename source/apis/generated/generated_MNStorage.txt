@@ -13,20 +13,20 @@
    * - Tier 3
      - ``POST /object/{pid}``
      - :func:`create`
-     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`, ``object``, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, ``object``, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
    * - Tier 3
      - ``PUT /object/{pid}``
      - :func:`update`
-     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`, ``object``, :class:`newPid<Types.Identifier>`, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, ``object``, :class:`newPid<Types.Identifier>`, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
    * - Tier 3
      - ``DELETE /object/{pid}``
      - :func:`delete`
-     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Identifier`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Identifier`
 
 
 
 
-.. function:: create(cert,pid,object,sysmeta) -> Identifier
+.. function:: create(session,pid,object,sysmeta) -> Identifier
 
    Adds a new object to the Member Node, where the object is either a data object or a science metadata object. This method is called by clients to create new data objects on Member Nodes.
 
@@ -35,8 +35,8 @@
    :Use Cases:
      :doc:`UC04 </design/UseCases/04_uc>`, :doc:`UC09 </design/UseCases/09_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
    :REST URL: ``POST /object/{pid}``
-   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
-   :type cert: :class:`Types.X509Certificate`
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :type session: :class:`Types.Session`
 
    :param pid: The identifier that should be used in DataONE to identify and access the object. This is an Unicode string that follows the constraints on identifiers described in :doc:`/design/PIDs`. If the identifier is already in use, :exc:`Exceptions.IdentifierNotUnique` will be raised and the client SHOULD try again with a different, unique identifier.
    :type pid: :class:`Types.Identifier`
@@ -84,7 +84,7 @@
 
 
 
-.. function:: update(cert,pid,object,newPid,sysmeta) -> Identifier
+.. function:: update(session,pid,object,newPid,sysmeta) -> Identifier
 
    Updates an existing object by creating a new object identified by *newPid* on the Member Node which explicitly obsoletes the object identified by *pid* through appropriate changes to the SystemMetadata of *pid* and *newPid*.
 
@@ -97,8 +97,8 @@
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`
    :REST URL: ``PUT /object/{pid}``
-   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
-   :type cert: :class:`Types.X509Certificate`
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :type session: :class:`Types.Session`
 
    :param pid: The identifier of the object that is being updated. If this identifier does not exist in the system, an error is raised and the operation does not cause any changes to the objects or their metadata.
    :type pid: :class:`Types.Identifier`
@@ -148,7 +148,7 @@
 
 
 
-.. function:: delete(cert,pid) -> Identifier
+.. function:: delete(session,pid) -> Identifier
 
    Deletes an object from the Member Node, where the object is either a data object or a science metadata object. This method is called by clients to delete objects on Member nodes. Member Nodes MUST check that the caller is authorized to perform this function.
 
@@ -157,8 +157,8 @@
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`
    :REST URL: ``DELETE /object/{pid}``
-   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
-   :type cert: :class:`Types.X509Certificate`
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :type session: :class:`Types.Session`
 
    :param pid: The identifier of the object to be deleted.
    :type pid: :class:`Types.Identifier`

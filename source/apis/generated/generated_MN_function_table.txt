@@ -17,7 +17,7 @@
    * - Tier 1
      - ``GET /log``
      - :func:`MNCore.getLogRecords`
-     - (:class:`cert<Types.X509Certificate>`, :class:`fromDate<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.Log`
+     - (:class:`session<Types.Session>`, :class:`fromDate<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.Log`
    * - Tier 1
      - ``GET /monitor/object``
      - :func:`MNCore.getObjectStatistics`
@@ -25,7 +25,7 @@
    * - Tier 1
      - ``GET /monitor/event``
      - :func:`MNCore.getOperationStatistics`
-     - (:class:`cert<Types.X509Certificate>`, ``[period]``, :class:`[requestor]<Types.Subject>`, :class:`[event]<Types.Event>`, :class:`[format]<Types.ObjectFormat>`) ``->`` :class:`Types.MonitorList`
+     - (:class:`session<Types.Session>`, ``[period]``, :class:`[requestor]<Types.Subject>`, :class:`[event]<Types.Event>`, :class:`[format]<Types.ObjectFormat>`) ``->`` :class:`Types.MonitorList`
    * - Tier 1
      - ``GET /monitor/status``
      - :func:`MNCore.getStatus`
@@ -38,49 +38,49 @@
    * - Tier 1
      - ``GET /object/{pid}``
      - :func:`MNRead.get`
-     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.OctetStream`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.OctetStream`
    * - Tier 1
      - ``GET /meta/{pid}``
      - :func:`MNRead.getSystemMetadata`
-     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.SystemMetadata`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.SystemMetadata`
    * - Tier 1
      - ``HEAD /object/{pid}``
      - :func:`MNRead.describe`
-     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.DescribeResponse`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.DescribeResponse`
    * - Tier 1
      - ``GET /checksum/{pid}[?checksumAlgorithm={checksumAlgorithm}]``
      - :func:`MNRead.getChecksum`
-     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`, ``[checksumAlgorithm]``) ``->`` :class:`Types.Checksum`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, ``[checksumAlgorithm]``) ``->`` :class:`Types.Checksum`
    * - Tier 1
      - ``GET /object[?starttime={startTime}&endtime={endTime}&objectformat={objectFormat}&replicastatus={replicaStatus}&start={start}&count={count}]``
      - :func:`MNRead.listObjects`
-     - (:class:`cert<Types.X509Certificate>`, :class:`[startTime]<Types.DateTime>`, :class:`[endTime]<Types.DateTime>`, :class:`[objectFormat]<Types.ObjectFormat>`, ``[replicaStatus]``, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.ObjectList`
+     - (:class:`session<Types.Session>`, :class:`[startTime]<Types.DateTime>`, :class:`[endTime]<Types.DateTime>`, :class:`[objectFormat]<Types.ObjectFormat>`, ``[replicaStatus]``, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.ObjectList`
    * - Tier 1
      - ``POST /error``
      - :func:`MNRead.synchronizationFailed`
-     - (:class:`cert<Types.X509Certificate>`, :class:`message<Types.Exception>`) ``->``
+     - (:class:`session<Types.Session>`, :class:`message<Types.Exception>`) ``->``
    * - Tier 2
      - ``GET /isAuthorized/{pid}?action={action}``
      - :func:`MNAuthorization.isAuthorized`
-     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`, :class:`action<Types.Permission>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`action<Types.Permission>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``PUT /accessRules/{pid}``
      - :func:`MNAuthorization.setAccess`
-     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`, :class:`accessPolicy<Types.AccessPolicy>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`accessPolicy<Types.AccessPolicy>`) ``->`` :class:`Types.Boolean`
    * - Tier 3
      - ``POST /object/{pid}``
      - :func:`MNStorage.create`
-     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`, ``object``, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, ``object``, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
    * - Tier 3
      - ``PUT /object/{pid}``
      - :func:`MNStorage.update`
-     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`, ``object``, :class:`newPid<Types.Identifier>`, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, ``object``, :class:`newPid<Types.Identifier>`, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
    * - Tier 3
      - ``DELETE /object/{pid}``
      - :func:`MNStorage.delete`
-     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Identifier`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Identifier`
    * - Tier 4
      - ``POST /replicate``
      - :func:`MNReplication.replicate`
-     - (:class:`cert<Types.X509Certificate>`, :class:`sysmeta<Types.SystemMetadata>`, :class:`sourceNode<Types.NodeReference>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`sysmeta<Types.SystemMetadata>`, :class:`sourceNode<Types.NodeReference>`) ``->`` :class:`Types.Boolean`
 

@@ -13,44 +13,44 @@
    * - Tier 1
      - ``GET /object/{pid}``
      - :func:`get`
-     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.OctetStream`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.OctetStream`
    * - Tier 1
      - ``GET /meta/{pid}``
      - :func:`getSystemMetadata`
-     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.SystemMetadata`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.SystemMetadata`
    * - Tier 1
      - ``GET /resolve/{pid}``
      - :func:`resolve`
-     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.ObjectLocationList`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.ObjectLocationList`
    * - Tier 1
      - ``POST /reserve``
      - :func:`reserveIdentifier`
-     - (:class:`cert<Types.X509Certificate>`, :class:`[pid]<Types.Identifier>`, ``[scope]``, ``[format]``) ``->`` :class:`Types.Identifier`
+     - (:class:`session<Types.Session>`, :class:`[pid]<Types.Identifier>`, ``[scope]``, ``[format]``) ``->`` :class:`Types.Identifier`
    * - Tier 1
      - ``GET /assertRelation/{pidOfSubject}?relationship={relationship}&pidofobject={pidOfObject}``
      - :func:`assertRelation`
-     - (:class:`cert<Types.X509Certificate>`, :class:`pidOfSubject<Types.Identifier>`, :class:`relationship<Types.???>`, :class:`pidOfObject<Types.Identifier>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`pidOfSubject<Types.Identifier>`, :class:`relationship<Types.???>`, :class:`pidOfObject<Types.Identifier>`) ``->`` :class:`Types.Boolean`
    * - Tier 1
      - ``GET /checksum/{pid}``
      - :func:`getChecksum`
-     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Checksum`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Checksum`
    * - Tier 1
      - ``GET /object?querytype={queryType}&query={query}``
      - :func:`search`
-     - (:class:`cert<Types.X509Certificate>`, :class:`queryType<Types.QueryType>`, ``query``) ``->`` :class:`Types.ObjectList`
+     - (:class:`session<Types.Session>`, :class:`queryType<Types.QueryType>`, ``query``) ``->`` :class:`Types.ObjectList`
 
 
 
 
-.. function:: get(cert,pid) -> OctetStream
+.. function:: get(session,pid) -> OctetStream
 
    Retrieves the object identified by *pid* from the node. If the object is not present on the node, then an :exc:`Exceptions.NotFound` error is raised (regardless of whether the object exists on another node in the DataONE system).
 
    :Use Cases:
      :doc:`UC01 </design/UseCases/01_uc>`, :doc:`UC16 </design/UseCases/16_uc>`, :doc:`UC09 </design/UseCases/09_uc>`
    :REST URL: ``GET /object/{pid}``
-   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identiy and validate the identity of the Principal making the call.  The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
-   :type cert: :class:`Types.X509Certificate`
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :type session: :class:`Types.Session`
 
    :param pid: Identifier of the object to be retrieved
    :type pid: :class:`Types.Identifier`
@@ -78,15 +78,15 @@
 
 
 
-.. function:: getSystemMetadata(cert,pid) -> SystemMetadata
+.. function:: getSystemMetadata(session,pid) -> SystemMetadata
 
    Returns the :term:`system metadata` that contains DataONE specific information about the object identified by *pid*. Note that authoritative copies of system metadata are only available from the Coordinating Nodes.
 
    :Use Cases:
      :doc:`UC36 </design/UseCases/36_uc>`, :doc:`UC37 </design/UseCases/37_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
    :REST URL: ``GET /meta/{pid}``
-   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
-   :type cert: :class:`Types.X509Certificate`
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :type session: :class:`Types.Session`
 
    :param pid: Identifier for the object of interest.
    :type pid: :class:`Types.Identifier`
@@ -116,7 +116,7 @@
 
 
 
-.. function:: resolve(cert,pid) -> ObjectLocationList
+.. function:: resolve(session,pid) -> ObjectLocationList
 
    Implemented by CNs, returns the nodes (MNs or CNs) known to hold copies of the object identified by *pid*. The object resolution process is intended to provide a simple mechanism for a client to discover from which node(s) a particular object may be retrieved, and this information is returned as a list of node identifiers. Details about method interfaces (i.e. REST URLs) exposed by a particular node can be determined by examining the response from the *node* collection. For convenience, the :func:`MN_read.get` URL is included in the response as is the base URL of the node REST services.
 
@@ -125,8 +125,8 @@
    :Use Cases:
      :doc:`UC36 </design/UseCases/36_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
    :REST URL: ``GET /resolve/{pid}``
-   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
-   :type cert: :class:`Types.X509Certificate`
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :type session: :class:`Types.Session`
 
    :param pid: Identifier for the object of interest.
    :type pid: :class:`Types.Identifier`
@@ -154,15 +154,15 @@
 
 
 
-.. function:: reserveIdentifier(cert,[pid],[scope],[format]) -> Identifier
+.. function:: reserveIdentifier(session,[pid],[scope],[format]) -> Identifier
 
    Given an optional scope and format, reserves and returns an identifier within that scope and format that is unique and will not be used by any other sessions. Future calls to :func:`MN_storage.create` and :func:`MN_storage.update` that reference this ID must originate from the :term:`session` in which the identifier was reserved, otherwise an error is raised on those methods.
 
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`
    :REST URL: ``POST /reserve``
-   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
-   :type cert: :class:`Types.X509Certificate`
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :type session: :class:`Types.Session`
 
    :param pid: An optional identifier proposed by the client. If no identifier is provided then one will be automatically generated.
    :type pid: :class:`Types.Identifier`
@@ -197,13 +197,13 @@
 
 
 
-.. function:: assertRelation(cert,pidOfSubject,relationship,pidOfObject) -> Boolean
+.. function:: assertRelation(session,pidOfSubject,relationship,pidOfObject) -> Boolean
 
    Tests that the specified relationship between *pidOfSubject* and *pidOfObject* exists.
 
    :REST URL: ``GET /assertRelation/{pidOfSubject}?relationship={relationship}&pidofobject={pidOfObject}``
-   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
-   :type cert: :class:`Types.X509Certificate`
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :type session: :class:`Types.Session`
 
    :param pidOfSubject: The subject of the relationship being tested
    :type pidOfSubject: :class:`Types.Identifier`
@@ -236,15 +236,15 @@
 
 
 
-.. function:: getChecksum(cert,pid) -> Checksum
+.. function:: getChecksum(session,pid) -> Checksum
 
    Returns the checksum for the specified object as reported in the system metadata.
 
    :Use Cases:
      :doc:`UC09 </design/UseCases/09_uc>`
    :REST URL: ``GET /checksum/{pid}``
-   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
-   :type cert: :class:`Types.X509Certificate`
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :type session: :class:`Types.Session`
 
    :param pid: Identifier of the object
    :type pid: :class:`Types.Identifier`
@@ -267,15 +267,15 @@
 
 
 
-.. function:: search(cert,queryType,query) -> ObjectList
+.. function:: search(session,queryType,query) -> ObjectList
 
    Search the metadata catalog and return identifiers of metadata records that match the criteria.
 
    :Use Cases:
      :doc:`UC02 </design/UseCases/02_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
    :REST URL: ``GET /object?querytype={queryType}&query={query}``
-   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
-   :type cert: :class:`Types.X509Certificate`
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :type session: :class:`Types.Session`
 
    :param queryType: An identifier for the type of query expression provided in the query.
    :type queryType: :class:`Types.QueryType`

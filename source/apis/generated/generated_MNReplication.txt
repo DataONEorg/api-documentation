@@ -13,20 +13,20 @@
    * - Tier 4
      - ``POST /replicate``
      - :func:`replicate`
-     - (:class:`cert<Types.X509Certificate>`, :class:`sysmeta<Types.SystemMetadata>`, :class:`sourceNode<Types.NodeReference>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`sysmeta<Types.SystemMetadata>`, :class:`sourceNode<Types.NodeReference>`) ``->`` :class:`Types.Boolean`
 
 
 
 
-.. function:: replicate(cert,sysmeta,sourceNode) -> Boolean
+.. function:: replicate(session,sysmeta,sourceNode) -> Boolean
 
    Called by a Coordinating Node to request that the Member Node create a copy of the specified object by retrieving it from another Member Nodeode and storing it locally so that it can be made accessible to the DataONE system.
 
    :Use Cases:
      :doc:`UC09 </design/UseCases/09_uc>`
    :REST URL: ``POST /replicate``
-   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
-   :type cert: :class:`Types.X509Certificate`
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :type session: :class:`Types.Session`
 
    :param sysmeta: Copy of the CN held system metadata for the object.
    :type sysmeta: :class:`Types.SystemMetadata`

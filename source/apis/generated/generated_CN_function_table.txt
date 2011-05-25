@@ -21,7 +21,7 @@
    * - Tier 1
      - ``GET /log?fromdate={fromDate}[&todate={toDate}&event={event}]``
      - :func:`CNCore.getLogRecords`
-     - (:class:`cert<Types.X509Certificate>`, :class:`fromDate<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`) ``->`` :class:`Types.Log`
+     - (:class:`session<Types.Session>`, :class:`fromDate<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`) ``->`` :class:`Types.Log`
    * - Tier 1
      - ``GET /node``
      - :func:`CNCore.listNodes`
@@ -30,89 +30,89 @@
    * - Tier 1
      - ``GET /object/{pid}``
      - :func:`CNRead.get`
-     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.OctetStream`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.OctetStream`
    * - Tier 1
      - ``GET /meta/{pid}``
      - :func:`CNRead.getSystemMetadata`
-     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.SystemMetadata`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.SystemMetadata`
    * - Tier 1
      - ``GET /resolve/{pid}``
      - :func:`CNRead.resolve`
-     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.ObjectLocationList`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.ObjectLocationList`
    * - Tier 1
      - ``POST /reserve``
      - :func:`CNRead.reserveIdentifier`
-     - (:class:`cert<Types.X509Certificate>`, :class:`[pid]<Types.Identifier>`, ``[scope]``, ``[format]``) ``->`` :class:`Types.Identifier`
+     - (:class:`session<Types.Session>`, :class:`[pid]<Types.Identifier>`, ``[scope]``, ``[format]``) ``->`` :class:`Types.Identifier`
    * - Tier 1
      - ``GET /assertRelation/{pidOfSubject}?relationship={relationship}&pidofobject={pidOfObject}``
      - :func:`CNRead.assertRelation`
-     - (:class:`cert<Types.X509Certificate>`, :class:`pidOfSubject<Types.Identifier>`, :class:`relationship<Types.???>`, :class:`pidOfObject<Types.Identifier>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`pidOfSubject<Types.Identifier>`, :class:`relationship<Types.???>`, :class:`pidOfObject<Types.Identifier>`) ``->`` :class:`Types.Boolean`
    * - Tier 1
      - ``GET /checksum/{pid}``
      - :func:`CNRead.getChecksum`
-     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Checksum`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Checksum`
    * - Tier 1
      - ``GET /object?querytype={queryType}&query={query}``
      - :func:`CNRead.search`
-     - (:class:`cert<Types.X509Certificate>`, :class:`queryType<Types.QueryType>`, ``query``) ``->`` :class:`Types.ObjectList`
+     - (:class:`session<Types.Session>`, :class:`queryType<Types.QueryType>`, ``query``) ``->`` :class:`Types.ObjectList`
    * - Tier 2
      - ``PUT /owner/{pid}``
      - :func:`CNAuthorization.setOwner`
-     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`, :class:`userId<Types.Subject>`) ``->`` :class:`Types.Identifier`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`userId<Types.Subject>`) ``->`` :class:`Types.Identifier`
    * - Tier 2
      - ``GET /isAuthorized/{pid}``
      - :func:`CNAuthorization.isAuthorized`
-     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`, :class:`operation<Types.Event>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`operation<Types.Event>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``PUT /accessRules/{pid}``
      - :func:`CNAuthorization.setAccess`
-     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`, :class:`accessPolicy<Types.AccessPolicy>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`accessPolicy<Types.AccessPolicy>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``POST /accounts``
      - :func:`CNIdentity.registerAccount`
-     - (:class:`cert<Types.X509Certificate>`, :class:`person<Types.Person>`) ``->`` :class:`Types.Subject`
+     - (:class:`session<Types.Session>`, :class:`person<Types.Person>`) ``->`` :class:`Types.Subject`
    * - Tier 2
      - ``PUT /accounts``
      - :func:`CNIdentity.updateAccount`
-     - (:class:`cert<Types.X509Certificate>`, :class:`person<Types.Person>`) ``->`` :class:`Types.Subject`
+     - (:class:`session<Types.Session>`, :class:`person<Types.Person>`) ``->`` :class:`Types.Subject`
    * - Tier 2
      - ``POST /accounts/{subject}``
      - :func:`CNIdentity.verifyAccount`
-     - (:class:`cert<Types.X509Certificate>`, :class:`subject<Types.Subject>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``GET /accounts/{subject}``
      - :func:`CNIdentity.getSubjectInfo`
-     - (:class:`cert<Types.X509Certificate>`, :class:`subject<Types.Subject>`) ``->`` :class:`Types.SubjectList`
+     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` :class:`Types.SubjectList`
    * - Tier 2
      - ``GET /accounts?query={query}[&start={start}&count={count}]``
      - :func:`CNIdentity.listSubjects`
-     - (:class:`cert<Types.X509Certificate>`, :class:`query<Types.String>`, ``start``, ``count``) ``->`` :class:`Types.SubjectList`
+     - (:class:`session<Types.Session>`, :class:`query<Types.String>`, ``start``, ``count``) ``->`` :class:`Types.SubjectList`
    * - Tier 2
      - ``POST /accounts/map``
      - :func:`CNIdentity.mapIdentity`
-     - (:class:`cert<Types.X509Certificate>`, :class:`subject<Types.Subject>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``POST /groups/{groupName}``
      - :func:`CNIdentity.createGroup`
-     - (:class:`cert<Types.X509Certificate>`, :class:`groupName<Types.Subject>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`groupName<Types.Subject>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``PUT /groups/{groupName}``
      - :func:`CNIdentity.addGroupMembers`
-     - (:class:`cert<Types.X509Certificate>`, :class:`groupName<Types.Subject>`, :class:`members<Types.SubjectList>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`groupName<Types.Subject>`, :class:`members<Types.SubjectList>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``DELETE /groups/{groupName}``
      - :func:`CNIdentity.removeGroupMembers`
-     - (:class:`cert<Types.X509Certificate>`, :class:`groupName<Types.Subject>`, :class:`members<Types.SubjectList>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`groupName<Types.Subject>`, :class:`members<Types.SubjectList>`) ``->`` :class:`Types.Boolean`
    * - Tier 4
      - ``POST /notify``
      - :func:`CNReplication.setReplicationStatus`
-     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`, :class:`status<Types.ReplicationStatus>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`status<Types.ReplicationStatus>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``PUT /node/{pid}``
      - :func:`CNRegister.addNodeCapabilities`
-     - (:class:`cert<Types.X509Certificate>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``POST /node``
      - :func:`CNRegister.register`
-     - (:class:`cert<Types.X509Certificate>`) ``->`` :class:`Types.Identifier`
+     - (:class:`session<Types.Session>`) ``->`` :class:`Types.Identifier`
 

@@ -13,52 +13,52 @@
    * - Tier 2
      - ``POST /accounts``
      - :func:`registerAccount`
-     - (:class:`cert<Types.X509Certificate>`, :class:`person<Types.Person>`) ``->`` :class:`Types.Subject`
+     - (:class:`session<Types.Session>`, :class:`person<Types.Person>`) ``->`` :class:`Types.Subject`
    * - Tier 2
      - ``PUT /accounts``
      - :func:`updateAccount`
-     - (:class:`cert<Types.X509Certificate>`, :class:`person<Types.Person>`) ``->`` :class:`Types.Subject`
+     - (:class:`session<Types.Session>`, :class:`person<Types.Person>`) ``->`` :class:`Types.Subject`
    * - Tier 2
      - ``POST /accounts/{subject}``
      - :func:`verifyAccount`
-     - (:class:`cert<Types.X509Certificate>`, :class:`subject<Types.Subject>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``GET /accounts/{subject}``
      - :func:`getSubjectInfo`
-     - (:class:`cert<Types.X509Certificate>`, :class:`subject<Types.Subject>`) ``->`` :class:`Types.SubjectList`
+     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` :class:`Types.SubjectList`
    * - Tier 2
      - ``GET /accounts?query={query}[&start={start}&count={count}]``
      - :func:`listSubjects`
-     - (:class:`cert<Types.X509Certificate>`, :class:`query<Types.String>`, ``start``, ``count``) ``->`` :class:`Types.SubjectList`
+     - (:class:`session<Types.Session>`, :class:`query<Types.String>`, ``start``, ``count``) ``->`` :class:`Types.SubjectList`
    * - Tier 2
      - ``POST /accounts/map``
      - :func:`mapIdentity`
-     - (:class:`cert<Types.X509Certificate>`, :class:`subject<Types.Subject>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``POST /groups/{groupName}``
      - :func:`createGroup`
-     - (:class:`cert<Types.X509Certificate>`, :class:`groupName<Types.Subject>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`groupName<Types.Subject>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``PUT /groups/{groupName}``
      - :func:`addGroupMembers`
-     - (:class:`cert<Types.X509Certificate>`, :class:`groupName<Types.Subject>`, :class:`members<Types.SubjectList>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`groupName<Types.Subject>`, :class:`members<Types.SubjectList>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``DELETE /groups/{groupName}``
      - :func:`removeGroupMembers`
-     - (:class:`cert<Types.X509Certificate>`, :class:`groupName<Types.Subject>`, :class:`members<Types.SubjectList>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`groupName<Types.Subject>`, :class:`members<Types.SubjectList>`) ``->`` :class:`Types.Boolean`
 
 
 
 
-.. function:: registerAccount(cert,person) -> Subject
+.. function:: registerAccount(session,person) -> Subject
 
    Create a new :term:`subject` in the DataONE system. Note that there should probably be a lot more metadata captured about the new user, and there should be a mechanism for specifying the default access control rules for the new account.
 
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`
    :REST URL: ``POST /accounts``
-   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
-   :type cert: :class:`Types.X509Certificate`
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :type session: :class:`Types.Session`
 
    :param person: Information about the Person to be registered with the account, including the real name and email address for the individual.  The Subject with the Person must match the subject of the X.509 certificate associated with the authenticated SSL session via client-side authentication, and must not have been registered previously.
    :type person: :class:`Types.Person`
@@ -83,15 +83,15 @@
 
 
 
-.. function:: updateAccount(cert,person) -> Subject
+.. function:: updateAccount(session,person) -> Subject
 
    Update an existing :term:`subject` in the DataONE system. The target subject is determined from the X509Certificate. Note that there should probably be a policy for verifying the details that change via this method.
 
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`
    :REST URL: ``PUT /accounts``
-   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user which will likely not be able to update the details.
-   :type cert: :class:`Types.X509Certificate`
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :type session: :class:`Types.Session`
 
    :param person: New information about the Person. The subject of the Person cannot be updated with this method and must match the subject of the X.509 certificate associated with the authenticated SSL session via client-side authentication.
    :type person: :class:`Types.Person`
@@ -112,15 +112,15 @@
 
 
 
-.. function:: verifyAccount(cert,subject) -> Boolean
+.. function:: verifyAccount(session,subject) -> Boolean
 
    Verify that the Person data associated with this Subject is a true representation of the real world person.
 
    This service can only be called byt users who have an administrative role for the domain of users in question.
 
    :REST URL: ``POST /accounts/{subject}``
-   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
-   :type cert: :class:`Types.X509Certificate`
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :type session: :class:`Types.Session`
 
    :param subject: The Subject identifier of the Person to be verified.  After this service is called for a subject by an authorized user, the account is marked as verified by this user.
    :type subject: :class:`Types.Subject`
@@ -143,13 +143,13 @@
 
 
 
-.. function:: getSubjectInfo(cert,subject) -> SubjectList
+.. function:: getSubjectInfo(session,subject) -> SubjectList
 
    Get the information about a Person (their equivalent identities, and the Groups to which they belong) or the Group (including members).
 
    :REST URL: ``GET /accounts/{subject}``
-   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
-   :type cert: :class:`Types.X509Certificate`
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :type session: :class:`Types.Session`
 
    :param subject: The Subject identifier of the Person or Group details to be returned.
    :type subject: :class:`Types.Subject`
@@ -164,15 +164,15 @@
 
 
 
-.. function:: listSubjects(cert,query,start,count) -> SubjectList
+.. function:: listSubjects(session,query,start,count) -> SubjectList
 
    List the subjects, including users, groups, and systems, that match search criteria.
 
    The list can be restricted to subjects whose identifier matches certain substrings, and the size of the resultset can be paged through.
 
    :REST URL: ``GET /accounts?query={query}[&start={start}&count={count}]``
-   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
-   :type cert: :class:`Types.X509Certificate`
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :type session: :class:`Types.Session`
 
    :param query: A query string criteria to be matched using a case-insensitive substring match against the identifier for the principal, the givenName or familyName of users, and the groupName of groups.  The function returns the union of all successful matches against these fields.
    :type query: :class:`Types.String`
@@ -197,15 +197,15 @@
 
 
 
-.. function:: mapIdentity(cert,subject) -> Boolean
+.. function:: mapIdentity(session,subject) -> Boolean
 
    Map the two authenticated identities, asserting that they represent the same subject.
 
    Mapping identities is a two-step process wherein a map request is made by a primary Subject and a subsequent (confirmation) map request is made by the secondary Subject. This ensures that mappings are performed only by those that have authority to do so.
 
    :REST URL: ``POST /accounts/map``
-   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.
-   :type cert: :class:`Types.X509Certificate`
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.
+   :type session: :class:`Types.Session`
 
    :param subject: The Subject identifier to be used for equivalentIdentity. This Subject will not match the Subject named in the certificate.
    :type subject: :class:`Types.Subject`
@@ -232,15 +232,15 @@
 
 
 
-.. function:: createGroup(cert,groupName) -> Boolean
+.. function:: createGroup(session,groupName) -> Boolean
 
    Create a group with the given name.
 
    Groups are lists of subjects that allow all members of the group to be referenced by listing solely the subject name of the group.  Group names must be unique within the DataONE system, and can only be modified by their creator.
 
    :REST URL: ``POST /groups/{groupName}``
-   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
-   :type cert: :class:`Types.X509Certificate`
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :type session: :class:`Types.Session`
 
    :param groupName: The name of the group to be created.
    :type groupName: :class:`Types.Subject`
@@ -271,15 +271,15 @@
 
 
 
-.. function:: addGroupMembers(cert,groupName,members) -> Boolean
+.. function:: addGroupMembers(session,groupName,members) -> Boolean
 
    Add members to the named group.
 
    Group members can be added by the original creator of the group, otherwise a NotAuthorized exception is thrown.  Group members are provided as a list of subjects to be added to the group.
 
    :REST URL: ``PUT /groups/{groupName}``
-   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
-   :type cert: :class:`Types.X509Certificate`
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :type session: :class:`Types.Session`
 
    :param groupName: The identifier of the group to be modified.
    :type groupName: :class:`Types.Subject`
@@ -309,15 +309,15 @@
 
 
 
-.. function:: removeGroupMembers(cert,groupName,members) -> Boolean
+.. function:: removeGroupMembers(session,groupName,members) -> Boolean
 
    Remove members to the named group.
 
    Group members can be removed by the original creator of the group, otherwise a NotAuthorized exception is thrown.  Group members are provided as a list of subjects to be removed from the group.
 
    :REST URL: ``DELETE /groups/{groupName}``
-   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
-   :type cert: :class:`Types.X509Certificate`
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :type session: :class:`Types.Session`
 
    :param groupName: The identifier of the group to be modified.
    :type groupName: :class:`Types.Subject`

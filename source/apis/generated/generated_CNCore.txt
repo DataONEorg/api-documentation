@@ -21,7 +21,7 @@
    * - Tier 1
      - ``GET /log?fromdate={fromDate}[&todate={toDate}&event={event}]``
      - :func:`getLogRecords`
-     - (:class:`cert<Types.X509Certificate>`, :class:`fromDate<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`) ``->`` :class:`Types.Log`
+     - (:class:`session<Types.Session>`, :class:`fromDate<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`) ``->`` :class:`Types.Log`
    * - Tier 1
      - ``GET /node``
      - :func:`listNodes`
@@ -101,15 +101,15 @@
 
 
 
-.. function:: getLogRecords(cert,fromDate,[toDate],[event]) -> Log
+.. function:: getLogRecords(session,fromDate,[toDate],[event]) -> Log
 
    Retrieves consolidated log information for the specified date range (inclusive) for the entire DataONE infrastructure
 
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`
    :REST URL: ``GET /log?fromdate={fromDate}[&todate={toDate}&event={event}]``
-   :param cert: X.509 Certificate, passed to the system via SSL client-side authentication, and used to identify and validate the identity of the Subject making the call. The X.509 certificate should be traceable to the CILogon service, and provides various attributes for authorization decisions.  If the X.509 certificate is not provided, then the request should be considered to have originated from the DataONE 'Public' user.
-   :type cert: :class:`Types.X509Certificate`
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :type session: :class:`Types.Session`
 
    :param fromDate: Starting time for records in response
    :type fromDate: :class:`Types.DateTime`

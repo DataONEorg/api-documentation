@@ -12,15 +12,18 @@ Transfer (REST) approach over HTTP.
   information about content, retrieving content, creating content, updating
   content, and deleting content respectively.
 
-- If state information is required (e.g. authentication token), it is passed
-  in the HTTP headers.
+- State information, if required, is passed in the HTTP headers.
+
+- Identity transfer is performed using SSL, with the :term:`subject` certificate
+  accessible through implementation specific mechanisms supported by the
+  respective server environment.
 
 - Hints to support efficient caching (e.g. content time stamps) should be
   respected. Caching is an important mechanism for achieving scalability.
 
-- Several URL patterns listed below support parameters as key, value pairs.
-  Unless otherwise indicted, the key is not case sensitive, though the case of
-  the value is significant.
+- Several URL patterns described in these documents support parameters as key,
+  value pairs. Unless otherwise indicted, the key is not case sensitive, though
+  the case of the value is significant and MUST be preserved.
 
 Collections exposed by :term:`Member Node`\s and :term:`Coordinating Node`\s
 include:
@@ -65,11 +68,11 @@ REST Endpoint Summary
 Message Serialization
 ~~~~~~~~~~~~~~~~~~~~~
 
-The format of the response (except for responses from :func:`MN_read.get` or
-:func:`CN_crud.get`) is determined by the ``Accept:`` header provided in the
+The format of the response (except for responses from :func:`MNRead.get` or
+:func:`CNRead.get`) is determined by the *Accept:* header provided in the
 request. 
 
-The default serialization format is XML and must be supported by all services.
+The default serialization format is XML and MUST be supported by all services.
 
 Acceptable content types include:
 
@@ -111,8 +114,7 @@ Parameters in Requests
 ~~~~~~~~~~~~~~~~~~~~~~
 
 Many of the URL patterns described here accept parameters in the URL. Unless
-otherwise indicated, parameter names and values are case sensitive.
-
+otherwise indicated, parameter names are not case sensitive though values are.
 Parameter names are identical to the parameter names as described in the
 corresponding method signature.
 
