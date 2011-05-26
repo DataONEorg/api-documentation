@@ -206,6 +206,9 @@ The list can be restricted to subjects whose identifier matches certain substrin
      - Map the two authenticated identities, asserting that they represent the same subject.
 Mapping identities is a two-step process wherein a map request is made by a primary Subject and a subsequent (confirmation) map request is made by the secondary Subject. This ensures that mappings are performed only by those that have authority to do so.
    * - \
+     - :func:`CNIdentity.confirmMapIdentity`
+     - Confirms a previously initiated identity mapping. If subject A asserts that B is the same identity through :func:`CNIdentity.mapIdentity`, then this method is called by B to confirm that assertion.
+   * - \
      - :func:`CNIdentity.createGroup`
      - Create a group with the given name.
 Groups are lists of subjects that allow all members of the group to be referenced by listing solely the subject name of the group.  Group names must be unique within the DataONE system, and can only be modified by their creator.

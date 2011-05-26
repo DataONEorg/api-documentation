@@ -80,7 +80,7 @@
    * - GET /node
      - :func:`CNCore.listNodes`
      - Returns a list of nodes that have been registered with the DataONE infrastructure.
-   * - POST ?
+   * - POST /meta
      - :func:`CNCore.registerSystemMetadata`
      - Provides a mechanism for adding system metadata independently of its associated object, such as when adding system metadata for data objects.
    * - GET /object/{pid}
@@ -113,6 +113,9 @@
    * - PUT /accessRules/{pid}
      - :func:`CNAuthorization.setAccess`
      - Sets the access permissions for an object identified by *pid*.
+   * - PUT /eta/access/{pid}
+     - :func:`CNAuthorization.setAccessPolicy`
+     - Updates the access policy entry for an object by modifying the system metadata. Triggers a change to the system metdata mdified time stamp.
    * - POST /accounts
      - :func:`CNIdentity.registerAccount`
      - Create a new :term:`subject` in the DataONE system. Note that there should probably be a lot more metadata captured about the new user, and there should be a mechanism for specifying the default access control rules for the new account.
@@ -131,6 +134,9 @@
    * - POST /accounts/map
      - :func:`CNIdentity.mapIdentity`
      - Map the two authenticated identities, asserting that they represent the same subject. Mapping identities is a two-step process wherein a map request is made by a primary Subject and a subsequent (confirmation) map request is made by the secondary Subject. This ensures that mappings are performed only by those that have authority to do so.
+   * - POST /accounts/map
+     - :func:`CNIdentity.confirmMapIdentity`
+     - Confirms a previously initiated identity mapping. If subject A asserts that B is the same identity through :func:`CNIdentity.mapIdentity`, then this method is called by B to confirm that assertion.
    * - POST /groups/{groupName}
      - :func:`CNIdentity.createGroup`
      - Create a group with the given name. Groups are lists of subjects that allow all members of the group to be referenced by listing solely the subject name of the group.  Group names must be unique within the DataONE system, and can only be modified by their creator.
@@ -143,7 +149,7 @@
    * - POST /notify
      - :func:`CNReplication.setReplicationStatus`
      - Update the replication status of the system metadata, ensuring that the change is appropriate for the given state of system metadata.  For example, a MN can not change the status to *COMPLETED* unless the CN previously requested replication of the object and the replications status of the object (as indicated in the system metadata) is set to *QUEUED*.
-   * - PUT ?
+   * - PUT /meta/replication/{pid}
      - :func:`CNReplication.updateReplicationMetadata`
      - Full replacement of ReplicationMetadata, changes date sys meta modified
    * - PUT ?

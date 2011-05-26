@@ -15,9 +15,9 @@
      - :func:`setReplicationStatus`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`status<Types.ReplicationStatus>`) ``->`` :class:`Types.Boolean`
    * - Tier 4
-     - ``PUT ?``
+     - ``PUT /meta/replication/{pid}``
      - :func:`updateReplicationMetadata`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`replicaMetadata<Types.ReplicaMetadata>`) ``->``
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`replicaMetadata<Types.Replica>`) ``->``
    * - 
      - ``PUT ?``
      - :func:`setReplicationPolicy`
@@ -64,7 +64,7 @@
 
    Full replacement of ReplicationMetadata, changes date sys meta modified
 
-   :REST URL: ``PUT ?``
+   :REST URL: ``PUT /meta/replication/{pid}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
@@ -72,7 +72,7 @@
    :type pid: :class:`Types.Identifier`
 
    :param replicaMetadata:
-   :type replicaMetadata: :class:`Types.ReplicaMetadata`
+   :type replicaMetadata: :class:`Types.Replica`
 
    :returns:
    :rtype: 

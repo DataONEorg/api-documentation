@@ -35,6 +35,10 @@
      - :func:`mapIdentity`
      - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
+     - ``POST /accounts/map``
+     - :func:`confirmMapIdentity`
+     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` :class:`Types.Boolean`
+   * - Tier 2
      - ``POST /groups/{groupName}``
      - :func:`createGroup`
      - (:class:`session<Types.Session>`, :class:`groupName<Types.Subject>`) ``->`` :class:`Types.Boolean`
@@ -202,6 +206,39 @@
    Map the two authenticated identities, asserting that they represent the same subject.
 
    Mapping identities is a two-step process wherein a map request is made by a primary Subject and a subsequent (confirmation) map request is made by the secondary Subject. This ensures that mappings are performed only by those that have authority to do so.
+
+   :REST URL: ``POST /accounts/map``
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.
+   :type session: :class:`Types.Session`
+
+   :param subject: The Subject identifier to be used for equivalentIdentity. This Subject will not match the Subject named in the certificate.
+   :type subject: :class:`Types.Subject`
+
+   :returns: True if the mapping was successfully initiated, false otherwise.
+   :rtype: :class:`Types.Boolean`
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2390)``
+
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=2370)``
+
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=2360)``
+
+     The supplied principal does not have permission to map these two identities
+
+   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=2340)``
+
+     The specified principal does not exist in the DataONE system
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2361)``
+
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=2342)``
+
+
+
+
+.. function:: confirmMapIdentity(session,subject) -> Boolean
+
+   Confirms a previously initiated identity mapping. If subject A asserts that B is the same identity through :func:`CNIdentity.mapIdentity`, then this method is called by B to confirm that assertion.
 
    :REST URL: ``POST /accounts/map``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.

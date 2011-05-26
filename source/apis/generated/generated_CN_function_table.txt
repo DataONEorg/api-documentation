@@ -27,7 +27,7 @@
      - :func:`CNCore.listNodes`
      - () ``->`` :class:`Types.NodeList`
    * - Tier 1
-     - ``POST ?``
+     - ``POST /meta``
      - :func:`CNCore.registerSystemMetadata`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.??`
 
@@ -72,7 +72,7 @@
      - :func:`CNAuthorization.setAccess`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`accessPolicy<Types.AccessPolicy>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
-     - n/a
+     - ``PUT /eta/access/{pid}``
      - :func:`CNAuthorization.setAccessPolicy`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`policy<Types.AccessPolicy>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
@@ -100,6 +100,10 @@
      - :func:`CNIdentity.mapIdentity`
      - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
+     - ``POST /accounts/map``
+     - :func:`CNIdentity.confirmMapIdentity`
+     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` :class:`Types.Boolean`
+   * - Tier 2
      - ``POST /groups/{groupName}``
      - :func:`CNIdentity.createGroup`
      - (:class:`session<Types.Session>`, :class:`groupName<Types.Subject>`) ``->`` :class:`Types.Boolean`
@@ -116,9 +120,9 @@
      - :func:`CNReplication.setReplicationStatus`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`status<Types.ReplicationStatus>`) ``->`` :class:`Types.Boolean`
    * - Tier 4
-     - ``PUT ?``
+     - ``PUT /meta/replication/{pid}``
      - :func:`CNReplication.updateReplicationMetadata`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`replicaMetadata<Types.ReplicaMetadata>`) ``->``
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`replicaMetadata<Types.Replica>`) ``->``
    * - 
      - ``PUT ?``
      - :func:`CNReplication.setReplicationPolicy`

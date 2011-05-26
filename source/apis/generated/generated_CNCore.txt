@@ -27,7 +27,7 @@
      - :func:`listNodes`
      - () ``->`` :class:`Types.NodeList`
    * - Tier 1
-     - ``POST ?``
+     - ``POST /meta``
      - :func:`registerSystemMetadata`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.??`
 
@@ -165,7 +165,7 @@
 
    Provides a mechanism for adding system metadata independently of its associated object, such as when adding system metadata for data objects.
 
-   :REST URL: ``POST ?``
+   :REST URL: ``POST /meta``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
