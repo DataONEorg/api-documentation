@@ -26,6 +26,10 @@
      - ``GET /node``
      - :func:`CNCore.listNodes`
      - () ``->`` :class:`Types.NodeList`
+   * - Tier 1
+     - ``POST ?``
+     - :func:`CNCore.registerSystemMetadata`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.??`
 
    * - Tier 1
      - ``GET /object/{pid}``
@@ -68,6 +72,10 @@
      - :func:`CNAuthorization.setAccess`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`accessPolicy<Types.AccessPolicy>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
+     - n/a
+     - :func:`CNAuthorization.setAccessPolicy`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`policy<Types.AccessPolicy>`) ``->`` :class:`Types.Boolean`
+   * - Tier 2
      - ``POST /accounts``
      - :func:`CNIdentity.registerAccount`
      - (:class:`session<Types.Session>`, :class:`person<Types.Person>`) ``->`` :class:`Types.Subject`
@@ -107,6 +115,14 @@
      - ``POST /notify``
      - :func:`CNReplication.setReplicationStatus`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`status<Types.ReplicationStatus>`) ``->`` :class:`Types.Boolean`
+   * - Tier 4
+     - ``PUT ?``
+     - :func:`CNReplication.updateReplicationMetadata`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`replicaMetadata<Types.ReplicaMetadata>`) ``->``
+   * - 
+     - ``PUT ?``
+     - :func:`CNReplication.setReplicationPolicy`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`policy<Types.ReplicationPolicy>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``PUT /node/{pid}``
      - :func:`CNRegister.addNodeCapabilities`

@@ -641,6 +641,26 @@
      - ServiceFailure
      - 500
      - 4801
+   * - :mod:`CNCore`
+     - :func:`registerSystemMetadata <CNCore.registerSystemMetadata>`
+     - NotImplemented
+     - 501
+     - 4860
+   * - :mod:`CNCore`
+     - :func:`registerSystemMetadata <CNCore.registerSystemMetadata>`
+     - NotAuthorized
+     - 401
+     - 4861
+   * - :mod:`CNCore`
+     - :func:`registerSystemMetadata <CNCore.registerSystemMetadata>`
+     - ServiceFailure
+     - 500
+     - 4862
+   * - :mod:`CNCore`
+     - :func:`registerSystemMetadata <CNCore.registerSystemMetadata>`
+     - InvalidRequest
+     - 400
+     - 4863
    * - :mod:`CNRead`
      - :func:`get <CNRead.get>`
      - NotAuthorized
@@ -936,6 +956,26 @@
      - InvalidRequest
      - 400
      - 4402
+   * - :mod:`CNAuthorization`
+     - :func:`setAccessPolicy <CNAuthorization.setAccessPolicy>`
+     - NotImplemented
+     - 501
+     - 4870
+   * - :mod:`CNAuthorization`
+     - :func:`setAccessPolicy <CNAuthorization.setAccessPolicy>`
+     - NotAuthorized
+     - 401
+     - 4871
+   * - :mod:`CNAuthorization`
+     - :func:`setAccessPolicy <CNAuthorization.setAccessPolicy>`
+     - ServiceFailure
+     - 500
+     - 4872
+   * - :mod:`CNAuthorization`
+     - :func:`setAccessPolicy <CNAuthorization.setAccessPolicy>`
+     - InvalidRequest
+     - 400
+     - 4873
    * - :mod:`CNIdentity`
      - :func:`registerAccount <CNIdentity.registerAccount>`
      - ServiceFailure
@@ -1191,6 +1231,46 @@
      - NotFound
      - 404
      - 4740
+   * - :mod:`CNReplication`
+     - :func:`updateReplicationMetadata <CNReplication.updateReplicationMetadata>`
+     - NotImplemented
+     - 501
+     - 4850
+   * - :mod:`CNReplication`
+     - :func:`updateReplicationMetadata <CNReplication.updateReplicationMetadata>`
+     - NotAuthorized
+     - 401
+     - 4851
+   * - :mod:`CNReplication`
+     - :func:`updateReplicationMetadata <CNReplication.updateReplicationMetadata>`
+     - ServiceFailure
+     - 500
+     - 4852
+   * - :mod:`CNReplication`
+     - :func:`updateReplicationMetadata <CNReplication.updateReplicationMetadata>`
+     - InvalidRequest
+     - 400
+     - 4853
+   * - :mod:`CNReplication`
+     - :func:`setReplicationPolicy <CNReplication.setReplicationPolicy>`
+     - NotImplemented
+     - 501
+     - 4880
+   * - :mod:`CNReplication`
+     - :func:`setReplicationPolicy <CNReplication.setReplicationPolicy>`
+     - NotAuthorized
+     - 401
+     - 4881
+   * - :mod:`CNReplication`
+     - :func:`setReplicationPolicy <CNReplication.setReplicationPolicy>`
+     - ServiceFailure
+     - 500
+     - 4882
+   * - :mod:`CNReplication`
+     - :func:`setReplicationPolicy <CNReplication.setReplicationPolicy>`
+     - InvalidRequest
+     - 400
+     - 4883
    * - :mod:`CNRegister`
      - :func:`addNodeCapabilities <CNRegister.addNodeCapabilities>`
      - NotImplemented

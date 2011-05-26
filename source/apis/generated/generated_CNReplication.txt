@@ -14,6 +14,14 @@
      - ``POST /notify``
      - :func:`setReplicationStatus`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`status<Types.ReplicationStatus>`) ``->`` :class:`Types.Boolean`
+   * - Tier 4
+     - ``PUT ?``
+     - :func:`updateReplicationMetadata`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`replicaMetadata<Types.ReplicaMetadata>`) ``->``
+   * - 
+     - ``PUT ?``
+     - :func:`setReplicationPolicy`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`policy<Types.ReplicationPolicy>`) ``->`` :class:`Types.Boolean`
 
 
 
@@ -48,5 +56,61 @@
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4730)``
 
    :raises Exceptions.NotFound: ``(errorCode=404, detailCode=4740)``
+
+
+
+
+.. function:: updateReplicationMetadata(session,pid,replicaMetadata) -> 
+
+   Full replacement of ReplicationMetadata, changes date sys meta modified
+
+   :REST URL: ``PUT ?``
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :type session: :class:`Types.Session`
+
+   :param pid:
+   :type pid: :class:`Types.Identifier`
+
+   :param replicaMetadata:
+   :type replicaMetadata: :class:`Types.ReplicaMetadata`
+
+   :returns:
+   :rtype: 
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4850)``
+
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=4851)``
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4852)``
+
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4853)``
+
+
+
+
+.. function:: setReplicationPolicy(session,pid,policy) -> Boolean
+
+   Updates the replication policy entry for an object by updating the system metadata.
+
+   :REST URL: ``PUT ?``
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :type session: :class:`Types.Session`
+
+   :param pid:
+   :type pid: :class:`Types.Identifier`
+
+   :param policy:
+   :type policy: :class:`Types.ReplicationPolicy`
+
+   :returns:
+   :rtype: :class:`Types.Boolean`
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4880)``
+
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=4881)``
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4882)``
+
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4883)``
 
 

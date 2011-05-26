@@ -123,6 +123,9 @@ If the object does not exist on the node servicing the request, then an :exc:`Ex
      - Returns a list of nodes that have been registered with the DataONE infrastructure.
 
        Appears in functional use cases: :doc:`UC39 </design/UseCases/39_uc>`
+   * - \
+     - :func:`CNCore.registerSystemMetadata`
+     - Provides a mechanism for adding system metadata independently of its associated object, such as when adding system metadata for data objects.
    * - :mod:`CNRead`
      - :func:`CNRead.get`
      - Retrieves the object identified by *pid* from the node. If the object is not present on the node, then an :exc:`Exceptions.NotFound` error is raised (regardless of whether the object exists on another node in the DataONE system).
@@ -174,6 +177,9 @@ Appears in functional use cases: :doc:`UC36 </design/UseCases/36_uc>`, :doc:`UC1
      - Sets the access permissions for an object identified by *pid*.
 
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
+   * - \
+     - :func:`CNAuthorization.setAccessPolicy`
+     - Updates the access policy entry for an object by modifying the system metadata. Triggers a change to the system metdata mdified time stamp.
    * - :mod:`CNIdentity`
      - :func:`CNIdentity.registerAccount`
      - Create a new :term:`subject` in the DataONE system. Note that there should probably be a lot more metadata captured about the new user, and there should be a mechanism for specifying the default access control rules for the new account.
@@ -216,6 +222,12 @@ Group members can be removed by the original creator of the group, otherwise a N
      - Update the replication status of the system metadata, ensuring that the change is appropriate for the given state of system metadata.  For example, a MN can not change the status to *COMPLETED* unless the CN previously requested replication of the object and the replications status of the object (as indicated in the system metadata) is set to *QUEUED*.
 
        Appears in functional use cases: :doc:`UC09 </design/UseCases/09_uc>`
+   * - \
+     - :func:`CNReplication.updateReplicationMetadata`
+     - Full replacement of ReplicationMetadata, changes date sys meta modified
+   * - \
+     - :func:`CNReplication.setReplicationPolicy`
+     - Updates the replication policy entry for an object by updating the system metadata.
    * - :mod:`CNRegister`
      - :func:`CNRegister.addNodeCapabilities`
      - 

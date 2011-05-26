@@ -26,6 +26,10 @@
      - ``GET /node``
      - :func:`listNodes`
      - () ``->`` :class:`Types.NodeList`
+   * - Tier 1
+     - ``POST ?``
+     - :func:`registerSystemMetadata`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.??`
 
 
 
@@ -153,5 +157,33 @@
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4800)``
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4801)``
+
+
+
+
+.. function:: registerSystemMetadata(session,pid,sysmeta) -> ??
+
+   Provides a mechanism for adding system metadata independently of its associated object, such as when adding system metadata for data objects.
+
+   :REST URL: ``POST ?``
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :type session: :class:`Types.Session`
+
+   :param pid:
+   :type pid: :class:`Types.Identifier`
+
+   :param sysmeta:
+   :type sysmeta: :class:`Types.SystemMetadata`
+
+   :returns:
+   :rtype: ??
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4860)``
+
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=4861)``
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4862)``
+
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4863)``
 
 

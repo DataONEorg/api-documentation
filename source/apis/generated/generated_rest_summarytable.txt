@@ -80,6 +80,9 @@
    * - GET /node
      - :func:`CNCore.listNodes`
      - Returns a list of nodes that have been registered with the DataONE infrastructure.
+   * - POST ?
+     - :func:`CNCore.registerSystemMetadata`
+     - Provides a mechanism for adding system metadata independently of its associated object, such as when adding system metadata for data objects.
    * - GET /object/{pid}
      - :func:`CNRead.get`
      - Retrieves the object identified by *pid* from the node. If the object is not present on the node, then an :exc:`Exceptions.NotFound` error is raised (regardless of whether the object exists on another node in the DataONE system).
@@ -140,6 +143,12 @@
    * - POST /notify
      - :func:`CNReplication.setReplicationStatus`
      - Update the replication status of the system metadata, ensuring that the change is appropriate for the given state of system metadata.  For example, a MN can not change the status to *COMPLETED* unless the CN previously requested replication of the object and the replications status of the object (as indicated in the system metadata) is set to *QUEUED*.
+   * - PUT ?
+     - :func:`CNReplication.updateReplicationMetadata`
+     - Full replacement of ReplicationMetadata, changes date sys meta modified
+   * - PUT ?
+     - :func:`CNReplication.setReplicationPolicy`
+     - Updates the replication policy entry for an object by updating the system metadata.
    * - PUT /node/{pid}
      - :func:`CNRegister.addNodeCapabilities`
      - 
