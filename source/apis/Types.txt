@@ -8,17 +8,16 @@ Data Types in CICore
 
 - :class:`Types.AccessPolicy`
 - :class:`Types.AccessRule`
-- :class:`Types.OctetStream`
-- :class:`Types.Integer`
 - :class:`Types.Boolean`
-- :class:`Types.ChecksumAlgorithm`
 - :class:`Types.Checksum`
+- :class:`Types.ChecksumAlgorithm`
 - :class:`Types.DateTime`
 - :class:`Types.DescribeResponse`
 - :class:`Types.Event`
 - :class:`Types.Group`
 - :class:`Types.IdentifierFormat`
 - :class:`Types.Identifier`
+- :class:`Types.Integer`
 - :class:`Types.LogEntry`
 - :class:`Types.Log`
 - :class:`Types.MonitorList`
@@ -34,14 +33,16 @@ Data Types in CICore
 - :class:`Types.ObjectLocationList`
 - :class:`Types.ObjectLocation`
 - :class:`Types.ObjectStatistics`
+- :class:`Types.OctetStream`
 - :class:`Types.OperationStatistics`
 - :class:`Types.Permission`
 - :class:`Types.Person`
 - :class:`Types.PingResponse`
+- :class:`Types.Query`
+- :class:`Types.Replica`
 - :class:`Types.Session`
 - :class:`Types.Subject`
 - :class:`Types.SubjectList`
-- :class:`Types.Query`
 - :class:`Types.Status`
 - :class:`Types.SystemMetadata`
 - :class:`Types.X509Certificate`
@@ -234,6 +235,29 @@ Data Types in CICore
   Person o-- Subject
   Person -- NonEmptyString
 
+  class Replica {
+    + replicaMemberNode : NodeReference
+    + replicationStatus : ReplicationStatus
+    + replicaVerified : DateTime
+  }
+  Replica -- NodeReference
+  Replica -- ReplicationStatus
+  Replica -- DateTime
+
+  enum ReplicationStatus
+    ReplicationStatus : queued
+    ReplicationStatus : requested
+    ReplicationStatus : completed
+    ReplicationStatus : invalidated
+
+  class ReplicationPolicy {
+    + preferredMemberNode : NodeReference[0..*]
+    + blockedMemberNode : NodeReference[0..*]
+    + replicationAllowed : Boolean
+    + numberReplicas : Integer
+  }
+  ReplicationPolicy -- NodeReference
+
   class Session {
     + subject : Subject
     + subjectList : SubjectList[0..1]
@@ -278,7 +302,7 @@ Data Types in CICore
   SystemMetadata o-- ReplicationPolicy
   SystemMetadata -- Checksum
   SystemMetadata -- NodeReference
-
+  SystemMetadata o-- Replica
   @enduml
 
 
@@ -353,21 +377,6 @@ Data Types in CICore
 
   Place holder for support of multiple authentication services for a single
   user.
-
-
-
-..                                    ######
-.. class:: AuthToken
-
-  An AuthToken is an Identifier that is used to reference an authenticated
-  AuthSession that has been established via the act of authenticating a
-  subject with a Coordinating Node. The AuthToken identifier follows the
-  same formatting and content rules as the Identifier class, and should be
-  representable in simple 7-bit ASCII or as a UTF-8 string. The value SHOULD
-  additionally be constrained to be less than 8K in order to be transportable
-  in typical HTTP header fields. The AuthToken represents an AuthSession,
-  which is tied to an authenticated Principal and can only be used for
-  requests from a particular Address.
 
 
 
@@ -1292,6 +1301,84 @@ Data Types in CICore
 
 
 ..                                    ######
+.. class:: Replica
+
+   Replica information that forms a part of the SystemMetadata.
+
+   As represented in XMLSchema:
+
+   .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+      :language: xml
+      :start-after: <!-- Replica -->
+      :end-before: <!-- Replication Policy -->
+
+  .. image:: images/class_replica.png
+
+  ..
+    @startuml images/class_replica.png
+    class Replica {
+      + replicaMemberNode : NodeReference
+      + replicationStatus : ReplicationStatus
+      + replicaVerified : DateTime
+    }
+    Replica -- NodeReference
+    Replica -- ReplicationStatus
+    Replica -- DateTime
+    @enduml
+
+
+
+..                                    ######
+.. class:: ReplicationStatus
+
+   Defines the replication policy applied to a particular object.
+
+   As represented in XMLSchema:
+
+   .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+      :language: xml
+      :start-after: <!-- Replication Status enumeration -->
+      :end-before: <!-- Identifier Format enumeration -->
+
+  .. image:: images/class_replicationstatus.png
+
+  ..
+    @startuml images/class_replicationstatus.png
+    enum ReplicationStatus
+      ReplicationStatus : queued
+      ReplicationStatus : requested
+      ReplicationStatus : completed
+      ReplicationStatus : invalidated
+    @enduml
+
+
+
+..                                    ######
+.. class:: ReplicationPolicy
+
+   Defines the replication policy applied to a particular object.
+
+   As represented in XMLSchema:
+
+   .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+      :language: xml
+      :start-after: <!-- Replication Policy -->
+      :end-before: <!-- Service -->
+
+  .. image:: images/class_replicationpolicy.png
+
+  ..
+    @startuml images/class_replicationpolicy.png
+    class ReplicationPolicy {
+      + preferredMemberNode : NodeReference[0..*]
+      + blockedMemberNode : NodeReference[0..*]
+      + replicationAllowed : Boolean
+      + numberReplicas : Integer
+    }
+    ReplicationPolicy -- NodeReference
+    @enduml
+
+..                                    ######
 .. class:: Subject
 
   Person (user), Group, or Organization, or System.
@@ -1475,6 +1562,7 @@ Data Types in CICore
     SystemMetadata o-- ReplicationPolicy
     SystemMetadata -- Checksum
     SystemMetadata -- NodeReference
+    SystemMetadata o-- Replica
     @enduml
 
 
