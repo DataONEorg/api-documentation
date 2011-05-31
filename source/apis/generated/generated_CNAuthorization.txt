@@ -23,7 +23,7 @@
      - :func:`setAccess`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`accessPolicy<Types.AccessPolicy>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
-     - ``PUT /eta/access/{pid}``
+     - ``PUT /meta/access/{pid}``
      - :func:`setAccessPolicy`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`policy<Types.AccessPolicy>`) ``->`` :class:`Types.Boolean`
 
@@ -154,7 +154,7 @@
 
    Updates the access policy entry for an object by modifying the system metadata. Triggers a change to the system metdata mdified time stamp.
 
-   :REST URL: ``PUT /eta/access/{pid}``
+   :REST URL: ``PUT /meta/access/{pid}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
