@@ -7,18 +7,22 @@
 .. exception:: AuthenticationTimeout(detailCode, description, traceInformation)
 
    The authentication request timed out.
+
    :errorCode: 408
 
    :param detailCode:
      Set by the method raising the exception.
+
    :type detailCode: string
 
    :param description:
      Human readable description that can assist the caller in determining
+
    :type description: string
 
    :param traceInformation:
      Optional set of key-value pairs that can include the name of the method that raised the error plus other details such as parameters used in the call that can be helpful for debugging. Sensitive information such as passwords must **never** be logged or recorded in error messages.
+
    :type traceInformation: dictionary
 
 
@@ -27,22 +31,27 @@
 .. exception:: IdentifierNotUnique(detailCode, description, identifier, [traceInformation])
 
    The provided identifier conflicts with an existing identifier in the DataONE system. When serializing, the identifier in conflict should be rendered in traceInformation as the value of an identifier key.
+
    :errorCode: 409
 
    :param detailCode:
      Set by the method raising the exception.
+
    :type detailCode: string
 
    :param description:
      Human readable description that can assist the caller in determining how to avoid the problem.
+
    :type description: string
 
    :param identifier:
      The identifier value that is in conflict
+
    :type identifier: :class:`Types.Identifier`
 
    :param traceInformation:
      Optional additional information to assist with debugging.
+
    :type traceInformation: dictionary
 
 
@@ -51,18 +60,22 @@
 .. exception:: InsufficientResources(detailCode, description, [traceInformation])
 
    There are insufficient resources at the node to support the requested operation.
+
    :errorCode: 413
 
    :param detailCode:
      Set by the method raising the exception.
+
    :type detailCode: string
 
    :param description:
      Human readable description that can assist the caller in determining how to avoid the problem.
+
    :type description: string
 
    :param traceInformation:
      Optional set of key-value pairs that can include the name of the method that raised the error plus other details such as parameters used in the call that can be helpful for debugging.
+
    :type traceInformation: dictionary
 
 
@@ -71,18 +84,22 @@
 .. exception:: InvalidCredentials(detailCode, description, [traceInformation])
 
    Indicates that the credentials supplied (to :func:`CN_crud.login` for example) are invalid for some reason.
+
    :errorCode: 401
 
    :param detailCode:
      Set by the method raising the exception.
+
    :type detailCode: string
 
    :param description:
      Human readable description that can assist the caller in determining how to avoid the problem.
+
    :type description: string
 
    :param traceInformation:
      Can include the name of the method that raised the error and perhaps the username. Obviously, the supplied password or other sensitive information should not be included.
+
    :type traceInformation: dictionary
 
 
@@ -91,18 +108,22 @@
 .. exception:: InvalidRequest(detailCode, description, [traceInformation])
 
    The parameters provided in the call were invalid. The names and values of parameters should included in traceInformation.
+
    :errorCode: 400
 
    :param detailCode:
      Set by the method raising the exception.
+
    :type detailCode: string
 
    :param description:
      Human readable description that can assist the caller in determining how to avoid the problem.
+
    :type description: string
 
    :param traceInformation:
      Can include the name of the method that raised the error and perhaps the username. Obviously, the supplied password or other sensitive information should not be included.
+
    :type traceInformation: dictionary
 
 
@@ -111,18 +132,22 @@
 .. exception:: InvalidSystemMetadata(detailCode, description, [traceInformation])
 
    The supplied system metadata is invalid. This could be because some required field is not set, the metadata document is malformed, or the value of some field is not valid. The content of traceInformation should contain additional information about the error encountered (e.g. name of the field with bad value, if the document is malformed).
+
    :errorCode: 400
 
    :param detailCode:
      Set by the method raising the exception.
+
    :type detailCode: string
 
    :param description:
      Human readable description that can assist the caller in determining how to avoid the problem.
+
    :type description: string
 
    :param traceInformation:
      Key-value pairs that should include additional information about the error that was encountered while processing the SystemMetadata document.
+
    :type traceInformation: dictionary
 
 
@@ -131,18 +156,22 @@
 .. exception:: InvalidToken(detailCode, description, [traceInformation])
 
    The supplied authentication token could not be verified as being valid.
+
    :errorCode: 401
 
    :param detailCode:
      Set by the method raising the exception.
+
    :type detailCode: string
 
    :param description:
      Human readable description that can assist the caller in determining how to avoid the problem.
+
    :type description: string
 
    :param traceInformation:
      Optional set of key-value pairs that can include the name of the method that raised the error plus other details such as parameters used in the call that can be helpful for debugging.
+
    :type traceInformation: dictionary
 
 
@@ -151,18 +180,22 @@
 .. exception:: NotAuthorized(detailCode, description, [traceInformation])
 
    The supplied identity information is not authorized for the requested operation.
+
    :errorCode: 401
 
    :param detailCode:
      Set by the method raising the exception.
+
    :type detailCode: string
 
    :param description:
      Human readable description that can assist the caller in determining how to avoid the problem.
+
    :type description: string
 
    :param traceInformation:
      Optional set of key-value pairs that can include the name of the method that raised the error plus other details such as parameters used in the call that can be helpful for debugging.
+
    :type traceInformation: dictionary
 
 
@@ -171,22 +204,27 @@
 .. exception:: NotFound(detailCode, description, identifier, [traceInformation])
 
    Used to indicate that an object is not present on the node where the exception was raised.  The error message should include a reference to the :func:`CN_crud.resolve` method URL for the object.
+
    :errorCode: 404
 
    :param detailCode:
      Set by the method raising the exception.
+
    :type detailCode: string
 
    :param description:
      Human readable description that can assist the caller in determining how to avoid the problem.
+
    :type description: string
 
    :param identifier:
      The identifier of the object that can not be located.
+
    :type identifier: :class:`Types.Identifier`
 
    :param traceInformation:
      Optional set of key-value pairs that can include the name of the method that raised the error plus other details such as parameters used in the call that can be helpful for debugging.
+
    :type traceInformation: dictionary
 
 
@@ -195,18 +233,22 @@
 .. exception:: NotImplemented(detailCode, description, [traceInformation])
 
    A method is not implemented, or alternatively, features of a particular method are not implemented.
+
    :errorCode: 501
 
    :param detailCode:
      Set by the method raising the exception.
+
    :type detailCode: string
 
    :param description:
      Human readable description that can assist the caller in determining how to avoid the problem.
+
    :type description: string
 
    :param traceInformation:
      Optional set of key-value pairs that can include the name of the method that raised the error plus other details such as parameters used in the call that can be helpful for debugging.
+
    :type traceInformation: dictionary
 
 
@@ -215,18 +257,22 @@
 .. exception:: ServiceFailure(detailCode, description, [traceInformation])
 
    Some sort of system failure occurred that is preventing the requested operation from completing successfully. This error can be raised by any method in the DataONE API.
+
    :errorCode: 500
 
    :param detailCode:
      Set by the method raising the exception.
+
    :type detailCode: string
 
    :param description:
      Human readable description that can assist the caller in determining how to avoid the problem.
+
    :type description: string
 
    :param traceInformation:
      Optional set of key-value pairs that can include the name of the method that raised the error plus other details such as parameters used in the call that can be helpful for debugging.
+
    :type traceInformation: dictionary
 
 
@@ -235,18 +281,22 @@
 .. exception:: UnsupportedMetadataType(detailCode, description, [traceInformation])
 
    The science metadata document submitted is not of a type that is recognized by the DataONE system.
+
    :errorCode: 400
 
    :param detailCode:
      Set by the method raising the exception.
+
    :type detailCode: string
 
    :param description:
      Human readable description that can assist the caller in determining how to avoid the problem.
+
    :type description: string
 
    :param traceInformation:
      Optional set of key-value pairs that can include the name of the method that raised the error plus other details such as parameters used in the call that can be helpful for debugging.
+
    :type traceInformation: dictionary
 
 
@@ -255,18 +305,22 @@
 .. exception:: UnsupportedType(detailCode, description, [traceInformation])
 
    The information presented appears to be unsupported. This error might be encountered when attempting to register unrecognized science metadata for example.
+
    :errorCode: 400
 
    :param detailCode:
      Set by the method raising the exception.
+
    :type detailCode: string
 
    :param description:
      Human readable description that can assist the caller in determining how to avoid the problem.
+
    :type description: string
 
    :param traceInformation:
      Optional set of key-value pairs that can include the name of the method that raised the error plus other details such as parameters used in the call that can be helpful for debugging.
+
    :type traceInformation: dictionary
 
 
@@ -275,22 +329,27 @@
 .. exception:: SynchronizationFailed(detailCode, description, identifier, [traceInformation])
 
    Sent to a Member Node from a Coordinating Node when an attempt to synchronize some object fails.
+
    :errorCode: 0
 
    :param detailCode:
      Set by the method raising the exception.
+
    :type detailCode: string
 
    :param description:
      Human readable description of the problem which can be forwarded to an administrator for further action.
+
    :type description: string
 
    :param identifier:
      Identifier of the object that could not be synchronized.
+
    :type identifier: :class:`Types.Identifier`
 
    :param traceInformation:
      Optional set of key-value pairs that can include the name of the method that raised the error plus other details such as parameters used in the call that can be helpful for debugging.
+
    :type traceInformation: dictionary
 
 

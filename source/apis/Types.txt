@@ -209,7 +209,7 @@ Data Types in CICore
     + url : anyURI
     + preference : integer[0..1]
   }
-  ObjectLocation -- Identifier
+  ObjectLocation -- NodeReference
 
   class ObjectLocationList {
     + identifier : Identifier
@@ -1236,7 +1236,7 @@ Data Types in CICore
       + url : anyURI
       + preference : integer[0..1]
     }
-    ObjectLocation -- Identifier
+    ObjectLocation -- NodeReference
     @enduml
 
 
