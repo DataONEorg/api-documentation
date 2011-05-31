@@ -23,7 +23,8 @@ Transfer (REST) approach over HTTP.
 
 - Several URL patterns described in these documents support parameters as key,
   value pairs. Unless otherwise indicted, the key and value are case sensitive
-  and MUST be preserved.
+  and SHOULD be preserved or the request MAY be rejected with an
+  :exc:`Exceptions.InvalidRequest` exception.
 
 Collections exposed by :term:`Member Node`\s and :term:`Coordinating Node`\s
 include:
@@ -113,44 +114,26 @@ the HTTP error code set to 406.
 Parameters in Requests
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Many of the URL patterns described here accept parameters in the URL. Unless
-otherwise indicated, parameter names are case sensitive though values are.
-Parameter names are identical to the parameter names as described in the
-corresponding method signature.
+Many of the URL patterns described here accept parameters in the URL and as
+components of a MIME multipart-mixed message body.
 
-Many requests accept an authorization token, i.e. the *token* parameter listed
-in method signatures. In all cases, the authorization token will be
-transmitted as a HTTP "Authorization" header.
+Unless otherwise indicated, all parameter names and values should be considered
+case sensitive. 
 
-Requests sent using the HTTP POST or PUT verbs must use MIME multipart-mixed
+Session information (formerly referred to as a *token*) is obtained from the
+client side authentication certificate held by the SSL processing library of the
+HTTPS service handling the request. Hence, even though a *session* parameter may
+be present in the method signature, the session information itself is
+transported as part of the HTTPS handshaking process and is not present in the
+body or header section of the HTTP request.
+
+Requests sent using the HTTP POST or PUT verbs MUST use MIME multipart-mixed
 encoding of the message body as described in RFC2046_. In most cases and
 unless otherwise indicated, all the parameters except the authorization token
 will be sent in the message body (as opposed to URL parameters).
 
 .. _RFC2046: http://tools.ietf.org/html/rfc2046#section-5.1.3
 
-
-Authorization Token
-~~~~~~~~~~~~~~~~~~~
-
-The authorization token is generated in response to an authentication
-operation and is used to indicate the principal that is performing the
-request. The authorization token is transferred as a value in the HTTP
-headers.
-
-The authorization token is serialized in the HTTP headers as indicated::
-
-  Authorization: authorization-token-string
-
-The content of *authorization-token-string* is currently (2010-10-04)
-undefined except that it will be a string that may be several kilobytes in
-length, but unlikely to be more than 10 kilobytes.
-
-Note that although the HTTP spec does not impose a size limit on HTTP header
-entries, practical limits are set by web servers. For example, the default
-limit HTTP header field sizes for Apache is `8190 bytes`_.
-
-.. _8190 bytes: http://httpd.apache.org/docs/2.2/mod/core.html#limitrequestfieldsize
 
 
 .. 

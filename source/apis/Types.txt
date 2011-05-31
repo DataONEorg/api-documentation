@@ -15,23 +15,23 @@ Data Types in CICore
 - :class:`Types.DescribeResponse`
 - :class:`Types.Event`
 - :class:`Types.Group`
-- :class:`Types.IdentifierFormat`
 - :class:`Types.Identifier`
+- :class:`Types.IdentifierFormat`
 - :class:`Types.Integer`
-- :class:`Types.LogEntry`
 - :class:`Types.Log`
-- :class:`Types.MonitorList`
+- :class:`Types.LogEntry`
 - :class:`Types.MonitorInfo`
+- :class:`Types.MonitorList`
 - :class:`Types.Node`
 - :class:`Types.NodeHealth`
 - :class:`Types.NodeList`
 - :class:`Types.NodeReference`
-- :class:`Types.ObjectFormatIdentifier`
 - :class:`Types.ObjectFormat`
+- :class:`Types.ObjectFormatIdentifier`
 - :class:`Types.ObjectFormatList`
 - :class:`Types.ObjectList`
-- :class:`Types.ObjectLocationList`
 - :class:`Types.ObjectLocation`
+- :class:`Types.ObjectLocationList`
 - :class:`Types.ObjectStatistics`
 - :class:`Types.OctetStream`
 - :class:`Types.OperationStatistics`
@@ -204,7 +204,7 @@ Data Types in CICore
   ObjectList o-- ObjectInfo
 
   class ObjectLocation {
-    + nodeIdentifier : Identifier
+    + nodeIdentifier : NodeReference
     + baseURL : anyURI
     + url : anyURI
     + preference : integer[0..1]
@@ -432,6 +432,32 @@ Data Types in CICore
 
 
 
+
+..                                    ######
+.. class:: Checksum
+
+  Represents the value of a computed checksum.
+
+  As represented in XMLSchema:
+
+  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+       :language: xml
+       :start-after: <!-- Checksum -->
+       :end-before: <!-- Component -->
+
+  .. image:: images/class_checksum.png
+
+  ..
+    @startuml images/class_checksum.png
+    class Checksum {
+      +algorithm : ChecksumAlgorithm
+      +value : string
+    }
+    Checksum -- ChecksumAlgorithm
+    @enduml
+
+
+
 ..                                    ######
 .. class:: ChecksumAlgorithm
 
@@ -462,30 +488,43 @@ Data Types in CICore
 
 
 ..                                    ######
-.. class:: Checksum
-
-  Represents the value of a computed checksum.
+.. class:: ComponentName
 
   As represented in XMLSchema:
 
   .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
-       :language: xml
-       :start-after: <!-- Checksum -->
-       :end-before: <!-- Component -->
-
-  .. image:: images/class_checksum.png
-
-  ..
-    @startuml images/class_checksum.png
-    class Checksum {
-      +algorithm : ChecksumAlgorithm
-      +value : string
-    }
-    Checksum -- ChecksumAlgorithm
-    @enduml
+     :language: xml
+     :start-after: <!-- ComponentName -->
+     :end-before: <!-- ComponentVersion -->
 
 
 
+
+..                                    ######
+.. class:: ComponentVersion
+
+  As represented in XMLSchema:
+  
+  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+     :language: xml
+     :start-after: <!-- ComponentVersion -->
+     :end-before: <!-- crontrabEntry -->
+
+
+
+..                                    ######
+.. class:: CrontabEntry
+
+  As represented in XMLSchema:
+
+  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+    :language: xml
+    :start-after: <!-- crontrabEntry -->
+    :end-before: <!-- Event Enumeration -->
+
+
+
+..                                    ######
 .. class:: DateTime
 
   A string that completely identifies a specific time.
@@ -575,6 +614,18 @@ Data Types in CICore
 
 ..                                    ######
 .. include:: types_errors.txt
+
+
+
+..                                    ######
+.. class:: Environment
+
+  As represented in XMLSchema:
+
+  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+    :language: xml
+    :start-after: <!-- Environment Enumeration -->
+    :end-before: <!-- Node State -->
 
 
 
@@ -1180,7 +1231,7 @@ Data Types in CICore
   .. 
     @startuml images/class_objectlocation.png
     class ObjectLocation {
-      + nodeIdentifier : Identifier
+      + nodeIdentifier : NodeReference
       + baseURL : anyURI
       + url : anyURI
       + preference : integer[0..1]
