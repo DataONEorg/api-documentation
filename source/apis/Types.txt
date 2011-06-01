@@ -176,6 +176,11 @@ Data Types in CICore
   }
   NodeList o-- Node
   
+  enum NodeType
+    NodeType : cn 
+    NodeType : mn
+    NodeType : Monitor
+
   NonEmptyString <|-- ObjectFormatIdentifier
 
   class ObjectFormat {
@@ -258,6 +263,42 @@ Data Types in CICore
   }
   ReplicationPolicy -- NodeReference
 
+  class Schedule {
+    + hour : CrontabEntry
+    + mday : CrontabEntry
+    + min : CrontabEntry
+    + mon : CrontabEntry
+    + sec : CrontabEntry
+    + wday : CrontabEntry
+    + year : CrontabEntry
+  }
+  Schedule -- CrontabEntry
+
+  class Service {
+    + name : ServiceName
+    + method : ServiceMethod[0..*]
+    + version : ServiceVersion
+    + available : Boolean
+  }
+  Service -- ServiceName
+  Service o-- ServiceMethod
+  Service -- ServiceVersion
+
+  class ServiceMethod {
+    + name : NMTOKEN
+    + rest : token
+    + implemented : Boolean
+  }
+
+  NonEmptyString <|-- ServiceName
+
+  class Services {
+    + service : Service[1..*]
+  }
+  Services o-- Service
+
+  NonEmptyString <|-- ServiceVersion
+
   class Session {
     + subject : Subject
     + subjectList : SubjectList[0..1]
@@ -273,6 +314,14 @@ Data Types in CICore
   }
   SubjectList o-- Person
   SubjectList o-- Group
+
+  class Synchronization {
+    + schedule : Schedule
+    + lastHarvested : DateTime
+    + lastCompleteHarvest : DateTime
+  }
+  Synchronization -- Schedule
+  Synchronization -- DateTime
 
   class SystemMetadata {
     + identifier : Identifier
@@ -988,6 +1037,28 @@ Data Types in CICore
 
 
 ..                                    ######
+.. class:: NodeType
+
+  As represented in XMLSchema:
+
+  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+     :language: xml
+     :start-after: <!-- NodeReference -->
+     :end-before: <!-- Node Type Enumeration -->
+
+  .. image:: images/class_nodetype.png
+
+  .. 
+    @startuml images/class_nodetype.png
+    enum NodeType
+    NodeType : cn 
+    NodeType : mn
+    NodeType : Monitor
+    @enduml
+
+
+
+..                                    ######
 .. class:: ObjectFormatIdentifier
 
   A string used to identify an instance of :class:`Types.ObjectFormat` and MUST
@@ -1429,6 +1500,144 @@ Data Types in CICore
     ReplicationPolicy -- NodeReference
     @enduml
 
+
+
+..                                    ######
+.. class:: Schedule
+
+  As represented in XMLSchema:
+  
+  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+    :language: xml
+    :start-after: <!-- Schedule -->
+    :end-before: <!-- Slice -->
+  
+  .. image:: images/class_schedule.png
+  
+  ..
+  @startuml images/class_schedule.png
+  class Schedule {
+    + hour : CrontabEntry
+    + mday : CrontabEntry
+    + min : CrontabEntry
+    + mon : CrontabEntry
+    + sec : CrontabEntry
+    + wday : CrontabEntry
+    + year : CrontabEntry
+  }
+  Schedule -- CrontabEntry
+  @enduml
+
+..                                    ######
+.. class:: Service
+
+  As represented in XMLSchema:
+  
+  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+    :language: xml
+    :start-after: <!-- Service -->
+    :end-before: <!-- Service Method -->
+  
+  .. image:: images/class_service.png
+  
+  ..
+  @startuml images/class_service.png
+  class Service {
+    + name : ServiceName
+    + method : ServiceMethod[0..*]
+    + version : ServiceVersion
+    + available : Boolean
+  }
+  Service -- ServiceName
+  Service o-- ServiceMethod
+  Service -- ServiceVersion
+  @enduml
+
+
+
+..                                    ######
+.. class:: ServiceMethod
+
+  As represented in XMLSchema:
+
+  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+     :language: xml
+     :start-after: <!-- Service Method -->
+     :end-before: <!-- Services -->
+
+  .. image:: images/class_servicemethod.png
+
+  ..
+    @startuml images/class_servicemethod.png
+    class ServiceMethod {
+      + name : NMTOKEN
+      + rest : token
+      + implemented : Boolean
+    }
+    @enduml
+
+
+
+..                                    ######
+.. class:: ServiceName
+
+  As represented in XMLSchema:
+
+  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+     :language: xml
+     :start-after: <!-- Service Name -->
+     :end-before: <!-- Service Version -->
+
+  .. image:: images/class_servicename.png
+
+  ..
+    @startuml images/class_servicename.png
+    NonEmptyString <|-- ServiceName
+    @enduml
+
+
+
+..                                    ######
+.. class:: Services
+
+  As represented in XMLSchema:
+  
+  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+    :language: xml
+    :start-after: <!-- Services -->
+    :end-before: <!-- Session -->
+  
+  .. image:: images/class_services.png
+  
+  ..
+  @startuml images/class_services.png
+  class Services {
+    + service : Service[1..*]
+  }
+  Services o-- Service
+  @enduml
+
+
+
+..                                    ######
+.. class:: ServiceVersion
+
+  As represented in XMLSchema:
+
+  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+     :language: xml
+     :start-after: <!-- Service Version -->
+     :end-before: <!-- ***************************************
+
+  .. image:: images/class_servicversion.png
+
+  ..
+    @startuml images/class_serviceversion.png
+    NonEmptyString <|-- ServiceVersion
+    @enduml
+
+
+
 ..                                    ######
 .. class:: Subject
 
@@ -1484,6 +1693,32 @@ Data Types in CICore
 
 
 
+..                                    ######
+.. class:: Synchronization
+
+  As represented in XMLSchema:
+
+  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+    :language: xml
+    :start-after: <!-- Synchronization -->
+    :end-before: <!-- Subject = user identity -->
+  
+  .. image:: images/class_synchronization.png
+
+  ..
+  @startuml images/class_synchronization.png
+  class Synchronization {
+    + schedule : Schedule
+    + lastHarvested : DateTime
+    + lastCompleteHarvest : DateTime
+  }
+  Synchronization -- Schedule
+  Synchronization -- DateTime
+  @enduml
+
+
+
+..                                    ######
 .. class:: Query
 
    Queries are used to identify a subset of objects from a collection. The
@@ -1563,9 +1798,41 @@ Data Types in CICore
 
 
 ..                                    ######
+.. class:: Session
+
+  Information about the authenticated session for a service transaction.
+  Session data is retrieved from the SSL client certificate and populated in
+  the Session object. The subject represents the person or system that
+  authenticated successfully, and the subjectList contains a listing of
+  alternate identities (both Persons and Groups) that are also valid
+  identities for this user. The subjectList should include at least one Person
+  or Group entry that provides the attributes of the subject that was
+  authenticated.
+
+  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+     :language: xml
+     :start-after: <!-- Session -->
+     :end-before: <!-- Schedule -->
+
+  .. image:: images/class_session.png
+
+  ..
+    @startuml images/class_session.png
+    class Session {
+      + subject : Subject
+      + subjectList : SubjectList[0..1]
+    }
+    Session o-- Subject
+    Session o-- SubjectList
+    @enduml
+
+
+
+..                                    ######
 .. class:: Status
 
   The response from :func:`MNCore.getStatus`
+
 
 
 ..                                    ######
