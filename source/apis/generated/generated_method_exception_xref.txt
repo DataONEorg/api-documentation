@@ -642,6 +642,11 @@
      - 500
      - 4801
    * - :mod:`CNCore`
+     - :func:`listNodes <CNCore.listNodes>`
+     - InvalidRequest
+     - 400
+     - 4823
+   * - :mod:`CNCore`
      - :func:`registerSystemMetadata <CNCore.registerSystemMetadata>`
      - NotImplemented
      - 501
@@ -1302,25 +1307,30 @@
      - 400
      - 4883
    * - :mod:`CNRegister`
-     - :func:`addNodeCapabilities <CNRegister.addNodeCapabilities>`
+     - :func:`updateNodeCapabilities <CNRegister.updateNodeCapabilities>`
      - NotImplemented
      - 501
      - 4820
    * - :mod:`CNRegister`
-     - :func:`addNodeCapabilities <CNRegister.addNodeCapabilities>`
+     - :func:`updateNodeCapabilities <CNRegister.updateNodeCapabilities>`
      - NotAuthorized
      - 401
      - 4821
    * - :mod:`CNRegister`
-     - :func:`addNodeCapabilities <CNRegister.addNodeCapabilities>`
+     - :func:`updateNodeCapabilities <CNRegister.updateNodeCapabilities>`
      - ServiceFailure
      - 500
      - 4822
    * - :mod:`CNRegister`
-     - :func:`addNodeCapabilities <CNRegister.addNodeCapabilities>`
+     - :func:`updateNodeCapabilities <CNRegister.updateNodeCapabilities>`
      - InvalidRequest
      - 400
      - 4823
+   * - :mod:`CNRegister`
+     - :func:`updateNodeCapabilities <CNRegister.updateNodeCapabilities>`
+     - NotFound
+     - 404
+     - 4824
    * - :mod:`CNRegister`
      - :func:`register <CNRegister.register>`
      - NotImplemented
@@ -1341,3 +1351,8 @@
      - InvalidRequest
      - 400
      - 4843
+   * - :mod:`CNRegister`
+     - :func:`register <CNRegister.register>`
+     - IdentifierNotUnique
+     - 409
+     - 4844

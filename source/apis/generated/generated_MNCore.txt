@@ -33,7 +33,7 @@
    * - Tier 1
      - ``GET /  or  GET /node``
      - :func:`getCapabilities`
-     - () ``->`` :class:`Types.NodeList`
+     - () ``->`` :class:`Types.Node`
 
 
 
@@ -222,13 +222,13 @@
 
 
 
-.. function:: getCapabilities() -> NodeList
+.. function:: getCapabilities() -> Node
 
    Returns a document describing the capabilities of the Member Node.
 
    :REST URL: ``GET /  or  GET /node``
    :returns: The technical capabilities of the Member Node
-   :rtype: :class:`Types.NodeList`
+   :rtype: :class:`Types.Node`
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2160)``
 

@@ -92,13 +92,19 @@ Data Types in CICore
   DescribeResponse -- Checksum
   DescribeResponse -- DateTime
 
+  enum Environment
+    Environment : dev
+    Environment : test
+    Environment : staging
+    Environment : prod
+
   enum Event
-  Event : CREATE
-  Event : READ
-  Event : UPDATE
-  Event : DELETE
-  Event : REPLICATE
-  Event : CHANGEOWNER
+    Event : CREATE
+    Event : READ
+    Event : UPDATE
+    Event : DELETE
+    Event : REPLICATE
+    Event : CHANGEOWNER
 
   class Group {
     + subject : Subject
@@ -146,7 +152,8 @@ Data Types in CICore
   NonEmptyString <|-- NodeReference
 
   class Node {
-    name : NonEmptyString
+    identifier : NodeReference
+    name : NodeReference
     description : NonEmptyString
     baseURL : anyURI
     services : Services[0..1]
@@ -157,6 +164,7 @@ Data Types in CICore
     type : NodeType
     environment : Environment[0..1]
   }
+  Node -- NodeReference
   Node -- NonEmptyString
   Node o-- Services
   Node o-- Synchronization
@@ -643,9 +651,9 @@ Data Types in CICore
 
   .. attribute:: DataONE-Checksum
 
-     The ChecksumAlgorithm and Checksum value of the object being examined. The
-     algorithm and checksum values are separated by a single comma with the
-     algorithm first.
+     The ChecksumAlgorithm and Checksum value of the object being examined.
+     The algorithm and checksum values are separated by a single comma with
+     the algorithm first.
 
 
   Example of a HEAD response on object "ABC123"::
@@ -675,6 +683,17 @@ Data Types in CICore
     :language: xml
     :start-after: <!-- Environment Enumeration -->
     :end-before: <!-- Node State -->
+
+  .. image:: images/class_environment.png
+
+  ..
+    @startuml images/class_environment.png
+    enum Environment
+      Environment : dev
+      Environment : test
+      Environment : staging
+      Environment : prod
+    @enduml
 
 
 
@@ -947,6 +966,7 @@ Data Types in CICore
   ..
     @startuml images/class_node.png
     class Node {
+      identifier : NodeReference
       name : NonEmptyString
       description : NonEmptyString
       baseURL : anyURI
@@ -958,6 +978,7 @@ Data Types in CICore
       type : NodeType
       environment : Environment[0..1]
     }
+    Node -- NodeReference
     Node -- NonEmptyString
     Node o-- Services
     Node o-- Synchronization
@@ -1515,18 +1536,20 @@ Data Types in CICore
   .. image:: images/class_schedule.png
   
   ..
-  @startuml images/class_schedule.png
-  class Schedule {
-    + hour : CrontabEntry
-    + mday : CrontabEntry
-    + min : CrontabEntry
-    + mon : CrontabEntry
-    + sec : CrontabEntry
-    + wday : CrontabEntry
-    + year : CrontabEntry
-  }
-  Schedule -- CrontabEntry
-  @enduml
+    @startuml images/class_schedule.png
+    class Schedule {
+      + hour : CrontabEntry
+      + mday : CrontabEntry
+      + min : CrontabEntry
+      + mon : CrontabEntry
+      + sec : CrontabEntry
+      + wday : CrontabEntry
+      + year : CrontabEntry
+    }
+    Schedule -- CrontabEntry
+    @enduml
+
+
 
 ..                                    ######
 .. class:: Service
@@ -1541,17 +1564,17 @@ Data Types in CICore
   .. image:: images/class_service.png
   
   ..
-  @startuml images/class_service.png
-  class Service {
-    + name : ServiceName
-    + method : ServiceMethod[0..*]
-    + version : ServiceVersion
-    + available : Boolean
-  }
-  Service -- ServiceName
-  Service o-- ServiceMethod
-  Service -- ServiceVersion
-  @enduml
+    @startuml images/class_service.png
+    class Service {
+      + name : ServiceName
+      + method : ServiceMethod[0..*]
+      + version : ServiceVersion
+      + available : Boolean
+    }
+    Service -- ServiceName
+    Service o-- ServiceMethod
+    Service -- ServiceVersion
+    @enduml
 
 
 
@@ -1610,12 +1633,12 @@ Data Types in CICore
   .. image:: images/class_services.png
   
   ..
-  @startuml images/class_services.png
-  class Services {
-    + service : Service[1..*]
-  }
-  Services o-- Service
-  @enduml
+    @startuml images/class_services.png
+    class Services {
+      + service : Service[1..*]
+    }
+    Services o-- Service
+    @enduml
 
 
 
@@ -1629,7 +1652,7 @@ Data Types in CICore
      :start-after: <!-- Service Version -->
      :end-before: <!-- ***************************************
 
-  .. image:: images/class_servicversion.png
+  .. image:: images/class_serviceversion.png
 
   ..
     @startuml images/class_serviceversion.png
@@ -1706,15 +1729,15 @@ Data Types in CICore
   .. image:: images/class_synchronization.png
 
   ..
-  @startuml images/class_synchronization.png
-  class Synchronization {
-    + schedule : Schedule
-    + lastHarvested : DateTime
-    + lastCompleteHarvest : DateTime
-  }
-  Synchronization -- Schedule
-  Synchronization -- DateTime
-  @enduml
+    @startuml images/class_synchronization.png
+    class Synchronization {
+      + schedule : Schedule
+      + lastHarvested : DateTime
+      + lastCompleteHarvest : DateTime
+    }
+    Synchronization -- Schedule
+    Synchronization -- DateTime
+    @enduml
 
 
 
@@ -1768,13 +1791,14 @@ Data Types in CICore
 ..                                    ######
 .. class:: Session
 
-  Information about the authenticated session for a service transaction. Session
-  data is retrieved from the SSL client certificate and populated in the Session
-  object. The subject represents the person or system that authenticated
-  successfully, and the subjectList contains a listing of alternate identities
-  (both Persons and Groups) that are also valid identities for this user. The
-  subjectList should include at least one Person or Group entry that provides
-  the attributes of the subject that was authenticated.
+  Information about the authenticated session for a service transaction.
+  Session data is retrieved from the SSL client certificate and populated in
+  the Session object. The subject represents the person or system that
+  authenticated successfully, and the subjectList contains a listing of
+  alternate identities (both Persons and Groups) that are also valid
+  identities for this user. The subjectList should include at least one Person
+  or Group entry that provides the attributes of the subject that was
+  authenticated.
 
   As represented in XMLSchema:
 

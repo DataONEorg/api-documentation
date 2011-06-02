@@ -151,12 +151,14 @@
    :Use Cases:
      :doc:`UC39 </design/UseCases/39_uc>`
    :REST URL: ``GET /node``
-   :returns: List of nodes
+   :returns: List of nodes from the registry
    :rtype: :class:`Types.NodeList`
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4800)``
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4801)``
+
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4823)``
 
 
 

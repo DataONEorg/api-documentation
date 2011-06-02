@@ -155,8 +155,8 @@
    * - PUT ?
      - :func:`CNReplication.setReplicationPolicy`
      - Updates the replication policy entry for an object by updating the system metadata.
-   * - PUT /node/{pid}
-     - :func:`CNRegister.addNodeCapabilities`
+   * - PUT /node/{nodeid}
+     - :func:`CNRegister.updateNodeCapabilities`
      - 
    * - POST /node
      - :func:`CNRegister.register`

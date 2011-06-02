@@ -128,11 +128,11 @@
      - :func:`CNReplication.setReplicationPolicy`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`policy<Types.ReplicationPolicy>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
-     - ``PUT /node/{pid}``
-     - :func:`CNRegister.addNodeCapabilities`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Boolean`
+     - ``PUT /node/{nodeid}``
+     - :func:`CNRegister.updateNodeCapabilities`
+     - (:class:`session<Types.Session>`, :class:`nodeid<Types.NodeReference>`, :class:`node<Types.Node>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``POST /node``
      - :func:`CNRegister.register`
-     - (:class:`session<Types.Session>`) ``->`` :class:`Types.Identifier`
+     - (:class:`session<Types.Session>`, :class:`node<Types.Node>`) ``->`` :class:`Types.NodeReference`
 
