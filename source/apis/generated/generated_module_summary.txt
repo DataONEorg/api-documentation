@@ -126,6 +126,7 @@ If the object does not exist on the node servicing the request, then an :exc:`Ex
    * - \
      - :func:`CNCore.registerSystemMetadata`
      - Provides a mechanism for adding system metadata independently of its associated object, such as when adding system metadata for data objects.
+This method is used internally by Coordinating Nodes.
    * - :mod:`CNRead`
      - :func:`CNRead.get`
      - Retrieves the object identified by *pid* from the node. If the object is not present on the node, then an :exc:`Exceptions.NotFound` error is raised (regardless of whether the object exists on another node in the DataONE system).
@@ -227,7 +228,7 @@ Group members can be removed by the original creator of the group, otherwise a N
        Appears in functional use cases: :doc:`UC09 </design/UseCases/09_uc>`
    * - \
      - :func:`CNReplication.updateReplicationMetadata`
-     - Full replacement of ReplicationMetadata, changes date sys meta modified
+     - Full replacement of replication metadata in the system metadata for the specified object, changes date sys meta modified
    * - \
      - :func:`CNReplication.setReplicationPolicy`
      - Updates the replication policy entry for an object by updating the system metadata.

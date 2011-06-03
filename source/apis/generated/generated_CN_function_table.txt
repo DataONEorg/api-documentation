@@ -122,9 +122,9 @@
    * - Tier 4
      - ``PUT /meta/replication/{pid}``
      - :func:`CNReplication.updateReplicationMetadata`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`replicaMetadata<Types.Replica>`) ``->``
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`replicaMetadata<Types.Replica>`) ``->`` :class:`Types.Boolean`
    * - 
-     - ``PUT ?``
+     - ``PUT /meta/policy/{pid}``
      - :func:`CNReplication.setReplicationPolicy`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`policy<Types.ReplicationPolicy>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
