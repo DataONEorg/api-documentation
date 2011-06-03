@@ -70,19 +70,19 @@
    :returns: The new subject in the DataONE system.  This may be a simple identifier.
    :rtype: :class:`Types.Subject`
 
-   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4530)``
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4520)``
 
-   :raises Exceptions.IdentifierNotUnique: ``(errorCode=409, detailCode=4500)``
+   :raises Exceptions.IdentifierNotUnique: ``(errorCode=409, detailCode=4521)``
 
      The chosen identity already exists in the system
 
-   :raises Exceptions.InvalidCredentials: ``(errorCode=401, detailCode=4520)``
+   :raises Exceptions.InvalidCredentials: ``(errorCode=401, detailCode=4522)``
 
      Raised if the supplied credentials are invalid, such as an invalid X.509 certificate.
 
-   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4501)``
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4523)``
 
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4502)``
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4524)``
 
 
 
@@ -105,13 +105,13 @@
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4530)``
 
-   :raises Exceptions.InvalidCredentials: ``(errorCode=401, detailCode=4520)``
+   :raises Exceptions.InvalidCredentials: ``(errorCode=401, detailCode=4531)``
 
      Raised if the supplied credentials are invalid, such as an invalid X.509 certificate.
 
-   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4501)``
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4532)``
 
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4502)``
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4533)``
 
 
 
@@ -132,17 +132,17 @@
    :returns: True if the account verification succeeds, otherwise false.
    :rtype: :class:`Types.Boolean`
 
-   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4550)``
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4540)``
 
-   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=4540)``
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=4541)``
 
      This error is raised if the person attempting to validate the account is not authorized to verify accounts.
 
-   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4541)``
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4542)``
 
-   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=4555)``
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=4543)``
 
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4542)``
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4544)``
 
 
 
@@ -161,9 +161,13 @@
    :returns: The Person or Group details are contained in the returned SubjectList for the given Subject
    :rtype: :class:`Types.SubjectList`
 
-   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2290)``
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4560)``
 
-   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=2270)``
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4561)``
+
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4562)``
+
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=4563)``
 
 
 

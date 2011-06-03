@@ -666,6 +666,11 @@
      - InvalidRequest
      - 400
      - 4863
+   * - :mod:`CNCore`
+     - :func:`registerSystemMetadata <CNCore.registerSystemMetadata>`
+     - InvalidSystemMetadata
+     - 400
+     - 4864
    * - :mod:`CNRead`
      - :func:`get <CNRead.get>`
      - NotAuthorized
@@ -985,27 +990,27 @@
      - :func:`registerAccount <CNIdentity.registerAccount>`
      - ServiceFailure
      - 500
-     - 4530
+     - 4520
    * - :mod:`CNIdentity`
      - :func:`registerAccount <CNIdentity.registerAccount>`
      - IdentifierNotUnique
      - 409
-     - 4500
+     - 4521
    * - :mod:`CNIdentity`
      - :func:`registerAccount <CNIdentity.registerAccount>`
      - InvalidCredentials
      - 401
-     - 4520
+     - 4522
    * - :mod:`CNIdentity`
      - :func:`registerAccount <CNIdentity.registerAccount>`
      - NotImplemented
      - 501
-     - 4501
+     - 4523
    * - :mod:`CNIdentity`
      - :func:`registerAccount <CNIdentity.registerAccount>`
      - InvalidRequest
      - 400
-     - 4502
+     - 4524
    * - :mod:`CNIdentity`
      - :func:`updateAccount <CNIdentity.updateAccount>`
      - ServiceFailure
@@ -1015,52 +1020,62 @@
      - :func:`updateAccount <CNIdentity.updateAccount>`
      - InvalidCredentials
      - 401
-     - 4520
+     - 4531
    * - :mod:`CNIdentity`
      - :func:`updateAccount <CNIdentity.updateAccount>`
      - NotImplemented
      - 501
-     - 4501
+     - 4532
    * - :mod:`CNIdentity`
      - :func:`updateAccount <CNIdentity.updateAccount>`
      - InvalidRequest
      - 400
-     - 4502
+     - 4533
    * - :mod:`CNIdentity`
      - :func:`verifyAccount <CNIdentity.verifyAccount>`
      - ServiceFailure
      - 500
-     - 4550
+     - 4540
    * - :mod:`CNIdentity`
      - :func:`verifyAccount <CNIdentity.verifyAccount>`
      - NotAuthorized
      - 401
-     - 4540
+     - 4541
    * - :mod:`CNIdentity`
      - :func:`verifyAccount <CNIdentity.verifyAccount>`
      - NotImplemented
      - 501
-     - 4541
+     - 4542
    * - :mod:`CNIdentity`
      - :func:`verifyAccount <CNIdentity.verifyAccount>`
      - InvalidToken
      - 401
-     - 4555
+     - 4543
    * - :mod:`CNIdentity`
      - :func:`verifyAccount <CNIdentity.verifyAccount>`
      - InvalidRequest
      - 400
-     - 4542
+     - 4544
+   * - :mod:`CNIdentity`
+     - :func:`getSubjectInfo <CNIdentity.getSubjectInfo>`
+     - NotImplemented
+     - 501
+     - 4560
    * - :mod:`CNIdentity`
      - :func:`getSubjectInfo <CNIdentity.getSubjectInfo>`
      - ServiceFailure
      - 500
-     - 2290
+     - 4561
    * - :mod:`CNIdentity`
      - :func:`getSubjectInfo <CNIdentity.getSubjectInfo>`
-     - InvalidToken
+     - InvalidRequest
+     - 400
+     - 4562
+   * - :mod:`CNIdentity`
+     - :func:`getSubjectInfo <CNIdentity.getSubjectInfo>`
+     - NotAuthorized
      - 401
-     - 2270
+     - 4563
    * - :mod:`CNIdentity`
      - :func:`listSubjects <CNIdentity.listSubjects>`
      - ServiceFailure
