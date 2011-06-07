@@ -17,7 +17,7 @@
    * - Tier 1
      - ``GET /formats/{fmtid}``
      - :func:`CNCore.getFormat`
-     - (:class:`fmtid<Types.Identifier>`) ``->`` :class:`Types.ObjectFormat`
+     - (:class:`fmtid<Types.ObjectFormatIdentifier>`) ``->`` :class:`Types.ObjectFormat`
    * - Tier 1
      - ``GET /log?fromdate={fromDate}[&todate={toDate}&event={event}]``
      - :func:`CNCore.getLogRecords`
@@ -69,12 +69,8 @@
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`operation<Types.Event>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``PUT /accessRules/{pid}``
-     - :func:`CNAuthorization.setAccess`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`accessPolicy<Types.AccessPolicy>`) ``->`` :class:`Types.Boolean`
-   * - Tier 2
-     - ``PUT /meta/access/{pid}``
      - :func:`CNAuthorization.setAccessPolicy`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`policy<Types.AccessPolicy>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`accessPolicy<Types.AccessPolicy>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``POST /accounts``
      - :func:`CNIdentity.registerAccount`

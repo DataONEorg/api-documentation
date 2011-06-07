@@ -109,6 +109,10 @@ Glossary
     The node event log is implemented on Coordinating Nodes and Member Nodes
     and should record all object access and manipulation events.
 
+  Origin Member Node 
+    The :term:`Member Node` where an object was first registered with the
+    DataONE infrastructure.
+
   public user
     The default user identity used when a service is called without supplying 
     user credentials. The public user SHOULD never have write access to any 
@@ -120,6 +124,10 @@ Glossary
 
   replication
     See :term:`Coordinating Node replication` or :term:`data replication`.
+
+  Rights Holder
+    The :term:`Subject` that has full control over the access control rules
+    for an object.
 
   session
     In the context of DataONE, a session refers to the operations that occur

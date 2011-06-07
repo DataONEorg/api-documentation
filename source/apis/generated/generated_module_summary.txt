@@ -112,7 +112,7 @@ If the object does not exist on the node servicing the request, then an :exc:`Ex
      - Returns a list of all object formats registered in the DataONE Object Format Vocabulary.
    * - \
      - :func:`CNCore.getFormat`
-     - Returns the object format registered in the dataONE Object Format Vocabulary for the given format identifier.
+     - Returns the object format registered in the DataONE Object Format Vocabulary for the given format identifier.
    * - \
      - :func:`CNCore.getLogRecords`
      - Retrieves consolidated log information for the specified date range (inclusive) for the entire DataONE infrastructure
@@ -174,13 +174,11 @@ Appears in functional use cases: :doc:`UC36 </design/UseCases/36_uc>`, :doc:`UC1
 
        Appears in functional use cases: :doc:`UC01 </design/UseCases/01_uc>`, :doc:`UC02 </design/UseCases/02_uc>`, :doc:`UC36 </design/UseCases/36_uc>`, :doc:`UC37 </design/UseCases/37_uc>`
    * - \
-     - :func:`CNAuthorization.setAccess`
+     - :func:`CNAuthorization.setAccessPolicy`
      - Sets the access permissions for an object identified by *pid*.
+Triggers a change to the system metadata modified time stamp.
 
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
-   * - \
-     - :func:`CNAuthorization.setAccessPolicy`
-     - Updates the access policy entry for an object by modifying the system metadata. Triggers a change to the system metdata mdified time stamp.
    * - :mod:`CNIdentity`
      - :func:`CNIdentity.registerAccount`
      - Create a new :term:`subject` in the DataONE system. Note that there should probably be a lot more metadata captured about the new user, and there should be a mechanism for specifying the default access control rules for the new account.

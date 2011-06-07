@@ -62,11 +62,9 @@ Data Types in CICore
   class AccessRule {
     + subject : Subject[1..*]
     + permission : Permission[1..*]
-    + resource : Identifier[1..*]
   }
   AccessRule o-- Subject
   AccessRule o-- Permission
-  AccessRule o-- Identifier
 
   enum ChecksumAlgorithm
   ChecksumAlgorithm : SHA-1
@@ -400,14 +398,18 @@ Data Types in CICore
 .. class:: AccessRule
 
   A rule that is used to allow a :term:`subject` to perform an action (such as
-  read or write) on an object in DataONE. Rules are three-tuples (subject,
-  permission, resource) specifying which permissions are allowed for the
-  subjects(s) for the resource(s) listed. Access control rules are specified by
-  the OriginMemberNode when the object is first registered in DataONE. If no
-  rules are specified at that time, then the object is deemed to be private and
-  the only user with access to the object (read, write, or otherwise) is the
-  RightsHolder.
-  
+  read or write) on an object in DataONE. Rules are tuples (subject,
+  permission) specifying which permissions are allowed for the subjects(s).
+  The resource on which the access control rules are being applied is
+  determined by the containing System Metadata document, or in the case of
+  methods such as :func:`CNAuthorization.setAccessPolicy`, by the *pid* in the
+  method parameters.
+
+  Access control rules are specified by the :term:`Origin Member Node` when the
+  object is first registered in DataONE. If no rules are specified at that
+  time, then the object is deemed to be private and the only user with access
+  to the object (read, write, or otherwise) is the :term:`Rights Holder`.
+
   .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
      :language: xml
      :start-after: <!-- AccessRule -->
@@ -420,11 +422,9 @@ Data Types in CICore
     class AccessRule {
       + subject : Subject[1..*]
       + permission : Permission[1..*]
-      + resource : Identifier[1..*]
     }
     AccessRule o-- Subject
     AccessRule o-- Permission
-    AccessRule o-- Identifier
     @enduml
 
 
@@ -510,6 +510,7 @@ Data Types in CICore
       +algorithm : ChecksumAlgorithm
       +value : string
     }
+    enum ChecksumAlgorithm
     Checksum -- ChecksumAlgorithm
     @enduml
 

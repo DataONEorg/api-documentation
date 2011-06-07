@@ -20,12 +20,8 @@
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`operation<Types.Event>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``PUT /accessRules/{pid}``
-     - :func:`setAccess`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`accessPolicy<Types.AccessPolicy>`) ``->`` :class:`Types.Boolean`
-   * - Tier 2
-     - ``PUT /meta/access/{pid}``
      - :func:`setAccessPolicy`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`policy<Types.AccessPolicy>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`accessPolicy<Types.AccessPolicy>`) ``->`` :class:`Types.Boolean`
 
 
 
@@ -106,9 +102,11 @@
 
 
 
-.. function:: setAccess(session,pid,accessPolicy) -> Boolean
+.. function:: setAccessPolicy(session,pid,accessPolicy) -> Boolean
 
    Sets the access permissions for an object identified by *pid*.
+
+   Triggers a change to the system metadata modified time stamp.
 
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`
@@ -116,7 +114,7 @@
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
-   :param pid: The object for which access control is being edited.
+   :param pid: The object for which access control is being updated.
    :type pid: :class:`Types.Identifier`
 
    :param accessPolicy: The desired privileges to be assigned to the object.
@@ -137,7 +135,7 @@
 
    :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=4420)``
 
-     The :term:`principal` does not have permission to alter access control rules for the object.
+     The :term:`Subject` does not have permission to alter access control rules for the object.
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4401)``
 
@@ -147,32 +145,4 @@
     Should permissions cascade? e.g. Should setting permission on a Data Package cascade to the contained objects as well (the experiment metadata and data)?
 .. TODO::
     .. Note:: Setting access rules on a CN implies that the rules are propogated to the CNs and to all MNs holding a copy of the object
-
-
-
-.. function:: setAccessPolicy(session,pid,policy) -> Boolean
-
-   Updates the access policy entry for an object by modifying the system metadata. Triggers a change to the system metdata mdified time stamp.
-
-   :REST URL: ``PUT /meta/access/{pid}``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
-   :type session: :class:`Types.Session`
-
-   :param pid:
-   :type pid: :class:`Types.Identifier`
-
-   :param policy:
-   :type policy: :class:`Types.AccessPolicy`
-
-   :returns: True on success
-   :rtype: :class:`Types.Boolean`
-
-   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4870)``
-
-   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=4871)``
-
-   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4872)``
-
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4873)``
-
 

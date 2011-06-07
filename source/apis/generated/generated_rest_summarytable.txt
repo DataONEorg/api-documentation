@@ -73,7 +73,7 @@
      - Returns a list of all object formats registered in the DataONE Object Format Vocabulary.
    * - GET /formats/{fmtid}
      - :func:`CNCore.getFormat`
-     - Returns the object format registered in the dataONE Object Format Vocabulary for the given format identifier.
+     - Returns the object format registered in the DataONE Object Format Vocabulary for the given format identifier.
    * - GET /log?fromdate={fromDate}[&todate={toDate}&event={event}]
      - :func:`CNCore.getLogRecords`
      - Retrieves consolidated log information for the specified date range (inclusive) for the entire DataONE infrastructure
@@ -111,11 +111,8 @@
      - :func:`CNAuthorization.isAuthorized`
      - Test if the user identified by the provided token has authorization for operation on the specified object. .. Note:: Should perhaps add convenience methods for "canRead()" and "canWrite()" to verify that a user is able to read / write an object.
    * - PUT /accessRules/{pid}
-     - :func:`CNAuthorization.setAccess`
-     - Sets the access permissions for an object identified by *pid*.
-   * - PUT /meta/access/{pid}
      - :func:`CNAuthorization.setAccessPolicy`
-     - Updates the access policy entry for an object by modifying the system metadata. Triggers a change to the system metdata mdified time stamp.
+     - Sets the access permissions for an object identified by *pid*. Triggers a change to the system metadata modified time stamp.
    * - POST /accounts
      - :func:`CNIdentity.registerAccount`
      - Create a new :term:`subject` in the DataONE system. Note that there should probably be a lot more metadata captured about the new user, and there should be a mechanism for specifying the default access control rules for the new account.

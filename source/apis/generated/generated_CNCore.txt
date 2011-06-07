@@ -17,7 +17,7 @@
    * - Tier 1
      - ``GET /formats/{fmtid}``
      - :func:`getFormat`
-     - (:class:`fmtid<Types.Identifier>`) ``->`` :class:`Types.ObjectFormat`
+     - (:class:`fmtid<Types.ObjectFormatIdentifier>`) ``->`` :class:`Types.ObjectFormat`
    * - Tier 1
      - ``GET /log?fromdate={fromDate}[&todate={toDate}&event={event}]``
      - :func:`getLogRecords`
@@ -70,11 +70,11 @@
 
 .. function:: getFormat(fmtid) -> ObjectFormat
 
-   Returns the object format registered in the dataONE Object Format Vocabulary for the given format identifier.
+   Returns the object format registered in the DataONE Object Format Vocabulary for the given format identifier.
 
    :REST URL: ``GET /formats/{fmtid}``
-   :param fmtid: Unique Identifier for the object format
-   :type fmtid: :class:`Types.Identifier`
+   :param fmtid: Unique ObjectFormatIdentifier for the object format
+   :type fmtid: :class:`Types.ObjectFormatIdentifier`
 
    :returns: The object format registered in the DataONE Object Format Vocablulary
    :rtype: :class:`Types.ObjectFormat`
