@@ -68,6 +68,9 @@
    * - Path
      - Method
      - Description
+   * - POST /object/{pid}
+     - :func:`CNCore.create`
+     - Used intenrally within a Coordinating Node to add a new object to the object store. This method is not publicly exposed by a Coordinating Node.
    * - GET /formats
      - :func:`CNCore.listFormats`
      - Returns a list of all object formats registered in the DataONE Object Format Vocabulary.
@@ -77,6 +80,9 @@
    * - GET /log?fromdate={fromDate}[&todate={toDate}&event={event}]
      - :func:`CNCore.getLogRecords`
      - Retrieves consolidated log information for the specified date range (inclusive) for the entire DataONE infrastructure
+   * - POST /reserve
+     - :func:`CNCore.reserveIdentifier`
+     - Given an optional scope and format, reserves and returns an identifier within that scope and format that is unique and will not be used by any other sessions. Future calls to :func:`MN_storage.create` and :func:`MN_storage.update` that reference this ID must originate from the :term:`session` in which the identifier was reserved, otherwise an error is raised on those methods.
    * - GET /node
      - :func:`CNCore.listNodes`
      - Returns a list of nodes that have been registered with the DataONE infrastructure.
@@ -92,9 +98,6 @@
    * - GET /resolve/{pid}
      - :func:`CNRead.resolve`
      - Implemented by CNs, returns the nodes (MNs or CNs) known to hold copies of the object identified by *pid*. The object resolution process is intended to provide a simple mechanism for a client to discover from which node(s) a particular object may be retrieved, and this information is returned as a list of node identifiers. Details about method interfaces (i.e. REST URLs) exposed by a particular node can be determined by examining the response from the *node* collection. For convenience, the :func:`MN_read.get` URL is included in the response as is the base URL of the node REST services. Note also that the same functionality as *resolve()* can be implemented by retrieving a copy of the system metadata for the object and utilizing the node registry to discover the base URL from which the client can construct the *get()* URL. Resolve is provided for efficiency since the response size is much smaller.
-   * - POST /reserve
-     - :func:`CNRead.reserveIdentifier`
-     - Given an optional scope and format, reserves and returns an identifier within that scope and format that is unique and will not be used by any other sessions. Future calls to :func:`MN_storage.create` and :func:`MN_storage.update` that reference this ID must originate from the :term:`session` in which the identifier was reserved, otherwise an error is raised on those methods.
    * - GET /assertRelation/{pidOfSubject}?relationship={relationship}&pidofobject={pidOfObject}
      - :func:`CNRead.assertRelation`
      - Tests that the specified relationship between *pidOfSubject* and *pidOfObject* exists.

@@ -11,6 +11,10 @@
      - Function
      - Parameters
    * - Tier 1
+     - ``POST /object/{pid}``
+     - :func:`CNCore.create`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, ``object``, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
+   * - Tier 1
      - ``GET /formats``
      - :func:`CNCore.listFormats`
      - () ``->`` :class:`Types.ObjectFormatList`
@@ -22,6 +26,10 @@
      - ``GET /log?fromdate={fromDate}[&todate={toDate}&event={event}]``
      - :func:`CNCore.getLogRecords`
      - (:class:`session<Types.Session>`, :class:`fromDate<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`) ``->`` :class:`Types.Log`
+   * - Tier 1
+     - ``POST /reserve``
+     - :func:`CNCore.reserveIdentifier`
+     - (:class:`session<Types.Session>`, :class:`[pid]<Types.Identifier>`, ``[scope]``, ``[format]``) ``->`` :class:`Types.Identifier`
    * - Tier 1
      - ``GET /node``
      - :func:`CNCore.listNodes`
@@ -43,10 +51,6 @@
      - ``GET /resolve/{pid}``
      - :func:`CNRead.resolve`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.ObjectLocationList`
-   * - Tier 1
-     - ``POST /reserve``
-     - :func:`CNRead.reserveIdentifier`
-     - (:class:`session<Types.Session>`, :class:`[pid]<Types.Identifier>`, ``[scope]``, ``[format]``) ``->`` :class:`Types.Identifier`
    * - Tier 1
      - ``GET /assertRelation/{pidOfSubject}?relationship={relationship}&pidofobject={pidOfObject}``
      - :func:`CNRead.assertRelation`

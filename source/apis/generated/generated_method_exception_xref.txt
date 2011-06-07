@@ -557,6 +557,51 @@
      - 400
      - 2155
    * - :mod:`CNCore`
+     - :func:`create <CNCore.create>`
+     - NotAuthorized
+     - 401
+     - 1100
+   * - :mod:`CNCore`
+     - :func:`create <CNCore.create>`
+     - IdentifierNotUnique
+     - 409
+     - 1120
+   * - :mod:`CNCore`
+     - :func:`create <CNCore.create>`
+     - UnsupportedType
+     - 400
+     - 4895
+   * - :mod:`CNCore`
+     - :func:`create <CNCore.create>`
+     - InsufficientResources
+     - 413
+     - 4897
+   * - :mod:`CNCore`
+     - :func:`create <CNCore.create>`
+     - InvalidSystemMetadata
+     - 400
+     - 4896
+   * - :mod:`CNCore`
+     - :func:`create <CNCore.create>`
+     - ServiceFailure
+     - 500
+     - 4893
+   * - :mod:`CNCore`
+     - :func:`create <CNCore.create>`
+     - InvalidToken
+     - 401
+     - 4894
+   * - :mod:`CNCore`
+     - :func:`create <CNCore.create>`
+     - NotImplemented
+     - 501
+     - 4890
+   * - :mod:`CNCore`
+     - :func:`create <CNCore.create>`
+     - InvalidRequest
+     - 400
+     - 4891
+   * - :mod:`CNCore`
      - :func:`listFormats <CNCore.listFormats>`
      - NotImplemented
      - 501
@@ -631,6 +676,36 @@
      - InvalidRequest
      - 400
      - 1480
+   * - :mod:`CNCore`
+     - :func:`reserveIdentifier <CNCore.reserveIdentifier>`
+     - InvalidToken
+     - 401
+     - 4190
+   * - :mod:`CNCore`
+     - :func:`reserveIdentifier <CNCore.reserveIdentifier>`
+     - ServiceFailure
+     - 500
+     - 4210
+   * - :mod:`CNCore`
+     - :func:`reserveIdentifier <CNCore.reserveIdentifier>`
+     - NotAuthorized
+     - 401
+     - 4180
+   * - :mod:`CNCore`
+     - :func:`reserveIdentifier <CNCore.reserveIdentifier>`
+     - InvalidRequest
+     - 400
+     - 4200
+   * - :mod:`CNCore`
+     - :func:`reserveIdentifier <CNCore.reserveIdentifier>`
+     - IdentifierNotUnique
+     - 409
+     - 4210
+   * - :mod:`CNCore`
+     - :func:`reserveIdentifier <CNCore.reserveIdentifier>`
+     - NotImplemented
+     - 501
+     - 4191
    * - :mod:`CNCore`
      - :func:`listNodes <CNCore.listNodes>`
      - NotImplemented
@@ -761,36 +836,6 @@
      - InvalidRequest
      - 400
      - 4132
-   * - :mod:`CNRead`
-     - :func:`reserveIdentifier <CNRead.reserveIdentifier>`
-     - InvalidToken
-     - 401
-     - 4190
-   * - :mod:`CNRead`
-     - :func:`reserveIdentifier <CNRead.reserveIdentifier>`
-     - ServiceFailure
-     - 500
-     - 4210
-   * - :mod:`CNRead`
-     - :func:`reserveIdentifier <CNRead.reserveIdentifier>`
-     - NotAuthorized
-     - 401
-     - 4180
-   * - :mod:`CNRead`
-     - :func:`reserveIdentifier <CNRead.reserveIdentifier>`
-     - InvalidRequest
-     - 400
-     - 4200
-   * - :mod:`CNRead`
-     - :func:`reserveIdentifier <CNRead.reserveIdentifier>`
-     - IdentifierNotUnique
-     - 409
-     - 4210
-   * - :mod:`CNRead`
-     - :func:`reserveIdentifier <CNRead.reserveIdentifier>`
-     - NotImplemented
-     - 501
-     - 4191
    * - :mod:`CNRead`
      - :func:`assertRelation <CNRead.assertRelation>`
      - InvalidToken

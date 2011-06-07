@@ -600,12 +600,27 @@ Data Types in CICore
 
   The milliseconds may be left off if that precision is not available.
 
+  In Java, code against `java.util.Date`_, though serialization and
+  deserialization will be performed with `org.joda.DateTime`_ to ensure
+  millisecond precision is .
+
+  Implemented in Python using the `datetime.datetime`_ class, which is also
+  used for serialization and deserialization through Pyxb_.
+
   See also the `XMLSchema dateTime`_ type which is used for serializing DateTime
   values in XML transmitted between DataONE components.
 
 .. _HTTP Full Date: http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.3.1
 
 .. _XMLSchema dateTime: http://www.w3.org/TR/xmlschema-2/#dateTime
+
+.. _java.util.Date: http://download.oracle.com/javase/6/docs/api/java/util/Date.html
+
+.. _org.joda.DateTime: http://joda-time.sourceforge.net/
+
+.. _datetime.datetime: http://docs.python.org/library/datetime.html
+
+.. _Pyxb: http://pyxb.sourceforge.net/api/pyxb.binding.datatypes.dateTime-class.html
 
 
 
@@ -677,6 +692,32 @@ Data Types in CICore
 
 ..                                    ######
 .. class:: Environment
+
+  Indicates which of the operating environments a component is operating in.
+  Possible environments include: *dev*, *test*, *staging*, and *prod*. There
+  is a general progression of components (Coordinating Nodes, Member Nodes,
+  Investigator Toolkit components) through each stage during development.
+  Components operating in the production environment represent the latest
+  stable release of the infrastructure.
+
+  *dev*
+    The component is under active development, should not be considered
+    stable, and may or may not pass relevant tests.
+
+  *test*
+    The component is operating in a test environment where unit, integration,
+    and overall stability and compliance tests are being performed.
+
+  *staging*
+
+    Staging provides an environment where infrastructure is being prepared for
+    an upgrade. The intent is that a staging environment will be used to
+    deploy updated services in preparation for switching to production.
+
+  *prod*
+    The component is operating in the DataONE production environment. Changes
+    should not be made without appropriate coordination with the component
+    administrator.
 
   As represented in XMLSchema:
 
