@@ -25,7 +25,7 @@
    * - Tier 1
      - ``GET /assertRelation/{pidOfSubject}?relationship={relationship}&pidofobject={pidOfObject}``
      - :func:`assertRelation`
-     - (:class:`session<Types.Session>`, :class:`pidOfSubject<Types.Identifier>`, :class:`relationship<Types.???>`, :class:`pidOfObject<Types.Identifier>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`pidOfSubject<Types.Identifier>`, :class:`relationship<Types.RelationshipEnum>`, :class:`pidOfObject<Types.Identifier>`) ``->`` :class:`Types.Boolean`
    * - Tier 1
      - ``GET /checksum/{pid}``
      - :func:`getChecksum`
@@ -162,7 +162,7 @@
    :type pidOfSubject: :class:`Types.Identifier`
 
    :param relationship: Relationship between *pidOfSubject* and *pidOfObject* being evaluated
-   :type relationship: ???
+   :type relationship: :class:`Types.RelationshipEnum`
 
    :param pidOfObject: The object of the relationship
    :type pidOfObject: :class:`Types.Identifier`

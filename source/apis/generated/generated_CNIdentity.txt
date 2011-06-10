@@ -120,7 +120,7 @@
 
    Verify that the Person data associated with this Subject is a true representation of the real world person.
 
-   This service can only be called byt users who have an administrative role for the domain of users in question.
+   This service can only be called by users who have an administrative role for the domain of users in question.
 
    :REST URL: ``POST /accounts/{subject}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
@@ -151,6 +151,8 @@
 
    Get the information about a Person (their equivalent identities, and the Groups to which they belong) or the Group (including members).
 
+   :Use Cases:
+     :doc:`UC12 </design/UseCases/12_uc>`
    :REST URL: ``GET /accounts/{subject}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`

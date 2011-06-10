@@ -78,7 +78,7 @@ but is expected to also support date range (by also specifying *endTime*), and s
 
        Appears in functional use cases: :doc:`UC01 </design/UseCases/01_uc>`, :doc:`UC37 </design/UseCases/37_uc>`
    * - \
-     - :func:`MNAuthorization.setAccess`
+     - :func:`MNAuthorization.setAccessPolicy`
      - Sets the access permissions for an object identified by *pid*.
 
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
@@ -198,10 +198,12 @@ Triggers a change to the system metadata modified time stamp.
    * - \
      - :func:`CNIdentity.verifyAccount`
      - Verify that the Person data associated with this Subject is a true representation of the real world person.
-This service can only be called byt users who have an administrative role for the domain of users in question.
+This service can only be called by users who have an administrative role for the domain of users in question.
    * - \
      - :func:`CNIdentity.getSubjectInfo`
      - Get the information about a Person (their equivalent identities, and the Groups to which they belong) or the Group (including members).
+
+       Appears in functional use cases: :doc:`UC12 </design/UseCases/12_uc>`
    * - \
      - :func:`CNIdentity.listSubjects`
      - List the subjects, including users, groups, and systems, that match search criteria.

@@ -16,7 +16,7 @@
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`action<Types.Permission>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``PUT /accessRules/{pid}``
-     - :func:`setAccess`
+     - :func:`setAccessPolicy`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`accessPolicy<Types.AccessPolicy>`) ``->`` :class:`Types.Boolean`
 
 
@@ -60,7 +60,7 @@
 
 
 
-.. function:: setAccess(session,pid,accessPolicy) -> Boolean
+.. function:: setAccessPolicy(session,pid,accessPolicy) -> Boolean
 
    Sets the access permissions for an object identified by *pid*.
 

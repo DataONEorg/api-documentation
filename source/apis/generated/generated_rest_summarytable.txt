@@ -45,7 +45,7 @@
      - :func:`MNAuthorization.isAuthorized`
      - Test if the user identified by the provided token has authorization for operation on the specified object. .. Note:: Should perhaps add convenience methods for "canRead()" and "canWrite()" to verify that a user is able to read / write an object.
    * - PUT /accessRules/{pid}
-     - :func:`MNAuthorization.setAccess`
+     - :func:`MNAuthorization.setAccessPolicy`
      - Sets the access permissions for an object identified by *pid*.
    * - POST /object/{pid}
      - :func:`MNStorage.create`
@@ -124,7 +124,7 @@
      - Update an existing :term:`subject` in the DataONE system. The target subject is determined from the X509Certificate. Note that there should probably be a policy for verifying the details that change via this method.
    * - POST /accounts/{subject}
      - :func:`CNIdentity.verifyAccount`
-     - Verify that the Person data associated with this Subject is a true representation of the real world person. This service can only be called byt users who have an administrative role for the domain of users in question.
+     - Verify that the Person data associated with this Subject is a true representation of the real world person. This service can only be called by users who have an administrative role for the domain of users in question.
    * - GET /accounts/{subject}
      - :func:`CNIdentity.getSubjectInfo`
      - Get the information about a Person (their equivalent identities, and the Groups to which they belong) or the Group (including members).

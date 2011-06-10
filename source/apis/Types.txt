@@ -39,6 +39,7 @@ Data Types in CICore
 - :class:`Types.Person`
 - :class:`Types.PingResponse`
 - :class:`Types.Query`
+- :class:`Types.RelationshipEnum`
 - :class:`Types.Replica`
 - :class:`Types.Session`
 - :class:`Types.Subject`
@@ -110,7 +111,7 @@ Data Types in CICore
     + hasMember : Subject[0..*]
   }
   Group o-- Subject
-  Group -- NonEmptystring
+  Group -- NonEmptyString
 
   NonEmptyString <|-- Identifier
 
@@ -245,6 +246,14 @@ Data Types in CICore
   }
   Person o-- Subject
   Person -- NonEmptyString
+
+  enum RelationshipEnum
+  RelationshipEnum : DESCRIBES
+  RelationshipEnum : DESCRIBED_BY
+  RelationshipEnum : OBSOLETES
+  RelationshipEnum : OBSOLETED_BY
+  RelationshipEnum : DERIVED_FROM
+
 
   class Replica {
     + replicaMemberNode : NodeReference
@@ -804,7 +813,7 @@ Data Types in CICore
        + hasMember : Subject[0..*]
      }
      Group o-- Subject
-     Group -- NonEmptystring
+     Group -- NonEmptyString
      @enduml
 
 
@@ -1482,6 +1491,28 @@ Data Types in CICore
 .. class:: PingResponse
 
   The response from :func:`MNCore.ping`
+
+
+
+
+..                                    ######
+.. class:: RelationshipEnum
+
+   An enumeration of relationship types that correspond with different
+   inter-object relationships expressed in the System Metadata. Used as a
+   parameter in :func:`CNRead.assertRelation`.
+
+   .. image:: images/class_relationshipenum.png
+
+   ..
+    @startuml images/class_relationshipenum.png
+    enum RelationshipEnum
+    RelationshipEnum : DESCRIBES
+    RelationshipEnum : DESCRIBED_BY
+    RelationshipEnum : OBSOLETES
+    RelationshipEnum : OBSOLETED_BY
+    RelationshipEnum : DERIVED_FROM
+    @enduml
 
 
 

@@ -225,10 +225,10 @@
    :param objectFormat: Restrict results to the specified object format.
    :type objectFormat: :class:`Types.ObjectFormat`
 
-   :param replicaStatus: Indicates if replicated objects should be returned in the list (i.e. any entries present in the :attr:`SystemMetadata.replica`). If ``0``, then no objects that have been replicated should be returned. If ``1``, then any objects can be returned, regardless of replication status. The default value is ``1``.
+   :param replicaStatus: Indicates if replicated objects should be returned in the list (i.e. any entries present in the :attr:`SystemMetadata.replica`, objects that have been replicated to this member node). If ``false``, then no objects that have been replicated should be returned. If ``true``, then any objects can be returned, regardless of replication status. The default value is ``true``.
 
    
-   :type replicaStatus: replicaStatus
+   :type replicaStatus: boolean
 
    :param start=0: The zero-based index of the first value, relative to the first record of the resultset that matches the parameters.
    :type start=0: integer
