@@ -120,17 +120,27 @@ components of a MIME multipart-mixed message body.
 Unless otherwise indicated, all parameter names and values should be considered
 case sensitive. 
 
-Session information (formerly referred to as a *token*) is obtained from the
-client side authentication certificate held by the SSL processing library of the
-HTTPS service handling the request. Hence, even though a *session* parameter may
-be present in the method signature, the session information itself is
-transported as part of the HTTPS handshaking process and is not present in the
-body or header section of the HTTP request.
+:Session Information:
 
-Requests sent using the HTTP POST or PUT verbs MUST use MIME multipart-mixed
-encoding of the message body as described in RFC2046_. In most cases and
-unless otherwise indicated, all the parameters except the authorization token
-will be sent in the message body (as opposed to URL parameters).
+  Session information (formerly referred to as a *token*) is obtained from the
+  client side authentication certificate held by the SSL processing library of
+  the HTTPS service handling the request. Hence, even though a *session*
+  parameter may be present in the method signature, the session information
+  itself is transported as part of the HTTPS handshaking process and is not
+  present in the body or header section of the HTTP request.
+
+:Boolean Parameters in URLs:
+
+  Where a boolean parameter value is being specified as the value portion of a
+  key-value pair appearing in a URL, the strings "true" and "false" MUST be
+  used to indicate logical true and logical false respectively.
+
+:Message Body in PUT or POST:
+
+  Requests sent using the HTTP POST or PUT verbs MUST use MIME multipart-mixed
+  encoding of the message body as described in RFC2046_. In most cases and
+  unless otherwise indicated, all the parameters except the authorization
+  token will be sent in the message body (as opposed to URL parameters).
 
 .. _RFC2046: http://tools.ietf.org/html/rfc2046#section-5.1.3
 
