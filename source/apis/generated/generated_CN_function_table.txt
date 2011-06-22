@@ -23,9 +23,9 @@
      - :func:`CNCore.getFormat`
      - (:class:`fmtid<Types.ObjectFormatIdentifier>`) ``->`` :class:`Types.ObjectFormat`
    * - Tier 1
-     - ``GET /log?fromdate={fromDate}[&todate={toDate}&event={event}]``
+     - ``GET /log?fromdate={fromDate}[&todate={toDate}&event={event}&start={start}&count={count}]``
      - :func:`CNCore.getLogRecords`
-     - (:class:`session<Types.Session>`, :class:`fromDate<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`) ``->`` :class:`Types.Log`
+     - (:class:`session<Types.Session>`, :class:`fromDate<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`, ``[start]``, ``[count]``) ``->`` :class:`Types.Log`
    * - Tier 1
      - ``POST /reserve``
      - :func:`CNCore.reserveIdentifier`

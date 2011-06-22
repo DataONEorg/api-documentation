@@ -25,7 +25,7 @@
      - The supplied system metadata is invalid. This could be because some required field is not set, the metadata document is malformed, or the value of some field is not valid. The content of traceInformation should contain additional information about the error encountered (e.g. name of the field with bad value, if the document is malformed).
    * - :exc:`Exceptions.InvalidToken`
      - `401 <http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2>`_
-     - The supplied authentication token could not be verified as being valid.
+     - The supplied authentication token (Session) could not be verified as being valid.
    * - :exc:`Exceptions.NotAuthorized`
      - `401 <http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2>`_
      - The supplied identity information is not authorized for the requested operation.

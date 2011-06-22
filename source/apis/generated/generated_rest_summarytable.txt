@@ -77,7 +77,7 @@
    * - GET /formats/{fmtid}
      - :func:`CNCore.getFormat`
      - Returns the object format registered in the DataONE Object Format Vocabulary for the given format identifier.
-   * - GET /log?fromdate={fromDate}[&todate={toDate}&event={event}]
+   * - GET /log?fromdate={fromDate}[&todate={toDate}&event={event}&start={start}&count={count}]
      - :func:`CNCore.getLogRecords`
      - Retrieves consolidated log information for the specified date range (inclusive) for the entire DataONE infrastructure
    * - POST /reserve
