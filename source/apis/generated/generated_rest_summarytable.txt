@@ -43,7 +43,7 @@
      - This is a callback method used by a CN to indicate to a MN that it cannot complete synchronization of the science metadata identified by *pid*. When called, the MN should take steps to record the problem description and notify an administrator or the data owner of the issue.
    * - GET /isAuthorized/{pid}?action={action}
      - :func:`MNAuthorization.isAuthorized`
-     - Test if the user identified by the provided token has authorization for operation on the specified object. .. Note:: Should perhaps add convenience methods for "canRead()" and "canWrite()" to verify that a user is able to read / write an object.
+     - Test if the user identified by the provided token has authorization for operation on the specified object. A successful operation is indicated by a return HTTP status of 200. Failure is indicated by an exception such as :exc:`NotAuthorized` being returned. .. Note:: Should perhaps add convenience methods for "canRead()" and "canWrite()" to verify that a user is able to read / write an object.
    * - PUT /accessRules/{pid}
      - :func:`MNAuthorization.setAccessPolicy`
      - Sets the access permissions for an object identified by *pid*. A successful operation is indicated by a return HTTP status of 200. Failure is indicated by an exception such as :exc:`NotAuthorized` being returned.

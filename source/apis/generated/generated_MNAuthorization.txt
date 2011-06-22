@@ -26,6 +26,10 @@
 
    Test if the user identified by the provided token has authorization for operation on the specified object.
 
+   A successful operation is indicated by a return HTTP status of 200.
+
+   Failure is indicated by an exception such as :exc:`NotAuthorized` being returned.
+
    .. Note:: Should perhaps add convenience methods for "canRead()" and "canWrite()" to verify that a user is able to read / write an object.
 
    :Use Cases:
