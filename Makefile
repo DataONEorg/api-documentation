@@ -38,6 +38,7 @@ help:
 	@echo "  linkcheck to check all external links for integrity"
 	@echo "  doctest   to run all doctests embedded in the documentation (if enabled)"
 	@echo "  pdf       to make PDF files"
+	@echo "  plantuml  to make PlantUML diagrams"
 
 clean:
 	-rm -rf $(BUILDDIR)/*
