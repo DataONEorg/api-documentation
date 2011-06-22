@@ -222,8 +222,8 @@ The user must then confirm this equivalence between the two identities.
 		client -> cilogon:authenticate with primary identity
 		client <- cilogon: X.509
 		'register this identity with DataONE
-		client -> ident: registerAccount(Types.X509Certificate, Types.Person)
-		ident --> client: Types.Principal
+		client -> ident: registerAccount(Types.Session, Types.Person)
+		ident --> client: Types.Subject
 		client -> client:logout (dispose X.509)
 	end
 	...
@@ -231,13 +231,13 @@ The user must then confirm this equivalence between the two identities.
 		'authenticate as secondary id
 		client -> cilogon:authenticate with secondary identity
 		client <- cilogon: X.509
-		'list existing Principals
-		client -> ident:listPrincipals()
-		ident --> client:Types.PrincipalList
-		client -> client:select equivalent Types.Principal
-		'request to map identity with existing Principal
-		client -> ident: mapIdentity(Types.X509Certificate, Types.Principal)
-		ident --> client: Types.Boolean
+		'list existing Subjects
+		client -> ident:listSubjects()
+		ident --> client:Types.SubjectList
+		client -> client:select equivalent Types.Subject
+		'request to map identity with existing Subject
+		client -> ident: mapIdentity(Types.Session, Types.Subject)
+		ident --> client: boolean
 		note left
 			request must be
 			confirmed before
@@ -251,8 +251,8 @@ The user must then confirm this equivalence between the two identities.
 		client -> cilogon:authenticate with primary identity
 		client <- cilogon: X.509
 		'confirm mapping identity with DataONE
-		client -> ident: mapIdentity(Types.X509Certificate, Types.Principal)
-		ident --> client: Types.Boolean
+		client -> ident: confirmMapIdentity(Types.Session, Types.Subject)
+		ident --> client: boolean
 		note left
 			equivalence is confirmed
 		end note
@@ -286,8 +286,8 @@ fully verified. Some DataONE actions will be restricted until verification is co
 		client -> cilogon:authenticate with untrusted identity
 		client <- cilogon: X.509
 		'register this identity with DataONE
-		client -> ident: registerAccount(Types.X509Certificate, Types.Person)
-		ident --> client: Types.Principal
+		client -> ident: registerAccount(Types.Session, Types.Person)
+		ident --> client: Types.Subject
 		client -> client:logout (dispose X.509)
 	end
 	...
@@ -295,15 +295,15 @@ fully verified. Some DataONE actions will be restricted until verification is co
 		'authenticate as secondary id
 		client -> cilogon:administrator authenticate
 		client <- cilogon: X.509
-		client -> ident:getPrincipalInfo(Types.X509Certificate, Types.Principal)
+		client -> ident:getSubjectInfo(Types.Session, Types.Subject)
 		ident --> client:Types.Person
 		note left
 			Administrator must 
 			verify Person details 
 		end note
-		'request to map identity with existing Principal
-		client -> ident: verifyIdentity(Types.X509Certificate, Types.Principal)
-		ident --> client: Types.Boolean
+		'request to map identity with existing Subject
+		client -> ident: verifyIdentity(Types.Session, Types.Subject)
+		ident --> client: boolean
 		client -> client:logout (dispose X.509)
 	end
 	
@@ -332,17 +332,17 @@ must be granted for other group members to edit the group.
 		client -> cilogon:authenticate admin identity
 		client <- cilogon: X.509
 		'create group
-		client -> ident: createGroup(Types.X509Certificate, Types.Principal)
+		client -> ident: createGroup(Types.Session, Types.Subject)
 		ident --> client: Types.Identifier
 		'add members
-		client -> ident: addGroupMembers(Types.X509Certificate, Types.Principal, Types.PrincipalList)
+		client -> ident: addGroupMembers(Types.Session, Types.Subject, Types.SubjectList)
 		ident --> client: Types.Identifier
 		note left
 			Administrator can 
 			edit group
 		end note
 		'remove members
-		client -> ident: removeGroupMembers(Types.X509Certificate, Types.Principal, Types.PrincipalList)
+		client -> ident: removeGroupMembers(Types.Session, Types.Subject, Types.SubjectList)
 		ident --> client: Types.Identifier
 		client -> client:logout (dispose X.509)
 	end
