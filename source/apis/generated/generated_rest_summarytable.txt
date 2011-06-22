@@ -46,7 +46,7 @@
      - Test if the user identified by the provided token has authorization for operation on the specified object. .. Note:: Should perhaps add convenience methods for "canRead()" and "canWrite()" to verify that a user is able to read / write an object.
    * - PUT /accessRules/{pid}
      - :func:`MNAuthorization.setAccessPolicy`
-     - Sets the access permissions for an object identified by *pid*.
+     - Sets the access permissions for an object identified by *pid*. A successful operation is indicated by a return HTTP status of 200. Failure is indicated by an exception such as :exc:`NotAuthorized` being returned.
    * - POST /object/{pid}
      - :func:`MNStorage.create`
      - Adds a new object to the Member Node, where the object is either a data object or a science metadata object. This method is called by clients to create new data objects on Member Nodes. The *pid* must not exist in the DataONE system or should have been previously reserved using  :func:`CN_crud.reserveIdentifier`.
@@ -58,7 +58,7 @@
      - Deletes an object from the Member Node, where the object is either a data object or a science metadata object. This method is called by clients to delete objects on Member nodes. Member Nodes MUST check that the caller is authorized to perform this function. If the object does not exist on the node servicing the request, then an :exc:`Exceptions.NotFound` exception is raised. The message body of the exception SHOULD contain a hint as to the location of the :func:`CN_crud.resolve` method.
    * - POST /replicate
      - :func:`MNReplication.replicate`
-     - Called by a Coordinating Node to request that the Member Node create a copy of the specified object by retrieving it from another Member Nodeode and storing it locally so that it can be made accessible to the DataONE system.
+     - Called by a Coordinating Node to request that the Member Node create a copy of the specified object by retrieving it from another Member Nodeode and storing it locally so that it can be made accessible to the DataONE system.   A successful operation is indicated by a HTTP status of 200 on the response.  Failure of the operation MUST be indicated by returning an appropriate exception.
 
 
 .. list-table:: REST URLs implemented on Coordinating Nodes.
@@ -70,7 +70,7 @@
      - Description
    * - POST /object/{pid}
      - :func:`CNCore.create`
-     - Used intenrally within a Coordinating Node to add a new object to the object store. This method is not publicly exposed by a Coordinating Node.
+     - Used internally within a Coordinating Node to add a new object to the object store. This method is not publicly exposed by a Coordinating Node.
    * - GET /formats
      - :func:`CNCore.listFormats`
      - Returns a list of all object formats registered in the DataONE Object Format Vocabulary.
@@ -100,10 +100,10 @@
      - Implemented by CNs, returns the nodes (MNs or CNs) known to hold copies of the object identified by *pid*. The object resolution process is intended to provide a simple mechanism for a client to discover from which node(s) a particular object may be retrieved, and this information is returned as a list of node identifiers. Details about method interfaces (i.e. REST URLs) exposed by a particular node can be determined by examining the response from the *node* collection. For convenience, the :func:`MN_read.get` URL is included in the response as is the base URL of the node REST services. Note also that the same functionality as *resolve()* can be implemented by retrieving a copy of the system metadata for the object and utilizing the node registry to discover the base URL from which the client can construct the *get()* URL. Resolve is provided for efficiency since the response size is much smaller.
    * - GET /assertRelation/{pidOfSubject}?relationship={relationship}&pidofobject={pidOfObject}
      - :func:`CNRead.assertRelation`
-     - Tests that the specified relationship between *pidOfSubject* and *pidOfObject* exists.
+     - Tests that the specified relationship between *pidOfSubject* and *pidOfObject* exists. A passing assertion is indicated by returning a response with a HTTP status of 200. Failed assertion MUST be indicated by returning an appropriate exception such as :exc:`NotAuthorized`.
    * - GET /checksum/{pid}
      - :func:`CNRead.getChecksum`
-     - Returns the checksum for the specified object as reported in the system metadata.
+     - Returns the checksum for the specified object as reported in the system metadata. Note that the signature of this method differs from :func:`MNRead.getChecksum` as that method takes an optional algorithm parameter.
    * - GET /object?querytype={queryType}&query={query}
      - :func:`CNRead.search`
      - Search the metadata catalog and return identifiers of metadata records that match the criteria.
@@ -112,10 +112,10 @@
      - Changes ownership (RightsHolder) of the specified object to the :term:`subject` specified by `userId`
    * - GET /isAuthorized/{pid}
      - :func:`CNAuthorization.isAuthorized`
-     - Test if the user identified by the provided token has authorization for operation on the specified object. .. Note:: Should perhaps add convenience methods for "canRead()" and "canWrite()" to verify that a user is able to read / write an object.
+     - Test if the user identified by the provided token has authorization for operation on the specified object. .. Note:: Should perhaps add convenience methods for "canRead()" and "canWrite()" to verify that a user is able to read / write an object. Successful completion of this operation is indicated by a HTTP response status code of 200. Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception such as :exc:`NotAuthorized`.
    * - PUT /accessRules/{pid}
      - :func:`CNAuthorization.setAccessPolicy`
-     - Sets the access permissions for an object identified by *pid*. Triggers a change to the system metadata modified time stamp.
+     - Sets the access permissions for an object identified by *pid*. Triggers a change to the system metadata modified time stamp. Successful completion of this operation is indicated by a HTTP response status code of 200. Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception such as :exc:`NotAuthorized`.
    * - POST /accounts
      - :func:`CNIdentity.registerAccount`
      - Create a new :term:`subject` in the DataONE system. Note that there should probably be a lot more metadata captured about the new user, and there should be a mechanism for specifying the default access control rules for the new account.
@@ -124,7 +124,7 @@
      - Update an existing :term:`subject` in the DataONE system. The target subject is determined from the X509Certificate. Note that there should probably be a policy for verifying the details that change via this method.
    * - POST /accounts/{subject}
      - :func:`CNIdentity.verifyAccount`
-     - Verify that the Person data associated with this Subject is a true representation of the real world person. This service can only be called by users who have an administrative role for the domain of users in question.
+     - Verify that the Person data associated with this Subject is a true representation of the real world person. This service can only be called by users who have an administrative role for the domain of users in question. A successful completion of this operation is indicated by returning a HTTP status of 200. An exeption MUST be returned if the account verification is not successful.
    * - GET /accounts/{subject}
      - :func:`CNIdentity.getSubjectInfo`
      - Get the information about a Person (their equivalent identities, and the Groups to which they belong) or the Group (including members).
@@ -133,31 +133,31 @@
      - List the subjects, including users, groups, and systems, that match search criteria. The list can be restricted to subjects whose identifier matches certain substrings, and the size of the resultset can be paged through.
    * - POST /accounts/map
      - :func:`CNIdentity.mapIdentity`
-     - Map the two authenticated identities, asserting that they represent the same subject. Mapping identities is a two-step process wherein a map request is made by a primary Subject and a subsequent (confirmation) map request is made by the secondary Subject. This ensures that mappings are performed only by those that have authority to do so.
-   * - POST /accounts/map
+     - Map the two authenticated identities, asserting that they represent the same subject. Mapping identities is a two-step process wherein a map request is made by a primary Subject and a subsequent (confirmation) map request is made by the secondary Subject. This ensures that mappings are performed only by those that have authority to do so. Successful completion of therequest is indicated by returning a HTTP status of 200. A failed request MUST be indicated by returning an appropriate exception and setting the response HTTP status accordingly.
+   * - POST /accounts/mapconfirm
      - :func:`CNIdentity.confirmMapIdentity`
-     - Confirms a previously initiated identity mapping. If subject A asserts that B is the same identity through :func:`CNIdentity.mapIdentity`, then this method is called by B to confirm that assertion.
+     - Confirms a previously initiated identity mapping. If subject A asserts that B is the same identity through :func:`CNIdentity.mapIdentity`, then this method is called by B to confirm that assertion. A successful request is indicated by returning a HTTP status of 200. A failed request MUST be indicated by returning an appropriate exception and setting the response HTTP status accordingly.
    * - POST /groups/{groupName}
      - :func:`CNIdentity.createGroup`
      - Create a group with the given name. Groups are lists of subjects that allow all members of the group to be referenced by listing solely the subject name of the group.  Group names must be unique within the DataONE system, and can only be modified by their creator.
    * - PUT /groups/{groupName}
      - :func:`CNIdentity.addGroupMembers`
-     - Add members to the named group. Group members can be added by the original creator of the group, otherwise a NotAuthorized exception is thrown.  Group members are provided as a list of subjects to be added to the group.
+     - Add members to the named group. Group members can be added by the original creator of the group, otherwise a NotAuthorized exception is thrown.  Group members are provided as a list of subjects to be added to the group. Successful completion of this operation is indicated by a HTTP response status code of 200. Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception.
    * - DELETE /groups/{groupName}
      - :func:`CNIdentity.removeGroupMembers`
-     - Remove members to the named group. Group members can be removed by the original creator of the group, otherwise a NotAuthorized exception is thrown.  Group members are provided as a list of subjects to be removed from the group.
+     - Remove members to the named group. Group members can be removed by the original creator of the group, otherwise a NotAuthorized exception is thrown.  Group members are provided as a list of subjects to be removed from the group. Successful completion of this operation is indicated by a HTTP response status code of 200. Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception.
    * - POST /notify
      - :func:`CNReplication.setReplicationStatus`
-     - Update the replication status of the system metadata, ensuring that the change is appropriate for the given state of system metadata.  For example, a MN can not change the status to *COMPLETED* unless the CN previously requested replication of the object and the replications status of the object (as indicated in the system metadata) is set to *QUEUED*.
+     - Update the replication status of the system metadata, ensuring that the change is appropriate for the given state of system metadata.  For example, a MN can not change the status to *COMPLETED* unless the CN previously requested replication of the object and the replications status of the object (as indicated in the system metadata) is set to *QUEUED*. Successful completion of this operation is indicated by a HTTP response status code of 200. Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception.
    * - PUT /meta/replication/{pid}
      - :func:`CNReplication.updateReplicationMetadata`
-     - Full replacement of replication metadata in the system metadata for the specified object, changes date sys meta modified
+     - Full replacement of replication metadata in the system metadata for the specified object, changes date sys meta modified Successful completion of the operation is indicated by returning a HTTP status of 200. Failure of the operation MUST be indicated by returning an appropriate exception.
    * - PUT /meta/policy/{pid}
      - :func:`CNReplication.setReplicationPolicy`
-     - Updates the replication policy entry for an object by updating the system metadata.
+     - Updates the replication policy entry for an object by updating the system metadata. Successful completion of the operation is indicated by returning a HTTP status of 200. Failure of the operation MUST be indicated by returning an appropriate exception.
    * - PUT /node/{nodeid}
      - :func:`CNRegister.updateNodeCapabilities`
-     - 
+     - Update the capabilities document for the specified node. Successful completion of this operation is indicated by a HTTP response status code of 200. Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception.
    * - POST /node
      - :func:`CNRegister.register`
-     - 
+     - Register a new node in the system. If the node already exists, then a :exc:`IdentifierNotUnique` exception MUST be returned.

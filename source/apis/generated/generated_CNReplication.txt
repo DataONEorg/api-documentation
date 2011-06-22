@@ -13,22 +13,26 @@
    * - Tier 4
      - ``POST /notify``
      - :func:`setReplicationStatus`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`status<Types.ReplicationStatus>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`status<Types.ReplicationStatus>`) ``->`` boolean
    * - Tier 4
      - ``PUT /meta/replication/{pid}``
      - :func:`updateReplicationMetadata`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`replicaMetadata<Types.Replica>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`replicaMetadata<Types.Replica>`) ``->`` boolean
    * - 
      - ``PUT /meta/policy/{pid}``
      - :func:`setReplicationPolicy`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`policy<Types.ReplicationPolicy>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`policy<Types.ReplicationPolicy>`) ``->`` boolean
 
 
 
 
-.. function:: setReplicationStatus(session,pid,status) -> Boolean
+.. function:: setReplicationStatus(session,pid,status) -> boolean
 
    Update the replication status of the system metadata, ensuring that the change is appropriate for the given state of system metadata.  For example, a MN can not change the status to *COMPLETED* unless the CN previously requested replication of the object and the replications status of the object (as indicated in the system metadata) is set to *QUEUED*.
+
+   Successful completion of this operation is indicated by a HTTP response status code of 200.
+
+   Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception.
 
    :Use Cases:
      :doc:`UC09 </design/UseCases/09_uc>`
@@ -43,7 +47,7 @@
    :type status: :class:`Types.ReplicationStatus`
 
    :returns: True if the operation is allowed and expected, otherwise an exception should be raised.
-   :rtype: :class:`Types.Boolean`
+   :rtype: boolean
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4700)``
 
@@ -60,9 +64,13 @@
 
 
 
-.. function:: updateReplicationMetadata(session,pid,replicaMetadata) -> Boolean
+.. function:: updateReplicationMetadata(session,pid,replicaMetadata) -> boolean
 
    Full replacement of replication metadata in the system metadata for the specified object, changes date sys meta modified
+
+   Successful completion of the operation is indicated by returning a HTTP status of 200.
+
+   Failure of the operation MUST be indicated by returning an appropriate exception.
 
    :REST URL: ``PUT /meta/replication/{pid}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.
@@ -75,7 +83,7 @@
    :type replicaMetadata: :class:`Types.Replica`
 
    :returns: True on success
-   :rtype: :class:`Types.Boolean`
+   :rtype: boolean
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4850)``
 
@@ -88,9 +96,13 @@
 
 
 
-.. function:: setReplicationPolicy(session,pid,policy) -> Boolean
+.. function:: setReplicationPolicy(session,pid,policy) -> boolean
 
    Updates the replication policy entry for an object by updating the system metadata.
+
+   Successful completion of the operation is indicated by returning a HTTP status of 200.
+
+   Failure of the operation MUST be indicated by returning an appropriate exception.
 
    :REST URL: ``PUT /meta/policy/{pid}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
@@ -103,7 +115,7 @@
    :type policy: :class:`Types.ReplicationPolicy`
 
    :returns: True on success
-   :rtype: :class:`Types.Boolean`
+   :rtype: boolean
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4880)``
 

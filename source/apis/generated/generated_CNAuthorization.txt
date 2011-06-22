@@ -17,11 +17,11 @@
    * - Tier 2
      - ``GET /isAuthorized/{pid}``
      - :func:`isAuthorized`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`operation<Types.Event>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`operation<Types.Event>`) ``->`` boolean
    * - Tier 2
      - ``PUT /accessRules/{pid}``
      - :func:`setAccessPolicy`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`accessPolicy<Types.AccessPolicy>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`accessPolicy<Types.AccessPolicy>`) ``->`` boolean
 
 
 
@@ -64,11 +64,15 @@
 
 
 
-.. function:: isAuthorized(session,pid,operation) -> Boolean
+.. function:: isAuthorized(session,pid,operation) -> boolean
 
    Test if the user identified by the provided token has authorization for operation on the specified object.
 
    .. Note:: Should perhaps add convenience methods for "canRead()" and "canWrite()" to verify that a user is able to read / write an object.
+
+   Successful completion of this operation is indicated by a HTTP response status code of 200.
+
+   Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception such as :exc:`NotAuthorized`.
 
    :Use Cases:
      :doc:`UC01 </design/UseCases/01_uc>`, :doc:`UC02 </design/UseCases/02_uc>`, :doc:`UC36 </design/UseCases/36_uc>`, :doc:`UC37 </design/UseCases/37_uc>`
@@ -83,7 +87,7 @@
    :type operation: :class:`Types.Event`
 
    :returns: True if the operation is allowed
-   :rtype: :class:`Types.Boolean`
+   :rtype: boolean
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=1760)``
 
@@ -102,11 +106,15 @@
 
 
 
-.. function:: setAccessPolicy(session,pid,accessPolicy) -> Boolean
+.. function:: setAccessPolicy(session,pid,accessPolicy) -> boolean
 
    Sets the access permissions for an object identified by *pid*.
 
    Triggers a change to the system metadata modified time stamp.
+
+   Successful completion of this operation is indicated by a HTTP response status code of 200.
+
+   Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception such as :exc:`NotAuthorized`.
 
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`
@@ -121,7 +129,7 @@
    :type accessPolicy: :class:`Types.AccessPolicy`
 
    :returns: True if the operation succeeds, otherwise false.
-   :rtype: :class:`Types.Boolean`
+   :rtype: boolean
 
    :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=4410)``
 

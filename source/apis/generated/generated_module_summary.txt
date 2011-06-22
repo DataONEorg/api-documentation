@@ -80,6 +80,8 @@ but is expected to also support date range (by also specifying *endTime*), and s
    * - \
      - :func:`MNAuthorization.setAccessPolicy`
      - Sets the access permissions for an object identified by *pid*.
+A successful operation is indicated by a return HTTP status of 200.
+Failure is indicated by an exception such as :exc:`NotAuthorized` being returned.
 
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
    * - :mod:`MNStorage`
@@ -104,12 +106,14 @@ If the object does not exist on the node servicing the request, then an :exc:`Ex
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
    * - :mod:`MNReplication`
      - :func:`MNReplication.replicate`
-     - Called by a Coordinating Node to request that the Member Node create a copy of the specified object by retrieving it from another Member Nodeode and storing it locally so that it can be made accessible to the DataONE system.
+     - Called by a Coordinating Node to request that the Member Node create a copy of the specified object by retrieving it from another Member Nodeode and storing it locally so that it can be made accessible to the DataONE system.  
+A successful operation is indicated by a HTTP status of 200 on the response. 
+Failure of the operation MUST be indicated by returning an appropriate exception.
 
        Appears in functional use cases: :doc:`UC09 </design/UseCases/09_uc>`
    * - :mod:`CNCore`
      - :func:`CNCore.create`
-     - Used intenrally within a Coordinating Node to add a new object to the object store.
+     - Used internally within a Coordinating Node to add a new object to the object store.
 This method is not publicly exposed by a Coordinating Node.
 
        Appears in functional use cases: :doc:`UC04 </design/UseCases/04_uc>`, :doc:`UC09 </design/UseCases/09_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
@@ -158,9 +162,12 @@ Appears in functional use cases: :doc:`UC36 </design/UseCases/36_uc>`, :doc:`UC1
    * - \
      - :func:`CNRead.assertRelation`
      - Tests that the specified relationship between *pidOfSubject* and *pidOfObject* exists.
+A passing assertion is indicated by returning a response with a HTTP status of 200.
+Failed assertion MUST be indicated by returning an appropriate exception such as :exc:`NotAuthorized`.
    * - \
      - :func:`CNRead.getChecksum`
      - Returns the checksum for the specified object as reported in the system metadata.
+Note that the signature of this method differs from :func:`MNRead.getChecksum` as that method takes an optional algorithm parameter.
 
        Appears in functional use cases: :doc:`UC09 </design/UseCases/09_uc>`
    * - \
@@ -177,12 +184,16 @@ Appears in functional use cases: :doc:`UC36 </design/UseCases/36_uc>`, :doc:`UC1
      - :func:`CNAuthorization.isAuthorized`
      - Test if the user identified by the provided token has authorization for operation on the specified object.
 .. Note:: Should perhaps add convenience methods for "canRead()" and "canWrite()" to verify that a user is able to read / write an object.
+Successful completion of this operation is indicated by a HTTP response status code of 200.
+Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception such as :exc:`NotAuthorized`.
 
        Appears in functional use cases: :doc:`UC01 </design/UseCases/01_uc>`, :doc:`UC02 </design/UseCases/02_uc>`, :doc:`UC36 </design/UseCases/36_uc>`, :doc:`UC37 </design/UseCases/37_uc>`
    * - \
      - :func:`CNAuthorization.setAccessPolicy`
      - Sets the access permissions for an object identified by *pid*.
 Triggers a change to the system metadata modified time stamp.
+Successful completion of this operation is indicated by a HTTP response status code of 200.
+Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception such as :exc:`NotAuthorized`.
 
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
    * - :mod:`CNIdentity`
@@ -199,6 +210,8 @@ Triggers a change to the system metadata modified time stamp.
      - :func:`CNIdentity.verifyAccount`
      - Verify that the Person data associated with this Subject is a true representation of the real world person.
 This service can only be called by users who have an administrative role for the domain of users in question.
+A successful completion of this operation is indicated by returning a HTTP status of 200.
+An exeption MUST be returned if the account verification is not successful.
    * - \
      - :func:`CNIdentity.getSubjectInfo`
      - Get the information about a Person (their equivalent identities, and the Groups to which they belong) or the Group (including members).
@@ -212,9 +225,13 @@ The list can be restricted to subjects whose identifier matches certain substrin
      - :func:`CNIdentity.mapIdentity`
      - Map the two authenticated identities, asserting that they represent the same subject.
 Mapping identities is a two-step process wherein a map request is made by a primary Subject and a subsequent (confirmation) map request is made by the secondary Subject. This ensures that mappings are performed only by those that have authority to do so.
+Successful completion of therequest is indicated by returning a HTTP status of 200.
+A failed request MUST be indicated by returning an appropriate exception and setting the response HTTP status accordingly.
    * - \
      - :func:`CNIdentity.confirmMapIdentity`
      - Confirms a previously initiated identity mapping. If subject A asserts that B is the same identity through :func:`CNIdentity.mapIdentity`, then this method is called by B to confirm that assertion.
+A successful request is indicated by returning a HTTP status of 200.
+A failed request MUST be indicated by returning an appropriate exception and setting the response HTTP status accordingly.
    * - \
      - :func:`CNIdentity.createGroup`
      - Create a group with the given name.
@@ -223,24 +240,36 @@ Groups are lists of subjects that allow all members of the group to be reference
      - :func:`CNIdentity.addGroupMembers`
      - Add members to the named group.
 Group members can be added by the original creator of the group, otherwise a NotAuthorized exception is thrown.  Group members are provided as a list of subjects to be added to the group.
+Successful completion of this operation is indicated by a HTTP response status code of 200.
+Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception.
    * - \
      - :func:`CNIdentity.removeGroupMembers`
      - Remove members to the named group.
 Group members can be removed by the original creator of the group, otherwise a NotAuthorized exception is thrown.  Group members are provided as a list of subjects to be removed from the group.
+Successful completion of this operation is indicated by a HTTP response status code of 200.
+Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception.
    * - :mod:`CNReplication`
      - :func:`CNReplication.setReplicationStatus`
      - Update the replication status of the system metadata, ensuring that the change is appropriate for the given state of system metadata.  For example, a MN can not change the status to *COMPLETED* unless the CN previously requested replication of the object and the replications status of the object (as indicated in the system metadata) is set to *QUEUED*.
+Successful completion of this operation is indicated by a HTTP response status code of 200.
+Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception.
 
        Appears in functional use cases: :doc:`UC09 </design/UseCases/09_uc>`
    * - \
      - :func:`CNReplication.updateReplicationMetadata`
      - Full replacement of replication metadata in the system metadata for the specified object, changes date sys meta modified
+Successful completion of the operation is indicated by returning a HTTP status of 200.
+Failure of the operation MUST be indicated by returning an appropriate exception.
    * - \
      - :func:`CNReplication.setReplicationPolicy`
      - Updates the replication policy entry for an object by updating the system metadata.
+Successful completion of the operation is indicated by returning a HTTP status of 200.
+Failure of the operation MUST be indicated by returning an appropriate exception.
    * - :mod:`CNRegister`
      - :func:`CNRegister.updateNodeCapabilities`
-     - 
+     - Update the capabilities document for the specified node.
+Successful completion of this operation is indicated by a HTTP response status code of 200.
+Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception.
    * - \
      - :func:`CNRegister.register`
-     - 
+     - Register a new node in the system. If the node already exists, then a :exc:`IdentifierNotUnique` exception MUST be returned.

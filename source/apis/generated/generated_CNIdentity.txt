@@ -21,7 +21,7 @@
    * - Tier 2
      - ``POST /accounts/{subject}``
      - :func:`verifyAccount`
-     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
    * - Tier 2
      - ``GET /accounts/{subject}``
      - :func:`getSubjectInfo`
@@ -33,23 +33,23 @@
    * - Tier 2
      - ``POST /accounts/map``
      - :func:`mapIdentity`
-     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
    * - Tier 2
-     - ``POST /accounts/map``
+     - ``POST /accounts/mapconfirm``
      - :func:`confirmMapIdentity`
-     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
    * - Tier 2
      - ``POST /groups/{groupName}``
      - :func:`createGroup`
-     - (:class:`session<Types.Session>`, :class:`groupName<Types.Subject>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`groupName<Types.Subject>`) ``->`` :class:`Types.Subject`
    * - Tier 2
      - ``PUT /groups/{groupName}``
      - :func:`addGroupMembers`
-     - (:class:`session<Types.Session>`, :class:`groupName<Types.Subject>`, :class:`members<Types.SubjectList>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`groupName<Types.Subject>`, :class:`members<Types.SubjectList>`) ``->`` boolean
    * - Tier 2
      - ``DELETE /groups/{groupName}``
      - :func:`removeGroupMembers`
-     - (:class:`session<Types.Session>`, :class:`groupName<Types.Subject>`, :class:`members<Types.SubjectList>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`groupName<Types.Subject>`, :class:`members<Types.SubjectList>`) ``->`` boolean
 
 
 
@@ -116,11 +116,15 @@
 
 
 
-.. function:: verifyAccount(session,subject) -> Boolean
+.. function:: verifyAccount(session,subject) -> boolean
 
    Verify that the Person data associated with this Subject is a true representation of the real world person.
 
    This service can only be called by users who have an administrative role for the domain of users in question.
+
+   A successful completion of this operation is indicated by returning a HTTP status of 200.
+
+   An exeption MUST be returned if the account verification is not successful.
 
    :REST URL: ``POST /accounts/{subject}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
@@ -130,7 +134,7 @@
    :type subject: :class:`Types.Subject`
 
    :returns: True if the account verification succeeds, otherwise false.
-   :rtype: :class:`Types.Boolean`
+   :rtype: boolean
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4540)``
 
@@ -207,11 +211,15 @@
 
 
 
-.. function:: mapIdentity(session,subject) -> Boolean
+.. function:: mapIdentity(session,subject) -> boolean
 
    Map the two authenticated identities, asserting that they represent the same subject.
 
    Mapping identities is a two-step process wherein a map request is made by a primary Subject and a subsequent (confirmation) map request is made by the secondary Subject. This ensures that mappings are performed only by those that have authority to do so.
+
+   Successful completion of therequest is indicated by returning a HTTP status of 200.
+
+   A failed request MUST be indicated by returning an appropriate exception and setting the response HTTP status accordingly.
 
    :REST URL: ``POST /accounts/map``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.
@@ -221,7 +229,7 @@
    :type subject: :class:`Types.Subject`
 
    :returns: True if the mapping was successfully initiated, false otherwise.
-   :rtype: :class:`Types.Boolean`
+   :rtype: boolean
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2390)``
 
@@ -242,11 +250,15 @@
 
 
 
-.. function:: confirmMapIdentity(session,subject) -> Boolean
+.. function:: confirmMapIdentity(session,subject) -> boolean
 
    Confirms a previously initiated identity mapping. If subject A asserts that B is the same identity through :func:`CNIdentity.mapIdentity`, then this method is called by B to confirm that assertion.
 
-   :REST URL: ``POST /accounts/map``
+   A successful request is indicated by returning a HTTP status of 200.
+
+   A failed request MUST be indicated by returning an appropriate exception and setting the response HTTP status accordingly.
+
+   :REST URL: ``POST /accounts/mapconfirm``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.
    :type session: :class:`Types.Session`
 
@@ -254,7 +266,7 @@
    :type subject: :class:`Types.Subject`
 
    :returns: True if the map was successfully created, false otherwise.
-   :rtype: :class:`Types.Boolean`
+   :rtype: boolean
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2390)``
 
@@ -275,7 +287,7 @@
 
 
 
-.. function:: createGroup(session,groupName) -> Boolean
+.. function:: createGroup(session,groupName) -> Subject
 
    Create a group with the given name.
 
@@ -288,8 +300,8 @@
    :param groupName: The name of the group to be created.
    :type groupName: :class:`Types.Subject`
 
-   :returns: True if group was created successfully, false otherwise
-   :rtype: :class:`Types.Boolean`
+   :returns: The name of the group that was created.
+   :rtype: :class:`Types.Subject`
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2490)``
 
@@ -314,11 +326,15 @@
 
 
 
-.. function:: addGroupMembers(session,groupName,members) -> Boolean
+.. function:: addGroupMembers(session,groupName,members) -> boolean
 
    Add members to the named group.
 
    Group members can be added by the original creator of the group, otherwise a NotAuthorized exception is thrown.  Group members are provided as a list of subjects to be added to the group.
+
+   Successful completion of this operation is indicated by a HTTP response status code of 200.
+
+   Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception.
 
    :REST URL: ``PUT /groups/{groupName}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
@@ -331,7 +347,7 @@
    :type members: :class:`Types.SubjectList`
 
    :returns: True if the group that was modified successfully, false otherwise
-   :rtype: :class:`Types.Boolean`
+   :rtype: boolean
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2590)``
 
@@ -352,11 +368,15 @@
 
 
 
-.. function:: removeGroupMembers(session,groupName,members) -> Boolean
+.. function:: removeGroupMembers(session,groupName,members) -> boolean
 
    Remove members to the named group.
 
    Group members can be removed by the original creator of the group, otherwise a NotAuthorized exception is thrown.  Group members are provided as a list of subjects to be removed from the group.
+
+   Successful completion of this operation is indicated by a HTTP response status code of 200.
+
+   Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception.
 
    :REST URL: ``DELETE /groups/{groupName}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
@@ -368,8 +388,8 @@
    :param members: The list of members to be removed from the group.
    :type members: :class:`Types.SubjectList`
 
-   :returns: True if the group that was modified successfully, false otherwise
-   :rtype: :class:`Types.Boolean`
+   :returns: True if the operation completed successfully.
+   :rtype: boolean
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2690)``
 

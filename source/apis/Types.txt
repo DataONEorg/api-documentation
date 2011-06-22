@@ -44,6 +44,7 @@ Data Types in CICore
 - :class:`Types.Session`
 - :class:`Types.Subject`
 - :class:`Types.SubjectList`
+- :class:`Types.SuccessFlag`
 - :class:`Types.Status`
 - :class:`Types.SystemMetadata`
 - :class:`Types.X509Certificate`
@@ -278,6 +279,10 @@ Data Types in CICore
   }
   ReplicationPolicy -- NodeReference
 
+  class SuccessFlag {
+    + value : boolean
+  }
+
   class Schedule {
     + hour : CrontabEntry
     + mday : CrontabEntry
@@ -386,7 +391,7 @@ Data Types in CICore
   sequence of allow rules that grant permissions to principals, which can be
   individual users, groups of users, symbolic users, or systems and services.
 
-  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+  .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
      :language: xml
      :start-after: <!-- AccessPolicy -->
      :end-before: <!-- AccessRule -->
@@ -419,7 +424,7 @@ Data Types in CICore
   time, then the object is deemed to be private and the only user with access
   to the object (read, write, or otherwise) is the :term:`Rights Holder`.
 
-  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+  .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
      :language: xml
      :start-after: <!-- AccessRule -->
      :end-before: <!-- AuthToken  -->
@@ -506,7 +511,7 @@ Data Types in CICore
 
   As represented in XMLSchema:
 
-  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+  .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
        :language: xml
        :start-after: <!-- Checksum -->
        :end-before: <!-- Component -->
@@ -534,7 +539,7 @@ Data Types in CICore
 
   As represented in XMLSchema:
 
-  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+  .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
      :language: xml
      :start-after: <!-- Checksum Algorithm -->
      :end-before: <!-- ComponentName -->
@@ -559,7 +564,7 @@ Data Types in CICore
 
   As represented in XMLSchema:
 
-  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+  .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
      :language: xml
      :start-after: <!-- ComponentName -->
      :end-before: <!-- ComponentVersion -->
@@ -572,7 +577,7 @@ Data Types in CICore
 
   As represented in XMLSchema:
   
-  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+  .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
      :language: xml
      :start-after: <!-- ComponentVersion -->
      :end-before: <!-- crontrabEntry -->
@@ -584,7 +589,7 @@ Data Types in CICore
 
   As represented in XMLSchema:
 
-  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+  .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
     :language: xml
     :start-after: <!-- crontrabEntry -->
     :end-before: <!-- Event Enumeration -->
@@ -730,7 +735,7 @@ Data Types in CICore
 
   As represented in XMLSchema:
 
-  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+  .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
     :language: xml
     :start-after: <!-- Environment Enumeration -->
     :end-before: <!-- Node State -->
@@ -769,7 +774,7 @@ Data Types in CICore
 
   As represented in XML Schema:
 
-  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+  .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
      :language: xml
      :start-after: <!-- Event Enumeration -->
      :end-before: <!-- Environment Enumeration -->
@@ -798,7 +803,7 @@ Data Types in CICore
 
   As represented in XML Schema:
 
-  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+  .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
      :language: xml
      :start-after: <!-- Group -->
      :end-before: <!-- Identifier  -->
@@ -842,7 +847,7 @@ Data Types in CICore
 
   As represented in XML Schema:
 
-  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+  .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
      :language: xml
      :start-after: <!-- Identifier Format enumeration -->
      :end-before: <!-- Service Name -->
@@ -875,7 +880,7 @@ Data Types in CICore
 
   As represented in XML Schema:
 
-  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+  .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
      :language: xml
      :start-after: <!-- Identifier  -->
      :end-before: <!--  Log -->
@@ -900,7 +905,7 @@ Data Types in CICore
 
   As represented in XMLSchema:
 
-  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+  .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
        :language: xml
        :start-after: <!-- Log Entry -->
        :end-before: <!-- Monitor Info -->
@@ -936,7 +941,7 @@ Data Types in CICore
 
   As represented in XMLSchema:
 
-  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+  .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
      :language: xml
      :start-after: <!--  Log -->
      :end-before: <!-- Log Entry -->
@@ -1007,7 +1012,7 @@ Data Types in CICore
   A set of values that describe a node, its Internet location, the services it
   supports and its replication policy.
 
-  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+  .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
      :language: xml
      :start-after: <!-- Node -->
      :end-before: <!-- Node Health -->
@@ -1043,7 +1048,7 @@ Data Types in CICore
 ..                                    ######
 .. class:: NodeHealth
 
-  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+  .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
      :language: xml
      :start-after: <!-- Node Health -->
      :end-before: <!-- Node List -->
@@ -1070,7 +1075,7 @@ Data Types in CICore
   NodeList is described in :mod:`NodeList`.
 
 
-  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+  .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
      :language: xml
      :start-after: <!-- Node List -->
      :end-before: <!-- Object Info -->
@@ -1094,7 +1099,7 @@ Data Types in CICore
 
   As represented in XMLSchema:
 
-  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+  .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
      :language: xml
      :start-after: <!-- NodeReference -->
      :end-before: <!-- Node Type Enumeration -->
@@ -1113,7 +1118,7 @@ Data Types in CICore
 
   As represented in XMLSchema:
 
-  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+  .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
      :language: xml
      :start-after: <!-- NodeReference -->
      :end-before: <!-- Node Type Enumeration -->
@@ -1138,7 +1143,7 @@ Data Types in CICore
 
   As represented in XMLSchema:
 
-  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+  .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
      :language: xml
      :start-after: <!-- Object Format Identifier -->
      :end-before: <!-- Permission = permitted action -->
@@ -1159,7 +1164,7 @@ Data Types in CICore
 
   As represented in XMLSchema:
 
-  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+  .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
      :language: xml
      :start-after: <!-- Object Format -->
      :end-before: <!--  Object Format List -->
@@ -1192,7 +1197,7 @@ Data Types in CICore
 
   As represented in XMLSchema:
 
-  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+  .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
      :language: xml
      :start-after: <!--  Object Format List -->
      :end-before: <!-- Object Info -->
@@ -1249,7 +1254,7 @@ Data Types in CICore
 
   As represented in XMLSchema:
 
-  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+  .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
      :language: xml
      :start-after: <!-- Object Info -->
      :end-before: <!-- Object Location -->
@@ -1303,7 +1308,7 @@ Data Types in CICore
 
    As represented in XMLSchema:
 
-   .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+   .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
       :language: xml
       :start-after: <!-- Object Location -->
       :end-before: <!-- Object Location List -->
@@ -1340,7 +1345,7 @@ Data Types in CICore
 
    As represented in XMLSchema:
 
-   .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+   .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
       :language: xml
       :start-after: <!-- Object Location -->
       :end-before: <!-- Object Location List -->
@@ -1405,7 +1410,7 @@ Data Types in CICore
 
   As represented in XMLSchema:
 
-  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+  .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
      :language: xml
      :start-after: <!-- Permission = permitted action -->
      :end-before: <!-- QueryType = named types of search query formats -->
@@ -1438,7 +1443,7 @@ Data Types in CICore
 
   As represented in XMLSchema:
 
-  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+  .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
      :language: xml
      :start-after: <!-- Person -->
      :end-before: <!-- Ping -->
@@ -1523,7 +1528,7 @@ Data Types in CICore
 
    As represented in XMLSchema:
 
-   .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+   .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
       :language: xml
       :start-after: <!-- Replica -->
       :end-before: <!-- Replication Policy -->
@@ -1551,7 +1556,7 @@ Data Types in CICore
 
    As represented in XMLSchema:
 
-   .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+   .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
       :language: xml
       :start-after: <!-- Replication Status enumeration -->
       :end-before: <!-- Identifier Format enumeration -->
@@ -1576,7 +1581,7 @@ Data Types in CICore
 
    As represented in XMLSchema:
 
-   .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+   .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
       :language: xml
       :start-after: <!-- Replication Policy -->
       :end-before: <!-- Service -->
@@ -1601,7 +1606,7 @@ Data Types in CICore
 
   As represented in XMLSchema:
   
-  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+  .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
     :language: xml
     :start-after: <!-- Schedule -->
     :end-before: <!-- Slice -->
@@ -1629,7 +1634,7 @@ Data Types in CICore
 
   As represented in XMLSchema:
   
-  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+  .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
     :language: xml
     :start-after: <!-- Service -->
     :end-before: <!-- Service Method -->
@@ -1656,7 +1661,7 @@ Data Types in CICore
 
   As represented in XMLSchema:
 
-  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+  .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
      :language: xml
      :start-after: <!-- Service Method -->
      :end-before: <!-- Services -->
@@ -1679,7 +1684,7 @@ Data Types in CICore
 
   As represented in XMLSchema:
 
-  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+  .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
      :language: xml
      :start-after: <!-- Service Name -->
      :end-before: <!-- Service Version -->
@@ -1698,7 +1703,7 @@ Data Types in CICore
 
   As represented in XMLSchema:
   
-  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+  .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
     :language: xml
     :start-after: <!-- Services -->
     :end-before: <!-- Session -->
@@ -1720,7 +1725,7 @@ Data Types in CICore
 
   As represented in XMLSchema:
 
-  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+  .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
      :language: xml
      :start-after: <!-- Service Version -->
      :end-before: <!-- ***************************************
@@ -1748,7 +1753,7 @@ Data Types in CICore
 
   As represented in XMLSchema:
   
-  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+  .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
      :language: xml
      :start-after: <!-- Subject = user identity -->
      :end-before: <!-- SubjectList -->
@@ -1770,7 +1775,7 @@ Data Types in CICore
 
   As represented in XMLSchema:
 
-  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+  .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
      :language: xml
      :start-after: <!-- SubjectList -->
      :end-before: <!-- Definition of the SystemMetdata element -->
@@ -1790,11 +1795,35 @@ Data Types in CICore
 
 
 ..                                    ######
+.. class:: SuccessFlag
+
+   A boolean value typically used to return a positive response from operations
+   that indicate success or failure of the operation through a boolean response.
+
+   As represented in XMLSchema:
+
+   .. LiteralInclude:: /d1_schemas_0.6.2/dataoneTypes.xsd
+      :language: xml
+      :start-after: <!-- SuccessFlag -->
+      :end-before: <!-- *********
+
+   .. image:: images/class_successflag.png
+
+   .. 
+     @startuml images/class_successflag.png
+     class SuccessFlag {
+       + value : boolean
+     }
+     @enduml
+
+
+
+..                                    ######
 .. class:: Synchronization
 
   As represented in XMLSchema:
 
-  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+  .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
     :language: xml
     :start-after: <!-- Synchronization -->
     :end-before: <!-- Subject = user identity -->
@@ -1861,6 +1890,7 @@ Data Types in CICore
      }
 
 
+
 ..                                    ######
 .. class:: Session
 
@@ -1875,38 +1905,7 @@ Data Types in CICore
 
   As represented in XMLSchema:
 
-  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
-     :language: xml
-     :start-after: <!-- Session -->
-     :end-before: <!-- Schedule -->
-
-  .. image:: images/class_session.png
-
-  ..
-    @startuml images/class_session.png
-    class Session {
-      + subject : Subject
-      + subjectList : SubjectList[0..1]
-    }
-    Session o-- Subject
-    Session o-- SubjectList
-    @enduml
-
-
-
-..                                    ######
-.. class:: Session
-
-  Information about the authenticated session for a service transaction.
-  Session data is retrieved from the SSL client certificate and populated in
-  the Session object. The subject represents the person or system that
-  authenticated successfully, and the subjectList contains a listing of
-  alternate identities (both Persons and Groups) that are also valid
-  identities for this user. The subjectList should include at least one Person
-  or Group entry that provides the attributes of the subject that was
-  authenticated.
-
-  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+  .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
      :language: xml
      :start-after: <!-- Session -->
      :end-before: <!-- Schedule -->
@@ -1940,10 +1939,10 @@ Data Types in CICore
 
   As represented in XMLSchema:
 
-  .. LiteralInclude:: /d1_schemas/dataoneTypes.xsd
+  .. LiteralInclude::   /d1_schemas_0.6.2/dataoneTypes.xsd
      :language: xml
      :start-after: <!-- Definition of the SystemMetdata element -->
-     :end-before: <!-- ****************************
+     :end-before: <!-- Status
 
   .. image:: images/class_systemmetadata.png
 

@@ -37,7 +37,7 @@
    * - Tier 1
      - ``POST /meta``
      - :func:`CNCore.registerSystemMetadata`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
 
    * - Tier 1
      - ``GET /object/{pid}``
@@ -54,7 +54,7 @@
    * - Tier 1
      - ``GET /assertRelation/{pidOfSubject}?relationship={relationship}&pidofobject={pidOfObject}``
      - :func:`CNRead.assertRelation`
-     - (:class:`session<Types.Session>`, :class:`pidOfSubject<Types.Identifier>`, :class:`relationship<Types.RelationshipEnum>`, :class:`pidOfObject<Types.Identifier>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`pidOfSubject<Types.Identifier>`, :class:`relationship<Types.RelationshipEnum>`, :class:`pidOfObject<Types.Identifier>`) ``->`` boolean
    * - Tier 1
      - ``GET /checksum/{pid}``
      - :func:`CNRead.getChecksum`
@@ -70,11 +70,11 @@
    * - Tier 2
      - ``GET /isAuthorized/{pid}``
      - :func:`CNAuthorization.isAuthorized`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`operation<Types.Event>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`operation<Types.Event>`) ``->`` boolean
    * - Tier 2
      - ``PUT /accessRules/{pid}``
      - :func:`CNAuthorization.setAccessPolicy`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`accessPolicy<Types.AccessPolicy>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`accessPolicy<Types.AccessPolicy>`) ``->`` boolean
    * - Tier 2
      - ``POST /accounts``
      - :func:`CNIdentity.registerAccount`
@@ -86,7 +86,7 @@
    * - Tier 2
      - ``POST /accounts/{subject}``
      - :func:`CNIdentity.verifyAccount`
-     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
    * - Tier 2
      - ``GET /accounts/{subject}``
      - :func:`CNIdentity.getSubjectInfo`
@@ -98,39 +98,39 @@
    * - Tier 2
      - ``POST /accounts/map``
      - :func:`CNIdentity.mapIdentity`
-     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
    * - Tier 2
-     - ``POST /accounts/map``
+     - ``POST /accounts/mapconfirm``
      - :func:`CNIdentity.confirmMapIdentity`
-     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
    * - Tier 2
      - ``POST /groups/{groupName}``
      - :func:`CNIdentity.createGroup`
-     - (:class:`session<Types.Session>`, :class:`groupName<Types.Subject>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`groupName<Types.Subject>`) ``->`` :class:`Types.Subject`
    * - Tier 2
      - ``PUT /groups/{groupName}``
      - :func:`CNIdentity.addGroupMembers`
-     - (:class:`session<Types.Session>`, :class:`groupName<Types.Subject>`, :class:`members<Types.SubjectList>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`groupName<Types.Subject>`, :class:`members<Types.SubjectList>`) ``->`` boolean
    * - Tier 2
      - ``DELETE /groups/{groupName}``
      - :func:`CNIdentity.removeGroupMembers`
-     - (:class:`session<Types.Session>`, :class:`groupName<Types.Subject>`, :class:`members<Types.SubjectList>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`groupName<Types.Subject>`, :class:`members<Types.SubjectList>`) ``->`` boolean
    * - Tier 4
      - ``POST /notify``
      - :func:`CNReplication.setReplicationStatus`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`status<Types.ReplicationStatus>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`status<Types.ReplicationStatus>`) ``->`` boolean
    * - Tier 4
      - ``PUT /meta/replication/{pid}``
      - :func:`CNReplication.updateReplicationMetadata`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`replicaMetadata<Types.Replica>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`replicaMetadata<Types.Replica>`) ``->`` boolean
    * - 
      - ``PUT /meta/policy/{pid}``
      - :func:`CNReplication.setReplicationPolicy`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`policy<Types.ReplicationPolicy>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`policy<Types.ReplicationPolicy>`) ``->`` boolean
    * - Tier 2
      - ``PUT /node/{nodeid}``
      - :func:`CNRegister.updateNodeCapabilities`
-     - (:class:`session<Types.Session>`, :class:`nodeid<Types.NodeReference>`, :class:`node<Types.Node>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`nodeid<Types.NodeReference>`, :class:`node<Types.Node>`) ``->`` boolean
    * - Tier 2
      - ``POST /node``
      - :func:`CNRegister.register`

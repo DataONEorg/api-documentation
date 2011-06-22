@@ -13,7 +13,7 @@
    * - Tier 2
      - ``PUT /node/{nodeid}``
      - :func:`updateNodeCapabilities`
-     - (:class:`session<Types.Session>`, :class:`nodeid<Types.NodeReference>`, :class:`node<Types.Node>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`nodeid<Types.NodeReference>`, :class:`node<Types.Node>`) ``->`` boolean
    * - Tier 2
      - ``POST /node``
      - :func:`register`
@@ -22,9 +22,13 @@
 
 
 
-.. function:: updateNodeCapabilities(session,nodeid,node) -> Boolean
+.. function:: updateNodeCapabilities(session,nodeid,node) -> boolean
 
-   
+   Update the capabilities document for the specified node.
+
+   Successful completion of this operation is indicated by a HTTP response status code of 200.
+
+   Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception.
 
    :REST URL: ``PUT /node/{nodeid}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
@@ -37,7 +41,7 @@
    :type node: :class:`Types.Node`
 
    :returns: True if operation is successful
-   :rtype: :class:`Types.Boolean`
+   :rtype: boolean
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4820)``
 
@@ -62,7 +66,7 @@
 
 .. function:: register(session,node) -> NodeReference
 
-   
+   Register a new node in the system. If the node already exists, then a :exc:`IdentifierNotUnique` exception MUST be returned.
 
    :REST URL: ``POST /node``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.

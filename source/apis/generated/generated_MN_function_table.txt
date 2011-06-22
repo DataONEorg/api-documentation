@@ -62,11 +62,11 @@
    * - Tier 2
      - ``GET /isAuthorized/{pid}?action={action}``
      - :func:`MNAuthorization.isAuthorized`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`action<Types.Permission>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`action<Types.Permission>`) ``->`` boolean
    * - Tier 2
      - ``PUT /accessRules/{pid}``
      - :func:`MNAuthorization.setAccessPolicy`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`accessPolicy<Types.AccessPolicy>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`accessPolicy<Types.AccessPolicy>`) ``->`` boolean
    * - Tier 3
      - ``POST /object/{pid}``
      - :func:`MNStorage.create`
@@ -82,5 +82,5 @@
    * - Tier 4
      - ``POST /replicate``
      - :func:`MNReplication.replicate`
-     - (:class:`session<Types.Session>`, :class:`sysmeta<Types.SystemMetadata>`, :class:`sourceNode<Types.NodeReference>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`sysmeta<Types.SystemMetadata>`, :class:`sourceNode<Types.NodeReference>`) ``->`` boolean
 

@@ -37,14 +37,14 @@
    * - Tier 1
      - ``POST /meta``
      - :func:`registerSystemMetadata`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
 
 
 
 
 .. function:: create(session,pid,object,sysmeta) -> Identifier
 
-   Used intenrally within a Coordinating Node to add a new object to the object store.
+   Used internally within a Coordinating Node to add a new object to the object store.
 
    This method is not publicly exposed by a Coordinating Node.
 
@@ -269,7 +269,7 @@
 
 
 
-.. function:: registerSystemMetadata(session,pid,sysmeta) -> Boolean
+.. function:: registerSystemMetadata(session,pid,sysmeta) -> Identifier
 
    Provides a mechanism for adding system metadata independently of its associated object, such as when adding system metadata for data objects.
 
@@ -285,8 +285,8 @@
    :param sysmeta:
    :type sysmeta: :class:`Types.SystemMetadata`
 
-   :returns: True on success
-   :rtype: :class:`Types.Boolean`
+   :returns: The pid that was updated.
+   :rtype: :class:`Types.Identifier`
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4860)``
 

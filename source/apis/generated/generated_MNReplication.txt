@@ -13,14 +13,18 @@
    * - Tier 4
      - ``POST /replicate``
      - :func:`replicate`
-     - (:class:`session<Types.Session>`, :class:`sysmeta<Types.SystemMetadata>`, :class:`sourceNode<Types.NodeReference>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`sysmeta<Types.SystemMetadata>`, :class:`sourceNode<Types.NodeReference>`) ``->`` boolean
 
 
 
 
-.. function:: replicate(session,sysmeta,sourceNode) -> Boolean
+.. function:: replicate(session,sysmeta,sourceNode) -> boolean
 
    Called by a Coordinating Node to request that the Member Node create a copy of the specified object by retrieving it from another Member Nodeode and storing it locally so that it can be made accessible to the DataONE system.
+
+   A successful operation is indicated by a HTTP status of 200 on the response.
+
+   Failure of the operation MUST be indicated by returning an appropriate exception.
 
    :Use Cases:
      :doc:`UC09 </design/UseCases/09_uc>`
@@ -35,7 +39,7 @@
    :type sourceNode: :class:`Types.NodeReference`
 
    :returns: True if everything works OK, otherwise an error is returned.
-   :rtype: :class:`Types.Boolean`
+   :rtype: boolean
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2150)``
 

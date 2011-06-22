@@ -13,16 +13,16 @@
    * - Tier 2
      - ``GET /isAuthorized/{pid}?action={action}``
      - :func:`isAuthorized`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`action<Types.Permission>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`action<Types.Permission>`) ``->`` boolean
    * - Tier 2
      - ``PUT /accessRules/{pid}``
      - :func:`setAccessPolicy`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`accessPolicy<Types.AccessPolicy>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`accessPolicy<Types.AccessPolicy>`) ``->`` boolean
 
 
 
 
-.. function:: isAuthorized(session,pid,action) -> Boolean
+.. function:: isAuthorized(session,pid,action) -> boolean
 
    Test if the user identified by the provided token has authorization for operation on the specified object.
 
@@ -34,14 +34,14 @@
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
-   :param pid:
+   :param pid: A successful response is indicated by a response HTTP status of 200. The body of the response is arbitrary and SHOULD be ignored by the caller.
    :type pid: :class:`Types.Identifier`
 
-   :param action:
+   :param action: If the action is not authorized, then a :exc:`NotAuthorized` exception MUST be raised.
    :type action: :class:`Types.Permission`
 
    :returns: True if the operation is allowed
-   :rtype: :class:`Types.Boolean`
+   :rtype: boolean
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=1760)``
 
@@ -60,9 +60,13 @@
 
 
 
-.. function:: setAccessPolicy(session,pid,accessPolicy) -> Boolean
+.. function:: setAccessPolicy(session,pid,accessPolicy) -> boolean
 
    Sets the access permissions for an object identified by *pid*.
+
+   A successful operation is indicated by a return HTTP status of 200.
+
+   Failure is indicated by an exception such as :exc:`NotAuthorized` being returned.
 
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`
@@ -77,7 +81,7 @@
    :type accessPolicy: :class:`Types.AccessPolicy`
 
    :returns: True if the operation succeeds, otherwise false.
-   :rtype: :class:`Types.Boolean`
+   :rtype: boolean
 
    :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=4410)``
 

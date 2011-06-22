@@ -25,7 +25,7 @@
    * - Tier 1
      - ``GET /assertRelation/{pidOfSubject}?relationship={relationship}&pidofobject={pidOfObject}``
      - :func:`assertRelation`
-     - (:class:`session<Types.Session>`, :class:`pidOfSubject<Types.Identifier>`, :class:`relationship<Types.RelationshipEnum>`, :class:`pidOfObject<Types.Identifier>`) ``->`` :class:`Types.Boolean`
+     - (:class:`session<Types.Session>`, :class:`pidOfSubject<Types.Identifier>`, :class:`relationship<Types.RelationshipEnum>`, :class:`pidOfObject<Types.Identifier>`) ``->`` boolean
    * - Tier 1
      - ``GET /checksum/{pid}``
      - :func:`getChecksum`
@@ -150,9 +150,13 @@
 
 
 
-.. function:: assertRelation(session,pidOfSubject,relationship,pidOfObject) -> Boolean
+.. function:: assertRelation(session,pidOfSubject,relationship,pidOfObject) -> boolean
 
    Tests that the specified relationship between *pidOfSubject* and *pidOfObject* exists.
+
+   A passing assertion is indicated by returning a response with a HTTP status of 200.
+
+   Failed assertion MUST be indicated by returning an appropriate exception such as :exc:`NotAuthorized`.
 
    :REST URL: ``GET /assertRelation/{pidOfSubject}?relationship={relationship}&pidofobject={pidOfObject}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
@@ -168,7 +172,7 @@
    :type pidOfObject: :class:`Types.Identifier`
 
    :returns: True if the relationship exists.
-   :rtype: :class:`Types.Boolean`
+   :rtype: boolean
 
    :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=4230)``
 
@@ -192,6 +196,8 @@
 .. function:: getChecksum(session,pid) -> Checksum
 
    Returns the checksum for the specified object as reported in the system metadata.
+
+   Note that the signature of this method differs from :func:`MNRead.getChecksum` as that method takes an optional algorithm parameter.
 
    :Use Cases:
      :doc:`UC09 </design/UseCases/09_uc>`
