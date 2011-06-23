@@ -401,6 +401,9 @@ information information necessary to perform authorization processing.
 
 Obtaining a CILogon X.509 certificate requires that the user authenticate through the CILogon InCommon identity services as outlined in Figure 4.
 
+.. Note::
+A proposal for mapping exisiting KNB accounts is included at the bottom of Figure 4.
+
 .. image:: images/auth_03.png
 
 *Figure 4.*  Detailed sequence of events for authentication through CILogon - 
@@ -416,6 +419,7 @@ generates X509 certificate and returns to client for use with DataONE.
     title Detailed CILogon Authentication Sequence
     participant "IdentityService" as IS << CNode >>
     participant "Client Browser" as D1 << Application >>
+    participant "JWS app" as JWS
     participant "CILogon" as CI
     participant "Identity Provider" as IP
 
@@ -435,13 +439,35 @@ generates X509 certificate and returns to client for use with DataONE.
     end note
     D1->>CI: SAML assertion
     D1->CI: "Download Certificate"
-    CI-->D1: JWS App
-    D1->D1: JWS Generate Key Pair
-    D1->CI: JWS Cert Request
+   	create JWS
+    CI-->JWS
+    JWS->JWS: JWS Generate Key Pair
+    JWS->CI: JWS Cert Request
     CI->IS: getPrincipalInfo(Principal)
     IS-->CI: PrincipalList
     CI->CI: Generate and Sign X.509
-    CI-->D1: X.509
+    CI-->JWS: X.509
+    ...
+    group For existing KNB identities
+    	participant "Metacat API" as Metacat
+    	create Metacat
+    	
+    	JWS->Metacat: authenticate with KNB identity/credentials
+    	JWS<--Metacat: name, email
+    	JWS->IS: mapIdentity(CILogon, KNB)
+    	note right
+    		using certificate for 
+    		CILogon identity
+    	end note
+    	JWS->JWS: Generate certificate for KNB identity
+    	JWS->IS: confirmMapIdentity(KNB, CILogon)
+    	note right
+    		using certificate for 
+    		KNB identity
+    	end note
+    	
+    end
+    
     @enduml
 
 The CILogon X.509 certificate provides a portable credential that binds a user’s public key to their distinguished name or another significant identifier (e.g., email) that is stored in the “subject” field of the certificate.  Once generated, the CILogon X.509 certificate has a specified span of time in which it is considered valid; this information is stored in the “valid not before” and “valid not after” fields of the certificate.
