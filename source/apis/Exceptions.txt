@@ -84,45 +84,52 @@ HTTP Exception Handling Codes
 HTTP error codes of relevance to the DataONE cicore are repeated here for
 convenience. Refer to the `HTTP specification`_ for a complete reference.
 
-==== =================== =======================================================
-Code Meaning             Description
-==== =================== =======================================================
-400  Bad Request         Bad request if the request REST operation is invalid,
-                         serialization is erroneous, mime type is not supported, 
-                         or resource is not supported.  
-401  Unauthorized        Authentication failure. Credentials are required or 
-                         were invalid. 
-403  Forbidden           The current user does not have the right to perform 
-                         the requested action.
-404  Not Found           The object does not exist.
-405  Method not allowed  The HTTP method used is not allowed on this resource.
-                         Response must include an Allow header indicating valid
-                         HTTP methods.
-406  Not Acceptable      The resource identified by the request is only capable 
-                         of generating response entities which have content 
-                         characteristics not acceptable according to the accept 
-                         headers sent in the request.
-408  Request Timeout     The client did not produce a request within the time 
-                         that the server was prepared to wait.
-409  Conflict            The request could not be completed due to a conflict 
-                         with the current state of the resource.
-410  Gone                The resource is known to be permanently deleted (as 
-                         opposed to 404 which indicates uncertainty about the
-                         state of the object).   
-413  Request Entity Too  The server is refusing to process a request because 
-     Large               the request entity is larger than the server is willing 
-                         or able to process.
-415  Unsupported Media   The server is refusing to service the request because 
-     Type                the entity of the request is in a format not supported 
-                         by the requested resource for the requested method. 
-500  Internal Server     The server encountered an unexpected condition which 
-     Error               prevented it from fulfilling the request. 
-501  Not Implemented     The server does not support the functionality required 
-                         to fulfill the request. This is the appropriate
-                         response  when the server does not recognize the
-                         request method and is not capable of supporting it for
-                         any resource.
-==== =================== =======================================================
+.. list-table::
+   :widths: 1 2 5
+   :header-rows: 1
+   
+   * - Code
+     - Meaning
+     - Description
+   * - 400
+     - Bad Request
+     - Bad request if the request REST operation is invalid, serialization is erroneous, mime type is not supported, or resource is not supported.
+   * - 401
+     - Unauthorized
+     - Authentication failure. Credentials are required or were invalid.
+   * - 403
+     - Forbidden
+     - The current user does not have the right to perform the requested action.
+   * - 404
+     - Not Found
+     - The requested resource does not exist.
+   * - 405
+     - Method not allowed
+     - The HTTP method used is not allowed on this resource. Response must include an Allow header indicating valid HTTP methods.
+   * - 406
+     - Not Acceptable
+     - The resource identified by the request is only capable of generating response entities which have content characteristics not acceptable according to the accept headers sent in the request.
+   * - 408
+     - Request Timeout
+     - The client did not produce a request within the time that the server was prepared to wait.
+   * - 409
+     - Conflict
+     - The request could not be completed due to a conflict with the current state of the resource.
+   * - 410
+     - Gone
+     - The resource is known to be permanently deleted (as opposed to 404 which indicates uncertainty about the state of the object).
+   * - 413
+     - Request Entity Too Large
+     - The server is refusing to process a request because the request entity is larger than the server is willing or able to process.
+   * - 415
+     - Unsupported Media Type
+     - The server is refusing to service the request because the entity of the request is in a format not supported by the requested resource for the requested method. 
+   * - 500
+     - Internal Server Error
+     - The server encountered an unexpected condition which prevented it from fulfilling the request.
+   * - 501
+     - Not Implemented
+     - The server does not support the functionality required  to fulfill the request. This is the appropriate response when the server does not recognize the request method and is not capable of supporting it for any resource.
 
 .. _HTTP specification: http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
 
