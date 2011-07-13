@@ -746,6 +746,36 @@
      - InvalidSystemMetadata
      - 400
      - 4864
+   * - :mod:`CNCore`
+     - :func:`hasReservation <CNCore.hasReservation>`
+     - NotImplemented
+     - 501
+     - 
+   * - :mod:`CNCore`
+     - :func:`hasReservation <CNCore.hasReservation>`
+     - NotAuthorized
+     - 401
+     - 
+   * - :mod:`CNCore`
+     - :func:`hasReservation <CNCore.hasReservation>`
+     - ServiceFailure
+     - 500
+     - 
+   * - :mod:`CNCore`
+     - :func:`hasReservation <CNCore.hasReservation>`
+     - NotFound
+     - 404
+     - 
+   * - :mod:`CNCore`
+     - :func:`hasReservation <CNCore.hasReservation>`
+     - InvalidToken
+     - 401
+     - 
+   * - :mod:`CNCore`
+     - :func:`hasReservation <CNCore.hasReservation>`
+     - IdentifierNotUnique
+     - 409
+     - 
    * - :mod:`CNRead`
      - :func:`get <CNRead.get>`
      - NotAuthorized
@@ -1346,6 +1376,16 @@
      - InvalidRequest
      - 400
      - 4883
+   * - :mod:`CNReplication`
+     - :func:`setReplicationPolicy <CNReplication.setReplicationPolicy>`
+     - NotFound
+     - 404
+     - 4884
+   * - :mod:`CNReplication`
+     - :func:`setReplicationPolicy <CNReplication.setReplicationPolicy>`
+     - InvalidToken
+     - 401
+     - 4885
    * - :mod:`CNRegister`
      - :func:`updateNodeCapabilities <CNRegister.updateNodeCapabilities>`
      - NotImplemented

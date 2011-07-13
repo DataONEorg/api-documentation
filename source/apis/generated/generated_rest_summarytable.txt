@@ -89,6 +89,9 @@
    * - POST /meta
      - :func:`CNCore.registerSystemMetadata`
      - Provides a mechanism for adding system metadata independently of its associated object, such as when adding system metadata for data objects. This method is used internally by Coordinating Nodes.
+   * - GET /reserve/{pid}
+     - :func:`CNCore.hasReservation`
+     - Checks to determine if the caller (as determined by session) has the reservation (i.e. is the owner) of the specified PID.
    * - GET /object/{pid}
      - :func:`CNRead.get`
      - Retrieves the object identified by *pid* from the node. If the object is not present on the node, then an :exc:`Exceptions.NotFound` error is raised (regardless of whether the object exists on another node in the DataONE system).

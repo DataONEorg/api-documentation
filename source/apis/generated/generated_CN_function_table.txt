@@ -38,6 +38,10 @@
      - ``POST /meta``
      - :func:`CNCore.registerSystemMetadata`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
+   * - 
+     - ``GET /reserve/{pid}``
+     - :func:`CNCore.hasReservation`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` boolean
 
    * - Tier 1
      - ``GET /object/{pid}``
