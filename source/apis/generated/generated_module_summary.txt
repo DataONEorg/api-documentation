@@ -94,9 +94,10 @@ The *pid* must not exist in the DataONE system or should have been previously re
        Appears in functional use cases: :doc:`UC04 </design/UseCases/04_uc>`, :doc:`UC09 </design/UseCases/09_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
    * - \
      - :func:`MNStorage.update`
-     - Updates an existing object by creating a new object identified by *newPid* on the Member Node which explicitly obsoletes the object identified by *pid* through appropriate changes to the SystemMetadata of *pid* and *newPid*. 
-This method is called by clients to update objects on Member Nodes. 
+     - This method is called by clients to update objects on Member Nodes. 
+Updates an existing object by creating a new object identified by *newPid* on the Member Node which explicitly obsoletes the object identified by *pid* through appropriate changes to the SystemMetadata of *pid* and *newPid*. 
 The *pid* of the object being obsoleted is passed in as a parameter, and the Member Node should record the update by storing the :attr:`SystemMetadata.obsoletes` and :attr:`SystemMetadata.obsoletedBy` fields for the respective objects in their system metadata.
+The Member Node MUST check or set the values of :attr:`SystemMetadata.obsoletes` and :attr:`SystemMetadata.obsoletedBy` so that they accurately represent the relationship between the new and old objects. If the client sets these values and they are incorrect, then an :exc:`InvalidSystemMetadata` MUST be raised.  The Member Node MUST also set :attr:`SystemMetadata.dateSysMetadataModified`.
 The modified system metadata entries must then be available in :func:`MN_read.listObjects` to ensure that a Coordinating Node will pick up the changes when filtering on :attr:`SystmeMetadata.dateSysMetadataModified`.
 
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
