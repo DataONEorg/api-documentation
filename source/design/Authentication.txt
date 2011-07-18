@@ -157,7 +157,7 @@ certificates that contain this biographical and account information in the
 returned certficate, all of which can be used by services to make authorization
 decisions.
 
-* :func:`CN_auth.newAccount`
+* :func:`CN_auth.registerAccount`
     Register an identity with the DataONE IdentityService. When a user attempts
     to use a given identity at DataONE, the user must first register the
     identity and provide biographical information including their real name,
@@ -174,8 +174,12 @@ decisions.
 
 * :func:`CN_auth.mapIdentity`
     Create an equivalence mapping between the identities listed for the 
-    users authenticated and represented by token1 and token2.
+    users authenticated and represented by session1 and session2.
 
+* :func:`CN_auth.confirmMapIdentity`
+    Confirm an equivalence mapping between the identities listed for the 
+    users authenticated and represented by session1 and session2.
+    
 * :func:`CN_auth.getPrincipalInfo`
     Get the information about a Person, their equivalent identities, and the
     Groups to which they belong.
@@ -399,7 +403,16 @@ mechanisms.  The certificate is then returned to the user for subsequent
 interactions with DataONE, and can be provided to services that need identity
 information information necessary to perform authorization processing.
 
-Obtaining a CILogon X.509 certificate requires that the user authenticate through the CILogon InCommon identity services as outlined in Figure 4.
+DataONE web clients will likely use CILogon Portal Delegation (http://www.cilogon.org/portal-delegation) to manage user 
+certificates (rather than the browser). The portal acts as a proxy for the user 
+when intereacting with underlying DataONE services that require authentication 
+or authorization. Instead of direct browser-based certificate management, the 
+portal requests and stores user certificates and opaquely presents them to DataONE.
+This does require developmenet of an extra web application "layer" that provides user
+session/certififcate management and pass-throughs for most of the defined DataONE services.
+
+Obtaining a CILogon X.509 certificate requires that the user authenticate through 
+the CILogon InCommon identity services as outlined in Figure 4.
 
 .. Note::
 A proposal for mapping exisiting KNB accounts is included at the bottom of Figure 4.
