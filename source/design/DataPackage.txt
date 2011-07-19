@@ -106,117 +106,17 @@ User stories
   an existing data package
 
 
-Packaging Technologies
-----------------------
+Representation of Data Packages in DataONE
+------------------------------------------
 
-A number of existing technologies can and have been used for describing the
-linkages between science metadata, data, and system metadata. Here we review
-some packaging mechanisms that are presently in use and discuss how they are
-or might be used in existing systems to provide robust linkages among the
-components of a data package.
-
-Ecological Metadata Language (EML)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The Ecological Metadata Language (EML) [EML-2010]_ is a science metadata specification
-that specifically is modeled around the idea of a 'data package' that consists
-of science metadata that is encoded in the EML document and one or more data
-objects that can be either referenced in the the document via external
-references or can be included inline in the EML document directly. Both
-mechanisms are in widespread use in the ecological and environmental science
-communities that use EML, although the mechanism of external references is far
-more prevalent at this time (2010). EML documents are serialized as XML
-documents but can include data inline if properly encoded. Each EML document
-defines a top-level 'packageId' which contains the globally unique identifier
-for the data package. Each EML document also describes zero or more data
-entities that are drawn from a simple data model that includes data tables,
-spatial raster, spatial vector, and other generic entity data types. Each
-entity type in EML includes a distribution section that can be used to include
-the data inline or reference an external source for the data. External
-references to data are found in the 'online/url' field of the document, and
-can consist of URLs, URNs, and other URIs. Within the Knowledge Network for
-Biocomplexity, it is common to find references to web URLs and to indirect
-digital identifiers such as DOIs and ecogrid URIs. The 'url' field also
-includes an attribute that allows providers to declare the external reference
-as either a 'download' url, which when resolved and dereferenced should
-provide the exact byte stream of the digital object, or an 'information' url,
-which when resolved and dereferenced provides additional information about the
-object but not the exact bytes of the object. This latter informational type
-of URL often leads to an HTML description of the object, a site-specific
-registration or authentication page, or some other site-specific gateway that
-may provide indirect access to the data.
-
-Beneficial features
-  * Simple data model covering common science object types, can be extended
-  * Library support through XML parsers on multiple platforms
-  * Highly structured metadata with good validation model
-  * Similarity to other science metadata models allows relatively simple and
-    complete crosswalks
-
-Issues
-  * Large data access is inefficient (XML parsing)
-  * External data references are unconstrained URIs
-
-Questions
-  * Does the EML 'packageId' field suffice as an identifier for a DataONE data
-    package per se, and if so, is the EML document the equivalent of a
-    serialization of the package?
-
-NetCDF
-~~~~~~
-
-"NetCDF is an abstraction that supports a view of data as a collection of
-self-describing, portable objects that can be accessed through a simple
-interface. Array values may be accessed directly, without knowing details of
-how the data are stored. Auxiliary information about the data, such as what
-units are used, may be stored with the data. Generic utilities and application
-programs can access netCDF datasets and transform, combine, analyze, or
-display specified fields of the data." (NetCDF User's Guide, 2010, section
-1.1, [NETCDF-2010]_) NetCDF is a self-describing data representation format
-developed by Unidata that is commonly used in the atmospheric and
-oceanographic communities. This data model is very similar to other existing
-data models such as the OPeNDAP model and the Hierarchical Data Format (HDF).
-NetCDF is self-describing in that it provides a mechanism for including
-metadata about the included data directly in the serialized representation.
-Many users of the format have standardized upon the use of CF (Climate Format)
-metadata attributes for the representation of science metadata, although this
-is not strictly required by NetCDF and many other ad-hoc approaches to
-metadata provision are commonly employed by users in the community as well.
-
-Beneficial features
-  * Rich data model
-  * Efficient (random) access to large data contents
-  * Extensive library support, including for parallel systems
-  * Efficient storage via binary format
-
-Issues
-  * Opaque binary format reduces long-term effectiveness for preservation
-  * Unspecified science metadata requirements (ad hoc community adoption)
-  * NetCDF actually represents multiple data models and multiple file formats,
-    all of which are called NetCDF even though they are different binary
-    formats
-
-Questions
-  * Does the spec allow for externally referenced data objects?
-  * What mechanisms are available for providing identifiers that are used to
-    reference all of the components of the data package?
-  * What are the proper namespace names for the various NetCDF models and file
-    formats?
-
-OGC O+M
-~~~~~~~
-
-.. TODO::
-  Describe the O+M XML-based serialization for observational data that
-  includes a mechanism for including metadata, data, and semantics (via
-  namespaced XML schemas) for various types.
-
-Beneficial features
-  * 
-Issues
-  *
-Questions
-  *
+A Data Package will be represented in DataONE as a unique, additional class of
+object with its own unique identifier different from the identifiers of its
+components.  Each of these Data Packages in DataONE will be represented by an
+OAI-ORE Aggregation that contains a Resource Map indicating the relationships
+among the components of the package.  The BagIt specification will be used to
+package these components into a single serialized object. Background on BagIt
+and OAI-ORE follow, and then a description of the use of the standards for
+DataONE data packages.
 
 BagIt
 ~~~~~
@@ -230,14 +130,14 @@ for a serialized representation of a group of opaque objects using commonly
 available technological approaches (such as the zip archive format). BagIt
 includes a specification for including metadata about each of the objects, the
 bag itself, and fixity attributes so that any BagIt implementation can
-validate the components contained within a package. Unlike NetCDF EML, BagIt
+validate the components contained within a package. Unlike NetCDF and EML, BagIt
 does not attempt to provide a data model for the data it carries, instead
 asserting that consuming applications will know how to handle package contents
 based on the metadata included in the bag or via external knowledge.
 
 Beneficial features
   * Simple and clear serialization, easy to parse, simple to recreate
-  * Allows referencing external resources via URI, which are used populate
+  * Allows referencing external resources via URI, which are used to populate
     objects in the bag when it is processed
 
 Issues
@@ -293,9 +193,31 @@ Questions
     using the `Cool URIs`_ approach of redirection, especially when multiple
     physical copies of a Resource might exist at multiple physical locations?
 
+Data Package Structure
+----------------------
 
-Conceptual Package design
--------------------------
+The structure of a Data Package will follow the BagIt specification with the
+exception of the following additions and changes described here.  The basic
+structure of a bag is:
+
+        <base directory>/
+        |   bagit.txt
+        |   manifest-<algorithm>.txt
+        |   oai-ore.txt
+        |   [optional additional tag files]
+        \--- data/
+              |   data-file-1.csv
+              |   data-file-2.csv
+              |   data-file-3.
+        \--- [optional tag directories]/
+              |   [optional tag files]
+
+The major addition is the presence of an OAI-ORE document within the base
+directory that uses the object identifiers for DataONE objects and describes
+the relationships among the objects in the package.
+
+Data Package Client design
+--------------------------
 
 Although DataONE CNs and MNs will treat data as opaque, it is useful to design
 clients that understand the structure of Data Packages and have a common
@@ -384,6 +306,104 @@ associated data objects. In pseudocode:
         f. objdata = mn.get(objid)
         g. construct dobj = DataObject(ID, sysmeta, objdata) 
         h. follow step 1.3 above to get remainder of data objects in package
+
+Additional Packaging Technologies
+---------------------------------
+
+A number of additional existing technologies can and have been used for
+describing the linkages between science metadata, data, and system metadata.
+Here we review some packaging mechanisms that are presently in use and discuss
+how they are or might be used in existing systems to provide robust linkages
+among the components of a data package. These packaging mechanisms were
+considered but not selected, in favor of using BagIt and OAI-ORE.
+
+Ecological Metadata Language (EML)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The Ecological Metadata Language (EML) [EML-2010]_ is a science metadata specification
+that specifically is modeled around the idea of a 'data package' that consists
+of science metadata that is encoded in the EML document and one or more data
+objects that can be either referenced in the the document via external
+references or can be included inline in the EML document directly. Both
+mechanisms are in widespread use in the ecological and environmental science
+communities that use EML, although the mechanism of external references is far
+more prevalent at this time (2010). EML documents are serialized as XML
+documents but can include data inline if properly encoded. Each EML document
+defines a top-level 'packageId' which contains the globally unique identifier
+for the data package. Each EML document also describes zero or more data
+entities that are drawn from a simple data model that includes data tables,
+spatial raster, spatial vector, and other generic entity data types. Each
+entity type in EML includes a distribution section that can be used to include
+the data inline or reference an external source for the data. External
+references to data are found in the 'online/url' field of the document, and
+can consist of URLs, URNs, and other URIs. Within the Knowledge Network for
+Biocomplexity, it is common to find references to web URLs and to indirect
+digital identifiers such as DOIs and ecogrid URIs. The 'url' field also
+includes an attribute that allows providers to declare the external reference
+as either a 'download' url, which when resolved and dereferenced should
+provide the exact byte stream of the digital object, or an 'information' url,
+which when resolved and dereferenced provides additional information about the
+object but not the exact bytes of the object. This latter informational type
+of URL often leads to an HTML description of the object, a site-specific
+registration or authentication page, or some other site-specific gateway that
+may provide indirect access to the data.
+
+Beneficial features
+  * Simple data model covering common science object types, can be extended
+  * Library support through XML parsers on multiple platforms
+  * Highly structured metadata with good validation model
+  * Similarity to other science metadata models allows relatively simple and
+    complete crosswalks
+
+Issues
+  * Large data access is inefficient (XML parsing)
+  * External data references are unconstrained URIs
+
+Questions
+  * Does the EML 'packageId' field suffice as an identifier for a DataONE data
+    package per se, and if so, is the EML document the equivalent of a
+    serialization of the package?
+
+NetCDF
+~~~~~~
+
+"NetCDF is an abstraction that supports a view of data as a collection of
+self-describing, portable objects that can be accessed through a simple
+interface. Array values may be accessed directly, without knowing details of
+how the data are stored. Auxiliary information about the data, such as what
+units are used, may be stored with the data. Generic utilities and application
+programs can access netCDF datasets and transform, combine, analyze, or
+display specified fields of the data." (NetCDF User's Guide, 2010, section
+1.1, [NETCDF-2010]_) NetCDF is a self-describing data representation format
+developed by Unidata that is commonly used in the atmospheric and
+oceanographic communities. This data model is very similar to other existing
+data models such as the OPeNDAP model and the Hierarchical Data Format (HDF).
+NetCDF is self-describing in that it provides a mechanism for including
+metadata about the included data directly in the serialized representation.
+Many users of the format have standardized upon the use of CF (Climate Format)
+metadata attributes for the representation of science metadata, although this
+is not strictly required by NetCDF and many other ad-hoc approaches to
+metadata provision are commonly employed by users in the community as well.
+
+Beneficial features
+  * Rich data model
+  * Efficient (random) access to large data contents
+  * Extensive library support, including for parallel systems
+  * Efficient storage via binary format
+
+Issues
+  * Opaque binary format reduces long-term effectiveness for preservation
+  * Unspecified science metadata requirements (ad hoc community adoption)
+  * NetCDF actually represents multiple data models and multiple file formats,
+    all of which are called NetCDF even though they are different binary
+    formats
+
+Questions
+  * Does the spec allow for externally referenced data objects?
+  * What mechanisms are available for providing identifiers that are used to
+    reference all of the components of the data package?
+  * What are the proper namespace names for the various NetCDF models and file
+    formats?
 
 
 References
