@@ -1,0 +1,74 @@
+Supporting Access Control in Search
+===================================
+
+:Status: DRAFT
+
+There is a requirement that search results contain only information for which the user has permission to read, which requires that access permissions for each item in the search results is examined. Search operations are high demand operations on Coordinating Nodes and will be targeted by a large number of clients. As such, efficiency of access control evaluation is critical.
+
+This document outlines an approach using the Lucene based SOLR index to provide such capability.
+
+
+Representing Access Rules
+-------------------------
+
+
+::
+
+  record = [PID, isPublic, readGroups, readSubjects]
+
+:PID: identifier of object
+
+:isPublic: boolean set true if the object is accessible by the public user
+
+:readGroups: a multi-valued field that contains a list of groups that have read access on the object
+
+:readSubjects: a multi-valued field that contains a list of subjects that have read access on the object
+
+
+A python function that would generate a suitable query for retrieving a list of PIDs for which a user has *read* access may be (note that subject strings need to be properly escaped):
+
+::
+
+  def canReadQuery(subject):
+    #return list of public objects
+    if CN.isPublic(subject):
+      return "isPublic:true"
+
+    #public OR readable by group
+    if CN.isGroup(subject):
+      return "isPublic:true || readGroups: %s" % subject
+
+    #list of public objects, OR objects readable by groups subject belongs to
+    # OR explicitly readable by subject
+    groups = CN.getSubjectGroups(subject)
+    gq = "readGroups:(%s)" % " ".join(groups)
+    return "isPublic:true || readSubjects:%s || %s" % (subject, gq)
+
+
+Subjects are represented in DataONE as lengthy strings. There may be some performance improvements gained by mapping the subject strings to integers and using this representation internally within the Lucene index.
+
+Keeping this index in a separate shard would enable it's maintenance and use independently of other indexes that may be used to support search against other properties of System Metadata or Science Metadata.
+
+Similar indexes can be generated for write, change, and execute permissions, though these are not needed for search operations.
+
+Draft SOLR schema fragment:
+
+.. code-block:: xml
+
+  <field name="pid" type="string" indexed="true" stored="true" required="true" multiValued="false" />
+  <field name="isPublic" type="boolean" indexed="true" stored="false" />
+  <field name="readGroups" type="string" indexed="true" stored="false" multiValued="true" />    
+  <field name="readSubjects" type="string" indexed="true" stored="false" multiValued="true" />    
+  <uniqueKey>pid</uniqueKey>
+  
+
+Observations
+------------
+
+A subject may participate in a potentially large number of groups which would result in a lengthy query string. The alternative would be to decompose groups with read access into a list of subjects, and just have a single list of subjects for each PID. This list could become very large.
+
+An index may be replicated across multiple locations to ensure the access control index is sufficiently responsive. A load balancer such as HAProxy can then be used to direct requests to different replicas.
+
+
+
+

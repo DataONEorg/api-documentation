@@ -1,6 +1,37 @@
 Member Node APIs
 ----------------
 
+.. 
+  @startuml images/class_mn.png
+  package MemberNode {
+  package Tier1 {
+     class MNCore {
+       Boolean : ping()
+       Log : getLogRecords()
+       
+     }
+     class MNRead {
+   
+     }
+   }
+   package Tier2 {
+     class MNAuthorization{
+     
+     }
+   }
+   package Tier3 {
+     class MNStorage {
+     
+     }
+   }
+   package Tier4 {
+     class MNReplication {
+     
+     }
+   }
+  }
+  @enduml
+
 .. include:: generated/generated_MN_function_table.txt
 
 
@@ -18,6 +49,7 @@ Coordinating Nodes.
 The state of health API provides mechanisms for the monitoring infrastructure 
 to report on the current state of the DataONE infrastructure and for the
 Coordinating Nodes to track the current operating state of the Member Node.
+
 
 
 .. include:: generated/generated_MNCore.txt

@@ -3,17 +3,35 @@ DataONE Overview
 
 The major goal of NSFs `DataNet program`_ is to catalyze development of a
 system addressing the vision outlined in Chapter 3 (Data, Data Analysis, and
-Visualization) of NSF’s `Cyberinfrastructure Vision`_ for 21st Century Discovery
-[2] in which “science and engineering digital data are routinely deposited in
-well-documented form, are regularly and easily consulted and analyzed by
-specialists and non-specialists alike, are openly accessible while suitably
-protected, and are reliably preserved.” The DataNet project DataONE_ (Data
-Observation Network for Earth) is a federated data network built to improve
-access to Earth science data, and to support science by: (1) engaging the
-relevant science, data, and policy communities; (2) facilitating easy, secure,
-and persistent storage of data; and (3) disseminating integrated and
+Visualization) of NSF’s `Cyberinfrastructure Vision`_ for 21st Century
+Discovery [2] in which “science and engineering digital data are routinely
+deposited in well-documented form, are regularly and easily consulted and
+analyzed by specialists and non-specialists alike, are openly accessible while
+suitably protected, and are reliably preserved.” The DataNet project DataONE_
+(Data Observation Network for Earth) is a federated data network built to
+improve access to Earth science data, and to support science by: (1) engaging
+the relevant science, data, and policy communities; (2) facilitating easy,
+secure, and persistent storage of data; and (3) disseminating integrated and
 user-friendly tools for data discovery, analysis, visualization, and
 decision-making.
+
+.. image:: images/core_components.png
+
+..
+  @startuml images/core_components.png
+  [lib_common]
+  package ITK {
+    [lib_client]
+  }
+  
+  [Member Node]
+  
+  [Coordinating Node]
+  
+  [lib_client] .. [lib_common]
+  [Member Node] .. [lib_common]
+  [Coordinating Node] .. [lib_common]
+  @enduml
 
 .. image:: images/ReferenceArchitecture.png
 
