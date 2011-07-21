@@ -71,29 +71,97 @@ Search Element Types
 Search Terms
 ------------
 
-- :attr:`author`
-- :attr:`keyWord`
-- :attr:`keyConcept`
-- :attr:`spatialFeature`
-- :attr:`namedLocation`
-- :attr:`temporalCoverageStart`
-- :attr:`temporalCoverageEnd`
-- :attr:`any`
-- :attr:`title`
-- :attr:`objectFormat`
-- :attr:`variableNme`
-- :attr:`scientificName`
-- :attr:`submitter`
-- :attr:`related Object`
-- :attr:`quality`
-- :attr:`relatedOrganizations`
-- :attr:`size`
-- :attr:`replicaLocation`
-- :attr:`identifier`
-- :attr:`datePublished`
-- :attr:`dateAddedToRepository`
-- :attr:`dateSysMetadataModified`
+.. list-table::
+   :widths: 5 5 1 10
 
+   * - Attribute
+     - Type
+     - In UI
+     - Description
+   * - :attr:`author`
+     - String
+     - 
+     - 
+   * - :attr:`keyWord`
+     - String, multivalued
+     - 
+     -
+   * - :attr:`keyConcept`
+     - String, multivalued 
+     - 
+     -
+   * - :attr:`spatialFeature`
+     - 
+     - 
+     - 
+   * - :attr:`namedLocation`
+     - String, multivalued
+     - 
+     - 
+   * - :attr:`temporalCoverageStart`
+     - Date
+     - 
+     - 
+   * - :attr:`temporalCoverageEnd`
+     - Date
+     - 
+     - 
+   * - :attr:`any`
+     - Text
+     - 
+     - 
+   * - :attr:`title`
+     - String
+     - 
+     - 
+   * - :attr:`objectFormat`
+     - String, multivalued
+     - 
+     - 
+   * - :attr:`variableNme`
+     - String, multivalued
+     - 
+     - 
+   * - :attr:`scientificName`
+     - String, multivalued
+     - 
+     - 
+   * - :attr:`submitter`
+     - String
+     - 
+     - 
+   * - :attr:`related Object`
+     - String, multivalued
+     - 
+     -
+   * - :attr:`relatedOrganizations`
+     - String, multivalued
+     - 
+     - 
+   * - :attr:`size`
+     - long integer
+     - 
+     - 
+   * - :attr:`replicaLocation`
+     - String
+     - 
+     - 
+   * - :attr:`identifier`
+     - String, multivalued
+     - 
+     - 
+   * - :attr:`datePublished`
+     - Date
+     - 
+     - 
+   * - :attr:`dateAddedToRepository`
+     - Date
+     - 
+     - 
+   * - :attr:`dateSysMetadataModified`
+     - Date
+     - 
+     - 
 
 
 .. attribute:: author
