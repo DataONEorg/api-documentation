@@ -68,231 +68,227 @@ Search Element Types
 .. _Well Known Text: http://en.wikipedia.org/wiki/Well-known_text
 
 
-Essential Elements
-~~~~~~~~~~~~~~~~~~
+Search Terms
+------------
+
+- author
+- keyWord
+- keyConcept
+- spatialFeature
+- namedLocation
+- temporalCoverageStart
+- temporalCoverageEnd
+- any
+- title
+- objectFormat
+- variableNme
+- scientificName
+- submitter
+- related Object
+- quality
+- relatedOrganizations
+- size
+- replicaLocation
+- identifier
+- datePublished
+- dateAddedToRepository
+- dateSysMetadataModified
+
+
 
 .. attribute:: author
 
-   (String)
+  (String) Principle Investigator (PI) / Author
 
-   - Principle Investigator (PI) / Author
-
-   - Name authority service is desired for some control over names appearing in metadata
-
-   - For search, advantages to keep simple text representation
-
-   - Goal of gradual increase in specificity
+  Name authority service is desired for some control over names appearing in
+  metadata For search, advantages to keep simple text representation Goal of
+  gradual increase in specificity - Desireable if we can get "sort friendly"
+  results -> recommend LAST, FIRST name - Mercury UI
 
 
 .. attribute:: keyWord
 
-   (String)
+  (String) Keyword (uncontrolled keywords)
 
-   - Keyword (uncontrolled keywords)
+  - Mercury enhances the kw list with e.g. gcmd keyword list
+  - Mercury UI
 
 
 .. attribute:: keyConcept
 
-   - Key concept -key concepts drawn from a set of ontologies
+  Key concept -key concepts drawn from a set of ontologies Term Namespace
 
-   - Term
+  - Controlled lists of terms available for several metadata standards
+  - A topic being addressed by the semantics WG
+  - Unlikely to be available in 2011
+  - Giri has some keyword enhancement and mapping script (magic)
+  - Mercury UI
 
-   - Namespace
 
 .. attribute:: spatialFeature
 
-   (SpatialFeature)
-
-   - Spatial bounding box (largest bounding rectangle)
-
-   - Spatial window (series of spatial envelopes representative of the spatial
-     locations of where the data is collected from or relevant to)
-
-   - Spatial features (points, bounding boxes, polygons)
-
-   - Centroid
-
-   - Bounding box
-
-   - Polygon
-
-   - (not largest extent)
-
-   - (need to resolve the semantics of the bounding box search - e.g. if centroids are recorded but fall outside of bounding box search)
+  (SpatialFeature)
+  - Spatial bounding box (largest bounding rectangle)
+  - Spatial window (series of spatial envelopes representative of the spatial locations of where the data is collected from or relevant to)
+  - Spatial features (points, bounding boxes, polygons)
+  - Centroid
+  - Bounding box
+  - Polygon
+  - (not largest extent)
+  - (need to resolve the semantics of the bounding box search - e.g. if centroids are recorded but fall outside of bounding box search)
+  - Bounding box with contains or overlaps 
+  - can be supported by SOLR and Metacat searches
+  - Mercury UI
 
 
 .. attribute:: namedLocation
 
-   (String)
+  (String) Named places Term Type Context (Columbus OH, Columbus GA) Namespace
+  of gazetteer
 
-   - Named places
-
-   - Term 
-
-   - Type 
-
-   - Context (Columbus OH, Columbus GA)
-
-   - Namespace of gazetteer  
-
-.. attribute:: earliestDate
-
-   (DateTime)
+  - free text search field
+  - provide recommendations for representation (see Wieczorek's georeferencing document)
+  - Mercury UI
 
 
-.. attribute:: latestDate
+.. attribute:: temporalCoverageStart
 
-   (DateTime)
+  (DateTime)
 
-   - Temporal window
+  - temporal extent
+  - "jurassic" vs "date collected for jurassic specimen"
+  - not publication date, not creation date
+  - Applicability date (as opposed to collection date or publication date -- though searching on collection date is a secondary search).  Multiple dates possible:  Collection/observation date, coverage date, analysis date, publication date, metadata modification date (e.g. peat bog samples relevant to 50,000 - 10,000 BCE, collected in July 1980, re-analyzed in July 2008, published in January 2010, and metadata revised in June 2010).  In this example, earliestDate applies to 50,000 BCE.  
+  - Mercury UI
 
-   - Relative terms (e.g. terms from the Geologic time scale) need to be supported
 
-   - Date ranges
+.. attribute:: temporalCoverageEnd
 
-   - Temporal coverage of the data set  (e.g. searches - during, before, after)
+  (DateTime) Temporal window
+  Relative terms (e.g. terms from the Geologic time scale) need to be supported
+  Date ranges
+  Temporal coverage of the data set (e.g. searches - during, before, after)
+
+  - same notes as above apply
+  - Mercury UI
+
 
 .. attribute:: any
 
-   (String)
+  (String) Full text search / Text search on abstract - Mercury UI
 
-   - Full text search / Text search on abstract
-
-
-Desirable Elements
-~~~~~~~~~~~~~~~~~~
 
 .. attribute:: title
 
-   (string)
+  (string) Title (2) - Mercury UI
 
-   - Title (2)
 
 .. attribute:: objectFormat
 
-   (String)
-
-  - Type of data (format) (2)
+  (String) Type of data (format) (2)
   
-    - Original data
+  - Original data
+  - Summarized versions
+  - Method used for processing (to generate summary, or original data)
+  - Resource type (spatial, models, observations, web service, ...)
+  - search the system metadata value, but need to parse system metadata of related objects to determine the objectFormat(s) of the data.
+  - Potential for mapping the values appearing the science metadata to the controlled terms available in the object format registry
+  - label should be "content type"
 
-    - Summarized versions
-
-    - Method used for processing (to generate summary, or original data)
-
-    - Resource type (spatial, models, observations, web service, ...)
 
 .. attribute:: variableName
 
-   (String)
+  (String) Scientific variables (from a controlled vocabulary) (1)
 
-   - Scientific variables (from a controlled vocabulary) (1)
-
-.. attribute:: dataDomain
-
-   (String)
-
-   - Domain of data (physics, environmental, ...) (1)
+  - not in Dryad, optional in most/all
+  - Mercury UI
 
 
 .. attribute:: scientificName
 
-   (String)
+  (String)  Biological taxonomic extents (1)
 
-   - Biological taxonomic extents (1)
-
-.. attribute:: publication
-
-   (String)
-
-  - Search by publication (1)
+  - lots of opportunities for cleanup services from ITIS, EOL, etc
+  - Mercury UI
 
 
-Some Others
-~~~~~~~~~~~
+.. attribute:: submitter
 
-.. attribute:: creator
+  (String) 
 
-   (String)  Dublin core
+  - for either data or metadata
+  - Principal that added the content to the MN
+  - Needs to be translated from the subject to the individual's name
 
-- Generator of data (instrument, application)
 
 .. attribute:: relatedObject
 
-   (String)
+  (String)  Related data (data sets, publications)
 
-   - Related data (data sets, publications)
+  - given a PID find everything that refers to it (deprecated, describes, derivedFrom...)
+  - This should probably be specific to relation type - find all stuff derivedFrom PID
+
 
 .. attribute:: quality
 
-   (String, controlled vocabulary)
+  (String, controlled vocabulary) Quality / level of curation
 
-   - Quality / level of curation
 
 .. attribute:: relatedOrganizations
 
-   (String)
+  (String) Organizations involved in study
 
-   - Organizations involved in study
+  - low priority
+
 
 .. attribute:: size
 
-   (Integer, long)
+  (Integer, long) Size of data (bytes)
 
-   - Size of data (bytes)
+  - needed for drive, display, not necessary for UI search
 
-.. attribute:: replicaCount
-
-   (Integer)
 
 .. attribute:: replicaLocation
 
-   (String)
+  (String)  Number / location of replicas
 
-   - Number / location of replicas 
-
-.. attribute:: dimensions
-
-   (Integer or perhaps float?)
-
-   - Dimensionality of data 
-
-.. attribute:: measurementUnits
-
-   (String)
-
-   - Units of measure (for sci variables)
 
 .. attribute:: identifier
 
-   (:class:`Types.IdentifierType`)
+  (Types.IdentifierType) Identifier (PID)
 
-   - Identifier (PID)
+  - Need to be able to find metadata records describing a dataset identified by PID
+  - Find any science metadata that is or describes PID
+  - Mercury UI
 
 
 .. attribute:: datePublished
 
-.. attribute:: dateCreated
+  - drawn from science metadata
+  - is this the same as publication date concept in datacite - Yes
+  - Mercury UI
+
+
+.. attribute:: dateAddedToRepository
+
+  - first submission to Member Node (drawn from science metadata if available, otherwise system metadata)
+
 
 .. attribute:: dateSysMetadataModified
 
-   (DateTime)
-
-  - Temporal coverage, low priority
-
-    - Publication date
-
-    - Creation date
-
-    - Last modified date
+  (DateTime) available from sysmeta
 
 
 .. attribute:: readPrincipal
 
+  - element in permission index, used for shard query
+
+
 .. attribute:: writePrincipal
 
-   (:class:`Types.PrincipalType`)
+  (Types.PrincipalType) Permissions on objects (e.g. available to read by user)
 
-   - Permissions on objects (e.g. available to read by user)
+  - element in permission index, used for shard query
+
 
 
