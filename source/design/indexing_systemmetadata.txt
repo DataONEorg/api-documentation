@@ -92,7 +92,6 @@ corresponding SOLR index using the SOLR update API.
 
 
 
-
 The Permission Index
 --------------------
 
@@ -130,6 +129,7 @@ control rules reported in the system metadata associated with the object.
      - Y
 
 
+
 The System Index
 ----------------
 
@@ -137,12 +137,18 @@ The system index contains values drawn from the bulk of the system metadata
 records. This index should be updated frequently with changes to system metadata
 documents, though latency may be greater than for the permission index.
 
+**Table 2.** Values to be extracted from System Metadata and stored in the
+system SOLR index. *Property* refers to the element or attribute in the System
+Metadata document, *SOLR Term* is the name of the field in the index, *SOLR
+Type* is the field type, and *Multi* indicates if the field should be
+multi-valued (Y) or not (N).
+
 .. list-table::
    :header-rows: 1
    :widths: 10 5 4 1
    
    - - Property
-     - SOLR term
+     - SOLR Term
      - SOLR Type
      - Multi
    - - identifier
@@ -188,11 +194,11 @@ documents, though latency may be greater than for the permission index.
    - - obsoletes
      - obsoletes
      - string
-     - Y
+     - N
    - - obsoletedBy
      - obsoletedby
      - string
-     - Y
+     - N
    - - resourceMap
      - resourcemap
      - string
