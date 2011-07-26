@@ -45,9 +45,9 @@ Indexing Process
 The general process of indexing content involves retrieving a System Metadata
 document, parsing out the permission rules to generate a SOLR permission
 document, parsing the system metadata elements to generate a SOLR system
-metadata document, and parsing the science metadata to generate a SOLR discovery
-document. Each of the generated documents is added to the corresponding SOLR
-index using the SOLR update API.
+metadata document, the retrieving and parsing the science metadata to generate a
+SOLR discovery document. Each of the generated documents is added to the
+corresponding SOLR index using the SOLR update API.
 
 .. figure:: cnsolr_index.png
    :width: 100%
