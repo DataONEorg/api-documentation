@@ -38,6 +38,62 @@ that the requesting subject will only be presented with results that match their
 query and for which they have read permission.
 
 
+
+Indexing Process
+----------------
+
+The general process of indexing content involves retrieving a System Metadata
+document, parsing out the permission rules to generate a SOLR permission
+document, parsing the system metadata elements to generate a SOLR system
+metadata document, and parsing the science metadata to generate a SOLR discovery
+document. Each of the generated documents is added to the corresponding SOLR
+index using the SOLR update API.
+
+.. figure:: cnsolr_index.png
+   :width: 100%
+
+   Figure 1. Approximate sequence of operations for indexing content. The
+   trigger may be initiated manually or through a messaging service. SOLR,
+   SOLRY, and SOLRP represent three separate SOLR indexes that are intended to
+   be combined through sharding. The index SOLRY holds the bulk of the System
+   Metadata fields, and the index SOLRP holds READ permissions associated with
+   each object. The index SOLR contains metadata to assist with the general
+   discovery process.
+
+..
+  @startuml images/cnsolr_index.png
+  participant trigger
+  participant "ObjectStore" as objectStore
+  participant "Indexer" as indexer
+  participant "SOLRP" as solrp
+  participant "SOLRY" as solry
+  participant "SOLR" as solr
+  
+  trigger -> indexer: doIndex(PID)
+  activate indexer
+  indexer -> objectStore: getSystemMetadata(PID)
+  objectStore --> indexer: systemMetadataXML
+  indexer -> indexer: permissionIndexDoc = generatePermissionDoc(systemMetadataXML)
+  indexer -> solrp: update(permissionIndexDoc)
+  indexer -> indexer: sysMetaObject = parseSystemMeta(systemMetadataXML)
+  indexer -> indexer: sysMetaIndexDoc = generateSystemMetaDoc(sysMetaObject)
+  indexer -> solry: update(sysMetaIndexDoc)
+  indexer -> indexer: objectFormat = getObjectFormat(sysMetaObject)
+  
+  alt objectFormat is Science Metadata
+    indexer -> indexer: parser = loadParser(objectFormat)
+    indexer -> objectStore: get(PID)
+    objectStore --> indexer: sciMetaDoc
+    indexer -> indexer: solrDoc = parser.parseMeta(sciMetaDoc)
+    indexer -> solr: update(solrDoc)    
+  end
+
+  deactivate indexer
+  @enduml
+
+
+
+
 The Permission Index
 --------------------
 
@@ -90,8 +146,8 @@ documents, though latency may be greater than for the permission index.
      - SOLR term
      - SOLR Type
      - Multi
-   - - pid
-     - identifier
+   - - identifier
+     - pid
      - string
      - N
    - - objectFormat
