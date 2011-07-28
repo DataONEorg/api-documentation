@@ -1265,10 +1265,17 @@ Data Types in CICore
     ObjectInfo -- Identifier
     DescribeResponse <|-- ObjectInfo
     
+    class Slice {
+      + count: integer
+      + start: integer
+      + total: integer
+    }
+    
     class ObjectList {
       objectInfo : ObjectInfo[0..*]
     }
     ObjectList o-- ObjectInfo
+    Slice <|-- ObjectList
     @enduml
 
   .. attribute:: identifier

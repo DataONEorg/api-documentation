@@ -1,0 +1,58 @@
+APIs Internal to Coordinating Nodes
+===================================
+
+The DataONE Coordinating Nodes are composed of several components that by their
+nature will be operating in different JVMs. This document outlines the methods
+that are exposed by the different components in a Coordinating Node.
+
+
+::
+
+  boolean identity.isPublic(Subject) 
+
+  boolean identity.isGroup(Subject)
+
+  Subject[] identity.getSubjectGroups(Subject)
+
+  XML objectStore.getSystemMetadata(Identifier)
+
+  OctetStream objectStore.get(Identifier)
+
+  boolean objectStore.registerSystemMetadata(Identifier, SystemMetadata)
+
+  CN_crud.updateReplicaMetadata(token, pid, Types.ReplicaMetadata) -> Types.Identifier
+
+   full replacement of ReplicaMetadata, changes date sysmeta modified
+
+
+  CN_crud.setAccessPolicy(token, pid, AccessPolicy) -> boolean
+
+    RE /access/pid (body containing token, AccessPolicy) -> boolean
+    changes date sysmeta modified too
+
+  CN_crud.setReplicationPolicy(token, pid, ReplicationPolicy) -> boolean
+  REST API: PUT /replication/pid (body containing token, ReplicationPolicy) -> boolean
+     - changes date sysmeta modified too
+
+
+  CN.setDescribes()
+
+     describes can be set in its own method, but only with write access to
+     described object and describing object
+
+     may want to relax the requirement later to allow third party
+     annotations/perspectives/derivations on other people's data, but need to be
+     able to differentiate the primary provider's description from these other
+     descriptions
+
+  CN.setDescribedBy()
+     describedBy can be set in its own method, but only with write access to described object
+
+
+  ObjectList getDescribes(Identifier)
+
+  ObjectList getDescribedBy(Identifier)
+
+  ObjectList getRelatedObjects(Identifier, RelationshipEnum)
+
+  

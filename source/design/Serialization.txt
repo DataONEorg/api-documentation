@@ -4,8 +4,16 @@ Serialization of Types for Transfer Over HTTP
 Boolean
 ~~~~~~~
 
-When the response is simply a boolean True or False, the response is a single
-character "1" if True, or "0" if False.
+When the response is simply a boolean True or False, the response returned is in
+one of two forms:
+
+a) For cases where false is a valid response: a single character "1" if *True*, 
+   or "0" if *False*
+
+b) For cases where false coincides with a DataONE exception: an arbitrary body
+   if *True* (ignored by caller), and an error-indicating HTTP status code and
+   serialized error object if *False*.
+
 
 
 ObjectList
