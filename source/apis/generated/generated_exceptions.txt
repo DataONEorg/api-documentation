@@ -28,7 +28,7 @@
 
 ----
 
-.. exception:: IdentifierNotUnique(detailCode, description, identifier, [traceInformation])
+.. exception:: IdentifierNotUnique(detailCode, description, pid, [traceInformation])
 
    The provided identifier conflicts with an existing identifier in the DataONE system. When serializing, the identifier in conflict should be rendered in traceInformation as the value of an identifier key.
 
@@ -44,10 +44,10 @@
 
    :type description: string
 
-   :param identifier:
+   :param pid:
      The identifier value that is in conflict
 
-   :type identifier: :class:`Types.Identifier`
+   :type pid: :class:`Types.Identifier`
 
    :param traceInformation:
      Optional additional information to assist with debugging.
@@ -201,7 +201,7 @@
 
 ----
 
-.. exception:: NotFound(detailCode, description, identifier, [traceInformation])
+.. exception:: NotFound(detailCode, description, pid, [traceInformation])
 
    Used to indicate that an object is not present on the node where the exception was raised.  The error message should include a reference to the :func:`CN_crud.resolve` method URL for the object.
 
@@ -217,10 +217,10 @@
 
    :type description: string
 
-   :param identifier:
+   :param pid:
      The identifier of the object that can not be located.
 
-   :type identifier: :class:`Types.Identifier`
+   :type pid: :class:`Types.Identifier`
 
    :param traceInformation:
      Optional set of key-value pairs that can include the name of the method that raised the error plus other details such as parameters used in the call that can be helpful for debugging.
@@ -326,7 +326,7 @@
 
 ----
 
-.. exception:: SynchronizationFailed(detailCode, description, identifier, [traceInformation])
+.. exception:: SynchronizationFailed(detailCode, description, pid, [traceInformation])
 
    Sent to a Member Node from a Coordinating Node when an attempt to synchronize some object fails.
 
@@ -342,10 +342,10 @@
 
    :type description: string
 
-   :param identifier:
+   :param pid:
      Identifier of the object that could not be synchronized.
 
-   :type identifier: :class:`Types.Identifier`
+   :type pid: :class:`Types.Identifier`
 
    :param traceInformation:
      Optional set of key-value pairs that can include the name of the method that raised the error plus other details such as parameters used in the call that can be helpful for debugging.
