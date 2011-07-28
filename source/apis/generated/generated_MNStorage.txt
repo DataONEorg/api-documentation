@@ -44,7 +44,7 @@
    :param object: The data bytes that are to be added to the Member Node.
    :type object: bytes
 
-   :param sysmeta: The system metadata document that provides basic information about the object, including a reference to its identifier, access control information, etc. Attributes of the sysmeta that are the responsibility of the client MUST be set.
+   :param sysmeta: The system metadata document that provides basic information about the object, including a reference to its identifier, access control information, etc. Attributes of the sysmeta that are the responsibility of the client MUST be set. Note that the obsoletes and obsoletedBy elements MUST not be set. It is the role of the update() method to ensure these are properly updated to ensure object lineage is as expected.
    :type sysmeta: :class:`Types.SystemMetadata`
 
    :returns: The identifier that was used to insert the document into the system.
