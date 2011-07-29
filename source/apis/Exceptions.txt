@@ -36,6 +36,9 @@ information and an optional element ``traceInformation`` as detailed in
      - 0..1
      - Required for exceptions that include an identifier in the constructor 
        signature (e.g. NotFound, IdentifierNotUnique, SynchronizationFailed).
+   * - nodeId
+     - 0..1
+     - The node identifier of the machine that raised the exception
    * - description
      - 0..1
      - A human readable message describing what happened
@@ -71,6 +74,7 @@ Expressed in xml-schema:
            <xs:attribute name="errorCode" type="xs:integer" use="required"></xs:attribute>
            <xs:attribute name="detailCode" type="NonEmptyString" use="required"></xs:attribute>
            <xs:attribute name='identifier' type="NonEmptyString" use="optional"></xs:attribute>
+           <xs:attribute name='nodeId' type="NonEmptyString" use="optional"></xs:attribute>
        </xs:complexType>
    </xs:schema>
 
@@ -170,6 +174,8 @@ In HTML:
           <dd class='detailCode'>1020.1</dd>
           <dt>Identifier</dt>
           <dd class='pid'>123XYZ</dd>
+          <dt>Node Identifier</dt>
+          <dd class='nodeId'>c3p0</dd>
         </dl>
       </p>
       <p class='description'>The specified object does not exist on this node.</p>
@@ -188,7 +194,8 @@ In XML:
   <error name='NotFound'
          errorCode='404' 
          detailCode='1020.1' 
-         pid='123XYZ'>
+         pid='123XYZ'
+         nodeId='c3p0'>
     <description>The specified object does not exist on this node.</description>
     <traceInformation>
       method: mn.get
@@ -204,6 +211,7 @@ In JSON::
     'errorCode':404,
     'detailCode': '1020.1',
     'pid': '123XYZ',
+    'nodeId': 'c3p0',
     'description': 'The specified object does not exist on this node.',
     'traceInformation': 'method: mn.get
       hint: http://cn.dataone.org/cn/resolve/123XYZ'
@@ -214,7 +222,7 @@ Log message body. This type of representation is presented here as a
 suggestion. The actual log representation may differ according to the actual
 implementation::
 
-  [detail:1020.1][pid:123XYZ, method:mn.get]The specified object does not exist on this node.
+  [detail:1020.1][pid:123XYZ, nodeId:c3p0, method:mn.get]The specified object does not exist on this node.
 
 
 
