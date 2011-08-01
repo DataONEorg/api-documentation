@@ -29,7 +29,11 @@
    * - Tier 1
      - ``POST /reserve``
      - :func:`CNCore.reserveIdentifier`
-     - (:class:`session<Types.Session>`, :class:`[pid]<Types.Identifier>`, ``[scope]``, ``[format]``) ``->`` :class:`Types.Identifier`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Identifier`
+   * - Tier 1
+     - ``POST /generate``
+     - :func:`CNCore.generateIdentifier`
+     - (:class:`session<Types.Session>`, ``scheme``, ``[fragment]``) ``->`` :class:`Types.Identifier`
    * - Tier 1
      - ``GET /node``
      - :func:`CNCore.listNodes`

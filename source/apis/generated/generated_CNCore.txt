@@ -29,7 +29,11 @@
    * - Tier 1
      - ``POST /reserve``
      - :func:`reserveIdentifier`
-     - (:class:`session<Types.Session>`, :class:`[pid]<Types.Identifier>`, ``[scope]``, ``[format]``) ``->`` :class:`Types.Identifier`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Identifier`
+   * - Tier 1
+     - ``POST /generate``
+     - :func:`generateIdentifier`
+     - (:class:`session<Types.Session>`, ``scheme``, ``[fragment]``) ``->`` :class:`Types.Identifier`
    * - Tier 1
      - ``GET /node``
      - :func:`listNodes`
@@ -217,9 +221,9 @@
 
 
 
-.. function:: reserveIdentifier(session,[pid],[scope],[format]) -> Identifier
+.. function:: reserveIdentifier(session,pid) -> Identifier
 
-   Given an optional scope and format, reserves and returns an identifier within that scope and format that is unique and will not be used by any other sessions. Future calls to :func:`MN_storage.create` and :func:`MN_storage.update` that reference this ID must originate from the :term:`session` in which the identifier was reserved, otherwise an error is raised on those methods.
+   Reserves the identifier that is unique and can not be used by any other sessions. Future calls to :func:`MN_storage.create` and :func:`MN_storage.update` that reference this ID must originate from the :term:`session` in which the identifier was reserved, otherwise an error is raised on those methods.
 
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`
@@ -227,14 +231,8 @@
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
-   :param pid: An optional identifier proposed by the client. If no identifier is provided then one will be automatically generated.
+   :param pid: The identifier used by the client.
    :type pid: :class:`Types.Identifier`
-
-   :param scope: An optional string to be used to qualify the scope of the identifier namespace, which is applied differently depending on the format requested. If scope is not supplied, a default scope will be used.
-   :type scope: string
-
-   :param format: The optional name of the identifier format to be used, drawn from a DataONE-specific vocabulary of identifier format names, including several common syntaxes such as DOI, LSID, UUID, and LSRN, among others. If the format is not supplied by the caller, the CN service will use a default identifier format, which may change over time.
-   :type format: string
 
    :returns: The identifier that was reserved
    :rtype: :class:`Types.Identifier`
@@ -249,11 +247,47 @@
 
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4200)``
 
-     The format requested is not a valid format accepted by this service
+     The identifier requested is not a valid format accepted by this service
 
    :raises Exceptions.IdentifierNotUnique: ``(errorCode=409, detailCode=4210)``
 
      The requested identifier can not be reserved because it already exists in the DataONE system or has already been reserved.
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4191)``
+
+
+
+
+.. function:: generateIdentifier(session,scheme,[fragment]) -> Identifier
+
+   Given a scheme and optional fragment, generates an identifier with that scheme and fragment that is unique.
+
+   :Use Cases:
+     :doc:`UC16 </design/UseCases/16_uc>`
+   :REST URL: ``POST /generate``
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :type session: :class:`Types.Session`
+
+   :param scheme: The name of the identifier scheme to be used, drawn from a DataONE-specific vocabulary of identifier scheme names, including several common syntaxes such as DOI, ARK, LSID, UUID, and LSRN, among others.
+   :type scheme: string
+
+   :param fragment: The optional fragment to include in the generated Identifier
+   :type fragment: string
+
+   :returns: The identifier that was generated
+   :rtype: :class:`Types.Identifier`
+
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=4190)``
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4210)``
+
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=4180)``
+
+     Supplied credentials does not have WRITE permission
+
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4200)``
+
+     The schme requested is not a valid schme accepted by this service
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4191)``
 
