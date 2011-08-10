@@ -205,88 +205,194 @@ Questions
 .. figure:: images/package_eg_1.png
 
    **Figure 2.** Simple OAI-ORE representation of a data package with single
-   science metadata (*scimeta_id*) and data(*scidata_id*) objects.
+   science metadata (*scimeta_id*) and data(*scidata_id*) objects. There are two
+   issues that need to be resolved for DataONE: a) how to assert that the
+   aggregated object *scidata_id* is described by the metadata *scimeta_id*; and
+   b) identifiers in OAI-ORE *must* be "protocol-based URIs", which is more
+   restrictive that DataONE requires.
 
 
-An RDF-XML rendering of the example from Figure 2:
+Though there are no predicates in ORE that can be used to indicate that the
+aggregated object *scimeta_id* describes the data indicated by *scidata_id*,
+there are a couple of options:
 
-.. code-block:: xml
-
-  <?xml version="1.0" encoding="UTF-8"?>
-  <rdf:RDF
-     xmlns:dc="http://purl.org/dc/elements/1.1/"
-     xmlns:dcterms="http://purl.org/dc/terms/"
-     xmlns:foaf="http://xmlns.com/foaf/0.1/"
-     xmlns:ore="http://www.openarchives.org/ore/terms/"
-     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-     xmlns:rdfs1="http://www.w3.org/2001/01/rdf-schema#"
-  >
-    <rdf:Description rdf:about="http://www.openarchives.org/ore/terms/Aggregation">
-      <rdfs1:label>Aggregation</rdfs1:label>
-      <rdfs1:isDefinedBy rdf:resource="http://www.openarchives.org/ore/terms/"/>
-    </rdf:Description>
-    <rdf:Description rdf:about="http://foresite-toolkit.googlecode.com/#pythonAgent">
-      <foaf:mbox>foresite@googlegroups.com</foaf:mbox>
-      <foaf:name>Foresite Toolkit (Python)</foaf:name>
-    </rdf:Description>
-    <rdf:Description rdf:about="aggregation_id">
-      <ore:aggregates rdf:resource="scidata_id"/>
-      <ore:aggregates rdf:resource="scimeta_id"/>
-      <rdf:type rdf:resource="http://www.openarchives.org/ore/terms/Aggregation"/>
-      <dcterms:title>Simple aggregation of science metadata and data</dcterms:title>
-    </rdf:Description>
-    <rdf:Description rdf:about="resource_map_id">
-      <dcterms:created>2011-08-09T23:59:36Z</dcterms:created>
-      <rdf:type rdf:resource="http://www.openarchives.org/ore/terms/ResourceMap"/>
-      <ore:describes rdf:resource="aggregation_id"/>
-      <dcterms:modified>2011-08-09T23:59:36Z</dcterms:modified>
-      <dc:format>application/rdf+xml</dc:format>
-      <dcterms:creator rdf:resource="http://foresite-toolkit.googlecode.com/#pythonAgent"/>
-    </rdf:Description>
-    <rdf:Description rdf:about="scimeta_id">
-      <dcterms:description>A reference to a science metadata document using a DataONE identifier.</dcterms:description>
-      <dcterms:identifier>scimeta_id</dcterms:identifier>
-    </rdf:Description>
-    <rdf:Description rdf:about="scidata_id">
-      <dcterms:description>A reference to a science data object using a DataONE identifier</dcterms:description>
-      <dcterms:identifier>scidata_id</dcterms:identifier>
-    </rdf:Description>
-    <rdf:Description rdf:about="http://www.openarchives.org/ore/terms/ResourceMap">
-      <rdfs1:label>ResourceMap</rdfs1:label>
-      <rdfs1:isDefinedBy rdf:resource="http://www.openarchives.org/ore/terms/"/>
-    </rdf:Description>
-  </rdf:RDF>
-
-
-The issue here is how to indicate that scimeta_id *describes* scidata_id. There
-are a couple of options:
-
-1. References between scimeta_id and scidata_id can be supported through custom
+1. References between scimeta_id and scidata_id can be supported through non-ORE
    RDF elements with emphasis on reuse of existing predicates to describe the
-   relationship.
+   relationship. 
+
+   For example, the DCMI Type Vocabulary defines a Dataset type that could be
+   used to indicate that *scidata_id* refers to a data object through the Dublin
+   Core Terms Type predicate.
+
+   An alternative might be the use of `dcterms:conformsTo`_ with the object
+   values pulled from a DataONE defined vocabulary of definitions for science
+   metadata, science data, and perhaps other object types such as the resource
+   map itself.
+
+   Other possibilities from dcterms include `references`_ and `isReferencedBy`_,
+   `requires`_ and `isRequiredBy`_, and `relation`_.
+
 
 2. That a science metadata object actually describes one or more data objects
    can be inferred simply from its presence in a resource map aggregation.
    Detection of science metadata vs. data would be highly dependent on the
-   object format for the object as expressed in it's system metadata.
+   object format for the object as expressed in it's system metadata. This could
+   be augmented by adding the format_ predicate from dcterms, with the object
+   being the corresponding entry in the object format registry.
+
 
 Identifiers in OAI-ORE documents must technically be "protocol-based URIs"
 (http://www.openarchives.org/ore/1.0/datamodel#Aggregated_Resource), whereas
 identifiers in DataONE can be essentially any non-blank string. There's a couple
 of options here:
 
-1. Ignore the OAI-ORE requirement for URI identifiers. The identifiers will
+1. 
+
+   Ignore the OAI-ORE requirement for URI identifiers. The identifiers will
    still work fine in the DataONE context, but would not be friendly for anyone
-   without an appropriate DataONE client.
+   accessing the ORE document without an appropriate DataONE client to resolve
+   and retrieve the referenced objects.
 
-2. Wrap the identifiers with a DataONE REST service URL that retrieves the
-   object being referenced. e.g. ``http://cn.dataone.org/object/scimeta_id``.
-   Update the CN.get method to provide a temporary redirect (HTTP code 302) to a
-   location provided by the CN.resolve method.
+2. 
 
-2a) Add a dcterms:identifier element to each aggregated object. A DataONE client
-    would use the dcterms:identifier as the permanent ID for the object.
+   Wrap the identifiers with a DataONE REST service URL that retrieves the
+   object being referenced. So for example, if the DataONE identifier for the
+   object was *scimeta_id*, then the URI used in the ORE document to reference
+   the aggregated object would *http://cn.dataone.org/object/scimeta_id*. The
+   :func:`CN_read.get` operation would be modified to do a resolve, then a HTTP
+   302 redirect to the node that contains the content. This would also require
+   that the client libraries are updated to support redirection.
 
+   This option has the advantage of keeping the the ORE document functional for
+   non-DataONE users but has the disadvantage of obfuscating the object
+   identifiers. The later issue could be addressed by adding the dcterms
+   `identifier`_ property to the aggregated object with the object being the
+   actual DataONE identifier.
+
+
+The recommendation (requires discussion) is as follows: 
+
+1. DataONE creates a vocabulary with entries describing the object classes being
+   managed by DataONE (science data or science metadata) and uses the dcterms
+   `conformsTo`_ predicate to indicate the type of aggregated objects.
+
+2. ORE URIs for aggregated objects are constructed by prepending the CN get
+   object REST URL to the identifier. The CN get operation is modified to
+   support HTTP 302 temporary redirects. The literal DataONE identifier for the
+   aggregated object is added to the ORE aggregate entry as a dcterms
+   `identifier`_ property.
+
+
+An RDF-XML rendering of the example from Figure 2 following the recommendations
+as generated using the `Foresite python library`_ is presented below:
+
+.. code-block:: xml
+
+   <?xml version="1.0" encoding="UTF-8"?>
+   <rdf:RDF
+      xmlns:dc="http://purl.org/dc/elements/1.1/"
+      xmlns:dcterms="http://purl.org/dc/terms/"
+      xmlns:foaf="http://xmlns.com/foaf/0.1/"
+      xmlns:ore="http://www.openarchives.org/ore/terms/"
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:rdfs1="http://www.w3.org/2001/01/rdf-schema#"
+   >
+     <rdf:Description rdf:about="http://www.openarchives.org/ore/terms/ResourceMap">
+       <rdfs1:label>ResourceMap</rdfs1:label>
+       <rdfs1:isDefinedBy rdf:resource="http://www.openarchives.org/ore/terms/"/>
+     </rdf:Description>
+     <rdf:Description rdf:about="http://www.openarchives.org/ore/terms/Aggregation">
+       <rdfs1:label>Aggregation</rdfs1:label>
+       <rdfs1:isDefinedBy rdf:resource="http://www.openarchives.org/ore/terms/"/>
+     </rdf:Description>
+     <rdf:Description rdf:about="https://cn.dataone.org/object/scidata_id">
+       <dcterms:description>A reference to a science data object using a DataONE identifier</dcterms:description>
+       <dcterms:identifier>scidata_id</dcterms:identifier>
+       <dcterms:conformsTo>http://ns.dataone.org/classes/scienceData</dcterms:conformsTo>
+     </rdf:Description>
+     <rdf:Description rdf:about="aggregation_id">
+       <dcterms:title>Simple aggregation of science metadata and data</dcterms:title>
+       <ore:aggregates rdf:resource="https://cn.dataone.org/object/scimeta_id"/>
+       <ore:aggregates rdf:resource="https://cn.dataone.org/object/scidata_id"/>
+       <rdf:type rdf:resource="http://www.openarchives.org/ore/terms/Aggregation"/>
+     </rdf:Description>
+     <rdf:Description rdf:about="https://cn.dataone.org/object/scimeta_id">
+       <dcterms:description>A reference to a science metadata document using a DataONE identifier.</dcterms:description>
+       <dcterms:identifier>scimeta_id</dcterms:identifier>
+       <dcterms:conformsTo>http://ns.dataone.org/classes/scienceMetadata</dcterms:conformsTo>
+     </rdf:Description>
+     <rdf:Description rdf:about="https://cn.dataone.org/object/resource_map_id">
+       <dc:format>application/rdf+xml</dc:format>
+       <dcterms:created>2011-08-10T09:45:52Z</dcterms:created>
+       <dcterms:modified>2011-08-10T09:45:52Z</dcterms:modified>
+       <rdf:type rdf:resource="http://www.openarchives.org/ore/terms/ResourceMap"/>
+       <dcterms:creator rdf:resource="http://foresite-toolkit.googlecode.com/#pythonAgent"/>
+       <dcterms:conformsTo>http://ns.dataone.org/classes/resourceMap</dcterms:conformsTo>
+       <ore:describes rdf:resource="aggregation_id"/>
+     </rdf:Description>
+     <rdf:Description rdf:about="http://foresite-toolkit.googlecode.com/#pythonAgent">
+       <foaf:name>Foresite Toolkit (Python)</foaf:name>
+       <foaf:mbox>foresite@googlegroups.com</foaf:mbox>
+     </rdf:Description>
+   </rdf:RDF>
+
+
+The same in N3::
+
+  @prefix dc: <http://purl.org/dc/elements/1.1/> .
+  @prefix dcterms: <http://purl.org/dc/terms/> .
+  @prefix foaf: <http://xmlns.com/foaf/0.1/> .
+  @prefix ore: <http://www.openarchives.org/ore/terms/> .
+  @prefix rdfs1: <http://www.w3.org/2001/01/rdf-schema#> .
+
+  <https://cn.dataone.org/object/resource_map_id> a <http://www.openarchives.org/ore/terms/ResourceMap>;
+      dc:format "text/rdf+n3";
+      dcterms:conformsTo "http://ns.dataone.org/classes/resourceMap";
+      dcterms:created "2011-08-10T09:47:08Z";
+      dcterms:creator <http://foresite-toolkit.googlecode.com/#pythonAgent>;
+      dcterms:modified "2011-08-10T09:47:08Z";
+      ore:describes <aggregation_id> .
+
+  <aggregation_id> a <http://www.openarchives.org/ore/terms/Aggregation>;
+      dcterms:title "Simple aggregation of science metadata and data";
+      ore:aggregates <https://cn.dataone.org/object/scidata_id>,
+          <https://cn.dataone.org/object/scimeta_id> .
+
+  <http://foresite-toolkit.googlecode.com/#pythonAgent> foaf:mbox "foresite@googlegroups.com";
+      foaf:name "Foresite Toolkit (Python)" .
+
+  <http://www.openarchives.org/ore/terms/Aggregation> rdfs1:isDefinedBy ore:;
+      rdfs1:label "Aggregation" .
+
+  <http://www.openarchives.org/ore/terms/ResourceMap> rdfs1:isDefinedBy ore:;
+      rdfs1:label "ResourceMap" .
+
+  <https://cn.dataone.org/object/scidata_id> dcterms:conformsTo "http://ns.dataone.org/classes/scienceData";
+      dcterms:description "A reference to a science data object using a DataONE identifier";
+      dcterms:identifier "scidata_id" .
+
+  <https://cn.dataone.org/object/scimeta_id> dcterms:conformsTo "http://ns.dataone.org/classes/scienceMetadata";
+      dcterms:description "A reference to a science metadata document using a DataONE identifier.";
+      dcterms:identifier "scimeta_id" .
+
+
+  
+
+.. _conformsTo: http://dublincore.org/documents/dcmi-terms/#terms-conformsTo
+
+.. _references: http://dublincore.org/documents/dcmi-terms/#terms-references
+
+.. _isReferencedBy: http://dublincore.org/documents/dcmi-terms/#terms-isReferencedBy
+
+.. _requires: http://dublincore.org/documents/dcmi-terms/#terms-requires
+
+.. _isRequiredBy: http://dublincore.org/documents/dcmi-terms/#terms-isRequiredBy
+
+.. _relation: http://dublincore.org/documents/dcmi-terms/#terms-relation
+
+.. _format: http://dublincore.org/documents/dcmi-terms/#terms-format
+
+.. _identifier: http://dublincore.org/documents/dcmi-terms/#terms-identifier
 
 
 
@@ -529,5 +635,6 @@ References
 .. [Sauermann_Cyganiak-2008] Sauermann, L, Cyganiak, R. (2008). Cool URIs for the Semantic Web. W3C Interest Group Note 03
    December 2008.  http://www.w3.org/TR/cooluris/
 
+.. _Foresite python library: http://code.google.com/p/foresite-toolkit/wiki/PythonLibrary
 
 .. _Cool URIs: http://www.w3.org/TR/cooluris/
