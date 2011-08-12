@@ -221,23 +221,29 @@ there are a couple of options:
 
    For example, the DCMI Type Vocabulary defines a *Dataset* type that could be
    used to indicate that *scidata_id* refers to a data object by attaching the
-   Dublin Core Terms Type predicate to the ORE aggregated object.
-
-   An alternative might be the use of dcterms `conformsTo`_ with the object
-   values pulled from a DataONE defined vocabulary of definitions for science
-   metadata, science data, and perhaps other object types such as the resource
-   map itself.
-
-   Other possibilities from dcterms include `references`_ and `isReferencedBy`_,
+   Dublin Core Terms Type predicate to the ORE aggregated object. Other
+   possibilities from dcterms include `references`_ and `isReferencedBy`_,
    `requires`_ and `isRequiredBy`_, and `relation`_.
 
+   In the document Mapping DataCite Metadata Scheme Terms (v2.0) to ontologies
+   (DataCite2RDF_), Shorthouse and Peroni provide a mapping between concepts
+   described in the DataCite schema and existing ontologies with the general
+   goal of expressing DataCite in RDF. The recommendation provided therein is to
+   use terms drawn from the Citation Typing Ontology (CiTO_) and others. The
+   semantics of the CiTO terms *documents* and *isDocumentedBy* match nicely
+   with the relationships between data and science metadata objects.
 
-2. That a science metadata object actually describes one or more data objects
+
+2. 
+
+   That a science metadata object actually describes one or more data objects
    can be inferred simply from its presence in a resource map aggregation.
    Detection of science metadata vs. data would be highly dependent on the
    object format for the object as expressed in it's system metadata. This could
    be augmented by adding the `format`_ predicate from dcterms, with the object
-   being the corresponding entry in the object format registry.
+   being the corresponding entry in the object format registry. However, this
+   approach will not indicate which data objects are described by which metadata
+   documents in the case where multiple metadata documents exist in a package.
 
 
 Identifiers in OAI-ORE documents must technically be "protocol-based URIs"
@@ -271,15 +277,23 @@ of options here:
 
 The recommendation (requires discussion) is as follows: 
 
-1. DataONE creates a vocabulary with entries describing the object classes being
-   managed by DataONE (science data or science metadata) and uses the dcterms
-   `conformsTo`_ predicate to indicate the type of aggregated objects.
+1. 
 
-2. ORE URIs for aggregated objects are constructed by prepending the CN get
-   object REST URL to the identifier. The CN get operation is modified to
-   support HTTP 302 temporary redirects. The literal DataONE identifier for the
+   ORE URIs for aggregated objects are constructed by prepending a CN REST URL
+   to the identifier. The CN REST URL will be a new service similar to the
+   current CN.get except that it will issue a HTTP 302 redirect to a node from
+   which the item can be retrieved. The literal DataONE identifier for the
    aggregated object is added to the ORE aggregate entry as a dcterms
-   `identifier`_ property.
+   `identifier`_ property. DataONE clients will utilize the *dcterms:identifier*
+   entry to determine the DataONE identifier of the object and utilize the
+   normal *resolve* and *get* approach for retrieving the object.
+
+2. 
+
+   Relationships between aggregated objects are indicated using terms drawn from
+   the CiTO_ ontology, with *cito:documents* attached to an aggregated science
+   metadata entry with the object of the triple being the URI of the relevant
+   aggregated data object, and the converse indicated by *cite:isDocumentedBy*.
 
 
 An RDF-XML rendering of the example from Figure 2 following the recommendations
@@ -387,7 +401,9 @@ The same in N3::
 
    **Figure 3.** Also rendered using the W3C RDF validator.
 
-  
+
+
+.. _DataCite2RDF: https://docs.google.com/document/d/1paJgvmCMu3pbM4in6PjWAKO0gP-6ultii3DWQslygq4/edit?authkey=CMeV3tgF&hl=en_GB
 
 .. _conformsTo: http://dublincore.org/documents/dcmi-terms/#terms-conformsTo
 
@@ -405,7 +421,7 @@ The same in N3::
 
 .. _identifier: http://dublincore.org/documents/dcmi-terms/#terms-identifier
 
-
+.. _CiTO: http://purl.org/spar/cito/
 
 Data Package Structure
 ----------------------
