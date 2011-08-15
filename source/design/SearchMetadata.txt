@@ -1,8 +1,161 @@
 Content Discovery
 =================
 
+Searching for content is a functionality that is primarily supported by
+Coordinating Nodes, programmatically through the CN_read.search method, and
+through the user interface which is based on Mercury_.
+
+There are two search backends, one implemented by Metacat, the other by a SOLR
+index that is populated with information extracted from system and science
+metadata.
+
+This document describes the properties of the SOLR index, how it is populated,
+and how it can be used to support programmatic search and introspection into the
+DataONE holdings.
 
 
+Properties of the Index
+-----------------------
+
+Descriptions of the SOLR fields available and the content that provides the
+field values.
+
+**Table 1.** Elements derived from System Metadata and available for all objects.
+
+.. list-table::
+   :widths: 3 2 1 10
+
+   * - Attribute
+     - Type
+     - Multi?
+     - Content Origin
+   * - pid
+     - string, unique
+     - No
+     - :attr:`SystemMetadata.identifier`
+   * - objectFormat
+     - string
+     - No
+     - :attr:`SystemMetadata.objectFormat`
+   * - isMetadata
+     - boolean
+     - No
+     - :attr:`SystemMetadata.objectFormat`, scienceMetadata element
+   * - isData
+     - boolean
+     - No
+     - True if the object is flagged as data. **Note: there's currently no way to know this.**
+   * - isResourceMap
+     - boolean
+     - No
+     - True if the objectFormatName starts with "http://www.openarchives.org/ore/"
+   * - size
+     - long
+     - No
+     - :attr:`SystemMetadata.size`
+   * - checksum
+     - string
+     - No
+     - :attr:`SystemMetadata.checksum`
+   * - checksumAlgorithm
+     - string
+     - No
+     - :attr:`SystemMetadata.algorithm`
+   * - submitter
+     - string
+     - No
+     - :attr:`SystemMetadata.submitter`
+   * - rightsHolder
+     - string
+     - No
+     - :attr:`SystemMetadata.rightsHolder`
+   * - rep_allowed
+     - boolean
+     - No
+     - :attr:`SystemMetadata.replicationPolicy` replicationAllowed attribute
+   * - n_replicas
+     - integer
+     - No
+     - :attr:`SystemMetadata.replicationPolicy` numberReplicas attribute
+   * - pref_rep_mn
+     - string
+     - Yes
+     - :attr:`SystemMetadata.replicationPolicy` preferredMemberNode
+   * - blocked_rep_mn
+     - string
+     - Yes
+     - :attr:`SystemMetadata.replicationPolicy` blockedMemberNode
+   * - obsoletes
+     - string
+     - No
+     - :attr:`SystemMetadata.obsoletes`
+   * - obsoletedBy
+     - string
+     - No
+     - :attr:`SystemMetadata.obsoletedBy`
+   * - dateUploaded
+     - date
+     - No
+     - :attr:`SystemMetadata.dateUploaded`
+   * - datemodified
+     - date
+     - No
+     - :attr:`SystemMetadata.dateSysMetadataModified`
+   * - origin_mn
+     - string
+     - No
+     - :attr:`SystemMetadata.originMemberNode`
+   * - auth_mn
+     - string
+     - No
+     - :attr:`SystemMetadata.authoritativeMemberNode`
+   * - replica_mn
+     - string
+     - Yes
+     - :attr:`SystemMetadata.replicaMemberNode`
+   * - readPermission
+     - string
+     - Yes
+     - List of subjects (groups and individuals) that have read permission on
+       PID, value retrieved from :attr:`SystemMetadata.accessPolicy`.
+   * - writePermission
+     - string
+     - Yes
+     - As for readPermission
+   * - executePermission
+     - string
+     - Yes
+     - As for readPermission
+   * - changePermission
+     - string
+     - Yes
+     - As for readPermission
+   * - isPublic
+     - boolean
+     - No
+     - Set to True if the DataONE public user is present in the list of subjects
+       with readPermission on PID.
+   * - resourceMaps
+     - string
+     - Yes
+     - List of resource maps that reference this PID.
+   * - describes
+     - string
+     - Yes
+     - Lists all PIDs that this object describes. Obtained by parsing all
+       resource maps in which this object is referenced. Not set for data or
+       resource map objects.
+   * - describedBy
+     - string
+     - Yes
+     - Lists all PIDs that describe this object. Obtained by parsing all
+       resource maps in which this object is referenced.
+
+
+
+.. _Mercury: http://mercury.ornl.gov/
+
+.. _OAI-ORE: http://www.openarchives.org/ore/
 
 Metadata Attributes
 -------------------
