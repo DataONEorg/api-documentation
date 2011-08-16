@@ -1,0 +1,179 @@
+Metadata Synchronization and Object Replication
+===============================================
+
+Replication of objects between Member Nodes (MN) within the DataONE system is
+managed by the Coordinating Nodes (CN), as is synchronization of system and
+science metadata for each MN object. CNs are aware of the replication policies
+of each object and the capabilities of each MN, and populates a distributed
+queue of replication tasks to be processed by all of the CNs.
+
+Populating Replication Queues 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The CN's Synchronization Service maintains a Hazelcast Map of objects
+(hzObjectMap) that reflects the current state of the DataONE system's full
+ObjectList. This in-memory map is also bound to the backing Metacat object store
+via the Hazelcast MapStore interface. The hzObjectMap serves as an object-level
+locking mechanism across CNs, and any service that will make changes to an
+object's system metadata will need to gain a lock on the given object identifier
+in the map.
+
+As the CN Synchronization Service becomes aware of create, update, and delete
+events for MN objects, in coordination with the Replication Service, it
+populates a Hazelcast queue (hzReplicationQueue) used to schedule evaluation of
+the replication policy for a given object identifier. Each item offered to the
+queue consists of a Java Map containing the object identifier/system metadata
+key/value pair (pid, sysmeta).
+
+The Replication Service running on each CN monitors the hzReplicationQueue, and
+when an object is queued for replication, one of the CN instances of the
+Replication Service acquires the queued item, evaluates the ReplicationPolicy of
+the given object, evaluates the capabilities and availability of the potential
+target MNs, and creates a ReplicationTask for each MN replication target up to
+the numberOfReplicas in the object's ReplicationPolicy. Each ReplicationTask is
+queued based on priority into the CN's hzReplicationTaskQueue for processing.
+
+Processing Replication Queues 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+As the hzReplicationTaskQueue is popluated, each CN polls the queue for new
+tasks to process. Upon receiving a ReplicationTask item from the queue, a CN
+Replication Service instance calls handleReplicationTask() to initiate the MN to
+MN replication.
+
+The Replication Service calls allowReplicate() on the originating MN, passing in
+a replication token (**cnZToken**), the target node reference (mnB), and the
+identifier of the object to be replicated (pid). Upon success, the CN calls
+replicate() on the target MN (mnB), passing in the replication token
+(**cnZToken**), the originating node reference (mnA), and the identifier of the
+object to be replicated (pid). This call triggers the MN (mnB) to call
+getReplica() on the originating MN (mnA), passing in a replication token
+(**mnBToken**) and the identifier of the object to be replicated (pid). In turn,
+the CN updates the system metadata for the object, setting the ReplicationStatus
+to QUEUED after gaining the lock on the object. The lock is immediately
+released.
+
+Before responding to getReplica(), mnA checks for replication authorization by
+calling isNodeAuthorized() on the CN, passing in a replication token
+(**mnAToken**), the Subject listed in the mnBToken (**mnBSubject**), the object
+identifier (pid), and the desired replication permission
+(**replicationPermission**). The Replication Service looks up Subject in the
+LDAP replication group, and returns the response.
+
+Upon successful authorization, mnA replicates the object (replicaBytes) to the
+target MN (mnB). mnB in turn sends a successful replication response to the CN
+(replicateResponse). The CN Replication Service once again updates the system
+metadata for the object after gaining a lock in the hzObjectMap. The lock is
+immediately released, and the statusResponse is sent to the CN.
+
+.. figure:: images/repl_01.png
+
+*Figure 1.* The CN Synchronization Service populates a replication queue that is 
+monitored by the Replication Service.  The Replication Service in turn populates
+a replication task queue based on object and node policies.  The service monitors
+this queue and initiates replication between two MNs.  Upon success, the objects's
+system metadata is updated to indicate that replication is complete.
+
+..
+  @startuml images/repl_01.png
+  title Replicate an object between two Member Nodes\n\n
+  participant "mnA : MNode" as mnA <<MNode>>
+  participant "mnB : MNode" as mnB <<MNode>>
+  participant "cnXSyncService : SynchronizationService" as cnX <<CNode>>
+  participant "cnYReplService : ReplicationService" as cnY <<CNode>>
+  participant "cnZReplService : ReplicationService" as cnZ <<CNode>>
+  
+  == Populate Queues ==
+  cnX -> mnA: listObjects()
+  activate mnA #D74F57
+  mnA --> cnX: objectList
+  deactivate mnA
+  
+  cnX -> mnB: listObjects()
+  activate mnB #D74F57
+  mnB --> cnX: objectList
+  deactivate mnB
+  
+  cnX -> cnX: hzObjectMap.put(pid, "")
+  activate cnX #D74F57
+  cnX -> cnX: hzReplicationQueue.put(pid, sysmeta)
+  deactivate cnX
+  note right
+  Each put() to the hz maps and queues 
+  concurrently distributes the item across CNs
+  in memory and their backing MapStore
+  end note
+  
+  == Process Queues ==
+  
+  cnY -> cnY: hzReplicationQueue.poll()
+  activate cnY #D74F57
+  deactivate cnY
+  
+  note right
+  Each ReplicationService
+  continuously polls the 
+  hz queues
+  end note
+  
+  
+  cnZ -> cnZ: hzReplicationQueue.poll()
+  activate cnZ #D74F57
+  deactivate cnZ
+  
+  cnY -> cnY: createReplicationTaskList()
+  activate cnY #D74F57
+
+  note right
+  ReplicationTasks are queued
+  after being prioritized
+  end note
+  cnY -> cnY: hzReplicationTaskQueue.put(taskid)
+  deactivate cnY
+  
+  cnY -> cnY: hzReplicationTaskQueue.poll()
+  activate cnY #D74F57
+  deactivate cnY
+  
+  cnZ -> cnZ: hzReplicationTaskQueue.poll()
+  activate cnZ #D74F57
+  cnZ --> cnZ: replicationTask
+  deactivate cnZ
+  
+  cnZ -> cnZ: handleReplicationTask(replicationTask)
+  activate cnZ #D74F57
+  cnZ -> mnA: allowReplicate(cnZtoken, mnB, pid)
+  activate mnA #D74F57
+  mnA --> cnZ: allowResponse
+  deactivate mnA
+  cnZ -> mnB: replicate(cnZToken, mnA, pid)
+  activate mnB #D74F57
+  cnZ -> cnZ: setReplicationStatus(pid, ReplicationStatus.QUEUED)
+  note left
+   Object's system metadata get's updated
+  end note
+  cnZ -> cnZ: hzObjectMap.lock(pid)
+  cnZ -> cnZ: updateSystemMetadata(pid)
+  cnZ --> cnZ: statusResponse
+  cnZ -> cnZ: hzObjectMap.unlock(pid)
+  
+  mnB -> mnA: getReplica(mnBToken, pid)
+  deactivate mnB
+  activate mnA #D74F57
+  mnA -> cnZ: isNodeAuthorized(mnAToken, mnBSubject, pid, replicationPermission)
+  cnZ --> mnA: authorizationResponse
+  mnA --> mnB: replicaBytes
+  deactivate mnA
+  activate mnB #D74F57
+  mnB --> cnZ: replicateResponse
+  deactivate mnB
+  
+  cnZ -> cnZ: setReplicationStatus(pid, ReplicationStatus.COMPLETE)
+  note left
+  Object's system metadata get's updated
+  end note
+  cnZ -> cnZ: hzObjectMap.lock(pid)
+  cnZ -> cnZ: updateSystemMetadata(pid)
+  cnZ -> cnZ: hzObjectMap.unlock(pid)
+  cnZ --> cnZ: statusResponse
+  deactivate cnZ
+  @enduml
