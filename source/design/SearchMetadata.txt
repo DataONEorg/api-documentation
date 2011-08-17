@@ -1,6 +1,8 @@
 Content Discovery
 =================
 
+.. module:: SearchMetadata
+
 Searching for content is a functionality that is primarily supported by
 Coordinating Nodes, programmatically through the CN_read.search method, and
 through the user interface which is based on Mercury_.
@@ -139,6 +141,11 @@ field values.
      - string
      - Yes
      - List of resource maps that reference this PID.
+   * - contains
+     - string
+     - Yes
+     - A list of all objects referenced by a resource map. Only populated if
+       the current object is a resource map.
    * - describes
      - string
      - Yes
@@ -152,52 +159,89 @@ field values.
        resource maps in which this object is referenced.
 
 
+Populating Permission Fields
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This process is fairly straight forward, and requires simply de-duping entries
+so that each of the permission fields contains a distinct list of subjects
+granted that permission. If the DataONE public user is present in the read
+permissions, then the isPublic field is set to True.
+
+
+Populating Object Relation Fields
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The fields *resourceMaps*, *contains*, *describes*, and *describedBy* contain
+identifiers of other objects in the DataONE system related to the subject of
+the current record. These relationships are recorded in OAI-ORE resource map
+documents as described in the section :doc:`DataPackage`. Since the values for
+these fields are contained in resource maps, it is necessary to build these
+fields in progression as additional resource maps are synchronized with the
+coordinating nodes.
+
+As a general strategy it is recommended that resource maps are indexed first,
+filling the *contains* entries for each map. Then each object that is not a
+resource map is indexed in turn. For each object, a query is issued against
+the index to retrieve the list of resource maps in which the object identifier
+is present, enabling population of the *resourceMaps* field for the object.
+Each of those resource maps is examined to obtain the list of identifiers for
+the *describes* field if the object is science metadata, and the *decribedBy*
+field if the object is data.
+
+
+Limitations of Multi-Valued Fields in SOLR
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Multi-valued fields in SOLR have an internal representation that can be
+likened to a delimited concatenation of all the values for the field. The
+fields have a configurable limit to the maximum field size, which defaults to
+10000 characters, and this limit may be encountered in the various entries
+such as the permission fields or object relation fields where a potentially
+large number of subjects or identifiers may be stored.
+
+.. TODO:: Strategies for dealing with these limits when reached. Change
+          config, use proxies for values
+
 
 .. _Mercury: http://mercury.ornl.gov/
 
 .. _OAI-ORE: http://www.openarchives.org/ore/
 
+
 Metadata Attributes
 -------------------
 
-.. module:: SearchMetadata
+Indexing the system metadata entries provides a mechanism for selection of
+content using low level attributes of the objects such as the type, size and
+relationships, however is not useful for locating content relevant to a
+particular topic or purpose. The :term:`science metadata` contains such
+information and such objects contain additional information described below
+when indexed by the DataONE system.
 
-This document describes the attributes pulled from :term:`science metadata`
-documents that are used to assist discovery (i.e. search) of content in the DataONE system.
+The initial web user interface to DataONE utilizes the Mercury_ system. This
+in turn relies upon a SOLR index to support the search, faceting, and
+sub-setting operations that are exposed through Mercury. The underlying SOLR
+index is also exposed through as an API, so other clients (such as the file
+system driver) can leverage the search capabilities thus provided.
 
-Data that exists within the DataONE system is always accompanied by science
-metadata in one of the supported metadata schemes (e.g. Dublin Core, EML, or
-another supported scheme) and expressed in one of the supported formats (e.g.
-XML, RDF-XML). The science metadata is also replicated with the data (where
-the Member Node supports the format and scheme) and additional copies are
-replicated across the Coordinating Nodes. The science metadata is parsed by
-the CNs to extract information to verify the content provides at least the
-minimal metadata content and meets consistency requirements. Attributes
-extracted from the science metadata are also used to support search
-operations.
+The remainder of this document describes the search properties that are
+extracted from the various formats and syntaxes of of science metadata that
+are supported by the DataONE indexing system.
 
+..
+  Searching content in DataONE involves the process of matching a user provided
+  value with some value extracted from the science metadata.
 
-Searching content in DataONE involves the process of matching a user provided
-value with some value extracted from the science metadata.
+  Values can be simple (e.g. string, integer, floating point, date) or compound
+  (e.g. spatial coordinate constructed from two floats - the latitude and
+  longitude and a string - the coordinate system identifier).
 
-Values can be simple (e.g. string, integer, floating point, date) or compound
-(e.g. spatial coordinate constructed from two floats - the latitude and
-longitude and a string - the coordinate system identifier).
+  Expression in science metadata
 
+  Expression in extracted values that are indexed
 
-Expression in science metadata
+  Expression in a query
 
-Expression in extracted values that are indexed
-
-Expression in a query
-
-
-Required Query Expressions
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Search the authors of content.
-
-Search the keywords of content
 
 
 Search Element Types
@@ -225,96 +269,128 @@ Search Terms
 ------------
 
 .. list-table::
-   :widths: 5 5 1 10
+   :widths: 3 2 1 1 10
 
    * - Attribute
      - Type
-     - In UI
-     - Description
+     - Multi?
+     - In UI?
+     - Content Origin
    * - :attr:`author`
-     - String
-     - 
+     - string
+     - No
+     - Yes
      - 
    * - :attr:`keyWord`
-     - String, multivalued
+     - string
+     - Yes
+     - Yes
      - 
-     -
    * - :attr:`keyConcept`
-     - String, multivalued 
-     - 
+     - string
+     - Yes
      -
-   * - :attr:`spatialFeature`
-     - 
-     - 
-     - 
+     -
+   * - :attr:`minLatitude`
+     - float
+     - No
+     - Yes
+     - Minimum bounding box latitude in degrees, WGS84
+   * - :attr:`maxLatitude`
+     - float
+     - No
+     - yes
+     - Maximum bounding box latitude in degrees, WGS84
+   * - :attr:`minLongitude`
+     - float
+     - No
+     - Yes
+     - Minimum bounding box longitude in degrees, WGS84
+   * - :attr:`maxLongitude`
+     - float
+     - No
+     - Yes
+     - Maximum bounding box longitude in degrees, WGS84
    * - :attr:`namedLocation`
-     - String, multivalued
-     - 
+     - string
+     - Yes
+     - Yes
      - 
    * - :attr:`temporalCoverageStart`
-     - Date
-     - 
+     - date
+     - No
+     - Yes
      - 
    * - :attr:`temporalCoverageEnd`
-     - Date
-     - 
+     - date
+     - No
+     - Yes
      - 
    * - :attr:`any`
-     - Text
-     - 
+     - text
+     - No
+     - Yes
      - 
    * - :attr:`title`
      - String
-     - 
+     - No
+     - Yes
      - 
    * - :attr:`objectFormat`
-     - String, multivalued
-     - 
+     - string
+     - No
+     - No
      - 
    * - :attr:`variableNme`
-     - String, multivalued
-     - 
-     - 
+     - string
+     - Yes
+     - Yes
+     -
    * - :attr:`scientificName`
-     - String, multivalued
-     - 
+     - string
+     - Yes
+     - Yes
      - 
    * - :attr:`submitter`
-     - String
+     - string
+     - No
+     - No
      - 
-     - 
-   * - :attr:`related Object`
-     - String, multivalued
-     - 
-     -
    * - :attr:`relatedOrganizations`
-     - String, multivalued
-     - 
+     - string
+     - Yes
+     - No
      - 
    * - :attr:`size`
      - long integer
-     - 
-     - 
+     - No
+     - Yes 
+     -
    * - :attr:`replicaLocation`
-     - String
-     - 
+     - string
+     - No
+     - No
      - 
    * - :attr:`identifier`
-     - String, multivalued
+     - string
+     - Yes
      - 
-     - 
+     - Remove this - Same as pid
    * - :attr:`datePublished`
-     - Date
-     - 
+     - date
+     - No
+     - Yes
      - 
    * - :attr:`dateAddedToRepository`
-     - Date
-     - 
+     - date
+     - No
+     - No
      - 
    * - :attr:`dateSysMetadataModified`
-     - Date
-     - 
-     - 
+     - date
+     - No
+     - No
+     - Remove this - duplicate from sysmeta
 
 
 .. attribute:: author
@@ -331,7 +407,7 @@ Search Terms
 
   (String) Keyword (uncontrolled keywords)
 
-  - Mercury enhances the kw list with e.g. gcmd keyword list
+  - Mercury enhances the kw list with e.g. GCMD keyword list
   - Mercury UI
 
 
