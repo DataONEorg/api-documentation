@@ -31,11 +31,11 @@ field values.
      - Type
      - Multi?
      - Content Origin
-   * - pid
+   * - :attr:`pid`
      - string, unique
      - No
      - :attr:`SystemMetadata.identifier`
-   * - objectFormat
+   * - :attr:`objectFormat`
      - string
      - No
      - :attr:`SystemMetadata.objectFormat`
@@ -51,108 +51,108 @@ field values.
      - boolean
      - No
      - True if the objectFormatName starts with "http://www.openarchives.org/ore/"
-   * - size
+   * - :attr:`size`
      - long
      - No
      - :attr:`SystemMetadata.size`
-   * - checksum
+   * - :attr:`checksum`
      - string
      - No
      - :attr:`SystemMetadata.checksum`
-   * - checksumAlgorithm
+   * - :attr:`checksumAlgorithm`
      - string
      - No
      - :attr:`SystemMetadata.algorithm`
-   * - submitter
+   * - :attr:`submitter`
      - string
      - No
      - :attr:`SystemMetadata.submitter`
-   * - rightsHolder
+   * - :attr:`rightsHolder`
      - string
      - No
      - :attr:`SystemMetadata.rightsHolder`
-   * - rep_allowed
+   * - :attr:`rep_allowed`
      - boolean
      - No
      - :attr:`SystemMetadata.replicationPolicy` replicationAllowed attribute
-   * - n_replicas
+   * - :attr:`n_replicas`
      - integer
      - No
      - :attr:`SystemMetadata.replicationPolicy` numberReplicas attribute
-   * - pref_rep_mn
+   * - :attr:`pref_rep_mn`
      - string
      - Yes
      - :attr:`SystemMetadata.replicationPolicy` preferredMemberNode
-   * - blocked_rep_mn
+   * - :attr:`blocked_rep_mn`
      - string
      - Yes
      - :attr:`SystemMetadata.replicationPolicy` blockedMemberNode
-   * - obsoletes
+   * - :attr:`obsoletes`
      - string
      - No
      - :attr:`SystemMetadata.obsoletes`
-   * - obsoletedBy
+   * - :attr:`obsoletedBy`
      - string
      - No
      - :attr:`SystemMetadata.obsoletedBy`
-   * - dateUploaded
+   * - :attr:`dateUploaded`
      - date
      - No
      - :attr:`SystemMetadata.dateUploaded`
-   * - datemodified
+   * - :attr:`datemodified`
      - date
      - No
      - :attr:`SystemMetadata.dateSysMetadataModified`
-   * - origin_mn
+   * - :attr:`origin_mn`
      - string
      - No
      - :attr:`SystemMetadata.originMemberNode`
-   * - auth_mn
+   * - :attr:`auth_mn`
      - string
      - No
      - :attr:`SystemMetadata.authoritativeMemberNode`
-   * - replica_mn
+   * - :attr:`replica_mn`
      - string
      - Yes
      - :attr:`SystemMetadata.replicaMemberNode`
-   * - readPermission
+   * - :attr:`readPermission`
      - string
      - Yes
      - List of subjects (groups and individuals) that have read permission on
        PID, value retrieved from :attr:`SystemMetadata.accessPolicy`.
-   * - writePermission
+   * - :attr:`writePermission`
      - string
      - Yes
      - As for readPermission
-   * - executePermission
+   * - :attr:`executePermission`
      - string
      - Yes
      - As for readPermission
-   * - changePermission
+   * - :attr:`changePermission`
      - string
      - Yes
      - As for readPermission
-   * - isPublic
+   * - :attr:`isPublic`
      - boolean
      - No
      - Set to True if the DataONE public user is present in the list of subjects
        with readPermission on PID.
-   * - resourceMaps
+   * - :attr:`resourceMaps`
      - string
      - Yes
      - List of resource maps that reference this PID.
-   * - contains
+   * - :attr:`contains`
      - string
      - Yes
      - A list of all objects referenced by a resource map. Only populated if
        the current object is a resource map.
-   * - describes
+   * - :attr:`describes`
      - string
      - Yes
      - Lists all PIDs that this object describes. Obtained by parsing all
        resource maps in which this object is referenced. Not set for data or
        resource map objects.
-   * - describedBy
+   * - :attr:`describedBy`
      - string
      - Yes
      - Lists all PIDs that describe this object. Obtained by parsing all
@@ -194,13 +194,13 @@ Limitations of Multi-Valued Fields in SOLR
 
 Multi-valued fields in SOLR have an internal representation that can be
 likened to a delimited concatenation of all the values for the field. The
-fields have a configurable limit to the maximum field size, which defaults to
-10000 characters, and this limit may be encountered in the various entries
-such as the permission fields or object relation fields where a potentially
-large number of subjects or identifiers may be stored.
-
-.. TODO:: Strategies for dealing with these limits when reached. Change
-          config, use proxies for values
+fields have a configurable limit to the maximum field size, and this limit may
+be encountered in the various entries such as the permission fields or object
+relation fields where a potentially large number of subjects or identifiers
+may be stored. Further research has indicated this problem is unlikely since
+simply increasing the SOLR *maxFieldLength* configuration value will enable
+larger field content, with examples in the wild of several thousand entries
+equivalent to DataONE identifiers in a single field.
 
 
 .. _Mercury: http://mercury.ornl.gov/
@@ -208,8 +208,8 @@ large number of subjects or identifiers may be stored.
 .. _OAI-ORE: http://www.openarchives.org/ore/
 
 
-Metadata Attributes
--------------------
+Values Extract from Science Metadata
+------------------------------------
 
 Indexing the system metadata entries provides a mechanism for selection of
 content using low level attributes of the objects such as the type, size and
@@ -265,133 +265,163 @@ Search Element Types
 .. _Well Known Text: http://en.wikipedia.org/wiki/Well-known_text
 
 
-Search Terms
-------------
+Search Terms Extracted From Science Metadata
+--------------------------------------------
 
 .. list-table::
-   :widths: 3 2 1 1 10
+   :widths: 3 2 1 1 3 10
 
    * - Attribute
      - Type
      - Multi?
      - In UI?
+     - `DataCite Terms`_
      - Content Origin
    * - :attr:`author`
      - string
      - No
      - Yes
+     - 2 Creator
      - 
    * - :attr:`keyWord`
      - string
      - Yes
      - Yes
      - 
+     -
    * - :attr:`keyConcept`
      - string
      - Yes
+     -
      -
      -
    * - :attr:`minLatitude`
      - float
      - No
      - Yes
+     -
      - Minimum bounding box latitude in degrees, WGS84
    * - :attr:`maxLatitude`
      - float
      - No
      - yes
+     -
      - Maximum bounding box latitude in degrees, WGS84
    * - :attr:`minLongitude`
      - float
      - No
      - Yes
+     -
      - Minimum bounding box longitude in degrees, WGS84
    * - :attr:`maxLongitude`
      - float
      - No
      - Yes
+     -
      - Maximum bounding box longitude in degrees, WGS84
    * - :attr:`namedLocation`
      - string
      - Yes
      - Yes
      - 
+     -
    * - :attr:`temporalCoverageStart`
      - date
      - No
      - Yes
      - 
+     -
    * - :attr:`temporalCoverageEnd`
      - date
      - No
      - Yes
      - 
+     -
    * - :attr:`any`
      - text
      - No
      - Yes
      - 
+     -
    * - :attr:`title`
      - String
      - No
      - Yes
-     - 
+     - 3 Title
+     -
    * - :attr:`objectFormat`
      - string
      - No
      - No
      - 
+     -
    * - :attr:`variableNme`
      - string
      - Yes
      - Yes
+     -
      -
    * - :attr:`scientificName`
      - string
      - Yes
      - Yes
      - 
+     -
    * - :attr:`submitter`
      - string
      - No
      - No
      - 
+     -
    * - :attr:`relatedOrganizations`
      - string
      - Yes
      - No
      - 
+     -
    * - :attr:`size`
      - long integer
      - No
      - Yes 
+     -
      -
    * - :attr:`replicaLocation`
      - string
      - No
      - No
      - 
-   * - :attr:`identifier`
+     -
+   * - :attr:`pid`
      - string
      - Yes
      - 
-     - Remove this - Same as pid
+     -
+     - Same as pid in System Metadata
    * - :attr:`datePublished`
      - date
      - No
      - Yes
-     - 
+     - 4 PublicationYear
+     -
    * - :attr:`dateAddedToRepository`
      - date
      - No
      - No
+     -
      - 
    * - :attr:`dateSysMetadataModified`
      - date
      - No
      - No
-     - Remove this - duplicate from sysmeta
+     -
+     - Same as :attr:`datemodified` in System Metadata
 
+
+.. _DataCite terms: http://wiki.esipfed.org/index.php/Interagency_Data_Stewardship/Citations/provider_guidelines
+
+
+Attribute Descriptions and Notes
+--------------------------------
 
 .. attribute:: author
 
@@ -407,6 +437,7 @@ Search Terms
 
   (String) Keyword (uncontrolled keywords)
 
+  - Initial values are extracted directly from the science metadata document
   - Mercury enhances the kw list with e.g. GCMD keyword list
   - Mercury UI
 
@@ -420,6 +451,26 @@ Search Terms
   - Unlikely to be available in 2011
   - Giri has some keyword enhancement and mapping script (magic)
   - Mercury UI
+
+
+.. attribute:: minLatitude
+
+   see :attr:`spatialFeature`
+
+
+.. attribute:: maxLatitude
+
+   see :attr:`spatialFeature`
+
+
+.. attribute:: minLongitude
+
+   see :attr:`spatialFeature`
+
+
+.. attribute:: maxLongitude
+
+   see :attr:`spatialFeature`
 
 
 .. attribute:: spatialFeature
@@ -550,12 +601,17 @@ Search Terms
   (String)  Number / location of replicas
 
 
-.. attribute:: identifier
+.. attribute:: pid
 
   (Types.IdentifierType) Identifier (PID)
 
-  - Need to be able to find metadata records describing a dataset identified by PID
+  The PID of the object as expressed in the system metadata document.
+
+  - Need to be able to find metadata records describing a dataset identified
+    by PID. Can be achieved by using the describedBy field.
+
   - Find any science metadata that is or describes PID
+
   - Mercury UI
 
 
