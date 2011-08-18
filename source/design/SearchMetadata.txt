@@ -146,13 +146,13 @@ field values.
      - Yes
      - A list of all objects referenced by a resource map. Only populated if
        the current object is a resource map.
-   * - :attr:`describes`
+   * - :attr:`documents`
      - string
      - Yes
      - Lists all PIDs that this object describes. Obtained by parsing all
        resource maps in which this object is referenced. Not set for data or
        resource map objects.
-   * - :attr:`describedBy`
+   * - :attr:`isDocumentedBy`
      - string
      - Yes
      - Lists all PIDs that describe this object. Obtained by parsing all
@@ -171,7 +171,7 @@ permissions, then the isPublic field is set to True.
 Populating Object Relation Fields
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The fields *resourceMaps*, *contains*, *describes*, and *describedBy* contain
+The fields *resourceMaps*, *contains*, *documents*, and *isDocumentedBy* contain
 identifiers of other objects in the DataONE system related to the subject of
 the current record. These relationships are recorded in OAI-ORE resource map
 documents as described in the section :doc:`DataPackage`. Since the values for
@@ -185,7 +185,7 @@ resource map is indexed in turn. For each object, a query is issued against
 the index to retrieve the list of resource maps in which the object identifier
 is present, enabling population of the *resourceMaps* field for the object.
 Each of those resource maps is examined to obtain the list of identifiers for
-the *describes* field if the object is science metadata, and the *decribedBy*
+the *documents* field if the object is science metadata, and the *isDocumentedBy*
 field if the object is data.
 
 
@@ -275,148 +275,187 @@ Search Terms Extracted From Science Metadata
      - Type
      - Multi?
      - In UI?
-     - `DataCite Terms`_
      - Content Origin
    * - :attr:`author`
      - string
      - No
      - Yes
-     - 2 Creator
      - 
    * - :attr:`keyWord`
      - string
      - Yes
      - Yes
-     - 
      -
    * - :attr:`keyConcept`
      - string
      - Yes
      -
      -
-     -
    * - :attr:`minLatitude`
      - float
      - No
      - Yes
-     -
      - Minimum bounding box latitude in degrees, WGS84
    * - :attr:`maxLatitude`
      - float
      - No
      - yes
-     -
      - Maximum bounding box latitude in degrees, WGS84
    * - :attr:`minLongitude`
      - float
      - No
      - Yes
-     -
      - Minimum bounding box longitude in degrees, WGS84
    * - :attr:`maxLongitude`
      - float
      - No
      - Yes
-     -
      - Maximum bounding box longitude in degrees, WGS84
    * - :attr:`namedLocation`
      - string
      - Yes
      - Yes
-     - 
      -
    * - :attr:`temporalCoverageStart`
      - date
      - No
      - Yes
-     - 
      -
    * - :attr:`temporalCoverageEnd`
      - date
      - No
      - Yes
-     - 
      -
    * - :attr:`any`
      - text
      - No
      - Yes
-     - 
      -
    * - :attr:`title`
      - String
      - No
      - Yes
-     - 3 Title
      -
    * - :attr:`objectFormat`
      - string
      - No
      - No
-     - 
      -
    * - :attr:`variableNme`
      - string
      - Yes
      - Yes
      -
-     -
    * - :attr:`scientificName`
      - string
      - Yes
      - Yes
-     - 
      -
    * - :attr:`submitter`
      - string
      - No
      - No
-     - 
      -
    * - :attr:`relatedOrganizations`
      - string
      - Yes
      - No
-     - 
      -
    * - :attr:`size`
      - long integer
      - No
      - Yes 
      -
-     -
    * - :attr:`replicaLocation`
      - string
      - No
      - No
-     - 
      -
    * - :attr:`pid`
      - string
      - Yes
-     - 
      -
      - Same as pid in System Metadata
    * - :attr:`datePublished`
      - date
      - No
      - Yes
-     - 4 PublicationYear
      -
    * - :attr:`dateAddedToRepository`
      - date
      - No
      - No
-     -
      - 
    * - :attr:`dateSysMetadataModified`
      - date
      - No
      - No
-     -
      - Same as :attr:`datemodified` in System Metadata
 
 
+**Table 3.** Cross reference of index fields and elements useful in citation
+best practices as exemplified in the `interagency data stewardship`_ wiki page of ESIP. *Mandatory (if applicable)
+
+
+.. list-table::
+   :widths: 5 5 5 5
+
+   * - Citation Element
+     - FGDC CSDGM field
+     - DataCite Metadata Scheme ID and Property
+     - DataONE Index Field
+   * - Author or Creator*
+     - idinfo > citation > citeinfo > "origin"
+     - 2 Creator*
+     - :attr:`author`
+   * - Release Date*
+     - idinfo > citation > citeinfo > "pubdate" and sometimes "othercit"
+     - 5 PublicationYear*
+     - :attr:`datePublished`
+   * - Title*
+     - idinfo > citation > citeinfo > "title" and possibly "edition"
+     - 3 Title*
+     - :attr:`title`
+   * - Version*
+     - 
+     - 15 Version
+     - See notes below.
+   * - Archive and/or Distributor*
+     - idinfo > citation > citeinfo > "publish"
+     - 4 Publisher*
+     - See notes below.
+   * - Locator, Identifier, or Distribution Medium*
+     - idinfo > citation > citeinfo > "othercit" or "onlink"
+     - 1 Identifier*
+     - :attr:`pid`
+   * - Access Date and Time*
+     - not applicable
+     - 8 Date
+     - perhaps :attr:`datemodified`
+   * - Subset Used
+     - not applicable
+     - 12 RelatedIdentifier DataCite recommends obtaining an identifier for any subset that needs to be cited as well as an identifier for the larger whole.
+     - perhaps a reference to the resource map?
+   * - Editor or Other Important Role
+     - idinfo > citation > citeinfo > "origin"
+     - 7 Contributor
+     - 
+   * - Publication Place
+     - idinfo > citation > citeinfo > "pubplace"
+     - 17 Description
+     -
+   * - Distributor, Associate Archive, or other Institutional Role
+     - idinfo > citation > citeinfo > "othercit"
+     - 7 Contributor or possibly 4 Publisher
+     - "http://dataone.org"
+   * - Data Within a Larger Work
+     - idinfo > citation > citeinfo > "othercit" or "lworkcit"
+     - 12 RelatedIdentifier
+     - perhaps a reference to the resource map?
+
+
+
+.. _interagency data stewardship: http://wiki.esipfed.org/index.php/Interagency_Data_Stewardship/Citations/provider_guidelines
 .. _DataCite terms: http://wiki.esipfed.org/index.php/Interagency_Data_Stewardship/Citations/provider_guidelines
 
 
