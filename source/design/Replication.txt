@@ -55,23 +55,20 @@ the queue for new tasks to process. Upon receiving a ReplicationTask item from
 the queue, a CN Replication Service instance calls handleReplicationTask(),
 passing the replicationTask to be handled, to initiate the MN to MN replication.
 
-The Replication Service calls allowReplicate() on the originating MN, passing in
-a replication token (**cnZToken**), the target node reference (mnB), and the
-identifier of the object to be replicated (pid). Upon success, the CN calls
-replicate() on the target MN (mnB), passing in the replication token
-(**cnZToken**), the originating node reference (mnA), and the identifier of the
+The CN calls replicate() on the target MN (mnB), passing in the cnZ token
+(cnZToken), the originating node reference (mnA), and the identifier of the
 object to be replicated (pid). This call triggers the MN (mnB) to call
-getReplica() on the originating MN (mnA), passing in a replication token
-(**mnBToken**) and the identifier of the object to be replicated (pid). In turn,
+getReplica() on the originating MN (mnA), passing in mnB token
+(mnBToken) and the identifier of the object to be replicated (pid). In turn,
 the CN updates the system metadata for the object, setting the ReplicationStatus
 to QUEUED after gaining the lock on the object. The lock is immediately
 released.
 
 Before responding to getReplica(), mnA checks for replication authorization by
-calling isNodeAuthorized() on the CN, passing in a replication token
-(**mnAToken**), the Subject listed in the mnBToken (**mnBSubject**), the object
+calling isNodeAuthorized() on the CN, passing in the mnA token
+(mnAToken), the Subject listed in the mnBToken (mnBSubject), the object
 identifier (pid), and the desired replication permission
-(**replicationPermission**). The Replication Service looks up Subject in the
+(replicationPermission). The Replication Service looks up Subject in the
 LDAP replication group, and returns the response.
 
 Upon successful authorization, mnA replicates the object (replicaBytes) to the
@@ -155,16 +152,15 @@ objects's system metadata is updated to indicate that replication is complete.
         
   cnZ -> cnZ: handleReplicationTask(replicationTask)
   activate cnZ #D74F57
-  cnZ -> mnA: allowReplicate(cnZtoken, mnB, pid)
-  activate mnA #D74F57
-  mnA --> cnZ: allowResponse
-  deactivate mnA
+
   cnZ -> mnB: replicate(cnZToken, mnA, pid)
   activate mnB #D74F57
   cnZ -> cnZ: setReplicationStatus(pid, ReplicationStatus.QUEUED)
+  
   note left
    Object's system metadata get's updated
   end note
+  
   cnZ -> cnZ: hzObjectMap.lock(pid)
   cnZ -> cnZ: updateSystemMetadata(pid)
   cnZ --> cnZ: statusResponse
