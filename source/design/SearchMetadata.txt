@@ -3,6 +3,8 @@ Content Discovery
 
 .. module:: SearchMetadata
 
+.. contents::
+
 Searching for content is a functionality that is primarily supported by
 Coordinating Nodes, programmatically through the CN_read.search method, and
 through the user interface which is based on Mercury_.
@@ -16,8 +18,8 @@ and how it can be used to support programmatic search and introspection into the
 DataONE holdings.
 
 
-Properties of the Index
------------------------
+Properties of the Index Derived From System Metadata
+----------------------------------------------------
 
 Descriptions of the SOLR fields available and the content that provides the
 field values.
@@ -26,6 +28,7 @@ field values.
 
 .. list-table::
    :widths: 3 2 1 10
+   :header-rows: 1
 
    * - Attribute
      - Type
@@ -208,8 +211,8 @@ equivalent to DataONE identifiers in a single field.
 .. _OAI-ORE: http://www.openarchives.org/ore/
 
 
-Values Extract from Science Metadata
-------------------------------------
+Values Extracted from Science Metadata
+--------------------------------------
 
 Indexing the system metadata entries provides a mechanism for selection of
 content using low level attributes of the objects such as the type, size and
@@ -228,47 +231,9 @@ The remainder of this document describes the search properties that are
 extracted from the various formats and syntaxes of of science metadata that
 are supported by the DataONE indexing system.
 
-..
-  Searching content in DataONE involves the process of matching a user provided
-  value with some value extracted from the science metadata.
-
-  Values can be simple (e.g. string, integer, floating point, date) or compound
-  (e.g. spatial coordinate constructed from two floats - the latitude and
-  longitude and a string - the coordinate system identifier).
-
-  Expression in science metadata
-
-  Expression in extracted values that are indexed
-
-  Expression in a query
-
-
-
-Search Element Types
-~~~~~~~~~~~~~~~~~~~~
-
-* Integer
-
-* Float
-
-* String
-
-* DateTime
-
-* SpatialFeature (use `Well Known Text`_ )
-
-* Publication (A structured type, perhaps search by decomposing to elements)
-
-* ScientificName (A structured type, perhaps search by decomposing to elements)
-
-
-.. _Well Known Text: http://en.wikipedia.org/wiki/Well-known_text
-
-
-Search Terms Extracted From Science Metadata
---------------------------------------------
 
 .. list-table::
+   :header-rows: 1
    :widths: 3 2 1 1 10
 
    * - Attribute
@@ -341,7 +306,7 @@ Search Terms Extracted From Science Metadata
      - No
      - No
      -
-   * - :attr:`variableNme`
+   * - :attr:`variableName`
      - string
      - Yes
      - Yes
@@ -393,11 +358,16 @@ Search Terms Extracted From Science Metadata
      - Same as :attr:`datemodified` in System Metadata
 
 
+
+Creating Citations from Index Fields
+------------------------------------
+
 **Table 3.** Cross reference of index fields and elements useful in citation
 best practices as exemplified in the `interagency data stewardship`_ wiki page of ESIP. *Mandatory (if applicable)
 
 
 .. list-table::
+   :header-rows: 1
    :widths: 5 5 5 5
 
    * - Citation Element
@@ -671,16 +641,114 @@ Attribute Descriptions and Notes
   (DateTime) available from sysmeta
 
 
-.. attribute:: readPrincipal
+.. attribute:: readPermission
 
   - element in permission index, used for shard query
 
 
-.. attribute:: writePrincipal
+.. attribute:: writePermission
 
   (Types.PrincipalType) Permissions on objects (e.g. available to read by user)
 
   - element in permission index, used for shard query
+
+
+.. attribute:: executePermission
+
+
+.. attribute:: changePermission
+
+
+.. attribute:: checksum
+
+
+.. attribute:: checksumAlgorithm
+
+
+.. attribute:: rightsHolder
+
+
+.. attribute:: rep_allowed
+
+
+.. attribute:: n_replicas
+
+
+.. attribute:: pref_rep_mn
+
+
+.. attribute:: blocked_rep_mn
+
+
+.. attribute:: obsoletes
+
+
+.. attribute:: obsoletedBy
+
+
+.. attribute:: datemodified
+
+
+.. attribute:: dateUploaded
+
+
+.. attribute:: origin_mn
+
+
+.. attribute:: auth_mn
+
+
+.. attribute:: replica_mn
+
+
+.. attribute:: isPublic
+
+
+.. attribute:: resourceMaps
+
+
+.. attribute:: contains
+
+
+.. attribute:: documents
+
+
+.. attribute:: isDocumentedBy
+
+
+
+..
+  NOTES etc (not rendered below)
+
+  Searching content in DataONE involves the process of matching a user provided
+  value with some value extracted from the science metadata.
+
+  Values can be simple (e.g. string, integer, floating point, date) or compound
+  (e.g. spatial coordinate constructed from two floats - the latitude and
+  longitude and a string - the coordinate system identifier).
+
+  Expression in science metadata
+
+  Expression in extracted values that are indexed
+
+  Expression in a query
+
+	* Integer
+
+	* Float
+
+	* String
+
+	* DateTime
+
+	* SpatialFeature (use `Well Known Text`_ )
+
+	* Publication (A structured type, perhaps search by decomposing to elements)
+
+	* ScientificName (A structured type, perhaps search by decomposing to elements)
+
+
+	.. _Well Known Text: http://en.wikipedia.org/wiki/Well-known_text
 
 
 
