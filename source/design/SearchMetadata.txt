@@ -296,6 +296,11 @@ are supported by the DataONE indexing system.
      - No
      - Yes
      -
+   * - :attr:`abstract`
+     - text
+     - No
+     - Yes
+     - 
    * - :attr:`title`
      - String
      - No
@@ -363,74 +368,192 @@ Creating Citations from Index Fields
 ------------------------------------
 
 **Table 3.** Cross reference of index fields and elements useful in citation
-best practices as exemplified in the `interagency data stewardship`_ wiki page of ESIP. *Mandatory (if applicable)
-
+best practices as exemplified in the `interagency data stewardship`_ wiki page
+of ESIP. * = Mandatory (if applicable). COinS tags provide a mechanism of
+embedding `Z39.88-2004`_ elements in HTML for consumption by citation manager
+tools.
 
 .. list-table::
    :header-rows: 1
-   :widths: 5 5 5 5
+   :widths: 5 5 5 5 5
 
    * - Citation Element
      - FGDC CSDGM field
      - DataCite Metadata Scheme ID and Property
      - DataONE Index Field
+     - COinS_ Tag
    * - Author or Creator*
      - idinfo > citation > citeinfo > "origin"
      - 2 Creator*
      - :attr:`author`
+     - rft.creator
    * - Release Date*
      - idinfo > citation > citeinfo > "pubdate" and sometimes "othercit"
      - 5 PublicationYear*
      - :attr:`datePublished`
+     - rft.date
    * - Title*
      - idinfo > citation > citeinfo > "title" and possibly "edition"
      - 3 Title*
      - :attr:`title`
+     - rft.title
    * - Version*
      - 
      - 15 Version
      - See notes below.
+     - 
    * - Archive and/or Distributor*
      - idinfo > citation > citeinfo > "publish"
      - 4 Publisher*
      - See notes below.
+     - rft.publisher
    * - Locator, Identifier, or Distribution Medium*
      - idinfo > citation > citeinfo > "othercit" or "onlink"
      - 1 Identifier*
      - :attr:`pid`
+     - rft.identifier
    * - Access Date and Time*
      - not applicable
      - 8 Date
-     - perhaps :attr:`datemodified`
+     - perhaps :attr:`dateUploaded`
+     - 
    * - Subset Used
      - not applicable
-     - 12 RelatedIdentifier DataCite recommends obtaining an identifier for any subset that needs to be cited as well as an identifier for the larger whole.
+     - 12 RelatedIdentifier DataCite recommends obtaining an identifier for
+       any subset that needs to be cited as well as an identifier for the
+       larger whole.
      - perhaps a reference to the resource map?
+     - 
    * - Editor or Other Important Role
      - idinfo > citation > citeinfo > "origin"
      - 7 Contributor
-     - 
+     - See notes below.
+     - rft.source
    * - Publication Place
      - idinfo > citation > citeinfo > "pubplace"
      - 17 Description
-     -
+     - See notes below.
+     - 
    * - Distributor, Associate Archive, or other Institutional Role
      - idinfo > citation > citeinfo > "othercit"
      - 7 Contributor or possibly 4 Publisher
      - "http://dataone.org"
+     - 
    * - Data Within a Larger Work
      - idinfo > citation > citeinfo > "othercit" or "lworkcit"
      - 12 RelatedIdentifier
      - perhaps a reference to the resource map?
+     - 
+   * - 
+     - 
+     - 
+     - :attr:`keyWord`
+     - rft.subject
+   * - 
+     - 
+     - 
+     - :attr:`abstract`
+     - rft.description
+   * - 
+     - 
+     - 
+     - object format name, or "data" | "metadata" | "resource map"
+     - rft.type
+   * - 
+     - 
+     - 
+     - object format type
+     - rft.format
+   * - 
+     - 
+     -
+     - constructed from bounding box
+     - rft.coverage
+
+
+
+
+**Notes**
+
+:Version:
+
+  There is no clear recommendation on how to express version. For an object
+  with a linear revision history (A is obsoleted by B is obsoleted by C),
+  object C might be considered to have a version of "2". However, it is
+  possible for an object to have a tree lineage (A1 and A2 are obsoleted by
+  B1, and B1, A3 and Z are obsoleted by C). A suggestion for a version
+  indicator in this case may be the total number of parent objects, 5 in this
+  case. Another option may be to indicate the number of contributing objects
+  at each revision, 1.1 in the first case, and 2.3 in the second.
+
+
+:Publisher:
+
+  The publisher in DataONE may in some cases be the origin member node,
+  however this will not always be the case. For example, many data sets in the
+  KNB are published by LTER, though KNB would be the member node. Where
+  possible the publisher information should be pulled from the science
+  metadata, though this may be complicated where multiple data and metadata
+  entries occur within a data package and there are several publishers listed.
+  In this case, a simple concatenation of the publishers (semi-colon + space
+  delimited) may be sufficient.
+
+
+:Date:
+
+  In the DataCite 2.2 document, a mapping between Date and the dcterms:date is
+  suggested. The description of dcterms:date is "A point or period of time
+  associated with an event in the lifecycle of the resource." In DataONE there
+  are two main dates related to an object, when the content is added to the
+  system, and when the properties of the object (access control, and so forth)
+  are modified. Since the content of the object does not change once submitted
+  to DataONE, the :attr:`SystemMetadata.dateUploaded` value seems appropriate
+  here, expressed as :attr:`dateUploaded` in the search index.
+
+
+:Subset Used:
+
+  DataONE does not provide a mechanism for identifying sets of information
+  other than through resource maps which describe data packages. It is
+  possible that a resource map may contain references to additional resource
+  maps, conceptually equivalent to subsets of content. The simplest option
+  here would be to use the identifier of the resource map object describing
+  the package in question.
+
+
+:Contributor:
+
+  Described in DataCite 2.2 as "The institution or person responsible for
+  collecting, creating, or otherwise contributing to the development of the
+  dataset", this optional element can be populated by the citeinfo/origin
+  element from FGDC.
+
+
+:Publication Place:
+
+  In CSDGM, "the name of the city (and state or province, and country, if
+  needed to identify the city) where the data set was published or released".
+
+
+:Data Within a Larger Work:
+
+  This is similar to the "Subset Used" entry except in the other direction of
+  containment. The identifier of the containing resource map relevant to the
+  current package should be used.
 
 
 
 .. _interagency data stewardship: http://wiki.esipfed.org/index.php/Interagency_Data_Stewardship/Citations/provider_guidelines
 .. _DataCite terms: http://wiki.esipfed.org/index.php/Interagency_Data_Stewardship/Citations/provider_guidelines
+.. _Z39.88-2004: http://www.niso.org/kst/reports/standards/kfile_download?id%3Austring%3Aiso-8859-1=Z39-88-2004.pdf&pt=RkGKiXzW643YeUaYUqZ1BFwDhIG4-24RJbcZBWg8uE4vWdpZsJDs4RjLz0t90_d5_ymGsj_IKVaGZww13HuDlZQ8NBt1sTxP_v4iiGqH7rSaAeVDnMfeKJrrJ_JSEGPB
+.. _COinS: http://ocoins.info/
 
 
 Attribute Descriptions and Notes
 --------------------------------
+
+.. attribute:: abstract
+
 
 .. attribute:: author
 
