@@ -1,5 +1,5 @@
 Member Node Object Replication (Draft Proposal)
-==============================================
+===============================================
 
 Replication of objects between Member Nodes (MN) within the DataONE system is
 managed by the Coordinating Nodes (CN). CNs are aware of the replication
@@ -50,6 +50,7 @@ ReplicationTask.
 
 Processing Replication Queues
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 As the hzReplicationTaskQueue is populated, each CN's Replication Service polls
 the queue for new tasks to process. Upon receiving a ReplicationTask item from
 the queue, a CN Replication Service instance calls handleReplicationTask(),
