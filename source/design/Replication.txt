@@ -79,11 +79,11 @@ lock is immediately released, and the statusResponse is sent to the CN.
 
 .. figure:: images/repl_01.png
 
-*Figure 1.* The CN Synchronization Service populates a replication queue that is
-monitored by the Replication Service. The Replication Service in turn populates
-a replication task queue based on object and node policies. The service monitors
-this queue and initiates replication between two MNs. Upon success, the
-objects's system metadata is updated to indicate that replication is complete.
+*Figure 1.* The CN Synchronization Service populates a replication task queue 
+by calling the Replication Service to create a list of tasks based on object 
+and node policies. The Replication Service monitors this queue and initiates 
+replication between two MNs. Upon success, the objects's system metadata is 
+updated to indicate that replication is complete.
 
 ..
   @startuml images/repl_01.png
