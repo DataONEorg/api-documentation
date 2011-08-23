@@ -191,6 +191,182 @@ Each of those resource maps is examined to obtain the list of identifiers for
 the *documents* field if the object is science metadata, and the *isDocumentedBy*
 field if the object is data.
 
+**Example Sequence for Index Population**
+
+The following sequence steps through the generation of index entries for three
+data packages, providing an example of how the index entries are updated
+depending on relationships between the objects being added.
+
+
+Adding Package 1
+................
+
+  .. graphviz::
+                            
+         digraph RM1 {        
+         graph [rankdir="LR", label="Package 1"];
+         A [shape=folder];    
+         B [shape=note];      
+         C [shape=oval];      
+         A -> B;              
+         A -> C;              
+       }                      
+
+A simple data package with a Resource Map *A* indicating that the metadata
+document *B* and the data object *C* together form a data package, and that
+*B* documents *C* and that *C* isDocumentedBy *B*.
+
+Index entries after Package 1 is added.
+
+  .. list-table::
+     :header-rows: 1
+     :widths: 1 3 3 3 3
+   
+     * - PID
+       - resourceMaps
+       - contains
+       - documents
+       - isDocumentedBy
+     * - A
+       - 
+       - B, C
+       -
+       -
+     * - B
+       - A
+       -
+       - C
+       -
+     * - C
+       - A
+       -
+       -
+       - B
+
+
+Adding Package 2
+................
+
+  .. graphviz::
+
+         digraph RM1 {
+         graph [rankdir="LR", label="Package 2"];
+         D [shape=folder];
+         B [shape=note];
+         E [shape=oval];
+         D -> B;
+         D -> E;
+       }
+
+A simple data package with a Resource Map *D* indicating that the metadata
+document *B* and the data object *E* together form a data package, and that
+*B* documents *E* and that *E* isDocumentedBy *B*. Note that the metadata
+document *B* is also used in Package 1.
+
+Index entries after package 2 is added. New entries and changes to existing
+are indicated in **bold**.
+
+  .. list-table::
+     :header-rows: 1
+     :widths: 1 3 3 3 3
+   
+     * - PID
+       - resourceMaps
+       - contains
+       - documents
+       - isDocumentedBy
+     * - A
+       - 
+       - B, C
+       -
+       -
+     * - B
+       - A, **D**
+       -
+       - C, **E**
+       -
+     * - C
+       - A
+       -
+       -
+       - B
+     * - D
+       - 
+       - **B, E**
+       -
+       - 
+     * - E
+       - **D**
+       -
+       -
+       - **B**
+
+
+Adding Package 3
+................
+
+  .. graphviz::
+
+         digraph RM1 {
+         graph [rankdir="LR", label="Package 3"];
+         F [shape=folder];
+         G [shape=note];
+         D [shape=folder];
+         F -> G;
+         F -> D;
+       }
+
+A data package that references another, already indexed data package
+(represented by the Resource Map *D*) as its data object.
+
+Index entries after package 3 is added. New entries and changes to existing
+are indicated in **bold**.
+
+  .. list-table::
+     :header-rows: 1
+     :widths: 1 3 3 3 3
+   
+     * - PID
+       - resourceMaps
+       - contains
+       - documents
+       - isDocumentedBy
+     * - A
+       - 
+       - B, C
+       -
+       -
+     * - B
+       - A, D
+       -
+       - C, E
+       -
+     * - C
+       - A
+       -
+       -
+       - B
+     * - D
+       - **F**
+       - B, E
+       -
+       - **G**
+     * - E
+       - D
+       -
+       -
+       - B
+     * - F
+       - 
+       - **D, G**
+       -
+       - 
+     * - G
+       - **F**
+       -
+       - **D**
+       - 
+
 
 Limitations of Multi-Valued Fields in SOLR
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
