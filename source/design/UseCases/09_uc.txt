@@ -95,63 +95,74 @@ Post Conditions
 Member Node replication.
 
 ..
-  @startuml images/09_seq.png
+@startuml images/09_seq.png
 
-  title Interactions: 09 - Replicate data from Member Node A to Member Node B
+title Interactions: 09 - Replicate data from Member Node A to Member Node B
 
-  participant "Replication API" as c_sync << Coordinating Node >>
-  participant "CRUD API" as m_crud_b << Member Node B >>
-  participant "CRUD API" as m_crud_a << Member Node A >>
+participant "Replication API" as c_sync << Coordinating Node >>
+participant "CRUD API" as m_crud_b << Member Node B >>
+participant "CRUD API" as m_crud_a << Member Node A >>
 
-    c_sync -> c_sync: placeholder so you can see the line below
-    activate c_sync
-    note right
-      token has the roles:
-      1) verifying that the replicate request originates from a CN
-      2) enables MN A to verify that the get request from MN B can
-      be trusted.
-    end note
-    c_sync -> m_crud_b: replicate(token, SystemMetadata, SourceNode)
-    activate m_crud_b
-    c_sync <-- m_crud_b: OK
-    deactivate m_crud_b
-    c_sync -> c_sync: setReplicationStatus(token, PID, QUEUED)
-    deactivate c_sync
+c_sync -> c_sync: placeholder so you can see the line below
+note right
+  token has the roles:
+  1) verifying that the replicate request originates from a CN
+  2) enables MN A to verify that the get request from MN B can
+  be trusted.
+end note
+'c_sync -> m_crud_a: allowReplicate(token, subject, PID)'
+activate c_sync
+'    m_crud_a --> c_sync: OK'
+c_sync -> m_crud_b: replicate(CNtoken, B, PID)
+activate m_crud_b
+c_sync <-- m_crud_b: OK
+'deactivate m_crud_b'
+deactivate c_sync
 
-    m_crud_b -> m_crud_a: get(token, PID)
-    activate m_crud_b
-    activate m_crud_a
-      m_crud_a -> m_crud_b: bytes
-    deactivate m_crud_a
-    m_crud_b -> m_crud_b: verify content
-    note right
-      The MN uses the System Metadata to verify
-      the checksum of the object and to determine 
-      the access control rules before committing 
-      storage of the object.
-    end note
-    deactivate c_sync
-    m_crud_b -> m_crud_b: _store(PID, bytes)
-    m_crud_b --> m_crud_b: log(PID, REPLICATE)
-    m_crud_b -> c_sync: setReplicationStatus(token, PID, COMPLETE)
-    activate c_sync
-    note right
-      - The MN has a copy of the content that needs to be 
-      verified by the CN. 
-      - The CN schedules a synchronization operation for 
-      that PID and the CN system metadata for the object
-      is updated on successful synchronization (UC06).
-      - If the synchronization fails, then the MN should be 
-      instructed to FAIL that object, which means it should 
-      not be offered for synchronization again.
-    end note
-    c_sync --> m_crud_b: OK
-    deactivate c_sync
-    deactivate m_crud_b
-    c_sync -> c_sync: Use case 06, synchronize content
-    activate c_sync
-    deactivate c_sync
-  @enduml
+m_crud_b -> m_crud_a: getReplica(Btoken, PID)
+activate m_crud_a
+'activate m_crud_b'
+m_crud_a -> c_sync: is3rdPartyAuthorized(Atoken, \nsubjectFromBtoken, pid,
+\nReplicationPermission)
+  activate c_sync
+  c_sync --> m_crud_a : YES
+deactivate c_sync
+m_crud_b -> c_sync: setReplicationStatus(token, PID, QUEUED)
+  activate c_sync
+  c_sync --> m_crud_b : OK
+  deactivate c_sync
+  m_crud_a --> m_crud_b: bytes
+  deactivate m_crud_a
+m_crud_b -> m_crud_b: verify content
+note right
+  The MN uses the System Metadata to verify
+  the checksum of the object and to determine 
+  the access control rules before committing 
+  storage of the object.
+end note
+deactivate c_sync
+m_crud_b -> m_crud_b: _store(PID, bytes)
+m_crud_b --> m_crud_b: log(PID, REPLICATE)
+m_crud_b -> c_sync: setReplicationStatus(token, PID, COMPLETE)
+activate c_sync
+note right
+  - The MN has a copy of the content that needs to be 
+  verified by the CN. 
+  - The CN schedules a synchronization operation for 
+  that PID and the CN system metadata for the object
+  is updated on successful synchronization (UC06).
+  - If the synchronization fails, then the MN should be 
+  instructed to FAIL that object, which means it should 
+  not be offered for synchronization again.
+end note
+c_sync --> m_crud_b: OK
+deactivate c_sync
+deactivate m_crud_b
+c_sync -> c_sync: Use case 06, synchronize content
+activate c_sync
+deactivate c_sync
+@enduml
+
 
 .. image:: images/09_seq.png
 
