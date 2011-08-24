@@ -122,8 +122,7 @@ Member Node replication.
     m_crud_b -> m_crud_a: getReplica(Btoken, PID)
     activate m_crud_a
     'activate m_crud_b'
-    m_crud_a -> c_sync: is3rdPartyAuthorized(Atoken, \nsubjectFromBtoken, pid,
-    \nReplicationPermission)
+    m_crud_a -> c_sync: is3rdPartyAuthorized(Atoken, \nsubjectFromBtoken, pid, \nReplicationPermission)
       activate c_sync
       c_sync --> m_crud_a : YES
     deactivate c_sync
