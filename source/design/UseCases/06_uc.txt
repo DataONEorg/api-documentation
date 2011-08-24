@@ -14,29 +14,39 @@ Goal
   Member Node are synchronized to a Coordinating Node.
 
 Summary
-  As content is added to Member Nodes, the associated system metadata and
-  science metadata documents are copied to a Coordinating Node. Once the
-  objects are registered with the Coordinating Node they are available for
-  transfer to other Coordinating and Member nodes.
+
+  As content is added to Member Nodes, the associated system metadata, science
+  metadata, and resource map documents are retrieved by a Coordinating Node.
+  Once the objects are registered with the Coordinating Node, they are
+  considered to be part of the DataONE system, and so will be managed
+  accordingly - the metadata and resource map object will be replicated
+  between Coordinating Nodes, metadata will be indexed, and the objects will
+  be replicated to other Member Nodes as required.
 
 Actors
+
   Member Node, Coordinating Node
 
 Preconditions 
+
   - CN and MN operational
   - New content available on a Member Node
 
 Triggers
+
   - Periodic polling of MNs
   - Signal to CN issued by a MN that is requesting synchronization
 
 Post Conditions
+
   - All system and science metadata records from a MN are also present on the
     CN
+
   - The search index is updated with the new content
 
 
 .. image:: images/06_uc.png
+
 
 *Figure 1.* Use case diagram indicating the components and other use cases
 involved in this use case.
@@ -53,7 +63,7 @@ rather than a READ event. The MN determines this through the User Agent header
 .. image:: images/06_act.png
 
 *Figure 3.* Activity diagram indicating the execution flow after attempting to
-retrieve the system metadata for the object from the CN. 
+retrieve the system metadata for the object from the CN.
 
 
 .. 
@@ -73,64 +83,77 @@ retrieve the system metadata for the object from the CN.
 
 .. 
     @startuml images/06_seq.png
-    participant "CRUD API" as c_crud << CN >>
-    participant "Task Queue" as cn_queue << CN >>
-    participant "Notification API" as c_notify << CN >>
-    participant "Synchronization API" as c_sync << CN >>
-    participant "Replication API" as m_rep << MN >>
-    participant "CRUD API" as m_crud << MN >>
+    participant "Repl Queue" as cn_repl << CN >>
+    participant "Index Queue" as cn_index << CN >>
+    participant "Object Store" as cn_objs << CN >>
+    participant "Sync Queue" as cn_queue << CN >>
+    participant "Node Lock" as c_nodelock << CN >>
+    participant "Node List" as c_nodes << CN >>
+    participant "Synchronization" as c_sync << CN >>
+    participant "Read API" as m_read << MN >>
 
-    activate cn_queue
-    m_crud -> c_notify: notify(token, pid, OBJECT_CREATED)
-    c_notify -> cn_queue: addTask(SYNC_OBJECT, node, pid)
-    note right
-      notification triggered by successful 
-      create operation on MN.
-    end note
+    'm_crud -> c_notify: notify(session, pid, OBJECT_CREATED)
+    'c_notify -> cn_queue: addTask(SYNC_OBJECT, node, pid)
+    'note right
+    '  notification triggered by successful 
+    '  create operation on MN.
+    'end note
 
-    m_rep -> c_notify: setReplicationStatus(token, pid, COMPLETE)
-    c_notify -> cn_queue: addTask(SYNC_OBJECT, node, pid)
-    note right
-      notification triggered by completed 
-      replication operation on MN.
-    end note
+    'm_rep -> c_notify: setReplicationStatus(token, pid, COMPLETE)
+    'c_notify -> cn_queue: addTask(SYNC_OBJECT, node, pid)
+    'note right
+    '  notification triggered by completed 
+    '  replication operation on MN.
+    'end note
 
-    c_sync -> m_rep: listObjects(token, startTime, ...)
-    note right
-      Periodic call to listObjects 
-      ensures complete coverage 
-      of all MNs
-    end note
+    c_sync -> c_sync: node_id = getNextNodeToSynchronize() 
     activate c_sync
-    activate m_rep
-    c_sync <-- m_rep: ObjectList
-    deactivate m_rep
-    loop for each pid
-      c_sync -> cn_queue: addTask(SYNC_OBJECT, node, pid)
+    c_sync -> c_nodes: lockNode(node_id)
+    activate c_nodes
+    c_nodes -> c_nodelock: lock(node_id)
+    activate c_nodelock
+    c_nodes -> c_sync: OK
+    deactivate c_nodes
+    c_sync -> c_nodes: getLastUpdateTime(node_id)
+    activate c_nodes
+    c_nodes -> c_sync: startTime
+    deactivate c_nodes
+    
+    c_sync -> m_read: listObjects(session, startTime, ...)
+    activate m_read
+    c_sync <-- m_read: ObjectList
+    deactivate m_read
+    loop for each PID
+      c_sync -> cn_queue: addTask(SYNC_OBJECT, node_id, PID)
+      activate cn_queue
     end
     deactivate c_sync
 
     loop for each task
       c_sync -> cn_queue: getNextTask()
-      note right
-        Process the task queue
-      end note
       activate c_sync
-      cn_queue --> c_sync: Node, pid
-      c_sync -> m_crud: getSystemMetadata(token, pid)
-      note left
-        It is always necessary to retrieve the 
-        system metadata from the MN in order 
-        to determine how to process this object.
-        Is it a duplicate? Is it new? Is it 
-        an attempt to use an existing identifier?
-      end note
-      m_crud --> c_sync: SystemMetadata
-      c_sync -> c_crud: getSystemMetadata(pid)
-      note right
-        Continue in activity diagram below.
-      end note
+      cn_queue --> c_sync: Node, PID
+      c_sync -> m_read: getSystemMetadata(session, PID)
+      m_read --> c_sync: SystemMetadata
+      c_sync -> m_read: get(session, PID)
+      m_read -> c_sync: object
+      c_sync -> c_sync: processObject(PID, object, SystemMetadata)
+      c_sync -> cn_objs: create(session, PID, object, SystemMetadata)
+      activate cn_objs
+      cn_objs -> c_sync: OK
+      deactivate cn_objs
+      c_sync -> cn_index: add_task(INDEX_OBJECT, PID, objectFormat)
+      activate cn_index
+      c_sync -> cn_repl: add_task(REPLICATE_OBJECT, PID)
+      activate cn_repl
+      deactivate cn_queue
     end
+    c_sync -> c_nodes: setLastCheckedTime(node_id, startTime)
+    activate c_nodes
+    c_nodes -> c_sync: OK
+    deactivate c_nodes
+    c_sync -> c_nodelock: unlock(node_id)
+    deactivate c_nodelock
 
     deactivate c_sync
     @enduml
