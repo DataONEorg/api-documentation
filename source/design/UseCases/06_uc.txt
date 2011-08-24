@@ -54,11 +54,9 @@ involved in this use case.
 .. image:: images/06_seq.png
 
 
-*Figure 2.* Sequence diagram for use case 06. Synchronize metadata between
-Member and Coordinating Node. Note that the log messages record a REPLICATE
-rather than a READ event. The MN determines this through the User Agent header
-(NB - this assumes that CNs only call MN.get to do replication).
-
+*Figure 2.* Sequence diagram for use case 06. Synchronize content between
+Member and Coordinating Node. Detail for the *processObject()* step provided
+in the activity diagram below.
 
 .. image:: images/06_act.png
 
@@ -161,13 +159,16 @@ retrieve the system metadata for the object from the CN.
 
 .. 
    @startuml images/06_act.png
-   (*) --> if "CN_crud.getSystemMetadata(pid)" then
+   (*) --> [processObject()] if "CN_read.getSystemMetadata(PID)" then
      if "Duplicate Object?" then
        -->[Yes] "Duplicate Content"
        --> "Update Replica Info"
+       --> "Store System Metadata"
+       --> "Notify watchers\nIndex, Replication"
        --> (*)
      else 
        -->[No] "Error: Duplicate Identifier"
+       --> "Notify MN"
        --> (*)
      endif
 
@@ -175,13 +176,13 @@ retrieve the system metadata for the object from the CN.
      ->[FAIL] "New content"
      note right
        The content is unknown to DataONE
-       so needs to be examined and its
-       location recorded and optionally
+       so needs to be examined, its
+       location recorded, and optionally
        retrieved and stored on the CN.
      end note
-     if "is Science Metadata?" then
-       ->[yes] "Get science metadata from MN"
-       --> "Store on CN"
+     if "Science Metadata \n or Resource Map?" then
+       ->[yes] "Get object from MN"
+       --> "Store object on CN"
        --> "Update Replica Info"
      else
        -->[no] "Update Replica Info"
