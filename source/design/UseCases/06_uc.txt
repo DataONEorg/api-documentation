@@ -84,6 +84,7 @@ retrieve the system metadata for the object from the CN.
     participant "Repl Queue" as cn_repl << CN >>
     participant "Index Queue" as cn_index << CN >>
     participant "Object Store" as cn_objs << CN >>
+    participant "PID Lock" as c_pidlock << CN >>
     participant "Sync Queue" as cn_queue << CN >>
     participant "Node Lock" as c_nodelock << CN >>
     participant "Node List" as c_nodes << CN >>
@@ -103,15 +104,24 @@ retrieve the system metadata for the object from the CN.
     '  notification triggered by completed 
     '  replication operation on MN.
     'end note
-
-    c_sync -> c_sync: node_id = getNextNodeToSynchronize() 
+    c_sync -> c_nodes: getNextNodeNotScheduled()
     activate c_sync
-    c_sync -> c_nodes: lockNode(node_id)
     activate c_nodes
-    c_nodes -> c_nodelock: lock(node_id)
-    activate c_nodelock
-    c_nodes -> c_sync: OK
+    c_nodes -> c_sync: node_id
     deactivate c_nodes
+    c_sync -> c_nodes: setNodeScheduledSyncTime( node_id, now() + offset)
+    c_sync -> c_nodes: setNodeSynchronizingNode( node_id, me.node_id )
+    c_sync -> c_sync: addScheduledTaskToQuartz( node_id )
+    deactivate c_sync
+    
+    c_sync -> c_nodelock: lockNode(node_id)
+    activate c_sync
+    note right
+      Start of synchronization process 
+      triggered by scheduled quartz job
+    end note
+    activate c_nodelock
+    c_nodelock -> c_sync: OK
     c_sync -> c_nodes: getLastUpdateTime(node_id)
     activate c_nodes
     c_nodes -> c_sync: startTime
@@ -125,34 +135,57 @@ retrieve the system metadata for the object from the CN.
       c_sync -> cn_queue: addTask(SYNC_OBJECT, node_id, PID)
       activate cn_queue
     end
+    c_sync -> c_nodes: setLastUpdateTime(node_id, startTime)
+    activate c_nodes
+    c_nodes -> c_sync: OK
+    deactivate c_nodes
+
+    c_sync -> c_nodelock: unlockNode( node_id )    
     deactivate c_sync
+    deactivate c_nodelock
 
     loop for each task
       c_sync -> cn_queue: getNextTask()
       activate c_sync
+      cn_queue -> c_pidlock: lockPID( PID )
+      activate c_pidlock
+      note right
+        The PID lock may be a property that 
+        is set on the entry in the sync task
+        queue. 
+      end note
       cn_queue --> c_sync: Node, PID
-      c_sync -> m_read: getSystemMetadata(session, PID)
-      m_read --> c_sync: SystemMetadata
-      c_sync -> m_read: get(session, PID)
-      m_read -> c_sync: object
-      c_sync -> c_sync: processObject(PID, object, SystemMetadata)
-      c_sync -> cn_objs: create(session, PID, object, SystemMetadata)
+      group ProcessPID( PID )
+        c_sync -> m_read: getSystemMetadata( PID )
+        m_read -> c_sync: SystemMetadata
+        c_sync -> m_read: get( PID )
+        m_read -> c_sync: object
+        c_sync -> c_sync: work
+        note right
+          Check for new object, 
+          updates to properties
+        end note
+      end
+      c_sync -> cn_objs: createOrUpdate(session, PID, object, SystemMetadata)
       activate cn_objs
+      cn_objs -> cn_index: add_task(INDEX_OBJECT, PID, objectFormat)
+      activate cn_index
       cn_objs -> c_sync: OK
       deactivate cn_objs
-      c_sync -> cn_index: add_task(INDEX_OBJECT, PID, objectFormat)
-      activate cn_index
+      c_sync -> cn_queue: popTask( PID )
+      cn_queue -> c_pidlock: unlockPID( PID )
+      deactivate cn_queue
+      deactivate c_pidlock
       c_sync -> cn_repl: add_task(REPLICATE_OBJECT, PID)
       activate cn_repl
       deactivate cn_queue
     end
-    c_sync -> c_nodes: setLastCheckedTime(node_id, startTime)
+    
+    c_sync -> c_nodes: setNodeUnscheduled( node_id )
     activate c_nodes
-    c_nodes -> c_sync: OK
+    c_nodes -> c_nodes: setNodeScheduledSyncTime( NULL )
+    c_nodes -> c_nodes: setNodeSynchronizingNode( NULL )
     deactivate c_nodes
-    c_sync -> c_nodelock: unlock(node_id)
-    deactivate c_nodelock
-
     deactivate c_sync
     @enduml
 
