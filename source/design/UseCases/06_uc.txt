@@ -104,45 +104,44 @@ retrieve the system metadata for the object from the CN.
     '  notification triggered by completed 
     '  replication operation on MN.
     'end note
-    c_sync -> c_nodes: getNextNodeNotScheduled()
-    activate c_sync
-    activate c_nodes
-    c_nodes -> c_sync: node_id
-    deactivate c_nodes
-    c_sync -> c_nodes: setNodeScheduledSyncTime( node_id, now() + offset)
-    c_sync -> c_nodes: setNodeSynchronizingNode( node_id, me.node_id )
-    c_sync -> c_sync: addScheduledTaskToQuartz( node_id )
-    deactivate c_sync
     
-    c_sync -> c_nodelock: lockNode(node_id)
-    activate c_sync
-    note right
-      Start of synchronization process 
-      triggered by scheduled quartz job
-    end note
-    activate c_nodelock
-    c_nodelock -> c_sync: OK
-    c_sync -> c_nodes: getLastUpdateTime(node_id)
-    activate c_nodes
-    c_nodes -> c_sync: startTime
-    deactivate c_nodes
+    group populateSynchronizationQueue
+      c_sync -> c_nodelock: lockNode(node_id)
+      activate c_sync
+      note right
+        Start of synchronization 
+        process triggered by quartz
+      end note
+      activate c_nodelock
+      c_nodelock -> c_sync: OK
+      c_sync -> c_nodes: getLastUpdateTime(node_id)
+      activate c_nodes
+      c_nodes -> c_sync: startTime
+      deactivate c_nodes
     
-    c_sync -> m_read: listObjects(session, startTime, ...)
-    activate m_read
-    c_sync <-- m_read: ObjectList
-    deactivate m_read
-    loop for each PID
-      c_sync -> cn_queue: addTask(SYNC_OBJECT, node_id, PID)
-      activate cn_queue
-    end
-    c_sync -> c_nodes: setLastUpdateTime(node_id, startTime)
-    activate c_nodes
-    c_nodes -> c_sync: OK
-    deactivate c_nodes
+      c_sync -> m_read: listObjects(session, startTime, ...)
+      activate m_read
+      c_sync <-- m_read: ObjectList
+      deactivate m_read
+      loop for each PID
+        c_sync -> cn_queue: addTask(SYNC_OBJECT, node_id, PID)
+        activate cn_queue
+      end
+      note left
+        addTask should fail if PID is already in the list and
+        the PID is NOT locked. This enables very recent updates
+        to a PID to occur and be correctly managed by the 
+        overall synchronization process.
+      end note
+      c_sync -> c_nodes: setLastUpdateTime(node_id, startTime)
+      activate c_nodes
+      c_nodes -> c_sync: OK
+      deactivate c_nodes
 
-    c_sync -> c_nodelock: unlockNode( node_id )    
-    deactivate c_sync
-    deactivate c_nodelock
+      c_sync -> c_nodelock: unlockNode( node_id )    
+      deactivate c_sync
+      deactivate c_nodelock
+    end
 
     loop for each task
       c_sync -> cn_queue: getNextTask()
@@ -180,12 +179,6 @@ retrieve the system metadata for the object from the CN.
       activate cn_repl
       deactivate cn_queue
     end
-    
-    c_sync -> c_nodes: setNodeUnscheduled( node_id )
-    activate c_nodes
-    c_nodes -> c_nodes: setNodeScheduledSyncTime( NULL )
-    c_nodes -> c_nodes: setNodeSynchronizingNode( NULL )
-    deactivate c_nodes
     deactivate c_sync
     @enduml
 
