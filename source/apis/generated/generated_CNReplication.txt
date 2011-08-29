@@ -18,10 +18,14 @@
      - ``PUT /meta/replication/{pid}``
      - :func:`updateReplicationMetadata`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`replicaMetadata<Types.Replica>`) ``->`` boolean
-   * - 
+   * - Tier 4
      - ``PUT /meta/policy/{pid}``
      - :func:`setReplicationPolicy`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`policy<Types.ReplicationPolicy>`) ``->`` boolean
+   * - Tier 4
+     - ``GET /authorized/replication/{pid}``
+     - :func:`isReplicationAuthorized`
+     - (:class:`session<Types.Session>`, :class:`targetNodeSubject<Types.Subject>`, :class:`pid<Types.Identifier>`, :class:`executePermission<Types.Permission>`) ``->`` boolean
 
 
 
@@ -128,5 +132,56 @@
    :raises Exceptions.NotFound: ``(errorCode=404, detailCode=4884)``
 
    :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=4885)``
+
+
+
+
+.. function:: isReplicationAuthorized(session,targetNodeSubject,pid,executePermission) -> boolean
+
+   Verifies that a replication event was initiated by a CN by comparing the target node's identifiying subject with a known list of scheduled replication tasks.
+
+   Successful completion of the operation is indicated by returning a HTTP status of 200.
+
+   Failure of the operation MUST be indicated by returning an appropriate exception.
+
+   :REST URL: ``GET /authorized/replication/{pid}``
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :type session: :class:`Types.Session`
+
+   :param targetNodeSubject: The subject that identifies the target node, with a value extracted from the X.509 certificate passed in during the call to CNReplication.replicate().
+   :type targetNodeSubject: :class:`Types.Subject`
+
+   :param pid: The identifier of the object to be replicated.
+   :type pid: :class:`Types.Identifier`
+
+   :param executePermission: The value of the permission to be checked, in this case Permission.EXECUTE
+   :type executePermission: :class:`Types.Permission`
+
+   :returns: True on success
+   :rtype: boolean
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4870)``
+
+     The method functionality is not implemented.
+
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=4871)``
+
+     Replication of PID is not authorized for the subject listed.
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4872)``
+
+     An internal server error occurred.
+
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4873)``
+
+     The replication request is invalid.
+
+   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=4874)``
+
+     The PID does not exist as an existing object.
+
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=4875)``
+
+     The session information is invalid.
 
 

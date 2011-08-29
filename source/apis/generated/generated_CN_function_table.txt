@@ -131,10 +131,14 @@
      - ``PUT /meta/replication/{pid}``
      - :func:`CNReplication.updateReplicationMetadata`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`replicaMetadata<Types.Replica>`) ``->`` boolean
-   * - 
+   * - Tier 4
      - ``PUT /meta/policy/{pid}``
      - :func:`CNReplication.setReplicationPolicy`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`policy<Types.ReplicationPolicy>`) ``->`` boolean
+   * - Tier 4
+     - ``GET /authorized/replication/{pid}``
+     - :func:`CNReplication.isReplicationAuthorized`
+     - (:class:`session<Types.Session>`, :class:`targetNodeSubject<Types.Subject>`, :class:`pid<Types.Identifier>`, :class:`executePermission<Types.Permission>`) ``->`` boolean
    * - Tier 2
      - ``PUT /node/{nodeid}``
      - :func:`CNRegister.updateNodeCapabilities`

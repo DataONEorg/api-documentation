@@ -276,6 +276,11 @@ Failure of the operation MUST be indicated by returning an appropriate exception
      - Updates the replication policy entry for an object by updating the system metadata.
 Successful completion of the operation is indicated by returning a HTTP status of 200.
 Failure of the operation MUST be indicated by returning an appropriate exception.
+   * - \
+     - :func:`CNReplication.isReplicationAuthorized`
+     - Verifies that a replication event was initiated by a CN by comparing the target node's identifiying subject with a known list of scheduled replication tasks.
+Successful completion of the operation is indicated by returning a HTTP status of 200.
+Failure of the operation MUST be indicated by returning an appropriate exception.
    * - :mod:`CNRegister`
      - :func:`CNRegister.updateNodeCapabilities`
      - Update the capabilities document for the specified node.
