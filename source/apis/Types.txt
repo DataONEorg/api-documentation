@@ -82,20 +82,14 @@ Data Types in CICore
   Checksum -- ChecksumAlgorithm
 
   class DescribeResponse {
-    +DataONE-ObjectFormat : ObjectFormat
+    +DataONE-fmtid : ObjectFormatIdentifier
     +Content-Length : integer
     +Last-Modified : DateTime
     +DataONE-Checksum : Checksum
   }
-  DescribeResponse -- ObjectFormat
+  DescribeResponse -- ObjectFormatIdentifier
   DescribeResponse -- Checksum
   DescribeResponse -- DateTime
-
-  enum Environment
-    Environment : dev
-    Environment : test
-    Environment : staging
-    Environment : prod
 
   enum Event
     Event : CREATE
@@ -158,10 +152,10 @@ Data Types in CICore
     services : Services[0..1]
     synchronization : Synchronization[0..1]
     health : Nodehealth[0..1]
+    subject: Subject[0..*]
     replicate : boolean
     synchronize : boolean
     type : NodeType
-    environment : Environment[0..1]
   }
   Node -- NodeReference
   Node -- NonEmptyString
@@ -169,7 +163,6 @@ Data Types in CICore
   Node o-- Synchronization
   Node o-- NodeHealth
   Node -- NodeType
-  Node o-- Environment
 
   class NodeHealth {
     ping : Ping
@@ -193,6 +186,7 @@ Data Types in CICore
   class ObjectFormat {
     fmtid : ObjectFormatIdentifier
     formatName : string
+    scienceMetadata: boolean
   }
   ObjectFormat -- ObjectFormatIdentifier
 
@@ -344,7 +338,7 @@ Data Types in CICore
 
   class SystemMetadata {
     + identifier : Identifier
-    + objectFormat : ObjectFormat
+    + fmtid : ObjectFormatIdentifier
     + size : long
     + checksum : Checksum
     + submitter : Subject
@@ -361,7 +355,7 @@ Data Types in CICore
     + replica : Replica[0...*]
   }
   SystemMetadata o-- Identifier
-  SystemMetadata -- ObjectFormat
+  SystemMetadata -- ObjectFormatIdentifier
   SystemMetadata -- Subject
   SystemMetadata o-- AccessPolicy
   SystemMetadata o-- ReplicationPolicy
@@ -649,20 +643,20 @@ Data Types in CICore
   ..
     @startuml images/class_describeresponse.png
     class DescribeResponse {
-      +DataONE-ObjectFormat : ObjectFormat
+      +DataONE-fmtid : ObjectFormatIdentifier
       +Content-Length : integer
       +Last-Modified : DateTime
       +DataONE-Checksum : Checksum
     }
-    DescribeResponse -- ObjectFormat
+    DescribeResponse -- ObjectFormatIdentifier
     DescribeResponse -- Checksum
     DescribeResponse -- DateTime
     @enduml
 
-  .. attribute:: DataONE-ObjectFormat
+  .. attribute:: DataONE-fmtid
 
-     The value of the :attr:`SystemMetadata.objectFormat` entry available in
-     the :class:`SystemMetadata`.
+     The value of the :attr:`SystemMetadata.fmtid` entry available in the
+     :class:`SystemMetadata`.
 
   .. attribute:: Content-Length
 
@@ -690,62 +684,13 @@ Data Types in CICore
     Last-Modified: Wed, 16 Dec 2009 13:58:34 GMT
     Content-Length: 10400
     Content-Type: application/octet-stream
-    DataONE-ObjectFormat: eml://ecoinformatics.org/eml-2.0.1
+    DataONE-fmtid: eml://ecoinformatics.org/eml-2.0.1
     DataONE-Checksum: SHA-1,2e01e17467891f7c933dbaa00e1459d23db3fe4f
 
 
 
 ..                                    ######
 .. include:: types_errors.txt
-
-
-
-..                                    ######
-.. class:: Environment
-
-  Indicates which of the operating environments a component is operating in.
-  Possible environments include: *dev*, *test*, *staging*, and *prod*. There
-  is a general progression of components (Coordinating Nodes, Member Nodes,
-  Investigator Toolkit components) through each stage during development.
-  Components operating in the production environment represent the latest
-  stable release of the infrastructure.
-
-  *dev*
-    The component is under active development, should not be considered
-    stable, and may or may not pass relevant tests.
-
-  *test*
-    The component is operating in a test environment where unit, integration,
-    and overall stability and compliance tests are being performed.
-
-  *staging*
-
-    Staging provides an environment where infrastructure is being prepared for
-    an upgrade. The intent is that a staging environment will be used to
-    deploy updated services in preparation for switching to production.
-
-  *prod*
-    The component is operating in the DataONE production environment. Changes
-    should not be made without appropriate coordination with the component
-    administrator.
-
-  As represented in XMLSchema:
-
-  .. LiteralInclude::   /d1_schemas_v1/dataoneTypes.xsd
-    :language: xml
-    :start-after: <!-- Environment Enumeration -->
-    :end-before: <!-- Node State -->
-
-  .. image:: images/class_environment.png
-
-  ..
-    @startuml images/class_environment.png
-    enum Environment
-      Environment : dev
-      Environment : test
-      Environment : staging
-      Environment : prod
-    @enduml
 
 
 
@@ -1025,10 +970,10 @@ Data Types in CICore
       services : Services[0..1]
       synchronization : Synchronization[0..1]
       health : Nodehealth[0..1]
+      subject: Subject[0..*]
       replicate : boolean
       synchronize : boolean
       type : NodeType
-      environment : Environment[0..1]
     }
     Node -- NodeReference
     Node -- NonEmptyString
@@ -1036,7 +981,6 @@ Data Types in CICore
     Node o-- Synchronization
     Node o-- NodeHealth
     Node -- NodeType
-    Node o-- Environment
     @enduml
 
 
@@ -1098,7 +1042,7 @@ Data Types in CICore
   .. LiteralInclude::   /d1_schemas_v1/dataoneTypes.xsd
      :language: xml
      :start-after: <!-- NodeReference -->
-     :end-before: <!-- Node Type Enumeration -->
+     :end-before: <!-- Object Format -->
 
   .. image:: images/class_nodereference.png
 
@@ -1142,7 +1086,7 @@ Data Types in CICore
   .. LiteralInclude::   /d1_schemas_v1/dataoneTypes.xsd
      :language: xml
      :start-after: <!-- Object Format Identifier -->
-     :end-before: <!-- Permission
+     :end-before: <!-- NonEmptyString800
 
   .. image:: images/class_objectformatidentifier.png
   
@@ -1173,6 +1117,11 @@ Data Types in CICore
   
      A human readable name that describes the object format
 
+  .. attribute:: scienceMetadata
+
+    A boolean value indicating if the object format should be treated as science 
+    metadata and processed accordingly.
+
   .. image:: images/class_objectformat.png
 
   ..
@@ -1180,6 +1129,7 @@ Data Types in CICore
     class ObjectFormat {
       fmtid : ObjectFormatIdentifier
       formatName : string
+      scienceMetadata: boolean
     }
     ObjectFormat -- ObjectFormatIdentifier
     @enduml
@@ -1954,7 +1904,7 @@ Data Types in CICore
     @startuml images/class_systemmetadata.png
     class SystemMetadata {
       + identifier : Identifier
-      + objectFormat : ObjectFormat
+      + fmtid : ObjectFormatIdentifier
       + size : long
       + checksum : Checksum
       + submitter : Subject
@@ -1971,7 +1921,7 @@ Data Types in CICore
       + replica : Replica[0...*]
     }
     SystemMetadata o-- Identifier
-    SystemMetadata -- ObjectFormat
+    SystemMetadata -- ObjectFormatIdentifier
     SystemMetadata -- Subject
     SystemMetadata o-- AccessPolicy
     SystemMetadata o-- ReplicationPolicy
