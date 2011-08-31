@@ -546,6 +546,47 @@ special system identity that signifies it is a "trusted" principal of the
 DataONE system.  For most instances, this certificate will serve identically to
 one generated during the authentication process of normal user.
 
+Portal Delegation
+------------------
+For web clients, we can use the CILogon portal delegation approach.
+
+	@startuml images/portal_01.png
+	participant "Browser" as browser
+	participant "CN" as cn
+	participant "Mercury" as mercury
+	participant "Portal" as portal
+	participant "CILogon" as cilogon
+   
+	group login
+	portal -> cilogon: get certificate
+	portal <- cilogon: certificate
+	end
+	group https://cn-dev.dataone.org/cn/v1/object?query=
+	browser -> cn: search(cookie)
+	cn --> portal: get certificate (cookie)
+	note right
+		same server
+    end note
+	cn <-- portal: certificate
+	cn -> mercury: search(certificate)
+	note right
+		different server
+    end note		
+	cn <- mercury: results
+	browser <- cn: results
+	end
+   @enduml
+   
+.. image:: images/portal_01.png
+
+*Figure 6.* Authenticated search going through CN.
+The browser is the client with no certificate.
+The portal keeps the user's client certificate.
+The CN looks up the client certificate using the client cookie.
+The CN includes the client certificate in the request that is sent to Mercury.
+Results are returned to the client as though they were retrieved directly with a certificate.
+
+
 Session Management (Alternative Scenario)
 -----------------------------------------
 This is a deprecated scenario that describes the use of a separate Session
@@ -626,7 +667,7 @@ to :func:`CN_auth.getAuthSession`.
 
 .. figure:: images/auth_02.png
 
-*Figure 6.* Authentication and session management assuming that the CN runs a
+*Figure 7.* Authentication and session management assuming that the CN runs a
 seperate SessionService that creates and tracks sessions. This is an
 alternative scenario based on the idea that CILogon may not be able to make
 calls to the Identity Service, in which case the separate Session Service would
