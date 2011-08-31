@@ -550,31 +550,31 @@ Portal Delegation
 ------------------
 For web clients, we can use the CILogon portal delegation approach.
 ..
-	@startuml images/portal_01.png
-	participant "Browser" as browser
-	participant "CN" as cn
-	participant "Mercury" as mercury
-	participant "Portal" as portal
-	participant "CILogon" as cilogon
+   @startuml images/portal_01.png
+   participant "Browser" as browser
+   participant "CN" as cn
+   participant "Mercury" as mercury
+   participant "Portal" as portal
+   participant "CILogon" as cilogon
    
-	group login
-	portal -> cilogon: get certificate
-	portal <- cilogon: certificate
-	end
-	group https://cn-dev.dataone.org/cn/v1/object?query=
-	browser -> cn: search(cookie)
-	cn --> portal: get certificate (cookie)
-	note right
-		same server
-    end note
-	cn <-- portal: certificate
-	cn -> mercury: search(certificate)
-	note right
-		different server
-    end note		
-	cn <- mercury: results
-	browser <- cn: results
-	end
+   group login
+   portal -> cilogon: get certificate
+   portal <- cilogon: certificate
+   end
+   group https://cn-dev.dataone.org/cn/v1/object?query=
+   browser -> cn: search(cookie)
+   cn --> portal: get certificate (cookie)
+   note right
+      same server
+   end note
+   cn <-- portal: certificate
+   cn -> mercury: search(certificate)
+   note right
+      different server
+   end note		
+   cn <- mercury: results
+   browser <- cn: results
+   end
    @enduml
    
 .. image:: images/portal_01.png
