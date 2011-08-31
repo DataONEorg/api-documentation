@@ -21,15 +21,7 @@
    * - Tier 1
      - ``GET /monitor/object``
      - :func:`MNCore.getObjectStatistics`
-     - (``[format]``, ``[pid]``) ``->`` :class:`Types.ObjectStatistics`
-   * - Tier 1
-     - ``GET /monitor/event``
-     - :func:`MNCore.getOperationStatistics`
-     - (:class:`session<Types.Session>`, ``[period]``, :class:`[requestor]<Types.Subject>`, :class:`[event]<Types.Event>`, :class:`[format]<Types.ObjectFormat>`) ``->`` :class:`Types.MonitorList`
-   * - Tier 1
-     - ``GET /monitor/status``
-     - :func:`MNCore.getStatus`
-     - () ``->`` :class:`Types.StatusResponse`
+     - (``[fmtid]``, ``[pid]``) ``->`` :class:`Types.ObjectStatistics`
    * - Tier 1
      - ``GET /  or  GET /node``
      - :func:`MNCore.getCapabilities`

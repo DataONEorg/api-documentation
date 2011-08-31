@@ -21,15 +21,7 @@
    * - Tier 1
      - ``GET /monitor/object``
      - :func:`getObjectStatistics`
-     - (``[format]``, ``[pid]``) ``->`` :class:`Types.ObjectStatistics`
-   * - Tier 1
-     - ``GET /monitor/event``
-     - :func:`getOperationStatistics`
-     - (:class:`session<Types.Session>`, ``[period]``, :class:`[requestor]<Types.Subject>`, :class:`[event]<Types.Event>`, :class:`[format]<Types.ObjectFormat>`) ``->`` :class:`Types.MonitorList`
-   * - Tier 1
-     - ``GET /monitor/status``
-     - :func:`getStatus`
-     - () ``->`` :class:`Types.StatusResponse`
+     - (``[fmtid]``, ``[pid]``) ``->`` :class:`Types.ObjectStatistics`
    * - Tier 1
      - ``GET /  or  GET /node``
      - :func:`getCapabilities`
@@ -114,19 +106,19 @@
 
 
 
-.. function:: getObjectStatistics([format],[pid]) -> ObjectStatistics
+.. function:: getObjectStatistics([fmtid],[pid]) -> ObjectStatistics
 
-   Returns the number of objects stored on the Member Node at the time the call is serviced. The count may be restricted to a particular object format or a filter on the PID.
+   Returns the number of objects stored on the Member Node at the time the call is serviced. The count may be restricted by simple filters (starts with)applied to a particular object format or PID. Optional simple restriction filters may be used in the request to limit the number of records in the response. If filters for both pid and object format are present, the response matches the logical AND of the filters.
 
    Access control rules are not applied to the count, so the actual record count may differ from the number of records that are accessible through other calls such as :func:`MN.listObjects`, however the response MUST be indicative of the number of objects available through the DataONE service interfaces.
 
    .. Note:: Functionality of this method has been simplfiied from the 0.5 description so that the response reflects the current state of the Member Node. Historical information should be collated by a monitoring service if necessary. This change was made to reduce the operational requirements for Member Node services.
 
    :REST URL: ``GET /monitor/object``
-   :param format: Limit to objects of given format.
-   :type format: string
+   :param fmtid: Limit to objects of format that starts-with or exactly matches the provided string. A null or missing value matches all formats. The first character of the value indicates if the match should be exact "E", or starts-with "S".
+   :type fmtid: string
 
-   :param pid: Filter on identifier. Wildcards characters (?: match any single character; \*: match any sequence of characters) SHOULD be supported by this method. If the implementation does not support wildcard characters for filtering PIDs, then an :exc:`InvalidRequest` MUST be raised if such characters are present unescaped in the request.
+   :param pid: Limit to objects with PIDs that start-with this value. A null or missing value matches all PIDs.
    :type pid: string
 
    :returns: Number of objects available on the node that match the request.
@@ -136,88 +128,14 @@
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2061)``
 
-   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=2062)``
-
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=2063)``
 
    :raises Exceptions.InsufficientResources: ``(errorCode=413, detailCode=2064)``
 
-   :raises Exceptions.UnsupportedType: ``(errorCode=400, detailCode=2065)``
+     The server is not able to fulfill the request due to a limitation of resources.
 
 
 .. include:: ../examples/getObjectStatistics.txt
-
-
-
-
-.. function:: getOperationStatistics(session,[period],[requestor],[event],[format]) -> MonitorList
-
-   Returns the number of operations that have been serviced by the node over time periods of one and 24 hours.
-
-   .. Note:: Functionality of this method has been simplfiied from the 0.5 description so that the response reflects the current state of the Member Node. Historical information should be collated by a monitoring service if necessary. This change was made to reduce the operational requirements for Member Node services.
-
-   :REST URL: ``GET /monitor/event``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
-   :type session: :class:`Types.Session`
-
-   :param period: An ISO8601 compatible DateTime range specifying the time range for which to return operation statistics.
-   :type period: integer
-
-   :param requestor: Limit to operations performed by given requestor identity.
-   :type requestor: :class:`Types.Subject`
-
-   :param event: Enumerated value indicating the type of event being examined
-   :type event: :class:`Types.Event`
-
-   :param format: Limit to events involving objects of the specified format.
-   :type format: :class:`Types.ObjectFormat`
-
-   :returns: List of statistics.
-   :rtype: :class:`Types.MonitorList`
-
-   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2080)``
-
-   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2081)``
-
-   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=2082)``
-
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=2083)``
-
-   :raises Exceptions.InsufficientResources: ``(errorCode=413, detailCode=2084)``
-
-   :raises Exceptions.UnsupportedType: ``(errorCode=400, detailCode=2085)``
-
-
-.. include:: ../examples/getOperationStatistics.txt
-
-
-
-
-.. function:: getStatus() -> StatusResponse
-
-   This function is similar to :func:`MN_health.ping` but returns a more complete status which may include information such as planned service outages.
-
-   This method provide a mechanism for notification to Coordinating Nodes at a higher frequency than through setting properties in the node registry information.
-
-   The response to a *getStatus* request is currently undefined, but will be a structure containing information that can be used by the Coordinating Nodes for notification of pending outages, software changes, or other significant events as described in :doc:`/design/UseCases/10_uc`.
-
-   :Use Cases:
-     :doc:`UC10 </design/UseCases/10_uc>`
-   :REST URL: ``GET /monitor/status``
-   :returns: Undefined
-   :rtype: :class:`Types.StatusResponse`
-
-   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2100)``
-
-   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2101)``
-
-   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=2102)``
-
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=2103)``
-
-   :raises Exceptions.InsufficientResources: ``(errorCode=413, detailCode=2104)``
-
-   :raises Exceptions.UnsupportedType: ``(errorCode=400, detailCode=2105)``
 
 
 

@@ -1,16 +1,13 @@
 **Examples**
 
-Retrieve a cumulative count of all object related events on MN::
+Retrieve a cumulative count of all object related events on Member Node::
 
-  curl -X GET -H "Accept: text/xml" http://mn1.dataone.org/monitor
+  curl -X GET -H "Accept: text/xml" http://mn1.dataone.org/monitor/event
 
-  <?xml version="1.0" ?>
-  <ns1:monitorList xmlns:ns1="http://dataone.org/service/types/monitorList/0.1">
-    <monitorInfo>
-      <date>2010-07-23</date>
-      <count>100</count>
-    </monitorInfo>
-  </ns1:monitorList>
+  <?xml version="1.0" encoding="UTF-8"?>
+  <d1:Statistics xmlns:d1="http://ns.dataone.org/service/types/v1">
+    <count>199211</count>
+  </d1:Statistics>
 
 
 Retrieve a count of object related events for all objects based on EML for
