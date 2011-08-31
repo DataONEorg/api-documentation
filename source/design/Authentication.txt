@@ -549,6 +549,8 @@ one generated during the authentication process of normal user.
 Portal Delegation
 ------------------
 For web clients, we can use the CILogon portal delegation approach.
+Note that the CN and portal are assumed to be on the same server. 
+
 .. 
    @startuml images/portal_01.png
    participant "Browser" as browser
