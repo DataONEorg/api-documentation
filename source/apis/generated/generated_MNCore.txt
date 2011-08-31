@@ -19,10 +19,6 @@
      - :func:`getLogRecords`
      - (:class:`session<Types.Session>`, :class:`fromDate<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.Log`
    * - Tier 1
-     - ``GET /monitor/object``
-     - :func:`getObjectStatistics`
-     - (``[fmtid]``, ``[pid]``) ``->`` :class:`Types.ObjectStatistics`
-   * - Tier 1
      - ``GET /  or  GET /node``
      - :func:`getCapabilities`
      - () ``->`` :class:`Types.Node`
@@ -36,6 +32,8 @@
 
    The Member Node should perform some minimal internal functionality testing before answering. However, ping checks will be frequent (every few minutes) so the internal functionality test should not be high impact.
 
+   Any status response other than 200 indicates that the node is offline for DataONE operations.
+
    :Use Cases:
      :doc:`UC10 </design/UseCases/10_uc>`
    :REST URL: ``GET /monitor/ping``
@@ -46,13 +44,7 @@
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2042)``
 
-   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=2043)``
-
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=2044)``
-
    :raises Exceptions.InsufficientResources: ``(errorCode=413, detailCode=2045)``
-
-   :raises Exceptions.UnsupportedType: ``(errorCode=400, detailCode=2046)``
 
 
 .. include:: ../examples/ping.txt
@@ -102,40 +94,6 @@
 
 
 .. include:: ../examples/getLogRecords.txt
-
-
-
-
-.. function:: getObjectStatistics([fmtid],[pid]) -> ObjectStatistics
-
-   Returns the number of objects stored on the Member Node at the time the call is serviced. The count may be restricted by simple filters (starts with)applied to a particular object format or PID. Optional simple restriction filters may be used in the request to limit the number of records in the response. If filters for both pid and object format are present, the response matches the logical AND of the filters.
-
-   Access control rules are not applied to the count, so the actual record count may differ from the number of records that are accessible through other calls such as :func:`MN.listObjects`, however the response MUST be indicative of the number of objects available through the DataONE service interfaces.
-
-   .. Note:: Functionality of this method has been simplfiied from the 0.5 description so that the response reflects the current state of the Member Node. Historical information should be collated by a monitoring service if necessary. This change was made to reduce the operational requirements for Member Node services.
-
-   :REST URL: ``GET /monitor/object``
-   :param fmtid: Limit to objects of format that starts-with or exactly matches the provided string. A null or missing value matches all formats. The first character of the value indicates if the match should be exact "E", or starts-with "S".
-   :type fmtid: string
-
-   :param pid: Limit to objects with PIDs that start-with this value. A null or missing value matches all PIDs.
-   :type pid: string
-
-   :returns: Number of objects available on the node that match the request.
-   :rtype: :class:`Types.ObjectStatistics`
-
-   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2060)``
-
-   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2061)``
-
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=2063)``
-
-   :raises Exceptions.InsufficientResources: ``(errorCode=413, detailCode=2064)``
-
-     The server is not able to fulfill the request due to a limitation of resources.
-
-
-.. include:: ../examples/getObjectStatistics.txt
 
 
 

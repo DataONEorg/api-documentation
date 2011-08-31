@@ -32,9 +32,7 @@ Data Types in CICore
 - :class:`Types.ObjectList`
 - :class:`Types.ObjectLocation`
 - :class:`Types.ObjectLocationList`
-- :class:`Types.ObjectStatistics`
 - :class:`Types.OctetStream`
-- :class:`Types.OperationStatistics`
 - :class:`Types.Permission`
 - :class:`Types.Person`
 - :class:`Types.PingResponse`
@@ -1191,14 +1189,6 @@ Data Types in CICore
 
 
 ..                                    ######
-.. class:: ObjectStatistics
-
-   A simple structure that contains the count of the objects that match a 
-   getObjectStatistics request.
-
-
-
-..                                    ######
 .. class:: ObjectList
 
   A list of object descriptions. This provides more information than the
@@ -1350,13 +1340,6 @@ Data Types in CICore
 
 
 ..                                    ######
-.. class:: ObjectStatistics
-
-   A summary of object use information intended primarily for the monitoring service.
-
-
-
-..                                    ######
 .. class:: Permission
 
   A string value indicating the set of actions that can be performed on a
@@ -1385,13 +1368,6 @@ Data Types in CICore
     Permission : CHANGEPERMISSION
     Permission : EXECUTE
     @enduml
-
-
-
-..                                    ######
-.. class:: OperationStatistics
-
-   A summary of operation calls intended primarily for the monitoring service.
 
 
 

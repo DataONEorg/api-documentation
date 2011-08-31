@@ -9,17 +9,13 @@
      - :func:`MNCore.ping`
      - Low level "are you alive" operation. A valid ping response is indicated by a HTTP status of 200. 
 The Member Node should perform some minimal internal functionality testing before answering. However, ping checks will be frequent (every few minutes) so the internal functionality test should not be high impact.
+Any status response other than 200 indicates that the node is offline for DataONE operations.
 
        Appears in functional use cases: :doc:`UC10 </design/UseCases/10_uc>`
    * - \
      - :func:`MNCore.getLogRecords`
      - Retrieve log information from the Member Node for the specified date range and even type.
 This method is used primarily by the log aggregator to generate aggregate statistics for nodes, objects, and the methods of access.
-   * - \
-     - :func:`MNCore.getObjectStatistics`
-     - Returns the number of objects stored on the Member Node at the time the call is serviced. The count may be restricted by simple filters (starts with)applied to a particular object format or PID. Optional simple restriction filters may be used in the request to limit the number of records in the response. If filters for both pid and object format are present, the response matches the logical AND of the filters.
-Access control rules are not applied to the count, so the actual record count may differ from the number of records that are accessible through other calls such as :func:`MN.listObjects`, however the response MUST be indicative of the number of objects available through the DataONE service interfaces.
-.. Note:: Functionality of this method has been simplfiied from the 0.5 description so that the response reflects the current state of the Member Node. Historical information should be collated by a monitoring service if necessary. This change was made to reduce the operational requirements for Member Node services.
    * - \
      - :func:`MNCore.getCapabilities`
      - Returns a document describing the capabilities of the Member Node.
