@@ -21,7 +21,7 @@ SystemMetadata has certain elements that, once created, will never change. The
 immutable set of elements are determined during the MN-CN Synchronization
 process and are static through the existence of the object. The mutable set of
 elements are modified due to certain interactions and restrictions placed on
-what actor in the system may perform the updates.
+which actor in the system may perform the updates.
 
 The Immutable set:
 
@@ -82,6 +82,10 @@ REST API
      - ``PUT /accessRules/{pid}``
      - :func:`MNAuthorization.setAccessPolicy`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`accessPolicy<Types.AccessPolicy>`) ``->`` boolean
+   * - Tier 3
+     - ``PUT /object/{pid}``
+     - :func:`MNStorage.update`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, ``object``, :class:`newPid<Types.Identifier>`, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
    * - Tier 4
      - ``POST /notify``
      - :func:`CNReplication.setReplicationStatus`
@@ -144,7 +148,7 @@ MN-MN Replication:
 
 The MN-MN Replication process running on the CN will call
 CNReplication.updateReplicationMetadata to modify replica :class:`Types.Replica`
-on the SystemMetadata to reflect the replica copies available. A member node
+on the SystemMetadata to reflect the replica copies available. A MN
 will call the CNReplication.setReplicationStatus that modifies the replica list
 replica :class:`Types.Replica` to indicate when a replication from one MN to
 another has been completed. After each operation, dateSysMetadataModified
@@ -154,7 +158,7 @@ performed.
 
 Client-CN Interactions:
 
-Clients, either ITK or MNs, may call certain the following methods on the CN:
+Clients, either ITK or MNs, may call the following methods on the CN:
 
 -  :func:`CNAuthorization.setOwner`
 -  :func:`CNAuthorization.setAccessPolicy`
@@ -175,15 +179,22 @@ Client-MN Interactions:
 A Client may call the following:
 
 - :func:`MNAuthorization.setAccessPolicy`
+- :func:`MNAuthorization.setAccessPolicy`
 
 This operation alone does not have an effect on the CN's definitive store. A
 subsequent call to the CN will via func:`CNAuthorization.setAccessPolicy` will
 need to be made by the MN.
 
+An object may be updated on an MN. The update mechanism will create a new object
+that is the descendent of the object updated.  The descendant object will have the
+:type obsoletes: :class:`Types.Identifier` field set while the ancestor object
+will need an :type obsoletedBy: :class:`Types.Identifier` element added. The
+synchronization process will update the ancestor's SystemMetadata with the new
+value.
   
 Robert's Notes:
 
-From these interactions, There is not a process defined that update
+From these interactions, there is no mechanism defined that updates
 authoritativeMemberNode on the Authoritative MN.
 
 I am uncertain why :func:`MNAuthorization.setAccessPolicy` is needed. It would
@@ -191,7 +202,7 @@ appear to be a proxy of the `CNAuthorization.setAccessPolicy`. So why not
 eliminate the MN call and direct all client calls to the CN?
 
 To answer my question about Synchronization updating responsibility:
-Synchronization should only update the obsoletes, obsoletedBy and
+Synchronization should only update the obsoletedBy and
 authoritativeMemberNode fields of the SystemMetadata from the Authoritative MN
 (and only the Authoritative MN).
 
