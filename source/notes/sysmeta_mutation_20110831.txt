@@ -6,50 +6,57 @@ December, 2010.
 
 Notes clarified and consolidated on 08/31/2011 by RW.
 
-SystemMetadata will be modified by CNs, MNs and clients.  The CN modifies the 
-SystemMetadata during certain operations, such as MN-CN Synchronization and MN-MN
-replication.  A MN will modify SystemMetadata provenance as an object is updated.
-Clients and MNs will modify SystemMetadata to reflect new policies regarding
-replication, access and ownership, and will notify the CN when a MN-MN Replication 
-event has completed.
+SystemMetadata will be modified by CNs, MNs and clients. The CN modifies the
+SystemMetadata during certain operations, such as MN-CN Synchronization and
+MN-MN replication. A MN will modify SystemMetadata provenance as an object is
+updated. Clients and MNs will modify SystemMetadata to reflect new policies
+regarding replication, access and ownership, and will notify the CN when a MN-MN
+Replication event has completed.
 
 
-::
-
-SystemMetadata Mutability::
+SystemMetadata Mutability
+-------------------------
 
 SystemMetadata has certain elements that, once created, will never change. The
-immutable set of elements are determined during the MN-CN Synchronization process
-and are static through the existance of the object.  The mutable set of elements
-are modified due to certain interactions and restrictions are placed on what 
-actor in the system may perform the updates.
+immutable set of elements are determined during the MN-CN Synchronization
+process and are static through the existence of the object. The mutable set of
+elements are modified due to certain interactions and restrictions placed on
+what actor in the system may perform the updates.
 
-The Immutable set::
+The Immutable set:
 
-:type identifier: :class:`Types.Identifier`
-:type fmtid: :class:`Types.ObjectFormatIdentifier`
-:type size: long
-:type checksum: :class:`Types.Checksum`
-:type submitter: :class:`Types.Subject`
-:type dateUploaded: :class:`Types.DateTime`
-:type originMemberNode: :class:`Types.NodeReference`
+  ======================== ======================================
+  Element                  Type
+  ======================== ======================================
+  identifier               :class:`Types.Identifier`
+  fmtid                    :class:`Types.ObjectFormatIdentifier`
+  size                     long
+  checksum                 :class:`Types.Checksum`
+  submitter                :class:`Types.Subject`
+  dateUploaded             :class:`Types.DateTime`
+  originMemberNode         :class:`Types.NodeReference`
+  ======================== ======================================
+  
 
-The Mutable set::
+The Mutable set:
 
-:type rightsHolder: :class:`Types.Subject`
-:type accessPolicy: :class:`Types.AccessPolicy`
-:type replicationPolicy: :class:`Types.ReplicationPolicy`
-:type obsoletes: :class:`Types.Identifier`
-:type obsoletedBy: :class:`Types.Identifier`
-:type dateSysMetadataModified: :class:`Types.DateTime`
-:type authoritativeMemberNode: :class:`Types.NodeReference`
-:type replica: :class:`Types.Replica`
+  ======================== ======================================
+  Element                  Type
+  ======================== ======================================
+  rightsHolder             :class:`Types.Subject`
+  accessPolicy             :class:`Types.AccessPolicy`
+  replicationPolicy        :class:`Types.ReplicationPolicy`
+  obsoletes                :class:`Types.Identifier`
+  obsoletedBy              :class:`Types.Identifier`
+  dateSysMetadataModified: :class:`Types.DateTime`
+  authoritativeMemberNode: :class:`Types.NodeReference`
+  replica                  :class:`Types.Replica`
+  ======================== ======================================
 
 
 
-::
-
-REST API::
+REST API
+--------
 
 .. list-table:: Methods affecting SystemMetadata 
    :widths: 3 10 10 30
@@ -89,89 +96,102 @@ REST API::
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`policy<Types.ReplicationPolicy>`) ``->`` boolean
      
 
-internal only::
+internal only:
 
-  :func:`CNCore.updateSystemMetadata`
-  :func:`CNReplication.updateReplicationMetadata`
+- :func:`CNCore.updateSystemMetadata`
+- :func:`CNReplication.updateReplicationMetadata`
   
-externally available through REST API::
-  :func:`CNAuthorization.setOwner`
-  :func:`CNAuthorization.setAccessPolicy`
-  :func:`MNAuthorization.setAccessPolicy`
-  :func:`CNReplication.setReplicationStatus`
-  :func:`CNReplication.setReplicationPolicy`
-  
+externally available through REST API:
+
+- :func:`CNAuthorization.setOwner`
+- :func:`CNAuthorization.setAccessPolicy`
+- :func:`MNAuthorization.setAccessPolicy`
+- :func:`CNReplication.setReplicationStatus`
+- :func:`CNReplication.setReplicationPolicy`
 
 
-::
+Interactions affecting SystemMetadata
+-------------------------------------
 
-Interactions affecting SystemMetadata::
-
-The CN is the ultimate arbitor of SystemMetadata changes. There needs to be a
-clear deliniation of responsibility with regard to which processes will interact
+The CN is the ultimate arbiter of SystemMetadata changes. There needs to be a
+clear delineation of responsibility with regard to which processes will interact
 with the CN store such that the SystemMetadata remains consistent.
 
-MN-CN Synchronization::
-  The MN-CN Synchronization process will set all the immutable elements the
+MN-CN Synchronization:
+
+The MN-CN Synchronization process will set all the immutable elements the
 first time an item is created. It will also add items to mutable elements
-that were provided by the MN- :type originMemberNode: :class:`Types.NodeReference`, 
-:type authoritativeMemberNode: :class:`Types.NodeReference`, 
-and :type replica: :class:`Types.Replica`. It will also reset 
-:type dateSysMetadataModified: :class:`Types.DateTime` to the time 
-the object was added.
-  The MN-CN Synchronization process may also update SystemMetadata by calling
-the CNCore.updateSystemMetadata internally. It will update the 
-:type authoritativeMemberNode: :class:`Types.NodeReference`, :type obsoletes: :class:`Types.Identifier`,
-:type obsoletedBy: :class:`Types.Identifier` on the CN when during
-synchronization of the node listed as the authoritativeMemberNode, it finds 
-those fields have changed been modified, and changes
-:type dateSysMetadataModified: :class:`Types.DateTime` to reflect the date on 
-the SystemMetadata sent from the MN.
+that were provided by the MN:
+
+ - originMemberNode, :class:`Types.NodeReference`
+ - authoritativeMemberNode, :class:`Types.NodeReference`
+ - replica, :class:`Types.Replica`
+
+It will also reset dateSysMetadataModified (:class:`Types.DateTime`) to the
+time the object was added.
+
+The MN-CN Synchronization process may also update SystemMetadata by calling the
+CNCore.updateSystemMetadata internally. It will update the
+authoritativeMemberNode :class:`Types.NodeReference`, obsoletes
+:class:`Types.Identifier`, obsoletedBy :class:`Types.Identifier` on the CN when
+during synchronization of the node listed as the authoritativeMemberNode, it
+finds those fields have changed been modified, and changes
+dateSysMetadataModified :class:`Types.DateTime` to reflect the date on the
+SystemMetadata sent from the MN.
 
 
-MN-MN Replication::
-  The MN-MN Replication process running on the CN will call 
-CNReplication.updateReplicationMetadata to modify 
-:type replica: :class:`Types.Replica` on the
-SystemMetadata to reflect the replica copies available. A membernode will 
-call the CNReplication.setReplicationStatus that modifies the replica list
-:type replica: :class:`Types.Replica` to indicate when a replication
-from one MN to another has been completed. After each operation, :type dateSysMetadataModified: :class:`Types.DateTime`
-will be modified to be the date the operation was performed.
+MN-MN Replication:
+
+The MN-MN Replication process running on the CN will call
+CNReplication.updateReplicationMetadata to modify replica :class:`Types.Replica`
+on the SystemMetadata to reflect the replica copies available. A member node
+will call the CNReplication.setReplicationStatus that modifies the replica list
+replica :class:`Types.Replica` to indicate when a replication from one MN to
+another has been completed. After each operation, dateSysMetadataModified
+:class:`Types.DateTime` will be modified to be the date the operation was
+performed.
 
 
-Client-CN Interactions::
-  Clients, either ITK or MNs, may call certain the following methods on the CN:
-  `CNAuthorization.setOwner`
-  `CNAuthorization.setAccessPolicy`
-  `CNReplication.setReplicationPolicy`
+Client-CN Interactions:
+
+Clients, either ITK or MNs, may call certain the following methods on the CN:
+
+-  :func:`CNAuthorization.setOwner`
+-  :func:`CNAuthorization.setAccessPolicy`
+-  :func:`CNReplication.setReplicationPolicy`
+
 The execution of these methods will alter various elements:
 
-:type rightsHolder: :class:`Types.Subject`
-:type accessPolicy: :class:`Types.AccessPolicy`
-:type replicationPolicy: :class:`Types.ReplicationPolicy`
+- rightsHolder :class:`Types.Subject`
+- accessPolicy :class:`Types.AccessPolicy`
+- replicationPolicy :class:`Types.ReplicationPolicy`
 
-A side effect of each of these operations will be an update to :type dateSysMetadataModified: :class:`Types.DateTime`.
+A side effect of each of these operations will be an update to
+dateSysMetadataModified :class:`Types.DateTime`.
 
 
-Client-MN Interactions::
-  A Client may call the following:
-  :func:`MNAuthorization.setAccessPolicy`
+Client-MN Interactions:
+
+A Client may call the following:
+
+- :func:`MNAuthorization.setAccessPolicy`
 
 This operation alone does not have an effect on the CN's definitive store. A
-Subsequent call to the CN will via `CNAuthorization.setAccessPolicy` will need to
-be made by the MN.
+subsequent call to the CN will via func:`CNAuthorization.setAccessPolicy` will
+need to be made by the MN.
 
   
-Robert's Notes::
-From these interactions, There is not a process defined that update 
+Robert's Notes:
+
+From these interactions, There is not a process defined that update
 authoritativeMemberNode on the Authoritative MN.
 
 I am uncertain why :func:`MNAuthorization.setAccessPolicy` is needed. It would
 appear to be a proxy of the `CNAuthorization.setAccessPolicy`. So why not
 eliminate the MN call and direct all client calls to the CN?
 
-To answer my question about Synchronization updating responsibility: Synchronization should only 
-update the obsoletes, obsoletedBy and authoritativeMemberNode fields 
-of the SystemMetadata  from the Authoritative MN (and only the  Authoritative MN).
+To answer my question about Synchronization updating responsibility:
+Synchronization should only update the obsoletes, obsoletedBy and
+authoritativeMemberNode fields of the SystemMetadata from the Authoritative MN
+(and only the Authoritative MN).
 

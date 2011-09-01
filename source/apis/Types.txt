@@ -986,6 +986,12 @@ Data Types in CICore
 ..                                    ######
 .. class:: NodeHealth
 
+   NodeHealth is used to record the current operating status of the node. 
+   Operating status is determined by the Coordinating Nodes and is influenced by
+   the results of polling ping() and getCapabilities(), by a node 
+   calling updateNodeCapabilities(), and through periodic checks of service
+   compliance.
+
   .. LiteralInclude::   /d1_schemas_v1/dataoneTypes.xsd
      :language: xml
      :start-after: <!-- Node Health -->
@@ -1191,9 +1197,7 @@ Data Types in CICore
 ..                                    ######
 .. class:: ObjectList
 
-  A list of object descriptions. This provides more information than the
-  :class:`IdentifierList` by adding an identifier to the
-  :class:`DescribeResponse`.
+  A list of :class:`ObjectInfo` structures.
 
   As represented in XMLSchema:
 
