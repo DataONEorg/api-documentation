@@ -128,32 +128,32 @@ The MN-CN Synchronization process will set all the immutable elements the
 first time an item is created. It will also add items to mutable elements
 that were provided by the MN:
 
- - originMemberNode,(:class:`Types.NodeReference`)
- - authoritativeMemberNode,(:class:`Types.NodeReference`)
- - replica,(:class:`Types.Replica`)
+ - *originMemberNode*(:class:`Types.NodeReference`)
+ - *authoritativeMemberNode*(:class:`Types.NodeReference`)
+ - *replica*(:class:`Types.Replica`)
 
-It will also reset dateSysMetadataModified (:class:`Types.DateTime`) to the
+It will also reset *dateSysMetadataModified*(:class:`Types.DateTime`) to the
 time the object was added.
 
 The MN-CN Synchronization process may also update SystemMetadata by calling the
 CNCore.updateSystemMetadata internally. It will update the
-authoritativeMemberNode(:class:`Types.NodeReference`), 
-obsoletes(:class:`Types.Identifier`), obsoletedBy(:class:`Types.Identifier`) 
-on the CN when during synchronization of the node listed as the 
-authoritativeMemberNode, it finds those fields have changed been modified, 
-and changes dateSysMetadataModified(:class:`Types.DateTime`) to reflect the date on the
+*authoritativeMemberNode*(:class:`Types.NodeReference`) or
+*obsoletedBy*(:class:`Types.Identifier`)  on the CN when during synchronization 
+of the node listed as the  authoritativeMemberNode, it finds those fields 
+have changed been modified, and changes 
+*dateSysMetadataModified*(:class:`Types.DateTime`) to reflect the date on the
 SystemMetadata sent from the MN.
 
 
 MN-MN Replication:
 
 The MN-MN Replication process running on the CN will call
-CNReplication.updateReplicationMetadata to modify replica(:class:`Types.Replica`)
+CNReplication.updateReplicationMetadata to modify *replica*(:class:`Types.Replica`)
 on the SystemMetadata to reflect the replica copies available. A MN
 will call the CNReplication.setReplicationStatus that modifies the replica list
-replica(:class:`Types.Replica`) to indicate when a replication from one MN to
+*replica*(:class:`Types.Replica`) to indicate when a replication from one MN to
 another has been completed. After each operation, 
-dateSysMetadataModified(:class:`Types.DateTime`) will be modified to be the 
+*dateSysMetadataModified*(:class:`Types.DateTime`) will be modified to be the 
 date the operation was performed.
 
 
@@ -167,12 +167,12 @@ Clients, either ITK or MNs, may call the following methods on the CN:
 
 The execution of these methods will alter various elements:
 
-- rightsHolder(:class:`Types.Subject`)
-- accessPolicy(:class:`Types.AccessPolicy`)
-- replicationPolicy(:class:`Types.ReplicationPolicy`)
+- *rightsHolder*(:class:`Types.Subject`)
+- *accessPolicy*(:class:`Types.AccessPolicy`)
+- *replicationPolicy*(:class:`Types.ReplicationPolicy`)
 
 A side effect of each of these operations will be an update to
-dateSysMetadataModified(:class:`Types.DateTime`).
+*dateSysMetadataModified*(:class:`Types.DateTime`).
 
 
 Client-MN Interactions:
@@ -188,8 +188,8 @@ need to be made by the MN.
 
 An object may be updated on an MN. The update mechanism will create a new object
 that is the descendent of the object updated.  The descendant object will have 
-the obsoletes (:class:`Types.Identifier`) field set while the ancestor object
-will need an obsoletedBy (:class:`Types.Identifier`) element added. The
+the *obsoletes*(:class:`Types.Identifier`) field set while the ancestor object
+will need an *obsoletedBy*(:class:`Types.Identifier`) element added. The
 synchronization process will update the ancestor's SystemMetadata with the new
 value.
   
