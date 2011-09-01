@@ -136,13 +136,11 @@ It will also reset  **dateSysMetadataModified** (:class:`Types.DateTime`) to the
 time the object was added.
 
 The MN-CN Synchronization process may also update SystemMetadata by calling the
-CNCore.updateSystemMetadata internally. It will update the
- **authoritativeMemberNode** (:class:`Types.NodeReference`) or
- **obsoletedBy** (:class:`Types.Identifier`)  on the CN when during synchronization 
+CNCore.updateSystemMetadata internally. It will update the **authoritativeMemberNode** (:class:`Types.NodeReference`) 
+or **obsoletedBy** (:class:`Types.Identifier`)  on the CN when during synchronization 
 of the node listed as the  authoritativeMemberNode, it finds those fields 
-have changed been modified, and changes 
- **dateSysMetadataModified** (:class:`Types.DateTime`) to reflect the date on the
-SystemMetadata sent from the MN.
+have changed been modified, and changes  **dateSysMetadataModified** (:class:`Types.DateTime`) 
+to reflect the date on the SystemMetadata sent from the MN.
 
 
 MN-MN Replication:
@@ -150,11 +148,10 @@ MN-MN Replication:
 The MN-MN Replication process running on the CN will call
 CNReplication.updateReplicationMetadata to modify  **replica** (:class:`Types.Replica`)
 on the SystemMetadata to reflect the replica copies available. A MN
-will call the CNReplication.setReplicationStatus that modifies the replica list
- **replica** (:class:`Types.Replica`) to indicate when a replication from one MN to
-another has been completed. After each operation, 
- **dateSysMetadataModified** (:class:`Types.DateTime`) will be modified to be the 
-date the operation was performed.
+will call the CNReplication.setReplicationStatus that modifies the replica list **replica** (:class:`Types.Replica`) 
+to indicate when a replication from one MN to another has been completed. After 
+each operation, **dateSysMetadataModified** (:class:`Types.DateTime`) will be 
+modified to be the  date the operation was performed.
 
 
 Client-CN Interactions:
