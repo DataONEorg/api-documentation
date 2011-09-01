@@ -555,37 +555,38 @@ Note that the CN and portal are assumed to be on the same server.
    @startuml images/portal_01.png
    participant "Browser" as browser
    participant "CN" as cn
-   participant "Mercury" as mercury
+   participant "Metacat" as metacat
    participant "Portal" as portal
    participant "CILogon" as cilogon
    group login
    portal -> cilogon: get certificate
    portal <- cilogon: certificate
+   portal -> browser: cookie
    end
-   group https://cn-dev.dataone.org/cn/v1/object?query=
-   browser -> cn: search(cookie)
+   group https://cn-dev.dataone.org/cn/v1/object/blah
+   browser -> cn: get(cookie)
    cn --> portal: get certificate (cookie)
    note right
       same server
    end note
    cn <-- portal: certificate
-   cn -> mercury: search(certificate)
+   cn -> metacat: get(certificate)
    note right
       different server
    end note		
-   cn <- mercury: results
-   browser <- cn: results
+   cn <- metacat: object
+   browser <- cn: object
    end
    @enduml
    
 .. image:: images/portal_01.png
 
-*Figure 6.* Authenticated search going through CN.
+*Figure 6.* Authenticated "read" going through CN.
 The browser is the client with no certificate.
 The portal keeps the user's client certificate.
 The CN looks up the client certificate using the client cookie.
-The CN includes the client certificate in the request that is sent to Mercury.
-Results are returned to the client as though they were retrieved directly with a certificate.
+The CN includes the client certificate in the request that is sent to Metacat.
+Object is returned to the client as though it was retrieved directly with a certificate.
 
 
 Session Management (Alternative Scenario)
