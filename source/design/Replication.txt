@@ -53,7 +53,7 @@ Processing Replication Queues
 
 As the hzReplicationTaskQueue is populated, each CN's Replication Service polls
 the queue for new tasks to process. Upon receiving a ReplicationTask item from
-the queue, a CN Replication Service instance calls handleReplicationTask(),
+the queue, a CN Replication Service instance calls itemAdded(),
 passing the replicationTask to be handled, to initiate the MN to MN replication.
 
 The CN calls replicate() on the target MN (mnB), passing in the cnZ token
@@ -93,20 +93,21 @@ updated to indicate that replication is complete.
   title Replicate an object between two Member Nodes\n\n
   participant "mnA : MNode" as mnA <<MNode>>
   participant "mnB : MNode" as mnB <<MNode>>
-  participant "cnXSyncService : SynchronizationService" as cnX <<CNode>>
+  participant "cnXSyncService : SynchronizationService" as cnXsync <<CNode>>
+  participant "cnXReplService : ReplicationService" as cnXrepl <<CNode>>
   participant "cnYReplService : ReplicationService" as cnY <<CNode>>
   participant "cnZReplService : ReplicationService" as cnZ <<CNode>>
   
   == Populate Queues ==
-  cnX -> mnA: listObjects()
-  activate cnX #D74F57
+  cnXsync -> mnA: listObjects()
+  activate cnXsync #D74F57
   activate mnA #D74F57
-  mnA --> cnX: objectList
+  mnA --> cnXsync: objectList
   deactivate mnA
   
-  cnX -> mnB: listObjects()
+  cnXsync -> mnB: listObjects()
   activate mnB #D74F57
-  mnB --> cnX: objectList
+  mnB --> cnXsync: objectList
   deactivate mnB
   note right
   Each put() to the hz maps and queues below
@@ -114,14 +115,11 @@ updated to indicate that replication is complete.
   in memory and their backing MapStore
   end note
   
-  loop 1:size(objectList)
-  cnX -> cnX: hzSystemMetadataMap.put(pid, sysmeta)
-  end
-  cnX -> cnX: cnXReplicationService.createReplicationTaskList(pid)
-  loop 1:size(replicationTaskList)
-  cnX -> cnX: hzReplicationTaskQueue.put(taskid, replicationTask)
-  deactivate cnX
-  end
+  cnXrepl -> cnXrepl : createReplicationTaskList(pid)
+  activate cnXrepl #D74F57
+  cnXrepl -> cnXrepl: hzReplicationTaskQueue.put(taskid, replicationTask)
+  deactivate cnXsync
+  deactivate cnXrepl
   note right of cnY #lightblue
     TODO: Show timed ReplicationService 
     system metadata sweep and task queue
@@ -151,10 +149,13 @@ updated to indicate that replication is complete.
   cnZ --> cnZ: replicationTask
   deactivate cnZ
         
-  cnZ -> cnZ: handleReplicationTask(replicationTask)
+  cnZ -> cnZ: itemAdded(replicationTask)
   activate cnZ #D74F57
 
-  cnZ -> mnB: replicate(cnZToken, mnA, pid)
+  cnZ -> cnZ: replicationTask.call(pid)
+  activate cnZ #DarkSalmon
+  cnZ -> mnB: replicate(cnZSession, mnASession, pid)
+  deactivate cnZ 
   activate mnB #D74F57
   cnZ -> cnZ: setReplicationStatus(pid, ReplicationStatus.QUEUED)
   
@@ -162,15 +163,14 @@ updated to indicate that replication is complete.
    Object's system metadata get's updated
   end note
   
-  cnZ -> cnZ: hzObjectMap.lock(pid)
+  cnZ -> cnZ: Hazelcast.getLock(pid)
   cnZ -> cnZ: updateSystemMetadata(pid)
   cnZ --> cnZ: statusResponse
-  cnZ -> cnZ: hzObjectMap.unlock(pid)
   
-  mnB -> mnA: getReplica(mnBToken, pid)
+  mnB -> mnA: getReplica(mnBSession, pid)
   deactivate mnB
   activate mnA #D74F57
-  mnA -> cnZ: isNodeAuthorized(mnAToken, mnBSubject, pid, replicationPermission)
+  mnA -> cnZ: isNodeAuthorized(mnASession, mnBSubject, pid, replicationPermission)
   cnZ --> mnA: authorizationResponse
   mnA --> mnB: replicaBytes
   deactivate mnA
@@ -182,9 +182,8 @@ updated to indicate that replication is complete.
   note left
   Object's system metadata get's updated
   end note
-  cnZ -> cnZ: hzObjectMap.lock(pid)
+  cnZ -> cnZ: Hazelcast.getLock(pid)
   cnZ -> cnZ: updateSystemMetadata(pid)
-  cnZ -> cnZ: hzObjectMap.unlock(pid)
   cnZ --> cnZ: statusResponse
   deactivate cnZ
   @enduml
