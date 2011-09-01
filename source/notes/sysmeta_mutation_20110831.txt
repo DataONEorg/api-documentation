@@ -110,6 +110,7 @@ externally available through REST API:
 - :func:`CNAuthorization.setOwner`
 - :func:`CNAuthorization.setAccessPolicy`
 - :func:`MNAuthorization.setAccessPolicy`
+- :func:`MNStorage.update`
 - :func:`CNReplication.setReplicationStatus`
 - :func:`CNReplication.setReplicationPolicy`
 
@@ -179,7 +180,7 @@ Client-MN Interactions:
 A Client may call the following:
 
 - :func:`MNAuthorization.setAccessPolicy`
-- :func:`MNAuthorization.setAccessPolicy`
+- :func:`MNStorage.update`
 
 This operation alone does not have an effect on the CN's definitive store. A
 subsequent call to the CN will via func:`CNAuthorization.setAccessPolicy` will
