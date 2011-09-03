@@ -16,14 +16,12 @@ Data Types in CICore
 - :class:`Types.Event`
 - :class:`Types.Group`
 - :class:`Types.Identifier`
-- :class:`Types.IdentifierFormat`
 - :class:`Types.Integer`
 - :class:`Types.Log`
 - :class:`Types.LogEntry`
 - :class:`Types.MonitorInfo`
 - :class:`Types.MonitorList`
 - :class:`Types.Node`
-- :class:`Types.NodeHealth`
 - :class:`Types.NodeList`
 - :class:`Types.NodeReference`
 - :class:`Types.ObjectFormat`
@@ -35,14 +33,13 @@ Data Types in CICore
 - :class:`Types.OctetStream`
 - :class:`Types.Permission`
 - :class:`Types.Person`
-- :class:`Types.PingResponse`
+- :class:`Types.Ping`
 - :class:`Types.Query`
 - :class:`Types.RelationshipEnum`
 - :class:`Types.Replica`
 - :class:`Types.Session`
 - :class:`Types.Subject`
 - :class:`Types.SubjectList`
-- :class:`Types.Status`
 - :class:`Types.SystemMetadata`
 - :class:`Types.X509Certificate`
 
@@ -64,14 +61,6 @@ Data Types in CICore
   }
   AccessRule o-- Subject
   AccessRule o-- Permission
-
-  enum ChecksumAlgorithm
-  ChecksumAlgorithm : SHA-1
-  ChecksumAlgorithm : SHA-224
-  ChecksumAlgorithm : SHA-356
-  ChecksumAlgorithm : SHA-384
-  ChecksumAlgorithm : SHA-512
-  ChecksumAlgorithm : MD5
 
   class Checksum {
       +algorithm : ChecksumAlgorithm
@@ -107,15 +96,6 @@ Data Types in CICore
 
   NonEmptyString <|-- Identifier
 
-  enum IdentifierFormat
-  IdentifierFormat : OID
-  IdentifierFormat : LSID
-  IdentifierFormat : UUID
-  IdentifierFormat : LSRN
-  IdentifierFormat : DOI
-  IdentifierFormat : URI
-  IdentifierFormat : STRING
-
   class LogEntry {
     + entryID : Identifier
     + identifier : Identifier
@@ -149,7 +129,8 @@ Data Types in CICore
     baseURL : anyURI
     services : Services[0..1]
     synchronization : Synchronization[0..1]
-    health : Nodehealth[0..1]
+    ping : Ping[0..1]
+    state : NodeState[0..1]
     subject: Subject[0..*]
     replicate : boolean
     synchronize : boolean
@@ -159,21 +140,18 @@ Data Types in CICore
   Node -- NonEmptyString
   Node o-- Services
   Node o-- Synchronization
-  Node o-- NodeHealth
   Node -- NodeType
-
-  class NodeHealth {
-    ping : Ping
-    status : Status
-  }
-  NodeHealth -- Ping
-  NodeHealth -- Status
 
   class NodeList {
     node : Node[1..*]
   }
   NodeList o-- Node
   
+  enum NodeState
+    NodeState : up 
+    NodeState : down 
+    NodeState : unknown 
+
   enum NodeType
     NodeType : cn 
     NodeType : mn
@@ -223,10 +201,11 @@ Data Types in CICore
   ObjectLocationList -- Identifier
 
   enum Permission
-  Permission : READ
-  Permission : WRITE
-  Permission : CHANGEPERMISSION
-  Permission : EXECUTE
+  Permission : read
+  Permission : write
+  Permission : changePermission
+  Permission : execute
+  Permission : replicate
 
   class Person {
     + subject : Subject
@@ -238,6 +217,11 @@ Data Types in CICore
   }
   Person o-- Subject
   Person -- NonEmptyString
+
+  class Ping {
+      + success : Boolean
+      + lastSuccess : DateTime
+  }
 
   enum RelationshipEnum
   RelationshipEnum : DESCRIBES
@@ -430,15 +414,6 @@ Data Types in CICore
     @enduml
 
 
-
-..                                    ######
-.. class:: AuthenticationSystem
-
-  Place holder for support of multiple authentication services for a single
-  user.
-
-
-
 ..                                    ######
 .. class:: OctetStream
 
@@ -483,15 +458,6 @@ Data Types in CICore
 .. _boolean: http://www.w3.org/TR/xmlschema-2/#boolean
 
 
-
-..                                    ######
-.. class:: Capabilities
-
-  This class has been deprecated by :class:`Node`
-
-
-
-
 ..                                    ######
 .. class:: Checksum
 
@@ -502,7 +468,7 @@ Data Types in CICore
   .. LiteralInclude::   /d1_schemas_v1/dataoneTypes.xsd
        :language: xml
        :start-after: <!-- Checksum -->
-       :end-before: <!-- Component -->
+       :end-before: <!-- Group -->
 
   .. image:: images/class_checksum.png
 
@@ -521,7 +487,9 @@ Data Types in CICore
 ..                                    ######
 .. class:: ChecksumAlgorithm
 
-  An enumeration of checksum types supported by the DataONE infrastructure.
+  The checksum algorithm used to calculate a checksum.
+  DataONE will publish a known list of algorithm names that can be
+  supported, but compliant implementations must support at least SHA-1.
 
   The default checksum is *SHA-1*.
 
@@ -530,45 +498,15 @@ Data Types in CICore
   .. LiteralInclude::   /d1_schemas_v1/dataoneTypes.xsd
      :language: xml
      :start-after: <!-- Checksum Algorithm -->
-     :end-before: <!-- ComponentName -->
+     :end-before: <!-- CrontabEntry -->
 
   .. image:: images/class_checksumalgorithm.png
 
   ..
     @startuml images/class_checksumalgorithm.png
-    enum ChecksumAlgorithm
-      ChecksumAlgorithm : SHA-1
-      ChecksumAlgorithm : SHA-224
-      ChecksumAlgorithm : SHA-356
-      ChecksumAlgorithm : SHA-384
-      ChecksumAlgorithm : SHA-512
-      ChecksumAlgorithm : MD5
+    class ChecksumAlgorithm {
+    }
     @enduml
-
-
-
-..                                    ######
-.. class:: ComponentName
-
-  As represented in XMLSchema:
-
-  .. LiteralInclude::   /d1_schemas_v1/dataoneTypes.xsd
-     :language: xml
-     :start-after: <!-- ComponentName -->
-     :end-before: <!-- ComponentVersion -->
-
-
-
-
-..                                    ######
-.. class:: ComponentVersion
-
-  As represented in XMLSchema:
-  
-  .. LiteralInclude::   /d1_schemas_v1/dataoneTypes.xsd
-     :language: xml
-     :start-after: <!-- ComponentVersion -->
-     :end-before: <!-- crontrabEntry -->
 
 
 
@@ -579,7 +517,7 @@ Data Types in CICore
 
   .. LiteralInclude::   /d1_schemas_v1/dataoneTypes.xsd
     :language: xml
-    :start-after: <!-- crontrabEntry -->
+    :start-after: <!-- CrontabEntry -->
     :end-before: <!-- Event Enumeration -->
 
 
@@ -763,51 +701,6 @@ Data Types in CICore
 
 
 ..                                    ######
-.. class:: PingResponse
-
-  The response from :func:`MNCore.ping` which is a HTTP response with status
-  code 200 and arbitrary, preferably empty payload (ignored by the caller).
-
-
-
-..                                    ######
-.. class:: StatusResponse
-
-  The response from :func:`MNCore.getStatus`. This is currently (2011-05-24)
-  undefined. This operation *may* replace ping() on closer evaluation of the
-  design notes.
-
-
-
-..                                    ######
-.. class:: IdentifierFormat
-
-  Initially an enumerated list of strings that specify different types of identifiers.
-
-  As represented in XML Schema:
-
-  .. LiteralInclude::   /d1_schemas_v1/dataoneTypes.xsd
-     :language: xml
-     :start-after: <!-- Identifier Format enumeration -->
-     :end-before: <!-- Service Name -->
-
-  .. image:: images/class_identifierformat.png
-
-  ..
-    @startuml images/class_identifierformat.png
-    enum IdentifierFormat
-    IdentifierFormat : OID
-    IdentifierFormat : LSID
-    IdentifierFormat : UUID
-    IdentifierFormat : LSRN
-    IdentifierFormat : DOI
-    IdentifierFormat : URI
-    IdentifierFormat : STRING
-    @enduml
-
-
-
-..                                    ######
 .. class:: Identifier
 
   An :term:`identifier` (:term:`PID`) in the DataONE system. This is equivalent
@@ -954,7 +847,7 @@ Data Types in CICore
   .. LiteralInclude::   /d1_schemas_v1/dataoneTypes.xsd
      :language: xml
      :start-after: <!-- Node -->
-     :end-before: <!-- Node Health -->
+     :end-before: <!-- Node List -->
 
   .. image:: images/class_node.png
 
@@ -967,46 +860,22 @@ Data Types in CICore
       baseURL : anyURI
       services : Services[0..1]
       synchronization : Synchronization[0..1]
-      health : Nodehealth[0..1]
+      ping : Ping[0..1]
+      state : NodeState[0..1]
       subject: Subject[0..*]
       replicate : boolean
       synchronize : boolean
       type : NodeType
     }
+    enum NodeState
+      NodeState : up 
+      NodeState : down 
+      NodeState : unknown 
     Node -- NodeReference
     Node -- NonEmptyString
     Node o-- Services
     Node o-- Synchronization
-    Node o-- NodeHealth
     Node -- NodeType
-    @enduml
-
-
-
-..                                    ######
-.. class:: NodeHealth
-
-   NodeHealth is used to record the current operating status of the node. 
-   Operating status is determined by the Coordinating Nodes and is influenced by
-   the results of polling ping() and getCapabilities(), by a node 
-   calling updateNodeCapabilities(), and through periodic checks of service
-   compliance.
-
-  .. LiteralInclude::   /d1_schemas_v1/dataoneTypes.xsd
-     :language: xml
-     :start-after: <!-- Node Health -->
-     :end-before: <!-- Node List -->
-
-  .. image:: images/class_nodehealth.png
-
-  ..
-    @startuml images/class_nodehealth.png
-    class NodeHealth {
-      ping : Ping
-      status : Status
-    }
-    NodeHealth -- Ping
-    NodeHealth -- Status
     @enduml
 
 
@@ -1054,6 +923,29 @@ Data Types in CICore
     @startuml images/class_nodereference.png
     NonEmptyString <|-- NodeReference
     @enduml
+
+
+
+..                                    ######
+.. class:: NodeState
+
+  As represented in XMLSchema:
+
+  .. LiteralInclude::   /d1_schemas_v1/dataoneTypes.xsd
+     :language: xml
+     :start-after: <!-- Node State -->
+     :end-before: <!-- Node Type Enumeration -->
+
+  .. image:: images/class_nodestate.png
+
+  .. 
+    @startuml images/class_nodestate.png
+    enum NodeState
+      NodeState : up 
+      NodeState : down 
+      NodeState : unknown 
+    @enduml
+
 
 
 
@@ -1360,17 +1252,18 @@ Data Types in CICore
   .. LiteralInclude::   /d1_schemas_v1/dataoneTypes.xsd
      :language: xml
      :start-after: <!-- Permission
-     :end-before: <!-- QueryType
+     :end-before: <!-- Replication Status
 
   .. image:: images/class_permission.png
 
   .. 
     @startuml images/class_permission.png
     enum Permission
-    Permission : READ
-    Permission : WRITE
-    Permission : CHANGEPERMISSION
-    Permission : EXECUTE
+    Permission : read
+    Permission : write
+    Permission : changePermission
+    Permission : execute
+    Permission : replicate
     @enduml
 
 
@@ -1433,10 +1326,36 @@ Data Types in CICore
 
 
 ..                                    ######
-.. class:: PingResponse
+.. class:: Ping
 
-  The response from :func:`MNCore.ping`
+  Data structure to hold the response from :func:`MNCore.ping`, stored in the
+  Node object.
 
+  As represented in XMLSchema:
+
+  .. LiteralInclude::   /d1_schemas_v1/dataoneTypes.xsd
+     :language: xml
+     :start-after: <!-- Ping -->
+     :end-before: <!-- QueryType
+   
+  .. attribute:: success
+
+     A boolean flag indicating TRUE if the node was reached by the last 
+     MNCore.ping call
+
+  .. attribute:: lastSuccess
+    
+     The date time value of the last time a successful ping was performed.
+    
+  .. image:: images/class_ping.png
+
+  ..
+    @startuml images/class_ping.png
+    class Ping {
+      + success : Boolean
+      + lastSuccess : DateTime
+    }
+    @enduml
 
 
 
@@ -1498,8 +1417,8 @@ Data Types in CICore
 
    .. LiteralInclude::   /d1_schemas_v1/dataoneTypes.xsd
       :language: xml
-      :start-after: <!-- Replication Status enumeration -->
-      :end-before: <!-- Identifier Format enumeration -->
+      :start-after: <!-- Replication Status 
+      :end-before: <!-- Service Name
 
   .. image:: images/class_replicationstatus.png
 
@@ -1862,13 +1781,6 @@ Data Types in CICore
     Session o-- Subject
     Session o-- SubjectList
     @enduml
-
-
-
-..                                    ######
-.. class:: Status
-
-  The response from :func:`MNCore.getStatus`
 
 
 
