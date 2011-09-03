@@ -93,78 +93,68 @@ updated to indicate that replication is complete.
   title Replicate an object between two Member Nodes\n\n
   participant "mnA : MNode" as mnA <<MNode>>
   participant "mnB : MNode" as mnB <<MNode>>
-  participant "cnXSyncService : SynchronizationService" as cnXsync <<CNode>>
   participant "cnXReplService : ReplicationService" as cnXrepl <<CNode>>
-  participant "cnYReplService : ReplicationService" as cnY <<CNode>>
   participant "cnZReplService : ReplicationService" as cnZ <<CNode>>
   
-  == Populate Queues ==
-  cnXsync -> mnA: listObjects()
-  activate cnXsync #D74F57
-  activate mnA #D74F57
-  mnA --> cnXsync: objectList
-  deactivate mnA
-  
-  cnXsync -> mnB: listObjects()
-  activate mnB #D74F57
-  mnB --> cnXsync: objectList
-  deactivate mnB
-  note right
-  Each put() to the hz maps and queues below
-  concurrently distributes the item across CNs
-  in memory and their backing MapStore
-  end note
-  
-  cnXrepl -> cnXrepl : createReplicationTaskList(pid)
+  == Replication Event  ==
+  [-> cnXrepl : hzSystemMetadata.put(pid, sysmeta)
   activate cnXrepl #D74F57
-  cnXrepl -> cnXrepl: hzReplicationTaskQueue.put(taskid, replicationTask)
-  deactivate cnXsync
+  
+  note right
+    Synchronization services adds entry to 
+    SystemMetadata map managed by Hazelcast,
+    EntryEvent is fired
+  end note
+  
+  cnXrepl -> cnXrepl : entryAdded(EntryEvent<pid, sysmeta>)
+  cnXrepl -> cnXrepl : createReplicationTaskList(pid)
+  
+  loop for each ReplicationTask
+  cnXrepl -> cnXrepl : taskid = idGenerator.newId()
+    note right
+    Hazelcast.getIdGenerator("task-ids") has been
+    called in ReplicationService constructor 
+  end note
+  cnXrepl -> cnXrepl : hzReplicationTaskQueue.put(taskid, task)
+  end loop
+  note right
+    Hazelcast distributes Replication
+    list to other CNs
+  end note
+  
   deactivate cnXrepl
-  note right of cnY #lightblue
-    TODO: Show timed ReplicationService 
-    system metadata sweep and task queue
-    population
-  end note
-  
-  note right of cnY #lightblue
-    TODO: Show MN-based replication       
-    request and task queue population   
-  end note
-   
+
+     
   == Process Queues ==
-  
-  cnY -> cnY: hzReplicationTaskQueue.poll()
-  activate cnY #D74F57
-  deactivate cnY
-  
+    
   note right
   Each ReplicationService
   continuously polls the 
   hz queues
   end note
   
-  
+          
+  cnZ -> cnZ: entryAdded(EntryEvent<taskid, task>)
+  activate cnZ #D74F57
   cnZ -> cnZ: hzReplicationTaskQueue.poll()
-  activate cnZ #D74F57
-  cnZ --> cnZ: replicationTask
-  deactivate cnZ
-        
-  cnZ -> cnZ: itemAdded(replicationTask)
-  activate cnZ #D74F57
+  cnZ --> cnZ: task
 
-  cnZ -> cnZ: replicationTask.call(pid)
+  cnZ -> cnZ: ExecutorService.submit(task)
   activate cnZ #DarkSalmon
+  cnZ -> cnZ: replicationTask.call(pid)
   cnZ -> mnB: replicate(cnZSession, mnASession, pid)
-  deactivate cnZ 
   activate mnB #D74F57
+  mnB --> cnZ: replicateResponse
+  deactivate cnZ 
   cnZ -> cnZ: setReplicationStatus(pid, ReplicationStatus.QUEUED)
   
   note left
    Object's system metadata get's updated
   end note
   
-  cnZ -> cnZ: Hazelcast.getLock(pid)
+  cnZ -> cnZ: hzSystemMetadata.lock(pid)
   cnZ -> cnZ: updateSystemMetadata(pid)
+  cnZ -> cnZ: hzSystemMetadata.unlock(pid)
   cnZ --> cnZ: statusResponse
   
   mnB -> mnA: getReplica(mnBSession, pid)
@@ -175,15 +165,21 @@ updated to indicate that replication is complete.
   mnA --> mnB: replicaBytes
   deactivate mnA
   activate mnB #D74F57
-  mnB --> cnZ: replicateResponse
-  deactivate mnB
   
-  cnZ -> cnZ: setReplicationStatus(pid, ReplicationStatus.COMPLETE)
-  note left
+  mnB -> cnZ: setReplicationStatus(pid, ReplicationStatus.COMPLETE)
+  deactivate mnB
+  cnZ -> mnA: mnA.getChecksum(pid)
+  activate mnA #D74F57
+  mnA --> cnZ : checksum
+  
+  note right
   Object's system metadata get's updated
   end note
-  cnZ -> cnZ: Hazelcast.getLock(pid)
+  
+  deactivate mnA
+  cnZ -> cnZ: hzSystemMetadata.lock(pid)
   cnZ -> cnZ: updateSystemMetadata(pid)
+  cnZ -> cnZ: hzSystemMetadata.unlock(pid)
   cnZ --> cnZ: statusResponse
   deactivate cnZ
   @enduml
