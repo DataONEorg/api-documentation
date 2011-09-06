@@ -165,6 +165,10 @@ retrieve the system metadata for the object from the CN.
 
     group processSynchronizationQueue
       cn_sync -> cn_sync: entryAdded(EntryEvent<PID, SyncTask>)
+      note left
+        Synchronization implements EntryListener,
+        monitors the Sync Queue for changes.
+      end note
       activate cn_sync #D74F57      
       cn_sync -> cn_queue: poll(timeout)
       activate cn_queue #D74F57
@@ -193,9 +197,9 @@ retrieve the system metadata for the object from the CN.
       cn_indexer -> cn_indexer: entryAdded()
       activate cn_indexer #D74F57
       note left
-        Indexer monitors the 
-        System Metadata Map for
-        inserts, updates, deletes.
+        Indexer implements EntryListener,
+        monitors the System Metadata Map 
+        for inserts, updates, deletes.
       end note
       cn_indexer -> cn_indexer: createTask(PID)
       note left
@@ -214,9 +218,9 @@ retrieve the system metadata for the object from the CN.
       cn_replication -> cn_replication: entryAdded()
       activate cn_replication #D74F57
       note left
-        Replication monitors the 
-        System Metadata Map for
-        inserts, updates, deletes.
+        Indexer implements EntryListener,
+        monitors the System Metadata Map 
+        for inserts, updates, deletes.
       end note
       cn_replication -> cn_replication: createTask(PID)
       note left
