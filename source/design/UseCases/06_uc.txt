@@ -84,13 +84,13 @@ retrieve the system metadata for the object from the CN.
     skinparam notebordercolor #AAAAAA
     skinparam notefontcolor #222222
     
-    participant "Repl Queue" as cn_repl << CN >>
+    participant "Repl Task Queue" as cn_repl << CN >>
     participant "Replication" as cn_replication << CN >>
-    participant "Index Queue" as cn_index << CN >>
+    participant "Index Task Queue" as cn_index << CN >>
     participant "Indexer" as cn_indexer << CN >>
     participant "Object Store" as cn_objs << CN >>
     participant "System Metadata Map" as cn_sysmeta << CN >>
-    participant "Sync Queue" as cn_queue << CN >>
+    participant "Sync Task Queue" as cn_queue << CN >>
     participant "Node Map" as cn_nodes << CN >>
     participant "Synchronization" as cn_sync << CN >>
     participant "Read API" as mn_read << MN >>
