@@ -31,7 +31,7 @@ Summary
 
 
 Actors
-  Member Node x2, Coordinating Node
+  Two Member Nodes, one or more Coordinating Nodes
 
 Preconditions 
   - Content is present on a Member Node
@@ -95,72 +95,102 @@ Post Conditions
 Member Node replication.
 
 ..
-    @startuml images/09_seq.png
-
-    title Interactions: 09 - Replicate data from Member Node A to Member Node B
-
-    participant "Replication API" as c_sync << Coordinating Node >>
-    participant "CRUD API" as m_crud_b << Member Node B >>
-    participant "CRUD API" as m_crud_a << Member Node A >>
-
-    c_sync -> c_sync: placeholder so you can see the line below
+  @startuml images/09_uc.png
+  skinparam notebordercolor #AAAAAA
+  skinparam notefontcolor #222222
+  title Replicate an object between two Member Nodes\n\n
+  participant "mnA : MNode" as mnA <<MNode>>
+  participant "mnB : MNode" as mnB <<MNode>>
+  participant "cnXReplService : ReplicationService" as cnXrepl <<CNode>>
+  participant "cnZReplService : ReplicationService" as cnZ <<CNode>>
+  
+  == Replication Event  ==
+  [-> cnXrepl : hzSystemMetadata.put(pid, sysmeta)
+  activate cnXrepl #D74F57
+  
+  note right
+    Synchronization services adds entry to 
+    SystemMetadata map managed by Hazelcast,
+    EntryEvent is fired
+  end note
+  
+  cnXrepl -> cnXrepl : entryAdded(EntryEvent<pid, sysmeta>)
+  cnXrepl -> cnXrepl : createReplicationTaskList(pid)
+  
+  loop for each ReplicationTask
+  cnXrepl -> cnXrepl : taskid = idGenerator.newId()
     note right
-      token has the roles:
-      1) verifying that the replicate request originates from a CN
-      2) enables MN A to verify that the get request from MN B can
-      be trusted.
-    end note
-    'c_sync -> m_crud_a: allowReplicate(token, subject, PID)'
-    activate c_sync
-    '    m_crud_a --> c_sync: OK'
-    c_sync -> m_crud_b: replicate(CNtoken, B, PID)
-    activate m_crud_b
-    c_sync <-- m_crud_b: OK
-    'deactivate m_crud_b'
-    deactivate c_sync
+    Hazelcast.getIdGenerator("task-ids") has been
+    called in ReplicationService constructor 
+  end note
+  cnXrepl -> cnXrepl : hzReplicationTaskQueue.put(taskid, task)
+  end loop
+  note right
+    Hazelcast distributes Replication
+    list to other CNs
+  end note
+  
+  deactivate cnXrepl
 
-    m_crud_b -> m_crud_a: getReplica(Btoken, PID)
-    activate m_crud_a
-    'activate m_crud_b'
-    m_crud_a -> c_sync: is3rdPartyAuthorized(Atoken, \nsubjectFromBtoken, pid, \nReplicationPermission)
-      activate c_sync
-      c_sync --> m_crud_a : YES
-    deactivate c_sync
-    m_crud_b -> c_sync: setReplicationStatus(token, PID, QUEUED)
-      activate c_sync
-      c_sync --> m_crud_b : OK
-      deactivate c_sync
-      m_crud_a --> m_crud_b: bytes
-      deactivate m_crud_a
-    m_crud_b -> m_crud_b: verify content
-    note right
-      The MN uses the System Metadata to verify
-      the checksum of the object and to determine 
-      the access control rules before committing 
-      storage of the object.
-    end note
-    deactivate c_sync
-    m_crud_b -> m_crud_b: _store(PID, bytes)
-    m_crud_b --> m_crud_b: log(PID, REPLICATE)
-    m_crud_b -> c_sync: setReplicationStatus(token, PID, COMPLETE)
-    activate c_sync
-    note right
-      - The MN has a copy of the content that needs to be 
-      verified by the CN. 
-      - The CN schedules a synchronization operation for 
-      that PID and the CN system metadata for the object
-      is updated on successful synchronization (UC06).
-      - If the synchronization fails, then the MN should be 
-      instructed to FAIL that object, which means it should 
-      not be offered for synchronization again.
-    end note
-    c_sync --> m_crud_b: OK
-    deactivate c_sync
-    deactivate m_crud_b
-    c_sync -> c_sync: Use case 06, synchronize content
-    activate c_sync
-    deactivate c_sync
-    @enduml
+     
+  == Process Replication Tasks ==
+    
+  note right
+  Each ReplicationService
+  continuously polls the 
+  hz queues
+  end note
+  
+          
+  cnZ -> cnZ: entryAdded(EntryEvent<taskid, task>)
+  activate cnZ #D74F57
+  cnZ -> cnZ: hzReplicationTaskQueue.poll()
+  cnZ --> cnZ: task
+
+  cnZ -> cnZ: ExecutorService.submit(task)
+  activate cnZ #DarkSalmon
+  cnZ -> cnZ: replicationTask.call(pid)
+  cnZ -> mnB: replicate(cnZSession, mnASession, pid)
+  activate mnB #D74F57
+  mnB --> cnZ: replicateResponse
+  deactivate cnZ 
+  cnZ -> cnZ: setReplicationStatus(pid, ReplicationStatus.QUEUED)
+  
+  note left
+   Object's system metadata get's updated
+  end note
+  
+  cnZ -> cnZ: hzSystemMetadata.lock(pid)
+  cnZ -> cnZ: updateSystemMetadata(pid)
+  cnZ -> cnZ: hzSystemMetadata.unlock(pid)
+  cnZ --> cnZ: statusResponse
+  
+  mnB -> mnA: getReplica(mnBSession, pid)
+  deactivate mnB
+  activate mnA #D74F57
+  mnA -> cnZ: isNodeAuthorized(mnASession, mnBSubject, pid, replicationPermission)
+  cnZ --> mnA: authorizationResponse
+  mnA --> mnB: replicaBytes
+  deactivate mnA
+  activate mnB #D74F57
+  
+  mnB -> cnZ: setReplicationStatus(pid, ReplicationStatus.COMPLETE)
+  deactivate mnB
+  cnZ -> mnA: mnA.getChecksum(pid)
+  activate mnA #D74F57
+  mnA --> cnZ : checksum
+  
+  note right
+  Object's system metadata get's updated
+  end note
+  
+  deactivate mnA
+  cnZ -> cnZ: hzSystemMetadata.lock(pid)
+  cnZ -> cnZ: updateSystemMetadata(pid)
+  cnZ -> cnZ: hzSystemMetadata.unlock(pid)
+  cnZ --> cnZ: statusResponse
+  deactivate cnZ
+  @enduml
 
 
 .. image:: images/09_seq.png
@@ -172,6 +202,7 @@ replication by the CN checking its status in the system metadata. The end
 state of a replicate operation is that content is available on the MN, the 
 MN has notified the CN of such, and the CN will schedule a synchronize 
 operation that will verify the copy as legitimate.
+
 
 Note (2011.01.07 CWB): This simple authentication scheme will not work on
 member nodes that have their own access control rules. In this scheme, each
