@@ -134,6 +134,13 @@ retrieve the system metadata for the object from the CN.
       deactivate mn_read
       loop for each PID
         cn_sync -> cn_sync: createTask(PID)
+      note right
+        Each SyncTask implements Callable
+        and will be submitted to the
+        ExecutorService to be executed 
+        on a CN
+      end note
+        
         cn_sync -> cn_queue: offer(taskid, SyncTask)
         activate cn_queue #D74F57
         cn_queue --> cn_sync: OK
@@ -171,7 +178,7 @@ retrieve the system metadata for the object from the CN.
       cn_sync -> cn_sysmeta: lock(PID)
       activate cn_sysmeta #D74F57
       group ProcessPID( PID )
-        cn_sync -> mn_read: getSystemMetadata( PID )
+        cn_sync -> mn_read: getSystemMetadata(PID)
         mn_read -> cn_sync: SystemMetadata
         cn_sync -> mn_read: get( PID )
         mn_read -> cn_sync: object
@@ -191,6 +198,12 @@ retrieve the system metadata for the object from the CN.
         inserts, updates, deletes.
       end note
       cn_indexer -> cn_indexer: createTask(PID)
+      note left
+        Each IndexTask implements Callable
+        and will be submitted to the
+        ExecutorService to be executed 
+        on the local CN
+      end note
       cn_indexer -> cn_index: offer(taskid, IndexTask)
       activate cn_index #D74F57
       cn_objs --> cn_sync: OK
@@ -206,6 +219,12 @@ retrieve the system metadata for the object from the CN.
         inserts, updates, deletes.
       end note
       cn_replication -> cn_replication: createTask(PID)
+      note left
+        Each ReplTask implements Callable
+        and will be submitted to the
+        ExecutorService to be executed 
+        on the a CN
+      end note
       cn_replication -> cn_repl: offer(taskid, ReplTask)
       activate cn_repl #D74F57
       deactivate cn_queue
