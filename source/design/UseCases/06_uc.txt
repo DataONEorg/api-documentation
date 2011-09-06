@@ -81,111 +81,142 @@ retrieve the system metadata for the object from the CN.
 
 .. 
     @startuml images/06_seq.png
+    skinparam notebordercolor #AAAAAA
+    skinparam notefontcolor #222222
+    
     participant "Repl Queue" as cn_repl << CN >>
+    participant "Replication" as cn_replication << CN >>
     participant "Index Queue" as cn_index << CN >>
+    participant "Indexer" as cn_indexer << CN >>
     participant "Object Store" as cn_objs << CN >>
-    participant "PID Lock" as c_pidlock << CN >>
+    participant "System Metadata Map" as cn_sysmeta << CN >>
     participant "Sync Queue" as cn_queue << CN >>
-    participant "Node Lock" as c_nodelock << CN >>
-    participant "Node List" as c_nodes << CN >>
-    participant "Synchronization" as c_sync << CN >>
-    participant "Read API" as m_read << MN >>
+    participant "Node Map" as cn_nodes << CN >>
+    participant "Synchronization" as cn_sync << CN >>
+    participant "Read API" as mn_read << MN >>
 
-    'm_crud -> c_notify: notify(session, pid, OBJECT_CREATED)
-    'c_notify -> cn_queue: addTask(SYNC_OBJECT, node, pid)
+    'm_crud -> c_notify: notify(session, PID, OBJECT_CREATED)
+    'c_notify -> cn_queue: addTask(SyncTask, node, PID)
     'note right
     '  notification triggered by successful 
     '  create operation on MN.
     'end note
 
-    'm_rep -> c_notify: setReplicationStatus(token, pid, COMPLETE)
-    'c_notify -> cn_queue: addTask(SYNC_OBJECT, node, pid)
+    'm_rep -> c_notify: setReplicationStatus(token, PID, COMPLETE)
+    'c_notify -> cn_queue: addTask(SyncTask, node, PID)
     'note right
     '  notification triggered by completed 
     '  replication operation on MN.
     'end note
     
     group populateSynchronizationQueue
-      c_sync -> c_nodelock: lockNode(node_id)
-      activate c_sync
+      cn_sync -> cn_nodes: lock(node_id)
+      activate cn_sync #D74F57
       note right
         Start of synchronization 
         process triggered by quartz
       end note
-      activate c_nodelock
-      c_nodelock -> c_sync: OK
-      c_sync -> c_nodes: getLastUpdateTime(node_id)
-      activate c_nodes
-      c_nodes -> c_sync: startTime
-      deactivate c_nodes
-    
-      c_sync -> m_read: listObjects(session, startTime, ...)
-      activate m_read
-      c_sync <-- m_read: ObjectList
-      deactivate m_read
-      loop for each PID
-        c_sync -> cn_queue: addTask(SYNC_OBJECT, node_id, PID)
-        activate cn_queue
-      end
-      note left
-        addTask should fail if PID is already in the list and
-        the PID is NOT locked. This enables very recent updates
-        to a PID to occur and be correctly managed by the 
-        overall synchronization process.
+      activate cn_nodes #D74F57
+      cn_nodes --> cn_sync: OK
+      cn_sync -> cn_nodes: getLastUpdateTime(node_id)
+      activate cn_nodes #D74F57
+      note right
+        The Node Map is a hash of 
+        (node_id, Node), use Hazelcast query
+        Map.values() passing in SqlPredicate
       end note
-      c_sync -> c_nodes: setLastUpdateTime(node_id, startTime)
-      activate c_nodes
-      c_nodes -> c_sync: OK
-      deactivate c_nodes
+      cn_nodes --> cn_sync: startTime
+      deactivate cn_nodes
+    
+      cn_sync -> mn_read: listObjects(session, startTime, ...)
+      activate mn_read #D74F57
+      cn_sync <-- mn_read: ObjectList
+      deactivate mn_read
+      loop for each PID
+        cn_sync -> cn_sync: createTask(PID)
+        cn_sync -> cn_queue: offer(taskid, SyncTask)
+        activate cn_queue #D74F57
+        cn_queue --> cn_sync: OK
+        deactivate cn_queue
+      end
+      note right
+        adding SyncTasks should fail if PID is already 
+        in the list and the PID is NOT locked. This enables 
+        very recent updates to a PID to occur and be 
+        correctly managed by the overall synchronization 
+        process.
+      end note
+      cn_sync -> cn_nodes: setLastUpdateTime(node_id, startTime)
+      activate cn_nodes #D74F57
+      cn_nodes --> cn_sync: OK
+      deactivate cn_nodes
 
-      c_sync -> c_nodelock: unlockNode( node_id )    
-      deactivate c_sync
-      deactivate c_nodelock
+      cn_sync -> cn_nodes: unlock(node_id)    
+      deactivate cn_sync
+      deactivate cn_nodes
     end
 
     loop for each task
-      c_sync -> cn_queue: getNextTask()
-      activate c_sync
-      cn_queue -> c_pidlock: lockPID( PID )
-      activate c_pidlock
+      cn_sync -> cn_sync: entryAdded(EntryEvent<PID, SyncTask>)
+      activate cn_sync #D74F57      
+      cn_sync -> cn_queue: poll(timeout)
+      activate cn_queue #D74F57
       note right
-        The PID lock may be a property that 
-        is set on the entry in the sync task
-        queue. 
+        Only one CN will win the poll and 
+        process the SyncTask
       end note
-      cn_queue --> c_sync: Node, PID
+      cn_queue --> cn_sync: SyncTask
+      deactivate cn_queue
+      cn_sync -> cn_sync: ExecutorService.submit(SyncTask)
+      cn_sync -> cn_sysmeta: lock(PID)
+      activate cn_sysmeta #D74F57
       group ProcessPID( PID )
-        c_sync -> m_read: getSystemMetadata( PID )
-        m_read -> c_sync: SystemMetadata
-        c_sync -> m_read: get( PID )
-        m_read -> c_sync: object
-        c_sync -> c_sync: work
+        cn_sync -> mn_read: getSystemMetadata( PID )
+        mn_read -> cn_sync: SystemMetadata
+        cn_sync -> mn_read: get( PID )
+        mn_read -> cn_sync: object
+        cn_sync -> cn_sync: work
         note right
           Check for new object, 
           updates to properties
         end note
       end
-      c_sync -> cn_objs: createOrUpdate(session, PID, object, SystemMetadata)
-      activate cn_objs
-      cn_objs -> cn_index: add_task(INDEX_OBJECT, PID, objectFormat)
-      activate cn_index
-      cn_objs -> c_sync: OK
+      cn_sync -> cn_objs: createOrUpdate(session, PID, object, SystemMetadata)
+      activate cn_objs #D74F57
+      cn_indexer -> cn_indexer: entryAdded()
+      activate cn_indexer #D74F57
+      note left
+        Indexer monitors the 
+        System Metadata Map for
+        inserts, updates, deletes.
+      end note
+      cn_indexer -> cn_indexer: createTask(PID)
+      cn_indexer -> cn_index: offer(taskid, IndexTask)
+      activate cn_index #D74F57
+      cn_objs --> cn_sync: OK
       deactivate cn_objs
-      c_sync -> cn_queue: popTask( PID )
-      cn_queue -> c_pidlock: unlockPID( PID )
+      cn_sync -> cn_sysmeta: unlockPID( PID )
       deactivate cn_queue
-      deactivate c_pidlock
-      c_sync -> cn_repl: add_task(REPLICATE_OBJECT, PID)
-      activate cn_repl
+      deactivate cn_sysmeta
+      cn_replication -> cn_replication: entryAdded()
+      activate cn_replication #D74F57
+      note left
+        Replication monitors the 
+        System Metadata Map for
+        inserts, updates, deletes.
+      end note
+      cn_replication -> cn_replication: createTask(PID)
+      cn_replication -> cn_repl: offer(taskid, ReplTask)
+      activate cn_repl #D74F57
       deactivate cn_queue
     end
-    deactivate c_sync
+    deactivate cn_sync
     @enduml
 
 
 .. 
    @startuml images/06_act.png
-   (*) --> [processObject()] if "CN_read.getSystemMetadata(PID)" then
+   (*) --> [processObject()] if "CNRead.getSystemMetadata(PID)" then
      if "Duplicate Object?" then
        -->[Yes] "Duplicate Content"
        --> "Update Replica Info"
@@ -224,18 +255,18 @@ The Member Node synchronization process will operate in an asynchronous
 manner, with a task queue on the CN service containing a list of objects that
 need to be added to the coordinating node populated through two mechanisms: 
 
-1. scheduled calls to :func:`MN_crud.listObjects` 
+1. scheduled calls to :func:`MNRead.listObjects` 
 
 2. through a new notification API that is called by a Member Node after a
    successful create operation.
 
 The task queue is processed by a pool of workers which retrieve the content
-using :func:`MN_crud.get` and :func:`MN_crud.getSystemMetadata`, and store the
-content in the Coordinating Node using the internal :func:`CN_crud.create`
+using :func:`MNRead.get` and :func:`MNRead.getSystemMetadata`, and store the
+content in the Coordinating Node using the internal :func:`CNStorage.create`
 method.
 
 The initial implementation will focus on using only scheduled calls to
-:func:`MN_crud.listObjects` to populate the task queue. The scheduling
+:func:`MNRead.listObjects` to populate the task queue. The scheduling
 information shall be set during the MN registration process.
 
 Multiple threads should be able to process the task queue, and the number of
