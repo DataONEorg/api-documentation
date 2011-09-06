@@ -163,7 +163,7 @@ retrieve the system metadata for the object from the CN.
       deactivate cn_nodes
     end
 
-    loop for each task
+    group processSynchronizationQueue
       cn_sync -> cn_sync: entryAdded(EntryEvent<PID, SyncTask>)
       activate cn_sync #D74F57      
       cn_sync -> cn_queue: poll(timeout)
