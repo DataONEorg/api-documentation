@@ -195,7 +195,7 @@ retrieve the system metadata for the object from the CN.
       activate cn_index #D74F57
       cn_objs --> cn_sync: OK
       deactivate cn_objs
-      cn_sync -> cn_sysmeta: unlockPID( PID )
+      cn_sync -> cn_sysmeta: unlock(PID)
       deactivate cn_queue
       deactivate cn_sysmeta
       cn_replication -> cn_replication: entryAdded()
