@@ -95,7 +95,7 @@ Post Conditions
 Member Node replication.
 
 ..
-  @startuml images/09_uc.png
+  @startuml images/09_seq.png
   skinparam notebordercolor #AAAAAA
   skinparam notefontcolor #222222
   title Replicate an object between two Member Nodes\n\n
@@ -115,7 +115,7 @@ Member Node replication.
   end note
   
   cnXrepl -> cnXrepl : entryAdded(EntryEvent<pid, sysmeta>)
-  cnXrepl -> cnXrepl : createReplicationTaskList(pid)
+  cnXrepl -> cnXrepl : createAndQueueTasks(pid)
   
   loop for each ReplicationTask
   cnXrepl -> cnXrepl : taskid = idGenerator.newId()
@@ -124,6 +124,7 @@ Member Node replication.
     called in ReplicationService constructor 
   end note
   cnXrepl -> cnXrepl : hzReplicationTaskQueue.put(taskid, task)
+  cnZ -> cnZ: setReplicationStatus(pid, nodeRef, ReplicationStatus.QUEUED)
   end loop
   note right
     Hazelcast distributes Replication
@@ -154,7 +155,7 @@ Member Node replication.
   activate mnB #D74F57
   mnB --> cnZ: replicateResponse
   deactivate cnZ 
-  cnZ -> cnZ: setReplicationStatus(pid, ReplicationStatus.QUEUED)
+  cnZ -> cnZ: setReplicationStatus(pid, nodeRef, ReplicationStatus.REQUESTED)
   
   note left
    Object's system metadata get's updated
@@ -174,7 +175,7 @@ Member Node replication.
   deactivate mnA
   activate mnB #D74F57
   
-  mnB -> cnZ: setReplicationStatus(pid, ReplicationStatus.COMPLETE)
+  mnB -> cnZ: setReplicationStatus(pid, nodeRef, ReplicationStatus.COMPLETE)
   deactivate mnB
   cnZ -> mnA: mnA.getChecksum(pid)
   activate mnA #D74F57
