@@ -35,6 +35,10 @@
      - :func:`generateIdentifier`
      - (:class:`session<Types.Session>`, ``scheme``, ``[fragment]``) ``->`` :class:`Types.Identifier`
    * - Tier 1
+     - ``GET /checksum``
+     - :func:`getChecksumAlgorithms`
+     - () ``->`` :class:`Types.ChecksumAlgorithmList`
+   * - Tier 1
      - ``GET /node``
      - :func:`listNodes`
      - () ``->`` :class:`Types.NodeList`
@@ -290,6 +294,25 @@
      The schme requested is not a valid schme accepted by this service
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4191)``
+
+
+
+
+.. function:: getChecksumAlgorithms() -> ChecksumAlgorithmList
+
+   Returns a list of checksum algorithms that are supported by DataONE.
+
+   :REST URL: ``GET /checksum``
+   :returns: A list of supported checksum algorithms.
+   :rtype: :class:`Types.ChecksumAlgorithmList`
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4880)``
+
+     The service is not implemented.
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4881)``
+
+     A problem occurred with the service that prevented it from returning the expected response.
 
 
 

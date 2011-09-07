@@ -35,6 +35,10 @@
      - :func:`CNCore.generateIdentifier`
      - (:class:`session<Types.Session>`, ``scheme``, ``[fragment]``) ``->`` :class:`Types.Identifier`
    * - Tier 1
+     - ``GET /checksum``
+     - :func:`CNCore.getChecksumAlgorithms`
+     - () ``->`` :class:`Types.ChecksumAlgorithmList`
+   * - Tier 1
      - ``GET /node``
      - :func:`CNCore.listNodes`
      - () ``->`` :class:`Types.NodeList`
@@ -136,7 +140,7 @@
      - :func:`CNReplication.setReplicationPolicy`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`policy<Types.ReplicationPolicy>`) ``->`` boolean
    * - Tier 4
-     - ``GET /authorized/replication/{pid}``
+     - ``GET /replicationAuthorized/{pid}``
      - :func:`CNReplication.isReplicationAuthorized`
      - (:class:`session<Types.Session>`, :class:`targetNodeSubject<Types.Subject>`, :class:`pid<Types.Identifier>`, :class:`executePermission<Types.Permission>`) ``->`` boolean
    * - Tier 2

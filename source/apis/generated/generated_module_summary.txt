@@ -99,6 +99,13 @@ A successful operation is indicated by a HTTP status of 200 on the response.
 Failure of the operation MUST be indicated by returning an appropriate exception.
 
        Appears in functional use cases: :doc:`UC09 </design/UseCases/09_uc>`
+   * - \
+     - :func:`MNReplication.getReplica`
+     - Called by a target Member Node to fullfill the replication request originated by a Coordinating Node calling :func:`MNReplication.replicate()`. This is a request to make a replica copy of the object, and differs from a call to GET /object in that it should be logged as a replication event rather than a read event on that object.
+A successful operation is indicated by a HTTP status of 200 on the response.
+Failure of the operation MUST be indicated by returning an appropriate exception.
+
+       Appears in functional use cases: :doc:`UC09 </design/UseCases/09_uc>`
    * - :mod:`CNCore`
      - :func:`CNCore.create`
      - Used internally within a Coordinating Node to add a new object to the object store.
@@ -126,6 +133,9 @@ This method is not publicly exposed by a Coordinating Node.
      - Given a scheme and optional fragment, generates an identifier with that scheme and fragment that is unique.
 
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
+   * - \
+     - :func:`CNCore.getChecksumAlgorithms`
+     - Returns a list of checksum algorithms that are supported by DataONE.
    * - \
      - :func:`CNCore.listNodes`
      - Returns a list of nodes that have been registered with the DataONE infrastructure.

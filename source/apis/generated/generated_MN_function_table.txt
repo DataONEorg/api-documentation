@@ -71,4 +71,8 @@
      - ``POST /replicate``
      - :func:`MNReplication.replicate`
      - (:class:`session<Types.Session>`, :class:`sysmeta<Types.SystemMetadata>`, :class:`sourceNode<Types.NodeReference>`) ``->`` boolean
+   * - Tier 4
+     - ``GET /replica/{pid}``
+     - :func:`MNReplication.getReplica`
+     - (:class:`session<Types.Session>`) ``->`` boolean
 

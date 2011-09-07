@@ -451,6 +451,31 @@
      - UnsupportedType
      - 400
      - 2155
+   * - :mod:`MNReplication`
+     - :func:`getReplica <MNReplication.getReplica>`
+     - NotImplemented
+     - 501
+     - 2180
+   * - :mod:`MNReplication`
+     - :func:`getReplica <MNReplication.getReplica>`
+     - ServiceFailure
+     - 500
+     - 2181
+   * - :mod:`MNReplication`
+     - :func:`getReplica <MNReplication.getReplica>`
+     - NotAuthorized
+     - 401
+     - 2182
+   * - :mod:`MNReplication`
+     - :func:`getReplica <MNReplication.getReplica>`
+     - InvalidRequest
+     - 400
+     - 2183
+   * - :mod:`MNReplication`
+     - :func:`getReplica <MNReplication.getReplica>`
+     - InsufficientResources
+     - 413
+     - 2184
    * - :mod:`CNCore`
      - :func:`create <CNCore.create>`
      - NotAuthorized
@@ -626,6 +651,16 @@
      - NotImplemented
      - 501
      - 4191
+   * - :mod:`CNCore`
+     - :func:`getChecksumAlgorithms <CNCore.getChecksumAlgorithms>`
+     - NotImplemented
+     - 501
+     - 4880
+   * - :mod:`CNCore`
+     - :func:`getChecksumAlgorithms <CNCore.getChecksumAlgorithms>`
+     - ServiceFailure
+     - 500
+     - 4881
    * - :mod:`CNCore`
      - :func:`listNodes <CNCore.listNodes>`
      - NotImplemented

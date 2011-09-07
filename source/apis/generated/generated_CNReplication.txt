@@ -23,7 +23,7 @@
      - :func:`setReplicationPolicy`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`policy<Types.ReplicationPolicy>`) ``->`` boolean
    * - Tier 4
-     - ``GET /authorized/replication/{pid}``
+     - ``GET /replicationAuthorized/{pid}``
      - :func:`isReplicationAuthorized`
      - (:class:`session<Types.Session>`, :class:`targetNodeSubject<Types.Subject>`, :class:`pid<Types.Identifier>`, :class:`executePermission<Types.Permission>`) ``->`` boolean
 
@@ -144,7 +144,7 @@
 
    Failure of the operation MUST be indicated by returning an appropriate exception.
 
-   :REST URL: ``GET /authorized/replication/{pid}``
+   :REST URL: ``GET /replicationAuthorized/{pid}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 

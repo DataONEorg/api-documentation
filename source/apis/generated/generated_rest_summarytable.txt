@@ -50,6 +50,9 @@
    * - POST /replicate
      - :func:`MNReplication.replicate`
      - Called by a Coordinating Node to request that the Member Node create a copy of the specified object by retrieving it from another Member Nodeode and storing it locally so that it can be made accessible to the DataONE system.   A successful operation is indicated by a HTTP status of 200 on the response.  Failure of the operation MUST be indicated by returning an appropriate exception.
+   * - GET /replica/{pid}
+     - :func:`MNReplication.getReplica`
+     - Called by a target Member Node to fullfill the replication request originated by a Coordinating Node calling :func:`MNReplication.replicate()`. This is a request to make a replica copy of the object, and differs from a call to GET /object in that it should be logged as a replication event rather than a read event on that object. A successful operation is indicated by a HTTP status of 200 on the response. Failure of the operation MUST be indicated by returning an appropriate exception.
 
 
 .. list-table:: REST URLs implemented on Coordinating Nodes.
@@ -77,6 +80,9 @@
    * - POST /generate
      - :func:`CNCore.generateIdentifier`
      - Given a scheme and optional fragment, generates an identifier with that scheme and fragment that is unique.
+   * - GET /checksum
+     - :func:`CNCore.getChecksumAlgorithms`
+     - Returns a list of checksum algorithms that are supported by DataONE.
    * - GET /node
      - :func:`CNCore.listNodes`
      - Returns a list of nodes that have been registered with the DataONE infrastructure.
@@ -152,7 +158,7 @@
    * - PUT /meta/policy/{pid}
      - :func:`CNReplication.setReplicationPolicy`
      - Updates the replication policy entry for an object by updating the system metadata. Successful completion of the operation is indicated by returning a HTTP status of 200. Failure of the operation MUST be indicated by returning an appropriate exception.
-   * - GET /authorized/replication/{pid}
+   * - GET /replicationAuthorized/{pid}
      - :func:`CNReplication.isReplicationAuthorized`
      - Verifies that a replication event was initiated by a CN by comparing the target node's identifiying subject with a known list of scheduled replication tasks. Successful completion of the operation is indicated by returning a HTTP status of 200. Failure of the operation MUST be indicated by returning an appropriate exception.
    * - PUT /node/{nodeid}
