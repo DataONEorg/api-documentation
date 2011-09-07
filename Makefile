@@ -5,15 +5,17 @@
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
 PAPER         =
-BUILDDIR      = build
+BUILDDIR      = $(CURDIR)/build
 GRAPHVIZ      = /usr/bin/dot
-PLANTUMLCONF  = `pwd`/tools/docutils/plantuml.conf
-PLANTUML      = java -jar tools/docutils/plantuml.jar -config tools/docutils/plantuml.conf
-DOCGENERATOR  = python tools/ihwd/ihwd.py
-METHODXLS     = MethodCrossReference.xls
-ZIPHTML       = architecture.zip
+JAVA          = /usr/bin/java
 XSLTPROC      = /usr/bin/xsltproc
-SCHEMADIR     = `pwd`/source/d1_schemas_v1
+PYTHON        = /usr/bin/python
+PLANTUMLCONF  = $(CURDIR)/tools/docutils/plantuml.conf
+PLANTUML      = $(JAVA) -jar $(CURDIR)/tools/docutils/plantuml.jar -config $(PLANTUMLCONF)
+DOCGENERATOR  = $(PYTHON) tools/ihwd/ihwd.py
+METHODXLS     = $(CURDIR)/MethodCrossReference.xls
+ZIPHTML       = architecture.zip
+SCHEMADIR     = $(CURDIR)/source/d1_schemas_v1
 #SCHEMADIR     = /Users/vieglais/Workspaces/DataONE_trunk/d1_schemas
 
 # Internal variables.
@@ -44,22 +46,22 @@ clean:
 	-rm -rf $(BUILDDIR)/*
 
 generate: $(METHODXLS)
-	$(DOCGENERATOR) -s $(METHODXLS) -d ./source/apis/generated
+	$(DOCGENERATOR) -s $(METHODXLS) -d $(CURDIR)/source/apis/generated
 
 generate_schema: 
-	$(XSLTPROC) --path ".:$(SCHEMADIR)" dataoneTypes2rst.xsl dataoneTypes.xsd > ./source/apis/Types.txt
+	$(XSLTPROC) --path ".:$(SCHEMADIR)" dataoneTypes2rst.xsl dataoneTypes.xsd > $(CURDIR)/source/apis/Types.txt
 	#$(XSLTPROC) --path ".:$(SCHEMADIR)" xsd2rst.xsl dataoneTypes.xsd > ./source/apis/generated/generated_schema_types2.txt
 
 plantuml: plantuml_source plantuml_usecase plantuml_types
 
 plantuml_source:
-	GRAPHVIZ_DOT=$(GRAPHVIZ) $(PLANTUML) source source/design
+	GRAPHVIZ_DOT=$(GRAPHVIZ) $(PLANTUML) $(CURDIR)/source $(CURDIR)/source/design
 
 plantuml_usecase:
-	GRAPHVIZ_DOT=$(GRAPHVIZ) $(PLANTUML) source/design/UseCases
+	GRAPHVIZ_DOT=$(GRAPHVIZ) $(PLANTUML) $(CURDIR)/source/design/UseCases
 
 plantuml_types:
-	GRAPHVIZ_DOT=$(GRAPHVIZ) $(PLANTUML) source/apis
+	GRAPHVIZ_DOT=$(GRAPHVIZ) $(PLANTUML) $(CURDIR)/source/apis
 
 html: 
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
