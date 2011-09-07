@@ -13,7 +13,7 @@ DOCGENERATOR  = python tools/ihwd/ihwd.py
 METHODXLS     = MethodCrossReference.xls
 ZIPHTML       = architecture.zip
 XSLTPROC      = /usr/bin/xsltproc
-SCHEMADIR     = `pwd`/source/d1_schemas
+SCHEMADIR     = `pwd`/source/d1_schemas_v1
 #SCHEMADIR     = /Users/vieglais/Workspaces/DataONE_trunk/d1_schemas
 
 # Internal variables.
@@ -47,7 +47,7 @@ generate: $(METHODXLS)
 	$(DOCGENERATOR) -s $(METHODXLS) -d ./source/apis/generated
 
 generate_schema: 
-	$(XSLTPROC) --path ".:$(SCHEMADIR)" types2rst.xsl dataoneTypes.xsd > ./source/apis/generated/generated_schema_types.txt
+	$(XSLTPROC) --path ".:$(SCHEMADIR)" dataoneTypes2rst.xsl dataoneTypes.xsd > ./source/apis/Types.txt
 	#$(XSLTPROC) --path ".:$(SCHEMADIR)" xsd2rst.xsl dataoneTypes.xsd > ./source/apis/generated/generated_schema_types2.txt
 
 plantuml: plantuml_source plantuml_usecase plantuml_types
