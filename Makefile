@@ -11,17 +11,17 @@ JAVA          = /usr/bin/java
 XSLTPROC      = /usr/bin/xsltproc
 PYTHON        = /usr/bin/python
 PLANTUMLCONF  = $(CURDIR)/tools/docutils/plantuml.conf
-PLANTUML      = $(JAVA) -jar $(CURDIR)/tools/docutils/plantuml.jar -config $(PLANTUMLCONF)
-DOCGENERATOR  = $(PYTHON) tools/ihwd/ihwd.py
-METHODXLS     = $(CURDIR)/MethodCrossReference.xls
+PLANTUML      = $(JAVA) -jar "$(CURDIR)/tools/docutils/plantuml.jar" -config "$(PLANTUMLCONF)"
+DOCGENERATOR  = $(PYTHON) "$(CURDIR)/tools/ihwd/ihwd.py"
+METHODXLS     = MethodCrossReference.xls
 ZIPHTML       = architecture.zip
-SCHEMADIR     = $(CURDIR)/source/d1_schemas_v1
+SCHEMADIR     = source/d1_schemas_v1
 #SCHEMADIR     = /Users/vieglais/Workspaces/DataONE_trunk/d1_schemas
 
 # Internal variables.
 PAPEROPT_a4     = -D latex_paper_size=a4
 PAPEROPT_letter = -D latex_paper_size=letter
-ALLSPHINXOPTS   = -d $(BUILDDIR)/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) source
+ALLSPHINXOPTS   = -d "$(BUILDDIR)/doctrees" $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) source
 
 .PHONY: help clean html dirhtml pickle json htmlhelp qthelp latex changes linkcheck doctest pdf
 
@@ -43,28 +43,28 @@ help:
 	@echo "  plantuml  to make PlantUML diagrams"
 
 clean:
-	-rm -rf $(BUILDDIR)/*
+	-rm -rf "$(BUILDDIR)/*"
 
 generate: $(METHODXLS)
-	$(DOCGENERATOR) -s $(METHODXLS) -d $(CURDIR)/source/apis/generated
+	$(DOCGENERATOR) -s "$(CURDIR)/$(METHODXLS)" -d "$(CURDIR)/source/apis/generated"
 
 generate_schema: 
-	$(XSLTPROC) --path ".:$(SCHEMADIR)" dataoneTypes2rst.xsl dataoneTypes.xsd > $(CURDIR)/source/apis/Types.txt
+	$(XSLTPROC) --path ".:$(SCHEMADIR)" dataoneTypes2rst.xsl dataoneTypes.xsd > "$(CURDIR)/source/apis/Types.txt"
 	#$(XSLTPROC) --path ".:$(SCHEMADIR)" xsd2rst.xsl dataoneTypes.xsd > ./source/apis/generated/generated_schema_types2.txt
 
 plantuml: plantuml_source plantuml_usecase plantuml_types
 
 plantuml_source:
-	GRAPHVIZ_DOT=$(GRAPHVIZ) $(PLANTUML) $(CURDIR)/source $(CURDIR)/source/design
+	GRAPHVIZ_DOT=$(GRAPHVIZ) $(PLANTUML) "$(CURDIR)/source" "$(CURDIR)/source/design"
 
 plantuml_usecase:
-	GRAPHVIZ_DOT=$(GRAPHVIZ) $(PLANTUML) $(CURDIR)/source/design/UseCases
+	GRAPHVIZ_DOT=$(GRAPHVIZ) $(PLANTUML) "$(CURDIR)/source/design/UseCases"
 
 plantuml_types:
-	GRAPHVIZ_DOT=$(GRAPHVIZ) $(PLANTUML) $(CURDIR)/source/apis
+	GRAPHVIZ_DOT=$(GRAPHVIZ) $(PLANTUML) "$(CURDIR)/source/apis"
 
 html: 
-	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
+	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) "$(BUILDDIR)/html"
 	#zip -r $(BUILDDIR)/$(ZIPHTML) $(BUILDDIR)/html
 	#mv $(BUILDDIR)/$(ZIPHTML) $(BUILDDIR)/html/
 	@echo
@@ -73,33 +73,33 @@ html:
 all: generate html latex
 
 dirhtml:
-	$(SPHINXBUILD) -b dirhtml $(ALLSPHINXOPTS) $(BUILDDIR)/dirhtml
+	$(SPHINXBUILD) -b dirhtml $(ALLSPHINXOPTS) "$(BUILDDIR)/dirhtml"
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/dirhtml."
 
 pickle:
-	$(SPHINXBUILD) -b pickle $(ALLSPHINXOPTS) $(BUILDDIR)/pickle
+	$(SPHINXBUILD) -b pickle $(ALLSPHINXOPTS) "$(BUILDDIR)/pickle"
 	@echo
 	@echo "Build finished; now you can process the pickle files."
 
 json:
-	$(SPHINXBUILD) -b json $(ALLSPHINXOPTS) $(BUILDDIR)/json
+	$(SPHINXBUILD) -b json $(ALLSPHINXOPTS) "$(BUILDDIR)/json"
 	@echo
 	@echo "Build finished; now you can process the JSON files."
 
 pdf:
-	$(SPHINXBUILD) -b pdf $(ALLSPHINXOPTS) $(BUILDDIR)/pdf
+	$(SPHINXBUILD) -b pdf $(ALLSPHINXOPTS) "$(BUILDDIR)/pdf"
 	@echo
 	@echo "Build finished. The PDF files are in $(BUILDDIR)/pdf."
 
 htmlhelp:
-	$(SPHINXBUILD) -b htmlhelp $(ALLSPHINXOPTS) $(BUILDDIR)/htmlhelp
+	$(SPHINXBUILD) -b htmlhelp $(ALLSPHINXOPTS) "$(BUILDDIR)/htmlhelp"
 	@echo
 	@echo "Build finished; now you can run HTML Help Workshop with the" \
 	      ".hhp project file in $(BUILDDIR)/htmlhelp."
 
 qthelp:
-	$(SPHINXBUILD) -b qthelp $(ALLSPHINXOPTS) $(BUILDDIR)/qthelp
+	$(SPHINXBUILD) -b qthelp $(ALLSPHINXOPTS) "$(BUILDDIR)/qthelp"
 	@echo
 	@echo "Build finished; now you can run "qcollectiongenerator" with the" \
 	      ".qhcp project file in $(BUILDDIR)/qthelp, like this:"
@@ -108,30 +108,30 @@ qthelp:
 	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/DataONEArchitecture.qhc"
 
 latex: 
-	$(SPHINXBUILD) -b latex $(ALLSPHINXOPTS) $(BUILDDIR)/latex
+	$(SPHINXBUILD) -b latex $(ALLSPHINXOPTS) "$(BUILDDIR)/latex"
 	@echo
 	@echo "Build finished; the LaTeX files are in $(BUILDDIR)/latex."
 	@echo "Run \`make all-pdf' or \`make all-ps' in that directory to" \
 	      "run these through (pdf)latex."
 
 changes:
-	$(SPHINXBUILD) -b changes $(ALLSPHINXOPTS) $(BUILDDIR)/changes
+	$(SPHINXBUILD) -b changes $(ALLSPHINXOPTS) "$(BUILDDIR)/changes"
 	@echo
 	@echo "The overview file is in $(BUILDDIR)/changes."
 
 linkcheck:
-	$(SPHINXBUILD) -b linkcheck $(ALLSPHINXOPTS) $(BUILDDIR)/linkcheck
+	$(SPHINXBUILD) -b linkcheck $(ALLSPHINXOPTS) "$(BUILDDIR)/linkcheck"
 	@echo
 	@echo "Link check complete; look for any errors in the above output " \
 	      "or in $(BUILDDIR)/linkcheck/output.txt."
 
 doctest:
-	$(SPHINXBUILD) -b doctest $(ALLSPHINXOPTS) $(BUILDDIR)/doctest
+	$(SPHINXBUILD) -b doctest $(ALLSPHINXOPTS) "$(BUILDDIR)/doctest"
 	@echo "Testing of doctests in the sources finished, look at the " \
 	      "results in $(BUILDDIR)/doctest/output.txt."
 
 epub:
-	$(SPHINXBUILD) -b epub $(ALLSPHINXOPTS) $(BUILDDIR)/epub
+	$(SPHINXBUILD) -b epub $(ALLSPHINXOPTS) "$(BUILDDIR)/epub"
 	@echo
 	@echo "Build finished. The epub file is in $(BUILDDIR)/epub."
 
