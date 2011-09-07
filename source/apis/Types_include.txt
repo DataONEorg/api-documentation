@@ -1,0 +1,195 @@
+..                                    ######
+.. class:: OctetStream
+
+   A series of 8-bit bytes which combined together form a digital object.
+   *OctetStream* is used to transfer object bytes such as the response to
+   :func:`MNRead.get`.
+
+
+
+..                                    ######
+.. class:: Integer
+
+   A simple integer. The range of expected values should be described with the
+   accompanying API call.
+
+   The Integer type is serialized over XML using the predefined XMLSchema
+   *integer_* type, the value space of which is the infinite series
+   {...,-2,-1,0,1,2,...}.
+   
+.. _integer: http://www.w3.org/TR/xmlschema-2/#integer
+
+
+
+..                                    ######
+.. class:: Boolean
+
+   A boolean response is commonly used in the DataONE service APIs to indicate
+   success or otherwise of an operation. For operations that are called 
+   through the service interfaces, a positive boolean response (i.e. True) is
+   indicated by returning a HTTP response with a status code of "200". The 
+   body of the message may contain additional content, but this should be 
+   ignored by the receiver.
+
+   A False or failure response must return an appropriate Error message and 
+   must set the appropriate HTTP status code on the response to indicate a 
+   failure.
+
+   The Boolean type is serialized over XML using the predefined XMLSchema
+   `boolean`_ type, an instance of which can have the following legal literals
+   {true, false, 1, 0}.
+
+.. _boolean: http://www.w3.org/TR/xmlschema-2/#boolean
+
+
+..                                    ######
+.. class:: DateTime
+
+  A string that completely identifies a specific time.
+
+  - Must include date and time
+  - If not specified, then the time zone is 0, i.e. GMT
+
+  Valid representations include:
+  
+  - `HTTP Full Date`_ format. e.g. `Sun, 06 Nov 1994 08:49:37 GMT`
+  - `YYYY-MM-DDTHH:MM:SS.mmmmmm`
+  - `YYYYMMDDTHHMMSS.mmmmmm`
+  - `YYYY-MM-DDTHH:MM:SS.mmmmmm+HH:MM`
+  - `YYYYMMDDTHHMMSS.mmmmmm+HHMM`
+
+  The milliseconds may be left off if that precision is not available.
+
+  In Java, code against `java.util.Date`_, though serialization and
+  deserialization will be performed with `org.joda.DateTime`_ to ensure
+  millisecond precision is .
+
+  Implemented in Python using the `datetime.datetime`_ class, which is also
+  used for serialization and deserialization through Pyxb_.
+
+  See also the `XMLSchema dateTime`_ type which is used for serializing DateTime
+  values in XML transmitted between DataONE components.
+
+.. _HTTP Full Date: http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.3.1
+
+.. _XMLSchema dateTime: http://www.w3.org/TR/xmlschema-2/#dateTime
+
+.. _java.util.Date: http://download.oracle.com/javase/6/docs/api/java/util/Date.html
+
+.. _org.joda.DateTime: http://joda-time.sourceforge.net/
+
+.. _datetime.datetime: http://docs.python.org/library/datetime.html
+
+.. _Pyxb: http://pyxb.sourceforge.net/api/pyxb.binding.datatypes.dateTime-class.html
+
+
+
+..                                    ######
+.. class:: DescribeResponse  
+
+  The :func:`MNRead.describe` method provides a low cost hint about the type,
+  size and state of an object.
+
+  The *DescribeResponse* is returned from the server in a HTTP HEAD response,
+  and hence the values must be represented in the HTTP response headers. There
+  is no XML serialization of a *DescribeResponse*.
+
+  .. image:: images/class_describeresponse.png
+
+  ..
+    @startuml images/class_describeresponse.png
+    class DescribeResponse {
+      +DataONE-fmtid : ObjectFormatIdentifier
+      +Content-Length : integer
+      +Last-Modified : DateTime
+      +DataONE-Checksum : Checksum
+    }
+    DescribeResponse -- ObjectFormatIdentifier
+    DescribeResponse -- Checksum
+    DescribeResponse -- DateTime
+    @enduml
+
+  .. attribute:: DataONE-fmtid
+
+     The value of the :attr:`SystemMetadata.fmtid` entry available in the
+     :class:`SystemMetadata`.
+
+  .. attribute:: Content-Length
+
+     Size of the object in bytes, the value of :attr:`SystemMetadata.size`
+     from :class:`SystemMetadata`.
+
+  .. attribute:: Last-Modified
+
+     A :class:`DateTime` value that indicates when the :term:`system metadata`
+     associated with the object was last modified, i.e. the value of
+     :attr:`SystemMetadata.dateSysMetadataModified` for the object.
+
+  .. attribute:: DataONE-Checksum
+
+     The ChecksumAlgorithm and Checksum value of the object being examined.
+     The algorithm and checksum values are separated by a single comma with
+     the algorithm first.
+
+
+  Example of a HEAD response on object "ABC123"::
+
+    curl -I http://mn1.dataone.org/mn/object/ABC123
+
+    HTTP/1.1 200 OK
+    Last-Modified: Wed, 16 Dec 2009 13:58:34 GMT
+    Content-Length: 10400
+    Content-Type: application/octet-stream
+    DataONE-fmtid: eml://ecoinformatics.org/eml-2.0.1
+    DataONE-Checksum: SHA-1,2e01e17467891f7c933dbaa00e1459d23db3fe4f
+
+
+
+..                                    ######
+.. class:: Query
+
+   Queries are used to identify a subset of objects from a collection. The
+   form of query used by the DataONE system is likely to evolve significantly
+   as the project proceeds. The query specification listed here applies to the
+   prototype implementations (i.e. pre-version 1.0).
+
+   ::
+    
+     enum FilterTypeEnum 
+     {
+       NVP = 1;
+       SOLR = 3;
+       EARTHGRID = 4;
+     }
+     
+     enum LogicalOperator
+     {
+       LOP_OR = 0;
+       LOP_AND = 1;
+     }
+
+     message NameValuePair
+     {
+       required string name = 0;
+       required string value= 1;
+     }
+
+     message NameValuePairFilter
+     {
+       optional LogicalOperator LOP = 1 [default = LOP_AND];
+       repeated NameValuePair nvpair = 2;
+     }
+
+     message SOLRFilter
+     {
+       required string filter = 0;
+       optional string facetFilter = 1;
+     }
+
+     message EarthGridFilter
+     {
+       required string filter = 0;
+     }
+
+
+
