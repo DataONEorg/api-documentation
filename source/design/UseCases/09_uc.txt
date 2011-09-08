@@ -124,28 +124,25 @@ Member Node replication.
     called in ReplicationService constructor 
   end note
   cnXrepl -> cnXrepl : hzReplicationTaskQueue.put(taskid, task)
-  cnZ -> cnZ: setReplicationStatus(pid, nodeRef, ReplicationStatus.QUEUED)
-  end loop
   note right
     Hazelcast distributes Replication
-    list to other CNs
+    Tasks to all CNs
   end note
-  
+  cnXrepl -> cnXrepl: setReplicationStatus(session, pid,\n  nodeRef, ReplicationStatus.QUEUED)
   deactivate cnXrepl
+  end loop
 
      
-  == Process Replication Tasks ==
-    
-  note right
-  Each ReplicationService
-  continuously polls the 
-  hz queues
-  end note
-  
+  == Process Replication Tasks ==  
           
   cnZ -> cnZ: entryAdded(EntryEvent<taskid, task>)
   activate cnZ #D74F57
   cnZ -> cnZ: hzReplicationTaskQueue.poll()
+  note right
+    Each ReplicationService
+    polls the replication task
+    queue when events are fired
+  end note
   cnZ --> cnZ: task
 
   cnZ -> cnZ: ExecutorService.submit(task)
@@ -155,7 +152,7 @@ Member Node replication.
   activate mnB #D74F57
   mnB --> cnZ: replicateResponse
   deactivate cnZ 
-  cnZ -> cnZ: setReplicationStatus(pid, nodeRef, ReplicationStatus.REQUESTED)
+  cnZ -> cnZ: setReplicationStatus(session, pid,\n  nodeRef, ReplicationStatus.REQUESTED)
   
   note left
    Object's system metadata get's updated
@@ -169,13 +166,13 @@ Member Node replication.
   mnB -> mnA: getReplica(mnBSession, pid)
   deactivate mnB
   activate mnA #D74F57
-  mnA -> cnZ: isNodeAuthorized(mnASession, mnBSubject, pid, replicationPermission)
+  mnA -> cnZ: isNodeAuthorized(mnASession, \nmnBSubject, pid, replicationPermission)
   cnZ --> mnA: authorizationResponse
   mnA --> mnB: replicaBytes
   deactivate mnA
   activate mnB #D74F57
   
-  mnB -> cnZ: setReplicationStatus(pid, nodeRef, ReplicationStatus.COMPLETE)
+  mnB -> cnZ: setReplicationStatus(session, pid,\n  nodeRef, ReplicationStatus.COMPLETE)
   deactivate mnB
   cnZ -> mnA: mnA.getChecksum(pid)
   activate mnA #D74F57
