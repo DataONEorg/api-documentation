@@ -114,13 +114,15 @@ Glossary
     DataONE infrastructure.
 
   public user
-    The default user identity used when a service is called without supplying 
-    user credentials. The public user SHOULD never have write access to any 
-    services and MAY be limited access to some services in addition to the 
-    usual restrictions imposed by access control.
+    The default user identity used when a service is called without supplying
+    user credentials. The public user SHOULD never have write access to any
+    services and MAY be limited access to some services in addition to the usual
+    restrictions imposed by access control. The public user :term:`subject` can
+    be any of "Public", "AuthenticatedUser", "VerifiedUser".
 
   principal
-    See :term:`subject`. The use of the term "principal" is being deprecated in the documentation.
+    See :term:`subject`. The use of the term "principal" is being deprecated in
+    the documentation.
 
   replication
     See :term:`Coordinating Node replication` or :term:`data replication`.

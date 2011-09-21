@@ -7,15 +7,20 @@ Content Discovery
 
 Searching for content is a functionality that is primarily supported by
 Coordinating Nodes, programmatically through the CN_read.search method, and
-through the user interface which is based on Mercury_.
-
-There are two search backends, one implemented by Metacat, the other by a SOLR
-index that is populated with information extracted from system and science
-metadata.
+through a web browser interface that connects through a UI to a SOLR_ index.
 
 This document describes the properties of the SOLR index, how it is populated,
 and how it can be used to support programmatic search and introspection into the
 DataONE holdings.
+
+The SOLR index is currently populated from content that is stored on
+Coordinating Nodes which includes System Metadata, Science Metadata and Resource
+Maps. The basic model is that each index entry represents information about the
+information referenced by a single identifier (PID). For PIDs that refer to
+science data object, the index entry will be constructed from system metadata
+and zero or more resource maps that reference the object. If the PID refers to a
+science metadata object, the index entry will have fields populated with content
+extracted from the science metadata document.
 
 
 Properties of the Index Derived From System Metadata
@@ -24,7 +29,9 @@ Properties of the Index Derived From System Metadata
 Descriptions of the SOLR fields available and the content that provides the
 field values.
 
-**Table 1.** Elements derived from System Metadata and available for all objects.
+**Table 1.** Elements derived from System Metadata and available for all
+objects. "Multi" fields may be populated with more than a single value per
+document (PID) indexed.
 
 .. list-table::
    :widths: 3 2 1 10
@@ -41,11 +48,11 @@ field values.
    * - :attr:`objectFormat`
      - string
      - No
-     - :attr:`SystemMetadata.objectFormat`
+     - :attr:`SystemMetadata.fmtid`
    * - isMetadata
      - boolean
      - No
-     - :attr:`SystemMetadata.objectFormat`, scienceMetadata element
+     - :attr:`SystemMetadata.fmtid`, object format registry
    * - isData
      - boolean
      - No
@@ -53,7 +60,7 @@ field values.
    * - isResourceMap
      - boolean
      - No
-     - True if the objectFormatName starts with "http://www.openarchives.org/ore/"
+     - True if the :attr:`SystemMetadata.fmtid` starts with "http://www.openarchives.org/ore/"
    * - :attr:`size`
      - long
      - No
@@ -117,7 +124,7 @@ field values.
    * - :attr:`replica_mn`
      - string
      - Yes
-     - :attr:`SystemMetadata.replicaMemberNode`
+     - :attr:`SystemMetadata.replica`, replica/replicationMemberNode element
    * - :attr:`readPermission`
      - string
      - Yes
@@ -126,29 +133,32 @@ field values.
    * - :attr:`writePermission`
      - string
      - Yes
-     - As for readPermission
+     - List of subjects (groups and individuals) that have write permission on
+       PID, value retrieved from :attr:`SystemMetadata.accessPolicy`.
    * - :attr:`executePermission`
      - string
      - Yes
-     - As for readPermission
+     - List of subjects (groups and individuals) that have execute permission on
+       PID, value retrieved from :attr:`SystemMetadata.accessPolicy`.
    * - :attr:`changePermission`
      - string
      - Yes
-     - As for readPermission
+     - List of subjects (groups and individuals) that have change permission on
+       PID, value retrieved from :attr:`SystemMetadata.accessPolicy`.
    * - :attr:`isPublic`
      - boolean
      - No
-     - Set to True if the DataONE public user is present in the list of subjects
-       with readPermission on PID.
+     - Set to True if the DataONE :term:`public user` is present in the list of
+       subjects with readPermission on PID.
    * - :attr:`resourceMaps`
      - string
      - Yes
-     - List of resource maps that reference this PID.
+     - List of resource map PIDs that reference this PID.
    * - :attr:`contains`
      - string
      - Yes
-     - A list of all objects referenced by a resource map. Only populated if
-       the current object is a resource map.
+     - A list of all objects (PIDs) referenced by a resource map. Only populated
+       if the current object is a resource map.
    * - :attr:`documents`
      - string
      - Yes
@@ -167,8 +177,8 @@ Populating Permission Fields
 
 This process is fairly straight forward, and requires simply de-duping entries
 so that each of the permission fields contains a distinct list of subjects
-granted that permission. If the DataONE public user is present in the read
-permissions, then the isPublic field is set to True.
+granted that permission. If the DataONE :term:`public user` is present in the
+read permissions, then the *isPublic* field is set to True.
 
 
 Populating Object Relation Fields
@@ -182,14 +192,11 @@ these fields are contained in resource maps, it is necessary to build these
 fields in progression as additional resource maps are synchronized with the
 coordinating nodes.
 
-As a general strategy it is recommended that resource maps are indexed first,
-filling the *contains* entries for each map. Then each object that is not a
-resource map is indexed in turn. For each object, a query is issued against
-the index to retrieve the list of resource maps in which the object identifier
-is present, enabling population of the *resourceMaps* field for the object.
-Each of those resource maps is examined to obtain the list of identifiers for
-the *documents* field if the object is science metadata, and the *isDocumentedBy*
-field if the object is data.
+For each object, a query is issued against the index to retrieve the list of
+resource maps in which the object identifier is present, enabling population of
+the *resourceMaps* field for the object. Each of those resource maps is examined
+to obtain the list of identifiers for the *documents* field if the object is
+science metadata, and the *isDocumentedBy* field if the object is data.
 
 **Example Sequence for Index Population**
 
@@ -394,8 +401,8 @@ Indexing the system metadata entries provides a mechanism for selection of
 content using low level attributes of the objects such as the type, size and
 relationships, however is not useful for locating content relevant to a
 particular topic or purpose. The :term:`science metadata` contains such
-information and such objects contain additional information described below
-when indexed by the DataONE system.
+information and the index records associated with these documents contain
+additional information described below.
 
 The initial web user interface to DataONE utilizes the Mercury_ system. This
 in turn relies upon a SOLR index to support the search, faceting, and
@@ -416,127 +423,497 @@ are supported by the DataONE indexing system.
      - Type
      - Multi?
      - In UI?
-     - Content Origin
-   * - :attr:`author`
-     - string
-     - No
-     - Yes
-     - 
-   * - :attr:`keyWord`
-     - string
-     - Yes
-     - Yes
-     -
-   * - :attr:`keyConcept`
-     - string
-     - Yes
-     -
-     -
-   * - :attr:`minLatitude`
-     - float
-     - No
-     - Yes
-     - Minimum bounding box latitude in degrees, WGS84
-   * - :attr:`maxLatitude`
-     - float
-     - No
-     - yes
-     - Maximum bounding box latitude in degrees, WGS84
-   * - :attr:`minLongitude`
-     - float
-     - No
-     - Yes
-     - Minimum bounding box longitude in degrees, WGS84
-   * - :attr:`maxLongitude`
-     - float
-     - No
-     - Yes
-     - Maximum bounding box longitude in degrees, WGS84
-   * - :attr:`namedLocation`
-     - string
-     - Yes
-     - Yes
-     -
-   * - :attr:`temporalCoverageStart`
-     - date
-     - No
-     - Yes
-     -
-   * - :attr:`temporalCoverageEnd`
-     - date
-     - No
-     - Yes
-     -
-   * - :attr:`any`
-     - text
-     - No
-     - Yes
-     -
+     - V-0.6.3?
    * - :attr:`abstract`
      - text
      - No
      - Yes
-     - 
+     - Y
+   * - :attr:`author`
+     - string
+     - No
+     - Yes
+     - Y
+   * - :attr:`author_lname`
+     - string
+     - Yes
+     - Yes
+     - Y
+   * - :attr:`keywords`
+     - string
+     - Yes
+     - Yes
+     - Y
+   * - :attr:`keyConcept`
+     - string
+     - Yes
+     -
+     - N
+   * - :attr:`southBoundCoord`
+     - float
+     - No
+     - Yes
+     - Y, Minimum bounding box latitude in degrees, WGS84
+   * - :attr:`northBoundCoord`
+     - float
+     - No
+     - yes
+     - Y, Maximum bounding box latitude in degrees, WGS84
+   * - :attr:`westBoundCoord`
+     - float
+     - No
+     - Yes
+     - Y, Minimum bounding box longitude in degrees, WGS84
+   * - :attr:`eastBoundCoord`
+     - float
+     - No
+     - Yes
+     - Y, Maximum bounding box longitude in degrees, WGS84
+   * - :attr:`namedLocation`
+     - string
+     - Yes
+     - Yes
+     - N
+   * - :attr:`beginDate`
+     - date
+     - No
+     - Yes
+     - Y
+   * - :attr:`endDate`
+     - date
+     - No
+     - Yes
+     - Y
+   * - :attr:`text`
+     - text
+     - No
+     - Yes
+     - Y
+   * - :attr:`abstract`
+     - text
+     - No
+     - Yes
+     - Y
    * - :attr:`title`
      - String
      - No
      - Yes
-     -
-   * - :attr:`objectFormat`
+     - Y
+   * - :attr:`fmtid`
      - string
      - No
      - No
-     -
+     - Y
    * - :attr:`variableName`
      - string
      - Yes
      - Yes
-     -
+     - N
    * - :attr:`scientificName`
      - string
      - Yes
      - Yes
-     -
+     - N
    * - :attr:`submitter`
      - string
      - No
      - No
-     -
+     - Y
    * - :attr:`relatedOrganizations`
      - string
      - Yes
      - No
-     -
+     - N
    * - :attr:`size`
      - long integer
      - No
      - Yes 
-     -
+     - Y
    * - :attr:`replicaLocation`
      - string
      - No
      - No
-     -
-   * - :attr:`pid`
+     - N
+   * - :attr:`id`
      - string
      - Yes
-     -
+     - 
      - Same as pid in System Metadata
    * - :attr:`datePublished`
      - date
      - No
      - Yes
-     -
-   * - :attr:`dateAddedToRepository`
+     - N
+   * - :attr:`dateuploaded`
      - date
      - No
      - No
-     - 
+     - Y
    * - :attr:`dateSysMetadataModified`
      - date
      - No
      - No
      - Same as :attr:`datemodified` in System Metadata
+
+
+
+
+
+Attribute Descriptions and Notes
+--------------------------------
+
+.. attribute:: abstract
+
+  :FGDC: //metadata/idinfo/descript/abstract/
+  :EML:  //dataset/abstract
+  :Dryad:
+
+
+.. attribute:: author
+
+  (String) Principle Investigator (PI) / Author
+
+  For search, advantages to keep simple text representation, with general goal
+  of gradual increase in specificity - Desireable if we can get "sort friendly"
+  results such as using LAST, FIRST name.
+
+  :FGDC:
+  :EML: //dataset/creator/individualName
+  :Dryad:
+
+
+.. attribute:: author_lname
+
+   (String) Last (family) name of the Author
+
+   :FGDC:
+   :EML: //dataset/creator/individualName/surName
+   :Dryad:
+
+
+.. attribute:: keywords
+
+  (String) Keyword (uncontrolled keywords)
+
+  - Initial values are extracted directly from the science metadata document
+  - Mercury enhances the kw list with e.g. GCMD keyword list
+  - Mercury UI
+
+  :FGDC: //metadata/mercury/Keywords
+  :EML: //dataset/keywordSet/keyword
+  :Dryad:
+
+
+.. attribute:: keyConcept
+
+  Key concept -key concepts drawn from a set of ontologies Term Namespace
+
+  - Controlled lists of terms available for several metadata standards
+  - A topic being addressed by the semantics WG
+  - Unlikely to be available in 2011
+  - Giri has some keyword enhancement and mapping script (magic)
+  - Mercury UI
+
+  :FGDC:
+  :EML:
+  :Dryad:
+
+
+.. attribute:: title
+
+   The title given to the data set.
+   
+   :FGDC: //metadata/idinfo/citation/citeinfo/title
+   :EML: //dataset/title
+   :Dryad: 
+
+.. attribute:: southBoundCoord
+
+   see :attr:`spatialFeature`
+
+   :FGDC: //metadata/idinfo/spdom/bounding/southbc
+   :EML: //dataset/coverage/geographicCoverage/boundingCoordinates/southBoundingCoordinate
+   :Dryad:
+
+
+.. attribute:: northBoundCoord
+
+   see :attr:`spatialFeature`
+
+   :FGDC: //metadata/idinfo/spdom/bounding/northbc
+   :EML: //dataset/coverage/geographicCoverage/boundingCoordinates/northBoundingCoordinate
+   :Dryad: 
+
+
+.. attribute:: westBoundCoord
+
+   see :attr:`spatialFeature`
+
+   :FGDC: //metadata/idinfo/spdom/bounding/westbc
+   :EML: //dataset/coverage/geographicCoverage/boundingCoordinates/westBoundingCoordinate
+   :Dryad:
+
+
+.. attribute:: eastBoundCoord
+
+   see :attr:`spatialFeature`
+
+   :FGDC: //metadata/idinfo/spdom/bounding/eastbc
+   :EML: //dataset/coverage/geographicCoverage/boundingCoordinates/eastBoundingCoordinate
+   :Dryad:
+
+
+.. attribute:: spatialFeature
+
+  (SpatialFeature)
+  - Spatial bounding box (largest bounding rectangle)
+  - Spatial window (series of spatial envelopes representative of the spatial locations of where the data is collected from or relevant to)
+  - Spatial features (points, bounding boxes, polygons)
+  - Centroid
+  - Bounding box
+  - Polygon
+  - (not largest extent)
+  - (need to resolve the semantics of the bounding box search - e.g. if centroids are recorded but fall outside of bounding box search)
+  - Bounding box with contains or overlaps 
+  - can be supported by SOLR and Metacat searches
+  - Mercury UI
+
+
+.. attribute:: namedLocation
+
+  (String) Named places Term Type Context (Columbus OH, Columbus GA) Namespace
+  of gazetteer
+
+  - free text search field
+  - provide recommendations for representation (see Wieczorek's georeferencing document)
+  - Mercury UI
+
+
+.. attribute:: beginDate
+
+  (DateTime)
+
+  - temporalCoverageStart
+  - temporal extent
+  - "jurassic" vs "date collected for jurassic specimen"
+  - not publication date, not creation date
+  - Applicability date (as opposed to collection date or publication date -- though searching on collection date is a secondary search).  Multiple dates possible:  Collection/observation date, coverage date, analysis date, publication date, metadata modification date (e.g. peat bog samples relevant to 50,000 - 10,000 BCE, collected in July 1980, re-analyzed in July 2008, published in January 2010, and metadata revised in June 2010).  In this example, earliestDate applies to 50,000 BCE.  
+  - Mercury UI
+
+  :FGDC:
+  :EML:
+  :Dryad:
+
+
+.. attribute:: endDate
+
+  (DateTime) Temporal window
+
+  - temporalCoverageEnd
+  Relative terms (e.g. terms from the Geologic time scale) need to be supported
+  Date ranges
+  Temporal coverage of the data set (e.g. searches - during, before, after)
+
+  - same notes as above apply
+  - Mercury UI
+
+  :FGDC:
+  :EML:
+  :Dryad:
+
+
+.. attribute:: text
+
+  (String) Full text search / Text search on abstract - Mercury UI
+
+
+.. attribute:: title
+
+  (string) Title (2) - Mercury UI
+
+  :FGDC:
+  :EML:
+  :Dryad:
+
+
+.. attribute:: fmtid
+
+  (String) Type of data (format) (2)
+  
+  - Original data
+  - Summarized versions
+  - Method used for processing (to generate summary, or original data)
+  - Resource type (spatial, models, observations, web service, ...)
+  - search the system metadata value, but need to parse system metadata of related objects to determine the objectFormat(s) of the data.
+  - Potential for mapping the values appearing the science metadata to the controlled terms available in the object format registry
+  - label should be "content type"
+
+
+.. attribute:: variableName
+
+  (String) Scientific variables (from a controlled vocabulary) (1)
+
+  - not in Dryad, optional in most/all
+  - Mercury UI
+
+
+.. attribute:: scientificName
+
+  (String)  Biological taxonomic extents (1)
+
+  - lots of opportunities for cleanup services from ITIS, EOL, etc
+  - Mercury UI
+
+
+.. attribute:: submitter
+
+  (String) 
+
+  - for either data or metadata
+  - Principal that added the content to the MN
+  - Needs to be translated from the subject to the individual's name
+
+
+.. attribute:: relatedObject
+
+  (String)  Related data (data sets, publications)
+
+  - given a PID find everything that refers to it (deprecated, describes, derivedFrom...)
+  - This should probably be specific to relation type - find all stuff derivedFrom PID
+
+
+.. attribute:: quality
+
+  (String, controlled vocabulary) Quality / level of curation
+
+
+.. attribute:: relatedOrganizations
+
+  (String) Organizations involved in study
+
+  - low priority
+
+
+.. attribute:: size
+
+  (Integer, long) Size of data (bytes)
+
+  - needed for drive, display, not necessary for UI search
+
+
+.. attribute:: replicaLocation
+
+  (String)  Number / location of replicas
+
+
+.. attribute:: pid
+
+  (Types.IdentifierType) Identifier (PID)
+
+  The PID of the object as expressed in the system metadata document.
+
+  - Need to be able to find metadata records describing a dataset identified
+    by PID. Can be achieved by using the describedBy field.
+
+  - Find any science metadata that is or describes PID
+
+  - Mercury UI
+
+
+.. attribute:: datePublished
+
+  - drawn from science metadata
+  - is this the same as publication date concept in datacite - Yes
+  - Mercury UI
+
+  :FGDC:
+  :EML:
+  :Dryad:
+
+
+.. attribute:: dateAddedToRepository
+
+  - first submission to Member Node (drawn from science metadata if available, otherwise system metadata)
+
+
+.. attribute:: dateSysMetadataModified
+
+  (DateTime) available from sysmeta
+
+
+.. attribute:: readPermission
+
+  - element in permission index, used for shard query
+
+
+.. attribute:: writePermission
+
+  (Types.PrincipalType) Permissions on objects (e.g. available to read by user)
+
+  - element in permission index, used for shard query
+
+
+.. attribute:: executePermission
+
+
+.. attribute:: changePermission
+
+
+.. attribute:: checksum
+
+
+.. attribute:: checksumAlgorithm
+
+
+.. attribute:: rightsHolder
+
+
+.. attribute:: rep_allowed
+
+
+.. attribute:: n_replicas
+
+
+.. attribute:: pref_rep_mn
+
+
+.. attribute:: blocked_rep_mn
+
+
+.. attribute:: obsoletes
+
+
+.. attribute:: obsoletedBy
+
+
+.. attribute:: datemodified
+
+
+.. attribute:: dateUploaded
+
+
+.. attribute:: origin_mn
+
+
+.. attribute:: auth_mn
+
+
+.. attribute:: replica_mn
+
+
+.. attribute:: isPublic
+
+
+.. attribute:: resourceMaps
+
+
+.. attribute:: contains
+
+
+.. attribute:: documents
+
+
+.. attribute:: isDocumentedBy
 
 
 
@@ -725,297 +1102,6 @@ tools.
 .. _COinS: http://ocoins.info/
 
 
-Attribute Descriptions and Notes
---------------------------------
-
-.. attribute:: abstract
-
-
-.. attribute:: author
-
-  (String) Principle Investigator (PI) / Author
-
-  Name authority service is desired for some control over names appearing in
-  metadata For search, advantages to keep simple text representation Goal of
-  gradual increase in specificity - Desireable if we can get "sort friendly"
-  results -> recommend LAST, FIRST name - Mercury UI
-
-
-.. attribute:: keyWord
-
-  (String) Keyword (uncontrolled keywords)
-
-  - Initial values are extracted directly from the science metadata document
-  - Mercury enhances the kw list with e.g. GCMD keyword list
-  - Mercury UI
-
-
-.. attribute:: keyConcept
-
-  Key concept -key concepts drawn from a set of ontologies Term Namespace
-
-  - Controlled lists of terms available for several metadata standards
-  - A topic being addressed by the semantics WG
-  - Unlikely to be available in 2011
-  - Giri has some keyword enhancement and mapping script (magic)
-  - Mercury UI
-
-
-.. attribute:: minLatitude
-
-   see :attr:`spatialFeature`
-
-
-.. attribute:: maxLatitude
-
-   see :attr:`spatialFeature`
-
-
-.. attribute:: minLongitude
-
-   see :attr:`spatialFeature`
-
-
-.. attribute:: maxLongitude
-
-   see :attr:`spatialFeature`
-
-
-.. attribute:: spatialFeature
-
-  (SpatialFeature)
-  - Spatial bounding box (largest bounding rectangle)
-  - Spatial window (series of spatial envelopes representative of the spatial locations of where the data is collected from or relevant to)
-  - Spatial features (points, bounding boxes, polygons)
-  - Centroid
-  - Bounding box
-  - Polygon
-  - (not largest extent)
-  - (need to resolve the semantics of the bounding box search - e.g. if centroids are recorded but fall outside of bounding box search)
-  - Bounding box with contains or overlaps 
-  - can be supported by SOLR and Metacat searches
-  - Mercury UI
-
-
-.. attribute:: namedLocation
-
-  (String) Named places Term Type Context (Columbus OH, Columbus GA) Namespace
-  of gazetteer
-
-  - free text search field
-  - provide recommendations for representation (see Wieczorek's georeferencing document)
-  - Mercury UI
-
-
-.. attribute:: temporalCoverageStart
-
-  (DateTime)
-
-  - temporal extent
-  - "jurassic" vs "date collected for jurassic specimen"
-  - not publication date, not creation date
-  - Applicability date (as opposed to collection date or publication date -- though searching on collection date is a secondary search).  Multiple dates possible:  Collection/observation date, coverage date, analysis date, publication date, metadata modification date (e.g. peat bog samples relevant to 50,000 - 10,000 BCE, collected in July 1980, re-analyzed in July 2008, published in January 2010, and metadata revised in June 2010).  In this example, earliestDate applies to 50,000 BCE.  
-  - Mercury UI
-
-
-.. attribute:: temporalCoverageEnd
-
-  (DateTime) Temporal window
-  Relative terms (e.g. terms from the Geologic time scale) need to be supported
-  Date ranges
-  Temporal coverage of the data set (e.g. searches - during, before, after)
-
-  - same notes as above apply
-  - Mercury UI
-
-
-.. attribute:: any
-
-  (String) Full text search / Text search on abstract - Mercury UI
-
-
-.. attribute:: title
-
-  (string) Title (2) - Mercury UI
-
-
-.. attribute:: objectFormat
-
-  (String) Type of data (format) (2)
-  
-  - Original data
-  - Summarized versions
-  - Method used for processing (to generate summary, or original data)
-  - Resource type (spatial, models, observations, web service, ...)
-  - search the system metadata value, but need to parse system metadata of related objects to determine the objectFormat(s) of the data.
-  - Potential for mapping the values appearing the science metadata to the controlled terms available in the object format registry
-  - label should be "content type"
-
-
-.. attribute:: variableName
-
-  (String) Scientific variables (from a controlled vocabulary) (1)
-
-  - not in Dryad, optional in most/all
-  - Mercury UI
-
-
-.. attribute:: scientificName
-
-  (String)  Biological taxonomic extents (1)
-
-  - lots of opportunities for cleanup services from ITIS, EOL, etc
-  - Mercury UI
-
-
-.. attribute:: submitter
-
-  (String) 
-
-  - for either data or metadata
-  - Principal that added the content to the MN
-  - Needs to be translated from the subject to the individual's name
-
-
-.. attribute:: relatedObject
-
-  (String)  Related data (data sets, publications)
-
-  - given a PID find everything that refers to it (deprecated, describes, derivedFrom...)
-  - This should probably be specific to relation type - find all stuff derivedFrom PID
-
-
-.. attribute:: quality
-
-  (String, controlled vocabulary) Quality / level of curation
-
-
-.. attribute:: relatedOrganizations
-
-  (String) Organizations involved in study
-
-  - low priority
-
-
-.. attribute:: size
-
-  (Integer, long) Size of data (bytes)
-
-  - needed for drive, display, not necessary for UI search
-
-
-.. attribute:: replicaLocation
-
-  (String)  Number / location of replicas
-
-
-.. attribute:: pid
-
-  (Types.IdentifierType) Identifier (PID)
-
-  The PID of the object as expressed in the system metadata document.
-
-  - Need to be able to find metadata records describing a dataset identified
-    by PID. Can be achieved by using the describedBy field.
-
-  - Find any science metadata that is or describes PID
-
-  - Mercury UI
-
-
-.. attribute:: datePublished
-
-  - drawn from science metadata
-  - is this the same as publication date concept in datacite - Yes
-  - Mercury UI
-
-
-.. attribute:: dateAddedToRepository
-
-  - first submission to Member Node (drawn from science metadata if available, otherwise system metadata)
-
-
-.. attribute:: dateSysMetadataModified
-
-  (DateTime) available from sysmeta
-
-
-.. attribute:: readPermission
-
-  - element in permission index, used for shard query
-
-
-.. attribute:: writePermission
-
-  (Types.PrincipalType) Permissions on objects (e.g. available to read by user)
-
-  - element in permission index, used for shard query
-
-
-.. attribute:: executePermission
-
-
-.. attribute:: changePermission
-
-
-.. attribute:: checksum
-
-
-.. attribute:: checksumAlgorithm
-
-
-.. attribute:: rightsHolder
-
-
-.. attribute:: rep_allowed
-
-
-.. attribute:: n_replicas
-
-
-.. attribute:: pref_rep_mn
-
-
-.. attribute:: blocked_rep_mn
-
-
-.. attribute:: obsoletes
-
-
-.. attribute:: obsoletedBy
-
-
-.. attribute:: datemodified
-
-
-.. attribute:: dateUploaded
-
-
-.. attribute:: origin_mn
-
-
-.. attribute:: auth_mn
-
-
-.. attribute:: replica_mn
-
-
-.. attribute:: isPublic
-
-
-.. attribute:: resourceMaps
-
-
-.. attribute:: contains
-
-
-.. attribute:: documents
-
-
-.. attribute:: isDocumentedBy
-
-
-
 ..
   NOTES etc (not rendered below)
 
@@ -1032,22 +1118,23 @@ Attribute Descriptions and Notes
 
   Expression in a query
 
-	* Integer
+  * Integer
 
-	* Float
+  * Float
 
-	* String
+  * String
 
-	* DateTime
+  * DateTime
 
-	* SpatialFeature (use `Well Known Text`_ )
+  * SpatialFeature (use `Well Known Text`_ )
 
-	* Publication (A structured type, perhaps search by decomposing to elements)
+  * Publication (A structured type, perhaps search by decomposing to elements)
 
-	* ScientificName (A structured type, perhaps search by decomposing to elements)
+  * ScientificName (A structured type, perhaps search by decomposing to elements)
 
 
-	.. _Well Known Text: http://en.wikipedia.org/wiki/Well-known_text
+  .. _Well Known Text: http://en.wikipedia.org/wiki/Well-known_text
 
+  .. _SOLR: http://lucene.apache.org/solr/
 
 
