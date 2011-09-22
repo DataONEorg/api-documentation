@@ -209,11 +209,10 @@ Data Types in CICore
   class ObjectFormat {
     + fmtid : ObjectFormatIdentifier[1..1]
     + formatName : xs.string[1..1]
-    + scienceMetadata : xs.boolean[1..1]
+    + formatType : xs.string[1..1]
   }
   ObjectFormat .. ObjectFormatIdentifier
   ObjectFormat .. xs.string
-  ObjectFormat .. xs.boolean
 
   class ObjectFormatList {
     + objectFormat : ObjectFormat[1..*]
@@ -435,7 +434,7 @@ Data Types in CICore
 
       <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="CrontabEntry">
          <xs:restriction base="xs:token">
-            <xs:pattern xmlns:d1="http://ns.dataone.org/service/types/v1" value="([\*\d]{1,2}[\-,]?)+"/>
+            <xs:pattern xmlns:d1="http://ns.dataone.org/service/types/v1" value="([\?\*\d]{1,2}[\-,]?)+"/>
          </xs:restriction>
       </xs:simpleType>
 
@@ -1306,11 +1305,11 @@ Data Types in CICore
       For objects that are typed using a Document Type Definition, this lists the well-known and accepted named version of the DTD.
 
 
-    .. attribute:: scienceMetadata
+    .. attribute:: formatType
 
-      Type: :class:`Types.xs.boolean`
+      Type: :class:`Types.xs.string`
 
-      A boolean field indicating whether or not this format is science metadata describing a science data object. If the format is a self-describing data format that includes science metadata, then the field should also be set to true.
+      A string field indicating whether or not this format is science data(DATA), science metadata(METADATA) or a resource map(RESOURCE). If the format is a self-describing data format that includes science metadata, then the field should also be set to science metadata.
 
 
     .. code-block:: xml
@@ -1322,7 +1321,7 @@ Data Types in CICore
             </xs:element>
             <xs:element name="formatName" type="xs:string" minOccurs="1" maxOccurs="1">
             </xs:element>
-            <xs:element name="scienceMetadata" type="xs:boolean" minOccurs="1" maxOccurs="1">
+            <xs:element name="formatType" type="xs:string" minOccurs="1" maxOccurs="1">
             </xs:element>
          </xs:sequence>
       </xs:complexType>
@@ -1336,11 +1335,10 @@ Data Types in CICore
       class ObjectFormat {
         + fmtid : ObjectFormatIdentifier[1..1]
         + formatName : xs.string[1..1]
-        + scienceMetadata : xs.boolean[1..1]
+        + formatType : xs.string[1..1]
       }
       ObjectFormat .. ObjectFormatIdentifier
       ObjectFormat .. xs.string
-      ObjectFormat .. xs.boolean
 
       @enduml
 

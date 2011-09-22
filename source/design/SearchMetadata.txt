@@ -45,7 +45,7 @@ document (PID) indexed.
      - string, unique
      - No
      - :attr:`SystemMetadata.identifier`
-   * - :attr:`objectFormat`
+   * - :attr:`fmtid`
      - string
      - No
      - :attr:`SystemMetadata.fmtid`
@@ -489,20 +489,10 @@ are supported by the DataONE indexing system.
      - No
      - Yes
      - Y
-   * - :attr:`abstract`
-     - text
-     - No
-     - Yes
-     - Y
    * - :attr:`title`
      - String
      - No
      - Yes
-     - Y
-   * - :attr:`fmtid`
-     - string
-     - No
-     - No
      - Y
    * - :attr:`variableName`
      - string
@@ -514,46 +504,16 @@ are supported by the DataONE indexing system.
      - Yes
      - Yes
      - N
-   * - :attr:`submitter`
-     - string
-     - No
-     - No
-     - Y
    * - :attr:`relatedOrganizations`
      - string
      - Yes
      - No
      - N
-   * - :attr:`size`
-     - long integer
-     - No
-     - Yes 
-     - Y
-   * - :attr:`replicaLocation`
-     - string
-     - No
-     - No
-     - N
-   * - :attr:`id`
-     - string
-     - Yes
-     - 
-     - Same as pid in System Metadata
    * - :attr:`datePublished`
      - date
      - No
      - Yes
      - N
-   * - :attr:`dateuploaded`
-     - date
-     - No
-     - No
-     - Y
-   * - :attr:`dateSysMetadataModified`
-     - date
-     - No
-     - No
-     - Same as :attr:`datemodified` in System Metadata
 
 
 
@@ -709,13 +669,14 @@ Attribute Descriptions and Notes
 
   (DateTime) Temporal window
 
-  - temporalCoverageEnd
-  Relative terms (e.g. terms from the Geologic time scale) need to be supported
-  Date ranges
-  Temporal coverage of the data set (e.g. searches - during, before, after)
+  - temporalCoverageEnd, Relative terms (e.g. terms from the Geologic time
+    scale) need to be supported Date ranges Temporal coverage of the data set
+    (e.g. searches - during, before, after)
 
   - same notes as above apply
+
   - Mercury UI
+
 
   :FGDC:
   :EML:
@@ -1100,6 +1061,8 @@ tools.
 .. _DataCite terms: http://wiki.esipfed.org/index.php/Interagency_Data_Stewardship/Citations/provider_guidelines
 .. _Z39.88-2004: http://www.niso.org/kst/reports/standards/kfile_download?id%3Austring%3Aiso-8859-1=Z39-88-2004.pdf&pt=RkGKiXzW643YeUaYUqZ1BFwDhIG4-24RJbcZBWg8uE4vWdpZsJDs4RjLz0t90_d5_ymGsj_IKVaGZww13HuDlZQ8NBt1sTxP_v4iiGqH7rSaAeVDnMfeKJrrJ_JSEGPB
 .. _COinS: http://ocoins.info/
+.. _Well Known Text: http://en.wikipedia.org/wiki/Well-known_text
+.. _SOLR: http://lucene.apache.org/solr/
 
 
 ..
@@ -1133,8 +1096,5 @@ tools.
   * ScientificName (A structured type, perhaps search by decomposing to elements)
 
 
-  .. _Well Known Text: http://en.wikipedia.org/wiki/Well-known_text
-
-  .. _SOLR: http://lucene.apache.org/solr/
 
 

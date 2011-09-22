@@ -86,7 +86,7 @@
    * - GET /node
      - :func:`CNCore.listNodes`
      - Returns a list of nodes that have been registered with the DataONE infrastructure.
-   * - POST /meta
+   * - POST /meta/{pid}
      - :func:`CNCore.registerSystemMetadata`
      - Provides a mechanism for adding system metadata independently of its associated object, such as when adding system metadata for data objects. This method is used internally by Coordinating Nodes.
    * - GET /reserve/{pid}
@@ -159,7 +159,7 @@
      - :func:`CNReplication.setReplicationPolicy`
      - Updates the replication policy entry for an object by updating the system metadata. Successful completion of the operation is indicated by returning a HTTP status of 200. Failure of the operation MUST be indicated by returning an appropriate exception.
    * - GET /replicationAuthorized/{pid}
-     - :func:`CNReplication.isReplicationAuthorized`
+     - :func:`CNReplication.isNodeAuthorized`
      - Verifies that a replication event was initiated by a CN by comparing the target node's identifiying subject with a known list of scheduled replication tasks. Successful completion of the operation is indicated by returning a HTTP status of 200. Failure of the operation MUST be indicated by returning an appropriate exception.
    * - PUT /node/{nodeid}
      - :func:`CNRegister.updateNodeCapabilities`

@@ -43,7 +43,7 @@
      - :func:`listNodes`
      - () ``->`` :class:`Types.NodeList`
    * - Tier 1
-     - ``POST /meta``
+     - ``POST /meta/{pid}``
      - :func:`registerSystemMetadata`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
    * - 
@@ -342,7 +342,7 @@
 
    This method is used internally by Coordinating Nodes.
 
-   :REST URL: ``POST /meta``
+   :REST URL: ``POST /meta/{pid}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 

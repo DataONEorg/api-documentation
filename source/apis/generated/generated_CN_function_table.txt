@@ -43,7 +43,7 @@
      - :func:`CNCore.listNodes`
      - () ``->`` :class:`Types.NodeList`
    * - Tier 1
-     - ``POST /meta``
+     - ``POST /meta/{pid}``
      - :func:`CNCore.registerSystemMetadata`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
    * - 
@@ -130,7 +130,7 @@
    * - Tier 4
      - ``POST /notify``
      - :func:`CNReplication.setReplicationStatus`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`status<Types.ReplicationStatus>`) ``->`` boolean
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`nodeRef<Types.NodeReference>`, :class:`status<Types.ReplicationStatus>`) ``->`` boolean
    * - Tier 4
      - ``PUT /meta/replication/{pid}``
      - :func:`CNReplication.updateReplicationMetadata`
@@ -141,7 +141,7 @@
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`policy<Types.ReplicationPolicy>`) ``->`` boolean
    * - Tier 4
      - ``GET /replicationAuthorized/{pid}``
-     - :func:`CNReplication.isReplicationAuthorized`
+     - :func:`CNReplication.isNodeAuthorized`
      - (:class:`session<Types.Session>`, :class:`targetNodeSubject<Types.Subject>`, :class:`pid<Types.Identifier>`, :class:`executePermission<Types.Permission>`) ``->`` boolean
    * - Tier 2
      - ``PUT /node/{nodeid}``
