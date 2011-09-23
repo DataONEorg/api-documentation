@@ -525,7 +525,7 @@ Standard Specific Metadata Extraction Notes
 
    SearchMetadata_eml
    SearchMetadata_fgdc
-   
+   SearchMetadata_dryad
 
 
 
@@ -571,58 +571,35 @@ Attribute Descriptions and Notes
   - Giri has some keyword enhancement and mapping script (magic)
   - Mercury UI
 
-  :FGDC:
-  :EML:
-  :Dryad:
-
-
 .. attribute:: title
 
    The title given to the data set.
-   
-   :FGDC: //metadata/idinfo/citation/citeinfo/title
-   :EML: //dataset/title
-   :Dryad: 
+
 
 .. attribute:: southBoundCoord
 
    see :attr:`spatialFeature`
-
-   :FGDC: //metadata/idinfo/spdom/bounding/southbc
-   :EML: //dataset/coverage/geographicCoverage/boundingCoordinates/southBoundingCoordinate
-   :Dryad:
 
 
 .. attribute:: northBoundCoord
 
    see :attr:`spatialFeature`
 
-   :FGDC: //metadata/idinfo/spdom/bounding/northbc
-   :EML: //dataset/coverage/geographicCoverage/boundingCoordinates/northBoundingCoordinate
-   :Dryad: 
-
 
 .. attribute:: westBoundCoord
 
    see :attr:`spatialFeature`
-
-   :FGDC: //metadata/idinfo/spdom/bounding/westbc
-   :EML: //dataset/coverage/geographicCoverage/boundingCoordinates/westBoundingCoordinate
-   :Dryad:
 
 
 .. attribute:: eastBoundCoord
 
    see :attr:`spatialFeature`
 
-   :FGDC: //metadata/idinfo/spdom/bounding/eastbc
-   :EML: //dataset/coverage/geographicCoverage/boundingCoordinates/eastBoundingCoordinate
-   :Dryad:
-
 
 .. attribute:: spatialFeature
 
   (SpatialFeature)
+  - Recorded as decimal degrees, WGS84 (EPSG:4326)
   - Spatial bounding box (largest bounding rectangle)
   - Spatial window (series of spatial envelopes representative of the spatial locations of where the data is collected from or relevant to)
   - Spatial features (points, bounding boxes, polygons)
@@ -638,17 +615,15 @@ Attribute Descriptions and Notes
 
 .. attribute:: namedLocation
 
-  (String) Named places Term Type Context (Columbus OH, Columbus GA) Namespace
-  of gazetteer
+   Named places Term Type Context (Columbus OH, Columbus GA) Namespace
+   of gazetteer
 
-  - free text search field
-  - provide recommendations for representation (see Wieczorek's georeferencing document)
-  - Mercury UI
+   - free text search field
+   - provide recommendations for representation (see Wieczorek's georeferencing document)
+   - Mercury UI
 
 
 .. attribute:: beginDate
-
-  (DateTime)
 
   - temporalCoverageStart
   - temporal extent
@@ -656,10 +631,6 @@ Attribute Descriptions and Notes
   - not publication date, not creation date
   - Applicability date (as opposed to collection date or publication date -- though searching on collection date is a secondary search).  Multiple dates possible:  Collection/observation date, coverage date, analysis date, publication date, metadata modification date (e.g. peat bog samples relevant to 50,000 - 10,000 BCE, collected in July 1980, re-analyzed in July 2008, published in January 2010, and metadata revised in June 2010).  In this example, earliestDate applies to 50,000 BCE.  
   - Mercury UI
-
-  :FGDC:
-  :EML:
-  :Dryad:
 
 
 .. attribute:: endDate
@@ -675,11 +646,6 @@ Attribute Descriptions and Notes
   - Mercury UI
 
 
-  :FGDC:
-  :EML:
-  :Dryad:
-
-
 .. attribute:: text
 
   (String) Full text search / Text search on abstract - Mercury UI
@@ -687,11 +653,7 @@ Attribute Descriptions and Notes
 
 .. attribute:: title
 
-  (string) Title (2) - Mercury UI
-
-  :FGDC:
-  :EML:
-  :Dryad:
+  Title - Mercury UI
 
 
 .. attribute:: fmtid
@@ -784,10 +746,6 @@ Attribute Descriptions and Notes
   - is this the same as publication date concept in datacite - Yes
   - Mercury UI
 
-  :FGDC:
-  :EML:
-  :Dryad:
-
 
 .. attribute:: dateAddedToRepository
 
@@ -806,9 +764,9 @@ Attribute Descriptions and Notes
 
 .. attribute:: writePermission
 
-  (Types.PrincipalType) Permissions on objects (e.g. available to read by user)
+   (Types.PrincipalType) Permissions on objects (e.g. available to read by user)
 
-  - element in permission index, used for shard query
+   - element in permission index, used for shard query
 
 
 .. attribute:: executePermission
