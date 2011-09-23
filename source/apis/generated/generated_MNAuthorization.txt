@@ -30,6 +30,10 @@
 
    Failure is indicated by an exception such as :exc:`NotAuthorized` being returned.
 
+   A successful response is indicated by a response HTTP status of 200. The body of the response is arbitrary and SHOULD be ignored by the caller.
+
+   If the action is not authorized, then a :exc:`NotAuthorized` exception MUST be raised.
+
    .. Note:: Should perhaps add convenience methods for "canRead()" and "canWrite()" to verify that a user is able to read / write an object.
 
    :Use Cases:
@@ -38,10 +42,10 @@
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
-   :param pid: A successful response is indicated by a response HTTP status of 200. The body of the response is arbitrary and SHOULD be ignored by the caller.
+   :param pid: The identifer of the resource for which access is being checked.
    :type pid: :class:`Types.Identifier`
 
-   :param action: If the action is not authorized, then a :exc:`NotAuthorized` exception MUST be raised.
+   :param action: The type of operation which is being requested for the given pid.
    :type action: :class:`Types.Permission`
 
    :returns: True if the operation is allowed

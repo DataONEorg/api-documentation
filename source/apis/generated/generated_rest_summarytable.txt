@@ -34,7 +34,7 @@
      - This is a callback method used by a CN to indicate to a MN that it cannot complete synchronization of the science metadata identified by *pid*. When called, the MN should take steps to record the problem description and notify an administrator or the data owner of the issue.
    * - GET /isAuthorized/{pid}?action={action}
      - :func:`MNAuthorization.isAuthorized`
-     - Test if the user identified by the provided token has authorization for operation on the specified object. A successful operation is indicated by a return HTTP status of 200. Failure is indicated by an exception such as :exc:`NotAuthorized` being returned. .. Note:: Should perhaps add convenience methods for "canRead()" and "canWrite()" to verify that a user is able to read / write an object.
+     - Test if the user identified by the provided token has authorization for operation on the specified object. A successful operation is indicated by a return HTTP status of 200. Failure is indicated by an exception such as :exc:`NotAuthorized` being returned. A successful response is indicated by a response HTTP status of 200. The body of the response is arbitrary and SHOULD be ignored by the caller. If the action is not authorized, then a :exc:`NotAuthorized` exception MUST be raised. .. Note:: Should perhaps add convenience methods for "canRead()" and "canWrite()" to verify that a user is able to read / write an object.
    * - PUT /accessRules/{pid}
      - :func:`MNAuthorization.setAccessPolicy`
      - Sets the access permissions for an object identified by *pid*. A successful operation is indicated by a return HTTP status of 200. Failure is indicated by an exception such as :exc:`NotAuthorized` being returned.
@@ -116,9 +116,9 @@
    * - PUT /owner/{pid}
      - :func:`CNAuthorization.setOwner`
      - Changes ownership (RightsHolder) of the specified object to the :term:`subject` specified by `userId`
-   * - GET /isAuthorized/{pid}
+   * - GET /isAuthorized/{pid}?action={action}
      - :func:`CNAuthorization.isAuthorized`
-     - Test if the user identified by the provided token has authorization for operation on the specified object. .. Note:: Should perhaps add convenience methods for "canRead()" and "canWrite()" to verify that a user is able to read / write an object. Successful completion of this operation is indicated by a HTTP response status code of 200. Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception such as :exc:`NotAuthorized`.
+     - Test if the user identified by the provided token has authorization for operation on the specified object. A successful operation is indicated by a return HTTP status of 200. Failure is indicated by an exception such as :exc:`NotAuthorized` being returned. A successful response is indicated by a response HTTP status of 200. The body of the response is arbitrary and SHOULD be ignored by the caller. If the action is not authorized, then a :exc:`NotAuthorized` exception MUST be raised. .. Note:: Should perhaps add convenience methods for "canRead()" and "canWrite()" to verify that a user is able to read / write an object.
    * - PUT /accessRules/{pid}
      - :func:`CNAuthorization.setAccessPolicy`
      - Sets the access permissions for an object identified by *pid*. Triggers a change to the system metadata modified time stamp. Successful completion of this operation is indicated by a HTTP response status code of 200. Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception such as :exc:`NotAuthorized`.

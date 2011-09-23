@@ -84,9 +84,9 @@
      - :func:`CNAuthorization.setOwner`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`userId<Types.Subject>`) ``->`` :class:`Types.Identifier`
    * - Tier 2
-     - ``GET /isAuthorized/{pid}``
+     - ``GET /isAuthorized/{pid}?action={action}``
      - :func:`CNAuthorization.isAuthorized`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`operation<Types.Event>`) ``->`` boolean
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`action<Types.Permission>`) ``->`` boolean
    * - Tier 2
      - ``PUT /accessRules/{pid}``
      - :func:`CNAuthorization.setAccessPolicy`

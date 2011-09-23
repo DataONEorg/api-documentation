@@ -61,6 +61,8 @@ but is expected to also support date range (by also specifying *endTime*), and s
      - Test if the user identified by the provided token has authorization for operation on the specified object.
 A successful operation is indicated by a return HTTP status of 200.
 Failure is indicated by an exception such as :exc:`NotAuthorized` being returned.
+A successful response is indicated by a response HTTP status of 200. The body of the response is arbitrary and SHOULD be ignored by the caller.
+If the action is not authorized, then a :exc:`NotAuthorized` exception MUST be raised.
 .. Note:: Should perhaps add convenience methods for "canRead()" and "canWrite()" to verify that a user is able to read / write an object.
 
        Appears in functional use cases: :doc:`UC01 </design/UseCases/01_uc>`, :doc:`UC37 </design/UseCases/37_uc>`
@@ -197,9 +199,11 @@ Implemented asa proxy to the SOLR search index. All readonly operations supporte
    * - \
      - :func:`CNAuthorization.isAuthorized`
      - Test if the user identified by the provided token has authorization for operation on the specified object.
+A successful operation is indicated by a return HTTP status of 200.
+Failure is indicated by an exception such as :exc:`NotAuthorized` being returned.
+A successful response is indicated by a response HTTP status of 200. The body of the response is arbitrary and SHOULD be ignored by the caller.
+If the action is not authorized, then a :exc:`NotAuthorized` exception MUST be raised.
 .. Note:: Should perhaps add convenience methods for "canRead()" and "canWrite()" to verify that a user is able to read / write an object.
-Successful completion of this operation is indicated by a HTTP response status code of 200.
-Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception such as :exc:`NotAuthorized`.
 
        Appears in functional use cases: :doc:`UC01 </design/UseCases/01_uc>`, :doc:`UC02 </design/UseCases/02_uc>`, :doc:`UC36 </design/UseCases/36_uc>`, :doc:`UC37 </design/UseCases/37_uc>`
    * - \

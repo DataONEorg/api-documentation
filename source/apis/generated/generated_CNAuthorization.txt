@@ -15,9 +15,9 @@
      - :func:`setOwner`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`userId<Types.Subject>`) ``->`` :class:`Types.Identifier`
    * - Tier 2
-     - ``GET /isAuthorized/{pid}``
+     - ``GET /isAuthorized/{pid}?action={action}``
      - :func:`isAuthorized`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`operation<Types.Event>`) ``->`` boolean
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`action<Types.Permission>`) ``->`` boolean
    * - Tier 2
      - ``PUT /accessRules/{pid}``
      - :func:`setAccessPolicy`
@@ -64,27 +64,31 @@
 
 
 
-.. function:: isAuthorized(session,pid,operation) -> boolean
+.. function:: isAuthorized(session,pid,action) -> boolean
 
    Test if the user identified by the provided token has authorization for operation on the specified object.
 
+   A successful operation is indicated by a return HTTP status of 200.
+
+   Failure is indicated by an exception such as :exc:`NotAuthorized` being returned.
+
+   A successful response is indicated by a response HTTP status of 200. The body of the response is arbitrary and SHOULD be ignored by the caller.
+
+   If the action is not authorized, then a :exc:`NotAuthorized` exception MUST be raised.
+
    .. Note:: Should perhaps add convenience methods for "canRead()" and "canWrite()" to verify that a user is able to read / write an object.
-
-   Successful completion of this operation is indicated by a HTTP response status code of 200.
-
-   Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception such as :exc:`NotAuthorized`.
 
    :Use Cases:
      :doc:`UC01 </design/UseCases/01_uc>`, :doc:`UC02 </design/UseCases/02_uc>`, :doc:`UC36 </design/UseCases/36_uc>`, :doc:`UC37 </design/UseCases/37_uc>`
-   :REST URL: ``GET /isAuthorized/{pid}``
+   :REST URL: ``GET /isAuthorized/{pid}?action={action}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
    :param pid: The identifer of the resource for which access is being checked.
    :type pid: :class:`Types.Identifier`
 
-   :param operation: The type of operation which is being requested for the given pid.
-   :type operation: :class:`Types.Event`
+   :param action: The type of operation which is being requested for the given pid.
+   :type action: :class:`Types.Permission`
 
    :returns: True if the operation is allowed
    :rtype: boolean
