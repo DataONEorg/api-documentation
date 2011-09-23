@@ -516,7 +516,7 @@ are supported by the DataONE indexing system.
      - N
 
 
-Metadata Standard Specific Extraction Notes
+Standard Specific Metadata Extraction Notes
 -------------------------------------------
 
 
@@ -524,7 +524,8 @@ Metadata Standard Specific Extraction Notes
    :maxdepth: 1
 
    SearchMetadata_eml
-
+   SearchMetadata_fgdc
+   
 
 
 
@@ -534,67 +535,30 @@ Attribute Descriptions and Notes
 
 .. attribute:: abstract
 
-  :FGDC: 
-
-    - path: //metadata/idinfo/descript/abstract/
-    - reference: 
-
-  :EML:  
-
-    - path: //dataset/abstract
-    - reference: http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-project.html#title
-
-  :Dryad:
-
-    - path:
-    - reference:
-
+   The abstract text as provided in the science metadata document.
 
 
 .. attribute:: author
 
-  Principle Investigator (PI) / Author
+   Principle Investigator (PI) / Author as listed in the metadata document. 
 
-  For search, advantages to keep simple text representation, with general goal
-  of gradual increase in specificity. Desireable if we can get "sort friendly"
-  results such as using LAST, FIRST name.
-
-  :FGDC:
-
-    - path:
-    - reference:
-
-  :EML: 
-
-    - path: //dataset/creator/individualName
-    - reference: 
-
-  :Dryad:
-
-  - path:
-  - reference:
+   For search there are advantages to keep simple text representation, with
+   general goal of gradual increase in specificity. Desireable to provide "sort
+   friendly" results such as using LAST, FIRST name.
 
 
 .. attribute:: author_lname
 
-   (String) Last (family) name of the Author
-
-   :FGDC:
-   :EML: //dataset/creator/individualName/surName
-   :Dryad:
+   Last (family or surname) name of the Author
 
 
 .. attribute:: keywords
 
-  (String) Keyword (uncontrolled keywords)
+   Keyword (uncontrolled keywords)
 
   - Initial values are extracted directly from the science metadata document
   - Mercury enhances the kw list with e.g. GCMD keyword list
   - Mercury UI
-
-  :FGDC: //metadata/mercury/Keywords
-  :EML: //dataset/keywordSet/keyword
-  :Dryad:
 
 
 .. attribute:: keyConcept
