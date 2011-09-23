@@ -43,6 +43,10 @@ sys.path.append( os.path.abspath('../tools/docutils/rst_directives') )
 #import plantuml
 #directives.register_directive('uml', plantuml.UmlDirective)
 
+from sqltable import SQLTable
+from docutils.parsers.rst import directives
+directives.register_directive('sqltable', SQLTable)
+
 
 
 # -- General configuration -----------------------------------------------------

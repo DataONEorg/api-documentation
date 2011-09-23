@@ -417,13 +417,13 @@ are supported by the DataONE indexing system.
 
 .. list-table::
    :header-rows: 1
-   :widths: 3 2 1 1 10
+   :widths: 3 2 1 1 1
 
    * - Attribute
      - Type
      - Multi?
      - In UI?
-     - V-0.6.3?
+     - V-0.6.4?
    * - :attr:`abstract`
      - text
      - No
@@ -453,22 +453,22 @@ are supported by the DataONE indexing system.
      - float
      - No
      - Yes
-     - Y, Minimum bounding box latitude in degrees, WGS84
+     - Y
    * - :attr:`northBoundCoord`
      - float
      - No
      - yes
-     - Y, Maximum bounding box latitude in degrees, WGS84
+     - Y
    * - :attr:`westBoundCoord`
      - float
      - No
      - Yes
-     - Y, Minimum bounding box longitude in degrees, WGS84
+     - Y
    * - :attr:`eastBoundCoord`
      - float
      - No
      - Yes
-     - Y, Maximum bounding box longitude in degrees, WGS84
+     - Y
    * - :attr:`namedLocation`
      - string
      - Yes
@@ -525,22 +525,45 @@ Attribute Descriptions and Notes
 
 .. attribute:: abstract
 
-  :FGDC: //metadata/idinfo/descript/abstract/
-  :EML:  //dataset/abstract
+  :FGDC: 
+
+    - path: //metadata/idinfo/descript/abstract/
+    - reference: 
+
+  :EML:  
+
+    - path: //dataset/abstract
+    - reference: http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-project.html#title
+
   :Dryad:
+
+    - path:
+    - reference:
+
 
 
 .. attribute:: author
 
-  (String) Principle Investigator (PI) / Author
+  Principle Investigator (PI) / Author
 
   For search, advantages to keep simple text representation, with general goal
-  of gradual increase in specificity - Desireable if we can get "sort friendly"
+  of gradual increase in specificity. Desireable if we can get "sort friendly"
   results such as using LAST, FIRST name.
 
   :FGDC:
-  :EML: //dataset/creator/individualName
+
+    - path:
+    - reference:
+
+  :EML: 
+
+    - path: //dataset/creator/individualName
+    - reference: 
+
   :Dryad:
+
+  - path:
+  - reference:
 
 
 .. attribute:: author_lname
