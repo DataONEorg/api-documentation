@@ -1,0 +1,13 @@
+Search Metadata Elements Extracted from Dryad
+=============================================
+
+
+
+.. sqltable:: Dryad Meta Properties
+   :header: Field,Path,Reference,Notes
+   :widths: 3 10 10 10
+   :driver: xlsx
+   :source: source/design/data/SearchFields.xlsx
+   :sql: SELECT ':attr:`SearchMetadata.'||SOLR_Field||'`', Element_path, Reference, Comments FROM Dryad,Fields WHERE Dryad.SOLR_Field=Fields.SOLR AND V0_6_4='y';
+
+
