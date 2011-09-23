@@ -72,7 +72,11 @@
      - :func:`CNRead.getChecksum`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Checksum`
    * - Tier 1
-     - ``GET /object?querytype={queryType}&query={query}``
+     - ``GET /object[?starttime={startTime}&endtime={endTime}&objectformat={objectFormat}&replicastatus={replicaStatus}&start={start}&count={count}]``
+     - :func:`CNRead.listObjects`
+     - (:class:`session<Types.Session>`, :class:`[startTime]<Types.DateTime>`, :class:`[endTime]<Types.DateTime>`, :class:`[objectFormat]<Types.ObjectFormat>`, ``[replicaStatus]``, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.ObjectList`
+   * - Tier 1
+     - ``GET /search``
      - :func:`CNRead.search`
      - (:class:`session<Types.Session>`, :class:`queryType<Types.QueryType>`, ``query``) ``->`` :class:`Types.ObjectList`
    * - Tier 2

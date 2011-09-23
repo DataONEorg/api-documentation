@@ -107,9 +107,12 @@
    * - GET /checksum/{pid}
      - :func:`CNRead.getChecksum`
      - Returns the checksum for the specified object as reported in the system metadata. Note that the signature of this method differs from :func:`MNRead.getChecksum` as that method takes an optional algorithm parameter.
-   * - GET /object?querytype={queryType}&query={query}
+   * - GET /object[?starttime={startTime}&endtime={endTime}&objectformat={objectFormat}&replicastatus={replicaStatus}&start={start}&count={count}]
+     - :func:`CNRead.listObjects`
+     - Retrieve the list of objects present on the CN that match the calling parameters. At a minimum, this method should be able to return a list of objects that match::   startTime <= SystemMetadata.dateSysMetadataModified but is expected to also support date range (by also specifying *endTime*), and should also support slicing of the matching set of records by indicating the starting *index* of the response (where 0 is the index of the first item) and the *count* of elements to be returned.
+   * - GET /search
      - :func:`CNRead.search`
-     - Search the metadata catalog and return identifiers of metadata records that match the criteria.
+     - Search the metadata catalog and return identifiers of metadata records that match the criteria. Implemented asa proxy to the SOLR search index. All readonly operations supported with standard SOLR parameters.
    * - PUT /owner/{pid}
      - :func:`CNAuthorization.setOwner`
      - Changes ownership (RightsHolder) of the specified object to the :term:`subject` specified by `userId`

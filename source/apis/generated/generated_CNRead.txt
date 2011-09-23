@@ -31,7 +31,11 @@
      - :func:`getChecksum`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Checksum`
    * - Tier 1
-     - ``GET /object?querytype={queryType}&query={query}``
+     - ``GET /object[?starttime={startTime}&endtime={endTime}&objectformat={objectFormat}&replicastatus={replicaStatus}&start={start}&count={count}]``
+     - :func:`listObjects`
+     - (:class:`session<Types.Session>`, :class:`[startTime]<Types.DateTime>`, :class:`[endTime]<Types.DateTime>`, :class:`[objectFormat]<Types.ObjectFormat>`, ``[replicaStatus]``, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.ObjectList`
+   * - Tier 1
+     - ``GET /search``
      - :func:`search`
      - (:class:`session<Types.Session>`, :class:`queryType<Types.QueryType>`, ``query``) ``->`` :class:`Types.ObjectList`
 
@@ -226,13 +230,69 @@
 
 
 
+.. function:: listObjects(session,[startTime],[endTime],[objectFormat],[replicaStatus],[start=0],[count=1000]) -> ObjectList
+
+   Retrieve the list of objects present on the CN that match the calling parameters. At a minimum, this method should be able to return a list of objects that match::
+
+     startTime <= SystemMetadata.dateSysMetadataModified
+
+   but is expected to also support date range (by also specifying *endTime*), and should also support slicing of the matching set of records by indicating the starting *index* of the response (where 0 is the index of the first item) and the *count* of elements to be returned.
+
+   
+
+   :Use Cases:
+     :doc:`UC06 </design/UseCases/06_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
+   :REST URL: ``GET /object[?starttime={startTime}&endtime={endTime}&objectformat={objectFormat}&replicastatus={replicaStatus}&start={start}&count={count}]``
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :type session: :class:`Types.Session`
+
+   :param startTime: Specifies the beginning of the time range from which to return object (>=). Queries against :attr:`SystemMetadata.dateSysMetadataModified`
+   :type startTime: :class:`Types.DateTime`
+
+   :param endTime: Specifies the end of the time range to which to return object (<=). Queries against :attr:`SystemMetadata.dateSysMetadataModified`
+   :type endTime: :class:`Types.DateTime`
+
+   :param objectFormat: Restrict results to the specified object format.
+   :type objectFormat: :class:`Types.ObjectFormat`
+
+   :param replicaStatus: Indicates if replicated objects should be returned in the list (i.e. any entries present in the :attr:`SystemMetadata.replica`, objects that have been replicated to this member node). If ``false``, then no objects that have been replicated should be returned. If ``true``, then any objects can be returned, regardless of replication status. The default value is ``true``.
+   :type replicaStatus: boolean
+
+   :param start=0: The zero-based index of the first value, relative to the first record of the resultset that matches the parameters.
+   :type start=0: integer
+
+   :param count=1000: The maximum number of entries that should be returned in the response. The Member Node may return less entries than specified in this value.
+   :type count=1000: integer
+
+   :returns: The list of PIDs that match the query criteria. If none match, an empty list is returned.
+   :rtype: :class:`Types.ObjectList`
+
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=1520)``
+
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=1540)``
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=1560)``
+
+     Raised if some functionality requested is not implemented. In the case of an optional request parameter not being supported, the errorCode should be 400. If the requested format (through HTTP Accept headers) is not supported, then the standard HTTP 406 error code should be returned.
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=1580)``
+
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=1530)``
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=1521)``
+
+
+
+
 .. function:: search(session,queryType,query) -> ObjectList
 
    Search the metadata catalog and return identifiers of metadata records that match the criteria.
 
+   Implemented asa proxy to the SOLR search index. All readonly operations supported with standard SOLR parameters.
+
    :Use Cases:
      :doc:`UC02 </design/UseCases/02_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
-   :REST URL: ``GET /object?querytype={queryType}&query={query}``
+   :REST URL: ``GET /search``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 

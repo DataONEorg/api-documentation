@@ -177,8 +177,16 @@ Note that the signature of this method differs from :func:`MNRead.getChecksum` a
 
        Appears in functional use cases: :doc:`UC09 </design/UseCases/09_uc>`
    * - \
+     - :func:`CNRead.listObjects`
+     - Retrieve the list of objects present on the CN that match the calling parameters. At a minimum, this method should be able to return a list of objects that match::
+  startTime <= SystemMetadata.dateSysMetadataModified
+but is expected to also support date range (by also specifying *endTime*), and should also support slicing of the matching set of records by indicating the starting *index* of the response (where 0 is the index of the first item) and the *count* of elements to be returned.
+
+       Appears in functional use cases: :doc:`UC06 </design/UseCases/06_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
+   * - \
      - :func:`CNRead.search`
      - Search the metadata catalog and return identifiers of metadata records that match the criteria.
+Implemented asa proxy to the SOLR search index. All readonly operations supported with standard SOLR parameters.
 
        Appears in functional use cases: :doc:`UC02 </design/UseCases/02_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
    * - :mod:`CNAuthorization`
