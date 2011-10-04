@@ -132,6 +132,37 @@ Member Node replication.
   deactivate cnXrepl
   end loop
 
+  == Regular Replication Audit ==
+
+  [-> cnXrepl : auditReplicas()
+  activate cnXrepl #D74F57
+
+  note right
+    Query the SOLR Index to receive a short list of tasks which have not had their
+    checksums verified in greater than 2 months
+  end note
+  cnXrepl ->] : getAuditShortList()
+  cnXrepl <-] : shortList
+
+  loop for each Identifier in shortList
+  cnXrepl -> cnXrepl : hzSystemMetadata.get(Identifier).getReplicaList()
+  loop for each Replica in List<Replica>
+  note right
+    Bin the tasks by NodeReference for bulk processing my MNAuditTask
+  end note
+  cnXrepl -> cnXrepl : if( auditTaskMap.containsKey(Replica.replicaMemberNode) )\n    auditTaskMap.get(Replica.replicaMemberNode).add(Identifier)
+  end loop
+  loop for each NodeReference in auditTaskMap.keySet()
+  cnXrepl -> cnXrepl : taskid = idGenerator.newId()
+  cnXrepl -> cnXrepl : auditTask = MNAuditTask(NodeReference, List<Identifier>)
+  cnXrepl -> cnXrepl : hzAuditTaskQueue.put(taskid, auditTask)
+  end loop
+  note right
+    Hazelcast distributes Audit
+    Tasks to all CNs
+  end note
+  end loop
+  deactivate cnXrepl
      
   == Process Replication Tasks ==  
           
@@ -188,6 +219,38 @@ Member Node replication.
   cnZ -> cnZ: hzSystemMetadata.unlock(pid)
   cnZ --> cnZ: statusResponse
   deactivate cnZ
+
+  == Process Audit Tasks ==  
+
+  cnZ -> cnZ: entryAdded(EntryEvent<taskid, auditTask>)
+  activate cnZ #D74F57
+  cnZ -> cnZ: hzAuditTaskQueue.poll()
+  note right
+    Each ReplicationService
+    polls the audit task
+    queue when events are fired
+  end note
+  cnZ --> cnZ: auditTask
+
+  cnZ -> cnZ : ExecutorService.submit(auditTask)
+  activate cnZ #DarkSalmon
+  cnZ -> cnZ : auditTask.call()
+
+  loop for each pid in List<Identifier>
+  cnZ -> mnB : getChecksum(pid)
+  activate mnB #D74F57
+  mnB --> cnZ : checksum
+  deactivate mnB
+  cnZ -> cnZ : if( cnZ.getChecksum(pid) != checksum ) \n    setReplicationStatus(session, pid, nodeRef, ReplicationStatus.INVALIDATED) \n    createAndQueueTasks(pid)
+  note left 
+    ReplicationStatus has been set to invalid due to disagreement in the
+    object's checksum between the MN and CN
+  end note
+  end loop
+
+  deactivate cnZ
+  deactivate cnZ
+
   @enduml
 
 
