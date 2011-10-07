@@ -115,14 +115,14 @@ system.  The reserved symbolic principals are:
 	trusted affiliate organizations or identity services or have been manually verified
 	by an administrator. The identity information when logged
 	during read operations should be fully trusted.
-    * Represented using the special principal 'VerifiedUser'
+    * Represented using the special principal 'verifiedUser'
 * Authenticated users
     * Any user who has a valid authentication token is considered a member of
       the authenticated users group.  This designation can be used in
       particular to require that user identity has been established, but not necessarily
       verified as accurate. Authenticated users may be restricted from certain [read] operations
       depending on the data owners' policy regarding access for untrusted identities.
-    * Represented using the special principal 'AuthenticatedUser'    
+    * Represented using the special principal 'authenticatedUser'    
 * Public user
     * The Public user represents any user accessing services that does not have
       a valid session token, plus all of those who do have a valid token. 
@@ -131,7 +131,7 @@ system.  The reserved symbolic principals are:
       user.  For create, update, and delete operations, this typically means
       that the user has insufficient privileges to access the service.  At
       times providers may want to provide Public read access to resources.
-    * Represented using the special principal 'Public'
+    * Represented using the special principal 'public'
 
 Identity Management Service
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
