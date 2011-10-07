@@ -137,6 +137,7 @@ Member Node replication.
   [-> cnXrepl : auditReplicas()
   activate cnXrepl #D74F57
 
+  cnXrepl -> cnXrepl : getLock(hzAuditString)
   note right
     Query the SOLR Index to receive a short list of tasks which have not had their
     checksums verified in greater than 2 months
@@ -150,7 +151,8 @@ Member Node replication.
   note right
     Bin the tasks by NodeReference for bulk processing my MNAuditTask
   end note
-  cnXrepl -> cnXrepl : if( auditTaskMap.containsKey(Replica.replicaMemberNode) )\n    auditTaskMap.get(Replica.replicaMemberNode).add(Identifier)
+  cnXrepl -> cnXrepl : if( auditTaskMap.containsKey(Replica.replicaMemberNode) )\n    auditTaskMap.get(Replica.replicaMemberNode).add(Identifier)\n else\n    auditTaskMap.put(Replica.replicaMemberNode, new List<Identifiers>())\n    auditTaskMap.get(Replica.replicaMemberNode).add(Identifier)
+  end loop
   end loop
   loop for each NodeReference in auditTaskMap.keySet()
   cnXrepl -> cnXrepl : taskid = idGenerator.newId()
@@ -161,7 +163,6 @@ Member Node replication.
     Hazelcast distributes Audit
     Tasks to all CNs
   end note
-  end loop
   deactivate cnXrepl
      
   == Process Replication Tasks ==  
