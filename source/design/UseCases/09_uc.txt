@@ -128,7 +128,7 @@ Member Node replication.
     Hazelcast distributes Replication
     Tasks to all CNs
   end note
-  cnXrepl -> cnXrepl: setReplicationStatus(session, pid,\n  nodeRef, ReplicationStatus.QUEUED)
+  cnXrepl -> cnXrepl: setReplicationStatus(session, pid,\n    nodeRef, ReplicationStatus.QUEUED)
   deactivate cnXrepl
   end loop
 
@@ -156,7 +156,7 @@ Member Node replication.
    alt if auditTaskMap.containsKey(Replica.replicaMemberNode)
    cnXrepl -> cnXrepl : auditTaskMap.get(Replica.replicaMemberNode).add(Identifier)
    else else
-   cnXrepl -> cnXrepl : auditTaskMap.put(Replica.replicaMemberNode, new List<Identifier>())\n auditTaskMap.get(Replica.replicaMemberNode).add(Identifier)
+   cnXrepl -> cnXrepl : auditTaskMap.put(Replica.replicaMemberNode, new List<Identifier>())\nauditTaskMap.get(Replica.replicaMemberNode).add(Identifier)
    end
    end
    end loop
@@ -191,7 +191,7 @@ Member Node replication.
   activate mnB #D74F57
   mnB --> cnZ: replicateResponse
   deactivate cnZ 
-  cnZ -> cnZ: setReplicationStatus(session, pid,\n  nodeRef, ReplicationStatus.REQUESTED)
+  cnZ -> cnZ: setReplicationStatus(session, pid,\n    nodeRef, ReplicationStatus.REQUESTED)
   
   note left
    Object's system metadata get's updated
@@ -205,13 +205,13 @@ Member Node replication.
   mnB -> mnA: getReplica(mnBSession, pid)
   deactivate mnB
   activate mnA #D74F57
-  mnA -> cnZ: isNodeAuthorized(mnASession, \nmnBSubject, pid, replicationPermission)
+  mnA -> cnZ: isNodeAuthorized(mnASession, \n    mnBSubject, pid, replicationPermission)
   cnZ --> mnA: authorizationResponse
   mnA --> mnB: replicaBytes
   deactivate mnA
   activate mnB #D74F57
   
-  mnB -> cnZ: setReplicationStatus(session, pid,\n  nodeRef, ReplicationStatus.COMPLETE)
+  mnB -> cnZ: setReplicationStatus(session, pid,\n    nodeRef, ReplicationStatus.COMPLETE)
   deactivate mnB
   cnZ -> mnA: mnA.getChecksum(pid)
   activate mnA #D74F57
@@ -250,7 +250,7 @@ Member Node replication.
   mnB --> cnZ : checksum
   deactivate mnB
   alt if ( cnZ.getChecksum(pid) != checksum )
-  cnZ -> cnZ : setReplicationStatus(session, pid, nodeRef,  \n ReplicationStatus.INVALIDATED) \ncreateAndQueueTasks(pid)
+  cnZ -> cnZ : setReplicationStatus(session, pid, nodeRef,  \n    ReplicationStatus.INVALIDATED) \ncreateAndQueueTasks(pid)
   note left 
     ReplicationStatus has been set to invalid due to 
     disagreement in the object's checksum between the 
