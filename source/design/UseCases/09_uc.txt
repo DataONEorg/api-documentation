@@ -134,43 +134,50 @@ Member Node replication.
 
   == Regular Replication Audit ==
 
-  [-> cnXrepl : auditReplicas()
-  activate cnXrepl #D74F57
+   [-> cnXrepl : auditReplicas()
+   activate cnXrepl #D74F57
 
-  cnXrepl -> cnXrepl : getLock(hzAuditString)
-  note right
-    Query the SOLR Index to receive a short list of tasks which have not had their
-    checksums verified in greater than 2 months
-  end note
-  cnXrepl ->] : getAuditShortList()
-  cnXrepl <-] : shortList
+   cnXrepl -> cnXrepl : getLock(hzAuditString)
+   note right
+     Query the SOLR Index to receive a short list of tasks which have not 
+     had their checksums verified in greater than 2 months
+   end note
+   cnXrepl ->] : getAuditShortList()
+   cnXrepl <--] : shortList
 
-  loop for each Identifier in shortList
-  cnXrepl -> cnXrepl : hzSystemMetadata.get(Identifier).getReplicaList()
-  loop for each Replica in List<Replica>
-  note right
-    Bin the tasks by NodeReference for bulk processing my MNAuditTask
-  end note
-  cnXrepl -> cnXrepl : if( auditTaskMap.containsKey(Replica.replicaMemberNode) )\n    auditTaskMap.get(Replica.replicaMemberNode).add(Identifier)\n else\n    auditTaskMap.put(Replica.replicaMemberNode, new List<Identifiers>())\n    auditTaskMap.get(Replica.replicaMemberNode).add(Identifier)
-  end loop
-  end loop
-  loop for each NodeReference in auditTaskMap.keySet()
-  cnXrepl -> cnXrepl : taskid = idGenerator.newId()
-  cnXrepl -> cnXrepl : auditTask = MNAuditTask(NodeReference, List<Identifier>)
-  cnXrepl -> cnXrepl : hzAuditTaskQueue.put(taskid, auditTask)
-  end loop
-  note right
-    Hazelcast distributes Audit
-    Tasks to all CNs
-  end note
-  deactivate cnXrepl
-     
+   note over cnXrepl
+   Bin the tasks by NodeReference for 
+   bulk processing my MNAuditTask
+   end note
+   loop for each Identifier in shortList
+   cnXrepl -> cnXrepl : hzSystemMetadata.get(Identifier).getReplicaList()
+   loop for each Replica in List<Replica>
+   alt if Replica.replicaVerified is older than 2 months
+   alt if auditTaskMap.containsKey(Replica.replicaMemberNode)
+   cnXrepl -> cnXrepl : auditTaskMap.get(Replica.replicaMemberNode).add(Identifier)
+   else else
+   cnXrepl -> cnXrepl : auditTaskMap.put(Replica.replicaMemberNode, new List<Identifier>())\n auditTaskMap.get(Replica.replicaMemberNode).add(Identifier)
+   end
+   end
+   end loop
+   end loop
+   loop for each NodeReference in auditTaskMap.keySet()
+   cnXrepl -> cnXrepl : taskid = idGenerator.newId()
+   cnXrepl -> cnXrepl : auditTask = MNAuditTask(NodeReference, List<Identifier>)
+   cnXrepl -> cnXrepl : hzAuditTaskQueue.put(taskid, auditTask)
+   end loop
+   note right
+     Hazelcast distributes Audit
+     Tasks to all CNs
+   end note
+   deactivate cnXrepl
+
   == Process Replication Tasks ==  
           
   cnZ -> cnZ: entryAdded(EntryEvent<taskid, task>)
   activate cnZ #D74F57
   cnZ -> cnZ: hzReplicationTaskQueue.poll()
-  note right
+  note left
     Each ReplicationService
     polls the replication task
     queue when events are fired
@@ -226,10 +233,10 @@ Member Node replication.
   cnZ -> cnZ: entryAdded(EntryEvent<taskid, auditTask>)
   activate cnZ #D74F57
   cnZ -> cnZ: hzAuditTaskQueue.poll()
-  note right
-    Each ReplicationService
-    polls the audit task
-    queue when events are fired
+  note left
+    Each ReplicationService polls 
+    the audit task queue when 
+    events are fired
   end note
   cnZ --> cnZ: auditTask
 
@@ -242,11 +249,14 @@ Member Node replication.
   activate mnB #D74F57
   mnB --> cnZ : checksum
   deactivate mnB
-  cnZ -> cnZ : if( cnZ.getChecksum(pid) != checksum ) \n    setReplicationStatus(session, pid, nodeRef, ReplicationStatus.INVALIDATED) \n    createAndQueueTasks(pid)
+  alt if ( cnZ.getChecksum(pid) != checksum )
+  cnZ -> cnZ : setReplicationStatus(session, pid, nodeRef,  \n ReplicationStatus.INVALIDATED) \ncreateAndQueueTasks(pid)
   note left 
-    ReplicationStatus has been set to invalid due to disagreement in the
-    object's checksum between the MN and CN
+    ReplicationStatus has been set to invalid due to 
+    disagreement in the object's checksum between the 
+    MN and CN
   end note
+  end
   end loop
 
   deactivate cnZ
