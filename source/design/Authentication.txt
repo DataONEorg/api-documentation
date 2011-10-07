@@ -127,10 +127,10 @@ system.  The reserved symbolic principals are:
     * The Public user represents any user accessing services that does not have
       a valid session token, plus all of those who do have a valid token. 
       If a token is found to be invalid, the user's
-      privileges are immediately lowered to those of the symbolic 'Public'
+      privileges are immediately lowered to those of the symbolic 'public'
       user.  For create, update, and delete operations, this typically means
       that the user has insufficient privileges to access the service.  At
-      times providers may want to provide Public read access to resources.
+      times providers may want to provide public read access to resources.
     * Represented using the special principal 'public'
 
 Identity Management Service
