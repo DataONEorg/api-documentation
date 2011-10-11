@@ -134,7 +134,7 @@
    * - GET /accounts/{subject}
      - :func:`CNIdentity.getSubjectInfo`
      - Get the information about a Person (their equivalent identities, and the Groups to which they belong) or the Group (including members).
-   * - GET /accounts?query={query}[&start={start}&count={count}]
+   * - GET /accounts?query={query}[&status={status}][&start={start}][&count={count}]
      - :func:`CNIdentity.listSubjects`
      - List the subjects, including users, groups, and systems, that match search criteria. The list can be restricted to subjects whose identifier matches certain substrings, and the size of the resultset can be paged through.
    * - POST /accounts/map

@@ -27,9 +27,9 @@
      - :func:`getSubjectInfo`
      - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` :class:`Types.SubjectList`
    * - Tier 2
-     - ``GET /accounts?query={query}[&start={start}&count={count}]``
+     - ``GET /accounts?query={query}[&status={status}][&start={start}][&count={count}]``
      - :func:`listSubjects`
-     - (:class:`session<Types.Session>`, :class:`query<Types.String>`, ``start``, ``count``) ``->`` :class:`Types.SubjectList`
+     - (:class:`session<Types.Session>`, :class:`query<Types.String>`, :class:`status<Types.String>`, ``start``, ``count``) ``->`` :class:`Types.SubjectList`
    * - Tier 2
      - ``POST /accounts/map``
      - :func:`mapIdentity`
@@ -178,18 +178,21 @@
 
 
 
-.. function:: listSubjects(session,query,start,count) -> SubjectList
+.. function:: listSubjects(session,query,status,start,count) -> SubjectList
 
    List the subjects, including users, groups, and systems, that match search criteria.
 
    The list can be restricted to subjects whose identifier matches certain substrings, and the size of the resultset can be paged through.
 
-   :REST URL: ``GET /accounts?query={query}[&start={start}&count={count}]``
+   :REST URL: ``GET /accounts?query={query}[&status={status}][&start={start}][&count={count}]``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
    :param query: A query string criteria to be matched using a case-insensitive substring match against the identifier for the principal, the givenName or familyName of users, and the groupName of groups.  The function returns the union of all successful matches against these fields.
    :type query: :class:`Types.String`
+
+   :param status: Optional value indicating only "unverified" or "verified" records should be returned. Null, missing, or any other string for the status value indicates all records should be returned.
+   :type status: :class:`Types.String`
 
    :param start: The starting record number for the records to be returned.
    :type start: integer
@@ -207,6 +210,8 @@
    :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=2260)``
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2261)``
+
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=2262)``
 
 
 
