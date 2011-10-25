@@ -13,7 +13,7 @@ Retrieve a count of all objects on Member Node::
 Retrieve a count of objects whose format identifier starts with "eml:"::
 
   curl -X GET -H "Accept: text/xml" \
-    http://mn1.dataone.org/monitor/object?fmtid=Seml:
+    http://mn1.dataone.org/monitor/object?formatid=Seml:
 
   <?xml version="1.0" encoding="UTF-8"?>
   <d1:objectStatistics xmlns:d1="http://ns.dataone.org/service/types/v1">

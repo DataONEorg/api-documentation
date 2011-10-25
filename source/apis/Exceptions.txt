@@ -151,7 +151,7 @@ the error should be serialized in the format indicated in the request Accept
 header, defaulting to HTML.
 
 Examples of a :exc:`Exceptions.NotFound` error raised by a request to
-:func:`MN_crud.get` object ``123XYZ`` from a Member Node. The trace
+:func:`MNRead.get` object ``123XYZ`` from a Member Node. The trace
 information contains ``{'method':'mn.get'}``.
 
 In HTML:

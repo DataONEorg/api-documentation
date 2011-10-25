@@ -99,7 +99,7 @@
   ..
     @startuml images/class_describeresponse.png
     class DescribeResponse {
-      +DataONE-fmtid : ObjectFormatIdentifier
+      +DataONE-formatid : ObjectFormatIdentifier
       +Content-Length : integer
       +Last-Modified : DateTime
       +DataONE-Checksum : Checksum
@@ -109,9 +109,9 @@
     DescribeResponse -- DateTime
     @enduml
 
-  .. attribute:: DataONE-fmtid
+  .. attribute:: DataONE-formatid
 
-     The value of the :attr:`SystemMetadata.fmtid` entry available in the
+     The value of the :attr:`SystemMetadata.formatid` entry available in the
      :class:`SystemMetadata`.
 
   .. attribute:: Content-Length
@@ -140,7 +140,7 @@
     Last-Modified: Wed, 16 Dec 2009 13:58:34 GMT
     Content-Length: 10400
     Content-Type: application/octet-stream
-    DataONE-fmtid: eml://ecoinformatics.org/eml-2.0.1
+    DataONE-formatid: eml://ecoinformatics.org/eml-2.0.1
     DataONE-Checksum: SHA-1,2e01e17467891f7c933dbaa00e1459d23db3fe4f
 
 
