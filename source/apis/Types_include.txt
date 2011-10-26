@@ -99,7 +99,7 @@
   ..
     @startuml images/class_describeresponse.png
     class DescribeResponse {
-      +DataONE-formatid : ObjectFormatIdentifier
+      +DataONE-formatId : ObjectFormatIdentifier
       +Content-Length : integer
       +Last-Modified : DateTime
       +DataONE-Checksum : Checksum
@@ -109,9 +109,9 @@
     DescribeResponse -- DateTime
     @enduml
 
-  .. attribute:: DataONE-formatid
+  .. attribute:: DataONE-formatId
 
-     The value of the :attr:`SystemMetadata.formatid` entry available in the
+     The value of the :attr:`SystemMetadata.formatId` entry available in the
      :class:`SystemMetadata`.
 
   .. attribute:: Content-Length
@@ -140,7 +140,7 @@
     Last-Modified: Wed, 16 Dec 2009 13:58:34 GMT
     Content-Length: 10400
     Content-Type: application/octet-stream
-    DataONE-formatid: eml://ecoinformatics.org/eml-2.0.1
+    DataONE-formatId: eml://ecoinformatics.org/eml-2.0.1
     DataONE-Checksum: SHA-1,2e01e17467891f7c933dbaa00e1459d23db3fe4f
 
 

@@ -45,14 +45,14 @@ document (PID) indexed.
      - string, unique
      - No
      - :attr:`SystemMetadata.identifier`
-   * - :attr:`formatid`
+   * - :attr:`formatId`
      - string
      - No
-     - :attr:`SystemMetadata.formatid`
+     - :attr:`SystemMetadata.formatId`
    * - isMetadata
      - boolean
      - No
-     - :attr:`SystemMetadata.formatid`, object format registry
+     - :attr:`SystemMetadata.formatId`, object format registry
    * - isData
      - boolean
      - No
@@ -60,7 +60,7 @@ document (PID) indexed.
    * - isResourceMap
      - boolean
      - No
-     - True if the :attr:`SystemMetadata.formatid` starts with "http://www.openarchives.org/ore/"
+     - True if the :attr:`SystemMetadata.formatId` starts with "http://www.openarchives.org/ore/"
    * - :attr:`size`
      - long
      - No
@@ -656,7 +656,7 @@ Attribute Descriptions and Notes
   Title - Mercury UI
 
 
-.. attribute:: formatid
+.. attribute:: formatId
 
   (String) Type of data (format) (2)
   

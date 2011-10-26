@@ -207,7 +207,7 @@ Data Types in CICore
   NodeReference --|> NonEmptyString
 
   class ObjectFormat {
-    + formatid : ObjectFormatIdentifier[1..1]
+    + formatId : ObjectFormatIdentifier[1..1]
     + formatName : xs.string[1..1]
     + formatType : xs.string[1..1]
   }
@@ -222,7 +222,7 @@ Data Types in CICore
 
   class ObjectInfo {
     + identifier : Identifier[1..1]
-    + formatid : ObjectFormatIdentifier[1..1]
+    + formatId : ObjectFormatIdentifier[1..1]
     + checksum : Checksum[1..1]
     + dateSysMetadataModified : xs.dateTime[1..1]
     + size : xs.unsignedLong[1..1]
@@ -364,7 +364,7 @@ Data Types in CICore
 
   class SystemMetadata {
     + identifier : Identifier[1..1]
-    + formatid : ObjectFormatIdentifier[1..1]
+    + formatId : ObjectFormatIdentifier[1..1]
     + size : xs.unsignedLong[1..1]
     + checksum : Checksum[1..1]
     + submitter : Subject[1..1]
@@ -1291,7 +1291,7 @@ Data Types in CICore
 
     An ObjectFormat is the structure returned from the getFormat() method of the CN REST interface. It provides the unique identifier and the name associated with the object format. Future versions may contain additional structured content from external common typing systems.
 
-    .. attribute:: formatid
+    .. attribute:: formatId
 
       Type: :class:`Types.ObjectFormatIdentifier`
 
@@ -1317,7 +1317,7 @@ Data Types in CICore
 
       <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ObjectFormat">
          <xs:sequence>
-            <xs:element name="formatid" type="d1:ObjectFormatIdentifier" minOccurs="1" maxOccurs="1">
+            <xs:element name="formatId" type="d1:ObjectFormatIdentifier" minOccurs="1" maxOccurs="1">
             </xs:element>
             <xs:element name="formatName" type="xs:string" minOccurs="1" maxOccurs="1">
             </xs:element>
@@ -1333,7 +1333,7 @@ Data Types in CICore
       @startuml images/class_ObjectFormat.png
 
       class ObjectFormat {
-        + formatid : ObjectFormatIdentifier[1..1]
+        + formatId : ObjectFormatIdentifier[1..1]
         + formatName : xs.string[1..1]
         + formatType : xs.string[1..1]
       }
@@ -1383,7 +1383,7 @@ Data Types in CICore
 
       Type: :class:`Types.Identifier`
 
-    .. attribute:: formatid
+    .. attribute:: formatId
 
       Type: :class:`Types.ObjectFormatIdentifier`
 
@@ -1405,7 +1405,7 @@ Data Types in CICore
       <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ObjectInfo">
          <xs:sequence>
             <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="identifier" type="d1:Identifier" minOccurs="1" maxOccurs="1"/>
-            <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="formatid" type="d1:ObjectFormatIdentifier"/>
+            <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="formatId" type="d1:ObjectFormatIdentifier"/>
             <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="checksum" type="d1:Checksum" minOccurs="1" maxOccurs="1"/>
             <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="dateSysMetadataModified" type="xs:dateTime"/>
             <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="size" type="xs:unsignedLong"/>
@@ -1420,7 +1420,7 @@ Data Types in CICore
 
       class ObjectInfo {
         + identifier : Identifier[1..1]
-        + formatid : ObjectFormatIdentifier[1..1]
+        + formatId : ObjectFormatIdentifier[1..1]
         + checksum : Checksum[1..1]
         + dateSysMetadataModified : xs.dateTime[1..1]
         + size : xs.unsignedLong[1..1]
@@ -2231,7 +2231,7 @@ Data Types in CICore
 
       Type: :class:`Types.Identifier`
 
-    .. attribute:: formatid
+    .. attribute:: formatId
 
       Type: :class:`Types.ObjectFormatIdentifier`
 
@@ -2293,7 +2293,7 @@ Data Types in CICore
       <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="SystemMetadata">
          <xs:sequence>
             <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="identifier" type="d1:Identifier"/>
-            <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="formatid" type="d1:ObjectFormatIdentifier"/>
+            <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="formatId" type="d1:ObjectFormatIdentifier"/>
             <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="size" type="xs:unsignedLong"/>
             <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="checksum" type="d1:Checksum"/>
             <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="submitter" type="d1:Subject"/>
