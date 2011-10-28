@@ -50,6 +50,7 @@ Data Types in CICore
 - :class:`Types.Session`
 - :class:`Types.Slice`
 - :class:`Types.Subject`
+- :class:`Types.SubjectInfo`
 - :class:`Types.SubjectList`
 - :class:`Types.Synchronization`
 - :class:`Types.SystemMetadata`
@@ -181,6 +182,7 @@ Data Types in CICore
     + synchronization : Synchronization[0..1]
     + ping : Ping[0..1]
     + subject : Subject[0..*]
+    + contactSubject : Subject[0..*]
     + replicate : xs.boolean[1.. 1]
     + synchronize : xs.boolean[1.. 1]
     + type : NodeType[1.. 1]
@@ -260,7 +262,7 @@ Data Types in CICore
     + subject : Subject[1..1]
     + givenName : NonEmptyString[1..*]
     + familyName : NonEmptyString[1..1]
-    + email : NonEmptyString[1..*]
+    + email : NonEmptyString[0..*]
     + isMemberOf : Subject[0..*]
     + equivalentIdentity : Subject[0..*]
   }
@@ -320,10 +322,10 @@ Data Types in CICore
 
   class Session {
     + subject : Subject[1..1]
-    + subjectList : SubjectList[0..1]
+    + subjectInfo : SubjectInfo[0..1]
   }
   Session .. Subject
-  Session .. SubjectList
+  Session .. SubjectInfo
 
   class Schedule {
     + hour : CrontabEntry[1..1]
@@ -355,14 +357,20 @@ Data Types in CICore
   }
   Subject --|> NonEmptyString
 
-  class SubjectList {
+  class SubjectInfo {
     + person : Person[0..*]
     + group : Group[0..*]
   }
-  SubjectList .. Person
-  SubjectList .. Group
+  SubjectInfo .. Person
+  SubjectInfo .. Group
+
+  class SubjectList {
+    + subject : Subject[0..*]
+  }
+  SubjectList .. Subject
 
   class SystemMetadata {
+    + serialVersion : xs.long[1..1]
     + identifier : Identifier[1..1]
     + formatId : ObjectFormatIdentifier[1..1]
     + size : xs.unsignedLong[1..1]
@@ -379,6 +387,7 @@ Data Types in CICore
     + authoritativeMemberNode : NodeReference[0..1]
     + replica : Replica[0..*]
   }
+  SystemMetadata .. xs.long
   SystemMetadata .. Identifier
   SystemMetadata .. ObjectFormatIdentifier
   SystemMetadata .. xs.unsignedLong
@@ -490,6 +499,8 @@ Data Types in CICore
 ..                                    ######
 .. class:: NodeState
 
+    An indicator of the current node accessibility. Nodes that are marked "down" are inaccessible for service operations, those that are "up" are in the normal accessible state, and "unknown" indicates that the state has not been determined yet.
+
     .. code-block:: xml
 
 
@@ -517,6 +528,8 @@ Data Types in CICore
 
 ..                                    ######
 .. class:: NodeType
+
+    The type of this node, which is either "mn" for Member Nodes, and and "cn" for Coordinating Nodes.
 
     .. code-block:: xml
 
@@ -620,7 +633,7 @@ Data Types in CICore
 ..                                    ######
 .. class:: Permission
 
-    A string value indicating the set of actions that can be performed on a resource as specified in an access policy. The set of permissions include the ability to read a resource, modify a resource (write), and to change the set of access control policies for a resource (changePermission). In addition, there is a permission that controls ability to execute a service (execute), and a permission that controls the ability of a node to replicate an object to itself from another node.
+    A string value indicating the set of actions that can be performed on a resource as specified in an access policy. The set of permissions include the ability to read a resource (read), modify a resource (write), and to change the set of access control policies for a resource (changePermission). In addition, there is a permission that controls ability to execute a service (execute), and a permission that controls the ability of a node to receive a replicate of an object from another node.
 
     .. code-block:: xml
 
@@ -654,7 +667,7 @@ Data Types in CICore
 ..                                    ######
 .. class:: ReplicationStatus
 
-    A controlled string value indicating the current state of a replica of an object. When an object identified that needs to be replicated, it is added to the replication task queue and is marked as 'queued'; a CN node will then pick up that task and request that it be replicated to a MN and marks that it is 'requested'; when a MN finishes replicating the object, it informs the CN that it is finished and it is marked as 'completed'; periodically the CN checks each replica to be sure it is both available and valid (matching checksum with original), and if it is either unavailable in invalid then it marks it as 'invalidated', which indicates that the replication policy needs to be checked again.
+    A controlled string value indicating the current state of a replica of an object. When an object identified needs to be replicated, it is added to the replication task queue and is marked as 'queued'; a CN node will then pick up that task and request that it be replicated to a MN and marks that it is 'requested'; when a MN finishes replicating the object, it informs the CN that it is finished and it is marked as 'completed'; periodically the CN checks each replica to be sure it is both available and valid (matching checksum with original), and if it is either unavailable in invalid then it marks it as 'invalidated', which indicates that the replication policy needs to be checked again.
 
     .. code-block:: xml
 
@@ -686,6 +699,8 @@ Data Types in CICore
 ..                                    ######
 .. class:: ServiceName
 
+    The name of a service that is available on a Node.
+
     .. code-block:: xml
 
 
@@ -706,6 +721,8 @@ Data Types in CICore
 
 ..                                    ######
 .. class:: ServiceVersion
+
+    The version of a service that is available on a Node, expressed using the symbolic service level that that service implements, such as "v1" or "v2". DataONE services are released only as major service versions; patches to services are not indicated in this version label.
 
     .. code-block:: xml
 
@@ -1146,7 +1163,14 @@ Data Types in CICore
 
       Type: :class:`Types.Subject`
 
-      The Subject of this node, which can be repeated as needed. The Node.subject represents the identifier of the node that would be found in X.509 certificates that would be used to securely communicate with this node. Thus, it is an X.509 Distinguished Name that applies to the host on which the Node is operating. When (and if) this hostname changes the new subject for the node would be added to the Node so that we can track the subject that has been used in various access control rules over time.
+      The Subject of this node, which can be repeated as needed. The Node.subject represents the identifier of the node that would be found in X.509 certificates that would be used to securely communicate with this node. Thus, it is an X.509 Distinguished Name that applies to the host on which the Node is operating. When (and if) this hostname changes the new subject for the node would be added to the Node to track the subject that has been used in various access control rules over time.
+
+
+    .. attribute:: contactSubject
+
+      Type: :class:`Types.Subject`
+
+      The appropriate person or group to contact regarding the disposition, management, and status of this Member Node. The Node.contactSubject is an X.509 Distinguished Name for a person or group that can be used to look up current contact details (e.g., name, email address) for the contact in the DataONE Identity service. DataONE uses the subjectContact to provide notices of interest to DataONE nodes, including information such as policy changes, maintenance updates, node outage notifications, among other information useful for administering a node. Each node that is registered with DataONE must provide at least one subjectContact that has been verified with DataONE.
 
 
     .. attribute:: replicate
@@ -1182,6 +1206,8 @@ Data Types in CICore
             <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="ping" type="d1:Ping" minOccurs="0" maxOccurs="1"/>
             <xs:element name="subject" type="d1:Subject" minOccurs="0" maxOccurs="unbounded">
             </xs:element>
+            <xs:element name="contactSubject" type="d1:Subject" minOccurs="0" maxOccurs="unbounded">
+            </xs:element>
          </xs:sequence>
          <xs:attribute xmlns:d1="http://ns.dataone.org/service/types/v1" name="replicate" use="required" type="xs:boolean"/>
          <xs:attribute xmlns:d1="http://ns.dataone.org/service/types/v1" name="synchronize" use="required" type="xs:boolean"/>
@@ -1204,6 +1230,7 @@ Data Types in CICore
         + synchronization : Synchronization[0..1]
         + ping : Ping[0..1]
         + subject : Subject[0..*]
+        + contactSubject : Subject[0..*]
         + replicate : xs.boolean[1.. 1]
         + synchronize : xs.boolean[1.. 1]
         + type : NodeType[1.. 1]
@@ -1641,7 +1668,7 @@ Data Types in CICore
             </xs:element>
             <xs:element name="familyName" type="d1:NonEmptyString" minOccurs="1" maxOccurs="1">
             </xs:element>
-            <xs:element name="email" type="d1:NonEmptyString" minOccurs="1" maxOccurs="unbounded">
+            <xs:element name="email" type="d1:NonEmptyString" minOccurs="0" maxOccurs="unbounded">
             </xs:element>
             <xs:element name="isMemberOf" type="d1:Subject" minOccurs="0" maxOccurs="unbounded">
             </xs:element>
@@ -1660,7 +1687,7 @@ Data Types in CICore
         + subject : Subject[1..1]
         + givenName : NonEmptyString[1..*]
         + familyName : NonEmptyString[1..1]
-        + email : NonEmptyString[1..*]
+        + email : NonEmptyString[0..*]
         + isMemberOf : Subject[0..*]
         + equivalentIdentity : Subject[0..*]
       }
@@ -1953,15 +1980,15 @@ Data Types in CICore
 ..                                    ######
 .. class:: Session
 
-    Information about the authenticated session for a service transaction. Session data is retrieved from the SSL client certificate and populated in the Session object. The subject represents the person or system that authenticated successfully, and the subjectList contains a listing of alternate identities (both Persons and Groups) that are also valid identities for this user. The subjectList should include at least one Person or Group entry that provides the attributes of the subject that was authenticated.
+    Information about the authenticated session for a service transaction. Session data is retrieved from the SSL client certificate and populated in the Session object. The subject represents the person or system that authenticated successfully, and the subjectInfo contains a listing of alternate identities (both Persons and Groups) that are also valid identities for this user. The subjectInfo should include at least one Person or Group entry that provides the attributes of the subject that was authenticated.
 
     .. attribute:: subject
 
       Type: :class:`Types.Subject`
 
-    .. attribute:: subjectList
+    .. attribute:: subjectInfo
 
-      Type: :class:`Types.SubjectList`
+      Type: :class:`Types.SubjectInfo`
 
     .. code-block:: xml
 
@@ -1969,7 +1996,7 @@ Data Types in CICore
       <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Session">
          <xs:sequence>
             <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="subject" type="d1:Subject" minOccurs="1" maxOccurs="1"/>
-            <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="subjectList" type="d1:SubjectList" minOccurs="0" maxOccurs="1"/>
+            <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="subjectInfo" type="d1:SubjectInfo" minOccurs="0" maxOccurs="1"/>
          </xs:sequence>
       </xs:complexType>
 
@@ -1981,10 +2008,10 @@ Data Types in CICore
 
       class Session {
         + subject : Subject[1..1]
-        + subjectList : SubjectList[0..1]
+        + subjectInfo : SubjectInfo[0..1]
       }
       Session .. Subject
-      Session .. SubjectList
+      Session .. SubjectInfo
 
       @enduml
 
@@ -2163,9 +2190,9 @@ Data Types in CICore
       <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Subject">
          <xs:simpleContent>
             <xs:extension xmlns:d1="http://ns.dataone.org/service/types/v1" base="d1:NonEmptyString"><!-- Note: Can also be special names:
-           VerifiedUser: anyone with checked credentials for whom their real name and email has been verified
-             AuthenticatedUser: anyone with checked credentials
-             Public: anyone, whether authenticated or not
+             verifiedUser: anyone with checked credentials for whom their real name and email has been verified
+             authenticatedUser: anyone with checked credentials
+             public: anyone, whether authenticated or not
         --></xs:extension>
          </xs:simpleContent>
       </xs:complexType>
@@ -2184,9 +2211,9 @@ Data Types in CICore
 
 
 ..                                    ######
-.. class:: SubjectList
+.. class:: SubjectInfo
 
-    A List of Subjects, including both persons and groups, that is returned from the listSubjects service.
+    A List of subjects, including both Persons and Groups, that is returned from the getSubjectInfo service and listSubjects service.
 
     .. attribute:: person
 
@@ -2199,10 +2226,44 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="SubjectList">
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="SubjectInfo">
          <xs:sequence>
             <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="person" type="d1:Person" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="group" type="d1:Group" minOccurs="0" maxOccurs="unbounded"/>
+         </xs:sequence>
+      </xs:complexType>
+
+
+    .. image:: images/class_SubjectInfo.png
+
+    ..
+      @startuml images/class_SubjectInfo.png
+
+      class SubjectInfo {
+        + person : Person[0..*]
+        + group : Group[0..*]
+      }
+      SubjectInfo .. Person
+      SubjectInfo .. Group
+
+      @enduml
+
+
+..                                    ######
+.. class:: SubjectList
+
+    A list of Subjects used for identity/group management
+
+    .. attribute:: subject
+
+      Type: :class:`Types.Subject`
+
+    .. code-block:: xml
+
+
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="SubjectList">
+         <xs:sequence>
+            <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" maxOccurs="unbounded" name="subject" type="d1:Subject" minOccurs="0"/>
          </xs:sequence>
       </xs:complexType>
 
@@ -2213,11 +2274,9 @@ Data Types in CICore
       @startuml images/class_SubjectList.png
 
       class SubjectList {
-        + person : Person[0..*]
-        + group : Group[0..*]
+        + subject : Subject[0..*]
       }
-      SubjectList .. Person
-      SubjectList .. Group
+      SubjectList .. Subject
 
       @enduml
 
@@ -2226,6 +2285,10 @@ Data Types in CICore
 .. class:: SystemMetadata
 
     A set of low level information about an object in the DataONE system. SystemMetadata is described in :mod:`SystemMetadata`.
+
+    .. attribute:: serialVersion
+
+      Type: :class:`Types.xs.long`
 
     .. attribute:: identifier
 
@@ -2292,6 +2355,7 @@ Data Types in CICore
 
       <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="SystemMetadata">
          <xs:sequence>
+            <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="serialVersion" type="xs:long" minOccurs="1" maxOccurs="1"/>
             <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="identifier" type="d1:Identifier"/>
             <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="formatId" type="d1:ObjectFormatIdentifier"/>
             <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="size" type="xs:unsignedLong"/>
@@ -2317,6 +2381,7 @@ Data Types in CICore
       @startuml images/class_SystemMetadata.png
 
       class SystemMetadata {
+        + serialVersion : xs.long[1..1]
         + identifier : Identifier[1..1]
         + formatid : ObjectFormatIdentifier[1..1]
         + size : xs.unsignedLong[1..1]
@@ -2333,6 +2398,7 @@ Data Types in CICore
         + authoritativeMemberNode : NodeReference[0..1]
         + replica : Replica[0..*]
       }
+      SystemMetadata .. xs.long
       SystemMetadata .. Identifier
       SystemMetadata .. ObjectFormatIdentifier
       SystemMetadata .. xs.unsignedLong

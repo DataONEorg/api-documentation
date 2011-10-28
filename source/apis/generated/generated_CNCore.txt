@@ -19,9 +19,9 @@
      - :func:`listFormats`
      - () ``->`` :class:`Types.ObjectFormatList`
    * - Tier 1
-     - ``GET /formats/{fmtid}``
+     - ``GET /formats/{formatid}``
      - :func:`getFormat`
-     - (:class:`fmtid<Types.ObjectFormatIdentifier>`) ``->`` :class:`Types.ObjectFormat`
+     - (:class:`formatid<Types.ObjectFormatIdentifier>`) ``->`` :class:`Types.ObjectFormat`
    * - Tier 1
      - ``GET /log?fromdate={fromDate}[&todate={toDate}&event={event}&start={start}&count={count}]``
      - :func:`getLogRecords`
@@ -84,7 +84,7 @@
 
    :raises Exceptions.IdentifierNotUnique: ``(errorCode=409, detailCode=1120)``
 
-     The requested identifier is already used by another object and therefore can not be used for this object. Clients should choose a new identifier that is unique and retry the operation or use :func:`CN_crud.reserveIdentifier` to reserve one.
+     The requested identifier is already used by another object and therefore can not be used for this object. Clients should choose a new identifier that is unique and retry the operation or use :func:`CNCore.reserveIdentifier` to reserve one.
 
    :raises Exceptions.UnsupportedType: ``(errorCode=400, detailCode=4895)``
 
@@ -143,13 +143,13 @@
 
 
 
-.. function:: getFormat(fmtid) -> ObjectFormat
+.. function:: getFormat(formatid) -> ObjectFormat
 
    Returns the object format registered in the DataONE Object Format Vocabulary for the given format identifier.
 
-   :REST URL: ``GET /formats/{fmtid}``
-   :param fmtid: Unique ObjectFormatIdentifier for the object format
-   :type fmtid: :class:`Types.ObjectFormatIdentifier`
+   :REST URL: ``GET /formats/{formatid}``
+   :param formatid: Unique ObjectFormatIdentifier for the object format
+   :type formatid: :class:`Types.ObjectFormatIdentifier`
 
    :returns: The object format registered in the DataONE Object Format Vocablulary
    :rtype: :class:`Types.ObjectFormat`
@@ -168,7 +168,7 @@
 
    :raises Exceptions.NotFound: ``(errorCode=404, detailCode=4848)``
 
-     The format specified by *fmtid* does not exist at this node.
+     The format specified by *formatid* does not exist at this node.
 
    :raises Exceptions.InsufficientResources: ``(errorCode=413, detailCode=4849)``
 
@@ -227,7 +227,7 @@
 
 .. function:: reserveIdentifier(session,pid) -> Identifier
 
-   Reserves the identifier that is unique and can not be used by any other sessions. Future calls to :func:`MN_storage.create` and :func:`MN_storage.update` that reference this ID must originate from the :term:`session` in which the identifier was reserved, otherwise an error is raised on those methods.
+   Reserves the identifier that is unique and can not be used by any other sessions. Future calls to :func:`MNStorage.create` and :func:`MNStorage.update` that reference this ID must originate from the :term:`session` in which the identifier was reserved, otherwise an error is raised on those methods.
 
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`

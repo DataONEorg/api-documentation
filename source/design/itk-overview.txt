@@ -14,3 +14,88 @@ applications that would fit into each category.
    itk-analysis
    itk-libraries
    
+
+ITK Architecture
+----------------
+
+Outline of class structure for the client library. There are two fundamental
+elements: nodes and granules. The former representing the base of Member and
+Coordinating Node functionality, and the later representing the (currently)
+smallest addressable unit of content in DataONE. 
+
+
+.. 
+  @startuml images/itk_structure.png
+  
+    NodeClient --|> CNodeClient
+    NodeClient --|> MNodeClient
+
+    DataOneClient .. CNodeClient
+    DataOneClient .. MNodeClient
+    
+    DataOneClient --|> CachingDataOneClient
+    
+    Granule .. SystemMetadata
+    
+    Granule --|> DataObject
+    Granule --|> ScienceMetadata
+    Granule --|> DataPackage
+    
+    class CNodeClient {
+      Node[] : resolve(Identifier pid)
+    }
+    
+    class DataOneClient {
+      CNodeClient : getCNodeClient()
+      MNodeClient : getMNodeClient()
+      
+      Identifier[] : search(String query, long start, long count)
+      Granule : get(Identifier)
+    }
+    
+    class Granule {
+      - DataOneClient : client
+      - DataOneClient : getClient()
+      Identifier : getPid()
+      ObjectFormatIdentifier : getFormatId()
+      long : getSize()
+      ByteStream : get(Node node)
+      Granule[] : getPackages()
+    }
+    
+    class DataObject {
+      Granule[] : getDocumentedBy()
+    }
+    
+    class ScienceMetadata {
+      Granule[] : getDocuments()
+    }
+    
+    class DataPackage {
+      Granule[] : getGranules()
+      ScienceMetadata[] : getDocuments()
+      DataObject[] : getData()
+    }
+    
+
+    class SystemMetadata {
+      + serialVersion : xs.long[1..1]
+      + identifier : Identifier[1..1]
+      + formatid : ObjectFormatIdentifier[1..1]
+      + size : xs.unsignedLong[1..1]
+      + checksum : Checksum[1..1]
+      + submitter : Subject[1..1]
+      + rightsHolder : Subject[1..1]
+      + accessPolicy : AccessPolicy[0..1]
+      + replicationPolicy : ReplicationPolicy[0..1]
+      + obsoletes : Identifier[0..1]
+      + obsoletedBy : Identifier[0..1]
+      + dateUploaded : xs.dateTime[1..1]
+      + dateSysMetadataModified : xs.dateTime[1..1]
+      + originMemberNode : NodeReference[0..1]
+      + authoritativeMemberNode : NodeReference[0..1]
+      + replica : Replica[0..*]
+    }
+
+    
+  @enduml

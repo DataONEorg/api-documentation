@@ -5,115 +5,137 @@ Glossary
 
    :sorted:
 
-  API
-    Application Programming Interface. Software interacts with libraries,
-    applications, and systems through APIs they expose. See also :doc:`apis/index`.
+   API
 
-  authentication
-    Authentication is the process of verifying a claim made by a subject that
-    it should be allowed to act on behalf of a given principal (person,
-    computer, process, etc.). Authentication in DataONE is described in
-    :doc:`design/UseCases/12_uc`.
+     Application Programming Interface. Software interacts with libraries,
+     applications, and systems through APIs they expose. See also :doc:`apis/index`.
 
-  authorization
-    The process of verifying that a subject has permission to access specific
-    resources or perform specific actions. Authorization in DataONE is
-    described in :doc:`design/UseCases/13_uc`.
+   authentication
 
-  cicore
-    Refers to the essential, core components of the DataONE
-    cyberinfrastructure. This includes the :term:`Member Node`\s,
-    :term:`Coordinating Node`\s, and the :term:`Investigator Toolkit`
-    libraries.
+     Authentication is the process of verifying a claim made by a subject that
+     it should be allowed to act on behalf of a given principal (person,
+     computer, process, etc.). Authentication in DataONE is described in
+     :doc:`design/UseCases/12_uc`.
+  
+   authorization
 
-  Coordinating Node
-    See :term:`Coordinating Node`
+     The process of verifying that a subject has permission to access specific
+     resources or perform specific actions. Authorization in DataONE is
+     described in :doc:`design/UseCases/13_uc`.
 
-  Coordinating Node
-    One of at least three nodes in the DataONE cyberinfrastructure that is
-    responsible for maintaining a complete collection of all :term:`science
-    metadata`, all :term:`system metadata`, a record of the location of all
-    objects stored in the :term:`DataONE` system, and provides mechanisms for
-    search and retrieval of all content. Coordinating Nodes store all original
-    copies of :term:`science metadata`. All Coordinating Node content is
-    replicated between other Coordinating Nodes. Coordinating Nodes drive
-    the replication of content between Member Nodes.
+   cicore
 
-  Coordinating Node Replication
-    In DataONE, refers to the process by which content that appears on any one
-    Coordinating Node is mirrored to all other Coordinating Nodes. See also
-    :term:`Member Node synchronization` and :term:`data replication`.
+     Refers to the essential, core components of the DataONE
+     cyberinfrastructure. This includes the :term:`Member Node`\s,
+     :term:`Coordinating Node`\s, and the :term:`Investigator Toolkit`
+     libraries.
+
+   
+   Coordinating Node
+
+     One of at least three nodes in the DataONE cyberinfrastructure that is
+     responsible for maintaining a complete collection of all :term:`science
+     metadata`, all :term:`system metadata`, a record of the location of all
+     objects stored in the :term:`DataONE` system, and provides mechanisms for
+     search and retrieval of all content. Coordinating Nodes store all original
+     copies of :term:`science metadata`. All Coordinating Node content is
+     replicated between other Coordinating Nodes. Coordinating Nodes drive
+     the replication of content between Member Nodes.
+
+   Coordinating Node Replication
+
+     In DataONE, refers to the process by which content that appears on any one
+     Coordinating Node is mirrored to all other Coordinating Nodes. See also
+     :term:`Member Node synchronization` and :term:`data replication`.
+
 
   data
+
     See :term:`data`.
 
   Data
+  
     Typically refers to :term:`science data`. Where ambiguity between the
     science data and another form of data, the full term "science data" should
     be used. 
 
   data package
+
     A data package is a set of one or more :term:`data` objects, :term:`science metadata` 
     objects, and :term:`system metadata` documents that together represent a scientifically 
     useful unit of information.
 
   data replication
+
     The transfer of content between Member Nodes as directed by the
     Coordinating Nodes.
 
   DataONE
+
     An NSF sponsored project implementing cyberinfrastructure according to
     guidelines indicated in the NSF `DataNet RFP`_.
 
   detail code
+
     Part of an exception that represents an error condition in the DataONE
     APIs. The error detail code is specific to an API method. See also
     :mod:`Exceptions`.
 
   PID
+
     Persistent Unique Identifier. A string of printable Unicode characters
     that uniquely identifies an object within the DataONE infrastructure. See
     :class:`Types.Identifier`
 
   identifier
+
     A synonym for :term:`PID`.
 
   identity 
+
     Refers to the properties of a user or :term:`principal` that enables the
     DataONE system to distinguish them from other users.
 
   Investigator Toolkit
+
     Software libraries, applications, and other tools that enable interaction
     with the DataONE system, typically by enabling storage of content on a
     Member Node and/or by enabling search and retrieval of content from the
     DataONE infrastructure.
 
   Member Node
+
     See :term:`Member Node`.
 
   Member Node
+
     A data holding node that implements all or the essential elements of the
     member mode :term:`API`\s (see :doc:`apis/MN_APIs`). Member Nodes accept
     content from users and may store content replicated from other member
     nodes as directed by a Coordinating Node.
 
   Member Node synchronization
+
     The process of updating a :term:`Coordinating Node` with the science and
     system metadata that appears on a :term:`Member Node`.
 
   metadata
+
     Data describing data. There are currently two distinct forms of metadata
     managed by DataONE, :term:`science metadata` and :term:`system metadata`.
 
   node event log
+
     The node event log is implemented on Coordinating Nodes and Member Nodes
     and should record all object access and manipulation events.
 
   Origin Member Node 
+
     The :term:`Member Node` where an object was first registered with the
     DataONE infrastructure.
 
   public user
+
     The default user identity used when a service is called without supplying
     user credentials. The public user SHOULD never have write access to any
     services and MAY be limited access to some services in addition to the usual
@@ -121,44 +143,55 @@ Glossary
     be any of "Public", "AuthenticatedUser", "VerifiedUser".
 
   principal
+
     See :term:`subject`. The use of the term "principal" is being deprecated in
     the documentation.
 
   replication
+
     See :term:`Coordinating Node replication` or :term:`data replication`.
 
   Rights Holder
+
     The :term:`Subject` that has full control over the access control rules
     for an object.
 
   session
+
     In the context of DataONE, a session refers to the operations that occur
     with a single authentication token.
 
   science data
+
     Science data that is stored in the DataONE system. See :doc:`design/WhatIsData`
     for a description of what is considered data in DataONE. DataONE services
     always return exact copies of the original data as submitted to DataONE.
 
   science metadata
+
     Metadata that describes the data that is replicated across the Member Nodes.
 
   subject
+
     A user that is a recognized :term:`identity` in the DataONE system.
 
   sysmeta
+
     See :term:`system metadata`
 
   system metadata
+
     Metadata that is used internally by the DataONE system to record system
     properties about each object stored in the DataONE system. See
     :class:`Types.SystemMetadata` and :mod:`SystemMetadata`. Also referred to as
     :term:`sysmeta`\.
 
   token
+
     In DataONE, refers to the package of information returned from a
     :func:`CN_authentication.login` operation that can be subsequently trusted
     to accurately and unambiguously identify a :term:`principal`.
 
 
-.. _DataNet RFP: http://www.nsf.gov/publications/pub_summ.jsp?WT.z_pims_id=503141&ods_key=nsf07601
+
+  .. _DataNet RFP: http://www.nsf.gov/publications/pub_summ.jsp?WT.z_pims_id=503141&ods_key=nsf07601

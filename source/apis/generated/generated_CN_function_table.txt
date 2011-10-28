@@ -19,9 +19,9 @@
      - :func:`CNCore.listFormats`
      - () ``->`` :class:`Types.ObjectFormatList`
    * - Tier 1
-     - ``GET /formats/{fmtid}``
+     - ``GET /formats/{formatid}``
      - :func:`CNCore.getFormat`
-     - (:class:`fmtid<Types.ObjectFormatIdentifier>`) ``->`` :class:`Types.ObjectFormat`
+     - (:class:`formatid<Types.ObjectFormatIdentifier>`) ``->`` :class:`Types.ObjectFormat`
    * - Tier 1
      - ``GET /log?fromdate={fromDate}[&todate={toDate}&event={event}&start={start}&count={count}]``
      - :func:`CNCore.getLogRecords`
@@ -72,9 +72,9 @@
      - :func:`CNRead.getChecksum`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Checksum`
    * - Tier 1
-     - ``GET /object[?starttime={startTime}&endtime={endTime}&objectformat={objectFormat}&replicastatus={replicaStatus}&start={start}&count={count}]``
+     - ``GET /object[?starttime={startTime}&endtime={endTime}&formatid= {formatid}&replicastatus={replicaStatus}&start={start}&count={count}]``
      - :func:`CNRead.listObjects`
-     - (:class:`session<Types.Session>`, :class:`[startTime]<Types.DateTime>`, :class:`[endTime]<Types.DateTime>`, :class:`[objectFormat]<Types.ObjectFormat>`, ``[replicaStatus]``, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.ObjectList`
+     - (:class:`session<Types.Session>`, :class:`[startTime]<Types.DateTime>`, :class:`[endTime]<Types.DateTime>`, :class:`[formatid]<Types.ObjectFormatIdentifier>`, ``[replicaStatus]``, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.ObjectList`
    * - Tier 1
      - ``GET /search``
      - :func:`CNRead.search`
@@ -108,9 +108,9 @@
      - :func:`CNIdentity.getSubjectInfo`
      - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` :class:`Types.SubjectList`
    * - Tier 2
-     - ``GET /accounts?query={query}[&status={status}][&start={start}][&count={count}]``
+     - ``GET /accounts?query={query}[&start={start}&count={count}]``
      - :func:`CNIdentity.listSubjects`
-     - (:class:`session<Types.Session>`, :class:`query<Types.String>`, :class:`status<Types.String>`, ``start``, ``count``) ``->`` :class:`Types.SubjectList`
+     - (:class:`session<Types.Session>`, :class:`query<Types.String>`, ``start``, ``count``) ``->`` :class:`Types.SubjectList`
    * - Tier 2
      - ``POST /accounts/map``
      - :func:`CNIdentity.mapIdentity`
@@ -132,21 +132,21 @@
      - :func:`CNIdentity.removeGroupMembers`
      - (:class:`session<Types.Session>`, :class:`groupName<Types.Subject>`, :class:`members<Types.SubjectList>`) ``->`` boolean
    * - Tier 4
-     - ``POST /notify``
+     - ``PUT /replicaNotifications/{pid}?session={session}&nodeRef={nodeRef}&status={status}``
      - :func:`CNReplication.setReplicationStatus`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`nodeRef<Types.NodeReference>`, :class:`status<Types.ReplicationStatus>`) ``->`` boolean
    * - Tier 4
-     - ``PUT /meta/replication/{pid}``
+     - ``PUT /replicaMetadata/{pid}?session={session}&replicaMetadata={replicaMetadata}``
      - :func:`CNReplication.updateReplicationMetadata`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`replicaMetadata<Types.Replica>`) ``->`` boolean
    * - Tier 4
-     - ``PUT /meta/policy/{pid}``
+     - ``PUT /replicaPolicies/{pid}?session={session}&policy={policy}``
      - :func:`CNReplication.setReplicationPolicy`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`policy<Types.ReplicationPolicy>`) ``->`` boolean
    * - Tier 4
-     - ``GET /replicationAuthorized/{pid}``
+     - ``GET /replicaAuthorizations/{pid}?session={session}&targetNodeSubject={targetNodeSubject}&replicatePermission={replicatePermission}``
      - :func:`CNReplication.isNodeAuthorized`
-     - (:class:`session<Types.Session>`, :class:`targetNodeSubject<Types.Subject>`, :class:`pid<Types.Identifier>`, :class:`executePermission<Types.Permission>`) ``->`` boolean
+     - (:class:`session<Types.Session>`, :class:`targetNodeSubject<Types.Subject>`, :class:`pid<Types.Identifier>`, :class:`replicatePermission<Types.Permission>`) ``->`` boolean
    * - Tier 2
      - ``PUT /node/{nodeid}``
      - :func:`CNRegister.updateNodeCapabilities`

@@ -133,6 +133,7 @@ today_fmt = '%Y-%m-%d'
 
 # List of documents that shouldn't be included in the build.
 unused_docs = [
+			   'glossary',
                'design/UseCases/uc_template', 
                'design/usecasesoverview',
                'apis/REST_object',

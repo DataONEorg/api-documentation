@@ -11,21 +11,21 @@
      - Function
      - Parameters
    * - Tier 4
-     - ``POST /notify``
+     - ``PUT /replicaNotifications/{pid}?session={session}&nodeRef={nodeRef}&status={status}``
      - :func:`setReplicationStatus`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`nodeRef<Types.NodeReference>`, :class:`status<Types.ReplicationStatus>`) ``->`` boolean
    * - Tier 4
-     - ``PUT /meta/replication/{pid}``
+     - ``PUT /replicaMetadata/{pid}?session={session}&replicaMetadata={replicaMetadata}``
      - :func:`updateReplicationMetadata`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`replicaMetadata<Types.Replica>`) ``->`` boolean
    * - Tier 4
-     - ``PUT /meta/policy/{pid}``
+     - ``PUT /replicaPolicies/{pid}?session={session}&policy={policy}``
      - :func:`setReplicationPolicy`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`policy<Types.ReplicationPolicy>`) ``->`` boolean
    * - Tier 4
-     - ``GET /replicationAuthorized/{pid}``
+     - ``GET /replicaAuthorizations/{pid}?session={session}&targetNodeSubject={targetNodeSubject}&replicatePermission={replicatePermission}``
      - :func:`isNodeAuthorized`
-     - (:class:`session<Types.Session>`, :class:`targetNodeSubject<Types.Subject>`, :class:`pid<Types.Identifier>`, :class:`executePermission<Types.Permission>`) ``->`` boolean
+     - (:class:`session<Types.Session>`, :class:`targetNodeSubject<Types.Subject>`, :class:`pid<Types.Identifier>`, :class:`replicatePermission<Types.Permission>`) ``->`` boolean
 
 
 
@@ -40,7 +40,7 @@
 
    :Use Cases:
      :doc:`UC09 </design/UseCases/09_uc>`
-   :REST URL: ``POST /notify``
+   :REST URL: ``PUT /replicaNotifications/{pid}?session={session}&nodeRef={nodeRef}&status={status}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the public user if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
@@ -79,7 +79,7 @@
 
    Failure of the operation MUST be indicated by returning an appropriate exception.
 
-   :REST URL: ``PUT /meta/replication/{pid}``
+   :REST URL: ``PUT /replicaMetadata/{pid}?session={session}&replicaMetadata={replicaMetadata}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.
    :type session: :class:`Types.Session`
 
@@ -111,7 +111,7 @@
 
    Failure of the operation MUST be indicated by returning an appropriate exception.
 
-   :REST URL: ``PUT /meta/policy/{pid}``
+   :REST URL: ``PUT /replicaPolicies/{pid}?session={session}&policy={policy}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
@@ -139,7 +139,7 @@
 
 
 
-.. function:: isNodeAuthorized(session,targetNodeSubject,pid,executePermission) -> boolean
+.. function:: isNodeAuthorized(session,targetNodeSubject,pid,replicatePermission) -> boolean
 
    Verifies that a replication event was initiated by a CN by comparing the target node's identifiying subject with a known list of scheduled replication tasks.
 
@@ -147,18 +147,18 @@
 
    Failure of the operation MUST be indicated by returning an appropriate exception.
 
-   :REST URL: ``GET /replicationAuthorized/{pid}``
+   :REST URL: ``GET /replicaAuthorizations/{pid}?session={session}&targetNodeSubject={targetNodeSubject}&replicatePermission={replicatePermission}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
-   :param targetNodeSubject: The subject that identifies the target node, with a value extracted from the X.509 certificate passed in during the call to CNReplication.replicate().
+   :param targetNodeSubject: The subject that identifies the target node, with a value extracted from the X.509 certificate passed in during the call to MNReplication.replicate().
    :type targetNodeSubject: :class:`Types.Subject`
 
    :param pid: The identifier of the object to be replicated.
    :type pid: :class:`Types.Identifier`
 
-   :param executePermission: The value of the permission to be checked, in this case Permission.EXECUTE
-   :type executePermission: :class:`Types.Permission`
+   :param replicatePermission: The value of the permission to be checked, in this case Permission.REPLICATE
+   :type replicatePermission: :class:`Types.Permission`
 
    :returns: True on success
    :rtype: boolean

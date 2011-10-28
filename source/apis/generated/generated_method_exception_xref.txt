@@ -236,6 +236,11 @@
      - InvalidRequest
      - 400
      - 2163
+   * - :mod:`MNRead`
+     - :func:`synchronizationFailed <MNRead.synchronizationFailed>`
+     - InvalidToken
+     - 401
+     - 2164
    * - :mod:`MNAuthorization`
      - :func:`isAuthorized <MNAuthorization.isAuthorized>`
      - ServiceFailure
@@ -1136,11 +1141,6 @@
      - NotImplemented
      - 501
      - 2261
-   * - :mod:`CNIdentity`
-     - :func:`listSubjects <CNIdentity.listSubjects>`
-     - InvalidRequest
-     - 400
-     - 2262
    * - :mod:`CNIdentity`
      - :func:`mapIdentity <CNIdentity.mapIdentity>`
      - ServiceFailure

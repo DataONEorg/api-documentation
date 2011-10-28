@@ -30,7 +30,7 @@
 
    Adds a new object to the Member Node, where the object is either a data object or a science metadata object. This method is called by clients to create new data objects on Member Nodes.
 
-   The *pid* must not exist in the DataONE system or should have been previously reserved using  :func:`CN_crud.reserveIdentifier`.
+   The *pid* must not exist in the DataONE system or should have been previously reserved using  :func:`CNCore.reserveIdentifier`.
 
    :Use Cases:
      :doc:`UC04 </design/UseCases/04_uc>`, :doc:`UC09 </design/UseCases/09_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
@@ -56,7 +56,7 @@
 
    :raises Exceptions.IdentifierNotUnique: ``(errorCode=409, detailCode=1120)``
 
-     The requested identifier is already used by another object and therefore can not be used for this object. Clients should choose a new identifier that is unique and retry the operation or use :func:`CN_crud.reserveIdentifier` to reserve one.
+     The requested identifier is already used by another object and therefore can not be used for this object. Clients should choose a new identifier that is unique and retry the operation or use :func:`CNCore.reserveIdentifier` to reserve one.
 
    :raises Exceptions.UnsupportedType: ``(errorCode=400, detailCode=1140)``
 
@@ -94,7 +94,7 @@
 
    The Member Node MUST check or set the values of :attr:`SystemMetadata.obsoletes` and :attr:`SystemMetadata.obsoletedBy` so that they accurately represent the relationship between the new and old objects. If the client sets these values and they are incorrect, then an :exc:`InvalidSystemMetadata` MUST be raised.  The Member Node MUST also set :attr:`SystemMetadata.dateSysMetadataModified`.
 
-   The modified system metadata entries must then be available in :func:`MN_read.listObjects` to ensure that a Coordinating Node will pick up the changes when filtering on :attr:`SystmeMetadata.dateSysMetadataModified`.
+   The modified system metadata entries must then be available in :func:`MNRead.listObjects` to ensure that a Coordinating Node will pick up the changes when filtering on :attr:`SystmeMetadata.dateSysMetadataModified`.
 
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`
@@ -154,7 +154,7 @@
 
    Deletes an object from the Member Node, where the object is either a data object or a science metadata object. This method is called by clients to delete objects on Member nodes. Member Nodes MUST check that the caller is authorized to perform this function.
 
-   If the object does not exist on the node servicing the request, then an :exc:`Exceptions.NotFound` exception is raised. The message body of the exception SHOULD contain a hint as to the location of the :func:`CN_crud.resolve` method.
+   If the object does not exist on the node servicing the request, then an :exc:`Exceptions.NotFound` exception is raised. The message body of the exception SHOULD contain a hint as to the location of the :func:`CNRead.resolve` method.
 
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`

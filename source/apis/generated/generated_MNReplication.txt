@@ -65,7 +65,7 @@
 
 .. function:: getReplica(session) -> boolean
 
-   Called by a target Member Node to fullfill the replication request originated by a Coordinating Node calling :func:`MNReplication.replicate()`. This is a request to make a replica copy of the object, and differs from a call to GET /object in that it should be logged as a replication event rather than a read event on that object.
+   Called by a target Member Node to fullfill the replication request originated by a Coordinating Node calling :func:`MNReplication.replicate`. This is a request to make a replica copy of the object, and differs from a call to GET /object in that it should be logged as a replication event rather than a read event on that object.
 
    A successful operation is indicated by a HTTP status of 200 on the response.
 
