@@ -60,11 +60,6 @@ include:
   Member node to member node replication functionality
 
 
-REST Endpoint Summary
-~~~~~~~~~~~~~~~~~~~~~
-
-.. include:: generated/generated_rest_summarytable.txt
-
 
 Message Serialization
 ~~~~~~~~~~~~~~~~~~~~~
@@ -73,42 +68,17 @@ The format of the response (except for responses from :func:`MNRead.get` or
 :func:`CNRead.get`) is determined by the *Accept:* header provided in the
 request. 
 
-The default serialization format is XML and MUST be supported by all services.
+Version 1.0 of the DataONE services only support XML serialization, and this
+format MUST be supported by all services and client interacting with the DataONE
+system.
 
-Acceptable content types include:
-
-:``application/json``:
-   The response structure is returned as a JSON_ encoded string. The service
-   should support an additional parameter "jsonvar" which would cause the
-   value of the parameter to be set as a variable name for the resulting JSON
-   block (e.g. ``&jsonvar=rs1`` would cause the JSON output to be "rs1=...").
-
-:``text/xml``:
-
-  The response is serialized as XML.
-
-:``application/rdf+xml``:
-
-  The response is serialized in RDF-XML.
-
-:``text/csv``:
-
-  The response is serialized as a comma delimited set of fields, with records
-  delimited by a new line.
-
-:``text/html``:
-
-  A HTML rendering of the response.
-
-Regardless of the format, the response is always encoded using the UTF-8
-character set.
+All request and response documents MUST be encoded using the UTF-8 character
+set.
 
 If the service is not able to provide a response in the specified format, then
 the node should return an error code of :exc:`Exceptions.NotImplemented`, with
 the HTTP error code set to 406.
 
-
-.. _JSON: http://www.json.org/
 
 
 Parameters in Requests
@@ -120,79 +90,127 @@ components of a MIME multipart-mixed message body.
 Unless otherwise indicated, all parameter names and values should be considered
 case sensitive. 
 
-:Session Information:
+Session Information
+...................
 
-  Session information (formerly referred to as a *token*) is obtained from the
-  client side authentication certificate held by the SSL processing library of
-  the HTTPS service handling the request. Hence, even though a *session*
-  parameter may be present in the method signature, the session information
-  itself is transported as part of the HTTPS handshaking process and is not
-  present in the body or header section of the HTTP request.
+Session information (formerly referred to as a *token*) is obtained from the
+client side authentication certificate held by the SSL processing library of the
+HTTPS service handling the request. Hence, even though a *session* parameter may
+be present in the method signature, the session information itself is
+transported as part of the HTTPS handshaking process and is not present in the
+body or header section of the HTTP request.
 
-:Boolean Parameters in URLs:
 
-  Where a boolean parameter value is being specified as the value portion of a
-  key-value pair appearing in a URL, the strings "true" and "false" MUST be
-  used to indicate logical true and logical false respectively.
+URL Path Parameters
+...................
 
-:Message Body in PUT or POST:
+Some parameters are passed as part of the REST service URL path (e.g.
+/get/{pid}). Such values MUST be encoded according to the rules of RFC3986_ with
+the additional restriction that the space character MUST be encoded as "%20"
+rather than "+". Examples of DataONE REST URLs for retrieving an object (i.e.
+the get() operation)::
 
-  Requests sent using the HTTP POST or PUT verbs MUST use MIME multipart-mixed
-  encoding of the message body as described in RFC2046_. In most cases and
-  unless otherwise indicated, all the parameters except the authorization
-  token will be sent in the message body (as opposed to URL parameters).
+  PID: 10.1000/182
+  URL: https://mn.example.com/mn/v1/object/10.1000%2F182
+
+  PID: http://example.com/data/mydata?row=24
+  URL: http://mn.example.com/mn/v1/object/http:%2F%2Fexample.com%2Fdata%2Fmydata%3Frow=24
+
+  PID: Is féidir liom ithe gloine
+  URL: http://mn.example.com/mn/v1/object/Is%20f%C3%A9idir%20liom%20ithe%20gloine
+
+
+URL Query Parameters
+....................
+
+Parameters passed as key, values parameters in the URL query string MUST be
+appropriately encoded for transmission as part of the URL according to RFC3986_
+rules for the URL query component. In addition, the space character MUST be
+encoded as "%20" rather than the alternative "+" character.
+
+
+Boolean URL Query Parameters
+............................
+
+Where a boolean parameter value is being specified as the value portion of a
+key-value pair appearing in a URL, the strings "true" and "false" MUST be used
+to indicate logical true and logical false respectively.
+
+
+Date Parameters in URLs
+.......................
+
+Date values in URLs should be formatted as:
+  
+  yyyy-MM-dd[Thh:mm:ss.S[+ZZ:zz]]
+  
+Where::
+    
+  yyyy = Four digit year
+  MM   = Two digit month, 01 = January
+  dd   = Two digit day of month, 01 = first day
+  hh   = Hour of day, 00 - 23
+  mm   = Minute of hour, 00 - 59
+  ss   = Second of minute, 00 - 59
+  S    = Milliseconds
+  ZZ   = Hours of timezone offset
+  zz   = Minutes of timezone offset
+
+If the timezone values are not present then the date time is interpreted to be
+in GMT.
+
+If the time portion of the date time is not present, then the time is assumed to
+be 00:00:00.0, i.e. the first millisecond of the specified date.
+
+
+Message Body in PUT or POST
+...........................
+
+Requests sent using the HTTP POST or PUT verbs MUST use MIME multipart-mixed
+encoding of the message body as described in RFC2046_. In most cases and unless
+otherwise indicated, all parameters for PUT and POST requests except the
+authorization session will be sent in the message body (as opposed to URL
+parameters). 
+
+Example of a HTTP POST request to the MN create() method using *curl*::
+
+  curl -X POST \
+       -H "Content-Length: 3524" \
+       -H "Charset: utf-8" \
+       -H "Content-Type: multipart/form-data; boundary=----------6B3C785C-6290-11DF-A355-A6ECDED72085_$" \
+       -H "Accept: text/xml" \
+       -H "User-Agent: pyd1/0.5 +http://dataone.org/" \
+       -F object=@content.bin \
+       -F sysmeta=@systemmetadata.abc 
+       "http://localhost:80/mn/object/10Dappend1.txt"
+
+Example serialized body of a HTTP POST request to the MN create() method
+(excluding session information)::
+
+
+  TODO
+
+
+Message Body in DELETE
+......................
+
+DataONE REST interfaces do not use message bodies in DELETE requests.
+
+RFC2046_ does not explicitly prevent the presence of a message body in a HTTP
+DELETE request, however it is not common practice for web servers to implement
+such support. For example, as of this writing, Tomcat6 will silently ignore any
+body of a DELETE request.
+
 
 .. _RFC2046: http://tools.ietf.org/html/rfc2046#section-5.1.3
 
+.. _RFC3986: http://tools.ietf.org/html/rfc3986
 
 
-.. 
-  Wildcards and Range Operators
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  Several of the REST calls support filtering using wildcards and/or range
-  operators. When such filtering is supported, it is explicitly noted in the
-  documentation for a given REST call.
+REST Endpoint Summary
+~~~~~~~~~~~~~~~~~~~~~
 
-  The basic approach is the use of name/value pairs (NVPs) in the URL to
-  construct a filter for restricting results to a portion of a data set. All
-  NVPs are combined using the AND operator.
-
-  Wildcards are typically supported for string values and allow substring
-  filters to be specified by including one or more of the following wildcard
-  characters in the string.
-
-  :\*: Match a string of zero or more random characters
-  :\?: Match a single random character
-
-  Range operators are typically supported for values that represent a continuous
-  series, such as byte sizes and datetimes. A range operator is specified by
-  appending it to a name. Valid range operators are:
-
-  ======= ===========================
-  Suffix  Range Operator
-  ======= ===========================
-  None    Equals (==) (default)
-  _eq     Equals (==)
-  _lt     Less than (<)
-  _le     Less than or equals (<=)
-  _gt     Greater than (>)
-  _ge     Greater than or equals (>=)
-  ======= ===========================
-
-  Wildcards and range operators cannot be combined in a single NVP.
-
-  **Examples**
-
-  Return only objects that have been modified since 6AM on the first of January,
-  2010 UTC::
-
-    ../object?qt=nvp&lastModified_gt=2010-01-01T06:00:00Z
-
-  Return only objects that were last modified in 2005::
-
-    ../object?qt=nvp&lastModified_ge=2005-01-01-T00:00:00Z&lastModified_lt=2006-01-01-T00:00:00Z
-
-  .. TODO:: Define the fields that should be supported for filtering for each type of collection.
+.. include:: generated/generated_rest_summarytable.txt
 
 
