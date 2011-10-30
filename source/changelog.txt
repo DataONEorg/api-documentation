@@ -1,0 +1,41 @@
+Change Log
+==========
+
+2011-10-26 Version 1.0.0 Branch
+-------------------------------
+
+dataoneTypes.xsd
+~~~~~~~~~~~~~~~~
+
+The following changes were enacted on the dataoneTypes.xsd schema as a result
+of discussions during the DataONE all-hands meeting held during the week of
+October 18, 2011.
+
+No further significant changes to dataonetypes.xsd are expected for version
+1.0.0 of the DataONE infrastructure.
+
+- unsigned long "serialversion" element added to the
+  :class:`Types.SystemMetadata` complex type. The *serialVersion* value is
+  incremented upon any updates to a system metadata instance, and is used to
+  indicate which is the current version (highest *serialVersion* is always the
+  latest) of system metadata for an object.
+
+- "fmtid" change to "formatId" in :class:`Types.SystemMetadata` complex type
+
+- "fmtid" change to "formatId" in :class:`Types.ObjectFormat` complex type 
+
+- "fmtid" change to "formatId" in :class:`Types.ObjectInfo` complex type 
+
+- email minOccurs change from 1 to 0 in :class:`Types.Person` complex type
+
+- boolean "verified" property added to :class:`Types.Person` complex type.
+  This value is *true* if the name and email address of the Person have been
+  verified to ensure that the *givenName* and *familyName* represent the real
+  person's legal name, and that the email address is correct for that person
+  and is in the control of the indicated individual. Verification occurs
+  through a established procedure within DataONE as part of the Identity
+  Management system.
+
+- Numerous annotation edits and updates
+
+
