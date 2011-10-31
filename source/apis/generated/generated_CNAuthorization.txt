@@ -153,8 +153,4 @@
 
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4402)``
 
-.. TODO::
-    Should permissions cascade? e.g. Should setting permission on a Data Package cascade to the contained objects as well (the experiment metadata and data)?
-.. TODO::
-    .. Note:: Setting access rules on a CN implies that the rules are propogated to the CNs and to all MNs holding a copy of the object
 

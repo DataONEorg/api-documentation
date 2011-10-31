@@ -35,7 +35,7 @@
      - :func:`mapIdentity`
      - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
    * - Tier 2
-     - ``POST /accounts/mapconfirm``
+     - ``PUT /accounts/map/{subject}``
      - :func:`confirmMapIdentity`
      - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
    * - Tier 2
@@ -56,7 +56,9 @@
 
 .. function:: registerAccount(session,person) -> Subject
 
-   Create a new :term:`subject` in the DataONE system. Note that there should probably be a lot more metadata captured about the new user, and there should be a mechanism for specifying the default access control rules for the new account.
+   Create a new :term:`subject` in the DataONE system.
+
+   Note that there should probably be a lot more metadata captured about the new user, and there should be a mechanism for specifying the default access control rules for the new account.
 
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`
@@ -84,12 +86,18 @@
 
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4524)``
 
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=4525)``
+
+     The subject of the session does not match the subject of the person.
+
 
 
 
 .. function:: updateAccount(session,person) -> Subject
 
-   Update an existing :term:`subject` in the DataONE system. The target subject is determined from the X509Certificate. Note that there should probably be a policy for verifying the details that change via this method.
+   Update an existing :term:`subject` in the DataONE system. The target subject is determined from the X509Certificate provided with the session.
+
+   Note that there should be a policy for verifying the details that change via this method.
 
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`
@@ -112,6 +120,14 @@
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4532)``
 
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4533)``
+
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=4534)``
+
+     Raised if the subject of the session does not match that of the person.
+
+   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=4535)``
+
+     Raised if the account does not exist.
 
 
 
@@ -171,7 +187,9 @@
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4561)``
 
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4562)``
+   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=4564)``
+
+     Raised if the requested subject is not registered with the DataONE system
 
    :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=4563)``
 
@@ -191,10 +209,10 @@
    :param query: A query string criteria to be matched using a case-insensitive substring match against the identifier for the principal, the givenName or familyName of users, and the groupName of groups.  The function returns the union of all successful matches against these fields.
    :type query: :class:`Types.String`
 
-   :param start: The starting record number for the records to be returned.
+   :param start: The starting record number for the records to be returned (default = 0).
    :type start: integer
 
-   :param count: The number of records to be returned.
+   :param count: The number of records to be returned (default = 100).
    :type count: integer
 
    :returns: The list of people and groups that match the query.
@@ -208,16 +226,18 @@
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2261)``
 
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=2262)``
+
 
 
 
 .. function:: mapIdentity(session,subject) -> boolean
 
-   Map the two authenticated identities, asserting that they represent the same subject.
+   Create a new mapping between the two authenticated identities, asserting that they represent the same subject.
 
    Mapping identities is a two-step process wherein a map request is made by a primary Subject and a subsequent (confirmation) map request is made by the secondary Subject. This ensures that mappings are performed only by those that have authority to do so.
 
-   Successful completion of therequest is indicated by returning a HTTP status of 200.
+   Successful completion of the request is indicated by returning a HTTP status of 200.
 
    A failed request MUST be indicated by returning an appropriate exception and setting the response HTTP status accordingly.
 
@@ -247,6 +267,10 @@
 
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=2342)``
 
+   :raises Exceptions.IdentifierNotUnique: ``(errorCode=409, detailCode=2343)``
+
+     The subject of the session and the provided subject are the same
+
 
 
 
@@ -258,7 +282,7 @@
 
    A failed request MUST be indicated by returning an appropriate exception and setting the response HTTP status accordingly.
 
-   :REST URL: ``POST /accounts/mapconfirm``
+   :REST URL: ``PUT /accounts/map/{subject}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.
    :type session: :class:`Types.Session`
 
@@ -278,11 +302,9 @@
 
    :raises Exceptions.NotFound: ``(errorCode=404, detailCode=2340)``
 
-     The specified principal does not exist in the DataONE system
+     The specified principal does not exist in the DataONE system, or the mapping between the subjects has no yet been initiated.
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2361)``
-
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=2342)``
 
 
 
@@ -311,13 +333,7 @@
 
      The supplied principal does not have permission to create a group
 
-   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=2440)``
-
-     The specified principal does not exist in the DataONE system
-
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2461)``
-
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=2442)``
 
    :raises Exceptions.IdentifierNotUnique: ``(errorCode=409, detailCode=2400)``
 

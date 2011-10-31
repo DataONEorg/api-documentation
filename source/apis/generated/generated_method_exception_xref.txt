@@ -538,16 +538,6 @@
      - 4841
    * - :mod:`CNCore`
      - :func:`listFormats <CNCore.listFormats>`
-     - InvalidRequest
-     - 400
-     - 4842
-   * - :mod:`CNCore`
-     - :func:`listFormats <CNCore.listFormats>`
-     - NotFound
-     - 404
-     - 4843
-   * - :mod:`CNCore`
-     - :func:`listFormats <CNCore.listFormats>`
      - InsufficientResources
      - 413
      - 4844
@@ -571,11 +561,6 @@
      - NotFound
      - 404
      - 4848
-   * - :mod:`CNCore`
-     - :func:`getFormat <CNCore.getFormat>`
-     - InsufficientResources
-     - 413
-     - 4849
    * - :mod:`CNCore`
      - :func:`getLogRecords <CNCore.getLogRecords>`
      - InvalidToken
@@ -601,6 +586,11 @@
      - InvalidRequest
      - 400
      - 1480
+   * - :mod:`CNCore`
+     - :func:`getLogRecords <CNCore.getLogRecords>`
+     - InsufficientResources
+     - 413
+     - 1481
    * - :mod:`CNCore`
      - :func:`reserveIdentifier <CNCore.reserveIdentifier>`
      - InvalidToken
@@ -677,11 +667,6 @@
      - 500
      - 4801
    * - :mod:`CNCore`
-     - :func:`listNodes <CNCore.listNodes>`
-     - InvalidRequest
-     - 400
-     - 4823
-   * - :mod:`CNCore`
      - :func:`registerSystemMetadata <CNCore.registerSystemMetadata>`
      - NotImplemented
      - 501
@@ -731,11 +716,6 @@
      - InvalidToken
      - 401
      - 
-   * - :mod:`CNCore`
-     - :func:`hasReservation <CNCore.hasReservation>`
-     - IdentifierNotUnique
-     - 409
-     - 
    * - :mod:`CNRead`
      - :func:`get <CNRead.get>`
      - NotAuthorized
@@ -762,11 +742,6 @@
      - 401
      - 1010
    * - :mod:`CNRead`
-     - :func:`get <CNRead.get>`
-     - InvalidRequest
-     - 400
-     - 1002
-   * - :mod:`CNRead`
      - :func:`getSystemMetadata <CNRead.getSystemMetadata>`
      - InvalidToken
      - 401
@@ -792,11 +767,6 @@
      - 404
      - 1060
    * - :mod:`CNRead`
-     - :func:`getSystemMetadata <CNRead.getSystemMetadata>`
-     - InvalidRequest
-     - 400
-     - 1080
-   * - :mod:`CNRead`
      - :func:`resolve <CNRead.resolve>`
      - InvalidToken
      - 401
@@ -821,11 +791,6 @@
      - NotImplemented
      - 501
      - 4131
-   * - :mod:`CNRead`
-     - :func:`resolve <CNRead.resolve>`
-     - InvalidRequest
-     - 400
-     - 4132
    * - :mod:`CNRead`
      - :func:`assertRelation <CNRead.assertRelation>`
      - InvalidToken
@@ -876,11 +841,6 @@
      - NotAuthorized
      - 401
      - 1400
-   * - :mod:`CNRead`
-     - :func:`getChecksum <CNRead.getChecksum>`
-     - InvalidRequest
-     - 400
-     - 1402
    * - :mod:`CNRead`
      - :func:`getChecksum <CNRead.getChecksum>`
      - InvalidToken
@@ -1057,6 +1017,11 @@
      - 400
      - 4524
    * - :mod:`CNIdentity`
+     - :func:`registerAccount <CNIdentity.registerAccount>`
+     - NotAuthorized
+     - 401
+     - 4525
+   * - :mod:`CNIdentity`
      - :func:`updateAccount <CNIdentity.updateAccount>`
      - ServiceFailure
      - 500
@@ -1076,6 +1041,16 @@
      - InvalidRequest
      - 400
      - 4533
+   * - :mod:`CNIdentity`
+     - :func:`updateAccount <CNIdentity.updateAccount>`
+     - NotAuthorized
+     - 401
+     - 4534
+   * - :mod:`CNIdentity`
+     - :func:`updateAccount <CNIdentity.updateAccount>`
+     - NotFound
+     - 404
+     - 4535
    * - :mod:`CNIdentity`
      - :func:`verifyAccount <CNIdentity.verifyAccount>`
      - ServiceFailure
@@ -1113,9 +1088,9 @@
      - 4561
    * - :mod:`CNIdentity`
      - :func:`getSubjectInfo <CNIdentity.getSubjectInfo>`
-     - InvalidRequest
-     - 400
-     - 4562
+     - NotFound
+     - 404
+     - 4564
    * - :mod:`CNIdentity`
      - :func:`getSubjectInfo <CNIdentity.getSubjectInfo>`
      - NotAuthorized
@@ -1142,6 +1117,11 @@
      - 501
      - 2261
    * - :mod:`CNIdentity`
+     - :func:`listSubjects <CNIdentity.listSubjects>`
+     - InvalidRequest
+     - 400
+     - 2262
+   * - :mod:`CNIdentity`
      - :func:`mapIdentity <CNIdentity.mapIdentity>`
      - ServiceFailure
      - 500
@@ -1172,6 +1152,11 @@
      - 400
      - 2342
    * - :mod:`CNIdentity`
+     - :func:`mapIdentity <CNIdentity.mapIdentity>`
+     - IdentifierNotUnique
+     - 409
+     - 2343
+   * - :mod:`CNIdentity`
      - :func:`confirmMapIdentity <CNIdentity.confirmMapIdentity>`
      - ServiceFailure
      - 500
@@ -1196,11 +1181,6 @@
      - NotImplemented
      - 501
      - 2361
-   * - :mod:`CNIdentity`
-     - :func:`confirmMapIdentity <CNIdentity.confirmMapIdentity>`
-     - InvalidRequest
-     - 400
-     - 2342
    * - :mod:`CNIdentity`
      - :func:`createGroup <CNIdentity.createGroup>`
      - ServiceFailure
@@ -1218,19 +1198,9 @@
      - 2460
    * - :mod:`CNIdentity`
      - :func:`createGroup <CNIdentity.createGroup>`
-     - NotFound
-     - 404
-     - 2440
-   * - :mod:`CNIdentity`
-     - :func:`createGroup <CNIdentity.createGroup>`
      - NotImplemented
      - 501
      - 2461
-   * - :mod:`CNIdentity`
-     - :func:`createGroup <CNIdentity.createGroup>`
-     - InvalidRequest
-     - 400
-     - 2442
    * - :mod:`CNIdentity`
      - :func:`createGroup <CNIdentity.createGroup>`
      - IdentifierNotUnique
@@ -1346,6 +1316,11 @@
      - InvalidRequest
      - 400
      - 4853
+   * - :mod:`CNReplication`
+     - :func:`updateReplicationMetadata <CNReplication.updateReplicationMetadata>`
+     - NotFound
+     - 404
+     - 4854
    * - :mod:`CNReplication`
      - :func:`setReplicationPolicy <CNReplication.setReplicationPolicy>`
      - NotImplemented

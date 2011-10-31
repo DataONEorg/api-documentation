@@ -19,13 +19,13 @@
      - :func:`CNCore.listFormats`
      - () ``->`` :class:`Types.ObjectFormatList`
    * - Tier 1
-     - ``GET /formats/{formatid}``
+     - ``GET /formats/{formatId}``
      - :func:`CNCore.getFormat`
-     - (:class:`formatid<Types.ObjectFormatIdentifier>`) ``->`` :class:`Types.ObjectFormat`
+     - (:class:`formatId<Types.ObjectFormatIdentifier>`) ``->`` :class:`Types.ObjectFormat`
    * - Tier 1
-     - ``GET /log?fromdate={fromDate}[&todate={toDate}&event={event}&start={start}&count={count}]``
+     - ``GET /log?[fromdate={fromDate}][&todate={toDate}][&event={event}][&start={start}][&count={count}]``
      - :func:`CNCore.getLogRecords`
-     - (:class:`session<Types.Session>`, :class:`fromDate<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`, ``[start]``, ``[count]``) ``->`` :class:`Types.Log`
+     - (:class:`session<Types.Session>`, :class:`[fromDate]<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`, ``[start]``, ``[count]``) ``->`` :class:`Types.Log`
    * - Tier 1
      - ``POST /reserve``
      - :func:`CNCore.reserveIdentifier`
@@ -72,9 +72,9 @@
      - :func:`CNRead.getChecksum`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Checksum`
    * - Tier 1
-     - ``GET /object[?starttime={startTime}&endtime={endTime}&formatid= {formatid}&replicastatus={replicaStatus}&start={start}&count={count}]``
+     - ``GET /object[?starttime={startTime}&endtime={endTime}&formatid= {formatId}&replicastatus={replicaStatus}&start={start}&count={count}]``
      - :func:`CNRead.listObjects`
-     - (:class:`session<Types.Session>`, :class:`[startTime]<Types.DateTime>`, :class:`[endTime]<Types.DateTime>`, :class:`[formatid]<Types.ObjectFormatIdentifier>`, ``[replicaStatus]``, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.ObjectList`
+     - (:class:`session<Types.Session>`, :class:`[startTime]<Types.DateTime>`, :class:`[endTime]<Types.DateTime>`, :class:`[formatId]<Types.ObjectFormatIdentifier>`, ``[replicaStatus]``, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.ObjectList`
    * - Tier 1
      - ``GET /search``
      - :func:`CNRead.search`
@@ -116,7 +116,7 @@
      - :func:`CNIdentity.mapIdentity`
      - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
    * - Tier 2
-     - ``POST /accounts/mapconfirm``
+     - ``PUT /accounts/map/{subject}``
      - :func:`CNIdentity.confirmMapIdentity`
      - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
    * - Tier 2
@@ -132,19 +132,19 @@
      - :func:`CNIdentity.removeGroupMembers`
      - (:class:`session<Types.Session>`, :class:`groupName<Types.Subject>`, :class:`members<Types.SubjectList>`) ``->`` boolean
    * - Tier 4
-     - ``PUT /replicaNotifications/{pid}?session={session}&nodeRef={nodeRef}&status={status}``
+     - ``PUT /replicaNotifications/{pid}``
      - :func:`CNReplication.setReplicationStatus`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`nodeRef<Types.NodeReference>`, :class:`status<Types.ReplicationStatus>`) ``->`` boolean
    * - Tier 4
-     - ``PUT /replicaMetadata/{pid}?session={session}&replicaMetadata={replicaMetadata}``
+     - ``PUT /replicaMetadata/{pid}``
      - :func:`CNReplication.updateReplicationMetadata`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`replicaMetadata<Types.Replica>`) ``->`` boolean
    * - Tier 4
-     - ``PUT /replicaPolicies/{pid}?session={session}&policy={policy}``
+     - ``PUT /replicaPolicies/{pid}``
      - :func:`CNReplication.setReplicationPolicy`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`policy<Types.ReplicationPolicy>`) ``->`` boolean
    * - Tier 4
-     - ``GET /replicaAuthorizations/{pid}?session={session}&targetNodeSubject={targetNodeSubject}&replicatePermission={replicatePermission}``
+     - ``GET /replicaAuthorizations/{pid}``
      - :func:`CNReplication.isNodeAuthorized`
      - (:class:`session<Types.Session>`, :class:`targetNodeSubject<Types.Subject>`, :class:`pid<Types.Identifier>`, :class:`replicatePermission<Types.Permission>`) ``->`` boolean
    * - Tier 2

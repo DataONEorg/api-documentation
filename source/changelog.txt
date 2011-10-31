@@ -38,4 +38,98 @@ No further significant changes to dataonetypes.xsd are expected for version
 
 - Numerous annotation edits and updates
 
+CN APIs
+~~~~~~~
+
+- CNCore.listFormats: removed InvalidRequest and NotFound exceptions
+
+- CNCore.getFormat: removed InvalidRequest exception
+
+- CNCore.getLogRecords: 
+
+  - Made fromDate optional. When not provided in request, there is no limit to
+    the earliest record being returned.
+
+  - Added exception InsufficientResources (443, 1481)
+
+- CNCore.listNodes: removed InvalidRequest exception
+
+- CNCore.hasReservation: removed exception IdentifierNotUnique
+
+- CNRead.get: removed InvalidRequest exception
+
+- CNRead.getSystemMetadata: removed InvalidRequest exception
+
+- CNRead.resolve: removed InvalidRequest exception
+
+- CNRead.assertRelation : deprecated
+
+- CNRead.getChecksum: removed InvalidRequest exception
+
+- CNIdentity.registerAccount: added NotAuthorized exception, thrown when subject
+  of session does not match that of the person.
+
+- CNIdentity.updateAccount:
+
+  - added exception NotAuthorized, raised if subject of session does not match
+    that of the person.
+
+  - added exception NotFound, raised if the account does not exist.
+
+- CNIdentity.verifyAccount:
+
+  - changed HTTP method to PUT (this is an update operation)
+
+  - Added exception NotFound, raised if the specified account does not already
+    exist.
+
+- CNIdentity.getSubjectInfo: 
+
+  - added exception NotFound, raised if the requested subject is not registered.
+
+  - removed exception InvalidRequest
+
+- CNIdentity.listSubjects 
+
+  - Specified default start value of 0
+
+  - Specified default page size (count) of 100
+
+  - Added InvalidRequest exception
+
+- CNIdentity.mapIdentity: added exception IdentfierNotUnique, raised when the
+  subject of the session and the provided subject arethe same.
+
+- CNIdentity.confirmMapIdentity
+
+  - changed REST URL to be a PUT to /accounts/map/{subject}
+
+  - Removed the InvalidRequest exception
+
+  - Updated the description of the NotFound exception
+
+- CNIdentity.createGroup
+
+  - Removed NotFound exception
+
+  - Removed InvalidRequest exception
+
+- CNReplication.setReplicationStatus: corrected description of the REST method
+  signature. Parameters for the PUT request should be transmitted in the request
+  body, the session information should be transmitted via SSL handshake process.
+
+- CNReplication.updateReplicationStatus: 
+
+  - corrected REST sURL description as for setReplicationStatus
+
+  - Added NotFound exception
+
+- CNReplication.setReplicationPolicy: updated REST URL description as per
+  setReplicationStatus.
+
+- CNReplication.isNodeAuthorized: updated REST URL description as per
+  setReplicationStatus
+
+
+
 

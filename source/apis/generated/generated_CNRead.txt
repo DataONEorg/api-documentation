@@ -31,9 +31,9 @@
      - :func:`getChecksum`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Checksum`
    * - Tier 1
-     - ``GET /object[?starttime={startTime}&endtime={endTime}&formatid= {formatid}&replicastatus={replicaStatus}&start={start}&count={count}]``
+     - ``GET /object[?starttime={startTime}&endtime={endTime}&formatid= {formatId}&replicastatus={replicaStatus}&start={start}&count={count}]``
      - :func:`listObjects`
-     - (:class:`session<Types.Session>`, :class:`[startTime]<Types.DateTime>`, :class:`[endTime]<Types.DateTime>`, :class:`[formatid]<Types.ObjectFormatIdentifier>`, ``[replicaStatus]``, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.ObjectList`
+     - (:class:`session<Types.Session>`, :class:`[startTime]<Types.DateTime>`, :class:`[endTime]<Types.DateTime>`, :class:`[formatId]<Types.ObjectFormatIdentifier>`, ``[replicaStatus]``, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.ObjectList`
    * - Tier 1
      - ``GET /search``
      - :func:`search`
@@ -44,7 +44,7 @@
 
 .. function:: get(session,pid) -> OctetStream
 
-   Retrieves the object identified by *pid* from the node. If the object is not present on the node, then an :exc:`Exceptions.NotFound` error is raised (regardless of whether the object exists on another node in the DataONE system).
+   Retrieves the object identified by *pid* from the node. If the object is not present on the node, then an :exc:`Exceptions.NotFound` error is raised, regardless of whether the object exists on another node in the DataONE system.
 
    :Use Cases:
      :doc:`UC01 </design/UseCases/01_uc>`, :doc:`UC16 </design/UseCases/16_uc>`, :doc:`UC09 </design/UseCases/09_uc>`
@@ -70,8 +70,6 @@
 
    :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=1010)``
 
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=1002)``
-
 
 .. include:: ../examples/cn_get.txt
 
@@ -80,7 +78,7 @@
 
 .. function:: getSystemMetadata(session,pid) -> SystemMetadata
 
-   Returns the :term:`system metadata` that contains DataONE specific information about the object identified by *pid*. Note that authoritative copies of system metadata are only available from the Coordinating Nodes.
+   Returns the :term:`system metadata` that contains DataONE specific information about the object identified by *pid*. Authoritative copies of system metadata are only available from the Coordinating Nodes.
 
    :Use Cases:
      :doc:`UC36 </design/UseCases/36_uc>`, :doc:`UC37 </design/UseCases/37_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
@@ -108,8 +106,6 @@
 
      There is no object identified by *pid* and so no system metadata can be returned.
 
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=1080)``
-
 
 .. include:: ../examples/cn_getSystemMetadata.txt
 
@@ -118,7 +114,7 @@
 
 .. function:: resolve(session,pid) -> ObjectLocationList
 
-   Implemented by CNs, returns the nodes (MNs or CNs) known to hold copies of the object identified by *pid*. The object resolution process is intended to provide a simple mechanism for a client to discover from which node(s) a particular object may be retrieved, and this information is returned as a list of node identifiers. Details about method interfaces (i.e. REST URLs) exposed by a particular node can be determined by examining the response from the *node* collection. For convenience, the :func:`MNRead.get` URL is included in the response as is the base URL of the node REST services.
+   Returns a list of nodes (MNs or CNs) known to hold copies of the object identified by *pid*. The object resolution process is intended to provide a simple mechanism for a client to discover from which node(s) a particular object may be retrieved. Details about method interfaces (i.e. REST URLs) exposed by a particular node can be determined by examining the response from the *node* collection. For convenience, the :func:`MNRead.get` URL is included in the response as is the base URL of the node REST services.
 
    Note also that the same functionality as *resolve()* can be implemented by retrieving a copy of the system metadata for the object and utilizing the node registry to discover the base URL from which the client can construct the *get()* URL. Resolve is provided for efficiency since the response size is much smaller.
 
@@ -128,7 +124,7 @@
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
-   :param pid: Identifier for the object of interest.
+   :param pid: Identifier being resolved.
    :type pid: :class:`Types.Identifier`
 
    :returns: A list of nodes known to contain copies of the target object, plus the URLs known to resolve to the node get methods.
@@ -146,8 +142,6 @@
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4131)``
 
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4132)``
-
 
 .. include:: ../examples/resolve.txt
 
@@ -155,6 +149,8 @@
 
 
 .. function:: assertRelation(session,pidOfSubject,relationship,pidOfObject) -> boolean
+
+   DEPRECATED for v1.0.0
 
    Tests that the specified relationship between *pidOfSubject* and *pidOfObject* exists.
 
@@ -192,8 +188,6 @@
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4221)``
 
-.. TODO::
-    Define what is meant by relationship - what is the type for this?
 
 
 
@@ -209,7 +203,7 @@
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
-   :param pid: Identifier of the object
+   :param pid: Identifier of the object for which checksum is being requested
    :type pid: :class:`Types.Identifier`
 
    :returns: The checksum of the specified object
@@ -223,14 +217,12 @@
 
    :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=1400)``
 
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=1402)``
-
    :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=1430)``
 
 
 
 
-.. function:: listObjects(session,[startTime],[endTime],[formatid],[replicaStatus],[start=0],[count=1000]) -> ObjectList
+.. function:: listObjects(session,[startTime],[endTime],[formatId],[replicaStatus],[start=0],[count=1000]) -> ObjectList
 
    Retrieve the list of objects present on the CN that match the calling parameters. At a minimum, this method should be able to return a list of objects that match::
 
@@ -242,7 +234,7 @@
 
    :Use Cases:
      :doc:`UC06 </design/UseCases/06_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
-   :REST URL: ``GET /object[?starttime={startTime}&endtime={endTime}&formatid= {formatid}&replicastatus={replicaStatus}&start={start}&count={count}]``
+   :REST URL: ``GET /object[?starttime={startTime}&endtime={endTime}&formatid= {formatId}&replicastatus={replicaStatus}&start={start}&count={count}]``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
@@ -252,10 +244,10 @@
    :param endTime: Specifies the end of the time range to which to return object (<=). Queries against :attr:`SystemMetadata.dateSysMetadataModified`
    :type endTime: :class:`Types.DateTime`
 
-   :param formatid: Restrict results to the specified object format.
-   :type formatid: :class:`Types.ObjectFormatIdentifier`
+   :param formatId: Restrict results to the specified object format.
+   :type formatId: :class:`Types.ObjectFormatIdentifier`
 
-   :param replicaStatus: Indicates if replicated objects should be returned in the list (i.e. any entries present in the :attr:`SystemMetadata.replica`, objects that have been replicated to this member node). If ``false``, then no objects that have been replicated should be returned. If ``true``, then any objects can be returned, regardless of replication status. The default value is ``true``.
+   :param replicaStatus: Indicates if replicated objects should be returned in the list (i.e. any entries present in the :attr:`SystemMetadata.replica`, objects that have been replicated to this node). If ``false``, then no objects that have been replicated should be returned. If ``true``, then any objects can be returned, regardless of replication status. The default value is ``true``.
    :type replicaStatus: boolean
 
    :param start=0: The zero-based index of the first value, relative to the first record of the resultset that matches the parameters.

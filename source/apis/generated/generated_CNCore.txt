@@ -19,13 +19,13 @@
      - :func:`listFormats`
      - () ``->`` :class:`Types.ObjectFormatList`
    * - Tier 1
-     - ``GET /formats/{formatid}``
+     - ``GET /formats/{formatId}``
      - :func:`getFormat`
-     - (:class:`formatid<Types.ObjectFormatIdentifier>`) ``->`` :class:`Types.ObjectFormat`
+     - (:class:`formatId<Types.ObjectFormatIdentifier>`) ``->`` :class:`Types.ObjectFormat`
    * - Tier 1
-     - ``GET /log?fromdate={fromDate}[&todate={toDate}&event={event}&start={start}&count={count}]``
+     - ``GET /log?[fromdate={fromDate}][&todate={toDate}][&event={event}][&start={start}][&count={count}]``
      - :func:`getLogRecords`
-     - (:class:`session<Types.Session>`, :class:`fromDate<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`, ``[start]``, ``[count]``) ``->`` :class:`Types.Log`
+     - (:class:`session<Types.Session>`, :class:`[fromDate]<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`, ``[start]``, ``[count]``) ``->`` :class:`Types.Log`
    * - Tier 1
      - ``POST /reserve``
      - :func:`reserveIdentifier`
@@ -75,7 +75,7 @@
    :param sysmeta: The complete system metadata document describing the object.
    :type sysmeta: :class:`Types.SystemMetadata`
 
-   :returns: The identifier that was used to insert the document into the system.
+   :returns: The identifier that was used to insert the document into the system. This should be the same as the identifier provided as the *pid* parameter.
    :rtype: :class:`Types.Identifier`
 
    :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=1100)``
@@ -125,14 +125,6 @@
 
      Unexpected exception from the service.
 
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4842)``
-
-     The request was invalid.
-
-   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=4843)``
-
-     The object formats collection could not be found at this node.
-
    :raises Exceptions.InsufficientResources: ``(errorCode=413, detailCode=4844)``
 
      The object formats collection could not be found at this node.
@@ -143,13 +135,13 @@
 
 
 
-.. function:: getFormat(formatid) -> ObjectFormat
+.. function:: getFormat(formatId) -> ObjectFormat
 
    Returns the object format registered in the DataONE Object Format Vocabulary for the given format identifier.
 
-   :REST URL: ``GET /formats/{formatid}``
-   :param formatid: Unique ObjectFormatIdentifier for the object format
-   :type formatid: :class:`Types.ObjectFormatIdentifier`
+   :REST URL: ``GET /formats/{formatId}``
+   :param formatId: Unique ObjectFormatIdentifier for the object format
+   :type formatId: :class:`Types.ObjectFormatIdentifier`
 
    :returns: The object format registered in the DataONE Object Format Vocablulary
    :rtype: :class:`Types.ObjectFormat`
@@ -168,11 +160,7 @@
 
    :raises Exceptions.NotFound: ``(errorCode=404, detailCode=4848)``
 
-     The format specified by *formatid* does not exist at this node.
-
-   :raises Exceptions.InsufficientResources: ``(errorCode=413, detailCode=4849)``
-
-     The object format could not be found at this node.
+     The format specified by *formatId* does not exist at this node.
 
 
 .. include:: ../examples/cn_getFormat.txt
@@ -180,17 +168,17 @@
 
 
 
-.. function:: getLogRecords(session,fromDate,[toDate],[event],[start],[count]) -> Log
+.. function:: getLogRecords(session,[fromDate],[toDate],[event],[start],[count]) -> Log
 
    Retrieves consolidated log information for the specified date range (inclusive) for the entire DataONE infrastructure
 
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`
-   :REST URL: ``GET /log?fromdate={fromDate}[&todate={toDate}&event={event}&start={start}&count={count}]``
+   :REST URL: ``GET /log?[fromdate={fromDate}][&todate={toDate}][&event={event}][&start={start}][&count={count}]``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
-   :param fromDate: Starting time for records in response
+   :param fromDate: Starting time for records in response. Defaults to include all records.
    :type fromDate: :class:`Types.DateTime`
 
    :param toDate: End time for records in response. If not specified, then defaults to now.
@@ -218,16 +206,18 @@
 
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=1480)``
 
-.. TODO::
-    Define the response structure and access control rules
-.. TODO::
-    getLogRecords should really be able to respond to a query rather than just a simple date range
+   :raises Exceptions.InsufficientResources: ``(errorCode=413, detailCode=1481)``
+
+     The request could not be serviced due to a limitation of resources - too many requests, internal service timeout, or another similar failure.
+
 
 
 
 .. function:: reserveIdentifier(session,pid) -> Identifier
 
    Reserves the identifier that is unique and can not be used by any other sessions. Future calls to :func:`MNStorage.create` and :func:`MNStorage.update` that reference this ID must originate from the :term:`session` in which the identifier was reserved, otherwise an error is raised on those methods.
+
+   The requested identifier is transmitted in a MIME Multipart/form-data body with *pid* as key, and the identifier string as value.
 
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`
@@ -266,6 +256,8 @@
 
    Given a scheme and optional fragment, generates an identifier with that scheme and fragment that is unique.
 
+   The message body is encoded as MIME Multipart/form-data
+
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`
    :REST URL: ``POST /generate``
@@ -295,6 +287,8 @@
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4191)``
 
+.. TODO::
+    Need to provide a list of recommended identifier schemes.
 
 
 
@@ -314,6 +308,8 @@
 
      A problem occurred with the service that prevented it from returning the expected response.
 
+.. TODO::
+    ChecksumAlgorithmList needs to be defined
 
 
 
@@ -330,8 +326,6 @@
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4800)``
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4801)``
-
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4823)``
 
 
 
@@ -401,9 +395,5 @@
    :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=)``
 
      The session information is invalid.
-
-   :raises Exceptions.IdentifierNotUnique: ``(errorCode=409, detailCode=)``
-
-     The PID is already in use identifying an existing object.
 
 

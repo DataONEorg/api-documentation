@@ -22,11 +22,11 @@
      - Describes the science metadata or data object (and likely other objects in the future) identified by *pid* by returning the associated system metadata object. If the object does not exist on the node servicing the request, then :exc:`Exceptions.NotFound` must be raised even if the object exists on another node in the DataONE system.
    * - HEAD /object/{pid}
      - :func:`MNRead.describe`
-     - This method provides a lighter weight mechanism than :func:`MNRead.getSystemMetadata` for a client to determine basic properties of the referenced object. The response should indicate properties that are typically returned in a HTTP HEAD request: the date late modified, the size of the object, the type of the object (the :attr:`SystemMetadata.formatid`). The principal indicated by *token* must have read privileges on the object, otherwise :exc:`Exceptions.NotAuthorized` is raised. If the object does not exist on the node servicing the request, then :exc:`Exceptions.NotFound` must be raised even if the object exists on another node in the DataONE system. Note that this method is likely to be called frequently and so efficiency should be taken into consideratin during implementation.
+     - This method provides a lighter weight mechanism than :func:`MNRead.getSystemMetadata` for a client to determine basic properties of the referenced object. The response should indicate properties that are typically returned in a HTTP HEAD request: the date late modified, the size of the object, the type of the object (the :attr:`SystemMetadata.formatId`). The principal indicated by *token* must have read privileges on the object, otherwise :exc:`Exceptions.NotAuthorized` is raised. If the object does not exist on the node servicing the request, then :exc:`Exceptions.NotFound` must be raised even if the object exists on another node in the DataONE system. Note that this method is likely to be called frequently and so efficiency should be taken into consideratin during implementation.
    * - GET /checksum/{pid}[?checksumAlgorithm={checksumAlgorithm}]
      - :func:`MNRead.getChecksum`
      - Returns a :class:`Types.Checksum` for the specified object using an accepted hashing algorithm. The result is used to determine if two instances referenced by a PID are identical, hence it is necessary that MNs can ensure that the returned checksum is valid for the referenced object either by computing it on the fly or by using a cached value that is certain to be correct.
-   * - GET /object[?starttime={startTime}&endtime={endTime}&formatid= {formatid}&replicastatus={replicaStatus}&start={start}&count={count}]
+   * - GET /object[?starttime={startTime}&endtime={endTime}&formatid= {formatId}&replicastatus={replicaStatus}&start={start}&count={count}]
      - :func:`MNRead.listObjects`
      - Retrieve the list of objects present on the MN that match the calling parameters. This method is required to support the process of :term:`Member Node synchronization`. At a minimum, this method should be able to return a list of objects that match::   startTime <= SystemMetadata.dateSysMetadataModified but is expected to also support date range (by also specifying *endTime*), and should also support slicing of the matching set of records by indicating the starting *index* of the response (where 0 is the index of the first item) and the *count* of elements to be returned.
    * - POST /error
@@ -68,18 +68,18 @@
    * - GET /formats
      - :func:`CNCore.listFormats`
      - Returns a list of all object formats registered in the DataONE Object Format Vocabulary.
-   * - GET /formats/{formatid}
+   * - GET /formats/{formatId}
      - :func:`CNCore.getFormat`
      - Returns the object format registered in the DataONE Object Format Vocabulary for the given format identifier.
-   * - GET /log?fromdate={fromDate}[&todate={toDate}&event={event}&start={start}&count={count}]
+   * - GET /log?[fromdate={fromDate}][&todate={toDate}][&event={event}][&start={start}][&count={count}]
      - :func:`CNCore.getLogRecords`
      - Retrieves consolidated log information for the specified date range (inclusive) for the entire DataONE infrastructure
    * - POST /reserve
      - :func:`CNCore.reserveIdentifier`
-     - Reserves the identifier that is unique and can not be used by any other sessions. Future calls to :func:`MNStorage.create` and :func:`MNStorage.update` that reference this ID must originate from the :term:`session` in which the identifier was reserved, otherwise an error is raised on those methods.
+     - Reserves the identifier that is unique and can not be used by any other sessions. Future calls to :func:`MNStorage.create` and :func:`MNStorage.update` that reference this ID must originate from the :term:`session` in which the identifier was reserved, otherwise an error is raised on those methods. The requested identifier is transmitted in a MIME Multipart/form-data body with *pid* as key, and the identifier string as value.
    * - POST /generate
      - :func:`CNCore.generateIdentifier`
-     - Given a scheme and optional fragment, generates an identifier with that scheme and fragment that is unique.
+     - Given a scheme and optional fragment, generates an identifier with that scheme and fragment that is unique. The message body is encoded as MIME Multipart/form-data
    * - GET /checksum
      - :func:`CNCore.getChecksumAlgorithms`
      - Returns a list of checksum algorithms that are supported by DataONE.
@@ -94,20 +94,20 @@
      - Checks to determine if the caller (as determined by session) has the reservation (i.e. is the owner) of the specified PID.
    * - GET /object/{pid}
      - :func:`CNRead.get`
-     - Retrieves the object identified by *pid* from the node. If the object is not present on the node, then an :exc:`Exceptions.NotFound` error is raised (regardless of whether the object exists on another node in the DataONE system).
+     - Retrieves the object identified by *pid* from the node. If the object is not present on the node, then an :exc:`Exceptions.NotFound` error is raised, regardless of whether the object exists on another node in the DataONE system.
    * - GET /meta/{pid}
      - :func:`CNRead.getSystemMetadata`
-     - Returns the :term:`system metadata` that contains DataONE specific information about the object identified by *pid*. Note that authoritative copies of system metadata are only available from the Coordinating Nodes.
+     - Returns the :term:`system metadata` that contains DataONE specific information about the object identified by *pid*. Authoritative copies of system metadata are only available from the Coordinating Nodes.
    * - GET /resolve/{pid}
      - :func:`CNRead.resolve`
-     - Implemented by CNs, returns the nodes (MNs or CNs) known to hold copies of the object identified by *pid*. The object resolution process is intended to provide a simple mechanism for a client to discover from which node(s) a particular object may be retrieved, and this information is returned as a list of node identifiers. Details about method interfaces (i.e. REST URLs) exposed by a particular node can be determined by examining the response from the *node* collection. For convenience, the :func:`MNRead.get` URL is included in the response as is the base URL of the node REST services. Note also that the same functionality as *resolve()* can be implemented by retrieving a copy of the system metadata for the object and utilizing the node registry to discover the base URL from which the client can construct the *get()* URL. Resolve is provided for efficiency since the response size is much smaller.
+     - Returns a list of nodes (MNs or CNs) known to hold copies of the object identified by *pid*. The object resolution process is intended to provide a simple mechanism for a client to discover from which node(s) a particular object may be retrieved. Details about method interfaces (i.e. REST URLs) exposed by a particular node can be determined by examining the response from the *node* collection. For convenience, the :func:`MNRead.get` URL is included in the response as is the base URL of the node REST services. Note also that the same functionality as *resolve()* can be implemented by retrieving a copy of the system metadata for the object and utilizing the node registry to discover the base URL from which the client can construct the *get()* URL. Resolve is provided for efficiency since the response size is much smaller.
    * - GET /assertRelation/{pidOfSubject}?relationship={relationship}&pidofobject={pidOfObject}
      - :func:`CNRead.assertRelation`
-     - Tests that the specified relationship between *pidOfSubject* and *pidOfObject* exists. A passing assertion is indicated by returning a response with a HTTP status of 200. Failed assertion MUST be indicated by returning an appropriate exception such as :exc:`NotAuthorized`.
+     - DEPRECATED for v1.0.0 Tests that the specified relationship between *pidOfSubject* and *pidOfObject* exists. A passing assertion is indicated by returning a response with a HTTP status of 200. Failed assertion MUST be indicated by returning an appropriate exception such as :exc:`NotAuthorized`.
    * - GET /checksum/{pid}
      - :func:`CNRead.getChecksum`
      - Returns the checksum for the specified object as reported in the system metadata. Note that the signature of this method differs from :func:`MNRead.getChecksum` as that method takes an optional algorithm parameter.
-   * - GET /object[?starttime={startTime}&endtime={endTime}&formatid= {formatid}&replicastatus={replicaStatus}&start={start}&count={count}]
+   * - GET /object[?starttime={startTime}&endtime={endTime}&formatid= {formatId}&replicastatus={replicaStatus}&start={start}&count={count}]
      - :func:`CNRead.listObjects`
      - Retrieve the list of objects present on the CN that match the calling parameters. At a minimum, this method should be able to return a list of objects that match::   startTime <= SystemMetadata.dateSysMetadataModified but is expected to also support date range (by also specifying *endTime*), and should also support slicing of the matching set of records by indicating the starting *index* of the response (where 0 is the index of the first item) and the *count* of elements to be returned.
    * - GET /search
@@ -124,10 +124,10 @@
      - Sets the access permissions for an object identified by *pid*. Triggers a change to the system metadata modified time stamp. Successful completion of this operation is indicated by a HTTP response status code of 200. Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception such as :exc:`NotAuthorized`.
    * - POST /accounts
      - :func:`CNIdentity.registerAccount`
-     - Create a new :term:`subject` in the DataONE system. Note that there should probably be a lot more metadata captured about the new user, and there should be a mechanism for specifying the default access control rules for the new account.
+     - Create a new :term:`subject` in the DataONE system.  Note that there should probably be a lot more metadata captured about the new user, and there should be a mechanism for specifying the default access control rules for the new account.
    * - PUT /accounts
      - :func:`CNIdentity.updateAccount`
-     - Update an existing :term:`subject` in the DataONE system. The target subject is determined from the X509Certificate. Note that there should probably be a policy for verifying the details that change via this method.
+     - Update an existing :term:`subject` in the DataONE system. The target subject is determined from the X509Certificate provided with the session.  Note that there should be a policy for verifying the details that change via this method.
    * - POST /accounts/{subject}
      - :func:`CNIdentity.verifyAccount`
      - Verify that the Person data associated with this Subject is a true representation of the real world person. This service can only be called by users who have an administrative role for the domain of users in question. A successful completion of this operation is indicated by returning a HTTP status of 200. An exeption MUST be returned if the account verification is not successful.
@@ -139,8 +139,8 @@
      - List the subjects, including users, groups, and systems, that match search criteria. The list can be restricted to subjects whose identifier matches certain substrings, and the size of the resultset can be paged through.
    * - POST /accounts/map
      - :func:`CNIdentity.mapIdentity`
-     - Map the two authenticated identities, asserting that they represent the same subject. Mapping identities is a two-step process wherein a map request is made by a primary Subject and a subsequent (confirmation) map request is made by the secondary Subject. This ensures that mappings are performed only by those that have authority to do so. Successful completion of therequest is indicated by returning a HTTP status of 200. A failed request MUST be indicated by returning an appropriate exception and setting the response HTTP status accordingly.
-   * - POST /accounts/mapconfirm
+     - Create a new mapping between the two authenticated identities, asserting that they represent the same subject. Mapping identities is a two-step process wherein a map request is made by a primary Subject and a subsequent (confirmation) map request is made by the secondary Subject. This ensures that mappings are performed only by those that have authority to do so. Successful completion of the request is indicated by returning a HTTP status of 200. A failed request MUST be indicated by returning an appropriate exception and setting the response HTTP status accordingly.
+   * - PUT /accounts/map/{subject}
      - :func:`CNIdentity.confirmMapIdentity`
      - Confirms a previously initiated identity mapping. If subject A asserts that B is the same identity through :func:`CNIdentity.mapIdentity`, then this method is called by B to confirm that assertion. A successful request is indicated by returning a HTTP status of 200. A failed request MUST be indicated by returning an appropriate exception and setting the response HTTP status accordingly.
    * - POST /groups/{groupName}
@@ -152,16 +152,16 @@
    * - DELETE /groups/{groupName}
      - :func:`CNIdentity.removeGroupMembers`
      - Remove members to the named group. Group members can be removed by the original creator of the group, otherwise a NotAuthorized exception is thrown.  Group members are provided as a list of subjects to be removed from the group. Successful completion of this operation is indicated by a HTTP response status code of 200. Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception.
-   * - PUT /replicaNotifications/{pid}?session={session}&nodeRef={nodeRef}&status={status}
+   * - PUT /replicaNotifications/{pid}
      - :func:`CNReplication.setReplicationStatus`
-     - Update the replication status of the system metadata, ensuring that the change is appropriate for the given state of system metadata.  For example, a MN can not change the status to *COMPLETED* unless the CN previously requested replication of the object and the replications status of the object (as indicated in the system metadata) is set to *QUEUED*. Successful completion of this operation is indicated by a HTTP response status code of 200. Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception.
-   * - PUT /replicaMetadata/{pid}?session={session}&replicaMetadata={replicaMetadata}
+     - Update the replication status of the system metadata, ensuring that the change is appropriate for the given state of system metadata.  For example, a MN can not change the status to *COMPLETED* unless the CN previously requested replication of the object and the replications status of the object (as indicated in the system metadata) is set to *QUEUED*. Successful completion of this operation is indicated by a HTTP response status code of 200. Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception. The nodeRef and status parameters are transmitted as part of the HTTP request body encoded as a MIME Multipart/form-data encoded payload.
+   * - PUT /replicaMetadata/{pid}
      - :func:`CNReplication.updateReplicationMetadata`
      - Full replacement of replication metadata in the system metadata for the specified object, changes date sys meta modified Successful completion of the operation is indicated by returning a HTTP status of 200. Failure of the operation MUST be indicated by returning an appropriate exception.
-   * - PUT /replicaPolicies/{pid}?session={session}&policy={policy}
+   * - PUT /replicaPolicies/{pid}
      - :func:`CNReplication.setReplicationPolicy`
      - Updates the replication policy entry for an object by updating the system metadata. Successful completion of the operation is indicated by returning a HTTP status of 200. Failure of the operation MUST be indicated by returning an appropriate exception.
-   * - GET /replicaAuthorizations/{pid}?session={session}&targetNodeSubject={targetNodeSubject}&replicatePermission={replicatePermission}
+   * - GET /replicaAuthorizations/{pid}
      - :func:`CNReplication.isNodeAuthorized`
      - Verifies that a replication event was initiated by a CN by comparing the target node's identifiying subject with a known list of scheduled replication tasks. Successful completion of the operation is indicated by returning a HTTP status of 200. Failure of the operation MUST be indicated by returning an appropriate exception.
    * - PUT /node/{nodeid}

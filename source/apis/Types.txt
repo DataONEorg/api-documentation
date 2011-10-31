@@ -182,7 +182,7 @@ Data Types in CICore
     + synchronization : Synchronization[0..1]
     + ping : Ping[0..1]
     + subject : Subject[0..*]
-    + contactSubject : Subject[0..*]
+    + contactSubject : Subject[1..*]
     + replicate : xs.boolean[1.. 1]
     + synchronize : xs.boolean[1.. 1]
     + type : NodeType[1.. 1]
@@ -265,9 +265,11 @@ Data Types in CICore
     + email : NonEmptyString[0..*]
     + isMemberOf : Subject[0..*]
     + equivalentIdentity : Subject[0..*]
+    + verified : xs.boolean[0..1]
   }
   Person .. Subject
   Person .. NonEmptyString
+  Person .. xs.boolean
 
   class Ping {
     + success : xs.boolean[0..1]
@@ -370,7 +372,7 @@ Data Types in CICore
   SubjectList .. Subject
 
   class SystemMetadata {
-    + serialVersion : xs.long[1..1]
+    + serialVersion : xs.unsignedLong[1..1]
     + identifier : Identifier[1..1]
     + formatId : ObjectFormatIdentifier[1..1]
     + size : xs.unsignedLong[1..1]
@@ -387,10 +389,9 @@ Data Types in CICore
     + authoritativeMemberNode : NodeReference[0..1]
     + replica : Replica[0..*]
   }
-  SystemMetadata .. xs.long
+  SystemMetadata .. xs.unsignedLong
   SystemMetadata .. Identifier
   SystemMetadata .. ObjectFormatIdentifier
-  SystemMetadata .. xs.unsignedLong
   SystemMetadata .. Checksum
   SystemMetadata .. Subject
   SystemMetadata .. AccessPolicy
@@ -1206,7 +1207,7 @@ Data Types in CICore
             <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="ping" type="d1:Ping" minOccurs="0" maxOccurs="1"/>
             <xs:element name="subject" type="d1:Subject" minOccurs="0" maxOccurs="unbounded">
             </xs:element>
-            <xs:element name="contactSubject" type="d1:Subject" minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="contactSubject" type="d1:Subject" minOccurs="1" maxOccurs="unbounded">
             </xs:element>
          </xs:sequence>
          <xs:attribute xmlns:d1="http://ns.dataone.org/service/types/v1" name="replicate" use="required" type="xs:boolean"/>
@@ -1230,7 +1231,7 @@ Data Types in CICore
         + synchronization : Synchronization[0..1]
         + ping : Ping[0..1]
         + subject : Subject[0..*]
-        + contactSubject : Subject[0..*]
+        + contactSubject : Subject[1..*]
         + replicate : xs.boolean[1.. 1]
         + synchronize : xs.boolean[1.. 1]
         + type : NodeType[1.. 1]
@@ -1322,7 +1323,7 @@ Data Types in CICore
 
       Type: :class:`Types.ObjectFormatIdentifier`
 
-      The unique identifier of the object format in the DataONE Object Format Vocabulary. The identifier should comply with DataONE Identifier rules, i.e. no whitespace, UTF-8 or US-ASCII printable characters.
+      The unique identifier of the object format in the DataONE Object Format Vocabulary. The identifier should comply with DataONE Identifier rules, i.e. no whitespace, only UTF-8 or US-ASCII printable characters.
 
 
     .. attribute:: formatName
@@ -1657,6 +1658,13 @@ Data Types in CICore
       An alternative but equivalent identity for the principal that has been used in alternate identity systems.
 
 
+    .. attribute:: verified
+
+      Type: :class:`Types.xs.boolean`
+
+      True if the name and email address of the Person have been verified to ensure that the givenName and familyName represent the real person's legal name, and that the email address is correct for that person and is in the control of the indicated individual. Verification occurs through a established procedure within DataONE as part of the Identity Management system.
+
+
     .. code-block:: xml
 
 
@@ -1674,6 +1682,8 @@ Data Types in CICore
             </xs:element>
             <xs:element name="equivalentIdentity" type="d1:Subject" minOccurs="0" maxOccurs="unbounded">
             </xs:element>
+            <xs:element name="verified" type="xs:boolean" minOccurs="0" maxOccurs="1">
+            </xs:element>
          </xs:sequence>
       </xs:complexType>
 
@@ -1690,9 +1700,11 @@ Data Types in CICore
         + email : NonEmptyString[0..*]
         + isMemberOf : Subject[0..*]
         + equivalentIdentity : Subject[0..*]
+        + verified : xs.boolean[0..1]
       }
       Person .. Subject
       Person .. NonEmptyString
+      Person .. xs.boolean
 
       @enduml
 
@@ -2288,7 +2300,7 @@ Data Types in CICore
 
     .. attribute:: serialVersion
 
-      Type: :class:`Types.xs.long`
+      Type: :class:`Types.xs.unsignedLong`
 
     .. attribute:: identifier
 
@@ -2355,7 +2367,7 @@ Data Types in CICore
 
       <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="SystemMetadata">
          <xs:sequence>
-            <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="serialVersion" type="xs:long" minOccurs="1" maxOccurs="1"/>
+            <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="serialVersion" type="xs:unsignedLong" minOccurs="1" maxOccurs="1"/>
             <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="identifier" type="d1:Identifier"/>
             <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="formatId" type="d1:ObjectFormatIdentifier"/>
             <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="size" type="xs:unsignedLong"/>
@@ -2381,9 +2393,9 @@ Data Types in CICore
       @startuml images/class_SystemMetadata.png
 
       class SystemMetadata {
-        + serialVersion : xs.long[1..1]
+        + serialVersion : xs.unsignedLong[1..1]
         + identifier : Identifier[1..1]
-        + formatid : ObjectFormatIdentifier[1..1]
+        + formatId : ObjectFormatIdentifier[1..1]
         + size : xs.unsignedLong[1..1]
         + checksum : Checksum[1..1]
         + submitter : Subject[1..1]
@@ -2398,10 +2410,9 @@ Data Types in CICore
         + authoritativeMemberNode : NodeReference[0..1]
         + replica : Replica[0..*]
       }
-      SystemMetadata .. xs.long
+      SystemMetadata .. xs.unsignedLong
       SystemMetadata .. Identifier
       SystemMetadata .. ObjectFormatIdentifier
-      SystemMetadata .. xs.unsignedLong
       SystemMetadata .. Checksum
       SystemMetadata .. Subject
       SystemMetadata .. AccessPolicy

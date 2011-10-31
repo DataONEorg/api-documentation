@@ -11,19 +11,19 @@
      - Function
      - Parameters
    * - Tier 4
-     - ``PUT /replicaNotifications/{pid}?session={session}&nodeRef={nodeRef}&status={status}``
+     - ``PUT /replicaNotifications/{pid}``
      - :func:`setReplicationStatus`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`nodeRef<Types.NodeReference>`, :class:`status<Types.ReplicationStatus>`) ``->`` boolean
    * - Tier 4
-     - ``PUT /replicaMetadata/{pid}?session={session}&replicaMetadata={replicaMetadata}``
+     - ``PUT /replicaMetadata/{pid}``
      - :func:`updateReplicationMetadata`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`replicaMetadata<Types.Replica>`) ``->`` boolean
    * - Tier 4
-     - ``PUT /replicaPolicies/{pid}?session={session}&policy={policy}``
+     - ``PUT /replicaPolicies/{pid}``
      - :func:`setReplicationPolicy`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`policy<Types.ReplicationPolicy>`) ``->`` boolean
    * - Tier 4
-     - ``GET /replicaAuthorizations/{pid}?session={session}&targetNodeSubject={targetNodeSubject}&replicatePermission={replicatePermission}``
+     - ``GET /replicaAuthorizations/{pid}``
      - :func:`isNodeAuthorized`
      - (:class:`session<Types.Session>`, :class:`targetNodeSubject<Types.Subject>`, :class:`pid<Types.Identifier>`, :class:`replicatePermission<Types.Permission>`) ``->`` boolean
 
@@ -38,9 +38,11 @@
 
    Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception.
 
+   The nodeRef and status parameters are transmitted as part of the HTTP request body encoded as a MIME Multipart/form-data encoded payload.
+
    :Use Cases:
      :doc:`UC09 </design/UseCases/09_uc>`
-   :REST URL: ``PUT /replicaNotifications/{pid}?session={session}&nodeRef={nodeRef}&status={status}``
+   :REST URL: ``PUT /replicaNotifications/{pid}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the public user if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
@@ -79,7 +81,7 @@
 
    Failure of the operation MUST be indicated by returning an appropriate exception.
 
-   :REST URL: ``PUT /replicaMetadata/{pid}?session={session}&replicaMetadata={replicaMetadata}``
+   :REST URL: ``PUT /replicaMetadata/{pid}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.
    :type session: :class:`Types.Session`
 
@@ -100,6 +102,10 @@
 
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4853)``
 
+   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=4854)``
+
+     The specified pid does not exist
+
 
 
 
@@ -111,7 +117,7 @@
 
    Failure of the operation MUST be indicated by returning an appropriate exception.
 
-   :REST URL: ``PUT /replicaPolicies/{pid}?session={session}&policy={policy}``
+   :REST URL: ``PUT /replicaPolicies/{pid}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
@@ -147,7 +153,7 @@
 
    Failure of the operation MUST be indicated by returning an appropriate exception.
 
-   :REST URL: ``GET /replicaAuthorizations/{pid}?session={session}&targetNodeSubject={targetNodeSubject}&replicatePermission={replicatePermission}``
+   :REST URL: ``GET /replicaAuthorizations/{pid}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
