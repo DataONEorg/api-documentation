@@ -48,149 +48,150 @@ Glossary
      Coordinating Node is mirrored to all other Coordinating Nodes. See also
      :term:`Member Node synchronization` and :term:`data replication`.
 
+   data
 
-  data
+     See :term:`data`.
 
-    See :term:`data`.
+   Data
 
-  Data
-  
-    Typically refers to :term:`science data`. Where ambiguity between the
-    science data and another form of data, the full term "science data" should
-    be used. 
+     Typically refers to :term:`science data`. Where ambiguity between the
+     science data and another form of data, the full term "science data" should
+     be used.
 
-  data package
+   data package
 
-    A data package is a set of one or more :term:`data` objects, :term:`science metadata` 
-    objects, and :term:`system metadata` documents that together represent a scientifically 
-    useful unit of information.
+     A data package is a set of one or more :term:`data` objects, :term:`science
+     metadata` objects, and :term:`system metadata` documents that together
+     represent a scientifically useful unit of information.
 
-  data replication
+   data replication
 
-    The transfer of content between Member Nodes as directed by the
-    Coordinating Nodes.
+     The transfer of content between Member Nodes as directed by the
+     Coordinating Nodes.
 
-  DataONE
+   DataONE
 
-    An NSF sponsored project implementing cyberinfrastructure according to
-    guidelines indicated in the NSF `DataNet RFP`_.
+     An NSF sponsored project implementing cyberinfrastructure according to
+     guidelines indicated in the NSF `DataNet RFP`_.
 
-  detail code
+   detail code
 
-    Part of an exception that represents an error condition in the DataONE
-    APIs. The error detail code is specific to an API method. See also
-    :mod:`Exceptions`.
+     Part of an exception that represents an error condition in the DataONE
+     APIs. The error detail code is specific to an API method. See also
+     :mod:`Exceptions`.
 
-  PID
+   PID
 
-    Persistent Unique Identifier. A string of printable Unicode characters
-    that uniquely identifies an object within the DataONE infrastructure. See
-    :class:`Types.Identifier`
+     Persistent Unique Identifier. A string of printable Unicode characters that
+     uniquely identifies an object within the DataONE infrastructure. See
+     :class:`Types.Identifier`
 
-  identifier
+   identifier
 
-    A synonym for :term:`PID`.
+     A synonym for :term:`PID`.
 
-  identity 
+   identity 
 
-    Refers to the properties of a user or :term:`principal` that enables the
-    DataONE system to distinguish them from other users.
+     Refers to the properties of a user or :term:`principal` that enables the
+     DataONE system to distinguish them from other users.
 
-  Investigator Toolkit
+   Investigator Toolkit
 
-    Software libraries, applications, and other tools that enable interaction
-    with the DataONE system, typically by enabling storage of content on a
-    Member Node and/or by enabling search and retrieval of content from the
-    DataONE infrastructure.
+     Software libraries, applications, and other tools that enable interaction
+     with the DataONE system, typically by enabling storage of content on a
+     Member Node and/or by enabling search and retrieval of content from the
+     DataONE infrastructure.
 
-  Member Node
+   Member Node
 
-    See :term:`Member Node`.
+     See :term:`Member Node`.
 
-  Member Node
+   Member Node
 
-    A data holding node that implements all or the essential elements of the
-    member mode :term:`API`\s (see :doc:`apis/MN_APIs`). Member Nodes accept
-    content from users and may store content replicated from other member
-    nodes as directed by a Coordinating Node.
+     A data holding node that implements all or the essential elements of the
+     member mode :term:`API`\s (see :doc:`apis/MN_APIs`). Member Nodes accept
+     content from users and may store content replicated from other member nodes
+     as directed by a Coordinating Node.
 
-  Member Node synchronization
+   Member Node synchronization
 
-    The process of updating a :term:`Coordinating Node` with the science and
-    system metadata that appears on a :term:`Member Node`.
+     The process of updating a :term:`Coordinating Node` with the science and
+     system metadata that appears on a :term:`Member Node`.
 
-  metadata
+   metadata
 
-    Data describing data. There are currently two distinct forms of metadata
-    managed by DataONE, :term:`science metadata` and :term:`system metadata`.
+     Data describing data. There are currently two distinct forms of metadata
+     managed by DataONE, :term:`science metadata` and :term:`system metadata`.
 
-  node event log
+   node event log
 
-    The node event log is implemented on Coordinating Nodes and Member Nodes
-    and should record all object access and manipulation events.
+     The node event log is implemented on Coordinating Nodes and Member Nodes
+     and should record all object access and manipulation events.
 
-  Origin Member Node 
+   Origin Member Node 
 
-    The :term:`Member Node` where an object was first registered with the
-    DataONE infrastructure.
+     The :term:`Member Node` where an object was first registered with the
+     DataONE infrastructure.
 
-  public user
+   public user
 
-    The default user identity used when a service is called without supplying
-    user credentials. The public user SHOULD never have write access to any
-    services and MAY be limited access to some services in addition to the usual
-    restrictions imposed by access control. The public user :term:`subject` can
-    be any of "Public", "AuthenticatedUser", "VerifiedUser".
+     The default user identity used when a service is called without supplying
+     user credentials. The public user SHOULD never have write access to any
+     services and MAY be limited access to some services in addition to the
+     usual restrictions imposed by access control. The public user
+     :term:`subject` can be any of "Public", "AuthenticatedUser",
+     "VerifiedUser".
 
-  principal
+   principal
 
-    See :term:`subject`. The use of the term "principal" is being deprecated in
-    the documentation.
+     See :term:`subject`. The use of the term "principal" is being deprecated in
+     the documentation.
 
-  replication
+   replication
 
-    See :term:`Coordinating Node replication` or :term:`data replication`.
+     See :term:`Coordinating Node replication` or :term:`data replication`.
 
-  Rights Holder
+   Rights Holder
 
-    The :term:`Subject` that has full control over the access control rules
-    for an object.
+     The :term:`Subject` that has full control over the access control rules for
+     an object.
 
-  session
+   session
 
-    In the context of DataONE, a session refers to the operations that occur
-    with a single authentication token.
+     In the context of DataONE, a session refers to the operations that occur
+     with a single authentication token.
 
-  science data
+   science data
 
-    Science data that is stored in the DataONE system. See :doc:`design/WhatIsData`
-    for a description of what is considered data in DataONE. DataONE services
-    always return exact copies of the original data as submitted to DataONE.
+     Science data that is stored in the DataONE system. See
+     :doc:`design/WhatIsData` for a description of what is considered data in
+     DataONE. DataONE services always return exact copies of the original data
+     as submitted to DataONE.
 
-  science metadata
+   science metadata
 
-    Metadata that describes the data that is replicated across the Member Nodes.
+     Metadata that describes the data that is replicated across the Member Nodes.
 
-  subject
+   subject
 
-    A user that is a recognized :term:`identity` in the DataONE system.
+     A user that is a recognized :term:`identity` in the DataONE system.
 
-  sysmeta
+   sysmeta
 
-    See :term:`system metadata`
+     See :term:`system metadata`
 
-  system metadata
+   system metadata
 
-    Metadata that is used internally by the DataONE system to record system
-    properties about each object stored in the DataONE system. See
-    :class:`Types.SystemMetadata` and :mod:`SystemMetadata`. Also referred to as
-    :term:`sysmeta`\.
+     Metadata that is used internally by the DataONE system to record system
+     properties about each object stored in the DataONE system. See
+     :class:`Types.SystemMetadata` and :mod:`SystemMetadata`. Also referred to
+     as :term:`sysmeta`\.
 
-  token
+   token
 
-    In DataONE, refers to the package of information returned from a
-    :func:`CN_authentication.login` operation that can be subsequently trusted
-    to accurately and unambiguously identify a :term:`principal`.
+     In DataONE, refers to the package of information returned from a
+     :func:`CN_authentication.login` operation that can be subsequently trusted
+     to accurately and unambiguously identify a :term:`principal`.
 
 
 

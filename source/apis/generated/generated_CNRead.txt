@@ -38,6 +38,10 @@
      - ``GET /search``
      - :func:`search`
      - (:class:`session<Types.Session>`, :class:`queryType<Types.QueryType>`, ``query``) ``->`` :class:`Types.ObjectList`
+   * - Tier 1
+     - ``PUT /meta/{pid}``
+     - :func:`updateSystemMetadata`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` boolean
 
 
 
@@ -306,5 +310,40 @@
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4300)``
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4281)``
+
+
+
+
+.. function:: updateSystemMetadata(session,pid) -> boolean
+
+   Updates the system metadata entry for pid.
+
+   Only mutable properties of system metadata can be altered through this method, i.e. the supplied copy of system metadata is not a complete replacement for the existing copy.
+
+   :REST URL: ``PUT /meta/{pid}``
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :type session: :class:`Types.Session`
+
+   :param pid: Identifier for the target system metadata that is to be updated with the supplied copy.
+   :type pid: :class:`Types.Identifier`
+
+   :returns: True if the system metadata was updated successfully, otherwise an exception should be raised.
+   :rtype: boolean
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4910)``
+
+     The method functionality is not implemented.
+
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=4911)``
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4912)``
+
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4913)``
+
+   :raises Exceptions.InvalidSystemMetadata: ``(errorCode=400, detailCode=4914)``
+
+   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=4915)``
+
+     The specified pid does not exist
 
 

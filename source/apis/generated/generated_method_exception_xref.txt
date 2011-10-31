@@ -901,6 +901,36 @@
      - NotImplemented
      - 501
      - 4281
+   * - :mod:`CNRead`
+     - :func:`updateSystemMetadata <CNRead.updateSystemMetadata>`
+     - NotImplemented
+     - 501
+     - 4910
+   * - :mod:`CNRead`
+     - :func:`updateSystemMetadata <CNRead.updateSystemMetadata>`
+     - NotAuthorized
+     - 401
+     - 4911
+   * - :mod:`CNRead`
+     - :func:`updateSystemMetadata <CNRead.updateSystemMetadata>`
+     - ServiceFailure
+     - 500
+     - 4912
+   * - :mod:`CNRead`
+     - :func:`updateSystemMetadata <CNRead.updateSystemMetadata>`
+     - InvalidRequest
+     - 400
+     - 4913
+   * - :mod:`CNRead`
+     - :func:`updateSystemMetadata <CNRead.updateSystemMetadata>`
+     - InvalidSystemMetadata
+     - 400
+     - 4914
+   * - :mod:`CNRead`
+     - :func:`updateSystemMetadata <CNRead.updateSystemMetadata>`
+     - NotFound
+     - 404
+     - 4915
    * - :mod:`CNAuthorization`
      - :func:`setOwner <CNAuthorization.setOwner>`
      - ServiceFailure
