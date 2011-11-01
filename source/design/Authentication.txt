@@ -492,16 +492,15 @@ A proposal for mapping exisiting KNB accounts is included at the bottom of Figur
 Client authentication through the CILogon service; CILogon, using Shibboleth,
 requests a SAML authentication through a registered *Identity Provider* (IdP);
 the IdP confirms identity and returns SAML response to CILogon; client continues
-process with download of Java Web Start application, which generates a PKI Key
-Pair and send Certificate Request to CILogon; CILogon generates X509 certificate
-and returns to client for use with DataONE.
+process, the portal delegate requests Certificate from CILogon; 
+CILogon generates X509 certificate and returns it to portal for use with DataONE.
 
 ..
     @startuml images/auth_03.png
     title Detailed CILogon Authentication Sequence
     participant "IdentityService" as IS << CNode >>
     participant "Client Browser" as D1 << Application >>
-    participant "JWS app" as JWS
+    participant "Portal" as Portal
     participant "CILogon" as CI
     participant "Identity Provider" as IP
 
@@ -519,35 +518,28 @@ and returns to client for use with DataONE.
         "document.forms[0].submit()"
         posting SAML response to CILogon
     end note
-    D1->>CI: SAML assertion
-    D1->CI: "Download Certificate"
-   	create JWS
-    CI-->JWS
-    JWS->JWS: JWS Generate Key Pair
-    JWS->CI: JWS Cert Request
+    create Portal
+    Portal->CI: "Download Certificate"
     CI->IS: getPrincipalInfo(Principal)
     IS-->CI: PrincipalList
     CI->CI: Generate and Sign X.509
-    CI-->JWS: X.509
+    CI-->Portal: X.509
     ...
     group For existing KNB identities
     	participant "Metacat API" as Metacat
     	create Metacat
     	
-    	JWS->Metacat: authenticate with KNB identity/credentials
-    	JWS<--Metacat: name, email
-    	JWS->IS: mapIdentity(CILogon, KNB)
+    	D1->Metacat: authenticate with KNB identity/credentials
+    	D1<--Metacat: session
+    	D1->Portal: get token
+    	D1<--Portal: token
+    	D1->Metacat: "Map Identites" (token)
+    	Metacat->Portal: verify token
+    	Portal-->Metacat: valid token
+    	Metacat->IS: mapIdentity(MN, CILogon, KNB)
     	note right
-    		using certificate for 
-    		CILogon identity
+    		using trusted MN certificate 	
     	end note
-    	JWS->JWS: Generate certificate for KNB identity
-    	JWS->IS: confirmMapIdentity(KNB, CILogon)
-    	note right
-    		using certificate for 
-    		KNB identity
-    	end note
-    	
     end
     
     @enduml
