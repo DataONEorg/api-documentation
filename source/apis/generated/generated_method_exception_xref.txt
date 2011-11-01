@@ -962,6 +962,11 @@
      - 400
      - 4442
    * - :mod:`CNAuthorization`
+     - :func:`setOwner <CNAuthorization.setOwner>`
+     - VersionMismatch
+     - 409
+     - 4443
+   * - :mod:`CNAuthorization`
      - :func:`isAuthorized <CNAuthorization.isAuthorized>`
      - ServiceFailure
      - 500
@@ -1021,6 +1026,11 @@
      - InvalidRequest
      - 400
      - 4402
+   * - :mod:`CNAuthorization`
+     - :func:`setAccessPolicy <CNAuthorization.setAccessPolicy>`
+     - VersionMismatch
+     - 409
+     - 4403
    * - :mod:`CNIdentity`
      - :func:`registerAccount <CNIdentity.registerAccount>`
      - ServiceFailure
@@ -1327,6 +1337,11 @@
      - 404
      - 4740
    * - :mod:`CNReplication`
+     - :func:`setReplicationStatus <CNReplication.setReplicationStatus>`
+     - VersionMismatch
+     - 409
+     - 4741
+   * - :mod:`CNReplication`
      - :func:`updateReplicationMetadata <CNReplication.updateReplicationMetadata>`
      - NotImplemented
      - 501
@@ -1351,6 +1366,11 @@
      - NotFound
      - 404
      - 4854
+   * - :mod:`CNReplication`
+     - :func:`updateReplicationMetadata <CNReplication.updateReplicationMetadata>`
+     - VersionMismatch
+     - 409
+     - 4855
    * - :mod:`CNReplication`
      - :func:`setReplicationPolicy <CNReplication.setReplicationPolicy>`
      - NotImplemented
@@ -1381,6 +1401,11 @@
      - InvalidToken
      - 401
      - 4885
+   * - :mod:`CNReplication`
+     - :func:`setReplicationPolicy <CNReplication.setReplicationPolicy>`
+     - VersionMismatch
+     - 409
+     - 4886
    * - :mod:`CNReplication`
      - :func:`isNodeAuthorized <CNReplication.isNodeAuthorized>`
      - NotImplemented

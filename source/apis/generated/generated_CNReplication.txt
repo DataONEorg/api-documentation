@@ -13,15 +13,15 @@
    * - Tier 4
      - ``PUT /replicaNotifications/{pid}``
      - :func:`setReplicationStatus`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`nodeRef<Types.NodeReference>`, :class:`status<Types.ReplicationStatus>`) ``->`` boolean
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`nodeRef<Types.NodeReference>`, :class:`status<Types.ReplicationStatus>`, ``serialVersion``) ``->`` boolean
    * - Tier 4
      - ``PUT /replicaMetadata/{pid}``
      - :func:`updateReplicationMetadata`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`replicaMetadata<Types.Replica>`) ``->`` boolean
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`replicaMetadata<Types.Replica>`, ``serialVersion``) ``->`` boolean
    * - Tier 4
      - ``PUT /replicaPolicies/{pid}``
      - :func:`setReplicationPolicy`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`policy<Types.ReplicationPolicy>`) ``->`` boolean
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`policy<Types.ReplicationPolicy>`, ``serialVersion``) ``->`` boolean
    * - Tier 4
      - ``GET /replicaAuthorizations/{pid}``
      - :func:`isNodeAuthorized`
@@ -30,7 +30,7 @@
 
 
 
-.. function:: setReplicationStatus(session,pid,nodeRef,status) -> boolean
+.. function:: setReplicationStatus(session,pid,nodeRef,status,serialVersion) -> boolean
 
    Update the replication status of the system metadata, ensuring that the change is appropriate for the given state of system metadata.  For example, a MN can not change the status to *COMPLETED* unless the CN previously requested replication of the object and the replications status of the object (as indicated in the system metadata) is set to *QUEUED*.
 
@@ -55,6 +55,9 @@
    :param status: Replication status. See system metadata schema for possible values.
    :type status: :class:`Types.ReplicationStatus`
 
+   :param serialVersion: The serialVersion of the system metadata that is the intended target for the change.
+   :type serialVersion: unsigned long
+
    :returns: True if the operation is allowed and expected, otherwise an exception should be raised.
    :rtype: boolean
 
@@ -70,10 +73,14 @@
 
    :raises Exceptions.NotFound: ``(errorCode=404, detailCode=4740)``
 
+   :raises Exceptions.VersionMismatch: ``(errorCode=409, detailCode=4741)``
+
+     The serialVersion supplied with the request does not match the serialVersion of the target
 
 
 
-.. function:: updateReplicationMetadata(session,pid,replicaMetadata) -> boolean
+
+.. function:: updateReplicationMetadata(session,pid,replicaMetadata,serialVersion) -> boolean
 
    Full replacement of replication metadata in the system metadata for the specified object, changes date sys meta modified
 
@@ -91,6 +98,9 @@
    :param replicaMetadata:
    :type replicaMetadata: :class:`Types.Replica`
 
+   :param serialVersion: The serialVersion of the system metadata that is the intended target for the change.
+   :type serialVersion: unsigned long
+
    :returns: True on success
    :rtype: boolean
 
@@ -106,10 +116,14 @@
 
      The specified pid does not exist
 
+   :raises Exceptions.VersionMismatch: ``(errorCode=409, detailCode=4855)``
+
+     The serialVersion supplied with the request does not match the serialVersion of the target
 
 
 
-.. function:: setReplicationPolicy(session,pid,policy) -> boolean
+
+.. function:: setReplicationPolicy(session,pid,policy,serialVersion) -> boolean
 
    Updates the replication policy entry for an object by updating the system metadata.
 
@@ -127,6 +141,9 @@
    :param policy:
    :type policy: :class:`Types.ReplicationPolicy`
 
+   :param serialVersion: The serialVersion of the system metadata that is the intended target for the change.
+   :type serialVersion: unsigned long
+
    :returns: True on success
    :rtype: boolean
 
@@ -141,6 +158,10 @@
    :raises Exceptions.NotFound: ``(errorCode=404, detailCode=4884)``
 
    :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=4885)``
+
+   :raises Exceptions.VersionMismatch: ``(errorCode=409, detailCode=4886)``
+
+     The serialVersion supplied with the request does not match the serialVersion of the target
 
 
 

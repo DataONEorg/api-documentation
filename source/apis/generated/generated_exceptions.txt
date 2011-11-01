@@ -353,3 +353,32 @@
    :type traceInformation: dictionary
 
 
+----
+
+.. exception:: VersionMismatch(detailCode, description, pid, [traceInformation])
+
+   The serialVersion of the system metadata being updated differs from the serialVersion supplied with the change request.
+
+   :errorCode: 409
+
+   :param detailCode:
+     Set by the method raising the exception.
+
+   :type detailCode: string
+
+   :param description:
+     Human readable description of the problem which can be forwarded to an administrator for further action.
+
+   :type description: string
+
+   :param pid:
+     Identifier of the system metadata for the object being updated.
+
+   :type pid: :class:`Types.Identifier`
+
+   :param traceInformation:
+     Optional set of key-value pairs that can include the name of the method that raised the error plus other details such as parameters used in the call that can be helpful for debugging.
+
+   :type traceInformation: dictionary
+
+

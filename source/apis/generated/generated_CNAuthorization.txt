@@ -13,7 +13,7 @@
    * - Tier 2
      - ``PUT /owner/{pid}``
      - :func:`setOwner`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`userId<Types.Subject>`) ``->`` :class:`Types.Identifier`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`userId<Types.Subject>`, ``serialVersion``) ``->`` :class:`Types.Identifier`
    * - Tier 2
      - ``GET /isAuthorized/{pid}?action={action}``
      - :func:`isAuthorized`
@@ -21,12 +21,12 @@
    * - Tier 2
      - ``PUT /accessRules/{pid}``
      - :func:`setAccessPolicy`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`accessPolicy<Types.AccessPolicy>`) ``->`` boolean
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`accessPolicy<Types.AccessPolicy>`, ``serialVersion``) ``->`` boolean
 
 
 
 
-.. function:: setOwner(session,pid,userId) -> Identifier
+.. function:: setOwner(session,pid,userId,serialVersion) -> Identifier
 
    Changes ownership (RightsHolder) of the specified object to the :term:`subject` specified by `userId`
 
@@ -41,6 +41,9 @@
 
    :param userId: The subject that will be taking ownership of the specified object.
    :type userId: :class:`Types.Subject`
+
+   :param serialVersion: The serialVersion of the system metadata that is the intended target for the change.
+   :type serialVersion: unsigned long
 
    :returns: Identifier of the object that was modified
    :rtype: :class:`Types.Identifier`
@@ -60,6 +63,10 @@
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4441)``
 
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4442)``
+
+   :raises Exceptions.VersionMismatch: ``(errorCode=409, detailCode=4443)``
+
+     The serialVersion supplied with the request does not match the serialVersion of the target
 
 
 
@@ -110,7 +117,7 @@
 
 
 
-.. function:: setAccessPolicy(session,pid,accessPolicy) -> boolean
+.. function:: setAccessPolicy(session,pid,accessPolicy,serialVersion) -> boolean
 
    Sets the access permissions for an object identified by *pid*.
 
@@ -132,6 +139,9 @@
    :param accessPolicy: The desired privileges to be assigned to the object.
    :type accessPolicy: :class:`Types.AccessPolicy`
 
+   :param serialVersion: The serialVersion of the system metadata that is the intended target for the change.
+   :type serialVersion: unsigned long
+
    :returns: True if the operation succeeds, otherwise false.
    :rtype: boolean
 
@@ -152,5 +162,9 @@
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4401)``
 
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4402)``
+
+   :raises Exceptions.VersionMismatch: ``(errorCode=409, detailCode=4403)``
+
+     The serialVersion supplied with the request does not match the serialVersion of the target
 
 
