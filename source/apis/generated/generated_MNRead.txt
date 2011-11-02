@@ -42,7 +42,7 @@
 
    Retrieve an object identified by *pid* from the node.
 
-   The response must contain the bytes of the indicated object, and the checksum of the bytes retrieved must match the :attr:`SystemMetadata.checksum` recorded in the  :class:`Types.SystemMetadata` if the object is science data.
+   The response MUST contain the bytes of the indicated object, and the checksum of the bytes retrieved SHOULD match the :attr:`SystemMetadata.checksum` recorded in the  :class:`Types.SystemMetadata` if the object is science data.
 
    If the object does not exist on the node servicing the request, then :exc:`Exceptions.NotFound` must be raised even if the object exists on another node in the DataONE system.
 
@@ -74,8 +74,6 @@
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=1001)``
 
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=1002)``
-
 
 .. include:: ../examples/get.txt
 
@@ -90,9 +88,9 @@
 
 .. function:: getSystemMetadata(session,pid) -> SystemMetadata
 
-   Describes the science metadata or data object (and likely other objects in the future) identified by *pid* by returning the associated system metadata object.
+   Describes the object identified by *pid* by returning the associated system metadata object.
 
-   If the object does not exist on the node servicing the request, then :exc:`Exceptions.NotFound` must be raised even if the object exists on another node in the DataONE system.
+   If the object does not exist on the node servicing the request, then :exc:`Exceptions.NotFound` MUST be raised even if the object exists on another node in the DataONE system.
 
    :Use Cases:
      :doc:`UC06 </design/UseCases/06_uc>`, :doc:`UC37 </design/UseCases/37_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
@@ -114,8 +112,6 @@
 
      There is no data or science metadata identified by the given *pid* on the node where the request was serviced. The error message should provide a hint to use the :func:`CNRead.resolve` mechanism.
 
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=1080)``
-
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=1090)``
 
    :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=1050)``
@@ -134,7 +130,7 @@
 
    If the object does not exist on the node servicing the request, then :exc:`Exceptions.NotFound` must be raised even if the object exists on another node in the DataONE system.
 
-   Note that this method is likely to be called frequently and so efficiency should be taken into consideratin during implementation.
+   Note that this method is likely to be called frequently and so efficiency should be taken into consideration during implementation.
 
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`
@@ -157,8 +153,6 @@
    :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=1370)``
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=1361)``
-
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=1362)``
 
 
 .. include:: ../examples/describe.txt
@@ -280,8 +274,6 @@
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2161)``
 
    :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=2162)``
-
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=2163)``
 
    :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=2164)``
 

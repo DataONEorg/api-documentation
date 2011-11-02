@@ -25,13 +25,16 @@ Actors
   - Member Node
 
 Preconditions 
+
   - Client has authenticated to the desired level (e.g. client may not have
     authenticated, so access might be anonymous).
 
 Triggers
+
   - An object is requested from the DataONE system.
 
 Post Conditions
+
   - The client has a copy of the object bytes (or an error message in the case
     of failure)
 
@@ -82,11 +85,11 @@ as they are identical at this level of detail.
 .. 
    @startuml images/01_seq.png
    participant "Client" as app_client << Application >>
-   participant "CRUD API" as n_crud << Node >>
+   participant "Read API" as n_crud << Node >>
    participant "Authorization API" as n_authorize << Node >>
    participant "Object Store" as n_ostore << Node >>
-   app_client -> n_crud: get(token, PID)
-   n_crud -> n_authorize: isAuthorized(token, PID, READ)
+   app_client -> n_crud: get(session, PID)
+   n_crud -> n_authorize: isAuthorized(session, PID, READ)
    n_crud <- n_authorize: True, False, Err.NotFound
    alt NotFound
      app_client <- n_crud: Err.NotFound

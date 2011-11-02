@@ -130,6 +130,25 @@ CN APIs
 - CNReplication.isNodeAuthorized: updated REST URL description as per
   setReplicationStatus
 
+MN APIs
+~~~~~~~
+
+- MNCore.getLogRecords: changed fromDate from required to optional.
+
+- MNCore.getCapabilities: removed InvalidRequest exception
+
+- MNCore.get: removed InvalidRequest exception
+
+- MNRead.getSystemMetadata: removed InvalidRequest exception
+
+- MNRead.describe: removed InvalidRequest exception
+
+- MNRead.synchronizationFailed: removed InvalidRequest exception
+
+- MNAuthorization.setAccessPolicy: Added note indicating that this method should only be called by Coordinating Nodes. 
+
+- MNStorage.delete: removed InvalidRequest exception
+
 
 
 

@@ -120,8 +120,20 @@
      - :func:`CNIdentity.mapIdentity`
      - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
    * - Tier 2
-     - ``PUT /accounts/map/{subject}``
+     - ``DELETE /accounts/map/{subject}``
+     - :func:`CNIdentity.removeMapIdentity`
+     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
+   * - Tier 2
+     - ``POST /accounts/pendingmap/{subject}``
+     - :func:`CNIdentity.requestMapIdentity`
+     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
+   * - Tier 2
+     - ``PUT /accounts/pendingmap/{subject}``
      - :func:`CNIdentity.confirmMapIdentity`
+     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
+   * - Tier 2
+     - ``DELETE /accounts/pendingmap/{subject}``
+     - :func:`CNIdentity.denyMapIdentity`
      - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
    * - Tier 2
      - ``POST /groups/{groupName}``

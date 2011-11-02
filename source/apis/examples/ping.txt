@@ -2,9 +2,9 @@
 
 The response should be a valid HTTP response with a blank or arbitrary body.
 Only the HTTP header information is considered by the requestor. A successful
-response *must* have a HTTP status code of 200. In case of an error condition,
-the appropriate HTTP status code *must* be set, and an exception or error
-information *may* be returned in the response.
+response MUST have a HTTP status code of 200. In case of an error condition,
+the appropriate HTTP status code MUST be set, and an exception or error
+information MAY be returned in the response.
 
 **Example**
 

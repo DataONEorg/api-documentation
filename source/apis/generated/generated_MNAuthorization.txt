@@ -24,13 +24,13 @@
 
 .. function:: isAuthorized(session,pid,action) -> boolean
 
-   Test if the user identified by the provided token has authorization for operation on the specified object.
+   Test if the user identified by the provided session has authorization for operation on the specified object.
 
    A successful operation is indicated by a return HTTP status of 200.
 
    Failure is indicated by an exception such as :exc:`NotAuthorized` being returned.
 
-   A successful response is indicated by a response HTTP status of 200. The body of the response is arbitrary and SHOULD be ignored by the caller.
+   The body of the response is arbitrary and SHOULD be ignored by the caller.
 
    If the action is not authorized, then a :exc:`NotAuthorized` exception MUST be raised.
 
@@ -75,6 +75,8 @@
    A successful operation is indicated by a return HTTP status of 200.
 
    Failure is indicated by an exception such as :exc:`NotAuthorized` being returned.
+
+   In version 1.0 of the DataONE infrastructure, this method SHOULD only be called by Coordinating Nodes to set the access policy for the specified object.
 
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`

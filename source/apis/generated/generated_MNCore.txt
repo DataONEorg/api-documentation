@@ -17,7 +17,7 @@
    * - Tier 1
      - ``GET /log``
      - :func:`getLogRecords`
-     - (:class:`session<Types.Session>`, :class:`fromDate<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.Log`
+     - (:class:`session<Types.Session>`, :class:`[fromDate]<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.Log`
    * - Tier 1
      - ``GET /  or  GET /node``
      - :func:`getCapabilities`
@@ -52,7 +52,7 @@
 
 
 
-.. function:: getLogRecords(session,fromDate,[toDate],[event],[start=0],[count=1000]) -> Log
+.. function:: getLogRecords(session,[fromDate],[toDate],[event],[start=0],[count=1000]) -> Log
 
    Retrieve log information from the Member Node for the specified date range and even type.
 
@@ -111,7 +111,5 @@
    :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=2161)``
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2162)``
-
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=2163)``
 
 

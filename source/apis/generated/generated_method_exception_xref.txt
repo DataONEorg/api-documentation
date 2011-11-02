@@ -61,11 +61,6 @@
      - ServiceFailure
      - 500
      - 2162
-   * - :mod:`MNCore`
-     - :func:`getCapabilities <MNCore.getCapabilities>`
-     - InvalidRequest
-     - 400
-     - 2163
    * - :mod:`MNRead`
      - :func:`get <MNRead.get>`
      - NotAuthorized
@@ -92,11 +87,6 @@
      - 501
      - 1001
    * - :mod:`MNRead`
-     - :func:`get <MNRead.get>`
-     - InvalidRequest
-     - 400
-     - 1002
-   * - :mod:`MNRead`
      - :func:`getSystemMetadata <MNRead.getSystemMetadata>`
      - NotAuthorized
      - 401
@@ -111,11 +101,6 @@
      - NotFound
      - 404
      - 1060
-   * - :mod:`MNRead`
-     - :func:`getSystemMetadata <MNRead.getSystemMetadata>`
-     - InvalidRequest
-     - 400
-     - 1080
    * - :mod:`MNRead`
      - :func:`getSystemMetadata <MNRead.getSystemMetadata>`
      - ServiceFailure
@@ -151,11 +136,6 @@
      - NotImplemented
      - 501
      - 1361
-   * - :mod:`MNRead`
-     - :func:`describe <MNRead.describe>`
-     - InvalidRequest
-     - 400
-     - 1362
    * - :mod:`MNRead`
      - :func:`getChecksum <MNRead.getChecksum>`
      - NotAuthorized
@@ -231,11 +211,6 @@
      - NotAuthorized
      - 401
      - 2162
-   * - :mod:`MNRead`
-     - :func:`synchronizationFailed <MNRead.synchronizationFailed>`
-     - InvalidRequest
-     - 400
-     - 2163
    * - :mod:`MNRead`
      - :func:`synchronizationFailed <MNRead.synchronizationFailed>`
      - InvalidToken
@@ -421,11 +396,6 @@
      - NotImplemented
      - 501
      - 1321
-   * - :mod:`MNStorage`
-     - :func:`delete <MNStorage.delete>`
-     - InvalidRequest
-     - 400
-     - 1322
    * - :mod:`MNReplication`
      - :func:`replicate <MNReplication.replicate>`
      - NotImplemented
@@ -1197,6 +1167,66 @@
      - 409
      - 2343
    * - :mod:`CNIdentity`
+     - :func:`removeMapIdentity <CNIdentity.removeMapIdentity>`
+     - ServiceFailure
+     - 500
+     - 2390
+   * - :mod:`CNIdentity`
+     - :func:`removeMapIdentity <CNIdentity.removeMapIdentity>`
+     - InvalidToken
+     - 401
+     - 2370
+   * - :mod:`CNIdentity`
+     - :func:`removeMapIdentity <CNIdentity.removeMapIdentity>`
+     - NotAuthorized
+     - 401
+     - 2360
+   * - :mod:`CNIdentity`
+     - :func:`removeMapIdentity <CNIdentity.removeMapIdentity>`
+     - NotFound
+     - 404
+     - 2340
+   * - :mod:`CNIdentity`
+     - :func:`removeMapIdentity <CNIdentity.removeMapIdentity>`
+     - NotImplemented
+     - 501
+     - 2361
+   * - :mod:`CNIdentity`
+     - :func:`requestMapIdentity <CNIdentity.requestMapIdentity>`
+     - ServiceFailure
+     - 500
+     - 2390
+   * - :mod:`CNIdentity`
+     - :func:`requestMapIdentity <CNIdentity.requestMapIdentity>`
+     - InvalidToken
+     - 401
+     - 2370
+   * - :mod:`CNIdentity`
+     - :func:`requestMapIdentity <CNIdentity.requestMapIdentity>`
+     - NotAuthorized
+     - 401
+     - 2360
+   * - :mod:`CNIdentity`
+     - :func:`requestMapIdentity <CNIdentity.requestMapIdentity>`
+     - NotFound
+     - 404
+     - 2340
+   * - :mod:`CNIdentity`
+     - :func:`requestMapIdentity <CNIdentity.requestMapIdentity>`
+     - NotImplemented
+     - 501
+     - 2361
+   * - :mod:`CNIdentity`
+     - :func:`requestMapIdentity <CNIdentity.requestMapIdentity>`
+     - InvalidRequest
+     - 400
+     - 2342
+   * - :mod:`CNIdentity`
+     - :func:`requestMapIdentity <CNIdentity.requestMapIdentity>`
+     - IdentifierNotUnique
+     - 409
+     - 2343
+   * - :mod:`CNIdentity`
      - :func:`confirmMapIdentity <CNIdentity.confirmMapIdentity>`
      - ServiceFailure
      - 500
@@ -1218,6 +1248,31 @@
      - 2340
    * - :mod:`CNIdentity`
      - :func:`confirmMapIdentity <CNIdentity.confirmMapIdentity>`
+     - NotImplemented
+     - 501
+     - 2361
+   * - :mod:`CNIdentity`
+     - :func:`denyMapIdentity <CNIdentity.denyMapIdentity>`
+     - ServiceFailure
+     - 500
+     - 2390
+   * - :mod:`CNIdentity`
+     - :func:`denyMapIdentity <CNIdentity.denyMapIdentity>`
+     - InvalidToken
+     - 401
+     - 2370
+   * - :mod:`CNIdentity`
+     - :func:`denyMapIdentity <CNIdentity.denyMapIdentity>`
+     - NotAuthorized
+     - 401
+     - 2360
+   * - :mod:`CNIdentity`
+     - :func:`denyMapIdentity <CNIdentity.denyMapIdentity>`
+     - NotFound
+     - 404
+     - 2340
+   * - :mod:`CNIdentity`
+     - :func:`denyMapIdentity <CNIdentity.denyMapIdentity>`
      - NotImplemented
      - 501
      - 2361

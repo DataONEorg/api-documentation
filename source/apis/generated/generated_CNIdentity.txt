@@ -35,8 +35,20 @@
      - :func:`mapIdentity`
      - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
    * - Tier 2
-     - ``PUT /accounts/map/{subject}``
+     - ``DELETE /accounts/map/{subject}``
+     - :func:`removeMapIdentity`
+     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
+   * - Tier 2
+     - ``POST /accounts/pendingmap/{subject}``
+     - :func:`requestMapIdentity`
+     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
+   * - Tier 2
+     - ``PUT /accounts/pendingmap/{subject}``
      - :func:`confirmMapIdentity`
+     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
+   * - Tier 2
+     - ``DELETE /accounts/pendingmap/{subject}``
+     - :func:`denyMapIdentity`
      - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
    * - Tier 2
      - ``POST /groups/{groupName}``
@@ -233,9 +245,9 @@
 
 .. function:: mapIdentity(session,subject) -> boolean
 
-   Create a new mapping between the two authenticated identities, asserting that they represent the same subject.
+   Create a new mapping between the two identities, asserting that they represent the same subject.
 
-   Mapping identities is a two-step process wherein a map request is made by a primary Subject and a subsequent (confirmation) map request is made by the secondary Subject. This ensures that mappings are performed only by those that have authority to do so.
+   Mapping identities with this method requires explicit authorization for the user given in the Session object. The caller must have made sure that the primary and secondary identities represent one and the same individual.
 
    Successful completion of the request is indicated by returning a HTTP status of 200.
 
@@ -274,15 +286,128 @@
 
 
 
-.. function:: confirmMapIdentity(session,subject) -> boolean
+.. function:: removeMapIdentity(session,subject) -> boolean
 
-   Confirms a previously initiated identity mapping. If subject A asserts that B is the same identity through :func:`CNIdentity.mapIdentity`, then this method is called by B to confirm that assertion.
+   Removes a previously asserted identity mapping from the Subject in the Session to the Subject given by the parameter. The reciprocol mapping entry is also removed.
 
    A successful request is indicated by returning a HTTP status of 200.
 
    A failed request MUST be indicated by returning an appropriate exception and setting the response HTTP status accordingly.
 
-   :REST URL: ``PUT /accounts/map/{subject}``
+   :REST URL: ``DELETE /accounts/map/{subject}``
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.
+   :type session: :class:`Types.Session`
+
+   :param subject: The Subject identifier to be used for equivalentIdentity. This Subject will not match the Subject named in the certificate.
+   :type subject: :class:`Types.Subject`
+
+   :returns: True if the map was successfully created, false otherwise.
+   :rtype: boolean
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2390)``
+
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=2370)``
+
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=2360)``
+
+     The supplied principal does not have permission to map these two identities
+
+   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=2340)``
+
+     The specified principal does not exist in the DataONE system, or the mapping between the subjects has no yet been initiated.
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2361)``
+
+
+
+
+.. function:: requestMapIdentity(session,subject) -> boolean
+
+   Request a new mapping between the authenticated identity in the session and the given identity, asserting that they represent the same subject.
+
+   Mapping identities is a two-step process wherein a map request is made by a primary Subject and a subsequent (confirmation) map request is made by the secondary Subject. This ensures that mappings are performed only by those that have authority to do so.
+
+   Successful completion of the request is indicated by returning a HTTP status of 200.
+
+   A failed request MUST be indicated by returning an appropriate exception and setting the response HTTP status accordingly.
+
+   :REST URL: ``POST /accounts/pendingmap/{subject}``
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.
+   :type session: :class:`Types.Session`
+
+   :param subject: The Subject identifier to be used for equivalentIdentity. This Subject will not match the Subject named in the certificate.
+   :type subject: :class:`Types.Subject`
+
+   :returns: True if the mapping was successfully initiated, false otherwise.
+   :rtype: boolean
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2390)``
+
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=2370)``
+
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=2360)``
+
+     The supplied principal does not have permission to map these two identities
+
+   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=2340)``
+
+     The specified principal does not exist in the DataONE system
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2361)``
+
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=2342)``
+
+   :raises Exceptions.IdentifierNotUnique: ``(errorCode=409, detailCode=2343)``
+
+     The subject of the session and the provided subject are the same
+
+
+
+
+.. function:: confirmMapIdentity(session,subject) -> boolean
+
+   Confirms a previously initiated identity mapping. If subject A asserts that B is the same identity through :func:`CNIdentity.requestMapIdentity`, then this method is called by B to confirm that assertion.
+
+   A successful request is indicated by returning a HTTP status of 200.
+
+   A failed request MUST be indicated by returning an appropriate exception and setting the response HTTP status accordingly.
+
+   :REST URL: ``PUT /accounts/pendingmap/{subject}``
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.
+   :type session: :class:`Types.Session`
+
+   :param subject: The Subject identifier to be used for equivalentIdentity. This Subject will not match the Subject named in the certificate.
+   :type subject: :class:`Types.Subject`
+
+   :returns: True if the map was successfully created, false otherwise.
+   :rtype: boolean
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2390)``
+
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=2370)``
+
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=2360)``
+
+     The supplied principal does not have permission to map these two identities
+
+   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=2340)``
+
+     The specified principal does not exist in the DataONE system, or the mapping between the subjects has no yet been initiated.
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2361)``
+
+
+
+
+.. function:: denyMapIdentity(session,subject) -> boolean
+
+   Denies a previously initiated identity mapping. If subject A asserts that B is the same identity through :func:`CNIdentity.requestMapIdentity`, then this method is called by B to deny that assertion.
+
+   A successful request is indicated by returning a HTTP status of 200.
+
+   A failed request MUST be indicated by returning an appropriate exception and setting the response HTTP status accordingly.
+
+   :REST URL: ``DELETE /accounts/pendingmap/{subject}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.
    :type session: :class:`Types.Session`
 

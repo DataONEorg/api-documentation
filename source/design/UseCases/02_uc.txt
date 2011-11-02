@@ -45,7 +45,9 @@ Post Conditions
 
 .. image:: images/02_seq.png
 
-*Figure 2.* Interaction diagram for Use Case 02.
+*Figure 2.* Interaction diagram for Use Case 02. The process for determining
+READ access is for illustration purposes only. Actually implementation may
+vary (e.g. by augmenting the query used for searching).
 
 ..
   @startuml images/02_uc.png
@@ -70,8 +72,8 @@ Post Conditions
    participant "Client" as app_client << Application >>
    participant "Query API" as c_query << Coordinating Node >>
    participant "Authentication API" as c_authenticate << Coordinating Node >>
-   participant "CRUD API" as c_crud << Coordinating Node >>
-   app_client -> c_query: search(token, query)
+   participant "Read API" as c_crud << Coordinating Node >>
+   app_client -> c_query: search(session, query)
    activate c_query
    c_query -> c_query: search -> objectList
    note right of c_query
@@ -80,7 +82,7 @@ Post Conditions
      access by the authenticated user.
    end note
      loop for pid in objectList
-       c_query -> c_authenticate: isAuthorized(token, pid, OP_GET)
+       c_query -> c_authenticate: isAuthorized(session, pid, OP_GET)
        c_query <-- c_authenticate: T or F
      end 
    c_query --> c_crud: log

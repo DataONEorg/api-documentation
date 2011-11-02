@@ -28,9 +28,11 @@
 
 .. function:: create(session,pid,object,sysmeta) -> Identifier
 
-   Adds a new object to the Member Node, where the object is either a data object or a science metadata object. This method is called by clients to create new data objects on Member Nodes.
+   Called by a client to adds a new object to the Member Node.
 
    The *pid* must not exist in the DataONE system or should have been previously reserved using  :func:`CNCore.reserveIdentifier`.
+
+   The caller MUST have authorization to write or create content on the Member Node.
 
    :Use Cases:
      :doc:`UC04 </design/UseCases/04_uc>`, :doc:`UC09 </design/UseCases/09_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
@@ -179,8 +181,6 @@
    :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=1330)``
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=1321)``
-
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=1322)``
 
 .. TODO::
     As DataONE is to be an archival system, we need to determine what the semantics of the DELETE function really should be. Can any user delete their objects at any time? What if they have published and referenced the identifier in past? Should DELETE simply be a mechanism to move the object out of commonly found search mechanisms? What about copyrighted or illegal content that is uploaded?
