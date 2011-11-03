@@ -10,13 +10,13 @@
      - Low level "are you alive" operation. A valid ping response is indicated by a HTTP status of 200.  The Member Node should perform some minimal internal functionality testing before answering. However, ping checks will be frequent (every few minutes) so the internal functionality test should not be high impact. Any status response other than 200 indicates that the node is offline for DataONE operations.
    * - GET /log
      - :func:`MNCore.getLogRecords`
-     - Retrieve log information from the Member Node for the specified date range and even type. This method is used primarily by the log aggregator to generate aggregate statistics for nodes, objects, and the methods of access.
-   * - GET /  or  GET /node
+     - Retrieve log information from the Member Node for the specified date range and even type. This method is used primarily by the log aggregator to generate aggregate statistics for nodes, objects, and the methods of access. The response MUST contain only records for which the requestor has permission to read.
+   * - GET /  and  GET /node
      - :func:`MNCore.getCapabilities`
-     - Returns a document describing the capabilities of the Member Node.
+     - Returns a document describing the capabilities of the Member Node. The response at the Member Node base URL is for convenience only. Clients of Member Nodes SHOULD use the /node URL to retrieve the node capabilities document.
    * - GET /object/{pid}
      - :func:`MNRead.get`
-     - Retrieve an object identified by *pid* from the node. The response MUST contain the bytes of the indicated object, and the checksum of the bytes retrieved SHOULD match the :attr:`SystemMetadata.checksum` recorded in the  :class:`Types.SystemMetadata` if the object is science data. If the object does not exist on the node servicing the request, then :exc:`Exceptions.NotFound` must be raised even if the object exists on another node in the DataONE system. Also implmented by Coordinating Nodes as :func:`CNRead.get`.
+     - Retrieve an object identified by *pid* from the node. The response MUST contain the bytes of the indicated object, and the checksum of the bytes retrieved SHOULD match the :attr:`SystemMetadata.checksum` recorded in the  :class:`Types.SystemMetadata`. If the object does not exist on the node servicing the request, then :exc:`Exceptions.NotFound` must be raised even if the object exists on another node in the DataONE system. Also implmented by Coordinating Nodes as :func:`CNRead.get`.
    * - GET /meta/{pid}
      - :func:`MNRead.getSystemMetadata`
      - Describes the object identified by *pid* by returning the associated system metadata object. If the object does not exist on the node servicing the request, then :exc:`Exceptions.NotFound` MUST be raised even if the object exists on another node in the DataONE system.
@@ -31,13 +31,10 @@
      - Retrieve the list of objects present on the MN that match the calling parameters. This method is required to support the process of :term:`Member Node synchronization`. At a minimum, this method should be able to return a list of objects that match::   startTime <= SystemMetadata.dateSysMetadataModified but is expected to also support date range (by also specifying *endTime*), and should also support slicing of the matching set of records by indicating the starting *index* of the response (where 0 is the index of the first item) and the *count* of elements to be returned.
    * - POST /error
      - :func:`MNRead.synchronizationFailed`
-     - This is a callback method used by a CN to indicate to a MN that it cannot complete synchronization of the science metadata identified by *pid*. When called, the MN should take steps to record the problem description and notify an administrator or the data owner of the issue.
+     - This is a callback method used by a CN to indicate to a MN that it cannot complete synchronization of the science metadata identified by *pid*. When called, the MN should take steps to record the problem description and notify an administrator or the data owner of the issue. A successful response is indicated by a HTTP status of 200. An unsuccessful call is indicated by a returned exception and associated HTTP status code.
    * - GET /isAuthorized/{pid}?action={action}
      - :func:`MNAuthorization.isAuthorized`
      - Test if the user identified by the provided session has authorization for operation on the specified object. A successful operation is indicated by a return HTTP status of 200. Failure is indicated by an exception such as :exc:`NotAuthorized` being returned. The body of the response is arbitrary and SHOULD be ignored by the caller. If the action is not authorized, then a :exc:`NotAuthorized` exception MUST be raised. .. Note:: Should perhaps add convenience methods for "canRead()" and "canWrite()" to verify that a user is able to read / write an object.
-   * - PUT /accessRules/{pid}
-     - :func:`MNAuthorization.setAccessPolicy`
-     - DEPRECATED Sets the access permissions for an object identified by *pid*. A successful operation is indicated by a return HTTP status of 200. Failure is indicated by an exception such as :exc:`NotAuthorized` being returned. In version 1.0 of the DataONE infrastructure, this method SHOULD only be called by Coordinating Nodes to set the access policy for the specified object.
    * - POST /object/{pid}
      - :func:`MNStorage.create`
      - Called by a client to adds a new object to the Member Node. The *pid* must not exist in the DataONE system or should have been previously reserved using  :func:`CNCore.reserveIdentifier`. The caller MUST have authorization to write or create content on the Member Node.

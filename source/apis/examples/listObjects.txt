@@ -1,201 +1,28 @@
-**Response**
+**Example**
 
-:class:`Types.ObjectList` serialized according to the requested format as
-indicated in the ``Accept:`` HTTP header.
+Retrieve an object list from a member node, and pipe the response through an
+xml formatter for easier viewing::
 
-The expected response when a user agent sends a GET request to a Member Node
-exposing the DataONE REST API ``/object`` collection is an extract from the
-total list of identifiers that the Member Node is able to provide access to
-when the request was received. 
-
-Example of a JSON response structure::
-
-  {
-    'start': <integer>,
-    'count': <integer>,
-    'total': <integer>,
-    'objectInfo':
-    [
-      {
-        'identifier':<IdentifierType>,
-        'objectFormat':<ObjectFormatType>,
-        'checksum': 
-        {
-          'algorithm':<checkSum Algorithm Type>, 
-          'value':<SHA1 hash of object>
-        },
-        'dateSysMetadataModified':<DateTime>,
-        'size':<integer>
-      },
-      ...
-    ]
-  }
-
-JSON with ``jsonvar=rs1`` ::
-
-  rs1={ ... }
-
-and an associated html page that could utilize the JSON result::
-
-  <html>
-  <head>...
-  <script type="text/javascript">
-  var rs1=false;
-  </script>
-  <script src="http://cn1.dataone.org/cn/object?qt=solr&jsonvar=rs1&q=..."></script>
-  ...
-  </html>
-
-
-Expressed in CSV, one entry per line, comma delimiting fields, new line
-delimiting records::
-
-  #<start>,<count>,<total>
-  identifier,objectFormat,algorithm,checksum,dateSysMetadataModified,size
-  "<identifier>","<object format>","<SHA-1 | SHA-224 | MD5 | ...>","<SHA1 hash of object>","<date time last modified>",<byte size of object>
-
-
-Expressed in XML::
-
-  <d1:listObjects xmlns:d1="http://dataone.org/service/types/ListObjects/0.1"
-    xmlns:common="http://dataone.org/service/types/common/0.1"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    count="_integer_" 
-    start="_integer_" 
-    total="_integer_">
-    <objectInfo>
-      <identifier>_identifier_</identifier>
-      <objectFormat>_object format_</objectFormat>
-      <checksum algorithm='SHA-1 | SHA-224 | MD5 | ...'>_hash of object_</checksum>
-      <dateSysMetadataModified>_date time last modified_</dateSysMetadataModified>
-      <size>_byte size of object_</size>
-    </objectInfo>
-    ...
-  </d1:listObjects>
-
-
-Expressed in RDF/XML::
-
-  <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-      xmlns:d1='http://ns.dataone.org/core/objects/'>
-    <rdf:Description rdf:about="_requesting URL_">
-      <d1:start>_integer_</d1:start>
-      <d1:count>_integer_</d1:count>
-      <d1:total>_integer_</d1:total>
-    </rdf:Description>
-    <rdf:Description rdf:about="_requesting URL_">
-      <d1:objectInfo rdf:parseType="Collection">
-        <rdf:Description rdf:about="http://mn1.dataone.org/mn/object/_identifier_">
-          <d1:objectFormat>_object format_</d1:objectFormat>
-          <d1:checksum d1:algorithm='SHA-1 | SHA-224 | MD5 | ...'>_SHA1 hash of object</d1:checksum>
-          <d1:dateSysMetadataModified>_date time last modified_</d1:dateSysMetadataModified>
-          <d1:size>_byte size of object_</d1:size>
-        </rdf:Description>
-      </d1:objectInfo>
-    </rdf:Description>
-  </rdf:RDF>
-
-
-**Examples**
-
-Retrieve a list of identifiers from a Member Node in JSON format::
-
-  curl -X GET -H "Accept: application/json" http://mn1.dataone.org/mn/object/
-
-  {'start':0,
-   'count':1000,
-   'total':159734,
-   'objectInfo':[{'identifier': 'ABC123',
-  	  'objectFormat':'data',
-  	  'checksum': {
-  	     'algorithm':'SHA-1', 
-  	     'value':'b3a1617100c2b782fe5f9f2050dc714fdd05df28'
-  	   },
-  	  'dateSysMetadataModified':'2009-12-02T17:40:03.0Z',
-  	  'size':1040032112},
-  	 ...,
-  	 {'identifier':'XYZ332',
-  	  'objectFormat':'metadata',
-  	  'checksum': {
-  	     'algorithm':'SHA-1', 
-  	     'value':'008b7d10f4cb282e6054146c5ee3a1ae5f4b4c07'
-  	   },
-  	  'dateSysMetadataModified':'2009-11-30T06:44:19.0Z',
-  	  'size':1044} ] }
-
-
-Retrieve a list of identifiers from a Member Node in plain text format::
-
-  curl -X GET -H "Accept: text/csv" http://mn1.dataone.org/mn/object/
-
-  #0,1000,159734
-  identifier,objectFormat,algorithm,checksum,dateSysMetadataModified,size
-  "ABC123","data","SHA-1","b3a1617100c2b782fe5f9f2050dc714fdd05df28","2009-12-02T17:40:03.0Z",1040032112
-  ...
-  "XYZ332","science metadata","SHA-1","008b7d10f4cb282e6054146c5ee3a1ae5f4b4c07","2009-11-30T06:44:19.0Z",1044
-
-
-Retrieve last modified information about the collection::
-
-  curl -I http://mn1.dataone.org/mn/object/
+  curl "https://gmn-dev.test.dataone.org/mn/v1/object?count=5" | xml fo
   
-  HTTP/1.1 200 OK
-  Date: Wed, 02 Dec 2009 22:48:46 GMT
-  Last-Modified: Wed, 02 Dec 2009 17:40:03 GMT
-  Content-Length: *
-  Content-Type: application/json; charset=utf-8
+  <?xml version="1.0"?>
+  <ns1:objectList xmlns:ns1="http://ns.dataone.org/service/types/v1" count="5" start="0" total="12">
+    <objectInfo>
+      <identifier>AnserMatrix.htm</identifier>
+      <formatId>eml://ecoinformatics.org/eml-2.0.0</formatId>
+      <checksum algorithm="MD5">0e25cf59d7bd4d57154cc83e0aa32b34</checksum>
+      <dateSysMetadataModified>1970-05-27T06:12:49</dateSysMetadataModified>
+      <size>11048</size>
+    </objectInfo>
 
-
-Perform a search against a Coordinating Node::
-
-  curl -X GET -H "Accept: application/json" http://cn1.dataone.org/cn/object?qt=solr&q=...
-
-  {
-   'start':0,
-   'count':1000,
-   'total':159734,
-   'objectInfo':[
-     {
-      'identifier': 'ABC123',
-      'objectFormat':'data',
-      'checksum': 
-      {
-       'algorithm':'SHA-1', 
-       'value':'b3a1617100c2b782fe5f9f2050dc714fdd05df28'
-       },
-      'dateSysMetadataModified':'2009-12-02T17:40:03.0Z',
-      'size':1040032112
-     },
-     ...,
-     {
-      'identifier':'XYZ332',
-      'objectFormat':'metadata',
-      'checksum': 
-      {
-         'algorithm':'SHA-1', 
-         'value':'008b7d10f4cb282e6054146c5ee3a1ae5f4b4c07'
-       },
-      'dateSysMetadataModified':'2009-11-30T06:44:19.0Z',
-      'size':1044
-     } ] 
-  }
-
-The search results are the same as the response from
-:func:`MNCore.listObjects`. At this stage, additional attributes can
-not be specified in the response, though this is likely to change in the
-future.
-
-Ordering of search results is currently unspecified. A simple approach would
-be to add an additional parameter *orderby* to the request, the value of
-which would be a combination of an attribute name and and indication of
-ascending or descending order.
-
-So for example, to return the results ordered by dateSysMetadataModified, with
-the oldest records first, the parameter and value of::
-
-  orderby=asc_dateSysMetadataModified
-
-might be specified, and similarly for newest first::
-
-  orderby=desc_dateSysMetadataModified
-
+    ...
+    
+    <objectInfo>
+      <identifier>hdl:10255/dryad.218/mets.xml</identifier>
+      <formatId>eml://ecoinformatics.org/eml-2.0.0</formatId>
+      <checksum algorithm="MD5">65c4e0a9c4ccf37c1e3ecaaa2541e9d5</checksum>
+      <dateSysMetadataModified>1987-01-14T07:09:09</dateSysMetadataModified>
+      <size>2796</size>
+    </objectInfo>
+  </ns1:objectList>
+  

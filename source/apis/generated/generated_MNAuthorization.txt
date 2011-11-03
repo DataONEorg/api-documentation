@@ -14,10 +14,6 @@
      - ``GET /isAuthorized/{pid}?action={action}``
      - :func:`isAuthorized`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`action<Types.Permission>`) ``->`` boolean
-   * - Tier 2
-     - ``PUT /accessRules/{pid}``
-     - :func:`setAccessPolicy`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`accessPolicy<Types.AccessPolicy>`) ``->`` boolean
 
 
 
@@ -65,56 +61,4 @@
 
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=1761)``
 
-
-
-
-.. function:: setAccessPolicy(session,pid,accessPolicy) -> boolean
-
-   DEPRECATED
-
-   Sets the access permissions for an object identified by *pid*.
-
-   A successful operation is indicated by a return HTTP status of 200.
-
-   Failure is indicated by an exception such as :exc:`NotAuthorized` being returned.
-
-   In version 1.0 of the DataONE infrastructure, this method SHOULD only be called by Coordinating Nodes to set the access policy for the specified object.
-
-   :Use Cases:
-     :doc:`UC16 </design/UseCases/16_uc>`
-   :REST URL: ``PUT /accessRules/{pid}``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
-   :type session: :class:`Types.Session`
-
-   :param pid: The object for which access control is being edited.
-   :type pid: :class:`Types.Identifier`
-
-   :param accessPolicy: The desired privileges to be assigned to the object, sent in the message body.
-   :type accessPolicy: :class:`Types.AccessPolicy`
-
-   :returns: True if the operation succeeds, otherwise false.
-   :rtype: boolean
-
-   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=4410)``
-
-     The supplied token is invalid
-
-   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4430)``
-
-   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=4400)``
-
-     The specified object does not exist in the DataONE system
-
-   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=4420)``
-
-     The :term:`principal` does not have permission to alter access control rules for the object.
-
-   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4401)``
-
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4402)``
-
-.. TODO::
-    Should permissions cascade? e.g. Should setting permission on a Data Package cascade to the contained objects as well (the experiment metadata and data)?
-.. TODO::
-    .. Note:: Setting access rules on a MN implies that the rules are propogated to the CNs and to all MNs holding a copy of the object
 

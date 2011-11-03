@@ -1,6 +1,22 @@
 Change Log
 ==========
 
+2011-11-03 Version 1.0.0 Branch
+-------------------------------
+
+MN APIs
+~~~~~~~
+
+- MNCore.getLogRecords: change date restriction to >= from Date, and <= toDate
+
+- MNCore.getCapabilities: removed NotAuthorized exception. Anyone should be
+  able to call this method.
+
+- MNRead.listObjects: Indicated that if formatId is not present as a filter
+  parameter, then that filter should be ignored. The previous was to default
+  to *true*.
+
+
 2011-11-02 Version 1.0.0 Branch
 -------------------------------
 

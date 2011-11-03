@@ -19,7 +19,7 @@
      - :func:`MNCore.getLogRecords`
      - (:class:`session<Types.Session>`, :class:`[fromDate]<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.Log`
    * - Tier 1
-     - ``GET /  or  GET /node``
+     - ``GET /  and  GET /node``
      - :func:`MNCore.getCapabilities`
      - () ``->`` :class:`Types.Node`
 
@@ -46,15 +46,11 @@
    * - Tier 1
      - ``POST /error``
      - :func:`MNRead.synchronizationFailed`
-     - (:class:`session<Types.Session>`, :class:`message<Types.Exception>`) ``->``
+     - (:class:`session<Types.Session>`, :class:`message<Types.Exception>`) ``->`` :class:`Types.Boolean`
    * - Tier 2
      - ``GET /isAuthorized/{pid}?action={action}``
      - :func:`MNAuthorization.isAuthorized`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`action<Types.Permission>`) ``->`` boolean
-   * - Tier 2
-     - ``PUT /accessRules/{pid}``
-     - :func:`MNAuthorization.setAccessPolicy`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`accessPolicy<Types.AccessPolicy>`) ``->`` boolean
    * - Tier 3
      - ``POST /object/{pid}``
      - :func:`MNStorage.create`
@@ -70,7 +66,7 @@
    * - Tier 2
      - ``POST /dirtySystemMetadata``
      - :func:`MNStorage.systemMetadataChanged`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, ``serialVersion``, :class:`dateSysMetaLastModified<Types.DateTime>`) ``->``
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, ``serialVersion``, :class:`dateSysMetaLastModified<Types.DateTime>`) ``->`` boolean
    * - Tier 4
      - ``POST /replicate``
      - :func:`MNReplication.replicate`

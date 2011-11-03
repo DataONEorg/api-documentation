@@ -33,7 +33,7 @@
    * - Tier 1
      - ``POST /error``
      - :func:`synchronizationFailed`
-     - (:class:`session<Types.Session>`, :class:`message<Types.Exception>`) ``->``
+     - (:class:`session<Types.Session>`, :class:`message<Types.Exception>`) ``->`` :class:`Types.Boolean`
 
 
 
@@ -42,7 +42,7 @@
 
    Retrieve an object identified by *pid* from the node.
 
-   The response MUST contain the bytes of the indicated object, and the checksum of the bytes retrieved SHOULD match the :attr:`SystemMetadata.checksum` recorded in the  :class:`Types.SystemMetadata` if the object is science data.
+   The response MUST contain the bytes of the indicated object, and the checksum of the bytes retrieved SHOULD match the :attr:`SystemMetadata.checksum` recorded in the  :class:`Types.SystemMetadata`.
 
    If the object does not exist on the node servicing the request, then :exc:`Exceptions.NotFound` must be raised even if the object exists on another node in the DataONE system.
 
@@ -219,7 +219,7 @@
    :param formatId: Restrict results to the specified object format identifier.
    :type formatId: :class:`Types.ObjectFormatIdentifier`
 
-   :param replicaStatus: Indicates if replicated objects should be returned in the list (i.e. any entries present in the :attr:`SystemMetadata.replica`, objects that have been replicated to this member node). If ``false``, then no objects that have been replicated should be returned. If ``true``, then any objects can be returned, regardless of replication status. The default value is ``true``.
+   :param replicaStatus: Indicates if replicated objects should be returned in the list (i.e. any entries present in the :attr:`SystemMetadata.replica`, objects that have been replicated to this member node). If ``false``, then no objects that have been replicated should be returned. If ``true``, then any objects can be returned, regardless of replication status. If not present, then the formatId filter should be ignored.
 
    
    :type replicaStatus: boolean
@@ -253,9 +253,11 @@
 
 
 
-.. function:: synchronizationFailed(session,message) -> 
+.. function:: synchronizationFailed(session,message) -> Boolean
 
    This is a callback method used by a CN to indicate to a MN that it cannot complete synchronization of the science metadata identified by *pid*. When called, the MN should take steps to record the problem description and notify an administrator or the data owner of the issue.
+
+   A successful response is indicated by a HTTP status of 200. An unsuccessful call is indicated by a returned exception and associated HTTP status code.
 
    :Use Cases:
      :doc:`UC06 </design/UseCases/06_uc>`
@@ -266,8 +268,8 @@
    :param message: An instance of the :exc:`Exceptions.SynchronizationFailed` exception with body appropriately filled.
    :type message: :class:`Types.Exception`
 
-   :returns: Null body or Exception
-   :rtype: 
+   :returns: A successful response is indicated by a HTTP 200 status. An unsuccessful call is indicated by returing the appropriate exception.
+   :rtype: :class:`Types.Boolean`
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2160)``
 

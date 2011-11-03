@@ -19,7 +19,7 @@
      - :func:`getLogRecords`
      - (:class:`session<Types.Session>`, :class:`[fromDate]<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.Log`
    * - Tier 1
-     - ``GET /  or  GET /node``
+     - ``GET /  and  GET /node``
      - :func:`getCapabilities`
      - () ``->`` :class:`Types.Node`
 
@@ -58,11 +58,13 @@
 
    This method is used primarily by the log aggregator to generate aggregate statistics for nodes, objects, and the methods of access.
 
+   The response MUST contain only records for which the requestor has permission to read.
+
    :REST URL: ``GET /log``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
-   :param fromDate: Records with dateSystemMetadatModified greater than this value will be returned.
+   :param fromDate: Records with dateSystemMetadatModified greater than or equal to this value will be returned.
    :type fromDate: :class:`Types.DateTime`
 
    :param toDate: Records with dateSystemMetadatModified less than or equal to this value will be returned. If not specified, then defaults to *now*.
@@ -102,13 +104,13 @@
 
    Returns a document describing the capabilities of the Member Node.
 
-   :REST URL: ``GET /  or  GET /node``
+   The response at the Member Node base URL is for convenience only. Clients of Member Nodes SHOULD use the /node URL to retrieve the node capabilities document.
+
+   :REST URL: ``GET /  and  GET /node``
    :returns: The technical capabilities of the Member Node
    :rtype: :class:`Types.Node`
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2160)``
-
-   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=2161)``
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2162)``
 
