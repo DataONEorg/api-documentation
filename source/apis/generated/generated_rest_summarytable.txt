@@ -37,7 +37,7 @@
      - Test if the user identified by the provided session has authorization for operation on the specified object. A successful operation is indicated by a return HTTP status of 200. Failure is indicated by an exception such as :exc:`NotAuthorized` being returned. The body of the response is arbitrary and SHOULD be ignored by the caller. If the action is not authorized, then a :exc:`NotAuthorized` exception MUST be raised. .. Note:: Should perhaps add convenience methods for "canRead()" and "canWrite()" to verify that a user is able to read / write an object.
    * - PUT /accessRules/{pid}
      - :func:`MNAuthorization.setAccessPolicy`
-     - Sets the access permissions for an object identified by *pid*. A successful operation is indicated by a return HTTP status of 200. Failure is indicated by an exception such as :exc:`NotAuthorized` being returned. In version 1.0 of the DataONE infrastructure, this method SHOULD only be called by Coordinating Nodes to set the access policy for the specified object.
+     - DEPRECATED Sets the access permissions for an object identified by *pid*. A successful operation is indicated by a return HTTP status of 200. Failure is indicated by an exception such as :exc:`NotAuthorized` being returned. In version 1.0 of the DataONE infrastructure, this method SHOULD only be called by Coordinating Nodes to set the access policy for the specified object.
    * - POST /object/{pid}
      - :func:`MNStorage.create`
      - Called by a client to adds a new object to the Member Node. The *pid* must not exist in the DataONE system or should have been previously reserved using  :func:`CNCore.reserveIdentifier`. The caller MUST have authorization to write or create content on the Member Node.
@@ -47,6 +47,9 @@
    * - DELETE /object/{pid}
      - :func:`MNStorage.delete`
      - Deletes an object from the Member Node, where the object is either a data object or a science metadata object. This method is called by clients to delete objects on Member nodes. Member Nodes MUST check that the caller is authorized to perform this function. If the object does not exist on the node servicing the request, then an :exc:`Exceptions.NotFound` exception is raised. The message body of the exception SHOULD contain a hint as to the location of the :func:`CNRead.resolve` method.
+   * - POST /dirtySystemMetadata
+     - :func:`MNStorage.systemMetadataChanged`
+     - Notifies the Member Node that the authoritative copy of system metadata on the Coordinating Nodes has changed. The Member Node SHOULD schedule an update to its information about the affected object by retrieving an authoritative copy from a Coordinating Node.
    * - POST /replicate
      - :func:`MNReplication.replicate`
      - Called by a Coordinating Node to request that the Member Node create a copy of the specified object by retrieving it from another Member Nodeode and storing it locally so that it can be made accessible to the DataONE system.   A successful operation is indicated by a HTTP status of 200 on the response.  Failure of the operation MUST be indicated by returning an appropriate exception.

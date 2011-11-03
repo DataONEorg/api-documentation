@@ -67,6 +67,10 @@
      - ``DELETE /object/{pid}``
      - :func:`MNStorage.delete`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Identifier`
+   * - Tier 2
+     - ``POST /dirtySystemMetadata``
+     - :func:`MNStorage.systemMetadataChanged`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, ``serialVersion``, :class:`dateSysMetaLastModified<Types.DateTime>`) ``->``
    * - Tier 4
      - ``POST /replicate``
      - :func:`MNReplication.replicate`

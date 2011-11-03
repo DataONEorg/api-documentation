@@ -22,6 +22,10 @@
      - ``DELETE /object/{pid}``
      - :func:`delete`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Identifier`
+   * - Tier 2
+     - ``POST /dirtySystemMetadata``
+     - :func:`systemMetadataChanged`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, ``serialVersion``, :class:`dateSysMetaLastModified<Types.DateTime>`) ``->``
 
 
 
@@ -184,4 +188,39 @@
 
 .. TODO::
     As DataONE is to be an archival system, we need to determine what the semantics of the DELETE function really should be. Can any user delete their objects at any time? What if they have published and referenced the identifier in past? Should DELETE simply be a mechanism to move the object out of commonly found search mechanisms? What about copyrighted or illegal content that is uploaded?
+
+
+
+.. function:: systemMetadataChanged(session,pid,serialVersion,dateSysMetaLastModified) -> 
+
+   Notifies the Member Node that the authoritative copy of system metadata on the Coordinating Nodes has changed.
+
+   The Member Node SHOULD schedule an update to its information about the affected object by retrieving an authoritative copy from a Coordinating Node.
+
+   :REST URL: ``POST /dirtySystemMetadata``
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :type session: :class:`Types.Session`
+
+   :param pid: Identifier of the object for which system metadata was changed
+   :type pid: :class:`Types.Identifier`
+
+   :param serialVersion: The serialVersion of the system metadata
+   :type serialVersion: unsigned long
+
+   :param dateSysMetaLastModified: The time stamp for when the system metadata was changed
+   :type dateSysMetaLastModified: :class:`Types.DateTime`
+
+   :returns:
+   :rtype: 
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=1330)``
+
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=1331)``
+
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=1332)``
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=1333)``
+
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=1334)``
+
 

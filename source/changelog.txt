@@ -1,6 +1,81 @@
 Change Log
 ==========
 
+2011-11-02 Version 1.0.0 Branch
+-------------------------------
+
+dataoneTypes.xsd
+~~~~~~~~~~~~~~~~
+
+- https://redmine.dataone.org/projects/d1/repository/revisions/5754
+
+- Deprecated MNAuthorization.setAccessPolicy. This is replaced by
+  MNStorage.systemMetadataChanged
+
+- Added MNStorage.systemMetadataChanged, which is called by Coordinating Nodes
+  when system metadata for an object known to be located on the Member Node
+  changes. The Member Node is expected to retrieve the full system metadata
+  document from the Coordinating Node and update the local system properties
+  of the object using information contained in the authoritative system
+  metadata. This is a Tier 2 method. It is accessed on the
+  */dirtySystemMetadata* REST endpoint.
+
+
+2011-11-01 Version 1.0.0 Branch
+-------------------------------
+
+Exceptions
+~~~~~~~~~~
+
+- Added a new exception, VersionMistmatch which is raised when there is a
+  version mistmatch between the target of the request and the supplied
+  parameters. e.g. when serialVersion is provided in a call and does not match
+  that of the target.
+
+
+CN APIs
+~~~~~~~
+
+- CNAuthorization.setOwner: added serialVersion parameter to method signature.
+  serialVersion is used to indicate which revision the change to system
+  metadata applies to. If the revision in the request does not match the
+  revision in the response, then a VersionMistmatch exception is raised.
+
+- CNAuthorization.getAccessPolicy: added serialVersion parameter to method
+  signature.
+
+- CNReplication.setReplicationStatus: added serialVersion parameter to method
+  signature.
+
+- CNReplication.updateReplicationMetadata: added serialVersion parameter to
+  method signature.
+
+- CNReplication.setReplicationPolicy: added serialVersion parameter to method
+  signature.
+
+
+MN APIs
+~~~~~~~
+
+- MNCore.getLogRecords: changed fromDate from required to optional.
+
+- MNCore.getCapabilities: removed InvalidRequest exception
+
+- MNCore.get: removed InvalidRequest exception
+
+- MNRead.getSystemMetadata: removed InvalidRequest exception
+
+- MNRead.describe: removed InvalidRequest exception
+
+- MNRead.synchronizationFailed: removed InvalidRequest exception
+
+- MNAuthorization.setAccessPolicy: Added note indicating that this method should only be called by Coordinating Nodes. 
+
+- MNStorage.delete: removed InvalidRequest exception
+
+
+
+
 2011-10-26 Version 1.0.0 Branch
 -------------------------------
 
@@ -129,25 +204,12 @@ CN APIs
 
 - CNReplication.isNodeAuthorized: updated REST URL description as per
   setReplicationStatus
+  
 
-MN APIs
-~~~~~~~
 
-- MNCore.getLogRecords: changed fromDate from required to optional.
 
-- MNCore.getCapabilities: removed InvalidRequest exception
 
-- MNCore.get: removed InvalidRequest exception
 
-- MNRead.getSystemMetadata: removed InvalidRequest exception
-
-- MNRead.describe: removed InvalidRequest exception
-
-- MNRead.synchronizationFailed: removed InvalidRequest exception
-
-- MNAuthorization.setAccessPolicy: Added note indicating that this method should only be called by Coordinating Nodes. 
-
-- MNStorage.delete: removed InvalidRequest exception
 
 
 

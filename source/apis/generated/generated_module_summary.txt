@@ -68,7 +68,8 @@ If the action is not authorized, then a :exc:`NotAuthorized` exception MUST be r
        Appears in functional use cases: :doc:`UC01 </design/UseCases/01_uc>`, :doc:`UC37 </design/UseCases/37_uc>`
    * - \
      - :func:`MNAuthorization.setAccessPolicy`
-     - Sets the access permissions for an object identified by *pid*.
+     - DEPRECATED
+Sets the access permissions for an object identified by *pid*.
 A successful operation is indicated by a return HTTP status of 200.
 Failure is indicated by an exception such as :exc:`NotAuthorized` being returned.
 In version 1.0 of the DataONE infrastructure, this method SHOULD only be called by Coordinating Nodes to set the access policy for the specified object.
@@ -96,6 +97,10 @@ The modified system metadata entries must then be available in :func:`MNRead.lis
 If the object does not exist on the node servicing the request, then an :exc:`Exceptions.NotFound` exception is raised. The message body of the exception SHOULD contain a hint as to the location of the :func:`CNRead.resolve` method.
 
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
+   * - \
+     - :func:`MNStorage.systemMetadataChanged`
+     - Notifies the Member Node that the authoritative copy of system metadata on the Coordinating Nodes has changed.
+The Member Node SHOULD schedule an update to its information about the affected object by retrieving an authoritative copy from a Coordinating Node.
    * - :mod:`MNReplication`
      - :func:`MNReplication.replicate`
      - Called by a Coordinating Node to request that the Member Node create a copy of the specified object by retrieving it from another Member Nodeode and storing it locally so that it can be made accessible to the DataONE system.  
