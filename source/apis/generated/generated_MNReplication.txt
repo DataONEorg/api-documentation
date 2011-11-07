@@ -86,8 +86,10 @@
 
    :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=2182)``
 
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=2183)``
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=2183)``
 
    :raises Exceptions.InsufficientResources: ``(errorCode=413, detailCode=2184)``
+
+   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=2185)``
 
 

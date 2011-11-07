@@ -433,14 +433,19 @@
      - 2182
    * - :mod:`MNReplication`
      - :func:`getReplica <MNReplication.getReplica>`
-     - InvalidRequest
-     - 400
+     - InvalidToken
+     - 401
      - 2183
    * - :mod:`MNReplication`
      - :func:`getReplica <MNReplication.getReplica>`
      - InsufficientResources
      - 413
      - 2184
+   * - :mod:`MNReplication`
+     - :func:`getReplica <MNReplication.getReplica>`
+     - NotFound
+     - 404
+     - 2185
    * - :mod:`CNCore`
      - :func:`create <CNCore.create>`
      - NotAuthorized
