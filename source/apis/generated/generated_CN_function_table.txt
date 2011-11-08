@@ -79,10 +79,6 @@
      - ``GET /search``
      - :func:`CNRead.search`
      - (:class:`session<Types.Session>`, :class:`queryType<Types.QueryType>`, ``query``) ``->`` :class:`Types.ObjectList`
-   * - Tier 1
-     - ``PUT /meta/{pid}``
-     - :func:`CNRead.updateSystemMetadata`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` boolean
    * - Tier 2
      - ``PUT /owner/{pid}``
      - :func:`CNAuthorization.setOwner`

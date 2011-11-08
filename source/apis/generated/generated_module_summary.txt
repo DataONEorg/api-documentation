@@ -197,10 +197,6 @@ but is expected to also support date range (by also specifying *endTime*), and s
 Implemented asa proxy to the SOLR search index. All readonly operations supported with standard SOLR parameters.
 
        Appears in functional use cases: :doc:`UC02 </design/UseCases/02_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
-   * - \
-     - :func:`CNRead.updateSystemMetadata`
-     - Updates the system metadata entry for pid. 
-Only mutable properties of system metadata can be altered through this method, i.e. the supplied copy of system metadata is not a complete replacement for the existing copy.
    * - :mod:`CNAuthorization`
      - :func:`CNAuthorization.setOwner`
      - Changes ownership (RightsHolder) of the specified object to the :term:`subject` specified by `userId`

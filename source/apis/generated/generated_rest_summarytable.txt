@@ -113,9 +113,6 @@
    * - GET /search
      - :func:`CNRead.search`
      - Search the metadata catalog and return identifiers of metadata records that match the criteria. Implemented asa proxy to the SOLR search index. All readonly operations supported with standard SOLR parameters.
-   * - PUT /meta/{pid}
-     - :func:`CNRead.updateSystemMetadata`
-     - Updates the system metadata entry for pid.  Only mutable properties of system metadata can be altered through this method, i.e. the supplied copy of system metadata is not a complete replacement for the existing copy.
    * - PUT /owner/{pid}
      - :func:`CNAuthorization.setOwner`
      - Changes ownership (RightsHolder) of the specified object to the :term:`subject` specified by `userId`
