@@ -366,34 +366,42 @@
 
    Checks to determine if the caller (as determined by session) has the reservation (i.e. is the owner) of the specified PID.
 
+   A positive response (that the identifier is reserved and owned by the caller) is indicated by a return of a HTTP status of 200.
+
+   A negative response is indicated by an exception and the associated HTTP status code.
+
    :REST URL: ``GET /reserve/{pid}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
-   :param pid: The identifier that is being checked for existing as a reserved identifier.
+   :param pid: The identifier that is being checked for existing as a reserved identifier or is in use as an identifier.
    :type pid: :class:`Types.Identifier`
 
    :returns: True - subject has the reservation on the PID; False - the PID does not exist; False - the PID is already in use; False - the PID is reserved by somone else.
    :rtype: boolean
 
-   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=)``
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4920)``
 
      The method functionality is not implemented.
 
-   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=)``
-
-     The PID exists but the caller does not own the reservation
-
-   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=)``
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4921)``
 
      An internal server error occurred.
 
-   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=)``
-
-     The PID does not exist as a reservation or an existing object.
-
-   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=)``
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=4922)``
 
      The session information is invalid.
+
+   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=4923)``
+
+     The PID does not exist as a reservation or an existing object and is not in use as an identifier.
+
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=4924)``
+
+     The PID is reserved but the caller does not own the reservation
+
+   :raises Exceptions.IdentifierNotUnique: ``(errorCode=409, detailCode=4925)``
+
+     The identifier is in use to identify an object in the DataONE system.
 
 

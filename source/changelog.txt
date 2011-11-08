@@ -1,6 +1,17 @@
 Change Log
 ==========
 
+2011-11-08 Version 1.0.0 Branch
+-------------------------------
+
+CN APIs
+~~~~~~~
+
+- CNCore.hasReservation: Updated description: caller owns reservation = HTTP
+  200; PID reserved but not owned by caller = NotAuthorized; PID in use as an
+  identifier = IdentifierNotUnique; PID not reserved and not in use = NotFound.
+
+
 2011-11-03 Version 1.0.0 Branch
 -------------------------------
 
