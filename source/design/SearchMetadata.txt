@@ -516,6 +516,89 @@ are supported by the DataONE indexing system.
      - N
 
 
+Date Representations in Science Metadata Documents
+--------------------------------------------------
+
+The following are examples of date values extracted from FGDC, ISO-19115, and
+EML science metadata documents currently in use. The literal value appearing in
+the document and the interpreted date value are shown.
+
+Examples of date values appearing in FGDC *<pubdate>*:
+
+================================== ====================
+Value                              Interpreted Value
+================================== ====================
+Unknown                            Null
+unknown                            Null
+Unpublished material               Null
+unpublished material               Null
+1993                               1993-01-01 00:00:00Z
+199607                             1996-07-01 00:00:00Z
+20000101                           2000-01-01 00:00:00Z
+19981231                           1998-12-31 00:00:00Z
+196820405                          1968-01-01 00:00:00Z
+1992 onwards                       1992-01-01 00:00:00Z
+1989 and 1990                      1989-01-01 00:00:00Z
+varies                             Null
+Present                            Null
+1995/1996                          1995-01-01 00:00:00Z
+1991-1992                          1991-01-01 00:00:00Z
+variouis                           Null
+April 1999                         1999-04-01 00:00:00Z
+1980 on                            1980-01-01 00:00:00Z
+2005-06-24                         2005-06-24 00:00:00Z
+NA                                 Null
+1990- [unpublished annual reports] 1990-01-01 00:00:00Z
+November, 1994                     1994-11-01 00:00:00Z
+================================== ====================
+
+Examples of date values appearing in ISO-19115 *<gco:Date>*:
+
+================================== ====================
+Value                              Interpreted Value
+================================== ====================
+1999                               1999-01-01 00:00:00Z  
+2010-03-03                         2010-03-03 00:00:00Z
+================================== ====================
+
+
+Examples of date values appearing in EML *<calendarDate>*: 
+
+================================== ====================
+Value                              Interpreted Value
+================================== ====================
+2002-06-20                         2002-06-20 00:00:00Z
+1998                               1998-01-01 00:00:00Z
+2004-02-13                         2004-02-13 00:00:00Z
+================================== ====================
+
+
+
+Science metadata examples
+-------------------------
+
+Examples for integration testing:
+
+  https://repository.dataone.org/software/cicore/trunk/d1_integration/src/test/resources/d1_testdocs/
+
+FGDC:
+
+ http://mercury.ornl.gov/metadata/nbii/xml/nbii/
+
+ISO 19115:
+
+ http://mercury.ornl.gov/metadata/ornldaac/xml/daac/iso/
+
+EML:
+
+ 2.0.0: https://repository.dataone.org/software/cicore/trunk/d1_integration/src/test/resources/d1_testdocs/eml200/
+
+ 2.0.1: https://repository.dataone.org/software/cicore/trunk/d1_integration/src/test/resources/d1_testdocs/eml201/
+
+ 2.1.0: https://repository.dataone.org/software/cicore/trunk/d1_integration/src/test/resources/d1_testdocs/eml210/
+
+
+
 Standard Specific Metadata Extraction Notes
 -------------------------------------------
 
