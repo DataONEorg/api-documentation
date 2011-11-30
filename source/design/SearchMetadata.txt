@@ -3,6 +3,8 @@ Content Discovery
 
 .. module:: SearchMetadata
 
+.. currentmodule:: SearchMetadata
+
 .. contents::
 
 Searching for content is a functionality that is primarily supported by
@@ -27,150 +29,20 @@ reference the science metadata.
 Properties of the Index Derived From System Metadata
 ----------------------------------------------------
 
-Descriptions of the SOLR fields available and the content that provides the
-field values.
+Table 1 provides a list of SOLR attributes that are populated by values taken
+from System Metadata.
 
 **Table 1.** Elements derived from System Metadata and available for all
 objects. "Multi" fields may be populated with more than a single value per
 document (PID) indexed.
 
-.. list-table::
+.. sqltable:: System Metadata Properties
+   :header: Attribute,Type,Multi?,Content Origin
    :widths: 3 2 1 10
-   :header-rows: 1
+   :driver: xlsx
+   :source: source/design/data/SearchFields.xlsx
+   :sql: SELECT ':attr:`SearchMetadata.'||SOLR||'`', FieldType, Multi, ValueOrigin FROM Fields WHERE Fields.Source='Y';
 
-   * - Attribute
-     - Type
-     - Multi?
-     - Content Origin
-   * - :attr:`pid`
-     - string, unique
-     - No
-     - :attr:`SystemMetadata.identifier`
-   * - :attr:`formatId`
-     - string
-     - No
-     - :attr:`SystemMetadata.formatId`
-   * - isMetadata
-     - boolean
-     - No
-     - :attr:`SystemMetadata.formatId`, object format registry
-   * - isData
-     - boolean
-     - No
-     - True if the object is flagged as data. **Note: there's currently no way to know this.**
-   * - isResourceMap
-     - boolean
-     - No
-     - True if the :attr:`SystemMetadata.formatId` starts with "http://www.openarchives.org/ore/"
-   * - :attr:`size`
-     - long
-     - No
-     - :attr:`SystemMetadata.size`
-   * - :attr:`checksum`
-     - string
-     - No
-     - :attr:`SystemMetadata.checksum`
-   * - :attr:`checksumAlgorithm`
-     - string
-     - No
-     - :attr:`SystemMetadata.algorithm`
-   * - :attr:`submitter`
-     - string
-     - No
-     - :attr:`SystemMetadata.submitter`
-   * - :attr:`rightsHolder`
-     - string
-     - No
-     - :attr:`SystemMetadata.rightsHolder`
-   * - :attr:`rep_allowed`
-     - boolean
-     - No
-     - :attr:`SystemMetadata.replicationPolicy` replicationAllowed attribute
-   * - :attr:`n_replicas`
-     - integer
-     - No
-     - :attr:`SystemMetadata.replicationPolicy` numberReplicas attribute
-   * - :attr:`pref_rep_mn`
-     - string
-     - Yes
-     - :attr:`SystemMetadata.replicationPolicy` preferredMemberNode
-   * - :attr:`blocked_rep_mn`
-     - string
-     - Yes
-     - :attr:`SystemMetadata.replicationPolicy` blockedMemberNode
-   * - :attr:`obsoletes`
-     - string
-     - No
-     - :attr:`SystemMetadata.obsoletes`
-   * - :attr:`obsoletedBy`
-     - string
-     - No
-     - :attr:`SystemMetadata.obsoletedBy`
-   * - :attr:`dateUploaded`
-     - date
-     - No
-     - :attr:`SystemMetadata.dateUploaded`
-   * - :attr:`datemodified`
-     - date
-     - No
-     - :attr:`SystemMetadata.dateSysMetadataModified`
-   * - :attr:`origin_mn`
-     - string
-     - No
-     - :attr:`SystemMetadata.originMemberNode`
-   * - :attr:`auth_mn`
-     - string
-     - No
-     - :attr:`SystemMetadata.authoritativeMemberNode`
-   * - :attr:`replica_mn`
-     - string
-     - Yes
-     - :attr:`SystemMetadata.replica`, replica/replicationMemberNode element
-   * - :attr:`readPermission`
-     - string
-     - Yes
-     - List of subjects (groups and individuals) that have read permission on
-       PID, value retrieved from :attr:`SystemMetadata.accessPolicy`.
-   * - :attr:`writePermission`
-     - string
-     - Yes
-     - List of subjects (groups and individuals) that have write permission on
-       PID, value retrieved from :attr:`SystemMetadata.accessPolicy`.
-   * - :attr:`executePermission`
-     - string
-     - Yes
-     - List of subjects (groups and individuals) that have execute permission on
-       PID, value retrieved from :attr:`SystemMetadata.accessPolicy`.
-   * - :attr:`changePermission`
-     - string
-     - Yes
-     - List of subjects (groups and individuals) that have change permission on
-       PID, value retrieved from :attr:`SystemMetadata.accessPolicy`.
-   * - :attr:`isPublic`
-     - boolean
-     - No
-     - Set to True if the DataONE :term:`public user` is present in the list of
-       subjects with readPermission on PID.
-   * - :attr:`resourceMaps`
-     - string
-     - Yes
-     - List of resource map PIDs that reference this PID.
-   * - :attr:`contains`
-     - string
-     - Yes
-     - A list of all objects (PIDs) referenced by a resource map. Only populated
-       if the current object is a resource map.
-   * - :attr:`documents`
-     - string
-     - Yes
-     - Lists all PIDs that this object describes. Obtained by parsing all
-       resource maps in which this object is referenced. Not set for data or
-       resource map objects.
-   * - :attr:`isDocumentedBy`
-     - string
-     - Yes
-     - Lists all PIDs that describe this object. Obtained by parsing all
-       resource maps in which this object is referenced.
 
 
 Populating Permission Fields
@@ -180,6 +52,24 @@ This process is fairly straight forward, and requires simply de-duping entries
 so that each of the permission fields contains a distinct list of subjects
 granted that permission. If the DataONE :term:`public user` is present in the
 read permissions, then the *isPublic* field is set to True.
+
+
+Properties of the Index Derived from Resource Maps
+--------------------------------------------------
+
+Table 2 provides a list of SOLR attributes that are populated by values obtained
+by parsing resource map objects.
+
+**Table 2.** Elements derived from Resource Map documents. "Multi" fields may be
+populated with more than a single value per document (PID) indexed.
+
+.. sqltable:: Resource Map Properties
+   :header: Attribute,Type,Multi?,Content Origin
+   :widths: 3 2 1 10
+   :driver: xlsx
+   :source: source/design/data/SearchFields.xlsx
+   :sql: SELECT ':attr:`SearchMetadata.'||SOLR||'`', FieldType, Multi, ValueOrigin FROM Fields WHERE Fields.Source='R';
+
 
 
 Populating Object Relation Fields
