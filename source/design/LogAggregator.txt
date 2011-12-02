@@ -9,7 +9,7 @@ Log Aggregation Overview
   ======== ============================================================ 
 
 Introduction
-------------
+............
 
 Logs will need to be aggregated from all Membernodes and stored at each
 Coordinating Node.  Each Coordinating Node must replicas its logging data to
@@ -18,29 +18,30 @@ technologies: Quartz Scheduler, Hazelcast Data Distribution, Metacat
 Repository Storage, and the Solr Search platform.
 
 DataONE use cases
-..................................
+.................
 
 .. toctree::
    :maxdepth: 1
+
    UseCases/16_uc
    UseCases/17_uc
    
-..................................   
+.................   
 
 
 Log Aggregation Scheduling
---------------------------
+..........................
 
 Log Aggregation will performed once a day per membernode. There is no set time 
 as to when harvesting of log records will be performed on a daily basis. 
 At the time it is performed, it will harvest all the records from the last 
 run until the beginning of the current day (00:00:00). Therefore, the aggregate 
 logs on the CN may be only as recent as 48 hrs in the past, depending on when a 
-query is executed and when the last harvesting was run.  In the LogScheduler 
+query is executed and when the last harvesting was run.  In the Log Scheduler 
 class, Quartz will be used as the mechanism to schedule log harvesting.
 
 Log Aggregation Distibuted Execution
-------------------------------------
+....................................
 
 The Log Aggregator will run as a distributed executable class for each 
 Member node, as well as locally for the metacat instance that acts as the
@@ -49,23 +50,24 @@ will be handled by Hazelcast.  There is a maximum number of executions of
 the Log Aggretator that may be running at any given time (# of CNs * max per CN).
 
 The Log Aggretator task will run a getLogRecords query against a Membernode. It
-will loop through the results, calling LogPublisher for each LogEntry, and place 
-on a distributed hazelcast topic a LogEntry to be broadcast to all members 
-of the Hazelcast cluster (including itself).
+will loop through the :class:`Types.Log` results, calling Log Publisher for 
+each :class:`Types.LogEntry`, and place on a distributed hazelcast topic 
+a :class:`Types.LogEntry` to be broadcast to all members of the Hazelcast 
+cluster (including itself).
 
 Log Aggregation Indexing
-------------------------
+........................
 
-Each CoordinatingNode will have a Log Aggregator will be running a LogSubscriber
-that listens for events on the distributed hazelcast topic.  For each LogEntry 
-message received, it will call LogIndexer.  LogIndexer will take the LogEntry
+Each CoordinatingNode will have a Log Aggregator will be running a Log Subscriber
+that listens for events on the distributed hazelcast topic.  For each :class:`Types.LogEntry` 
+message received, it will call Log Indexer.  Log Indexer will take the :class:`Types.LogEntry`
 and create a Solr Document finally submitting the document to Solr for addition
 to the lucene index.  
 
 
 .. figure:: images/logAggregator_seq.png
 
-*Figure 1.* Sequence diagram illustrating the sequence for Log Aggregator process.
+*Figure 1.* Sequence diagram illustrating the sequence of the Log Aggregator process.
 
 .. 
 	@startuml images/logAggregator_seq.png
