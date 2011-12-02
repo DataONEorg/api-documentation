@@ -68,52 +68,52 @@ to the lucene index.
 *Figure 1.* Sequence diagram illustrating the sequence for Log Aggregator process.
 
 .. 
-@startuml images/logAggregator_seq.png
-
-participant "Log Scheduler" as CnSchd << CN >>
-participant "Core API" as CnCore << CN >>
-participant "Log Aggregator" as CnAgg << CN >>
-participant "Core API" as MnCore << MN >>
-participant "Log Publisher" as CnPub << CN >>
-participant "Log Subscriber" as CnSub << CN >>
-participant "Log Indexer" as CnInd << CN >>
-
-
-
-CnSchd -> CnSchd : init()
-activate CnSchd
-CnSchd -> CnCore : CNCore.listNodes()
-activate CnCore
-CnCore -> CnSchd: NodeList
-deactivate CnCore
-CnSchd -> CnSchd : Schedule all MNs in quartz
-CnSchd -> CnAgg : Trigger Aggregation of MN
-activate CnAgg
-
-deactivate CnSchd
-
-CnAgg->MnCore : getLogRecords(session, fromDate, toDate)
-activate MnCore
-MnCore->CnAgg : Log
-
-deactivate MnCore
-
-CnAgg->CnPub : scheduleEvent(LogEvent)
-activate CnPub
-CnPub->CnPub : topic.publish(LogEvent)
-
-deactivate CnPub
-
-deactivate CnAgg
-
-CnSub -> CnSub : onMessage(LogEvent)
-activate CnSub
-CnSub -> CnInd : indexItem(LogEvent)
-activate CnInd
-CnInd -> CnInd : create LogEvent in Solr
-
-deactivate CnSub
-
-deactivate CnInd
-@enduml
+	@startuml images/logAggregator_seq.png
+	
+		participant "Log Scheduler" as CnSchd << CN >>
+		participant "Core API" as CnCore << CN >>
+		participant "Log Aggregator" as CnAgg << CN >>
+		participant "Core API" as MnCore << MN >>
+		participant "Log Publisher" as CnPub << CN >>
+		participant "Log Subscriber" as CnSub << CN >>
+		participant "Log Indexer" as CnInd << CN >>
+		
+		
+		
+		CnSchd -> CnSchd : init()
+		activate CnSchd
+		CnSchd -> CnCore : CNCore.listNodes()
+		activate CnCore
+		CnCore -> CnSchd: NodeList
+		deactivate CnCore
+		CnSchd -> CnSchd : Schedule all MNs in quartz
+		CnSchd -> CnAgg : Trigger Aggregation of MN
+		activate CnAgg
+		
+		deactivate CnSchd
+		
+		CnAgg->MnCore : getLogRecords(session, fromDate, toDate)
+		activate MnCore
+		MnCore->CnAgg : Log
+		
+		deactivate MnCore
+		
+		CnAgg->CnPub : scheduleEvent(LogEvent)
+		activate CnPub
+		CnPub->CnPub : topic.publish(LogEvent)
+		
+		deactivate CnPub
+		
+		deactivate CnAgg
+		
+		CnSub -> CnSub : onMessage(LogEvent)
+		activate CnSub
+		CnSub -> CnInd : indexItem(LogEvent)
+		activate CnInd
+		CnInd -> CnInd : create LogEvent in Solr
+		
+		deactivate CnSub
+		
+		deactivate CnInd
+	@enduml
 
