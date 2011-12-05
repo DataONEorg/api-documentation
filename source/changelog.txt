@@ -1,6 +1,24 @@
 Change Log
 ==========
 
+2011-12-05 Version 1.0.0 Branch
+-------------------------------
+
+dataoneTypes.xsd
+~~~~~~~~~~~~~~~~
+
+- https://redmine.dataone.org/projects/d1/repository/entry/software/cicore/branches/D1_SCHEMA_1_0_0/dataoneTypes.xsd
+
+- Added SystemMetadata.archived flag to indicated when a document is archived
+
+- Added ObjectLocation.version field for convenient access
+
+- Added Group.rightsHolder for access rights to groups
+
+- Refactored ServiceMethodRestriction to removed unneeded levels
+
+- Removed Permissions.execute as it is no longer needed
+
 2011-11-08 Version 1.0.0 Branch
 -------------------------------
 
