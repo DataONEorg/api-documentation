@@ -43,7 +43,7 @@ help:
 	@echo "  plantuml  to make PlantUML diagrams"
 
 clean:
-	-rm -rf "$(BUILDDIR)/*"
+	-rm -rf "$(BUILDDIR)"
 
 generate: $(METHODXLS)
 	$(DOCGENERATOR) -s "$(CURDIR)/$(METHODXLS)" -d "$(CURDIR)/source/apis/generated"
