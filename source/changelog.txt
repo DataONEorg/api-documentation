@@ -1,6 +1,44 @@
 Change Log
 ==========
 
+
+2011-12-08 : Version 1.0
+-------------------------
+
+MethodCrossReference.xls (trunk)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+
+ - CN.removeGroupMembers - changed REST specification from "DELETE /groups/{group}"
+   to "POST /groups/remove/{group} 
+ - CN.getFormat: removed InvalidRequest from documentation, (was supposedly
+   removed earlier, but reappeared)
+ - CN.listSubjects - added status parameter to the method 
+ - CN.search - added queryType and query parameters as optional (documentation fix)
+ - changed setOwner() to setRightsHolder()
+ - MN.getReplica - documentation fix, added pid as parameter - it was in REST specification
+   but not listed as a parameter
+
+2011-12-07-api-corrections branch
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Java libclient / implementation changes (in branch)
+ - CN.verifyAccount - removed NotFound from java api and impl
+ - CN.updateAccount - removed IdentifierNotUnique from java api and impl
+ - CN.mapIdentity - refactored method signature from (session, subject1, subject2) to (session,subject)
+ - CN.mapIdentity - changed message body to pass subject as paramPart instead of filePart.
+ - CN.requestMapIdentity - added IdentifierNotUnique to java api and impl
+ - CN.denyMapIdentity - removed InvalidRequest from  java api and impl
+ - CN.removeMapIdentity - removed InvalidRequest from  java api and impl
+ - CN.search - changed resource in java libclient from 'object' to 'search'
+ - CN.setAccessPolicy - put parameter 'pid' on path (removed from filePart)
+ - CN.setOwner - changed resource from 'accounts/map' to 'owner'
+ - MN.getReplica - added InsufficientResources to java api and impl
+ - MN.setAccessPolicy - removed method from java api and impl
+ - CN.setOwner - changed name to setRightsHolder in java api and impl
+
+Client bug fixes (in trunk)
+ - MN.getLogRecords - added missing 'start' and 'count' parameters to impl  call.
+ - MN.listObjects - fixed failed exception recast
+ 
 2011-12-06 Version 1.0.0 Branch
 -------------------------------
 
