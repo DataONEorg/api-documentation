@@ -14,9 +14,9 @@
    accompanying API call.
 
    The Integer type is serialized over XML using the predefined XMLSchema
-   *integer_* type, the value space of which is the infinite series
+   `integer`_ type, the value space of which is the infinite series
    {...,-2,-1,0,1,2,...}.
-   
+
 .. _integer: http://www.w3.org/TR/xmlschema-2/#integer
 
 
@@ -25,14 +25,14 @@
 .. class:: Boolean
 
    A boolean response is commonly used in the DataONE service APIs to indicate
-   success or otherwise of an operation. For operations that are called 
+   success or otherwise of an operation. For operations that are called
    through the service interfaces, a positive boolean response (i.e. True) is
-   indicated by returning a HTTP response with a status code of "200". The 
-   body of the message may contain additional content, but this should be 
+   indicated by returning a HTTP response with a status code of "200". The
+   body of the message may contain additional content, but this should be
    ignored by the receiver.
 
-   A False or failure response must return an appropriate Error message and 
-   must set the appropriate HTTP status code on the response to indicate a 
+   A False or failure response must return an appropriate Error message and
+   must set the appropriate HTTP status code on the response to indicate a
    failure.
 
    The Boolean type is serialized over XML using the predefined XMLSchema
@@ -51,7 +51,7 @@
   - If not specified, then the time zone is 0, i.e. GMT
 
   Valid representations include:
-  
+
   - `HTTP Full Date`_ format. e.g. `Sun, 06 Nov 1994 08:49:37 GMT`
   - `YYYY-MM-DDTHH:MM:SS.mmmmmm`
   - `YYYYMMDDTHHMMSS.mmmmmm`
@@ -85,7 +85,7 @@
 
 
 ..                                    ######
-.. class:: DescribeResponse  
+.. class:: DescribeResponse
 
   The :func:`MNRead.describe` method provides a low cost hint about the type,
   size and state of an object.
@@ -154,14 +154,14 @@
    prototype implementations (i.e. pre-version 1.0).
 
    ::
-    
-     enum FilterTypeEnum 
+
+     enum FilterTypeEnum
      {
        NVP = 1;
        SOLR = 3;
        EARTHGRID = 4;
      }
-     
+
      enum LogicalOperator
      {
        LOP_OR = 0;
@@ -190,6 +190,3 @@
      {
        required string filter = 0;
      }
-
-
-

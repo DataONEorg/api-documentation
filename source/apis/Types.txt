@@ -530,7 +530,8 @@ Data Types in CICore
 ..                                    ######
 .. class:: NodeType
 
-    The type of this node, which is either "mn" for Member Nodes, and and "cn" for Coordinating Nodes.
+    The type of this node. Valid values include "mn" for Member Nodes and "cn"
+    for Coordinating Nodes.
 
     .. code-block:: xml
 
@@ -1288,7 +1289,8 @@ Data Types in CICore
 ..                                    ######
 .. class:: NodeReference
 
-    Member Node identifier drawn from the DataONE :mod:`cn_register &lt;registry service&gt;`.
+    Member Node identifier drawn from the DataONE :mod:`cn_register <registry
+    service>`.
 
     .. code-block:: xml
 
@@ -2422,5 +2424,3 @@ Data Types in CICore
       SystemMetadata .. Replica
 
       @enduml
-
-
