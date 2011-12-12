@@ -26,7 +26,7 @@
    * - GET /checksum/{pid}[?checksumAlgorithm={checksumAlgorithm}]
      - :func:`MNRead.getChecksum`
      - Returns a :class:`Types.Checksum` for the specified object using an accepted hashing algorithm. The result is used to determine if two instances referenced by a PID are identical, hence it is necessary that MNs can ensure that the returned checksum is valid for the referenced object either by computing it on the fly or by using a cached value that is certain to be correct.
-   * - GET /object[?fromDate={fromDate}&toDate={toDate}&formatid={formatId}&replicastatus={replicaStatus}&start={start}&count={count}]
+   * - GET /object[?fromDate={fromDate}&toDate={toDate}&formatid={formatId}&replicaStatus={replicaStatus}&start={start}&count={count}]
      - :func:`MNRead.listObjects`
      - Retrieve the list of objects present on the MN that match the calling parameters. This method is required to support the process of :term:`Member Node synchronization`. At a minimum, this method MUST be able to return a list of objects that match::   fromDate < SystemMetadata.dateSysMetadataModified but is expected to also support date range (by also specifying *toDate*), and should also support slicing of the matching set of records by indicating the starting *index* of the response (where 0 is the index of the first item) and the *count* of elements to be returned. Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed.
    * - POST /error
@@ -107,7 +107,7 @@
    * - GET /checksum/{pid}
      - :func:`CNRead.getChecksum`
      - Returns the checksum for the specified object as reported in the system metadata. Note that the signature of this method differs from :func:`MNRead.getChecksum` as that method takes an optional algorithm parameter.
-   * - GET /object[?fromDate={fromDate}&toDate={toDate}&formatid= {formatId}&replicastatus={replicaStatus}&start={start}&count={count}]
+   * - GET /object[?fromDate={fromDate}&toDate={toDate}&formatid= {formatId}&replicaStatus={replicaStatus}&start={start}&count={count}]
      - :func:`CNRead.listObjects`
      - Retrieve the list of objects present on the CN that match the calling parameters. At a minimum, this method should be able to return a list of objects that match::   fromDate < SystemMetadata.dateSysMetadataModified but is expected to also support date range (by also specifying *toDate*), and should also support slicing of the matching set of records by indicating the starting *index* of the response (where 0 is the index of the first item) and the *count* of elements to be returned. Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed.
    * - GET /search[?qt={queryType}[&{query}]]

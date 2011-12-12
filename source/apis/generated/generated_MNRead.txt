@@ -27,7 +27,7 @@
      - :func:`getChecksum`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, ``[checksumAlgorithm]``) ``->`` :class:`Types.Checksum`
    * - Tier 1
-     - ``GET /object[?fromDate={fromDate}&toDate={toDate}&formatid={formatId}&replicastatus={replicaStatus}&start={start}&count={count}]``
+     - ``GET /object[?fromDate={fromDate}&toDate={toDate}&formatid={formatId}&replicaStatus={replicaStatus}&start={start}&count={count}]``
      - :func:`listObjects`
      - (:class:`session<Types.Session>`, :class:`[fromDate]<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[formatId]<Types.ObjectFormatIdentifier>`, ``[replicaStatus]``, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.ObjectList`
    * - Tier 1
@@ -206,7 +206,7 @@
 
    :Use Cases:
      :doc:`UC06 </design/UseCases/06_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
-   :REST URL: ``GET /object[?fromDate={fromDate}&toDate={toDate}&formatid={formatId}&replicastatus={replicaStatus}&start={start}&count={count}]``
+   :REST URL: ``GET /object[?fromDate={fromDate}&toDate={toDate}&formatid={formatId}&replicaStatus={replicaStatus}&start={start}&count={count}]``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
