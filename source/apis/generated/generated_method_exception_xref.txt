@@ -1072,6 +1072,11 @@
      - 401
      - 4563
    * - :mod:`CNIdentity`
+     - :func:`getSubjectInfo <CNIdentity.getSubjectInfo>`
+     - InvalidToken
+     - 401
+     - 4564
+   * - :mod:`CNIdentity`
      - :func:`listSubjects <CNIdentity.listSubjects>`
      - ServiceFailure
      - 500
@@ -1392,6 +1397,11 @@
      - 409
      - 4855
    * - :mod:`CNReplication`
+     - :func:`updateReplicationMetadata <CNReplication.updateReplicationMetadata>`
+     - InvalidToken
+     - 401
+     - 4856
+   * - :mod:`CNReplication`
      - :func:`setReplicationPolicy <CNReplication.setReplicationPolicy>`
      - NotImplemented
      - 501
@@ -1481,6 +1491,11 @@
      - NotFound
      - 404
      - 4824
+   * - :mod:`CNRegister`
+     - :func:`updateNodeCapabilities <CNRegister.updateNodeCapabilities>`
+     - InvalidToken
+     - 401
+     - 4825
    * - :mod:`CNRegister`
      - :func:`register <CNRegister.register>`
      - NotImplemented
