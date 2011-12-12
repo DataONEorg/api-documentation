@@ -12,7 +12,7 @@
      - Parameters
    * - Tier 2
      - ``PUT /owner/{pid}``
-     - :func:`setOwner`
+     - :func:`setRightsHolder`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`userId<Types.Subject>`, ``serialVersion``) ``->`` :class:`Types.Identifier`
    * - Tier 2
      - ``GET /isAuthorized/{pid}?action={action}``
@@ -26,7 +26,7 @@
 
 
 
-.. function:: setOwner(session,pid,userId,serialVersion) -> Identifier
+.. function:: setRightsHolder(session,pid,userId,serialVersion) -> Identifier
 
    Changes ownership (RightsHolder) of the specified object to the :term:`subject` specified by `userId`
 

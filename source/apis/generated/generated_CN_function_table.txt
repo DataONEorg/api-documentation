@@ -72,16 +72,16 @@
      - :func:`CNRead.getChecksum`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Checksum`
    * - Tier 1
-     - ``GET /object[?starttime={startTime}&endtime={endTime}&formatid= {formatId}&replicastatus={replicaStatus}&start={start}&count={count}]``
+     - ``GET /object[?fromDate={fromDate}&toDate={toDate}&formatid= {formatId}&replicastatus={replicaStatus}&start={start}&count={count}]``
      - :func:`CNRead.listObjects`
-     - (:class:`session<Types.Session>`, :class:`[startTime]<Types.DateTime>`, :class:`[endTime]<Types.DateTime>`, :class:`[formatId]<Types.ObjectFormatIdentifier>`, ``[replicaStatus]``, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.ObjectList`
+     - (:class:`session<Types.Session>`, :class:`[fromDate]<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[formatId]<Types.ObjectFormatIdentifier>`, ``[replicaStatus]``, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.ObjectList`
    * - Tier 1
-     - ``GET /search``
+     - ``GET /search[?qt={queryType}[&{query}]]``
      - :func:`CNRead.search`
      - (:class:`session<Types.Session>`, :class:`queryType<Types.QueryType>`, ``query``) ``->`` :class:`Types.ObjectList`
    * - Tier 2
      - ``PUT /owner/{pid}``
-     - :func:`CNAuthorization.setOwner`
+     - :func:`CNAuthorization.setRightsHolder`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`userId<Types.Subject>`, ``serialVersion``) ``->`` :class:`Types.Identifier`
    * - Tier 2
      - ``GET /isAuthorized/{pid}?action={action}``
@@ -108,9 +108,9 @@
      - :func:`CNIdentity.getSubjectInfo`
      - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` :class:`Types.SubjectList`
    * - Tier 2
-     - ``GET /accounts?query={query}[&start={start}&count={count}]``
+     - ``GET /accounts?query={query}[&status={status}&start={start}&count={count}]``
      - :func:`CNIdentity.listSubjects`
-     - (:class:`session<Types.Session>`, :class:`query<Types.String>`, ``start``, ``count``) ``->`` :class:`Types.SubjectList`
+     - (:class:`session<Types.Session>`, :class:`query<Types.String>`, :class:`status<Types.String>`, ``start``, ``count``) ``->`` :class:`Types.SubjectList`
    * - Tier 2
      - ``POST /accounts/map``
      - :func:`CNIdentity.mapIdentity`
@@ -140,7 +140,7 @@
      - :func:`CNIdentity.addGroupMembers`
      - (:class:`session<Types.Session>`, :class:`groupName<Types.Subject>`, :class:`members<Types.SubjectList>`) ``->`` boolean
    * - Tier 2
-     - ``DELETE /groups/{groupName}``
+     - ``POST /groups/remove/{groupName}``
      - :func:`CNIdentity.removeGroupMembers`
      - (:class:`session<Types.Session>`, :class:`groupName<Types.Subject>`, :class:`members<Types.SubjectList>`) ``->`` boolean
    * - Tier 4

@@ -10,7 +10,7 @@
      - Low level "are you alive" operation. A valid ping response is indicated by a HTTP status of 200.  The Member Node should perform some minimal internal functionality testing before answering. However, ping checks will be frequent (every few minutes) so the internal functionality test should not be high impact. Any status response other than 200 indicates that the node is offline for DataONE operations.
    * - GET /log
      - :func:`MNCore.getLogRecords`
-     - Retrieve log information from the Member Node for the specified date range and even type. This method is used primarily by the log aggregator to generate aggregate statistics for nodes, objects, and the methods of access. The response MUST contain only records for which the requestor has permission to read.
+     - Retrieve log information from the Member Node for the specified date range and even type. This method is used primarily by the log aggregator to generate aggregate statistics for nodes, objects, and the methods of access. The response MUST contain only records for which the requestor has permission to read. Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed.
    * - GET /  and  GET /node
      - :func:`MNCore.getCapabilities`
      - Returns a document describing the capabilities of the Member Node. The response at the Member Node base URL is for convenience only. Clients of Member Nodes SHOULD use the /node URL to retrieve the node capabilities document.
@@ -26,9 +26,9 @@
    * - GET /checksum/{pid}[?checksumAlgorithm={checksumAlgorithm}]
      - :func:`MNRead.getChecksum`
      - Returns a :class:`Types.Checksum` for the specified object using an accepted hashing algorithm. The result is used to determine if two instances referenced by a PID are identical, hence it is necessary that MNs can ensure that the returned checksum is valid for the referenced object either by computing it on the fly or by using a cached value that is certain to be correct.
-   * - GET /object[?starttime={startTime}&endtime={endTime}&formatid= {formatId}&replicastatus={replicaStatus}&start={start}&count={count}]
+   * - GET /object[?fromDate={fromDate}&toDate={toDate}&formatid={formatId}&replicastatus={replicaStatus}&start={start}&count={count}]
      - :func:`MNRead.listObjects`
-     - Retrieve the list of objects present on the MN that match the calling parameters. This method is required to support the process of :term:`Member Node synchronization`. At a minimum, this method should be able to return a list of objects that match::   startTime <= SystemMetadata.dateSysMetadataModified but is expected to also support date range (by also specifying *endTime*), and should also support slicing of the matching set of records by indicating the starting *index* of the response (where 0 is the index of the first item) and the *count* of elements to be returned.
+     - Retrieve the list of objects present on the MN that match the calling parameters. This method is required to support the process of :term:`Member Node synchronization`. At a minimum, this method MUST be able to return a list of objects that match::   fromDate < SystemMetadata.dateSysMetadataModified but is expected to also support date range (by also specifying *toDate*), and should also support slicing of the matching set of records by indicating the starting *index* of the response (where 0 is the index of the first item) and the *count* of elements to be returned. Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed.
    * - POST /error
      - :func:`MNRead.synchronizationFailed`
      - This is a callback method used by a CN to indicate to a MN that it cannot complete synchronization of the science metadata identified by *pid*. When called, the MN should take steps to record the problem description and notify an administrator or the data owner of the issue. A successful response is indicated by a HTTP status of 200. An unsuccessful call is indicated by a returned exception and associated HTTP status code.
@@ -46,7 +46,7 @@
      - Deletes an object from the Member Node, where the object is either a data object or a science metadata object. This method is called by clients to delete objects on Member nodes. Member Nodes MUST check that the caller is authorized to perform this function. If the object does not exist on the node servicing the request, then an :exc:`Exceptions.NotFound` exception is raised. The message body of the exception SHOULD contain a hint as to the location of the :func:`CNRead.resolve` method.
    * - POST /dirtySystemMetadata
      - :func:`MNStorage.systemMetadataChanged`
-     - Notifies the Member Node that the authoritative copy of system metadata on the Coordinating Nodes has changed. The Member Node SHOULD schedule an update to its information about the affected object by retrieving an authoritative copy from a Coordinating Node.
+     - Notifies the Member Node that the authoritative copy of system metadata on the Coordinating Nodes has changed. The Member Node SHOULD schedule an update to its information about the affected object by retrieving an authoritative copy from a Coordinating Node. Note that date time precision is limited to one millisecond.
    * - POST /replicate
      - :func:`MNReplication.replicate`
      - Called by a Coordinating Node to request that the Member Node create a copy of the specified object by retrieving it from another Member Nodeode and storing it locally so that it can be made accessible to the DataONE system.   A successful operation is indicated by a HTTP status of 200 on the response.  Failure of the operation MUST be indicated by returning an appropriate exception.
@@ -73,7 +73,7 @@
      - Returns the object format registered in the DataONE Object Format Vocabulary for the given format identifier.
    * - GET /log?[fromdate={fromDate}][&todate={toDate}][&event={event}][&start={start}][&count={count}]
      - :func:`CNCore.getLogRecords`
-     - Retrieves consolidated log information for the specified date range (inclusive) for the entire DataONE infrastructure
+     - Retrieves consolidated log information for the specified date range (fromDate < timestamp <= toDate) for the entire DataONE infrastructure Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed.
    * - POST /reserve
      - :func:`CNCore.reserveIdentifier`
      - Reserves the identifier that is unique and can not be used by any other sessions. Future calls to :func:`MNStorage.create` and :func:`MNStorage.update` that reference this ID must originate from the :term:`session` in which the identifier was reserved, otherwise an error is raised on those methods. The requested identifier is transmitted in a MIME Multipart/form-data body with *pid* as key, and the identifier string as value.
@@ -107,14 +107,14 @@
    * - GET /checksum/{pid}
      - :func:`CNRead.getChecksum`
      - Returns the checksum for the specified object as reported in the system metadata. Note that the signature of this method differs from :func:`MNRead.getChecksum` as that method takes an optional algorithm parameter.
-   * - GET /object[?starttime={startTime}&endtime={endTime}&formatid= {formatId}&replicastatus={replicaStatus}&start={start}&count={count}]
+   * - GET /object[?fromDate={fromDate}&toDate={toDate}&formatid= {formatId}&replicastatus={replicaStatus}&start={start}&count={count}]
      - :func:`CNRead.listObjects`
-     - Retrieve the list of objects present on the CN that match the calling parameters. At a minimum, this method should be able to return a list of objects that match::   startTime <= SystemMetadata.dateSysMetadataModified but is expected to also support date range (by also specifying *endTime*), and should also support slicing of the matching set of records by indicating the starting *index* of the response (where 0 is the index of the first item) and the *count* of elements to be returned.
-   * - GET /search
+     - Retrieve the list of objects present on the CN that match the calling parameters. At a minimum, this method should be able to return a list of objects that match::   fromDate < SystemMetadata.dateSysMetadataModified but is expected to also support date range (by also specifying *toDate*), and should also support slicing of the matching set of records by indicating the starting *index* of the response (where 0 is the index of the first item) and the *count* of elements to be returned. Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed.
+   * - GET /search[?qt={queryType}[&{query}]]
      - :func:`CNRead.search`
      - Search the metadata catalog and return identifiers of metadata records that match the criteria. Implemented asa proxy to the SOLR search index. All readonly operations supported with standard SOLR parameters.
    * - PUT /owner/{pid}
-     - :func:`CNAuthorization.setOwner`
+     - :func:`CNAuthorization.setRightsHolder`
      - Changes ownership (RightsHolder) of the specified object to the :term:`subject` specified by `userId`
    * - GET /isAuthorized/{pid}?action={action}
      - :func:`CNAuthorization.isAuthorized`
@@ -134,7 +134,7 @@
    * - GET /accounts/{subject}
      - :func:`CNIdentity.getSubjectInfo`
      - Get the information about a Person (their equivalent identities, and the Groups to which they belong) or the Group (including members).
-   * - GET /accounts?query={query}[&start={start}&count={count}]
+   * - GET /accounts?query={query}[&status={status}&start={start}&count={count}]
      - :func:`CNIdentity.listSubjects`
      - List the subjects, including users, groups, and systems, that match search criteria. The list can be restricted to subjects whose identifier matches certain substrings, and the size of the resultset can be paged through.
    * - POST /accounts/map
@@ -158,7 +158,7 @@
    * - PUT /groups/{groupName}
      - :func:`CNIdentity.addGroupMembers`
      - Add members to the named group. Group members can be added by the original creator of the group, otherwise a NotAuthorized exception is thrown.  Group members are provided as a list of subjects to be added to the group. Successful completion of this operation is indicated by a HTTP response status code of 200. Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception.
-   * - DELETE /groups/{groupName}
+   * - POST /groups/remove/{groupName}
      - :func:`CNIdentity.removeGroupMembers`
      - Remove members to the named group. Group members can be removed by the original creator of the group, otherwise a NotAuthorized exception is thrown.  Group members are provided as a list of subjects to be removed from the group. Successful completion of this operation is indicated by a HTTP response status code of 200. Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception.
    * - PUT /replicaNotifications/{pid}

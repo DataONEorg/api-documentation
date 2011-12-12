@@ -31,11 +31,11 @@
      - :func:`getChecksum`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Checksum`
    * - Tier 1
-     - ``GET /object[?starttime={startTime}&endtime={endTime}&formatid= {formatId}&replicastatus={replicaStatus}&start={start}&count={count}]``
+     - ``GET /object[?fromDate={fromDate}&toDate={toDate}&formatid= {formatId}&replicastatus={replicaStatus}&start={start}&count={count}]``
      - :func:`listObjects`
-     - (:class:`session<Types.Session>`, :class:`[startTime]<Types.DateTime>`, :class:`[endTime]<Types.DateTime>`, :class:`[formatId]<Types.ObjectFormatIdentifier>`, ``[replicaStatus]``, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.ObjectList`
+     - (:class:`session<Types.Session>`, :class:`[fromDate]<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[formatId]<Types.ObjectFormatIdentifier>`, ``[replicaStatus]``, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.ObjectList`
    * - Tier 1
-     - ``GET /search``
+     - ``GET /search[?qt={queryType}[&{query}]]``
      - :func:`search`
      - (:class:`session<Types.Session>`, :class:`queryType<Types.QueryType>`, ``query``) ``->`` :class:`Types.ObjectList`
 
@@ -222,27 +222,27 @@
 
 
 
-.. function:: listObjects(session,[startTime],[endTime],[formatId],[replicaStatus],[start=0],[count=1000]) -> ObjectList
+.. function:: listObjects(session,[fromDate],[toDate],[formatId],[replicaStatus],[start=0],[count=1000]) -> ObjectList
 
    Retrieve the list of objects present on the CN that match the calling parameters. At a minimum, this method should be able to return a list of objects that match::
 
-     startTime <= SystemMetadata.dateSysMetadataModified
+     fromDate < SystemMetadata.dateSysMetadataModified
 
-   but is expected to also support date range (by also specifying *endTime*), and should also support slicing of the matching set of records by indicating the starting *index* of the response (where 0 is the index of the first item) and the *count* of elements to be returned.
+   but is expected to also support date range (by also specifying *toDate*), and should also support slicing of the matching set of records by indicating the starting *index* of the response (where 0 is the index of the first item) and the *count* of elements to be returned.
 
-   
+   Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed.
 
    :Use Cases:
      :doc:`UC06 </design/UseCases/06_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
-   :REST URL: ``GET /object[?starttime={startTime}&endtime={endTime}&formatid= {formatId}&replicastatus={replicaStatus}&start={start}&count={count}]``
+   :REST URL: ``GET /object[?fromDate={fromDate}&toDate={toDate}&formatid= {formatId}&replicastatus={replicaStatus}&start={start}&count={count}]``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
-   :param startTime: Specifies the beginning of the time range from which to return object (>=). Queries against :attr:`SystemMetadata.dateSysMetadataModified`
-   :type startTime: :class:`Types.DateTime`
+   :param fromDate: Entries with :attr:`SystemMetadata.dateSysMetadataModified` greater than (>) *fromDate* must be returned.
+   :type fromDate: :class:`Types.DateTime`
 
-   :param endTime: Specifies the end of the time range to which to return object (<=). Queries against :attr:`SystemMetadata.dateSysMetadataModified`
-   :type endTime: :class:`Types.DateTime`
+   :param toDate: Entries with :attr:`SystemMetadata.dateSysMetadataModified` equal to or less than (<=) *toDate* must be returned.
+   :type toDate: :class:`Types.DateTime`
 
    :param formatId: Restrict results to the specified object format.
    :type formatId: :class:`Types.ObjectFormatIdentifier`
@@ -284,7 +284,7 @@
 
    :Use Cases:
      :doc:`UC02 </design/UseCases/02_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
-   :REST URL: ``GET /search``
+   :REST URL: ``GET /search[?qt={queryType}[&{query}]]``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 

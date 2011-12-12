@@ -40,9 +40,9 @@
      - :func:`MNRead.getChecksum`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, ``[checksumAlgorithm]``) ``->`` :class:`Types.Checksum`
    * - Tier 1
-     - ``GET /object[?starttime={startTime}&endtime={endTime}&formatid= {formatId}&replicastatus={replicaStatus}&start={start}&count={count}]``
+     - ``GET /object[?fromDate={fromDate}&toDate={toDate}&formatid={formatId}&replicastatus={replicaStatus}&start={start}&count={count}]``
      - :func:`MNRead.listObjects`
-     - (:class:`session<Types.Session>`, :class:`[startTime]<Types.DateTime>`, :class:`[endTime]<Types.DateTime>`, :class:`[formatId]<Types.ObjectFormatIdentifier>`, ``[replicaStatus]``, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.ObjectList`
+     - (:class:`session<Types.Session>`, :class:`[fromDate]<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[formatId]<Types.ObjectFormatIdentifier>`, ``[replicaStatus]``, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.ObjectList`
    * - Tier 1
      - ``POST /error``
      - :func:`MNRead.synchronizationFailed`
@@ -74,5 +74,5 @@
    * - Tier 4
      - ``GET /replica/{pid}``
      - :func:`MNReplication.getReplica`
-     - (:class:`session<Types.Session>`) ``->`` boolean
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` boolean
 

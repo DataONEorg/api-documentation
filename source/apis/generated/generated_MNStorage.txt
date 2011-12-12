@@ -197,6 +197,8 @@
 
    The Member Node SHOULD schedule an update to its information about the affected object by retrieving an authoritative copy from a Coordinating Node.
 
+   Note that date time precision is limited to one millisecond.
+
    :REST URL: ``POST /dirtySystemMetadata``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`

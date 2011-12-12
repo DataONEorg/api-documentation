@@ -1,6 +1,34 @@
 Change Log
 ==========
 
+2011-12-12 : Version 1.0
+------------------------
+
+MN API
+~~~~~~
+
+- MNCore.getLogRecords and MNRead.listObjects - the time comparison range has
+  been changed. The lower bound is now exclusive, i.e. ``fromDate < date <=
+  toDate``
+
+- MNRead.listObjects - the name of the date range comparison properties has been
+  changed from "startTime" and "endTime" to "fromDate" and "toDate"
+  respectively.
+
+
+CN API
+~~~~~~
+
+- CNCore.getLogRecords and CNRead.listObjects - the time comparison range has
+  been changed. The lower bound is now exclusive, i.e. ``fromDate < date <=
+  toDate``
+
+- CNRead.listObjects - the name of the date range comparison properties has been
+  changed from "startTime" and "endTime" to "fromDate" and "toDate"
+  respectively.
+
+
+
 
 2011-12-08 : Version 1.0
 -------------------------
@@ -20,7 +48,9 @@ MethodCrossReference.xls (trunk)
 
 2011-12-07-api-corrections branch
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 Java libclient / implementation changes (in branch)
+
  - CN.verifyAccount - removed NotFound from java api and impl
  - CN.updateAccount - removed IdentifierNotUnique from java api and impl
  - CN.mapIdentity - refactored method signature from (session, subject1, subject2) to (session,subject)
@@ -36,6 +66,7 @@ Java libclient / implementation changes (in branch)
  - CN.setOwner - changed name to setRightsHolder in java api and impl
 
 Client bug fixes (in trunk)
+
  - MN.getLogRecords - added missing 'start' and 'count' parameters to impl  call.
  - MN.listObjects - fixed failed exception recast
  

@@ -154,10 +154,6 @@
 
      Unexpected exception from the service.
 
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4847)``
-
-     The request was invalid.
-
    :raises Exceptions.NotFound: ``(errorCode=404, detailCode=4848)``
 
      The format specified by *formatId* does not exist at this node.
@@ -170,7 +166,9 @@
 
 .. function:: getLogRecords(session,[fromDate],[toDate],[event],[start],[count]) -> Log
 
-   Retrieves consolidated log information for the specified date range (inclusive) for the entire DataONE infrastructure
+   Retrieves consolidated log information for the specified date range (fromDate < timestamp <= toDate) for the entire DataONE infrastructure
+
+   Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed.
 
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`
@@ -178,10 +176,10 @@
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
-   :param fromDate: Starting time for records in response. Defaults to include all records.
+   :param fromDate: Starting time for records in response, entries with timestamp greater than (>) this value will be returned. Defaults to include all records.
    :type fromDate: :class:`Types.DateTime`
 
-   :param toDate: End time for records in response. If not specified, then defaults to now.
+   :param toDate: End time for records in response, entries with timestamp less than or equal to (<=) this value will be returned. If not specified, then defaults to now.
    :type toDate: :class:`Types.DateTime`
 
    :param event: Return only log records for the specified type of event.  Default is all.

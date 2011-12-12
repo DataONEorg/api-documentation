@@ -17,6 +17,7 @@ Any status response other than 200 indicates that the node is offline for DataON
      - Retrieve log information from the Member Node for the specified date range and even type.
 This method is used primarily by the log aggregator to generate aggregate statistics for nodes, objects, and the methods of access.
 The response MUST contain only records for which the requestor has permission to read.
+Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed.
    * - \
      - :func:`MNCore.getCapabilities`
      - Returns a document describing the capabilities of the Member Node.
@@ -48,9 +49,10 @@ Note that this method is likely to be called frequently and so efficiency should
      - Returns a :class:`Types.Checksum` for the specified object using an accepted hashing algorithm. The result is used to determine if two instances referenced by a PID are identical, hence it is necessary that MNs can ensure that the returned checksum is valid for the referenced object either by computing it on the fly or by using a cached value that is certain to be correct.
    * - \
      - :func:`MNRead.listObjects`
-     - Retrieve the list of objects present on the MN that match the calling parameters. This method is required to support the process of :term:`Member Node synchronization`. At a minimum, this method should be able to return a list of objects that match::
-  startTime <= SystemMetadata.dateSysMetadataModified
-but is expected to also support date range (by also specifying *endTime*), and should also support slicing of the matching set of records by indicating the starting *index* of the response (where 0 is the index of the first item) and the *count* of elements to be returned.
+     - Retrieve the list of objects present on the MN that match the calling parameters. This method is required to support the process of :term:`Member Node synchronization`. At a minimum, this method MUST be able to return a list of objects that match::
+  fromDate < SystemMetadata.dateSysMetadataModified
+but is expected to also support date range (by also specifying *toDate*), and should also support slicing of the matching set of records by indicating the starting *index* of the response (where 0 is the index of the first item) and the *count* of elements to be returned.
+Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed.
 
        Appears in functional use cases: :doc:`UC06 </design/UseCases/06_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
    * - \
@@ -95,6 +97,7 @@ If the object does not exist on the node servicing the request, then an :exc:`Ex
      - :func:`MNStorage.systemMetadataChanged`
      - Notifies the Member Node that the authoritative copy of system metadata on the Coordinating Nodes has changed.
 The Member Node SHOULD schedule an update to its information about the affected object by retrieving an authoritative copy from a Coordinating Node.
+Note that date time precision is limited to one millisecond.
    * - :mod:`MNReplication`
      - :func:`MNReplication.replicate`
      - Called by a Coordinating Node to request that the Member Node create a copy of the specified object by retrieving it from another Member Nodeode and storing it locally so that it can be made accessible to the DataONE system.  
@@ -123,7 +126,8 @@ This method is not publicly exposed by a Coordinating Node.
      - Returns the object format registered in the DataONE Object Format Vocabulary for the given format identifier.
    * - \
      - :func:`CNCore.getLogRecords`
-     - Retrieves consolidated log information for the specified date range (inclusive) for the entire DataONE infrastructure
+     - Retrieves consolidated log information for the specified date range (fromDate < timestamp <= toDate) for the entire DataONE infrastructure
+Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed.
 
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
    * - \
@@ -187,8 +191,9 @@ Note that the signature of this method differs from :func:`MNRead.getChecksum` a
    * - \
      - :func:`CNRead.listObjects`
      - Retrieve the list of objects present on the CN that match the calling parameters. At a minimum, this method should be able to return a list of objects that match::
-  startTime <= SystemMetadata.dateSysMetadataModified
-but is expected to also support date range (by also specifying *endTime*), and should also support slicing of the matching set of records by indicating the starting *index* of the response (where 0 is the index of the first item) and the *count* of elements to be returned.
+  fromDate < SystemMetadata.dateSysMetadataModified
+but is expected to also support date range (by also specifying *toDate*), and should also support slicing of the matching set of records by indicating the starting *index* of the response (where 0 is the index of the first item) and the *count* of elements to be returned.
+Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed.
 
        Appears in functional use cases: :doc:`UC06 </design/UseCases/06_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
    * - \
@@ -198,7 +203,7 @@ Implemented asa proxy to the SOLR search index. All readonly operations supporte
 
        Appears in functional use cases: :doc:`UC02 </design/UseCases/02_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
    * - :mod:`CNAuthorization`
-     - :func:`CNAuthorization.setOwner`
+     - :func:`CNAuthorization.setRightsHolder`
      - Changes ownership (RightsHolder) of the specified object to the :term:`subject` specified by `userId`
 
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
