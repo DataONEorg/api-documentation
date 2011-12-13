@@ -280,10 +280,10 @@
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
-   :param fromDate: Entries with :attr:`SystemMetadata.dateSysMetadataModified` greater than (>) *fromDate* must be returned.
+   :param fromDate: Entries with :attr:`SystemMetadata.dateSysMetadataModified` greater than or equal to (>=) *fromDate* must be returned.
    :type fromDate: :class:`Types.DateTime`
 
-   :param toDate: Entries with :attr:`SystemMetadata.dateSysMetadataModified` equal to or less than (<=) *toDate* must be returned.
+   :param toDate: Entries with :attr:`SystemMetadata.dateSysMetadataModified` less than (<) *toDate* must be returned.
    :type toDate: :class:`Types.DateTime`
 
    :param formatId: Restrict results to the specified object format.

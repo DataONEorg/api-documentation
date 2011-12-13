@@ -3,6 +3,7 @@ Change Log
 
 2011-12-12 : Version 1.0
 ------------------------
+
 Changes to dataoneTypes.xsd:
 
  - Added ChecksumAlgorithmList
@@ -18,12 +19,12 @@ Changes to dataoneTypes.xsd:
  - Removed MonitorInfo and MonitorList types - deprecated.
  - Updated documentation for the Node type.
 
-=======
+
 MN API
 ~~~~~~
 
 - MNCore.getLogRecords and MNRead.listObjects - the time comparison range has
-  been changed. The lower bound is now exclusive, i.e. ``fromDate < date <=
+  been changed. The upper bound is now exclusive, i.e. ``fromDate <= date <
   toDate``
 
 - MNRead.listObjects - the name of the date range comparison properties has been
@@ -42,7 +43,7 @@ CN API
 ~~~~~~
 
 - CNCore.getLogRecords and CNRead.listObjects - the time comparison range has
-  been changed. The lower bound is now exclusive, i.e. ``fromDate < date <=
+  been changed. The upper bound is now exclusive, i.e. ``fromDate <= date <
   toDate``
 
 - CNRead.listObjects - the name of the date range comparison properties has been
@@ -62,7 +63,6 @@ CN API
   with other methods that return a list.
 
 
->>>>>>> .r6181
 2011-12-08 : Version 1.0
 -------------------------
 
