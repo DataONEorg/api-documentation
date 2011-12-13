@@ -60,6 +60,10 @@
      - :func:`CNRead.getSystemMetadata`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.SystemMetadata`
    * - Tier 1
+     - ``HEAD /object/{pid}``
+     - :func:`CNRead.describe`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.DescribeResponse`
+   * - Tier 1
      - ``GET /resolve/{pid}``
      - :func:`CNRead.resolve`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.ObjectLocationList`

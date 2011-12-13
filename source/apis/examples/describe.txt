@@ -10,4 +10,19 @@
   Content-Type: application/octet-stream
   DataONE-ObjectFormat: eml://ecoinformatics.org/eml-2.0.1
   DataONE-Checksum: SHA-1,2e01e17467891f7c933dbaa00e1459d23db3fe4f
+  DataONE-SerialVersion: 1234
+
+
+(HEAD) An error response to a describe() request for object "IDONTEXIST"::
+
+  curl -I http://mn1.dataone.org/mn/object/IDONTEXIST
+
+  HTTP/1.1 404 Not Found
+  Last-Modified: Wed, 16 Dec 2009 13:58:34 GMT
+  Content-Length: 1182
+  Content-Type: text/xml
+  DataONE-Exception-Name: NotFound
+  DataONE-Exception-DetailCode: 1380
+  DataONE-Exception-Description: The specified object does not exist on this node.
+  DataONE-Exception-PID: IDONTEXIST
 

@@ -103,10 +103,12 @@
       +Content-Length : integer
       +Last-Modified : DateTime
       +DataONE-Checksum : Checksum
+      +DataONE-SerialVersion: unsignedLong
     }
     DescribeResponse -- ObjectFormatIdentifier
     DescribeResponse -- Checksum
     DescribeResponse -- DateTime
+    DescribeResponse -- unsignedLong
     @enduml
 
   .. attribute:: DataONE-formatId
@@ -142,7 +144,7 @@
     Content-Type: application/octet-stream
     DataONE-formatId: eml://ecoinformatics.org/eml-2.0.1
     DataONE-Checksum: SHA-1,2e01e17467891f7c933dbaa00e1459d23db3fe4f
-
+    DataONE-SerialVersion: 1234
 
 
 ..                                    ######
