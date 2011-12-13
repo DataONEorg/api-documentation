@@ -3,7 +3,22 @@ Change Log
 
 2011-12-12 : Version 1.0
 ------------------------
+Changes to dataoneTypes.xsd:
 
+ - Added ChecksumAlgorithmList
+ - Limited valid checksums to SHA-1 and MD5
+ - Added ReplicationStatus.FAILED to the enumeration
+ - Added a new SimpleType: NonEmptyNoWhitespaceString800, used to restrict identifiers
+ - Removed Permission.REPLICATE
+ - Changed SystemMetadata to make the following fields optional: submitter, dateUploaded,
+   dateSystemMetadataModified, serialVersion. However, an MN or CN must set them.
+ - Created Types.CrontabEntrySeconds to restrict the seconds field in a Schedule
+ - Changed documentation for SystemMetadata.authoritativeMemberNode
+ - Added a new NodeReplicationPolicy type, to be used as an optional structure in Node
+ - Removed MonitorInfo and MonitorList types - deprecated.
+ - Updated documentation for the Node type.
+
+=======
 MN API
 ~~~~~~
 
@@ -47,6 +62,7 @@ CN API
   with other methods that return a list.
 
 
+>>>>>>> .r6181
 2011-12-08 : Version 1.0
 -------------------------
 
