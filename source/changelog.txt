@@ -43,6 +43,9 @@ CN API
 - CNCore.listFormats: removed InsufficientResources exception. If the CN can not
   provide a response, then a ServiceFailure should be raised.
 
+- CNCore.getChecksumAlgorithms renamed to listChecksumAlgorithms for consistency
+  with other methods that return a list.
+
 
 2011-12-08 : Version 1.0
 -------------------------

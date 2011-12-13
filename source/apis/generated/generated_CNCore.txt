@@ -36,7 +36,7 @@
      - (:class:`session<Types.Session>`, ``scheme``, ``[fragment]``) ``->`` :class:`Types.Identifier`
    * - Tier 1
      - ``GET /checksum``
-     - :func:`getChecksumAlgorithms`
+     - :func:`listChecksumAlgorithms`
      - () ``->`` :class:`Types.ChecksumAlgorithmList`
    * - Tier 1
      - ``GET /node``
@@ -286,7 +286,7 @@
 
 
 
-.. function:: getChecksumAlgorithms() -> ChecksumAlgorithmList
+.. function:: listChecksumAlgorithms() -> ChecksumAlgorithmList
 
    Returns a list of checksum algorithms that are supported by DataONE.
 
@@ -302,8 +302,6 @@
 
      A problem occurred with the service that prevented it from returning the expected response.
 
-.. TODO::
-    ChecksumAlgorithmList needs to be defined
 
 
 
