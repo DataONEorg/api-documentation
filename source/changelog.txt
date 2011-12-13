@@ -15,6 +15,13 @@ MN API
   changed from "startTime" and "endTime" to "fromDate" and "toDate"
   respectively.
 
+- MNRead.get - added InsufficientResources exception as possible response. This
+  may be raised for example, if memory, CPU, or bandwidth use is too limited to
+  respond to the request.
+
+- MNCore.ping - added description for why InsufficientResources may be raised.
+
+
 
 CN API
 ~~~~~~
@@ -32,6 +39,9 @@ CN API
 - CNRegister.updateNodeCapabilities, added InvalidToken exception
 
 - CNReplication.updateReplicationMetadata, added InvalidToken exception
+
+- CNCore.listFormats: removed InsufficientResources exception. If the CN can not
+  provide a response, then a ServiceFailure should be raised.
 
 
 2011-12-08 : Version 1.0

@@ -74,15 +74,13 @@
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=1001)``
 
+   :raises Exceptions.InsufficientResources: ``(errorCode=413, detailCode=1002)``
+
+     The node is unable to service the request due to insufficient resources such as CPU, memory, or bandwidth being over utilized.
+
 
 .. include:: ../examples/get.txt
 
-.. TODO::
-    There may be multiple representations of content (e.g. metadata as XML, RDF, or some other format).  May need to add another parameter to specify the format, or perhaps rely on HTTP content negotiation for this.
-
-    Should there be a separate identifier for different representations of the same content?
-.. TODO::
-    For Science Metadata, only the CNs and the original Member Node can guarantee that the returned object will provide the same hash as recorded in the System Metadata for the object.  This needs to be verified.
 
 
 

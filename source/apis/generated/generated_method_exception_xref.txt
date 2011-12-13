@@ -82,6 +82,11 @@
      - 501
      - 1001
    * - :mod:`MNRead`
+     - :func:`get <MNRead.get>`
+     - InsufficientResources
+     - 413
+     - 1002
+   * - :mod:`MNRead`
      - :func:`getSystemMetadata <MNRead.getSystemMetadata>`
      - NotAuthorized
      - 401
@@ -501,11 +506,6 @@
      - ServiceFailure
      - 500
      - 4841
-   * - :mod:`CNCore`
-     - :func:`listFormats <CNCore.listFormats>`
-     - InsufficientResources
-     - 413
-     - 4844
    * - :mod:`CNCore`
      - :func:`getFormat <CNCore.getFormat>`
      - NotImplemented
