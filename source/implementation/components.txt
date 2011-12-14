@@ -1,264 +1,431 @@
 Components of the DataONE Infrastructure
 ========================================
 
-This document outlines the major components of the DataONE core
-infrastructure, and indicates the dependencies between them. The component
-names listed here are used to categorize issues in the `issue tracking system`_.
 
-Products
---------
-
-Required for 2011 public release
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Coordinating Nodes
-
-  Tiers 1, 2, 3, 4.
-
-Member Nodes
-
-  MN testing Service
-
-  KNB
-
-  GMN
-
-  Dryad
-
-  DAAC
-
-  NBII
-
-  AKN
-
-  Merritt
-
-
-Investigator Toolkit
-
-  Mercury
-
-  CLI
-
-  FUSE
-
-  R
-
-  Morpho
-
-  VisTrails
-
-
-
-
-
-
-Dependency Graph
+Common Components
 -----------------
+
+**Figure 1.** Core shared components.
 
 .. graphviz::
 
-   digraph components {
-     rankdir = R;
-     fontname = "Bitstream Vera Sans";
-     fontsize = 8;
+   digraph core_components {
 
-     edge [
-       fontname = "Bitstream Vera Sans"
-       fontsize = 8
-       color = "#888888"
-       arrowhead = "open"
-       arrowsize = 0.5
-       len = 0.2
-       style="dashed"
-       ];
+      fontname = "Bitstream Vera Sans";
+      fontsize = 8;
 
-     node [
-       shape = "record"
-       fontname = "Courier"
-       fontsize = 8
-       fontcolor = "black"];   
+      edge [
+        fontname = "Bitstream Vera Sans"
+        fontsize = 8
+        color = "#888888"
+        arrowhead = "open"
+        arrowsize = 0.5
+        style="solid"
+        ];
 
-     arch [label="d1_architecture"
-           URL="https://repository.dataone.org/documents/Projects/documentation/architecture"];
-     schemas [label="d1_schemas"
-              URL="https://repository.dataone.org/software/cicore/trunk/d1_schemas"]
-     commonjava [label="d1_common_java"
-                 URL="https://repository.dataone.org/software/cicore/trunk/d1_common_java"];
-     commonpython [label="d1_common_python"
-                   URL="https://repository.dataone.org/software/cicore/trunk/d1_common_python"];
-     javalib [label="d1_libclient_java"
-              URL="https://repository.dataone.org/software/cicore/trunk/d1_libclient_java"];
-     pythonlib [label="d1_libclient_python"
-                URL="https://repository.dataone.org/software/cicore/trunk/d1_libclient_python"];
+      node [
+        fontname = "Courier"
+        fontsize = 8
+        fontcolor = "black"];   
 
-     
-     subgraph cluster_CN {
-       label="Coordinating Node stack";
-       color="#888888";
-       cnsvc [label="d1_cn_service"];
-       indexer [label="d1_indexer"];
-       sync [label="d1_synchronization"];
-       metacatCN [label="metacat"];
-     }
+      color="#888888";
 
-     subgraph cluster_MN {
-       label="Member Node Implementations";
-       color = "#888888"
-       gmn [label="d1_mn_generic"];
-       mndaac [label="d1_mn_daac"];
-       mndryad [label="d1_mn_dryad"];
-       mndryad_native [label="dryad_native"];
-       mnfedora [label="d1_mn_fedora"];
-       metacat [label="metacat"];
-       mncuahsi [label="CUAHSI"];
-       mnnbii [label="NBII"];
-       mnmerritt [label="Merritt"];
-     }
+      schema [label="dataonetypes.xsd" URL="#dataonetypes"];
+      d1_common_java;
+      d1_common_python;
+      d1_libclient_java;
+      d1_libclient_python;
+      d1_architecture;
 
-     subgraph cluster_ITK {
-       label="Investigator Toolkit"
-       color = "#888888"
-       cli [label="d1_client_cli"];
-       fuse [label="d1_client_fuse"];
-       r [label="d1_client_r"];       
-     }
-
-     monitor [label="d1_monitor"];
-     base [label="debian_packaging"];
-     
-     schemas -> arch [style="dotted"];
-     commonjava -> arch [style="dotted"];
-     commonpython -> arch [style="dotted"];
-     commonjava -> schemas;
-     commonpython -> schemas;
-     metacat -> commonjava;
-     metacatCN -> commonjava;
-     javalib -> commonjava;
-     javalib -> arch [style="dotted"];
-     pythonlib -> arch [style="dotted"];
-     
-     cnsvc -> commonjava;
-     cnsvc -> metacatCN;
-     cnsvc -> arch [style="dotted"];
-     indexer -> commonjava;
-     sync -> commonjava;
-     sync -> javalib;
-     
-     pythonlib -> commonpython;
-     cli -> pythonlib;
-     fuse -> pythonlib;
-     r -> javalib;
-     
-     gmn -> pythonlib;
-     gmn -> arch [style="dotted"];
-     mndaac -> pythonlib;
-     mndaac -> gmn;
-     mndryad -> pythonlib;
-     mndryad -> gmn;
-     
-     mnfedora -> javalib;
+      d1_architecture -> schema [style="dashed"];
+      d1_common_java -> schema;
+      d1_common_java -> d1_architecture [style="dashed"];
+      d1_common_python -> schema;
+      d1_common_python  -> d1_architecture [style="dashed"];
+      d1_libclient_java -> d1_common_java;
+      d1_libclient_java  -> d1_architecture [style="dashed"];
+      d1_libclient_python -> d1_common_python;
+      d1_libclient_python -> d1_architecture [style="dashed"];
+   
    }
 
 
-.. list-table::
-   :header-rows: 1
-   :widths: 2 5 20
+Integration Test Tools
+----------------------
 
-   * - Group
-     - Component Name
-     - Description
-   * - Core
-     - \
-     - \
-   * - \
-     - d1_architecture_
-     - The system architecture documentation
-   * - \
-     - d1_schemas_
-     - The schemas used for defining serialization of core data types
-   * - \
-     - d1_common_java_
-     - Base DataONE library in Java
-   * - \
-     - d1_common_python_
-     - Base DataONE library in Python
-   * - \
-     - metacat_
-     - The `Metacat application`_. Currently employed as the replicated object
-       store on Coordinating Nodes.
-   * - CN
-     - \
-     - \
-   * - \
-     - d1_cn_service_
-     - Coordinating node service, implementing the service APIs, data storage, 
-       and CN replication.
-   * - \
-     - d1_indexer_
-     - Indexes metadata and implements search interfaces for discovery of 
-       content stored in the DataONE network. Implemented using Mercury_, as
-       an extension of SOLR_, which in turn is an extension of Lucene_.
-   * - \
-     - d1_synchronization_
-     - Manages the synchronization of content between Member Nodes and the 
-       Coordinating Nodes.
-   * - MN
-     - \
-     - \
-   * - \
-     - d1_mn_generic_
-     - A generic, standalone Member Node implementation written in Python 
-       using the Django_ framework.
-   * - \
-     - d1_mn_daac_
-     - Adaptation of the Generic Member Node to support Member Node 
-       functionality on the DAAC.
-   * - \
-     - d1_mn_dryad_
-     - Currently the python adaptation of the Generic Member Node. A native 
-       implementation of Member Node services is being implemented 
-       (late 2010).
-   * - \
-     - d1_mn_fedora_
-     - Prototype Fedora Commons Member Node
-   * - \
-     - metacat_
-     - The `Metacat application`_. Implements the DataONE MN service interfaces.
-   * - ITK
-     - \
-     - \
-   * - \
-     - d1_libclient_java_
-     - Client library implemented in Java
-   * - \
-     - d1_libclient_python_
-     - Client library implemented in Python
-   * - \
-     - d1_client_cli_
-     - A command line client for interacting with the DataONE infrastructure. 
-       Currently (late 2010) implemented using d1_libclient_python.
-   * - \
-     - d1_client_fuse_
-     - A FUSE_ driver for mounting the DataONE infrastructure as a file 
-       system.
-   * - \
-     - d1_client_r_
-     - A plugin for R that enables access to DataONE content from the R_ 
-       application. Implemented using d1_libclient_java.
-   * - Other
-     - \
-     - \
-   * - \
-     - d1_monitor_
-     - The DataONE server and service monitoring system. Implemented using 
-       Cacti_.
-   * - \
-     - debian_packaging_
-     - Debian_ packages for setting up Ubuntu_ server installs of Coordinating
-       Nodes.
+**Figure 2.** Test services.
+
+.. graphviz::
+
+   digraph core_components {
+
+      color="#888888";
+      fontname = "Bitstream Vera Sans";
+      fontsize = 8;
+
+      edge [
+        fontname = "Bitstream Vera Sans"
+        fontsize = 8
+        color = "#888888"
+        arrowhead = "open"
+        arrowsize = 0.5
+        style="solid"
+        ];
+
+      node [
+        fontname = "Courier"
+        fontsize = 8
+        fontcolor = "black"];   
+
+      subgraph cluster_CORE {
+        label="Shared Components";
+        color="#888888";
+
+        schema [label="dataonetypes.xsd"];
+        d1_common_java;
+        d1_common_python;
+        d1_libclient_java;
+        d1_libclient_python;
+        d1_architecture;
+
+        d1_architecture -> schema [style="dashed"];
+        d1_common_java -> schema;
+        d1_common_java -> d1_architecture [style="dashed"];
+        d1_common_python -> schema;
+        d1_common_python  -> d1_architecture [style="dashed"];
+        d1_libclient_java -> d1_common_java;
+        d1_libclient_java  -> d1_architecture [style="dashed"];
+        d1_libclient_python -> d1_common_python;
+        d1_libclient_python -> d1_architecture [style="dashed"];
+      }
+   
+      d1_integration;
+      d1_web_test_site;
+      d1_instance_generator;
+      d1_echo_service;
+   
+      d1_integration -> d1_common_java;
+      d1_integration -> d1_libclient_java;
+      d1_integration -> Certificates;
+
+      d1_web_test_site -> d1_integration;
+   
+      d1_instance_generator -> d1_common_python;
+      d1_instance_generator -> d1_libclient_python;
+  }
 
 
+Coordinating Node Components
+----------------------------
+
+**Figure 3.** Coordinating node components.
+
+.. graphviz::
+
+   digraph core_components {
+
+      color="#888888";
+      fontname = "Bitstream Vera Sans";
+      fontsize = 8;
+
+      edge [
+        fontname = "Bitstream Vera Sans"
+        fontsize = 8
+        color = "#888888"
+        arrowhead = "open"
+        arrowsize = 0.5
+        style="solid"
+        ];
+
+      node [
+        fontname = "Courier"
+        fontsize = 8
+        fontcolor = "black"];   
+
+      subgraph cluster_CORE {
+        label="Shared Components";
+        color="#888888";
+
+        schema [label="dataonetypes.xsd"];
+        d1_common_java;
+        d1_common_python;
+        d1_libclient_java;
+        d1_libclient_python;
+        d1_architecture;
+
+        d1_architecture -> schema [style="dashed"];
+        d1_common_java -> schema;
+        d1_common_java -> d1_architecture [style="dashed"];
+        d1_common_python -> schema;
+        d1_common_python  -> d1_architecture [style="dashed"];
+        d1_libclient_java -> d1_common_java;
+        d1_libclient_java  -> d1_architecture [style="dashed"];
+        d1_libclient_python -> d1_common_python;
+        d1_libclient_python -> d1_architecture [style="dashed"];
+      }
+   
+
+      postgres [style="filled" fillcolor="grey80"];
+      hazelcast [style="filled" bgcolor="grey80"];
+      LDAP [style="filled" bgcolor="grey80"];
+      SOLR [style="filled" bgcolor="grey80"];
+      
+      cn_metacat;
+      d1_cn_common;
+      d1_cn_index_common;
+      d1_cn_index_generator;
+      d1_cn_index_processor;
+      d1_cn_noderegistry;
+      d1_cn_service;
+      d1_cn_rest;
+      d1_cn_rest_proxy;
+      indexerapi;
+      d1_process_daemon;
+      d1_replication;
+      d1_simple_search;
+      d1_synchronization;
+      one_mercury;
+      d1_identity_manager;
+      d1_portal;
+      d1_portal_servlet;
+      
+      
+      cn_metacat -> d1_common_java;
+      cn_metacat -> d1_libclient_java;
+      cn_metacat -> postgres [style="dashed"];
+      
+      d1_cn_common -> d1_common_java;
+      
+      indexerapi -> d1_common_java;
+      indexerapi -> d1_libclient_java;
+      
+      d1_cn_index_common -> d1_common_java;
+      
+      d1_cn_index_generator -> d1_cn_index_common;
+      d1_cn_index_generator -> d1_common_java;
+      d1_cn_index_generator -> d1_cn_common;
+      d1_cn_index_generator -> postgres [style="dashed"];
+      d1_cn_index_generator -> hazelcast [style="dashed"];
+      
+      d1_cn_index_processor -> d1_cn_common;
+      d1_cn_index_processor -> d1_cn_index_common;
+      d1_cn_index_processor -> d1_cn_index_generator;
+      d1_cn_index_processor -> indexerapi;
+      d1_cn_index_processor -> postgres [style="dashed"];
+      d1_cn_index_processor -> SOLR [style="dashed"];
+      
+      one_mercury -> SOLR [style="dashed"];
+      
+      d1_cn_noderegistry -> d1_cn_common;
+      d1_cn_noderegistry -> LDAP  [style="dashed"];
+      
+      d1_cn_service -> d1_cn_rest;
+      d1_cn_service -> d1_cn_rest_proxy;
+      
+      d1_cn_rest -> d1_libclient_java;
+      d1_cn_rest -> d1_cn_rest_proxy;
+      d1_cn_rest -> d1_cn_noderegistry;
+      d1_cn_rest -> d1_cn_common;
+      
+      d1_cn_rest_proxy -> d1_common_java;
+      
+      d1_process_daemon -> d1_synchronization;
+      d1_process_daemon -> d1_replication;
+      
+      d1_replication -> d1_cn_noderegistry;
+      d1_replication -> d1_cn_common;
+      d1_replication -> d1_libclient_java;
+      d1_replication -> hazelcast [style="dashed"];
+      
+      d1_synchronization -> d1_libclient_java;
+      d1_synchronization -> d1_cn_noderegistry;
+      d1_synchronization -> hazelcast [style="dashed"];
+      
+      d1_identity_manager -> d1_cn_common;
+      d1_identity_manager -> d1_libclient_java;
+      d1_identity_manager -> d1_cn_noderegistry;
+      
+      d1_portal -> d1_common_java;
+      d1_portal -> d1_libclient_java;
+      
+      d1_portal_servlet -> d1_portal;
+      
+      d1_simple_search -> SOLR;
+   }
+
+
+Member Node Components and Instances
+------------------------------------
+
+**Figure 4.** Member node implementations (ovals) and instances (rectangles).
+
+
+.. graphviz::
+
+   digraph core_components {
+
+      color="#888888";
+      fontname = "Bitstream Vera Sans";
+      fontsize = 8;
+
+      edge [
+        fontname = "Bitstream Vera Sans"
+        fontsize = 8
+        color = "#888888"
+        arrowhead = "open"
+        arrowsize = 0.5
+        style="solid"
+        ];
+
+      node [
+        fontname = "Courier"
+        fontsize = 8
+        fontcolor = "black"];   
+
+      subgraph cluster_CORE {
+        label="Shared Components";
+        color="#888888";
+
+        schema [label="dataonetypes.xsd"];
+        d1_common_java;
+        d1_common_python;
+        d1_libclient_java;
+        d1_libclient_python;
+        d1_architecture;
+
+        d1_architecture -> schema [style="dashed"];
+        d1_common_java -> schema;
+        d1_common_java -> d1_architecture [style="dashed"];
+        d1_common_python -> schema;
+        d1_common_python  -> d1_architecture [style="dashed"];
+        d1_libclient_java -> d1_common_java;
+        d1_libclient_java  -> d1_architecture [style="dashed"];
+        d1_libclient_python -> d1_common_python;
+        d1_libclient_python -> d1_architecture [style="dashed"];
+      }
+   
+      Metacat;
+      Mercury_MN;
+
+      KNB [shape="record"];
+      ORNL_DAAC [shape="record"];
+      USGS [shape="record"];
+      Dryad [shape="record"];
+      Merritt [shape="record"];
+      SAN_Parks [shape="record"];
+      MN_Replication_UNM_1 [shape="record"];
+      MN_Replication_UNM_2 [shape="record"];
+      MN_Replication_UCSB_1 [shape="record"];
+      MN_Replication_UCSB_2 [shape="record"];
+      MN_Replication_ORC_1 [shape="record"];
+      MN_Replication_ORC_2 [shape="record"];
+      
+      Metacat -> d1_common_java;
+      Metacat -> d1_libclient_java;
+      KNB -> Metacat;
+      SAN_Parks -> Metacat;
+      Merritt -> Metacat;
+
+      Mercury_MN -> d1_common_java;
+      ORNL_DAAC -> Mercury_MN;
+      USGS -> Mercury_MN;
+
+      GMN -> d1_common_python;
+      GMN -> d1_libclient_python;
+      MN_Replication_UNM_1 -> GMN;
+      MN_Replication_UCSB_1 -> GMN;
+      MN_Replication_ORC_1 -> GMN;
+
+      MN_Replication_UNM_2 -> Metacat;
+      MN_Replication_UCSB_2 -> Metacat;
+      MN_Replication_ORC_2 -> Metacat;
+      
+      Dryad -> d1_common_java;
+      Dryad -> d1_libclient_java;
+  }
+
+
+
+Investigator Toolkit Components
+-------------------------------
+
+**Figure 5.** Investigator toolkit.
+
+
+.. graphviz::
+
+   digraph core_components {
+
+      color="#888888";
+      fontname = "Bitstream Vera Sans";
+      fontsize = 8;
+
+      edge [
+        fontname = "Bitstream Vera Sans"
+        fontsize = 8
+        color = "#888888"
+        arrowhead = "open"
+        arrowsize = 0.5
+        style="solid"
+        ];
+
+      node [
+        fontname = "Courier"
+        fontsize = 8
+        fontcolor = "black"];   
+
+      subgraph cluster_CORE {
+        label="Shared Components";
+        color="#888888";
+
+        schema [label="dataonetypes.xsd"];
+        d1_common_java;
+        d1_common_python;
+        d1_libclient_java;
+        d1_libclient_python;
+        d1_architecture;
+
+        d1_architecture -> schema [style="dashed"];
+        d1_common_java -> schema;
+        d1_common_java -> d1_architecture [style="dashed"];
+        d1_common_python -> schema;
+        d1_common_python  -> d1_architecture [style="dashed"];
+        d1_libclient_java -> d1_common_java;
+        d1_libclient_java  -> d1_architecture [style="dashed"];
+        d1_libclient_python -> d1_common_python;
+        d1_libclient_python -> d1_architecture [style="dashed"];
+      }
+
+      d1_client_cli;
+      d1_client_r;
+      d1_client_fuse;
+      d1_client_dokan;
+      
+      d1_client_cli -> d1_common_python;
+      d1_client_cli -> d1_libclient_python;
+      d1_client_r -> d1_common_java;
+      d1_client_r -> d1_libclient_java;
+      d1_client_fuse -> d1_common_python;
+      d1_client_fuse -> d1_libclient_python;
+      d1_client_dokan -> d1_client_fuse;
+  }
+
+
+
+Table of Components
+-------------------
+
+
+.. sqltable:: Components List Table
+   :header: Component,Category,Responsible,Description
+   :widths: 3 3 3 10
+   :driver: xlsx
+   :source: source/implementation/data/components.xlsx
+   :sql: SELECT Component, Category, Responsible, Description FROM Sheet1;
+
+    
+
+    
 .. _d1_architecture: https://redmine.dataone.org/projects/d1/issues?query_id=8
 .. _d1_authentication: https://redmine.dataone.org/projects/d1/issues?query_id=9
 .. _d1_authorization: https://redmine.dataone.org/projects/d1/issues?query_id=11
@@ -292,5 +459,6 @@ Dependency Graph
 .. _Debian: http://www.debian.org/
 .. _Ubuntu: http://www.ubuntu.com/
 .. _issue tracking system: http://redmine.dataone.org/
-
-
+    
+    
+    

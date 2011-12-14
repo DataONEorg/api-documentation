@@ -7,7 +7,7 @@
      - Description
    * - GET /monitor/ping
      - :func:`MNCore.ping`
-     - Low level "are you alive" operation. A valid ping response is indicated by a HTTP status of 200.  The Member Node should perform some minimal internal functionality testing before answering. However, ping checks will be frequent (every few minutes) so the internal functionality test should not be high impact. Any status response other than 200 indicates that the node is offline for DataONE operations.
+     - Low level "are you alive" operation. A valid ping response is indicated by a HTTP status of 200. A timestmap indicating the current system time (UTC) at the precision available on the system SHOULD be returned as a string as the first line in the response body. The Member Node should perform some minimal internal functionality testing before answering. However, ping checks will be frequent (every few minutes) so the internal functionality test should not be high impact. Any status response other than 200 indicates that the node is offline for DataONE operations.
    * - GET /log
      - :func:`MNCore.getLogRecords`
      - Retrieve log information from the Member Node for the specified date range and even type. This method is used primarily by the log aggregator to generate aggregate statistics for nodes, objects, and the methods of access. The response MUST contain only records for which the requestor has permission to read. Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed.
@@ -62,6 +62,9 @@
    * - Path
      - Method
      - Description
+   * - GET /monitor/ping
+     - :func:`CNCore.ping`
+     - Low level "are you alive" operation. A valid ping response is indicated by a HTTP status of 200. A timestmap indicating the current system time (UTC) at the precision available on the system SHOULD be returned as a string as the first line in the response body. The Coordinating Node should perform some minimal internal functionality testing before answering. However, ping checks will be frequent (every few minutes) so the internal functionality test should not be high impact. Any status response other than 200 indicates that the node is offline for DataONE operations.
    * - POST /object/{pid}
      - :func:`CNCore.create`
      - Used internally within a Coordinating Node to add a new object to the object store. This method is not publicly exposed by a Coordinating Node.
@@ -166,7 +169,7 @@
      - Remove members to the named group. Group members can be removed by the original creator of the group, otherwise a NotAuthorized exception is thrown.  Group members are provided as a list of subjects to be removed from the group. Successful completion of this operation is indicated by a HTTP response status code of 200. Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception.
    * - PUT /replicaNotifications/{pid}
      - :func:`CNReplication.setReplicationStatus`
-     - Update the replication status of the system metadata, ensuring that the change is appropriate for the given state of system metadata.  For example, a MN can not change the status to *COMPLETED* unless the CN previously requested replication of the object and the replications status of the object (as indicated in the system metadata) is set to *QUEUED*. Successful completion of this operation is indicated by a HTTP response status code of 200. Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception. The nodeRef and status parameters are transmitted as part of the HTTP request body encoded as a MIME Multipart/form-data encoded payload.
+     - Update the replication status of the system metadata, ensuring that the change is appropriate for the given state of system metadata.  For example, a MN can not change the status to *COMPLETED* unless the CN previously requested replication of the object and the replications status of the object (as indicated in the system metadata) is set to *QUEUED*. Successful completion of this operation is indicated by a HTTP response status code of 200. Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception. The nodeRef, status, and failure parameters are transmitted as part of the HTTP request body encoded as a MIME Multipart/form-data encoded payload.
    * - PUT /replicaMetadata/{pid}
      - :func:`CNReplication.updateReplicationMetadata`
      - Full replacement of replication metadata in the system metadata for the specified object, changes date sys meta modified Successful completion of the operation is indicated by returning a HTTP status of 200. Failure of the operation MUST be indicated by returning an appropriate exception.

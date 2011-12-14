@@ -11,6 +11,10 @@
      - Function
      - Parameters
    * - Tier 1
+     - ``GET /monitor/ping``
+     - :func:`ping`
+     - () ``->`` :class:`Types.DateTime`
+   * - Tier 1
      - ``POST /object/{pid}``
      - :func:`create`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, ``object``, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
@@ -50,6 +54,34 @@
      - ``GET /reserve/{pid}``
      - :func:`hasReservation`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` boolean
+
+
+
+
+.. function:: ping() -> DateTime
+
+   Low level "are you alive" operation. A valid ping response is indicated by a HTTP status of 200. A timestmap indicating the current system time (UTC) at the precision available on the system SHOULD be returned as a string as the first line in the response body.
+
+   The Coordinating Node should perform some minimal internal functionality testing before answering. However, ping checks will be frequent (every few minutes) so the internal functionality test should not be high impact.
+
+   Any status response other than 200 indicates that the node is offline for DataONE operations.
+
+   :Use Cases:
+     :doc:`UC10 </design/UseCases/10_uc>`
+   :REST URL: ``GET /monitor/ping``
+   :returns: Null body or Exception
+   :rtype: :class:`Types.DateTime`
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2041)``
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2042)``
+
+   :raises Exceptions.InsufficientResources: ``(errorCode=413, detailCode=2045)``
+
+     A ping response may return InsufficientResources if for example the system is in a state where normal DataONE operations may be impeded by an unusually high load on the node.
+
+
+.. include:: ../examples/ping.txt
 
 
 

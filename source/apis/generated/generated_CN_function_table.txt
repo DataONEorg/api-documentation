@@ -11,6 +11,10 @@
      - Function
      - Parameters
    * - Tier 1
+     - ``GET /monitor/ping``
+     - :func:`CNCore.ping`
+     - () ``->`` :class:`Types.DateTime`
+   * - Tier 1
      - ``POST /object/{pid}``
      - :func:`CNCore.create`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, ``object``, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
@@ -150,7 +154,7 @@
    * - Tier 4
      - ``PUT /replicaNotifications/{pid}``
      - :func:`CNReplication.setReplicationStatus`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`nodeRef<Types.NodeReference>`, :class:`status<Types.ReplicationStatus>`, ``serialVersion``) ``->`` boolean
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`nodeRef<Types.NodeReference>`, :class:`status<Types.ReplicationStatus>`, :class:`failure<Types.BaseException>`) ``->`` boolean
    * - Tier 4
      - ``PUT /replicaMetadata/{pid}``
      - :func:`CNReplication.updateReplicationMetadata`
@@ -162,7 +166,7 @@
    * - Tier 4
      - ``GET /replicaAuthorizations/{pid}``
      - :func:`CNReplication.isNodeAuthorized`
-     - (:class:`session<Types.Session>`, :class:`targetNodeSubject<Types.Subject>`, :class:`pid<Types.Identifier>`, :class:`replicatePermission<Types.Permission>`) ``->`` boolean
+     - (:class:`session<Types.Session>`, :class:`targetNodeSubject<Types.Subject>`, :class:`pid<Types.Identifier>`) ``->`` boolean
    * - Tier 2
      - ``PUT /node/{nodeid}``
      - :func:`CNRegister.updateNodeCapabilities`

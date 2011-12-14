@@ -13,7 +13,7 @@
    * - Tier 1
      - ``GET /monitor/ping``
      - :func:`ping`
-     - () ``->`` :class:`Types.Boolean`
+     - () ``->`` :class:`Types.DateTime`
    * - Tier 1
      - ``GET /log``
      - :func:`getLogRecords`
@@ -26,9 +26,9 @@
 
 
 
-.. function:: ping() -> Boolean
+.. function:: ping() -> DateTime
 
-   Low level "are you alive" operation. A valid ping response is indicated by a HTTP status of 200.
+   Low level "are you alive" operation. A valid ping response is indicated by a HTTP status of 200. A timestmap indicating the current system time (UTC) at the precision available on the system SHOULD be returned as a string as the first line in the response body.
 
    The Member Node should perform some minimal internal functionality testing before answering. However, ping checks will be frequent (every few minutes) so the internal functionality test should not be high impact.
 
@@ -38,7 +38,7 @@
      :doc:`UC10 </design/UseCases/10_uc>`
    :REST URL: ``GET /monitor/ping``
    :returns: Null body or Exception
-   :rtype: :class:`Types.Boolean`
+   :rtype: :class:`Types.DateTime`
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2041)``
 

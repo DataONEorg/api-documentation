@@ -13,7 +13,7 @@
    * - Tier 4
      - ``PUT /replicaNotifications/{pid}``
      - :func:`setReplicationStatus`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`nodeRef<Types.NodeReference>`, :class:`status<Types.ReplicationStatus>`, ``serialVersion``) ``->`` boolean
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`nodeRef<Types.NodeReference>`, :class:`status<Types.ReplicationStatus>`, :class:`failure<Types.BaseException>`) ``->`` boolean
    * - Tier 4
      - ``PUT /replicaMetadata/{pid}``
      - :func:`updateReplicationMetadata`
@@ -25,12 +25,12 @@
    * - Tier 4
      - ``GET /replicaAuthorizations/{pid}``
      - :func:`isNodeAuthorized`
-     - (:class:`session<Types.Session>`, :class:`targetNodeSubject<Types.Subject>`, :class:`pid<Types.Identifier>`, :class:`replicatePermission<Types.Permission>`) ``->`` boolean
+     - (:class:`session<Types.Session>`, :class:`targetNodeSubject<Types.Subject>`, :class:`pid<Types.Identifier>`) ``->`` boolean
 
 
 
 
-.. function:: setReplicationStatus(session,pid,nodeRef,status,serialVersion) -> boolean
+.. function:: setReplicationStatus(session,pid,nodeRef,status,failure) -> boolean
 
    Update the replication status of the system metadata, ensuring that the change is appropriate for the given state of system metadata.  For example, a MN can not change the status to *COMPLETED* unless the CN previously requested replication of the object and the replications status of the object (as indicated in the system metadata) is set to *QUEUED*.
 
@@ -38,7 +38,7 @@
 
    Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception.
 
-   The nodeRef and status parameters are transmitted as part of the HTTP request body encoded as a MIME Multipart/form-data encoded payload.
+   The nodeRef, status, and failure parameters are transmitted as part of the HTTP request body encoded as a MIME Multipart/form-data encoded payload.
 
    :Use Cases:
      :doc:`UC09 </design/UseCases/09_uc>`
@@ -55,8 +55,8 @@
    :param status: Replication status. See system metadata schema for possible values.
    :type status: :class:`Types.ReplicationStatus`
 
-   :param serialVersion: The serialVersion of the system metadata that is the intended target for the change.
-   :type serialVersion: unsigned long
+   :param failure: A BaseException object or one of it's subclasses, or null.  If the status is set to 'failed', this exception object can provide more detail. Appropriate sub-classes include InsufficientResource, NotAuthorized, ServiceFailure, etc.
+   :type failure: :class:`Types.BaseException`
 
    :returns: True if the operation is allowed and expected, otherwise an exception should be raised.
    :rtype: boolean
@@ -168,7 +168,7 @@
 
 
 
-.. function:: isNodeAuthorized(session,targetNodeSubject,pid,replicatePermission) -> boolean
+.. function:: isNodeAuthorized(session,targetNodeSubject,pid) -> boolean
 
    Verifies that a replication event was initiated by a CN by comparing the target node's identifiying subject with a known list of scheduled replication tasks.
 
@@ -185,9 +185,6 @@
 
    :param pid: The identifier of the object to be replicated.
    :type pid: :class:`Types.Identifier`
-
-   :param replicatePermission: The value of the permission to be checked, in this case Permission.REPLICATE
-   :type replicatePermission: :class:`Types.Permission`
 
    :returns: True on success
    :rtype: boolean
