@@ -7,9 +7,11 @@
      - Description
    * - :mod:`MNCore`
      - :func:`MNCore.ping`
-     - Low level "are you alive" operation. A valid ping response is indicated by a HTTP status of 200. A timestmap indicating the current system time (UTC) at the precision available on the system SHOULD be returned as a string as the first line in the response body.
+     - Low level "are you alive" operation. A valid ping response is indicated by a HTTP status of 200. A timestmap indicating the current system time (UTC) on the node MUST be returned in the HTTP Date header.
 The Member Node should perform some minimal internal functionality testing before answering. However, ping checks will be frequent (every few minutes) so the internal functionality test should not be high impact.
 Any status response other than 200 indicates that the node is offline for DataONE operations.
+Note that the timestamp returned in the Date header should follow the semantics as described in the HTTP specifications, http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.18
+The response body will be ignored by the caller expect in the case of an error, in which case the response body should contain the appropriate DataONE exception.
 
        Appears in functional use cases: :doc:`UC10 </design/UseCases/10_uc>`
    * - \
@@ -114,9 +116,11 @@ Failure of the operation MUST be indicated by returning an appropriate exception
        Appears in functional use cases: :doc:`UC09 </design/UseCases/09_uc>`
    * - :mod:`CNCore`
      - :func:`CNCore.ping`
-     - Low level "are you alive" operation. A valid ping response is indicated by a HTTP status of 200. A timestmap indicating the current system time (UTC) at the precision available on the system SHOULD be returned as a string as the first line in the response body.
-The Coordinating Node should perform some minimal internal functionality testing before answering. However, ping checks will be frequent (every few minutes) so the internal functionality test should not be high impact.
+     - Low level "are you alive" operation. A valid ping response is indicated by a HTTP status of 200. A timestmap indicating the current system time (UTC) on the node MUST be returned in the HTTP Date header.
+The Member Node should perform some minimal internal functionality testing before answering. However, ping checks will be frequent (every few minutes) so the internal functionality test should not be high impact.
 Any status response other than 200 indicates that the node is offline for DataONE operations.
+Note that the timestamp returned in the Date header should follow the semantics as described in the HTTP specifications, http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.18
+The response body will be ignored by the caller expect in the case of an error, in which case the response body should contain the appropriate DataONE exception.
 
        Appears in functional use cases: :doc:`UC10 </design/UseCases/10_uc>`
    * - \
@@ -214,7 +218,7 @@ Note that date time precision is limited to one millisecond. If no timezone info
    * - \
      - :func:`CNRead.search`
      - Search the metadata catalog and return identifiers of metadata records that match the criteria.
-Implemented asa proxy to the SOLR search index. All readonly operations supported with standard SOLR parameters.
+Implemented as a proxy to the SOLR search index. All readonly operations supported with standard SOLR parameters.
 
        Appears in functional use cases: :doc:`UC02 </design/UseCases/02_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
    * - :mod:`CNAuthorization`
@@ -290,6 +294,11 @@ A failed request MUST be indicated by returning an appropriate exception and set
 A successful request is indicated by returning a HTTP status of 200.
 A failed request MUST be indicated by returning an appropriate exception and setting the response HTTP status accordingly.
    * - \
+     - :func:`CNIdentity.getPendingMapIdentity`
+     - Gets the SubjectInfo of a previously initiated identity mapping.
+A successful request is indicated by returning a HTTP status of 200.
+A failed request MUST be indicated by returning an appropriate exception and setting the response HTTP status accordingly.
+   * - \
      - :func:`CNIdentity.denyMapIdentity`
      - Denies a previously initiated identity mapping. If subject A asserts that B is the same identity through :func:`CNIdentity.requestMapIdentity`, then this method is called by B to deny that assertion.
 A successful request is indicated by returning a HTTP status of 200.
@@ -297,17 +306,11 @@ A failed request MUST be indicated by returning an appropriate exception and set
    * - \
      - :func:`CNIdentity.createGroup`
      - Create a group with the given name.
-Groups are lists of subjects that allow all members of the group to be referenced by listing solely the subject name of the group.  Group names must be unique within the DataONE system, and can only be modified by their creator.
+Groups are lists of subjects that allow all members of the group to be referenced by listing solely the subject name of the group.  Group names must be unique within the DataONE system. Groups can only be modified by Subjects listed as rightsHolders.
    * - \
-     - :func:`CNIdentity.addGroupMembers`
+     - :func:`CNIdentity.updateGroup`
      - Add members to the named group.
 Group members can be added by the original creator of the group, otherwise a NotAuthorized exception is thrown.  Group members are provided as a list of subjects to be added to the group.
-Successful completion of this operation is indicated by a HTTP response status code of 200.
-Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception.
-   * - \
-     - :func:`CNIdentity.removeGroupMembers`
-     - Remove members to the named group.
-Group members can be removed by the original creator of the group, otherwise a NotAuthorized exception is thrown.  Group members are provided as a list of subjects to be removed from the group.
 Successful completion of this operation is indicated by a HTTP response status code of 200.
 Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception.
    * - :mod:`CNReplication`

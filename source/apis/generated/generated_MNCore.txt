@@ -13,7 +13,7 @@
    * - Tier 1
      - ``GET /monitor/ping``
      - :func:`ping`
-     - () ``->`` :class:`Types.DateTime`
+     - () ``->`` null
    * - Tier 1
      - ``GET /log``
      - :func:`getLogRecords`
@@ -26,19 +26,23 @@
 
 
 
-.. function:: ping() -> DateTime
+.. function:: ping() -> null
 
-   Low level "are you alive" operation. A valid ping response is indicated by a HTTP status of 200. A timestmap indicating the current system time (UTC) at the precision available on the system SHOULD be returned as a string as the first line in the response body.
+   Low level "are you alive" operation. A valid ping response is indicated by a HTTP status of 200. A timestmap indicating the current system time (UTC) on the node MUST be returned in the HTTP Date header.
 
    The Member Node should perform some minimal internal functionality testing before answering. However, ping checks will be frequent (every few minutes) so the internal functionality test should not be high impact.
 
    Any status response other than 200 indicates that the node is offline for DataONE operations.
 
+   Note that the timestamp returned in the Date header should follow the semantics as described in the HTTP specifications, http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.18
+
+   The response body will be ignored by the caller expect in the case of an error, in which case the response body should contain the appropriate DataONE exception.
+
    :Use Cases:
      :doc:`UC10 </design/UseCases/10_uc>`
    :REST URL: ``GET /monitor/ping``
    :returns: Null body or Exception
-   :rtype: :class:`Types.DateTime`
+   :rtype: null
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2041)``
 

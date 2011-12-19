@@ -7,7 +7,7 @@
      - Description
    * - GET /monitor/ping
      - :func:`MNCore.ping`
-     - Low level "are you alive" operation. A valid ping response is indicated by a HTTP status of 200. A timestmap indicating the current system time (UTC) at the precision available on the system SHOULD be returned as a string as the first line in the response body. The Member Node should perform some minimal internal functionality testing before answering. However, ping checks will be frequent (every few minutes) so the internal functionality test should not be high impact. Any status response other than 200 indicates that the node is offline for DataONE operations.
+     - Low level "are you alive" operation. A valid ping response is indicated by a HTTP status of 200. A timestmap indicating the current system time (UTC) on the node MUST be returned in the HTTP Date header. The Member Node should perform some minimal internal functionality testing before answering. However, ping checks will be frequent (every few minutes) so the internal functionality test should not be high impact. Any status response other than 200 indicates that the node is offline for DataONE operations. Note that the timestamp returned in the Date header should follow the semantics as described in the HTTP specifications, http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.18 The response body will be ignored by the caller expect in the case of an error, in which case the response body should contain the appropriate DataONE exception.
    * - GET /log
      - :func:`MNCore.getLogRecords`
      - Retrieve log information from the Member Node for the specified date range and even type. This method is used primarily by the log aggregator to generate aggregate statistics for nodes, objects, and the methods of access. The response MUST contain only records for which the requestor has permission to read. Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed.
@@ -64,7 +64,7 @@
      - Description
    * - GET /monitor/ping
      - :func:`CNCore.ping`
-     - Low level "are you alive" operation. A valid ping response is indicated by a HTTP status of 200. A timestmap indicating the current system time (UTC) at the precision available on the system SHOULD be returned as a string as the first line in the response body. The Coordinating Node should perform some minimal internal functionality testing before answering. However, ping checks will be frequent (every few minutes) so the internal functionality test should not be high impact. Any status response other than 200 indicates that the node is offline for DataONE operations.
+     - Low level "are you alive" operation. A valid ping response is indicated by a HTTP status of 200. A timestmap indicating the current system time (UTC) on the node MUST be returned in the HTTP Date header. The Member Node should perform some minimal internal functionality testing before answering. However, ping checks will be frequent (every few minutes) so the internal functionality test should not be high impact. Any status response other than 200 indicates that the node is offline for DataONE operations. Note that the timestamp returned in the Date header should follow the semantics as described in the HTTP specifications, http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.18 The response body will be ignored by the caller expect in the case of an error, in which case the response body should contain the appropriate DataONE exception.
    * - POST /object/{pid}
      - :func:`CNCore.create`
      - Used internally within a Coordinating Node to add a new object to the object store. This method is not publicly exposed by a Coordinating Node.
@@ -118,7 +118,7 @@
      - Retrieve the list of objects present on the CN that match the calling parameters. At a minimum, this method should be able to return a list of objects that match::   fromDate < SystemMetadata.dateSysMetadataModified but is expected to also support date range (by also specifying *toDate*), and should also support slicing of the matching set of records by indicating the starting *index* of the response (where 0 is the index of the first item) and the *count* of elements to be returned. Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed.
    * - GET /search[?qt={queryType}[&{query}]]
      - :func:`CNRead.search`
-     - Search the metadata catalog and return identifiers of metadata records that match the criteria. Implemented asa proxy to the SOLR search index. All readonly operations supported with standard SOLR parameters.
+     - Search the metadata catalog and return identifiers of metadata records that match the criteria. Implemented as a proxy to the SOLR search index. All readonly operations supported with standard SOLR parameters.
    * - PUT /owner/{pid}
      - :func:`CNAuthorization.setRightsHolder`
      - Changes ownership (RightsHolder) of the specified object to the :term:`subject` specified by `userId`
@@ -155,18 +155,18 @@
    * - PUT /accounts/pendingmap/{subject}
      - :func:`CNIdentity.confirmMapIdentity`
      - Confirms a previously initiated identity mapping. If subject A asserts that B is the same identity through :func:`CNIdentity.requestMapIdentity`, then this method is called by B to confirm that assertion. A successful request is indicated by returning a HTTP status of 200. A failed request MUST be indicated by returning an appropriate exception and setting the response HTTP status accordingly.
+   * - GET /accounts/pendingmap/{subject}
+     - :func:`CNIdentity.getPendingMapIdentity`
+     - Gets the SubjectInfo of a previously initiated identity mapping. A successful request is indicated by returning a HTTP status of 200. A failed request MUST be indicated by returning an appropriate exception and setting the response HTTP status accordingly.
    * - DELETE /accounts/pendingmap/{subject}
      - :func:`CNIdentity.denyMapIdentity`
      - Denies a previously initiated identity mapping. If subject A asserts that B is the same identity through :func:`CNIdentity.requestMapIdentity`, then this method is called by B to deny that assertion. A successful request is indicated by returning a HTTP status of 200. A failed request MUST be indicated by returning an appropriate exception and setting the response HTTP status accordingly.
-   * - POST /groups/{groupName}
+   * - POST /groups
      - :func:`CNIdentity.createGroup`
-     - Create a group with the given name. Groups are lists of subjects that allow all members of the group to be referenced by listing solely the subject name of the group.  Group names must be unique within the DataONE system, and can only be modified by their creator.
-   * - PUT /groups/{groupName}
-     - :func:`CNIdentity.addGroupMembers`
+     - Create a group with the given name. Groups are lists of subjects that allow all members of the group to be referenced by listing solely the subject name of the group.  Group names must be unique within the DataONE system. Groups can only be modified by Subjects listed as rightsHolders.
+   * - PUT /groups
+     - :func:`CNIdentity.updateGroup`
      - Add members to the named group. Group members can be added by the original creator of the group, otherwise a NotAuthorized exception is thrown.  Group members are provided as a list of subjects to be added to the group. Successful completion of this operation is indicated by a HTTP response status code of 200. Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception.
-   * - POST /groups/remove/{groupName}
-     - :func:`CNIdentity.removeGroupMembers`
-     - Remove members to the named group. Group members can be removed by the original creator of the group, otherwise a NotAuthorized exception is thrown.  Group members are provided as a list of subjects to be removed from the group. Successful completion of this operation is indicated by a HTTP response status code of 200. Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception.
    * - PUT /replicaNotifications/{pid}
      - :func:`CNReplication.setReplicationStatus`
      - Update the replication status of the system metadata, ensuring that the change is appropriate for the given state of system metadata.  For example, a MN can not change the status to *COMPLETED* unless the CN previously requested replication of the object and the replications status of the object (as indicated in the system metadata) is set to *QUEUED*. Successful completion of this operation is indicated by a HTTP response status code of 200. Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception. The nodeRef, status, and failure parameters are transmitted as part of the HTTP request body encoded as a MIME Multipart/form-data encoded payload.

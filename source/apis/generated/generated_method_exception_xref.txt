@@ -1262,6 +1262,26 @@
      - 501
      - 2361
    * - :mod:`CNIdentity`
+     - :func:`getPendingMapIdentity <CNIdentity.getPendingMapIdentity>`
+     - ServiceFailure
+     - 500
+     - 2390
+   * - :mod:`CNIdentity`
+     - :func:`getPendingMapIdentity <CNIdentity.getPendingMapIdentity>`
+     - NotAuthorized
+     - 401
+     - 2360
+   * - :mod:`CNIdentity`
+     - :func:`getPendingMapIdentity <CNIdentity.getPendingMapIdentity>`
+     - NotFound
+     - 404
+     - 2340
+   * - :mod:`CNIdentity`
+     - :func:`getPendingMapIdentity <CNIdentity.getPendingMapIdentity>`
+     - NotImplemented
+     - 501
+     - 2361
+   * - :mod:`CNIdentity`
      - :func:`denyMapIdentity <CNIdentity.denyMapIdentity>`
      - ServiceFailure
      - 500
@@ -1312,65 +1332,35 @@
      - 409
      - 2400
    * - :mod:`CNIdentity`
-     - :func:`addGroupMembers <CNIdentity.addGroupMembers>`
+     - :func:`updateGroup <CNIdentity.updateGroup>`
      - ServiceFailure
      - 500
      - 2590
    * - :mod:`CNIdentity`
-     - :func:`addGroupMembers <CNIdentity.addGroupMembers>`
+     - :func:`updateGroup <CNIdentity.updateGroup>`
      - InvalidToken
      - 401
      - 2570
    * - :mod:`CNIdentity`
-     - :func:`addGroupMembers <CNIdentity.addGroupMembers>`
+     - :func:`updateGroup <CNIdentity.updateGroup>`
      - NotAuthorized
      - 401
      - 2560
    * - :mod:`CNIdentity`
-     - :func:`addGroupMembers <CNIdentity.addGroupMembers>`
+     - :func:`updateGroup <CNIdentity.updateGroup>`
      - NotFound
      - 404
      - 2540
    * - :mod:`CNIdentity`
-     - :func:`addGroupMembers <CNIdentity.addGroupMembers>`
+     - :func:`updateGroup <CNIdentity.updateGroup>`
      - NotImplemented
      - 501
      - 2561
    * - :mod:`CNIdentity`
-     - :func:`addGroupMembers <CNIdentity.addGroupMembers>`
+     - :func:`updateGroup <CNIdentity.updateGroup>`
      - InvalidRequest
      - 400
      - 2542
-   * - :mod:`CNIdentity`
-     - :func:`removeGroupMembers <CNIdentity.removeGroupMembers>`
-     - ServiceFailure
-     - 500
-     - 2690
-   * - :mod:`CNIdentity`
-     - :func:`removeGroupMembers <CNIdentity.removeGroupMembers>`
-     - InvalidToken
-     - 401
-     - 2670
-   * - :mod:`CNIdentity`
-     - :func:`removeGroupMembers <CNIdentity.removeGroupMembers>`
-     - NotAuthorized
-     - 401
-     - 2660
-   * - :mod:`CNIdentity`
-     - :func:`removeGroupMembers <CNIdentity.removeGroupMembers>`
-     - NotFound
-     - 404
-     - 2640
-   * - :mod:`CNIdentity`
-     - :func:`removeGroupMembers <CNIdentity.removeGroupMembers>`
-     - NotImplemented
-     - 501
-     - 2661
-   * - :mod:`CNIdentity`
-     - :func:`removeGroupMembers <CNIdentity.removeGroupMembers>`
-     - InvalidRequest
-     - 400
-     - 2642
    * - :mod:`CNReplication`
      - :func:`setReplicationStatus <CNReplication.setReplicationStatus>`
      - ServiceFailure

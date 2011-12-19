@@ -1,6 +1,13 @@
 Change Log
 ==========
 
+2011-12-19 : Version 1.0
+
+- Altered MNCore and CNCore ping() to use the HTTP Date header field for
+  transmitting the timestamp. Removed requirement for timestamp appearing in
+  response body.
+
+
 2011-12-14 : Version 1.0
 
 - Changed MNCore.ping() to return a DateTime string

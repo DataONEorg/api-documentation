@@ -13,7 +13,7 @@
    * - Tier 1
      - ``GET /monitor/ping``
      - :func:`CNCore.ping`
-     - () ``->`` :class:`Types.DateTime`
+     - () ``->`` null
    * - Tier 1
      - ``POST /object/{pid}``
      - :func:`CNCore.create`
@@ -86,7 +86,7 @@
    * - Tier 1
      - ``GET /search[?qt={queryType}[&{query}]]``
      - :func:`CNRead.search`
-     - (:class:`session<Types.Session>`, :class:`queryType<Types.QueryType>`, ``query``) ``->`` :class:`Types.ObjectList`
+     - (:class:`session<Types.Session>`, :class:`queryType=solr<Types.String>`, ``query``) ``->`` :class:`Types.ObjectList`
    * - Tier 2
      - ``PUT /owner/{pid}``
      - :func:`CNAuthorization.setRightsHolder`
@@ -122,7 +122,7 @@
    * - Tier 2
      - ``POST /accounts/map``
      - :func:`CNIdentity.mapIdentity`
-     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
+     - (:class:`session<Types.Session>`, :class:`primarySubject<Types.Subject>`, :class:`secondarySubject<Types.Subject>`) ``->`` boolean
    * - Tier 2
      - ``DELETE /accounts/map/{subject}``
      - :func:`CNIdentity.removeMapIdentity`
@@ -136,21 +136,21 @@
      - :func:`CNIdentity.confirmMapIdentity`
      - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
    * - Tier 2
+     - ``GET /accounts/pendingmap/{subject}``
+     - :func:`CNIdentity.getPendingMapIdentity`
+     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` :class:`Types.SubjectInfo`
+   * - Tier 2
      - ``DELETE /accounts/pendingmap/{subject}``
      - :func:`CNIdentity.denyMapIdentity`
      - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
    * - Tier 2
-     - ``POST /groups/{groupName}``
+     - ``POST /groups``
      - :func:`CNIdentity.createGroup`
-     - (:class:`session<Types.Session>`, :class:`groupName<Types.Subject>`) ``->`` :class:`Types.Subject`
+     - (:class:`session<Types.Session>`, :class:`group<Types.Group>`) ``->`` :class:`Types.Subject`
    * - Tier 2
-     - ``PUT /groups/{groupName}``
-     - :func:`CNIdentity.addGroupMembers`
-     - (:class:`session<Types.Session>`, :class:`groupName<Types.Subject>`, :class:`members<Types.SubjectList>`) ``->`` boolean
-   * - Tier 2
-     - ``POST /groups/remove/{groupName}``
-     - :func:`CNIdentity.removeGroupMembers`
-     - (:class:`session<Types.Session>`, :class:`groupName<Types.Subject>`, :class:`members<Types.SubjectList>`) ``->`` boolean
+     - ``PUT /groups``
+     - :func:`CNIdentity.updateGroup`
+     - (:class:`session<Types.Session>`, :class:`group<Types.Group>`) ``->`` boolean
    * - Tier 4
      - ``PUT /replicaNotifications/{pid}``
      - :func:`CNReplication.setReplicationStatus`

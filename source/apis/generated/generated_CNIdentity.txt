@@ -33,7 +33,7 @@
    * - Tier 2
      - ``POST /accounts/map``
      - :func:`mapIdentity`
-     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
+     - (:class:`session<Types.Session>`, :class:`primarySubject<Types.Subject>`, :class:`secondarySubject<Types.Subject>`) ``->`` boolean
    * - Tier 2
      - ``DELETE /accounts/map/{subject}``
      - :func:`removeMapIdentity`
@@ -47,21 +47,21 @@
      - :func:`confirmMapIdentity`
      - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
    * - Tier 2
+     - ``GET /accounts/pendingmap/{subject}``
+     - :func:`getPendingMapIdentity`
+     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` :class:`Types.SubjectInfo`
+   * - Tier 2
      - ``DELETE /accounts/pendingmap/{subject}``
      - :func:`denyMapIdentity`
      - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
    * - Tier 2
-     - ``POST /groups/{groupName}``
+     - ``POST /groups``
      - :func:`createGroup`
-     - (:class:`session<Types.Session>`, :class:`groupName<Types.Subject>`) ``->`` :class:`Types.Subject`
+     - (:class:`session<Types.Session>`, :class:`group<Types.Group>`) ``->`` :class:`Types.Subject`
    * - Tier 2
-     - ``PUT /groups/{groupName}``
-     - :func:`addGroupMembers`
-     - (:class:`session<Types.Session>`, :class:`groupName<Types.Subject>`, :class:`members<Types.SubjectList>`) ``->`` boolean
-   * - Tier 2
-     - ``POST /groups/remove/{groupName}``
-     - :func:`removeGroupMembers`
-     - (:class:`session<Types.Session>`, :class:`groupName<Types.Subject>`, :class:`members<Types.SubjectList>`) ``->`` boolean
+     - ``PUT /groups``
+     - :func:`updateGroup`
+     - (:class:`session<Types.Session>`, :class:`group<Types.Group>`) ``->`` boolean
 
 
 
@@ -248,7 +248,7 @@
 
 
 
-.. function:: mapIdentity(session,subject) -> boolean
+.. function:: mapIdentity(session,primarySubject,secondarySubject) -> boolean
 
    Create a new mapping between the two identities, asserting that they represent the same subject.
 
@@ -262,8 +262,11 @@
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.
    :type session: :class:`Types.Session`
 
-   :param subject: The Subject identifier to be used for equivalentIdentity. This Subject will not match the Subject named in the certificate.
-   :type subject: :class:`Types.Subject`
+   :param primarySubject: The Subject identifier that will have a mapped identity to the other given subject
+   :type primarySubject: :class:`Types.Subject`
+
+   :param secondarySubject: The Subject identifier that will have a mapped identity to the other given subject
+   :type secondarySubject: :class:`Types.Subject`
 
    :returns: True if the mapping was successfully initiated, false otherwise.
    :rtype: boolean
@@ -404,6 +407,39 @@
 
 
 
+.. function:: getPendingMapIdentity(session,subject) -> SubjectInfo
+
+   Gets the SubjectInfo of a previously initiated identity mapping.
+
+   A successful request is indicated by returning a HTTP status of 200.
+
+   A failed request MUST be indicated by returning an appropriate exception and setting the response HTTP status accordingly.
+
+   :REST URL: ``GET /accounts/pendingmap/{subject}``
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.
+   :type session: :class:`Types.Session`
+
+   :param subject: The Subject identifier to be used for equivalentIdentity. This Subject will not match the Subject named in the certificate.
+   :type subject: :class:`Types.Subject`
+
+   :returns: The SubjectInfo
+   :rtype: :class:`Types.SubjectInfo`
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2390)``
+
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=2360)``
+
+     The supplied principal does not have permission to get the SubjectInfo
+
+   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=2340)``
+
+     The specified principal does not exist in the DataONE system, or the mapping between the subjects has no yet been initiated.
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2361)``
+
+
+
+
 .. function:: denyMapIdentity(session,subject) -> boolean
 
    Denies a previously initiated identity mapping. If subject A asserts that B is the same identity through :func:`CNIdentity.requestMapIdentity`, then this method is called by B to deny that assertion.
@@ -439,20 +475,20 @@
 
 
 
-.. function:: createGroup(session,groupName) -> Subject
+.. function:: createGroup(session,group) -> Subject
 
    Create a group with the given name.
 
-   Groups are lists of subjects that allow all members of the group to be referenced by listing solely the subject name of the group.  Group names must be unique within the DataONE system, and can only be modified by their creator.
+   Groups are lists of subjects that allow all members of the group to be referenced by listing solely the subject name of the group.  Group names must be unique within the DataONE system. Groups can only be modified by Subjects listed as rightsHolders.
 
-   :REST URL: ``POST /groups/{groupName}``
+   :REST URL: ``POST /groups``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
-   :param groupName: The name of the group to be created.
-   :type groupName: :class:`Types.Subject`
+   :param group: The Group to be created.
+   :type group: :class:`Types.Group`
 
-   :returns: The name of the group that was created.
+   :returns: The Subject of the group that was created.
    :rtype: :class:`Types.Subject`
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2490)``
@@ -472,7 +508,7 @@
 
 
 
-.. function:: addGroupMembers(session,groupName,members) -> boolean
+.. function:: updateGroup(session,group) -> boolean
 
    Add members to the named group.
 
@@ -482,15 +518,12 @@
 
    Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception.
 
-   :REST URL: ``PUT /groups/{groupName}``
+   :REST URL: ``PUT /groups``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
-   :param groupName: The identifier of the group to be modified.
-   :type groupName: :class:`Types.Subject`
-
-   :param members: The list of members to be added to the group.
-   :type members: :class:`Types.SubjectList`
+   :param group: The new Group object that will replace the old Group. The Group.Subject must match the groupName and an update cannot modify this value.
+   :type group: :class:`Types.Group`
 
    :returns: True if the group that was modified successfully, false otherwise
    :rtype: boolean
@@ -511,48 +544,4 @@
 
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=2542)``
 
-
-
-
-.. function:: removeGroupMembers(session,groupName,members) -> boolean
-
-   Remove members to the named group.
-
-   Group members can be removed by the original creator of the group, otherwise a NotAuthorized exception is thrown.  Group members are provided as a list of subjects to be removed from the group.
-
-   Successful completion of this operation is indicated by a HTTP response status code of 200.
-
-   Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception.
-
-   :REST URL: ``POST /groups/remove/{groupName}``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
-   :type session: :class:`Types.Session`
-
-   :param groupName: The identifier of the group to be modified.
-   :type groupName: :class:`Types.Subject`
-
-   :param members: The list of members to be removed from the group.
-   :type members: :class:`Types.SubjectList`
-
-   :returns: True if the operation completed successfully.
-   :rtype: boolean
-
-   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2690)``
-
-   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=2670)``
-
-   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=2660)``
-
-     The supplied principal does not have permission to remove from a group
-
-   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=2640)``
-
-     The specified group does not exist in the DataONE system
-
-   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2661)``
-
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=2642)``
-
-.. TODO::
-    Evaluate the REST endpoint for this method and determine if DELETE is the appropriate http method.
 
