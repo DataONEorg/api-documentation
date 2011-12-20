@@ -45,7 +45,10 @@
 ..                                    ######
 .. class:: DateTime
 
-  A string that completely identifies a specific time.
+  A string that completely identifies a specific time, typed using the XML 
+  Schema Datatypes definition (see `XMLSchema dateTime`_) for the datetime serialization syntax ('xs:dateTime').
+  This syntax represents a subset of the ISO 8601 standard notation, and so standard ISO 8601
+  parsing libraries can be used to parse the values (see libraries used below).
 
   - Must include date and time
   - If not specified, then the time zone is 0, i.e. GMT
