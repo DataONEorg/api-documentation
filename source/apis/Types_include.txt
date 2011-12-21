@@ -45,30 +45,36 @@
 ..                                    ######
 .. class:: DateTime
 
-  A string that completely identifies a specific time, typed using the XML 
+  A string that completely identifies a specific date and time.  When DateTime values are used within 
+  fields in request and response messages, and as URL-encoded values for parameters,
+  all DateTime values will be typed using the XML 
   Schema Datatypes definition (see `XMLSchema dateTime`_) for the datetime serialization syntax ('xs:dateTime').
   This syntax represents a subset of the ISO 8601 standard notation, and so standard ISO 8601
-  parsing libraries can be used to parse the values (see libraries used below).
+  parsing libraries can be used to parse the values (see libraries used below).  In addition, 
+  within DataONE, these values MUST be expressed with a timezone designation in UTC/GMT time only; local times
+  are not permitted.
 
   - Must include date and time
-  - If not specified, then the time zone is 0, i.e. GMT
+  - The time zone must be 0, i.e. GMT
 
   Valid representations include:
 
-  - `HTTP Full Date`_ format. e.g. `Sun, 06 Nov 1994 08:49:37 GMT`
   - `YYYY-MM-DDTHH:MM:SS.mmmmmm`
-  - `YYYYMMDDTHHMMSS.mmmmmm`
-  - `YYYY-MM-DDTHH:MM:SS.mmmmmm+HH:MM`
-  - `YYYYMMDDTHHMMSS.mmmmmm+HHMM`
+  - `YYYY-MM-DDTHH:MM:SS.mmmmmm+00:00`
 
   The milliseconds may be left off if that precision is not available.
+  
+  In addition, in any methods that use date time values in HTTP headers, the serialization will
+  follow the HTTP Full DateTime standard (RFC 1123):
+  
+    - `HTTP Full Date`_ format. e.g. `Sun, 06 Nov 1994 08:49:37 GMT`
 
   In Java, code against `java.util.Date`_, though serialization and
   deserialization will be performed with `org.joda.DateTime`_ to ensure
-  millisecond precision is .
+  millisecond precision is correct.
 
-  Implemented in Python using the `datetime.datetime`_ class, which is also
-  used for serialization and deserialization through Pyxb_.
+  In Python, we use `datetime.datetime`_ to represent datetimes internally and a library 
+  called iso8601 to serialize and deserialize to Types.DateTime and Pyxb_ for the XML representation.
 
   See also the `XMLSchema dateTime`_ type which is used for serializing DateTime
   values in XML transmitted between DataONE components.
