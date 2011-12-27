@@ -27,8 +27,10 @@ ALLSPHINXOPTS   = -d "$(BUILDDIR)/doctrees" $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) s
 
 help:
 	@echo "Please use \`make <target>' where <target> is one of"
-	@echo "  generate  to generate doc files from spreadsheet"
+	@echo "  generate  to generate doc files from spreadsheet and schema"
+	@echo "  plantuml  to make PlantUML diagrams"
 	@echo "  html      to make standalone HTML files"
+	@echo "  all       Run generate, plantuml, and html to make standalone HTML files"
 	@echo "  epub      to make ePub document"
 	@echo "  dirhtml   to make HTML files named index.html in directories"
 	@echo "  pickle    to make pickle files"
@@ -40,17 +42,19 @@ help:
 	@echo "  linkcheck to check all external links for integrity"
 	@echo "  doctest   to run all doctests embedded in the documentation (if enabled)"
 	@echo "  pdf       to make PDF files"
-	@echo "  plantuml  to make PlantUML diagrams"
 
 clean:
 	-rm -rf "$(BUILDDIR)"
 
-generate: $(METHODXLS)
+all: generate plantuml html
+
+generate: generate_types generate_methods
+
+generate_methods: $(METHODXLS)
 	$(DOCGENERATOR) -s "$(CURDIR)/$(METHODXLS)" -d "$(CURDIR)/source/apis/generated"
 
-generate_schema: 
+generate_types: 
 	$(XSLTPROC) --path ".:$(SCHEMADIR)" dataoneTypes2rst.xsl dataoneTypes.xsd > "$(CURDIR)/source/apis/Types.txt"
-	#$(XSLTPROC) --path ".:$(SCHEMADIR)" xsd2rst.xsl dataoneTypes.xsd > ./source/apis/generated/generated_schema_types2.txt
 
 plantuml: plantuml_source plantuml_usecase plantuml_types
 
@@ -69,8 +73,6 @@ html:
 	#mv $(BUILDDIR)/$(ZIPHTML) $(BUILDDIR)/html/
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
-
-all: generate html latex
 
 dirhtml:
 	$(SPHINXBUILD) -b dirhtml $(ALLSPHINXOPTS) "$(BUILDDIR)/dirhtml"

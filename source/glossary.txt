@@ -23,6 +23,12 @@ Glossary
      resources or perform specific actions. Authorization in DataONE is
      described in :doc:`design/UseCases/13_uc`.
 
+   checksum
+
+     A string representing the computed hash of an object using an algorithm
+     supported by the DataONE infrastructure (MD5 or SHA-1). Checksums are
+     used to assist with the bit-level preservation of content.
+
    cicore
 
      Refers to the essential, core components of the DataONE
@@ -30,8 +36,8 @@ Glossary
      :term:`Coordinating Node`\s, and the :term:`Investigator Toolkit`
      libraries.
 
-   
    Coordinating Node
+   CN
 
      One of at least three nodes in the DataONE cyberinfrastructure that is
      responsible for maintaining a complete collection of all :term:`science
@@ -42,6 +48,7 @@ Glossary
      replicated between other Coordinating Nodes. Coordinating Nodes drive
      the replication of content between Member Nodes.
 
+
    Coordinating Node Replication
 
      In DataONE, refers to the process by which content that appears on any one
@@ -49,9 +56,6 @@ Glossary
      :term:`Member Node synchronization` and :term:`data replication`.
 
    data
-
-     See :term:`data`.
-
    Data
 
      Typically refers to :term:`science data`. Where ambiguity between the
@@ -60,14 +64,15 @@ Glossary
 
    data package
 
-     A data package is a set of one or more :term:`data` objects, :term:`science
-     metadata` objects, and :term:`system metadata` documents that together
-     represent a scientifically useful unit of information.
+     A data package is a set of one or more :term:`data` objects and
+     :term:`science metadata` objects that together represent a scientifically
+     useful unit of information. Data packages are defined in DataONE using
+     :term:`resource maps`.
 
    data replication
 
      The transfer of content between Member Nodes as directed by the
-     Coordinating Nodes.
+     Coordinating Nodes. Also referred to as just "replication".
 
    DataONE
 
@@ -77,18 +82,26 @@ Glossary
    detail code
 
      Part of an exception that represents an error condition in the DataONE
-     APIs. The error detail code is specific to an API method. See also
-     :mod:`Exceptions`.
+     APIs. The error detail code is specific to an API method and is intended
+     to be only useful to the implementors of the service that generates an
+     exception to help identify the location in the code where the exception
+     originated. See also :mod:`Exceptions`.
 
+   Group
+   group
+
+     Group represents metadata about a :term:`Subject` that represents a
+     collection of other Subjects. Groups provide a convenient mechanism to
+     express access rules for certain roles that are not necessarily tied to
+     particular :term:`principals` over time.
+
+   identifier
+   pid
    PID
 
      Persistent Unique Identifier. A string of printable Unicode characters that
      uniquely identifies an object within the DataONE infrastructure. See
      :class:`Types.Identifier`
-
-   identifier
-
-     A synonym for :term:`PID`.
 
    identity 
 
@@ -103,20 +116,12 @@ Glossary
      DataONE infrastructure.
 
    Member Node
-
-     See :term:`Member Node`.
-
-   Member Node
+   MN
 
      A data holding node that implements all or the essential elements of the
      member mode :term:`API`\s (see :doc:`apis/MN_APIs`). Member Nodes accept
      content from users and may store content replicated from other member nodes
      as directed by a Coordinating Node.
-
-   Member Node synchronization
-
-     The process of updating a :term:`Coordinating Node` with the science and
-     system metadata that appears on a :term:`Member Node`.
 
    metadata
 
@@ -143,6 +148,7 @@ Glossary
      "VerifiedUser".
 
    principal
+   principals
 
      See :term:`subject`. The use of the term "principal" is being deprecated in
      the documentation.
@@ -151,10 +157,22 @@ Glossary
 
      See :term:`Coordinating Node replication` or :term:`data replication`.
 
-   Rights Holder
+   replication target
 
-     The :term:`Subject` that has full control over the access control rules for
-     an object.
+     A Member Node that can be directed by a Coordinating Node to retrieve
+     content from another Member node to support the process of
+     :term:`replication`.
+
+   resource map
+   resource maps
+
+     TODO
+
+   Rights Holder
+   rightsHolder
+
+     The :term:`Subject` that has full control over the access control rules
+     for an object.
 
    session
 
@@ -162,6 +180,7 @@ Glossary
      with a single authentication token.
 
    science data
+   data
 
      Science data that is stored in the DataONE system. See
      :doc:`design/WhatIsData` for a description of what is considered data in
@@ -170,17 +189,27 @@ Glossary
 
    science metadata
 
-     Metadata that describes the data that is replicated across the Member Nodes.
+     Metadata that describes the data that is replicated across the Member
+     Nodes.
 
+   Subject
    subject
+   subjects
 
-     A user that is a recognized :term:`identity` in the DataONE system.
+     Users that are a recognized :term:`identity` in the DataONE system.
+
+   synchronized
+   synchronization
+   Member Node synchronization
+
+     The process of updating a :term:`Coordinating Node` with the science and
+     system metadata that appears on a :term:`Member Node`. Also referred to
+     as just "synchronization".
 
    sysmeta
-
-     See :term:`system metadata`
-
    system metadata
+   System Metadata
+   SystemMetadata
 
      Metadata that is used internally by the DataONE system to record system
      properties about each object stored in the DataONE system. See
@@ -189,10 +218,29 @@ Glossary
 
    token
 
-     In DataONE, refers to the package of information returned from a
-     :func:`CN_authentication.login` operation that can be subsequently trusted
-     to accurately and unambiguously identify a :term:`principal`.
+     In DataONE, refers to an X509 certificate generated by a trusted
+     authority and is used to absolutely and unambiguously identify a
+     :term:`principal`.
+
+   verified
+
+     A :term:`Subject` is verified in DataONE after going through a process to
+     verify that the stated identity matches with an actual identity for the
+     subject.
+
+   whitespace
+
+     Characters that produce no visible output other than influencing the
+     spacing of other characters. For example the space character (ASCII 0x20)
+     and the tab character (ASCII 0x09) are whitespace characters.
+
+   X.509 Distinguished Name
+   Distinguished Name
+   DN
+  
+     TODO
+     
+     See also :term:`Subject`.
 
 
-
-  .. _DataNet RFP: http://www.nsf.gov/publications/pub_summ.jsp?WT.z_pims_id=503141&ods_key=nsf07601
+.. _DataNet RFP: http://www.nsf.gov/publications/pub_summ.jsp?WT.z_pims_id=503141&ods_key=nsf07601

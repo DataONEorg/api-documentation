@@ -45,14 +45,15 @@
 ..                                    ######
 .. class:: DateTime
 
-  A string that completely identifies a specific date and time.  When DateTime values are used within 
-  fields in request and response messages, and as URL-encoded values for parameters,
-  all DateTime values will be typed using the XML 
-  Schema Datatypes definition (see `XMLSchema dateTime`_) for the datetime serialization syntax ('xs:dateTime').
-  This syntax represents a subset of the ISO 8601 standard notation, and so standard ISO 8601
-  parsing libraries can be used to parse the values (see libraries used below).  In addition, 
-  within DataONE, these values MUST be expressed with a timezone designation in UTC/GMT time only; local times
-  are not permitted.
+  A string that completely identifies a specific date and time. When *DateTime*
+  values are used within fields in request and response messages, and as
+  URL-encoded values for parameters, all *DateTime* values will be typed using
+  the XML Schema Datatypes definition (see `XMLSchema dateTime`_) for the
+  datetime serialization syntax (*xs:dateTime*). This syntax represents a
+  subset of the ISO 8601 standard notation, and so standard ISO 8601 parsing
+  libraries can be used to parse the values (see libraries used below). In
+  addition, within DataONE, these values MUST be expressed with a timezone
+  designation in UTC/GMT time only; local times are not permitted.
 
   - Must include date and time
   - The time zone must be 0, i.e. GMT
@@ -63,10 +64,10 @@
   - `YYYY-MM-DDTHH:MM:SS.mmm+00:00`
 
   The milliseconds may be left off if that precision is not available.
-  
+
   In addition, in any methods that use date time values in HTTP headers, the serialization will
   follow the HTTP Full DateTime standard (RFC 1123):
-  
+
     - `HTTP Full Date`_ format. e.g. `Sun, 06 Nov 1994 08:49:37 GMT`
 
   In Java, code against `java.util.Date`_, though serialization and
@@ -138,9 +139,14 @@
 
   .. attribute:: DataONE-Checksum
 
-     The ChecksumAlgorithm and Checksum value of the object being examined.
-     The algorithm and checksum values are separated by a single comma with
-     the algorithm first.
+     The *checksumAlgorithm* and *checksum* value of the object being
+     examined. The algorithm and checksum values are separated by a single
+     comma with the algorithm first.
+
+  .. attribute:: DataONE-SerialVersion
+
+     The *serialVersion* value of the :term:`system metadata` for the object
+     as reported by the Node responding to the describe request.
 
 
   Example of a HEAD response on object "ABC123"::
@@ -155,49 +161,3 @@
     DataONE-Checksum: SHA-1,2e01e17467891f7c933dbaa00e1459d23db3fe4f
     DataONE-SerialVersion: 1234
 
-
-..                                    ######
-.. class:: Query
-
-   Queries are used to identify a subset of objects from a collection. The
-   form of query used by the DataONE system is likely to evolve significantly
-   as the project proceeds. The query specification listed here applies to the
-   prototype implementations (i.e. pre-version 1.0).
-
-   ::
-
-     enum FilterTypeEnum
-     {
-       NVP = 1;
-       SOLR = 3;
-       EARTHGRID = 4;
-     }
-
-     enum LogicalOperator
-     {
-       LOP_OR = 0;
-       LOP_AND = 1;
-     }
-
-     message NameValuePair
-     {
-       required string name = 0;
-       required string value= 1;
-     }
-
-     message NameValuePairFilter
-     {
-       optional LogicalOperator LOP = 1 [default = LOP_AND];
-       repeated NameValuePair nvpair = 2;
-     }
-
-     message SOLRFilter
-     {
-       required string filter = 0;
-       optional string facetFilter = 1;
-     }
-
-     message EarthGridFilter
-     {
-       required string filter = 0;
-     }
