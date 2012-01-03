@@ -1,8 +1,8 @@
 Authorization in DataONE
 ========================
 
-This document outlines a proposed mechanism for specifying authorization
-policies for objects in DataONE and a set of services for controlling access to
+This document outlines the mechanism for specifying authorization policies for
+objects and service in DataONE and a set of services for controlling access to
 those objects on Member Nodes and Coordinating Nodes.
 
 Overview
@@ -17,39 +17,46 @@ within the DataONE framework. Requirements for Authorization are listed here:
 
    AuthnAndAuthzRequirements
 
-Privacy and access control in DataONE are primarily for the protection and integrity of user contributed data and metadata via Member Nodes.  There are, however, other entities in DataONE that also need protection, including DataONE specific services and system resources, like system metadata and components of the general software stack (e.g., databases, web servers) for Coordinating and Member Nodes.  For this reason, all resources in DataONE, from data and metadata objects to system services, will have a rule, called an access control rule, that is used to determine who may access the resource.  The process of confirming whether a user has privileges to access a resource in DataONE is called "authorization".  The act of authorization uses attribute information contained in the security token and compares such information to the resource access control rule.  If the rule permits access by the principal requesting the resource, then authorization succeeds and permission is granted to access the resource.
+Privacy and access control in DataONE are primarily for the protection and
+integrity of user contributed data and metadata via Member Nodes. There are,
+however, other entities in DataONE that also need protection, including
+DataONE specific services and system resources, like system metadata and
+components of the general software stack (e.g., databases, web servers) for
+Coordinating and Member Nodes. For this reason, all resources in DataONE, from
+data and metadata objects to system services, have a rule, called an *access
+control rule* (:class:`Types.AccessRule`), that is used to determine who may
+access the resource. The process of confirming whether a user has privileges
+to access a resource in DataONE is called *authorization*. The act of
+authorization uses attribute information contained in the security token and
+compares such information to the resource access control rule. If the rule
+permits access by the :term:`principal` requesting the resource, then
+authorization succeeds and permission is granted to access the resource.
 
-Because nodes that form the DataONE federation are managed by various administrative domains and may cross multiple political boundaries, a "trust" relationship is crucial for DataONE to succeed in its security plan.  In simple terms, this means that access control rules that are defined by one member of the federation are upheld be another member.  It also means that trust may be revoked if a particular member does not behave accordingly within the federation.  Access control rules may be dynamic and must be propagated with the resource they are designated to protect, as when data or metadata objects are replicated to another Member Node.
+Because nodes that form the DataONE federation are managed by various
+administrative domains and may cross multiple political boundaries, a "trust"
+relationship is crucial for DataONE to succeed in its security plan. In simple
+terms, this means that access control rules that are defined by one member of
+the federation are upheld be another member. It also means that trust may be
+revoked if a particular member does not behave accordingly within the
+federation. Access control rules may be dynamic and must be propagated with
+the resource they are designated to protect, such as when data or metadata
+objects are replicated to another Member Node.
 
-The language that specifies the policy for a given access control rule dictates only whether a user is allowed access to a given resource; to include the ability to explicitly deny access to a resource overly complicates managing the authorization process and is seldom used in practice.  Rules will consist of the system identity of the user, also known as the "principal", the type of permission granted (e.g., read, write, and or execute), and the identifier of the resource being requested.  DataONE will provide, where reasonable, a conversion of the internal access control rule to a subset of one or more industry standard policy languages to support interoperability between different organizations.
+The language that specifies the policy for a given access control rule
+dictates only whether a user is allowed access to a given resource; to include
+the ability to explicitly deny access to a resource overly complicates
+management of the authorization process and is seldom used in practice. Access
+rules (:class:`Types.AccessRule`) consist of the system identity of the user,
+also known as the :term:`Subject`, the type of permission granted (e.g.,
+*read*, *write*, or *changePermission*), and the :term:`identifier` of the
+resource being requested. 
 
-Implementation phases
----------------------
-
-During the first DataONE Federated Security workshop, four phases for
-development were identified that involve increasingly sophisticated
-authorization and access control mechanisms. The four phases are:
-
-- **Phase 1: Mostly public access (target date: January 2011)**: Only publicly 
-  readable content is replicated. Only publicly readable content is indexed for 
-  search and retrieval. Access to restricted content is through origin member 
-  node only. No authentication is required to search and retrieve public content.
-  Authentication is required to upload (create) content.
-
-- **Phase 2: Access control supported for search and retrieval**: ACLs respected 
-  by coordinating nodes.  Authenticated users can discover content that is 
-  restricted to them or their groups. Restricted access content is not replicated.
-
-- **Phase 3: Access control supported for content replication**: 
-  Restricted access content is replicated to member nodes with compatible ACLs 
-  and pre-arranged trust agreements.
-
-- **Phase 4: Consistent semantic and functional interoperability for identity and
-  security**: Restricted access content is replicated to any member node. 
-  Authentication by long-running workflows is supported.
+DataONE will provide, where reasonable, a conversion of the internal access
+control rule to a subset of one or more industry standard policy languages to
+support interoperability between different organizations.
 
 
-Trust relationships
+Trust Relationships
 -------------------
 
 Any authorization system in a federation requires trust among participants.
@@ -67,67 +74,179 @@ federation:
 
 - **MN to CN**: Member Nodes need to have trust that Coordinating Nodes will
   respect and enforce their authorization policies, including any restrictions
-  placed on where and when to create replicas of objects and on the
-  presentation of search results for restricted content. As there are only
-  three Coordinating Nodes in the initial deployment, this trust relationship
-  should be easy to establish.
+  placed on where and when to create replicas of objects, and on the
+  presentation of search results for restricted content.
 
-- **CN to MN**: Coordinating Nodes rely upon Member Nodes for limited services,
-  and mainly expect Member Nodes to accurately implement the DataONE Service
-  API, including replication services.
+- **CN to MN**: Coordinating Nodes rely upon Member Nodes for limited
+  services, and mainly expect Member Nodes to accurately implement the DataONE
+  Service API, including replication services.
 
-- **CN to CN**: Each Coordinating Node contains a replica of the content of the
-  others, and are configured to provide seamless failover and load-balancing
-  for all incoming requests across the three nodes. Consequently, the three CNs
-  inherently trust one another fully.  As the suite of Coordinating Node
-  instances expands to other continents, this relationship may need to be
-  re-examined.
+- **CN to CN**: Each Coordinating Node contains a replica of the content of
+  the others, and are configured to provide seamless failover and
+  load-balancing for all incoming requests across the three nodes.
+  Consequently, the Coordinating Nodes inherently trust one another fully. As
+  the suite of Coordinating Node instances expands to other continents, this
+  relationship may need to be re-examined.
 
-Objects Subject to Access Control
----------------------------------
 
-A variety of resources in DataONE would be the subject of authorization
-policies.  The permission levels for each of these types of objects include:
+Object Access Control
+---------------------
 
-* Data objects and Science Metadata objects
+Access control for content managed by DataONE (:term:`Data` objects,
+:term:`Science Metadata` objects, and :term:`Resource Maps`) is determined by
+the :class:`Types.AccessPolicy` entry in the :class:`Types.SystemMetadata`
+associated with the object.
 
-   :Read: The ability to view the content of this object
+In addition, the :term:`rightsHolder` of the System Metadata holds all
+permissions on the object, and the :term:`Authoritative Member Node` has
+equivalent privileges as the *rightsHolder*.
 
-   :Write: The ability to change the content of this object via update services
+The *Authoritative Member Node* is identified by one or more :term:`Subjects`
+listed in the Member Node :class:`Types.Node` record registered in the DataONE
+:term:`node registry`. Thus, the :class:`Types.NodeReference` entry recorded
+in the System Metadata *Authoritative Member Node* references the *Node* entry
+in the node registry, which in turn contains a list of *Subjects* that, when
+used in a request to access or manipulate an object, identify the user as the
+*Authoritative Member Node*.
 
-   :ChangePermission: The ability to change the authorization policies for this object
+Permissions that can be associated with an object include:
 
-* MN services (create, update, delete, read, listObjects)
+:Read: 
 
-   :Execute: The ability to invoke a service
+  The ability to view the content of this object.
 
-* CN services (synchronize, search, register)
+:Write: 
 
-   :Execute: The ability to invoke a service
+  The ability to change the content of this object via update services.
+  Permissions are hierarchical, so *write* permission also includes *read*
+  permission.
 
-* Log records
+:ChangePermission: 
 
-   :Read: The ability to view the log records for an object or service
+  The ability to change the authorization policies for this object.
+  Includes both *read* and *write* permissions.
+
+Conceptually, an :class:`Types.AccessRule` is a tuple with three components:
+an *identifier* which indicates which object the rule applies to; a *subject*
+which indicates who the rule applies to; and a *permission* which indicates
+the level of access described by the rule.
+
+In practice, the *access rule* is contained in the System Metadata, and so
+each access rule contains a permission and list of subjects. A set of *access
+rules* are contained in the :class:`Types.AccessPolicy`, and these together
+with the *rights holder* and *authoritative member node* determine which
+subjects may perform operations on an object.
+
+Evaluation of a permission for an object is determined in a manner thus, where
+SUBJECT is the *subject* making the request, and PERMISSION is the
+*permission* being evaluated::
+
+  Is SUBJECT == rightsHolder?  Yes -> return True
+  Is SUBJECT IN authoritiveMemberNode.Subject?  Yes -> return True
+  for each accessRule in accessPolicy
+    if PERMISSION is IN accessRule.Permission 
+      Is SUBJECT IN accessRule.Subject? Yes -> return True
+  return False
+
+
+Adjusting Object Access Control
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Adjustments to access control for objects is made by altering the
+*accessPolicy* of the :class:`Types.SystemMetadata` for the object. The
+process is to retrieve a current copy of the system metadata from a
+Coordinating Node using the :func:`CNRead.getSystemMetadata` method, edit the
+:class:`Types.AccessPolicy` entry as necessary, then send the updated
+*AccessPolicy* structure to a Coordinating Node using the
+:func:`CNAuthorization.setAccessPolicy` method.
+
+Changes to *accessPolicy* are then propagated to other Coordinating Nodes
+through the Coordinating Node replication process (and hence to the search
+index), then to the Member Nodes that hold a copy of the object. Member Nodes
+are informed of a change to *accessPolicy* through the
+:func:`MNStorage.systemMetadataChanged` method which is called by a
+Coordinating Node. Member Nodes are expected to update the *accessPolicy* for
+an object as soon as possible after being informed of an update.
+
+
+Log Record Access Control
+-------------------------
+
+Access to log records is evaluated in the same manner as access to objects. If
+the requesting *subject* does not have *read* permission for the *identifier*
+recorded in the log record, then they will be denied access to the log entry.
+
+Adjustments to access control for log records are made indirectly by adjusting
+access control for the referenced object(s).
+
+
+Service Access Control
+----------------------
+
+DataONE services are accessed through HTTPS connections. Restrictions on
+agents (i.e. clients) that may call the services may be imposed through
+network configuration (e.g. restricting IP addresses that may call the
+service) or preferably through the *restriction* property of the
+:class:`Types.Service` entry in the *services* property of the
+:class:`Types.Node` entry describing the registered Member or Coordinating
+Node.
+
+The optional *restriction* property of the *service* lists subjects that have
+permission to invoke the service. If a *restriction* is not included with the
+service description, then any agent may call that service endpoint.
+
+
+Adjusting Service Access Control
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Adjustments to access control for services, or more accurately, the methods
+exposed within a service, are made by altering the contents of the
+*restriction* property of the :class:`Types.Service` entry for the
+:class:`Types.Node` registration document for the node. These adjustments are
+made through the :func:`CNRegistration.updateNodeCapabilities` method by
+specifying a replacement node document. A current version of the node document
+should be retrieved from the Coordinating Node through the
+:func:`CNCore.listNodes` method.
+
+Changes to node registration information can only be performed by subjects
+listed in the *subject* property of the :class:`Types.Node` document for the
+node.
 
 
 Additional Authorization Constraints
 ------------------------------------
+
+:TODO: 
+  Need to update this section to cover the additional constraints beyond
+  subject authorization that will limit movement of content between components
+
 Some nodes may also want to conditionally provide access to some services based
 on a principal's current usage of a resource such as node storage or node
 bandwidth.
 
 * Create/Update constraints
+
    * MaximumStorageQuota
    * MaximumNetworkTransferQuota
+
 * Embargoes
+
    * Add ability to specify an embargo period during which the access policies
      would not be in effect, and rather resources are only privately accessible
 
 .. Note::
     Add constraints and embargoes to the AccessPolicy language described below
 
+
 Access Policy Language
 -----------------------
+
+:TODO: 
+  This section needs to be updated with the latest revisions to the
+  AccessPolicy section. Also need to update / regenerate the example of access 
+  policy.
+
+ 
 Several existing authorization policy languages were evaluated for use in the
 DataONE architecture.  Given the simplicity of authorization rules that DataONE
 needs to express, these specifications were deemed overly complex and would
@@ -242,19 +361,28 @@ An example instance of this syntax is:
 
 Authorization Services
 ----------------------
-In this section, define a set of Authorization services to be implemented at CN
-and MN. The current Authorization Service is defined as a standalone service.
+
+:TODO:
+  Update this section to include the latest revisions to the methods defined
+  for managing and working with the access control for objects.
+
+In this section, define a set of Authorization services to be implemented at
+CN and MN. The current Authorization Service is defined as a standalone
+service.
 
 .. TODO::
+
     Link these methods to the generated methods in the API specifications,
     eliminate redundancy of the description text between the two locations.
 
 isAuthorized(token, pid, action):: boolean
+
     Determine if the user authenticated by the token can take the action
     specified (read, write, changePermission, execute) on the resource named by
     the identifier pid.
 
 setAccess(token, Types.AccessPolicy):: void
+
     Set the access policy for a series of resources as specified by the
     provided AccessPolicy document.  The user identified by the authentication
     token must have changePermission permission on all resources named in the
@@ -266,8 +394,41 @@ setAccess(token, Types.AccessPolicy):: void
     permission is not present for all listed resources, then implementations
     must roll back any changes and return NotAuthorized.
 
+
 Interaction diagrams
 --------------------
+
+:TODO: Need to update authorization use cases and include references to them.
+
+..
+    Implementation phases
+    ---------------------
+
+    During the first DataONE Federated Security workshop, four phases for
+    development were identified that involve increasingly sophisticated
+    authorization and access control mechanisms. The four phases are:
+
+    - **Phase 1: Mostly public access (target date: January 2011)**: Only publicly
+      readable content is replicated. Only publicly readable content is indexed
+      for search and retrieval. Access to restricted content is through origin
+      member node only. No authentication is required to search and retrieve
+      public content. Authentication is required to upload (create) content.
+
+    - **Phase 2: Access control supported for search and retrieval**: ACLs
+      respected by coordinating nodes. Authenticated users can discover content
+      that is restricted to them or their groups. Restricted access content is not
+      replicated.
+
+    - **Phase 3: Access control supported for content replication**: Restricted
+      access content is replicated to member nodes with compatible ACLs and
+      pre-arranged trust agreements.
+
+    - **Phase 4: Consistent semantic and functional interoperability for identity
+      and security**: Restricted access content is replicated to any member node.
+      Authentication by long-running workflows is supported.
+
+
+
 
 Phase 1
 ~~~~~~~
@@ -351,7 +512,9 @@ TBD
 
 Issues
 ------
+
 - Located At CN or MN?
+
    * At CN requires global knowledge of ACLs
    * At CN requires a lot of network traffic for authorization on objects
    * At MN makes authorization of search results impossible
@@ -365,6 +528,8 @@ Issues
      * Requires MN Authorization services
      
 - Efficiency of search results authorization
+
    * Need to authorize large number of search results in each operation
    * Has implications for search results cacheing
+
 

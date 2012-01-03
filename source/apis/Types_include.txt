@@ -65,8 +65,8 @@
 
   The milliseconds may be left off if that precision is not available.
 
-  In addition, in any methods that use date time values in HTTP headers, the serialization will
-  follow the HTTP Full DateTime standard (RFC 1123):
+  In addition, in any methods that use date time values in HTTP headers, the
+  serialization will follow the HTTP Full DateTime standard (RFC 1123):
 
     - `HTTP Full Date`_ format. e.g. `Sun, 06 Nov 1994 08:49:37 GMT`
 
@@ -74,8 +74,9 @@
   deserialization will be performed with `org.joda.DateTime`_ to ensure
   millisecond precision is correct.
 
-  In Python, we use `datetime.datetime`_ to represent datetimes internally and a library 
-  called iso8601 to serialize and deserialize to Types.DateTime and Pyxb_ for the XML representation.
+  In Python, we use `datetime.datetime`_ to represent datetimes internally and
+  a library called iso8601 to serialize and deserialize to Types.DateTime and
+  Pyxb_ for the XML representation.
 
   See also the `XMLSchema dateTime`_ type which is used for serializing DateTime
   values in XML transmitted between DataONE components.

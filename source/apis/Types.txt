@@ -433,9 +433,9 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-      
+      <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ChecksumAlgorithm">
+         <xs:restriction xmlns:d1="http://ns.dataone.org/service/types/v1" base="xs:string"/>
+      </xs:simpleType>
 
 
     .. image:: images/class_ChecksumAlgorithm.png
@@ -458,11 +458,11 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-            
-         
-      
+      <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="CrontabEntry">
+         <xs:restriction base="xs:token">
+            <xs:pattern xmlns:d1="http://ns.dataone.org/service/types/v1" value="([\?\*\d]{1,2}[\-,]?)+"/>
+         </xs:restriction>
+      </xs:simpleType>
 
 
     .. image:: images/class_CrontabEntry.png
@@ -487,11 +487,11 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-            
-         
-      
+      <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="CrontabEntrySeconds">
+         <xs:restriction base="xs:token">
+            <xs:pattern xmlns:d1="http://ns.dataone.org/service/types/v1" value="[0-5]?\d"/>
+         </xs:restriction>
+      </xs:simpleType>
 
 
     .. image:: images/class_CrontabEntrySeconds.png
@@ -512,17 +512,17 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-            
-            
-            
-            
-            
-            
-            
-         
-      
+      <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Event">
+         <xs:restriction base="xs:string">
+            <xs:enumeration xmlns:d1="http://ns.dataone.org/service/types/v1" value="create"/>
+            <xs:enumeration xmlns:d1="http://ns.dataone.org/service/types/v1" value="read"/>
+            <xs:enumeration xmlns:d1="http://ns.dataone.org/service/types/v1" value="update"/>
+            <xs:enumeration xmlns:d1="http://ns.dataone.org/service/types/v1" value="delete"/>
+            <xs:enumeration xmlns:d1="http://ns.dataone.org/service/types/v1" value="replicate"/>
+            <xs:enumeration xmlns:d1="http://ns.dataone.org/service/types/v1" value="synchronization_failed"/>
+            <xs:enumeration xmlns:d1="http://ns.dataone.org/service/types/v1" value="replication_failed"/>
+         </xs:restriction>
+      </xs:simpleType>
 
 
     .. image:: images/class_Event.png
@@ -550,13 +550,13 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-            
-            
-            
-         
-      
+      <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="NodeState">
+         <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration xmlns:d1="http://ns.dataone.org/service/types/v1" value="up"/>
+            <xs:enumeration xmlns:d1="http://ns.dataone.org/service/types/v1" value="down"/>
+            <xs:enumeration xmlns:d1="http://ns.dataone.org/service/types/v1" value="unknown"/>
+         </xs:restriction>
+      </xs:simpleType>
 
 
     .. image:: images/class_NodeState.png
@@ -580,13 +580,13 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-            
-            
-            
-         
-      
+      <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="NodeType">
+         <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration xmlns:d1="http://ns.dataone.org/service/types/v1" value="mn"/>
+            <xs:enumeration xmlns:d1="http://ns.dataone.org/service/types/v1" value="cn"/>
+            <xs:enumeration xmlns:d1="http://ns.dataone.org/service/types/v1" value="Monitor"/>
+         </xs:restriction>
+      </xs:simpleType>
 
 
     .. image:: images/class_NodeType.png
@@ -610,12 +610,12 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-            
-            
-         
-      
+      <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="NonEmptyString">
+         <xs:restriction base="xs:string">
+            <xs:minLength xmlns:d1="http://ns.dataone.org/service/types/v1" value="1"/>
+            <xs:pattern xmlns:d1="http://ns.dataone.org/service/types/v1" value="[\s]*[\S][\s\S]*"/>
+         </xs:restriction>
+      </xs:simpleType>
 
 
     .. image:: images/class_NonEmptyString.png
@@ -636,9 +636,9 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-      
+      <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ObjectFormatIdentifier">
+         <xs:restriction xmlns:d1="http://ns.dataone.org/service/types/v1" base="d1:NonEmptyString"/>
+      </xs:simpleType>
 
 
     .. image:: images/class_ObjectFormatIdentifier.png
@@ -659,11 +659,11 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-            
-         
-      
+      <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="NonEmptyString800">
+         <xs:restriction base="d1:NonEmptyString">
+            <xs:maxLength xmlns:d1="http://ns.dataone.org/service/types/v1" value="800"/>
+         </xs:restriction>
+      </xs:simpleType>
 
 
     .. image:: images/class_NonEmptyString800.png
@@ -684,11 +684,11 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-            
-         
-      
+      <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="NonEmptyNoWhitespaceString800">
+         <xs:restriction base="d1:NonEmptyString800">
+            <xs:pattern xmlns:d1="http://ns.dataone.org/service/types/v1" value="\S+"/>
+         </xs:restriction>
+      </xs:simpleType>
 
 
     .. image:: images/class_NonEmptyNoWhitespaceString800.png
@@ -709,13 +709,13 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-            
-            
-            
-         
-      
+      <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Permission">
+         <xs:restriction base="xs:string">
+            <xs:enumeration xmlns:d1="http://ns.dataone.org/service/types/v1" value="read"/>
+            <xs:enumeration xmlns:d1="http://ns.dataone.org/service/types/v1" value="write"/>
+            <xs:enumeration xmlns:d1="http://ns.dataone.org/service/types/v1" value="changePermission"/>
+         </xs:restriction>
+      </xs:simpleType>
 
 
     .. image:: images/class_Permission.png
@@ -740,20 +740,20 @@ Data Types in CICore
 
     Periodically a CN checks each replica to be sure it is both available and valid (matching checksum with original), and if it is either inaccessible or invalid then it marks it as *invalidated*, which indicates that the object replication needs to be invoked again.
 
-    The replication process is described in :doc:`UC09 </design/UseCases/09_uc>`.
+    The replication process is described in :doc:`UC09 &lt;/design/UseCases/09_uc&gt;`.
 
     .. code-block:: xml
 
 
-      
-         
-            
-            
-            
-            
-            
-         
-      
+      <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ReplicationStatus">
+         <xs:restriction base="xs:string">
+            <xs:enumeration xmlns:d1="http://ns.dataone.org/service/types/v1" value="queued"/>
+            <xs:enumeration xmlns:d1="http://ns.dataone.org/service/types/v1" value="requested"/>
+            <xs:enumeration xmlns:d1="http://ns.dataone.org/service/types/v1" value="completed"/>
+            <xs:enumeration xmlns:d1="http://ns.dataone.org/service/types/v1" value="failed"/>
+            <xs:enumeration xmlns:d1="http://ns.dataone.org/service/types/v1" value="invalidated"/>
+         </xs:restriction>
+      </xs:simpleType>
 
 
     .. image:: images/class_ReplicationStatus.png
@@ -779,9 +779,9 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-      
+      <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ServiceName">
+         <xs:restriction xmlns:d1="http://ns.dataone.org/service/types/v1" base="d1:NonEmptyString"/>
+      </xs:simpleType>
 
 
     .. image:: images/class_ServiceName.png
@@ -802,9 +802,9 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-      
+      <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ServiceVersion">
+         <xs:restriction xmlns:d1="http://ns.dataone.org/service/types/v1" base="d1:NonEmptyString"/>
+      </xs:simpleType>
 
 
     .. image:: images/class_ServiceVersion.png
@@ -829,11 +829,11 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-            
-         
-      
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="AccessPolicy">
+         <xs:sequence>
+            <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="allow" type="d1:AccessRule" minOccurs="1" maxOccurs="unbounded"/>
+         </xs:sequence>
+      </xs:complexType>
 
 
     .. image:: images/class_AccessPolicy.png
@@ -867,12 +867,12 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-            
-            
-         
-      
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="AccessRule">
+         <xs:sequence>
+            <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="subject" type="d1:Subject" minOccurs="1" maxOccurs="unbounded"/>
+            <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="permission" type="d1:Permission" minOccurs="1" maxOccurs="unbounded"/>
+         </xs:sequence>
+      </xs:complexType>
 
 
     .. image:: images/class_AccessRule.png
@@ -898,13 +898,13 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-            
-               
-            
-         
-      
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Checksum">
+         <xs:simpleContent>
+            <xs:extension base="xs:string">
+               <xs:attribute xmlns:d1="http://ns.dataone.org/service/types/v1" name="algorithm" type="d1:ChecksumAlgorithm" use="required"/>
+            </xs:extension>
+         </xs:simpleContent>
+      </xs:complexType>
 
 
     .. image:: images/class_Checksum.png
@@ -933,11 +933,11 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-            
-         
-      
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ChecksumAlgorithmList">
+         <xs:sequence>
+            <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="algorithm" type="d1:ChecksumAlgorithm" minOccurs="1" maxOccurs="unbounded"/>
+         </xs:sequence>
+      </xs:complexType>
 
 
     .. image:: images/class_ChecksumAlgorithmList.png
@@ -989,18 +989,18 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-            
-            
-            
-            
-            
-            
-            
-            
-         
-      
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Group">
+         <xs:sequence>
+            <xs:element name="subject" type="d1:Subject" minOccurs="1" maxOccurs="1">
+            </xs:element>
+            <xs:element name="groupName" type="d1:NonEmptyString" minOccurs="1" maxOccurs="1">
+            </xs:element>
+            <xs:element name="hasMember" type="d1:Subject" minOccurs="0" maxOccurs="unbounded">
+            </xs:element>
+            <xs:element name="rightsHolder" type="d1:Subject" minOccurs="1" maxOccurs="unbounded">
+            </xs:element>
+         </xs:sequence>
+      </xs:complexType>
 
 
     .. image:: images/class_Group.png
@@ -1034,11 +1034,11 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-            
-         
-      
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Identifier">
+         <xs:simpleContent>
+            <xs:extension xmlns:d1="http://ns.dataone.org/service/types/v1" base="d1:NonEmptyNoWhitespaceString800"/>
+         </xs:simpleContent>
+      </xs:complexType>
 
 
     .. image:: images/class_Identifier.png
@@ -1061,15 +1061,15 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-            
-               
-                  
-               
-            
-         
-      
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Log">
+         <xs:complexContent>
+            <xs:extension base="d1:Slice">
+               <xs:sequence>
+                  <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="logEntry" type="d1:LogEntry" minOccurs="0" maxOccurs="unbounded"/>
+               </xs:sequence>
+            </xs:extension>
+         </xs:complexContent>
+      </xs:complexType>
 
 
     .. image:: images/class_Log.png
@@ -1095,49 +1095,81 @@ Data Types in CICore
 
       Type: :class:`Types.NonEmptyString`
 
+      A unique identifier for this log entry. The identifier should be unique for a particular node; This is not drawn from the same value space as other identifiers in DataONE, and so is not subjec to the same restrictions.
+
+
     .. attribute:: identifier
 
       Type: :class:`Types.Identifier`
+
+      The :term:`identifier` of the object that was the target of the operation which generated this log entry.
+
 
     .. attribute:: ipAddress
 
       Type: :class:`Types.xs.string`
 
+      The IP address, as reported by the service receiving the request, of the request origin.
+
+
     .. attribute:: userAgent
 
       Type: :class:`Types.xs.string`
+
+      The user agent of the client making the request, as reported in the User-Agent HTTP header.
+
 
     .. attribute:: subject
 
       Type: :class:`Types.Subject`
 
+      The :term:`Subject` used for making the request. This may be the DataONE *public* user if the request is not authenticated, otherwise it will be the Subject of the certificate used for authenticating the request.
+
+
     .. attribute:: event
 
       Type: :class:`Types.Event`
+
+      An entry from the :class:`Types.Event` enumeration indicating the type of operation that triggered the log message.
+
 
     .. attribute:: dateLogged
 
       Type: :class:`Types.xs.dateTime`
 
+      A :class:`Types.DateTime` time stamp indicating when the event triggering the log message ocurred. Note that all time stamps in DataONE are in UTC.
+
+
     .. attribute:: nodeIdentifier
 
       Type: :class:`Types.NodeReference`
 
+      The unique identifier for the node where the log message was generated.
+
+
     .. code-block:: xml
 
 
-      
-         
-            
-            
-            
-            
-            
-            
-            
-            
-         
-      
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="LogEntry">
+         <xs:sequence>
+            <xs:element name="entryId" type="d1:NonEmptyString" minOccurs="1" maxOccurs="1">
+            </xs:element>
+            <xs:element name="identifier" type="d1:Identifier" minOccurs="1" maxOccurs="1">
+            </xs:element>
+            <xs:element name="ipAddress" type="xs:string" minOccurs="1" maxOccurs="1">
+            </xs:element>
+            <xs:element name="userAgent" type="xs:string" minOccurs="1" maxOccurs="1">
+            </xs:element>
+            <xs:element name="subject" type="d1:Subject" minOccurs="1" maxOccurs="1">
+            </xs:element>
+            <xs:element name="event" type="d1:Event" minOccurs="1" maxOccurs="1">
+            </xs:element>
+            <xs:element name="dateLogged" type="xs:dateTime" minOccurs="1" maxOccurs="1">
+            </xs:element>
+            <xs:element name="nodeIdentifier" type="d1:NodeReference" minOccurs="1" maxOccurs="1">
+            </xs:element>
+         </xs:sequence>
+      </xs:complexType>
 
 
     .. image:: images/class_LogEntry.png
@@ -1272,38 +1304,38 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-         
-         
-         
-         
-         
-         
-         
-         
-         
-      
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Node">
+         <xs:sequence>
+            <xs:element name="identifier" type="d1:NodeReference" minOccurs="1" maxOccurs="1">
+            </xs:element>
+            <xs:element name="name" type="d1:NonEmptyString" minOccurs="1" maxOccurs="1">
+            </xs:element>
+            <xs:element name="description" type="d1:NonEmptyString" minOccurs="1" maxOccurs="1">
+            </xs:element>
+            <xs:element name="baseURL" type="xs:anyURI" minOccurs="1" maxOccurs="1">
+            </xs:element>
+            <xs:element name="services" type="d1:Services" minOccurs="0" maxOccurs="1">
+            </xs:element>
+            <xs:element name="synchronization" type="d1:Synchronization" minOccurs="0" maxOccurs="1">
+            </xs:element>
+            <xs:element name="nodeReplicationPolicy" type="d1:NodeReplicationPolicy" minOccurs="0" maxOccurs="1">
+            </xs:element>
+            <xs:element name="ping" type="d1:Ping" minOccurs="0" maxOccurs="1">
+            </xs:element>
+            <xs:element name="subject" type="d1:Subject" minOccurs="0" maxOccurs="unbounded">
+            </xs:element>
+            <xs:element name="contactSubject" type="d1:Subject" minOccurs="1" maxOccurs="unbounded">
+            </xs:element>
+         </xs:sequence>
+         <xs:attribute name="replicate" use="required" type="xs:boolean">
+         </xs:attribute>
+         <xs:attribute name="synchronize" use="required" type="xs:boolean">
+         </xs:attribute>
+         <xs:attribute name="type" use="required" type="d1:NodeType">
+         </xs:attribute>
+         <xs:attribute name="state" use="required" type="d1:NodeState">
+         </xs:attribute>
+      </xs:complexType>
 
 
     .. image:: images/class_Node.png
@@ -1378,18 +1410,18 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-            
-            
-            
-            
-            
-            
-            
-            
-         
-      
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="NodeReplicationPolicy">
+         <xs:sequence>
+            <xs:element name="maxObjectSize" type="xs:unsignedLong" minOccurs="0" maxOccurs="1">
+            </xs:element>
+            <xs:element name="spaceAllocated" type="xs:unsignedLong" minOccurs="0" maxOccurs="1">
+            </xs:element>
+            <xs:element name="allowedNode" type="d1:NodeReference" minOccurs="0" maxOccurs="unbounded">
+            </xs:element>
+            <xs:element name="allowedObjectFormat" type="d1:ObjectFormatIdentifier" minOccurs="0" maxOccurs="unbounded">
+            </xs:element>
+         </xs:sequence>
+      </xs:complexType>
 
 
     .. image:: images/class_NodeReplicationPolicy.png
@@ -1424,11 +1456,11 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-            
-         
-      
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="NodeList">
+         <xs:sequence>
+            <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" maxOccurs="unbounded" name="node" type="d1:Node" minOccurs="1"/>
+         </xs:sequence>
+      </xs:complexType>
 
 
     .. image:: images/class_NodeList.png
@@ -1447,16 +1479,16 @@ Data Types in CICore
 ..                                    ######
 .. class:: NodeReference
 
-    Member Node identifier drawn from the DataONE :mod:`CNReplication <registry service>`.
+    Member Node identifier drawn from the DataONE :mod:`CNReplication &lt;registry service&gt;`.
 
     .. code-block:: xml
 
 
-      
-         
-            
-         
-      
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="NodeReference">
+         <xs:simpleContent>
+            <xs:extension xmlns:d1="http://ns.dataone.org/service/types/v1" base="d1:NonEmptyString"/>
+         </xs:simpleContent>
+      </xs:complexType>
 
 
     .. image:: images/class_NodeReference.png
@@ -1502,16 +1534,16 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-            
-            
-            
-            
-            
-            
-         
-      
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ObjectFormat">
+         <xs:sequence>
+            <xs:element name="formatId" type="d1:ObjectFormatIdentifier" minOccurs="1" maxOccurs="1">
+            </xs:element>
+            <xs:element name="formatName" type="xs:string" minOccurs="1" maxOccurs="1">
+            </xs:element>
+            <xs:element name="formatType" type="xs:string" minOccurs="1" maxOccurs="1">
+            </xs:element>
+         </xs:sequence>
+      </xs:complexType>
 
 
     .. image:: images/class_ObjectFormat.png
@@ -1538,15 +1570,15 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-            
-               
-                  
-               
-            
-         
-      
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ObjectFormatList">
+         <xs:complexContent>
+            <xs:extension base="d1:Slice">
+               <xs:sequence>
+                  <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="objectFormat" type="d1:ObjectFormat" minOccurs="1" maxOccurs="unbounded"/>
+               </xs:sequence>
+            </xs:extension>
+         </xs:complexContent>
+      </xs:complexType>
 
 
     .. image:: images/class_ObjectFormatList.png
@@ -1591,15 +1623,15 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-            
-            
-            
-            
-            
-         
-      
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ObjectInfo">
+         <xs:sequence>
+            <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="identifier" type="d1:Identifier" minOccurs="1" maxOccurs="1"/>
+            <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="formatId" type="d1:ObjectFormatIdentifier"/>
+            <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="checksum" type="d1:Checksum" minOccurs="1" maxOccurs="1"/>
+            <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="dateSysMetadataModified" type="xs:dateTime"/>
+            <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="size" type="xs:unsignedLong"/>
+         </xs:sequence>
+      </xs:complexType>
 
 
     .. image:: images/class_ObjectInfo.png
@@ -1631,15 +1663,15 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-            
-               
-                  
-               
-            
-         
-      
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ObjectList">
+         <xs:complexContent>
+            <xs:extension base="d1:Slice">
+               <xs:sequence>
+                  <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="objectInfo" type="d1:ObjectInfo" minOccurs="0" maxOccurs="unbounded"/>
+               </xs:sequence>
+            </xs:extension>
+         </xs:complexContent>
+      </xs:complexType>
 
 
     .. image:: images/class_ObjectList.png
@@ -1702,20 +1734,20 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-         
-      
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ObjectLocation">
+         <xs:sequence>
+            <xs:element name="nodeIdentifier" type="d1:NodeReference" minOccurs="1" maxOccurs="1">
+            </xs:element>
+            <xs:element name="baseURL" type="xs:anyURI" minOccurs="1" maxOccurs="1">
+            </xs:element>
+            <xs:element name="version" type="d1:ServiceVersion" minOccurs="1" maxOccurs="unbounded">
+            </xs:element>
+            <xs:element name="url" type="xs:anyURI" minOccurs="1" maxOccurs="1">
+            </xs:element>
+            <xs:element name="preference" type="xs:int" minOccurs="0" maxOccurs="1">
+            </xs:element>
+         </xs:sequence>
+      </xs:complexType>
 
 
     .. image:: images/class_ObjectLocation.png
@@ -1760,14 +1792,14 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-            
-            
-            
-            
-         
-      
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ObjectLocationList">
+         <xs:sequence>
+            <xs:element name="identifier" type="d1:Identifier" minOccurs="1" maxOccurs="1">
+            </xs:element>
+            <xs:element name="objectLocation" type="d1:ObjectLocation" minOccurs="0" maxOccurs="unbounded">
+            </xs:element>
+         </xs:sequence>
+      </xs:complexType>
 
 
     .. image:: images/class_ObjectLocationList.png
@@ -1842,24 +1874,24 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-         
-      
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Person">
+         <xs:sequence>
+            <xs:element name="subject" type="d1:Subject" minOccurs="1" maxOccurs="1">
+            </xs:element>
+            <xs:element name="givenName" type="d1:NonEmptyString" minOccurs="1" maxOccurs="unbounded">
+            </xs:element>
+            <xs:element name="familyName" type="d1:NonEmptyString" minOccurs="1" maxOccurs="1">
+            </xs:element>
+            <xs:element name="email" type="d1:NonEmptyString" minOccurs="0" maxOccurs="unbounded">
+            </xs:element>
+            <xs:element name="isMemberOf" type="d1:Subject" minOccurs="0" maxOccurs="unbounded">
+            </xs:element>
+            <xs:element name="equivalentIdentity" type="d1:Subject" minOccurs="0" maxOccurs="unbounded">
+            </xs:element>
+            <xs:element name="verified" type="xs:boolean" minOccurs="0" maxOccurs="1">
+            </xs:element>
+         </xs:sequence>
+      </xs:complexType>
 
 
     .. image:: images/class_Person.png
@@ -1905,12 +1937,12 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-         
-         
-         
-      
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Ping">
+         <xs:attribute name="success" type="xs:boolean">
+         </xs:attribute>
+         <xs:attribute name="lastSuccess" type="xs:dateTime">
+         </xs:attribute>
+      </xs:complexType>
 
 
     .. image:: images/class_Ping.png
@@ -1957,16 +1989,16 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-            
-            
-            
-            
-            
-            
-         
-      
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Replica">
+         <xs:sequence>
+            <xs:element name="replicaMemberNode" type="d1:NodeReference">
+            </xs:element>
+            <xs:element name="replicationStatus" type="d1:ReplicationStatus">
+            </xs:element>
+            <xs:element name="replicaVerified" type="xs:dateTime">
+            </xs:element>
+         </xs:sequence>
+      </xs:complexType>
 
 
     .. image:: images/class_Replica.png
@@ -2022,18 +2054,18 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-            
-            
-            
-            
-         
-         
-         
-         
-         
-      
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ReplicationPolicy">
+         <xs:sequence>
+            <xs:element name="preferredMemberNode" type="d1:NodeReference" minOccurs="0" maxOccurs="unbounded">
+            </xs:element>
+            <xs:element name="blockedMemberNode" type="d1:NodeReference" minOccurs="0" maxOccurs="unbounded">
+            </xs:element>
+         </xs:sequence>
+         <xs:attribute name="replicationAllowed" type="xs:boolean">
+         </xs:attribute>
+         <xs:attribute name="numberReplicas" type="xs:int">
+         </xs:attribute>
+      </xs:complexType>
 
 
     .. image:: images/class_ReplicationPolicy.png
@@ -2057,13 +2089,13 @@ Data Types in CICore
 ..                                    ######
 .. class:: Service
 
-    The available Dataone Service APIs that are exposed on a Node. Without a restriction, all service methods are available to all callers. Restrictions may be placed on individual methods of the service to limit the service to a certain set of :term:`Subject`s. Enforcement of these service restrictions is incumbent on the Node service implementation.
+    The available Dataone Service APIs that are exposed on a Node. Without a restriction, all service methods are available to all callers. Restrictions may be placed on individual methods of the service to limit the service to a certain set of :term:`Subjects`. Enforcement of these service restrictions is incumbent on the Node service implementation.
 
     .. attribute:: restriction
 
       Type: :class:`Types.ServiceMethodRestriction`
 
-      A list of method names and :term:`Subject`s with permission to invoke those methods.
+      A list of method names and :term:`Subjects` with permission to invoke those methods.
 
 
     .. attribute:: name
@@ -2090,18 +2122,18 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-            
-            
-         
-         
-         
-         
-         
-         
-         
-      
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Service">
+         <xs:sequence>
+            <xs:element name="restriction" type="d1:ServiceMethodRestriction" minOccurs="0" maxOccurs="unbounded">
+            </xs:element>
+         </xs:sequence>
+         <xs:attribute name="name" type="d1:ServiceName" use="required">
+         </xs:attribute>
+         <xs:attribute name="version" type="d1:ServiceVersion" use="required">
+         </xs:attribute>
+         <xs:attribute name="available" type="xs:boolean">
+         </xs:attribute>
+      </xs:complexType>
 
 
     .. image:: images/class_Service.png
@@ -2126,19 +2158,19 @@ Data Types in CICore
 ..                                    ######
 .. class:: ServiceMethodRestriction
 
-    Describes an optional restriction policy for a given method. If this element exists for a service method, its use is restricted, and only :term:`Subject`s listed in the list are allowed to invoke the method named in the *methodName* attribute.
+    Describes an optional restriction policy for a given method. If this element exists for a service method, its use is restricted, and only :term:`Subjects` listed in the list are allowed to invoke the method named in the *methodName* attribute.
 
     .. code-block:: xml
 
 
-      
-         
-            
-               
-               
-            
-         
-      
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ServiceMethodRestriction">
+         <xs:complexContent>
+            <xs:extension base="d1:SubjectList">
+               <xs:attribute name="methodName" use="required" type="xs:string">
+               </xs:attribute>
+            </xs:extension>
+         </xs:complexContent>
+      </xs:complexType>
 
 
     .. image:: images/class_ServiceMethodRestriction.png
@@ -2165,11 +2197,11 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-            
-         
-      
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Services">
+         <xs:sequence>
+            <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="service" type="d1:Service" minOccurs="1" maxOccurs="unbounded"/>
+         </xs:sequence>
+      </xs:complexType>
 
 
     .. image:: images/class_Services.png
@@ -2201,12 +2233,12 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-            
-            
-         
-      
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Session">
+         <xs:sequence>
+            <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="subject" type="d1:Subject" minOccurs="1" maxOccurs="1"/>
+            <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="subjectInfo" type="d1:SubjectInfo" minOccurs="0" maxOccurs="1"/>
+         </xs:sequence>
+      </xs:complexType>
 
 
     .. image:: images/class_Session.png
@@ -2260,15 +2292,15 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-         
-         
-         
-         
-         
-         
-      
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Schedule">
+         <xs:attribute xmlns:d1="http://ns.dataone.org/service/types/v1" name="hour" use="required" type="d1:CrontabEntry"/>
+         <xs:attribute xmlns:d1="http://ns.dataone.org/service/types/v1" name="mday" use="required" type="d1:CrontabEntry"/>
+         <xs:attribute xmlns:d1="http://ns.dataone.org/service/types/v1" name="min" use="required" type="d1:CrontabEntry"/>
+         <xs:attribute xmlns:d1="http://ns.dataone.org/service/types/v1" name="mon" use="required" type="d1:CrontabEntry"/>
+         <xs:attribute xmlns:d1="http://ns.dataone.org/service/types/v1" name="sec" use="required" type="d1:CrontabEntrySeconds"/>
+         <xs:attribute xmlns:d1="http://ns.dataone.org/service/types/v1" name="wday" use="required" type="d1:CrontabEntry"/>
+         <xs:attribute xmlns:d1="http://ns.dataone.org/service/types/v1" name="year" use="required" type="d1:CrontabEntry"/>
+      </xs:complexType>
 
 
     .. image:: images/class_Schedule.png
@@ -2322,14 +2354,14 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-         
-         
-         
-         
-         
-      
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Slice">
+         <xs:attribute name="count" use="required" type="xs:int">
+         </xs:attribute>
+         <xs:attribute name="start" use="required" type="xs:int">
+         </xs:attribute>
+         <xs:attribute name="total" use="required" type="xs:int">
+         </xs:attribute>
+      </xs:complexType>
 
 
     .. image:: images/class_Slice.png
@@ -2376,16 +2408,16 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-            
-            
-            
-            
-            
-            
-         
-      
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Synchronization">
+         <xs:sequence>
+            <xs:element name="schedule" type="d1:Schedule" minOccurs="1" maxOccurs="1">
+            </xs:element>
+            <xs:element name="lastHarvested" type="xs:dateTime" minOccurs="0" maxOccurs="1">
+            </xs:element>
+            <xs:element name="lastCompleteHarvest" type="xs:dateTime" minOccurs="0" maxOccurs="1">
+            </xs:element>
+         </xs:sequence>
+      </xs:complexType>
 
 
     .. image:: images/class_Synchronization.png
@@ -2414,11 +2446,14 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-            
-         
-      
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="Subject">
+         <xs:simpleContent>
+            <xs:extension xmlns:d1="http://ns.dataone.org/service/types/v1" base="d1:NonEmptyString"><!-- Note: Can also be special symbolic principals: verifiedUser:
+        anyone with checked credentials for whom their real name and email has
+        been verified authenticatedUser: anyone with checked credentials
+        public: anyone, whether authenticated or not --></xs:extension>
+         </xs:simpleContent>
+      </xs:complexType>
 
 
     .. image:: images/class_Subject.png
@@ -2449,12 +2484,12 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-            
-            
-         
-      
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="SubjectInfo">
+         <xs:sequence>
+            <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="person" type="d1:Person" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="group" type="d1:Group" minOccurs="0" maxOccurs="unbounded"/>
+         </xs:sequence>
+      </xs:complexType>
 
 
     .. image:: images/class_SubjectInfo.png
@@ -2484,11 +2519,11 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-            
-         
-      
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="SubjectList">
+         <xs:sequence>
+            <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" name="subject" type="d1:Subject" minOccurs="0" maxOccurs="unbounded"/>
+         </xs:sequence>
+      </xs:complexType>
 
 
     .. image:: images/class_SubjectList.png
@@ -2649,44 +2684,44 @@ Data Types in CICore
     .. code-block:: xml
 
 
-      
-         
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-         
-      
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="SystemMetadata">
+         <xs:sequence>
+            <xs:element name="serialVersion" type="xs:unsignedLong" minOccurs="0" maxOccurs="1">
+            </xs:element>
+            <xs:element name="identifier" type="d1:Identifier">
+            </xs:element>
+            <xs:element name="formatId" type="d1:ObjectFormatIdentifier">
+            </xs:element>
+            <xs:element name="size" type="xs:unsignedLong">
+            </xs:element>
+            <xs:element name="checksum" type="d1:Checksum">
+            </xs:element>
+            <xs:element name="submitter" type="d1:Subject" minOccurs="0" maxOccurs="1">
+            </xs:element>
+            <xs:element name="rightsHolder" type="d1:Subject">
+            </xs:element>
+            <xs:element name="accessPolicy" type="d1:AccessPolicy" minOccurs="0" maxOccurs="1">
+            </xs:element>
+            <xs:element name="replicationPolicy" type="d1:ReplicationPolicy" minOccurs="0" maxOccurs="1">
+            </xs:element>
+            <xs:element name="obsoletes" type="d1:Identifier" minOccurs="0" maxOccurs="1">
+            </xs:element>
+            <xs:element name="obsoletedBy" type="d1:Identifier" minOccurs="0" maxOccurs="1">
+            </xs:element>
+            <xs:element name="archived" type="xs:boolean" minOccurs="0" maxOccurs="1">
+            </xs:element>
+            <xs:element name="dateUploaded" type="xs:dateTime" minOccurs="0" maxOccurs="1">
+            </xs:element>
+            <xs:element name="dateSysMetadataModified" type="xs:dateTime" minOccurs="0" maxOccurs="1">
+            </xs:element>
+            <xs:element name="originMemberNode" type="d1:NodeReference" minOccurs="0" maxOccurs="1">
+            </xs:element>
+            <xs:element name="authoritativeMemberNode" type="d1:NodeReference" minOccurs="0" maxOccurs="1">
+            </xs:element>
+            <xs:element name="replica" type="d1:Replica" minOccurs="0" maxOccurs="unbounded">
+            </xs:element>
+         </xs:sequence>
+      </xs:complexType>
 
 
     .. image:: images/class_SystemMetadata.png
@@ -2726,4 +2761,5 @@ Data Types in CICore
       SystemMetadata .. Replica
 
       @enduml
+
 

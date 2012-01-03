@@ -2,7 +2,6 @@ Glossary
 ========
 
 .. glossary::
-
    :sorted:
 
    API
@@ -22,6 +21,12 @@ Glossary
      The process of verifying that a subject has permission to access specific
      resources or perform specific actions. Authorization in DataONE is
      described in :doc:`design/UseCases/13_uc`.
+
+   Authoritative Member Node
+
+     Recorded in :term:`SystemMetadata` for an object, the Authoritative
+     Member Node has all the rights of the :term:`rightsHolder` to maintain
+     and curate the object, including making any changes necessary.
 
    checksum
 
@@ -132,6 +137,14 @@ Glossary
 
      The node event log is implemented on Coordinating Nodes and Member Nodes
      and should record all object access and manipulation events.
+
+   Node Registry
+   node registry
+   Registry
+
+     A list of nodes participating in DataONE maintained by Coordinating
+     Nodes. Entries in node registry may be retrieved through the
+     :func:`CNCore.listNodes` method of a Coordinating Node.
 
    Origin Member Node 
 
