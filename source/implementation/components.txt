@@ -1,6 +1,9 @@
 Components of the DataONE Infrastructure
 ========================================
 
+The following diagrams indicate code dependencies between various components
+that make up the DataONE infrastructure. Functional dependencies are not
+depicted.
 
 Common Components
 -----------------
@@ -418,10 +421,10 @@ Table of Components
 
 .. sqltable:: Components List Table
    :header: Component,Category,Responsible,Description
-   :widths: 3 3 3 10
+   :widths: 3 2 2 10
    :driver: xlsx
    :source: source/implementation/data/components.xlsx
-   :sql: SELECT Component, Category, Responsible, Description FROM Sheet1;
+   :sql: SELECT Component, Category, Responsible, Description FROM Components;
 
     
 
@@ -459,6 +462,7 @@ Table of Components
 .. _Debian: http://www.debian.org/
 .. _Ubuntu: http://www.ubuntu.com/
 .. _issue tracking system: http://redmine.dataone.org/
+.. _Dokan: http://dokan-dev.net/en/
     
     
     

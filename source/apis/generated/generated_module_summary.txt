@@ -196,12 +196,6 @@ Note also that the same functionality as *resolve()* can be implemented by retri
        
 Appears in functional use cases: :doc:`UC36 </design/UseCases/36_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
    * - \
-     - :func:`CNRead.assertRelation`
-     - DEPRECATED for v1.0.0
-Tests that the specified relationship between *pidOfSubject* and *pidOfObject* exists.
-A passing assertion is indicated by returning a response with a HTTP status of 200.
-Failed assertion MUST be indicated by returning an appropriate exception such as :exc:`NotAuthorized`.
-   * - \
      - :func:`CNRead.getChecksum`
      - Returns the checksum for the specified object as reported in the system metadata.
 Note that the signature of this method differs from :func:`MNRead.getChecksum` as that method takes an optional algorithm parameter.

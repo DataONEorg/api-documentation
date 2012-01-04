@@ -27,10 +27,6 @@
      - :func:`resolve`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.ObjectLocationList`
    * - Tier 1
-     - ``GET /assertRelation/{pidOfSubject}?relationship={relationship}&pidofobject={pidOfObject}``
-     - :func:`assertRelation`
-     - (:class:`session<Types.Session>`, :class:`pidOfSubject<Types.Identifier>`, :class:`relationship<Types.RelationshipEnum>`, :class:`pidOfObject<Types.Identifier>`) ``->`` boolean
-   * - Tier 1
      - ``GET /checksum/{pid}``
      - :func:`getChecksum`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Checksum`
@@ -186,49 +182,6 @@
 
 
 .. include:: /apis/examples/resolve.txt
-
-
-
-
-.. function:: assertRelation(session,pidOfSubject,relationship,pidOfObject) -> boolean
-
-   DEPRECATED for v1.0.0
-
-   Tests that the specified relationship between *pidOfSubject* and *pidOfObject* exists.
-
-   A passing assertion is indicated by returning a response with a HTTP status of 200.
-
-   Failed assertion MUST be indicated by returning an appropriate exception such as :exc:`NotAuthorized`.
-
-   :REST URL: ``GET /assertRelation/{pidOfSubject}?relationship={relationship}&pidofobject={pidOfObject}``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
-   :type session: :class:`Types.Session`
-
-   :param pidOfSubject: The subject of the relationship being tested
-   :type pidOfSubject: :class:`Types.Identifier`
-
-   :param relationship: Relationship between *pidOfSubject* and *pidOfObject* being evaluated
-   :type relationship: :class:`Types.RelationshipEnum`
-
-   :param pidOfObject: The object of the relationship
-   :type pidOfObject: :class:`Types.Identifier`
-
-   :returns: True if the relationship exists.
-   :rtype: boolean
-
-   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=4230)``
-
-   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4270)``
-
-   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=4220)``
-
-   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=4240)``
-
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4260)``
-
-     Raised if the parameters are incorrect (e.g. unknown relationship type specified)
-
-   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4221)``
 
 
 

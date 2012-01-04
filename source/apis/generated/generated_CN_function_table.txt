@@ -72,10 +72,6 @@
      - :func:`CNRead.resolve`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.ObjectLocationList`
    * - Tier 1
-     - ``GET /assertRelation/{pidOfSubject}?relationship={relationship}&pidofobject={pidOfObject}``
-     - :func:`CNRead.assertRelation`
-     - (:class:`session<Types.Session>`, :class:`pidOfSubject<Types.Identifier>`, :class:`relationship<Types.RelationshipEnum>`, :class:`pidOfObject<Types.Identifier>`) ``->`` boolean
-   * - Tier 1
      - ``GET /checksum/{pid}``
      - :func:`CNRead.getChecksum`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Checksum`
