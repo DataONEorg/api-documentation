@@ -506,6 +506,22 @@ Standard Specific Metadata Extraction Notes
 Attribute Descriptions and Notes
 --------------------------------
 
+A list of all fields in search index, their origin and brief description. Source
+column indicates which DataONE content the values are retrieved from: Y = System
+Metadata, S = Science Metadata, R = Resource Map, and C = copied internally by
+the search index.
+
+.. sqltable:: . . . 
+   :header: Index Field,Source,Origin,Description
+   :widths: 1 1 1 10
+   :driver: xlsx
+   :source: source/design/data/SearchFields.xlsx
+   :sql: SELECT SOLR, Source, ValueOrigin, Description FROM Fields ORDER BY SOLR ASC;
+
+
+
+
+
 .. attribute:: abstract
 
    The abstract text as provided in the science metadata document.
