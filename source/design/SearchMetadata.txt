@@ -9,21 +9,53 @@ Content Discovery
 
 Searching for content is a functionality that is primarily supported by
 Coordinating Nodes, programmatically through the CN_read.search method, and
-through a web browser interface that connects through a UI to a SOLR_ index.
+through a web browser interface that connects through a user interface
+implemented by Mercury_ which utilizes a SOLR_ index to support search
+operations.
 
 This document describes the properties of the SOLR index, how it is populated,
 and how it can be used to support programmatic search and introspection into the
 DataONE holdings.
 
-The SOLR index is currently populated from content that is stored on
-Coordinating Nodes which includes System Metadata, Science Metadata and Resource
-Maps. The basic model is that each index entry represents information about the
-information referenced by a single identifier (PID). For PIDs that refer to
-science data object, the index entry will be constructed from system metadata
-and zero or more resource maps that reference the object. If the PID refers to a
-science metadata object, the index entry will have fields populated with content
-extracted from the science metadata document and zero or more resource maps that
-reference the science metadata.
+The SOLR index is populated from content that is copied to Coordinating Nodes,
+that is :term:`System Metadata`, :term:`Science Metadata` and :term:`Resource
+Maps`. Each index entry represents information about the information referenced
+by a single identifier (PID). For PIDs that refer to science data objects the
+index entry will be constructed from system metadata and zero or more resource
+maps that reference the object. If a PID identifies a science metadata object,
+the index entry will have fields populated with content extracted from the
+system metadata for the object, the science metadata document and zero or more
+resource maps that reference the science metadata. Similarly, if the PID
+identifies a resource map, then the index entry fields for that PID will be
+populated by the System Metadata and resource map values for that PID.
+
+The general sequence for indexing content is illustrated in Figure 1 below.
+
+.. figure:: images/index_sequence.png
+
+.. 
+   @startuml images/index_sequence.png
+   (*) -right-> "System metadata updated"
+   --> "Index Task"
+   --> "Extract system metadata"
+   if "Science           \nMetadata?            " then
+     -right-> [true] "Parse science metadata"
+     --> "Update SOLR"
+   else
+     if "Resource            \nMap?        " then
+       -right-> [true] "Parse resource map"
+       --> "Update data and metadata\n resource map index fields"
+       --> "Update SOLR"
+     else
+       --> "Update SOLR"
+       --> (*)
+     endif
+   endif
+   @enduml
+
+
+
+A full list of index fields is provided in Table 4 below.
 
 
 Properties of the Index Derived From System Metadata
@@ -41,7 +73,7 @@ document (PID) indexed.
    :widths: 3 2 1 10
    :driver: xlsx
    :source: source/design/data/SearchFields.xlsx
-   :sql: SELECT ':attr:`SearchMetadata.'||SOLR||'`', FieldType, Multi, ValueOrigin FROM Fields WHERE Fields.Source='Y';
+   :sql: SELECT ':attr:`~SearchMetadata.'||SOLR||'`', FieldType, Multi, Reference FROM SystemMetadata;
 
 
 
@@ -68,7 +100,7 @@ populated with more than a single value per document (PID) indexed.
    :widths: 3 2 1 10
    :driver: xlsx
    :source: source/design/data/SearchFields.xlsx
-   :sql: SELECT ':attr:`SearchMetadata.'||SOLR||'`', FieldType, Multi, ValueOrigin FROM Fields WHERE Fields.Source='R';
+   :sql: SELECT ':attr:`SearchMetadata.'||SOLR||'`', FieldType, Multi, Reference FROM ResourceMap;
 
 
 
@@ -306,105 +338,17 @@ extracted from the various formats and syntaxes of of science metadata that
 are supported by the DataONE indexing system.
 
 
-.. list-table::
-   :header-rows: 1
-   :widths: 3 2 1 1 1
+**Table 3.** Index fields populated from science metadata documents. "Multi"
+fields may be populated with more than a single value per document (PID)
+indexed.
 
-   * - Attribute
-     - Type
-     - Multi?
-     - In UI?
-     - V-0.6.4?
-   * - :attr:`abstract`
-     - text
-     - No
-     - Yes
-     - Y
-   * - :attr:`author`
-     - string
-     - No
-     - Yes
-     - Y
-   * - :attr:`author_lname`
-     - string
-     - Yes
-     - Yes
-     - Y
-   * - :attr:`keywords`
-     - string
-     - Yes
-     - Yes
-     - Y
-   * - :attr:`keyConcept`
-     - string
-     - Yes
-     -
-     - N
-   * - :attr:`southBoundCoord`
-     - float
-     - No
-     - Yes
-     - Y
-   * - :attr:`northBoundCoord`
-     - float
-     - No
-     - yes
-     - Y
-   * - :attr:`westBoundCoord`
-     - float
-     - No
-     - Yes
-     - Y
-   * - :attr:`eastBoundCoord`
-     - float
-     - No
-     - Yes
-     - Y
-   * - :attr:`namedLocation`
-     - string
-     - Yes
-     - Yes
-     - N
-   * - :attr:`beginDate`
-     - date
-     - No
-     - Yes
-     - Y
-   * - :attr:`endDate`
-     - date
-     - No
-     - Yes
-     - Y
-   * - :attr:`text`
-     - text
-     - No
-     - Yes
-     - Y
-   * - :attr:`title`
-     - String
-     - No
-     - Yes
-     - Y
-   * - :attr:`variableName`
-     - string
-     - Yes
-     - Yes
-     - N
-   * - :attr:`scientificName`
-     - string
-     - Yes
-     - Yes
-     - N
-   * - :attr:`relatedOrganizations`
-     - string
-     - Yes
-     - No
-     - N
-   * - :attr:`datePublished`
-     - date
-     - No
-     - Yes
-     - N
+.. sqltable:: Resource Map Properties
+   :header: Field,Type,Multi?,Description
+   :widths: 2 1 1 10
+   :driver: xlsx
+   :source: source/design/data/SearchFields.xlsx
+   :sql: SELECT ':attr:`SearchMetadata.'||SOLR||'`', FieldType, Multi, Description FROM Fields WHERE Source='S';
+
 
 
 Date Representations in Science Metadata Documents

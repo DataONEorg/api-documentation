@@ -26,6 +26,10 @@
      - ``GET /replicaAuthorizations/{pid}``
      - :func:`isNodeAuthorized`
      - (:class:`session<Types.Session>`, :class:`targetNodeSubject<Types.Subject>`, :class:`pid<Types.Identifier>`) ``->`` boolean
+   * - 
+     - ``DELETE /replicaMetadata/{pid}``
+     - :func:`deleteReplicationMetadata`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`nodeId<Types.NodeReference>`, ``serialVersion``) ``->`` boolean
 
 
 
@@ -73,16 +77,12 @@
 
    :raises Exceptions.NotFound: ``(errorCode=404, detailCode=4740)``
 
-   :raises Exceptions.VersionMismatch: ``(errorCode=409, detailCode=4741)``
-
-     The serialVersion supplied with the request does not match the serialVersion of the target
-
 
 
 
 .. function:: updateReplicationMetadata(session,pid,replicaMetadata,serialVersion) -> boolean
 
-   Full replacement of replication metadata in the system metadata for the specified object, changes date sys meta modified
+   Replaces the replica with matching nodeRef in the system metadata of the specified object.  Adds a new replica if the nodeRef of passed in Replica is not already present.  Changes the date sys meta modified.
 
    Successful completion of the operation is indicated by returning a HTTP status of 200.
 
@@ -212,5 +212,60 @@
    :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=4875)``
 
      The session information is invalid.
+
+
+
+
+.. function:: deleteReplicationMetadata(session,pid,nodeId,serialVersion) -> boolean
+
+   Removes the replication information for the specified node from the object system metadata identified by *pid*.
+
+   Removal of replication metadata is necessary if the Member Node goes offline permanently or for an extended period, or when it is deeemed prudent to migrate an object from one node to another to address resource management issues.
+
+   This method is normally only called by Coordinating Nodes.
+
+   :REST URL: ``DELETE /replicaMetadata/{pid}``
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session MUST be a Coordinating Node.
+   :type session: :class:`Types.Session`
+
+   :param pid: The identifier of the object whose replication metadata is being modified.
+   :type pid: :class:`Types.Identifier`
+
+   :param nodeId: The identifier of the node replication information that is being removed from the system metadata record.
+   :type nodeId: :class:`Types.NodeReference`
+
+   :param serialVersion: The :attr:`Types.SystemMetadata.serialVersion` of the system metadata being updated. This MUST match the latest version of system metadata available for the object on the Coordinating Node
+   :type serialVersion: unsigned long
+
+   :returns: True if the replication metadata was successfully deleted.
+   :rtype: boolean
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4950)``
+
+     The method functionality if not fully implemented
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4951)``
+
+     An internal server error occurred that prevented the operation from completing.
+
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4952)``
+
+     The request parameters are malformed
+
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=4953)``
+
+     The supplied session is invalid
+
+   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=4956)``
+
+     The object identified by *pid* or the node reference specified by *nodeId* could not be located in the system metadata for the object.
+
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=4954)``
+
+     The subject identified by the *session* information does not have appropriate priviledges for modifiying the content or accessing the service.
+
+   :raises Exceptions.VersionMismatch: ``(errorCode=409, detailCode=4955)``
+
+     The *serialVersion* does not match the current :attr:`Types.SystemMetadata.serialVersion` value of the object system metadata.
 
 

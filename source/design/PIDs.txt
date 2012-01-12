@@ -1,29 +1,29 @@
 Identifiers in DataONE
 ======================
 
-Identifiers are handles utilized by data providers as a mechanism to
-specifically identify the individual objects (documents, data sets, data
-records) they manage. Identifiers in use by the provider are unique at least
-within the scope of the data provider itself. In some cases the data provider
-will use a system that expands the scope of guaranteed uniqueness to a larger
-domain either through an `algorithmic approach <guid>`_ (where likelihood of
-duplication is statistically improbable) or through segmenting by namespaces,
-with values appearing within the namespace under the control of the identifier
-generator and namespace control enforced at a higher level to thus ensure
-uniqueness within the domain of interest.
+Identifiers (PIDs, Persistent IDentifiers) are handles utilized by data
+providers as a mechanism to specifically identify the individual objects
+(documents, data sets, data records) they manage. Identifiers in use by the
+provider are unique at least within the scope of the data provider itself. In
+some cases the data provider will use a system that expands the scope of
+guaranteed uniqueness to a larger domain either through an `algorithmic approach
+<guid>`_ (where likelihood of duplication is statistically improbable) or
+through segmenting by namespaces, with values appearing within the namespace
+under the control of the identifier generator and namespace control enforced at
+a higher level to thus ensure uniqueness within the domain of interest.
 
 Uniqueness
 ~~~~~~~~~~
 
-Uniqueness of identifiers in DataONE is largely under the control of the
-Member Nodes (i.e. the data providers), with the requirement that an existing
-identifier (i.e. one that is already registered in the dataONE system) can not
+Uniqueness of identifiers in DataONE is largely under the control of the Member
+Nodes (i.e. the data providers), with the requirement that an existing
+identifier (i.e. one that is already registered in the DataONE system) can not
 be reused. This is enforced for new content by checking the uniqueness of a
-proposed identifier in the create() method, and for existing content by
-ignoring content with identifiers that are already in use. A mechanism is also
-available to reserve an identifier, so that a client may for example compose a
-composite object prior to committing the new content to storage on the Member
-Node.
+proposed identifier in the :func:`MNStorage.create` method, and for existing
+content by ignoring content with identifiers that are already in use. A
+mechanism is also available to reserve an identifier, so that a client may for
+example compose a composite object prior to committing the new content to
+storage on the Member Node.
 
 .. Note:: 
 
@@ -60,40 +60,22 @@ infrastructure, but rather indicates that the DataONE infrastructure and
 services operate independently of such external services, with no functional
 dependency.
 
-Identifiers are treated as opaque strings in the DataONE system, with no
-meaning inferred from structure or pattern that may be present in identifiers.
-The rules for identifier construction in DataONE are minimal and intended to
-ensure practical utility of identifiers. There is a set of characters that can
-not be used within an identifier string (non-printing characters), and the
-maximum number of characters that such a string may contain (800 characters,
-#577). Leading and trailing white space is strongly discouraged (to enhance
-use of identifiers in printed media).
-
-.. Note:: 
-
-   It will be necessary to reserve at least one more character such as the
-   quote (") character to enable clear representation of identifiers in
-   printed media. For example, an identifier may be "something that can not be
-   distinguished from the text body" without delimiters. Such an identifier
-   could not be properly rendered in text if the quote character were part of
-   the reserved character set. An alternative would be to escape such a
-   reserved character, but this can reduce readability.
+Identifiers are treated as opaque strings in the DataONE system, with no meaning
+inferred from structure or pattern that may be present in identifiers. The rules
+for identifier construction in DataONE are minimal and intended to ensure
+practical utility of identifiers. There is a set of characters that can not be
+used within an identifier string (non-printing and whitespace characters), and
+the maximum number of characters that such a string may contain (800 characters,
+#577). Leading and trailing white space is not allowed.
 
 
 Immutability
 ~~~~~~~~~~~~
 
 Once assigned and registered in the DataONE infrastructure, an identifier will
-always refer to the same set of bytes in the case of data and metadata
-objects. Generation of other representations of the objects may be supported
-by services (e.g. an image may be transformed from TIFF to JPEG), but the
-identifier will always refer to the original form.
-
-.. Note:: 
-
-   Delete and Update operations are supported through the CRUD APIs. We need
-   to be very clear about what these operations actually do - can data and
-   metadata actually be modified or deleted and retain the same identifier?
+always refer to the same sequence of bytes. Generation of other representations
+of objects may be supported by services (e.g. an image may be transformed from
+TIFF to JPEG), but the identifier will always refer to the original form.
 
 
 Resolvability
@@ -102,45 +84,26 @@ Resolvability
 A fundamental goal of DataONE is to ensure that any identifier utilized in the
 system is resolvable, that is, DataONE provides a method that will enable
 retrieval of the bytes associated with the object (the actual object bytes or
-metadata associated with the object). Resolution is handled by the
-Coordinating Nodes through the :func:`CN_crud.resolve` method of the CRUD API.
-A guarantee of resolvability is a fundamental function of the DataONE
-infrastructure upon which many other services may be constructed, both within
-DataONE and by third party systems.
+metadata associated with the object). Resolution is handled by the Coordinating
+Nodes through the :func:`CNCore.resolve` method. A guarantee of resolvability is
+a fundamental function of the DataONE infrastructure upon which many other
+services may be constructed, both within DataONE and by third party systems.
 
 Granularity
 ~~~~~~~~~~~
 
-Identifiers refer to objects in DataONE. Initially data and science metadata
-documents describing data have identifiers. The definition of "data" is
+Identifiers refer to managed objects in DataONE. Initially data, science metadata
+documents, and resource maps have identifiers. The definition of "data" is
 somewhat arbitrary though, and a single data object may be a single record
 within some larger collection, or may refer to an entire set of records
 contained within some package.
 
-Opacity of identifiers currently (version 1.x) precludes the use of fragment
-identifiers in DataONE, since there is no reliable way to determine if a
-string suffix does indeed indicate a fragment or is actually part of the
-identifier string. Instead, it is more likely that selectors will be used
-along with some convention of representation. A selector is an operator that
-is able to extract some piece of content from an object referenced by an
-identifier. Selectors will necessarily be of varied form. For example, xpath
-may be enabled as a selector that can be applied against XML or well formed
-HTML documents, and similarly a feature expressed in `OGC WKT`_ may act as a
-selector against an spatial data set object.
 
 Serializing
 ~~~~~~~~~~~
 
-When identifiers appear in text (human readable documents, printed or
-otherwise), it is recommended that identifiers that contain white space should
-be surrounded by the quote character ("). New line characters appearing in
-identifiers that span multiple lines should be ignored by the reader. Leading
-and trailing white space should be ignored by the reader. In multi-line
-presentations of identifiers, care should be taken to avoid situations where
-internal white space characters end a line, as they will be mistakenly
-ignored.
-
-.. TODO:: This suggestion about serializing in text needs to be vetted and verified to be reasonable.
+When identifiers appear in text, the full identifier should be presented
+unmodified.
 
 Identifiers appearing in URLs or other representations that have reserved
 characters should be escaped according to the rules of the targeted

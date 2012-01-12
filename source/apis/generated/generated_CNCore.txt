@@ -42,6 +42,10 @@
      - ``GET /checksum``
      - :func:`listChecksumAlgorithms`
      - () ``->`` :class:`Types.ChecksumAlgorithmList`
+   * - 
+     - ``PUT /meta/obsoletedby/{pid}``
+     - :func:`setObsoletedBy`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`obsoletedByPid<Types.Identifier>`, ``serialVersion``) ``->`` boolean
    * - Tier 1
      - ``GET /node``
      - :func:`listNodes`
@@ -337,6 +341,57 @@
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4881)``
 
      A problem occurred with the service that prevented it from returning the expected response.
+
+
+
+
+.. function:: setObsoletedBy(session,pid,obsoletedByPid,serialVersion) -> boolean
+
+   Updates the :attr:`Types.SystemMetadata.obsoletedBy` property for an object, indicating that the object specified by *pid* has been obsoleted by the identifier in *obsoletedByPid*.
+
+   :REST URL: ``PUT /meta/obsoletedby/{pid}``
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The :term:`Subject` of the session MUST have *write* permission on the object.
+   :type session: :class:`Types.Session`
+
+   :param pid: Identifier of the object system metadata being updated.
+   :type pid: :class:`Types.Identifier`
+
+   :param obsoletedByPid: Identifier of the object that obsoletes the object identified by *pid*
+   :type obsoletedByPid: :class:`Types.Identifier`
+
+   :param serialVersion: The serial version of the system metadata being updated. If the specified *serialVersion* does not match the current version at the Coordinating Nodes, then a :exc:`Exceptions.VersionMismatch` error is raised and no changes are made.
+   :type serialVersion: unsigned long
+
+   :returns: True if the operation succeeds, otherwise false.
+   :rtype: boolean
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4940)``
+
+     The service endpoint has not yet been fully implemented
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4941)``
+
+     A problem occurred with the service that prevented it from returning the expected response.
+
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4942)``
+
+     The request was malformed and could not be processed.
+
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=4943)``
+
+     The supplied session information could not be verified as a valid DataONE session.
+
+   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=4944)``
+
+     The specified *pid* does not exist.
+
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=4945)``
+
+     The credentials provided with the request in the *session* do not have *write* privileges on *pid*.
+
+   :raises Exceptions.VersionMismatch: ``(errorCode=409, detailCode=4946)``
+
+     The provided *serialVersion* does not match the latest version that is held by the CN. The client should refresh it's copy, verify that the update is still necessary, and resubmit the request with the updated information.
 
 
 

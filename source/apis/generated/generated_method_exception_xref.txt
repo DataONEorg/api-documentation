@@ -632,6 +632,41 @@
      - 500
      - 4881
    * - :mod:`CNCore`
+     - :func:`setObsoletedBy <CNCore.setObsoletedBy>`
+     - NotImplemented
+     - 501
+     - 4940
+   * - :mod:`CNCore`
+     - :func:`setObsoletedBy <CNCore.setObsoletedBy>`
+     - ServiceFailure
+     - 500
+     - 4941
+   * - :mod:`CNCore`
+     - :func:`setObsoletedBy <CNCore.setObsoletedBy>`
+     - InvalidRequest
+     - 400
+     - 4942
+   * - :mod:`CNCore`
+     - :func:`setObsoletedBy <CNCore.setObsoletedBy>`
+     - InvalidToken
+     - 401
+     - 4943
+   * - :mod:`CNCore`
+     - :func:`setObsoletedBy <CNCore.setObsoletedBy>`
+     - NotFound
+     - 404
+     - 4944
+   * - :mod:`CNCore`
+     - :func:`setObsoletedBy <CNCore.setObsoletedBy>`
+     - NotAuthorized
+     - 401
+     - 4945
+   * - :mod:`CNCore`
+     - :func:`setObsoletedBy <CNCore.setObsoletedBy>`
+     - VersionMismatch
+     - 409
+     - 4946
+   * - :mod:`CNCore`
      - :func:`listNodes <CNCore.listNodes>`
      - NotImplemented
      - 501
@@ -1362,11 +1397,6 @@
      - 404
      - 4740
    * - :mod:`CNReplication`
-     - :func:`setReplicationStatus <CNReplication.setReplicationStatus>`
-     - VersionMismatch
-     - 409
-     - 4741
-   * - :mod:`CNReplication`
      - :func:`updateReplicationMetadata <CNReplication.updateReplicationMetadata>`
      - NotImplemented
      - 501
@@ -1466,6 +1496,41 @@
      - InvalidToken
      - 401
      - 4875
+   * - :mod:`CNReplication`
+     - :func:`deleteReplicationMetadata <CNReplication.deleteReplicationMetadata>`
+     - NotImplemented
+     - 501
+     - 4950
+   * - :mod:`CNReplication`
+     - :func:`deleteReplicationMetadata <CNReplication.deleteReplicationMetadata>`
+     - ServiceFailure
+     - 500
+     - 4951
+   * - :mod:`CNReplication`
+     - :func:`deleteReplicationMetadata <CNReplication.deleteReplicationMetadata>`
+     - InvalidRequest
+     - 400
+     - 4952
+   * - :mod:`CNReplication`
+     - :func:`deleteReplicationMetadata <CNReplication.deleteReplicationMetadata>`
+     - InvalidToken
+     - 401
+     - 4953
+   * - :mod:`CNReplication`
+     - :func:`deleteReplicationMetadata <CNReplication.deleteReplicationMetadata>`
+     - NotFound
+     - 404
+     - 4956
+   * - :mod:`CNReplication`
+     - :func:`deleteReplicationMetadata <CNReplication.deleteReplicationMetadata>`
+     - NotAuthorized
+     - 401
+     - 4954
+   * - :mod:`CNReplication`
+     - :func:`deleteReplicationMetadata <CNReplication.deleteReplicationMetadata>`
+     - VersionMismatch
+     - 409
+     - 4955
    * - :mod:`CNRegister`
      - :func:`updateNodeCapabilities <CNRegister.updateNodeCapabilities>`
      - NotImplemented

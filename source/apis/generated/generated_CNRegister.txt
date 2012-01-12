@@ -24,7 +24,7 @@
 
 .. function:: updateNodeCapabilities(session,nodeid,node) -> boolean
 
-   Update the capabilities document for the specified node.
+   For updating the capabilities of the specified node. Most information is replaced by information in the new node, however, the node identifier, nodeType, ping, syncrhonization.lastHarvested, and synchronization.lastCompleteHarvest are preserved from the existing entry.  Services in the old record not included in the new Node will be removed.
 
    Successful completion of this operation is indicated by a HTTP response status code of 200.
 

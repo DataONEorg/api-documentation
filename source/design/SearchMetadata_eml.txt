@@ -8,6 +8,6 @@ Search Metadata Elements Extracted from EML
    :widths: 3 10 10 10
    :driver: xlsx
    :source: source/design/data/SearchFields.xlsx
-   :sql: SELECT ':attr:`SearchMetadata.'||SOLR_Field||'`', Element_path, Reference, Comments FROM EML,Fields WHERE EML.SOLR_Field=Fields.SOLR AND V0_6_4='y';
+   :sql: SELECT ':attr:`SearchMetadata.'||SOLR||'`', ElementPath, Reference, Comments FROM EML;
 
 

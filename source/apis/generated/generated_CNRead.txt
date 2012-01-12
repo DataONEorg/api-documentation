@@ -156,6 +156,8 @@
 
    Note also that the same functionality as *resolve()* can be implemented by retrieving a copy of the system metadata for the object and utilizing the node registry to discover the base URL from which the client can construct the *get()* URL. Resolve is provided for efficiency since the response size is much smaller.
 
+   Resolve will return a HTTP status of 303 (see other) on success. The HTTP header "Location" MUST be set, and it's value SHOULD be the full get() URL for retrieving the object from the first location in the resolve response.
+
    :Use Cases:
      :doc:`UC36 </design/UseCases/36_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
    :REST URL: ``GET /resolve/{pid}``

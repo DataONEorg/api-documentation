@@ -1,6 +1,19 @@
 Change Log
 ==========
 
+2012-01-12 : Version 1.0, MethodCrossReference.xls
+--------------------------------------------------
+
+- Updated :func:`CNRead.resolve` to return a HTTP 303 See Other response on
+  success
+
+- Added :func:`CNCore.setObsoletedBy` to update the obsoletedBy information for
+  an object. Note that the proposed endpoint may change pending discussion.
+
+- Added :func:`CNReplication.deleteReplicationMetadata` to remove the replica
+  metadata for a particular node for an object. Only callable by CNs
+
+
 2012-01-10 : Version 1.0, MethodCrossReference.xls
 --------------------------------------------------
 

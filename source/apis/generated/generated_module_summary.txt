@@ -91,7 +91,8 @@ The modified system metadata entries must then be available in :func:`MNRead.lis
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
    * - \
      - :func:`MNStorage.delete`
-     - Deletes an object from the Member Node, where the object is either a data object or a science metadata object. This method is called by clients to delete objects on Member nodes. Member Nodes MUST check that the caller is authorized to perform this function.
+     - Deletes an object managed by DataONE from the Member Node. This method is called by clients to delete objects on Member nodes. Member Nodes MUST check that the caller is authorized to perform this function.
+The operation does not delete the object bytes, but instead sets the :attr:`Types.SystemMetadata.archived` flag to True. This ensures that the object can still be resolved (and hence remain valid for existing citations and cross references), though will not appear in searches.
 If the object does not exist on the node servicing the request, then an :exc:`Exceptions.NotFound` exception is raised. The message body of the exception SHOULD contain a hint as to the location of the :func:`CNRead.resolve` method.
 
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
@@ -157,6 +158,9 @@ The message body is encoded as MIME Multipart/form-data
      - :func:`CNCore.listChecksumAlgorithms`
      - Returns a list of checksum algorithms that are supported by DataONE.
    * - \
+     - :func:`CNCore.setObsoletedBy`
+     - Updates the :attr:`Types.SystemMetadata.obsoletedBy` property for an object, indicating that the object specified by *pid* has been obsoleted by the identifier in *obsoletedByPid*.
+   * - \
      - :func:`CNCore.listNodes`
      - Returns a list of nodes that have been registered with the DataONE infrastructure.
 
@@ -192,9 +196,9 @@ Note that this method is likely to be called frequently and so efficiency should
      - :func:`CNRead.resolve`
      - Returns a list of nodes (MNs or CNs) known to hold copies of the object identified by *pid*. The object resolution process is intended to provide a simple mechanism for a client to discover from which node(s) a particular object may be retrieved. Details about method interfaces (i.e. REST URLs) exposed by a particular node can be determined by examining the response from the *node* collection. For convenience, the :func:`MNRead.get` URL is included in the response as is the base URL of the node REST services.
 Note also that the same functionality as *resolve()* can be implemented by retrieving a copy of the system metadata for the object and utilizing the node registry to discover the base URL from which the client can construct the *get()* URL. Resolve is provided for efficiency since the response size is much smaller.
+Resolve will return a HTTP status of 303 (see other) on success. The HTTP header "Location" MUST be set, and it's value SHOULD be the full get() URL for retrieving the object from the first location in the resolve response.
 
-       
-Appears in functional use cases: :doc:`UC36 </design/UseCases/36_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
+       Appears in functional use cases: :doc:`UC36 </design/UseCases/36_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
    * - \
      - :func:`CNRead.getChecksum`
      - Returns the checksum for the specified object as reported in the system metadata.
@@ -317,7 +321,7 @@ The nodeRef, status, and failure parameters are transmitted as part of the HTTP 
        Appears in functional use cases: :doc:`UC09 </design/UseCases/09_uc>`
    * - \
      - :func:`CNReplication.updateReplicationMetadata`
-     - Full replacement of replication metadata in the system metadata for the specified object, changes date sys meta modified
+     - Replaces the replica with matching nodeRef in the system metadata of the specified object.  Adds a new replica if the nodeRef of passed in Replica is not already present.  Changes the date sys meta modified.
 Successful completion of the operation is indicated by returning a HTTP status of 200.
 Failure of the operation MUST be indicated by returning an appropriate exception.
    * - \
@@ -330,9 +334,14 @@ Failure of the operation MUST be indicated by returning an appropriate exception
      - Verifies that a replication event was initiated by a CN by comparing the target node's identifiying subject with a known list of scheduled replication tasks.
 Successful completion of the operation is indicated by returning a HTTP status of 200.
 Failure of the operation MUST be indicated by returning an appropriate exception.
+   * - \
+     - :func:`CNReplication.deleteReplicationMetadata`
+     - Removes the replication information for the specified node from the object system metadata identified by *pid*.
+Removal of replication metadata is necessary if the Member Node goes offline permanently or for an extended period, or when it is deeemed prudent to migrate an object from one node to another to address resource management issues.
+This method is normally only called by Coordinating Nodes.
    * - :mod:`CNRegister`
      - :func:`CNRegister.updateNodeCapabilities`
-     - Update the capabilities document for the specified node.
+     - For updating the capabilities of the specified node. Most information is replaced by information in the new node, however, the node identifier, nodeType, ping, syncrhonization.lastHarvested, and synchronization.lastCompleteHarvest are preserved from the existing entry.  Services in the old record not included in the new Node will be removed.
 Successful completion of this operation is indicated by a HTTP response status code of 200.
 Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception.
    * - \
