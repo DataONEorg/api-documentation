@@ -30,6 +30,8 @@
 
    Failure of the operation MUST be indicated by returning an appropriate exception.
 
+   Access control for this method MUST be configured to allow calling by Coordinating Nodes.
+
    :Use Cases:
      :doc:`UC09 </design/UseCases/09_uc>`
    :REST URL: ``POST /replicate``

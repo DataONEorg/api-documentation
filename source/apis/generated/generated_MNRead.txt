@@ -202,6 +202,8 @@
 
    Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed.
 
+   Access control for this method MUST be configured to allow calling by Coordinating Nodes and MAY be configured to allow more general access.
+
    :Use Cases:
      :doc:`UC06 </design/UseCases/06_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
    :REST URL: ``GET /object[?fromDate={fromDate}&toDate={toDate}&formatid={formatId}&replicaStatus={replicaStatus}&start={start}&count={count}]``
@@ -256,6 +258,8 @@
    This is a callback method used by a CN to indicate to a MN that it cannot complete synchronization of the science metadata identified by *pid*. When called, the MN should take steps to record the problem description and notify an administrator or the data owner of the issue.
 
    A successful response is indicated by a HTTP status of 200. An unsuccessful call is indicated by a returned exception and associated HTTP status code.
+
+   Access control for this method MUST be configured to allow calling by Coordinating Nodes and MAY be configured to allow more general access.
 
    :Use Cases:
      :doc:`UC06 </design/UseCases/06_uc>`

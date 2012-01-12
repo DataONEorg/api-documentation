@@ -68,6 +68,8 @@
 
    Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed.
 
+   Access control for this method MUST be configured to allow calling by Coordinating Nodes and MAY be configured to allow more general access.
+
    :REST URL: ``GET /log``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`

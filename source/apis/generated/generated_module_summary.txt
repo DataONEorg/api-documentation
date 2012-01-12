@@ -20,6 +20,7 @@ The response body will be ignored by the caller expect in the case of an error, 
 This method is used primarily by the log aggregator to generate aggregate statistics for nodes, objects, and the methods of access.
 The response MUST contain only records for which the requestor has permission to read.
 Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed.
+Access control for this method MUST be configured to allow calling by Coordinating Nodes and MAY be configured to allow more general access.
    * - \
      - :func:`MNCore.getCapabilities`
      - Returns a document describing the capabilities of the Member Node.
@@ -55,12 +56,14 @@ Note that this method is likely to be called frequently and so efficiency should
   fromDate < SystemMetadata.dateSysMetadataModified
 but is expected to also support date range (by also specifying *toDate*), and should also support slicing of the matching set of records by indicating the starting *index* of the response (where 0 is the index of the first item) and the *count* of elements to be returned.
 Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed.
+Access control for this method MUST be configured to allow calling by Coordinating Nodes and MAY be configured to allow more general access.
 
        Appears in functional use cases: :doc:`UC06 </design/UseCases/06_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
    * - \
      - :func:`MNRead.synchronizationFailed`
      - This is a callback method used by a CN to indicate to a MN that it cannot complete synchronization of the science metadata identified by *pid*. When called, the MN should take steps to record the problem description and notify an administrator or the data owner of the issue.
 A successful response is indicated by a HTTP status of 200. An unsuccessful call is indicated by a returned exception and associated HTTP status code.
+Access control for this method MUST be configured to allow calling by Coordinating Nodes and MAY be configured to allow more general access.
 
        Appears in functional use cases: :doc:`UC06 </design/UseCases/06_uc>`
    * - :mod:`MNAuthorization`
@@ -100,12 +103,14 @@ If the object does not exist on the node servicing the request, then an :exc:`Ex
      - :func:`MNStorage.systemMetadataChanged`
      - Notifies the Member Node that the authoritative copy of system metadata on the Coordinating Nodes has changed.
 The Member Node SHOULD schedule an update to its information about the affected object by retrieving an authoritative copy from a Coordinating Node.
-Note that date time precision is limited to one millisecond.
+Note that date time precision is limited to one millisecond. 
+Access control for this method MUST be configured to allow calling by Coordinating Nodes.
    * - :mod:`MNReplication`
      - :func:`MNReplication.replicate`
      - Called by a Coordinating Node to request that the Member Node create a copy of the specified object by retrieving it from another Member Nodeode and storing it locally so that it can be made accessible to the DataONE system.  
 A successful operation is indicated by a HTTP status of 200 on the response. 
 Failure of the operation MUST be indicated by returning an appropriate exception.
+Access control for this method MUST be configured to allow calling by Coordinating Nodes.
 
        Appears in functional use cases: :doc:`UC09 </design/UseCases/09_uc>`
    * - \
