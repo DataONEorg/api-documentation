@@ -86,7 +86,7 @@
    * - GET /checksum
      - :func:`CNCore.listChecksumAlgorithms`
      - Returns a list of checksum algorithms that are supported by DataONE.
-   * - PUT /meta/obsoletedby/{pid}
+   * - PUT /obsoletedBy/{pid}
      - :func:`CNCore.setObsoletedBy`
      - Updates the :attr:`Types.SystemMetadata.obsoletedBy` property for an object, indicating that the object specified by *pid* has been obsoleted by the identifier in *obsoletedByPid*.
    * - GET /node
@@ -179,7 +179,7 @@
    * - GET /replicaAuthorizations/{pid}
      - :func:`CNReplication.isNodeAuthorized`
      - Verifies that a replication event was initiated by a CN by comparing the target node's identifiying subject with a known list of scheduled replication tasks. Successful completion of the operation is indicated by returning a HTTP status of 200. Failure of the operation MUST be indicated by returning an appropriate exception.
-   * - DELETE /replicaMetadata/{pid}
+   * - PUT /removeReplicaMetadata/{pid}
      - :func:`CNReplication.deleteReplicationMetadata`
      - Removes the replication information for the specified node from the object system metadata identified by *pid*. Removal of replication metadata is necessary if the Member Node goes offline permanently or for an extended period, or when it is deeemed prudent to migrate an object from one node to another to address resource management issues. This method is normally only called by Coordinating Nodes.
    * - PUT /node/{nodeid}

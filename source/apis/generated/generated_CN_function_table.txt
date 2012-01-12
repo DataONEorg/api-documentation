@@ -43,7 +43,7 @@
      - :func:`CNCore.listChecksumAlgorithms`
      - () ``->`` :class:`Types.ChecksumAlgorithmList`
    * - 
-     - ``PUT /meta/obsoletedby/{pid}``
+     - ``PUT /obsoletedBy/{pid}``
      - :func:`CNCore.setObsoletedBy`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`obsoletedByPid<Types.Identifier>`, ``serialVersion``) ``->`` boolean
    * - Tier 1
@@ -168,7 +168,7 @@
      - :func:`CNReplication.isNodeAuthorized`
      - (:class:`session<Types.Session>`, :class:`targetNodeSubject<Types.Subject>`, :class:`pid<Types.Identifier>`) ``->`` boolean
    * - 
-     - ``DELETE /replicaMetadata/{pid}``
+     - ``PUT /removeReplicaMetadata/{pid}``
      - :func:`CNReplication.deleteReplicationMetadata`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`nodeId<Types.NodeReference>`, ``serialVersion``) ``->`` boolean
    * - Tier 2

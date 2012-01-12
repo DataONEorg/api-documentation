@@ -27,7 +27,7 @@
      - :func:`isNodeAuthorized`
      - (:class:`session<Types.Session>`, :class:`targetNodeSubject<Types.Subject>`, :class:`pid<Types.Identifier>`) ``->`` boolean
    * - 
-     - ``DELETE /replicaMetadata/{pid}``
+     - ``PUT /removeReplicaMetadata/{pid}``
      - :func:`deleteReplicationMetadata`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`nodeId<Types.NodeReference>`, ``serialVersion``) ``->`` boolean
 
@@ -224,7 +224,7 @@
 
    This method is normally only called by Coordinating Nodes.
 
-   :REST URL: ``DELETE /replicaMetadata/{pid}``
+   :REST URL: ``PUT /removeReplicaMetadata/{pid}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session MUST be a Coordinating Node.
    :type session: :class:`Types.Session`
 
