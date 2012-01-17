@@ -31,6 +31,15 @@ populated by the System Metadata and resource map values for that PID.
 
 The general sequence for indexing content is illustrated in Figure 1 below.
 
+The general process of indexing content involves retrieving a System Metadata
+document, parsing system metadata properties such as permission rules to
+generate a SOLR index document, then optionally adding to the document if the
+PID refers to a science metadata or resource map object. The general sequence
+of operations is outlined in Figure 1. If the PID refers to a resource map,
+then it is necessary to update the :attr:`~SearchMetadata.documents` and
+:attr:`~SearchMetadata.isDocumentedBy` properties of the Science Metadata and
+data objects that appear in the data package defined by the Resource Map.
+
 .. figure:: images/index_sequence.png
 
 .. 
@@ -58,8 +67,16 @@ The general sequence for indexing content is illustrated in Figure 1 below.
 A full list of index fields is provided in Table 4 below.
 
 
-Properties of the Index Derived From System Metadata
-----------------------------------------------------
+System Metadata Index Properties
+--------------------------------
+
+The main goals for indexing system metadata include:
+
+1. Support access control rules for search results
+
+2. Support efficient discovery of objects by their properties
+
+
 
 Table 1 provides a list of SOLR attributes that are populated by values taken
 from System Metadata.
@@ -84,6 +101,7 @@ This process is fairly straight forward, and requires simply de-duping entries
 so that each of the permission fields contains a distinct list of subjects
 granted that permission. If the DataONE :term:`public user` is present in the
 read permissions, then the *isPublic* field is set to True.
+
 
 
 Properties of the Index Derived from Resource Maps
@@ -456,444 +474,14 @@ Metadata, S = Science Metadata, R = Resource Map, and C = copied internally by
 the search index.
 
 .. sqltable:: . . . 
-   :header: Index Field,Source,Origin,Description
+   :header: Index Field,Multi?,Source,Description
    :widths: 1 1 1 10
    :driver: xlsx
    :source: source/design/data/SearchFields.xlsx
-   :sql: SELECT SOLR, Source, ValueOrigin, Description FROM Fields ORDER BY SOLR ASC;
+   :sql: SELECT '.. attribute:: '||SOLR, Multi, Source, Description FROM Fields ORDER BY LOWER(SOLR) ASC;
 
-
-
-
-
-.. attribute:: abstract
-
-   The abstract text as provided in the science metadata document.
-
-
-.. attribute:: auth_mn
-
-.. attribute:: author
-
-   Principle Investigator (PI) / Author as listed in the metadata document. 
-
-   For search there are advantages to keep simple text representation, with
-   general goal of gradual increase in specificity. Desireable to provide "sort
-   friendly" results such as using LAST, FIRST name.
-
-
-.. attribute:: author_lname
-
-   Last (family or surname) name of the Author
-
-
-.. attribute:: beginDate
-
-   - temporalCoverageStart
-   - temporal extent
-   - "jurassic" vs "date collected for jurassic specimen"
-   - not publication date, not creation date
-   - Applicability date (as opposed to collection date or publication date -- though searching on collection date is a secondary search).  Multiple dates possible:  Collection/observation date, coverage date, analysis date, publication date, metadata modification date (e.g. peat bog samples relevant to 50,000 - 10,000 BCE, collected in July 1980, re-analyzed in July 2008, published in January 2010, and metadata revised in June 2010).  In this example, earliestDate applies to 50,000 BCE.  
-   - Mercury UI
-
-
-.. attribute:: blocked_rep_mn
-
-.. attribute:: cat
-
-.. attribute:: changePermission
-
-.. attribute:: checksum
-
-.. attribute:: checksumAlgorithm
-
-.. attribute:: class
-
-.. attribute:: contactOrganization
-
-.. attribute:: contactOrganizationText
-
-   Copy field from *contactOrganization*
-
-
-.. attribute:: contains
-
-.. attribute:: data_url
-
-.. attribute:: datasource
-
-.. attribute:: datemodified
-
-   (DateTime) available from sysmeta
-
-.. attribute:: datePublished
-
-   - drawn from science metadata
-   - is this the same as publication date concept in datacite - Yes
-   - Mercury UI
-
-
-.. attribute:: dateuploaded
-
-   - first submission to Member Node (drawn from science metadata if available, otherwise system metadata)
-
-.. attribute:: decade
-
-.. attribute:: distribution
-
-.. attribute:: distributionText
-
-  Copy field from *distribution*
-
-
-.. attribute:: documents
-
-.. attribute:: eastBoundCoord
-
-   (SpatialFeature)
-   - Recorded as decimal degrees, WGS84 (EPSG:4326)
-   - Spatial bounding box (largest bounding rectangle)
-   - Spatial window (series of spatial envelopes representative of the spatial locations of where the data is collected from or relevant to)
-   - Spatial features (points, bounding boxes, polygons)
-   - Centroid
-   - Bounding box
-   - Polygon
-   - (not largest extent)
-   - (need to resolve the semantics of the bounding box search - e.g. if centroids are recorded but fall outside of bounding box search)
-   - Bounding box with contains or overlaps 
-   - can be supported by SOLR and Metacat searches
-   - Mercury UI
-   
-
-.. attribute:: edition
-
-.. attribute:: endDate
-
-   (DateTime) Temporal window
-
-   - temporalCoverageEnd, Relative terms (e.g. terms from the Geologic time
-     scale) need to be supported Date ranges Temporal coverage of the data set
-     (e.g. searches - during, before, after)
-
-   - same notes as above apply
-
-   - Mercury UI
-
-
-.. attribute:: executePermission
-
-.. attribute:: family
-
-.. attribute:: features
-
-.. attribute:: fileID
-
-.. attribute:: fullText
-
-.. attribute:: gcmdKeyword
-
-.. attribute:: genus
-
-.. attribute:: geoform
-
-.. attribute:: id
-
-   (Types.IdentifierType) Identifier (PID)
-
-   The PID of the object as expressed in the system metadata document.
-
-   - Need to be able to find metadata records describing a dataset identified
-     by PID. Can be achieved by using the describedBy field.
-
-   - Find any science metadata that is or describes PID
-
-   - Mercury UI
-
-
-.. attribute:: identifier
-
-   Copy field from *id*.
-
-
-.. attribute:: includes
-
-.. attribute:: investigator
-
-.. attribute:: investigatorText
-
-   Copy field from *investigator*.
-
-
-.. attribute:: isDocumentedBy
-
-.. attribute:: isPublic
-
-.. attribute:: isSpatial
-
-.. attribute:: keyConcept
-
-   Key concept -key concepts drawn from a set of ontologies Term Namespace
-
-   - Controlled lists of terms available for several metadata standards
-   - A topic being addressed by the semantics WG
-   - Unlikely to be available in 2011
-   - Giri has some keyword enhancement and mapping script (magic)
-   - Mercury UI
-
-
-.. attribute:: keywords
-
-    Keyword (uncontrolled keywords)
-
-   - Initial values are extracted directly from the science metadata document
-   - Mercury enhances the kw list with e.g. GCMD keyword list
-   - Mercury UI
-   
-
-.. attribute:: keywordsText
-
-   Copy field from *keywords*.
-
-
-.. attribute:: kingdom
-
-.. attribute:: LTERSite
-
-.. attribute:: manu
-
-   Copy field from *manu_exact*.
-
-
-.. attribute:: manu_exact
-
-.. attribute:: n_replicas
-
-.. attribute:: name
-
-.. attribute:: namedLocation
-
-   Named places Term Type Context (Columbus OH, Columbus GA) Namespace
-   of gazetteer
-
-   - free text search field
-   - provide recommendations for representation (see Wieczorek's georeferencing document)
-   - Mercury UI
-
-
-.. attribute:: noBoundingBox
-
-.. attribute:: northBoundCoord
-
-   see :attr:`eastBoundCoord`
-
-.. attribute:: objectformat
-
-   (String) Type of data (format) (2)
-
-   - Original data
-   - Summarized versions
-   - Method used for processing (to generate summary, or original data)
-   - Resource type (spatial, models, observations, web service, ...)
-   - search the system metadata value, but need to parse system metadata of related objects to determine the objectFormat(s) of the data.
-   - Potential for mapping the values appearing the science metadata to the controlled terms available in the object format registry
-   - label should be "content type"
-   
-
-.. attribute:: obsoletedby
-
-.. attribute:: obsoletes
-
-.. attribute:: ogc_url
-
-.. attribute:: order
-
-.. attribute:: origin
-
-.. attribute:: originator
-
-.. attribute:: originatorText
-
-   Copy field from *originator*.
-
-
-.. attribute:: originText
-
-   Copy field from *origin*.
-
-
-.. attribute:: parameter
-
-.. attribute:: parameterText
-
-   Copy field from *parameter*.
-
-
-.. attribute:: phylum
-
-.. attribute:: placeKey
-
-.. attribute:: pref_rep_mn
-
-.. attribute:: presentationCat
-
-.. attribute:: project
-
-.. attribute:: projectText
-
-   Copy field from *project*.
-
-
-.. attribute:: pubDate
-
-   Copy field from *datePublished*.
-
-
-.. attribute:: purpose
-
-.. attribute:: readPermission
-
-   - element in permission index, used for shard query
-
-.. attribute:: relatedOrganizations
-
-   (String) Organizations involved in study
-
-   - low priority
-
-
-.. attribute:: rep_allowed
-
-.. attribute:: replica_mn
-
-.. attribute:: replica_verified
-
-.. attribute:: resourcemap
-
-.. attribute:: rightsholder
-
-.. attribute:: scientificName
-
-   (String)  Biological taxonomic extents (1)
-
-   - lots of opportunities for cleanup services from ITIS, EOL, etc
-   - Mercury UI
-
-
-.. attribute:: sensor
-
-.. attribute:: sensorText
-
-   Copy field from *sensor*.
-
-
-.. attribute:: site
-
-.. attribute:: siteText
-
-   Copy field from *site*.
-
-
-.. attribute:: size
-
-   (Integer, long) Size of data (bytes)
-
-   - needed for drive, display, not necessary for UI search
-
-
-.. attribute:: sku
-
-   Copy field from *id*.
-
-
-.. attribute:: source
-
-.. attribute:: sourceText
-
-   Copy field from *source*.
-
-
-.. attribute:: southBoundCoord
-
-   see :attr:`eastBoundCoord`
-
-
-.. attribute:: species
-
-.. attribute:: submitter
-
-   (String) 
-
-   - for either data or metadata
-   - Principal that added the content to the MN
-   - Needs to be translated from the subject to the individual's name
-
-
-.. attribute:: term
-
-.. attribute:: termText
-
-   Copy field from *term*.
-
-
-.. attribute:: text
-
-   A copy field constructed from content in the following fields:
-   contactOrganization, datasource, decade, features, fileID, fullText,
-   gcmdKeyword, geoform, id, includes, investigator, keywords, LTERSite, manu,
-   name, origin, originator, parameter, placeKey, presentationCat, project,
-   purpose, sensor, site, source, term, title, topic
-
-.. attribute:: title
-
-   The title given to the data set.
-
-
-.. attribute:: titlestr
-
-   Copy field from *title*.
-
-
-.. attribute:: titleText
-
-   Copy field from *title*.
-
-
-.. attribute:: topic
-
-.. attribute:: topicText
-
-   Copy field from *topic*.
-
-
-.. attribute:: update_date
-
-   Copy field from *dateuploaded*.
-
-
-.. attribute:: variableName
-
-   (String) Scientific variables (from a controlled vocabulary) (1)
-
-   - not in Dryad, optional in most/all
-   - Mercury UI
-
-
-.. attribute:: web_url
-
-.. attribute:: westBoundCoord
-
-   see :attr:`eastBoundCoord`
-
-
-.. attribute:: writePermission
-
-   (Types.PrincipalType) Permissions on objects (e.g. available to read by user)
-
-   - element in permission index, used for shard query
-   
 
 ----
-
 
 
 
