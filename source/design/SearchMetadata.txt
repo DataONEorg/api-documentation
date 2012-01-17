@@ -76,8 +76,6 @@ The main goals for indexing system metadata include:
 
 2. Support efficient discovery of objects by their properties
 
-
-
 Table 1 provides a list of SOLR attributes that are populated by values taken
 from System Metadata.
 
@@ -102,6 +100,54 @@ so that each of the permission fields contains a distinct list of subjects
 granted that permission. If the DataONE :term:`public user` is present in the
 read permissions, then the *isPublic* field is set to True.
 
+
+Example Queries
+~~~~~~~~~~~~~~~
+
+The following provide some example queries that may be issued directly against
+the SOLR index operating on the Coordinating Nodes. Note that search terms must
+be properly escaped for the SOLR query syntax, and additionally if submitted
+directly as part of a URL, must also be properly URL escaped.
+
+1. Index entries that match PID (should be at most one match)::
+
+     id:"PID"
+
+   where PID = identifier of object being located
+
+2. Index entries with PID that starts with "some_prefix"::
+
+     id:"some_prefix*"
+
+3. Index entries that match a particular object format::
+
+     objectFormat:"formatId"
+
+   where formatId = the formatId being located
+
+4. Entries with formatId matching "fmtid_1" or "fmtid_2"::
+
+     objectformat:"fmtid_1" || objectFormat:"fmtid_2"
+
+5. Entries with byte size less than or equal to 10000::
+
+     size:[* TO 10000]
+
+6. Entries with byte size less than 10000::
+
+     size:{* TO 10000}
+
+7. Objects modified before 09:56:04 on 2012-01-03 UTC::
+
+     datemodified:{* TO 2012-01-03T09:56:04.000Z}
+
+8. Objects modified less than 10 minutes ago::
+
+     datemodified:[NOW-10MINUTE TO *]
+
+9. Objects of a formatId equal to "format_a" and modified within one day::
+
+     objectformat:"format_a" AND datemodified:[NOW-1DAY TO *]
 
 
 Properties of the Index Derived from Resource Maps
