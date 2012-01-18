@@ -63,8 +63,18 @@ data objects that appear in the data package defined by the Resource Map.
    @enduml
 
 
-
 A full list of index fields is provided in Table 4 below.
+
+
+Querying the SOLR Index
+-----------------------
+
+The `SOLR query syntax`_ is based on the `Lucene query syntax`_ and adds a
+couple of extensions. The SOLR search index is exposed directly as a SOLR search
+service with the base url of::
+
+  http(s)://server.name/solr/
+
 
 
 System Metadata Index Properties
@@ -716,6 +726,10 @@ tools.
 .. _COinS: http://ocoins.info/
 .. _Well Known Text: http://en.wikipedia.org/wiki/Well-known_text
 .. _SOLR: http://lucene.apache.org/solr/
+.. _SOLR query syntax: http://wiki.apache.org/solr/SolrQuerySyntax
+.. _Lucene: http://lucene.apache.org/java/docs/index.html
+.. _Lucene query syntax: http://lucene.apache.org/java/2_9_1/queryparsersyntax.html
+
 
 
 ..
