@@ -57,7 +57,7 @@
    * - 
      - ``GET /reserve/{pid}``
      - :func:`CNCore.hasReservation`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` boolean
+     - (:class:`session<Types.Session>`, :class:`subjectInfo<Types.SubjectInfo>`, :class:`pid<Types.Identifier>`) ``->`` boolean
 
    * - Tier 1
      - ``GET /object/{pid}``

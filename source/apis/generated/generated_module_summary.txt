@@ -149,7 +149,7 @@ Note that date time precision is limited to one millisecond. If no timezone info
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
    * - \
      - :func:`CNCore.reserveIdentifier`
-     - Reserves the identifier that is unique and can not be used by any other sessions. Future calls to :func:`MNStorage.create` and :func:`MNStorage.update` that reference this ID must originate from the :term:`session` in which the identifier was reserved, otherwise an error is raised on those methods.
+     - Reserves the identifier that is unique and can not be used by any other sessions. Future calls to :func:`MNStorage.create` and :func:`MNStorage.update` that reference this ID must be made by the same :term:`principal` making the reservation, otherwise an error is raised on those methods.
 The requested identifier is transmitted in a MIME Multipart/form-data body with *pid* as key, and the identifier string as value.
 
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
@@ -176,8 +176,8 @@ The message body is encoded as MIME Multipart/form-data
 This method is used internally by Coordinating Nodes.
    * - \
      - :func:`CNCore.hasReservation`
-     - Checks to determine if the caller (as determined by session) has the reservation (i.e. is the owner) of the specified PID.
-A positive response (that the identifier is reserved and owned by the caller) is indicated by a return of a HTTP status of 200.
+     - Checks to determine if the supplied *subject* is the owner of the reservation of *pid*.
+A positive response (that the *pid* is reserved and owned by *subject*) is indicated by a return of a HTTP status of 200.
 A negative response is indicated by an exception and the associated HTTP status code.
    * - :mod:`CNRead`
      - :func:`CNRead.get`

@@ -57,7 +57,7 @@
    * - 
      - ``GET /reserve/{pid}``
      - :func:`hasReservation`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` boolean
+     - (:class:`session<Types.Session>`, :class:`subjectInfo<Types.SubjectInfo>`, :class:`pid<Types.Identifier>`) ``->`` boolean
 
 
 
@@ -249,7 +249,7 @@
 
 .. function:: reserveIdentifier(session,pid) -> Identifier
 
-   Reserves the identifier that is unique and can not be used by any other sessions. Future calls to :func:`MNStorage.create` and :func:`MNStorage.update` that reference this ID must originate from the :term:`session` in which the identifier was reserved, otherwise an error is raised on those methods.
+   Reserves the identifier that is unique and can not be used by any other sessions. Future calls to :func:`MNStorage.create` and :func:`MNStorage.update` that reference this ID must be made by the same :term:`principal` making the reservation, otherwise an error is raised on those methods.
 
    The requested identifier is transmitted in a MIME Multipart/form-data body with *pid* as key, and the identifier string as value.
 
@@ -298,7 +298,7 @@
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
-   :param scheme: The name of the identifier scheme to be used, drawn from a DataONE-specific vocabulary of identifier scheme names, including several common syntaxes such as DOI, ARK, LSID, UUID, and LSRN, among others.
+   :param scheme: The name of the identifier scheme to be used, drawn from a DataONE-specific vocabulary of identifier scheme names, including several common syntaxes such as DOI, ARK, LSID, UUID, and LSRN, among others. The first version of this method only supports the UUID scheme, and ignores the fragment parameter.
    :type scheme: string
 
    :param fragment: The optional fragment to include in the generated Identifier
@@ -308,6 +308,8 @@
    :rtype: :class:`Types.Identifier`
 
    :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=4190)``
+
+     The supplied authentication token is not a proper certificate, or missing required fields, or otherwise proves invalid.
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4210)``
 
@@ -445,19 +447,22 @@
 
 
 
-.. function:: hasReservation(session,pid) -> boolean
+.. function:: hasReservation(session,subjectInfo,pid) -> boolean
 
-   Checks to determine if the caller (as determined by session) has the reservation (i.e. is the owner) of the specified PID.
+   Checks to determine if the supplied *subject* is the owner of the reservation of *pid*.
 
-   A positive response (that the identifier is reserved and owned by the caller) is indicated by a return of a HTTP status of 200.
+   A positive response (that the *pid* is reserved and owned by *subject*) is indicated by a return of a HTTP status of 200.
 
    A negative response is indicated by an exception and the associated HTTP status code.
 
    :REST URL: ``GET /reserve/{pid}``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to an authority trusted by the DataONE Coordinating Nodes.
    :type session: :class:`Types.Session`
 
-   :param pid: The identifier that is being checked for existing as a reserved identifier or is in use as an identifier.
+   :param subjectInfo: The subject information about the :term:`principal` that made the reservation. This can be obtained by a call to :func:`CNIdentity.getSubjectInfo`.
+   :type subjectInfo: :class:`Types.SubjectInfo`
+
+   :param pid: The identifier that is being checked for existing as a reserved identifier or is in use as an identifier for an existing object.
    :type pid: :class:`Types.Identifier`
 
    :returns: True - subject has the reservation on the PID; False - the PID does not exist; False - the PID is already in use; False - the PID is reserved by somone else.
@@ -481,10 +486,10 @@
 
    :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=4924)``
 
-     The PID is reserved but the caller does not own the reservation
+     The PID is reserved but the owner is not the :term:`principal` identified by the *subjectInfo* OR the provide *session* does not have authority to access this service.
 
    :raises Exceptions.IdentifierNotUnique: ``(errorCode=409, detailCode=4925)``
 
-     The identifier is in use to identify an object in the DataONE system.
+     The PID is in use to identify an already existing object in the DataONE system.
 
 
