@@ -55,9 +55,9 @@
      - :func:`CNCore.registerSystemMetadata`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
    * - 
-     - ``GET /reserve/{pid}``
+     - ``POST /hasReservation``
      - :func:`CNCore.hasReservation`
-     - (:class:`session<Types.Session>`, :class:`subjectInfo<Types.SubjectInfo>`, :class:`pid<Types.Identifier>`) ``->`` boolean
+     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`, :class:`pid<Types.Identifier>`) ``->`` boolean
 
    * - Tier 1
      - ``GET /object/{pid}``
@@ -84,9 +84,9 @@
      - :func:`CNRead.listObjects`
      - (:class:`session<Types.Session>`, :class:`[fromDate]<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[formatId]<Types.ObjectFormatIdentifier>`, ``[replicaStatus]``, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.ObjectList`
    * - Tier 1
-     - ``GET /search[?qt={queryType}[&{query}]]``
+     - ``GET /search?q={query}``
      - :func:`CNRead.search`
-     - (:class:`session<Types.Session>`, :class:`queryType=solr<Types.String>`, ``query``) ``->`` :class:`Types.ObjectList`
+     - (:class:`session<Types.Session>`, ``query``) ``->`` :class:`Types.ObjectList`
    * - Tier 2
      - ``PUT /owner/{pid}``
      - :func:`CNAuthorization.setRightsHolder`

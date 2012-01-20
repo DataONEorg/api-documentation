@@ -35,9 +35,9 @@
      - :func:`listObjects`
      - (:class:`session<Types.Session>`, :class:`[fromDate]<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[formatId]<Types.ObjectFormatIdentifier>`, ``[replicaStatus]``, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.ObjectList`
    * - Tier 1
-     - ``GET /search[?qt={queryType}[&{query}]]``
+     - ``GET /search?q={query}``
      - :func:`search`
-     - (:class:`session<Types.Session>`, :class:`queryType=solr<Types.String>`, ``query``) ``->`` :class:`Types.ObjectList`
+     - (:class:`session<Types.Session>`, ``query``) ``->`` :class:`Types.ObjectList`
 
 
 
@@ -273,20 +273,17 @@
 
 
 
-.. function:: search(session,queryType=solr,query) -> ObjectList
+.. function:: search(session,query) -> ObjectList
 
    Search the metadata catalog and return identifiers of metadata records that match the criteria.
 
-   Implemented as a proxy to the SOLR search index. All readonly operations supported with standard SOLR parameters.
+   Implemented as a connection to the SOLR search index. The query syntax is the same as for SOLR. Examples queries and available search fields are described in :doc:`SearchMetadata`.
 
    :Use Cases:
      :doc:`UC02 </design/UseCases/02_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
-   :REST URL: ``GET /search[?qt={queryType}[&{query}]]``
+   :REST URL: ``GET /search?q={query}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
-
-   :param queryType=solr: Name of the search service to direct the query to.  Should default to "solr" if value not provided.
-   :type queryType=solr: :class:`Types.String`
 
    :param query: The criteria for matching the characteristics of the metadata objects of interest, expressed in the syntax of the chosen queryType.
    :type query: string

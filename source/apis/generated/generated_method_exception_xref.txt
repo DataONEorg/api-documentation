@@ -422,6 +422,11 @@
      - 400
      - 2155
    * - :mod:`MNReplication`
+     - :func:`replicate <MNReplication.replicate>`
+     - InvalidToken
+     - 401
+     - 2156
+   * - :mod:`MNReplication`
      - :func:`getReplica <MNReplication.getReplica>`
      - NotImplemented
      - 501
@@ -701,6 +706,11 @@
      - InvalidSystemMetadata
      - 400
      - 4864
+   * - :mod:`CNCore`
+     - :func:`registerSystemMetadata <CNCore.registerSystemMetadata>`
+     - InvalidToken
+     - 401
+     - 4865
    * - :mod:`CNCore`
      - :func:`hasReservation <CNCore.hasReservation>`
      - NotImplemented
@@ -1042,6 +1052,11 @@
      - 401
      - 4525
    * - :mod:`CNIdentity`
+     - :func:`registerAccount <CNIdentity.registerAccount>`
+     - InvalidToken
+     - 401
+     - 4526
+   * - :mod:`CNIdentity`
      - :func:`updateAccount <CNIdentity.updateAccount>`
      - ServiceFailure
      - 500
@@ -1071,6 +1086,11 @@
      - NotFound
      - 404
      - 4535
+   * - :mod:`CNIdentity`
+     - :func:`updateAccount <CNIdentity.updateAccount>`
+     - InvalidToken
+     - 401
+     - 4536
    * - :mod:`CNIdentity`
      - :func:`verifyAccount <CNIdentity.verifyAccount>`
      - ServiceFailure
@@ -1286,6 +1306,11 @@
      - NotImplemented
      - 501
      - 2361
+   * - :mod:`CNIdentity`
+     - :func:`getPendingMapIdentity <CNIdentity.getPendingMapIdentity>`
+     - InvalidToken
+     - 401
+     - 4961
    * - :mod:`CNIdentity`
      - :func:`denyMapIdentity <CNIdentity.denyMapIdentity>`
      - ServiceFailure
@@ -1586,3 +1611,8 @@
      - IdentifierNotUnique
      - 409
      - 4844
+   * - :mod:`CNRegister`
+     - :func:`register <CNRegister.register>`
+     - InvalidToken
+     - 401
+     - 4845

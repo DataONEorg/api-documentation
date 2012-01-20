@@ -179,6 +179,7 @@ This method is used internally by Coordinating Nodes.
      - Checks to determine if the supplied *subject* is the owner of the reservation of *pid*.
 A positive response (that the *pid* is reserved and owned by *subject*) is indicated by a return of a HTTP status of 200.
 A negative response is indicated by an exception and the associated HTTP status code.
+The *pid* and *subjectInfo* are transmitted as a MIME Multipart/form-data message body.
    * - :mod:`CNRead`
      - :func:`CNRead.get`
      - Retrieves the object identified by *pid* from the node. If the object is not present on the node, then an :exc:`Exceptions.NotFound` error is raised, regardless of whether the object exists on another node in the DataONE system.
@@ -221,7 +222,7 @@ Note that date time precision is limited to one millisecond. If no timezone info
    * - \
      - :func:`CNRead.search`
      - Search the metadata catalog and return identifiers of metadata records that match the criteria.
-Implemented as a proxy to the SOLR search index. All readonly operations supported with standard SOLR parameters.
+Implemented as a connection to the SOLR search index. The query syntax is the same as for SOLR. Examples queries and available search fields are described in :doc:`SearchMetadata`.
 
        Appears in functional use cases: :doc:`UC02 </design/UseCases/02_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
    * - :mod:`CNAuthorization`

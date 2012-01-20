@@ -95,9 +95,9 @@
    * - POST /meta/{pid}
      - :func:`CNCore.registerSystemMetadata`
      - Provides a mechanism for adding system metadata independently of its associated object, such as when adding system metadata for data objects. This method is used internally by Coordinating Nodes.
-   * - GET /reserve/{pid}
+   * - POST /hasReservation
      - :func:`CNCore.hasReservation`
-     - Checks to determine if the supplied *subject* is the owner of the reservation of *pid*. A positive response (that the *pid* is reserved and owned by *subject*) is indicated by a return of a HTTP status of 200. A negative response is indicated by an exception and the associated HTTP status code.
+     - Checks to determine if the supplied *subject* is the owner of the reservation of *pid*. A positive response (that the *pid* is reserved and owned by *subject*) is indicated by a return of a HTTP status of 200. A negative response is indicated by an exception and the associated HTTP status code. The *pid* and *subjectInfo* are transmitted as a MIME Multipart/form-data message body.
    * - GET /object/{pid}
      - :func:`CNRead.get`
      - Retrieves the object identified by *pid* from the node. If the object is not present on the node, then an :exc:`Exceptions.NotFound` error is raised, regardless of whether the object exists on another node in the DataONE system.
@@ -116,9 +116,9 @@
    * - GET /object[?fromDate={fromDate}&toDate={toDate}&formatid= {formatId}&replicaStatus={replicaStatus}&start={start}&count={count}]
      - :func:`CNRead.listObjects`
      - Retrieve the list of objects present on the CN that match the calling parameters. At a minimum, this method should be able to return a list of objects that match::   fromDate < SystemMetadata.dateSysMetadataModified but is expected to also support date range (by also specifying *toDate*), and should also support slicing of the matching set of records by indicating the starting *index* of the response (where 0 is the index of the first item) and the *count* of elements to be returned. Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed.
-   * - GET /search[?qt={queryType}[&{query}]]
+   * - GET /search?q={query}
      - :func:`CNRead.search`
-     - Search the metadata catalog and return identifiers of metadata records that match the criteria. Implemented as a proxy to the SOLR search index. All readonly operations supported with standard SOLR parameters.
+     - Search the metadata catalog and return identifiers of metadata records that match the criteria. Implemented as a connection to the SOLR search index. The query syntax is the same as for SOLR. Examples queries and available search fields are described in :doc:`SearchMetadata`.
    * - PUT /owner/{pid}
      - :func:`CNAuthorization.setRightsHolder`
      - Changes ownership (RightsHolder) of the specified object to the :term:`subject` specified by `userId`

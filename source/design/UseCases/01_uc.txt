@@ -98,7 +98,7 @@ as they are identical at this level of detail.
    else True
      n_crud -> n_ostore: read(PID)
      n_crud <- n_ostore: bytes
-     n_crud --> n_crud: log(READ)
+     n_crud --> n_crud: log(PID, READ)
      app_client <- n_crud: bytes
    end
    @enduml

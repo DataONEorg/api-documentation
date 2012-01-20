@@ -55,9 +55,9 @@
      - :func:`registerSystemMetadata`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
    * - 
-     - ``GET /reserve/{pid}``
+     - ``POST /hasReservation``
      - :func:`hasReservation`
-     - (:class:`session<Types.Session>`, :class:`subjectInfo<Types.SubjectInfo>`, :class:`pid<Types.Identifier>`) ``->`` boolean
+     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`, :class:`pid<Types.Identifier>`) ``->`` boolean
 
 
 
@@ -444,10 +444,12 @@
 
    :raises Exceptions.InvalidSystemMetadata: ``(errorCode=400, detailCode=4864)``
 
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=4865)``
 
 
 
-.. function:: hasReservation(session,subjectInfo,pid) -> boolean
+
+.. function:: hasReservation(session,subject,pid) -> boolean
 
    Checks to determine if the supplied *subject* is the owner of the reservation of *pid*.
 
@@ -455,12 +457,14 @@
 
    A negative response is indicated by an exception and the associated HTTP status code.
 
-   :REST URL: ``GET /reserve/{pid}``
+   The *pid* and *subjectInfo* are transmitted as a MIME Multipart/form-data message body.
+
+   :REST URL: ``POST /hasReservation``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to an authority trusted by the DataONE Coordinating Nodes.
    :type session: :class:`Types.Session`
 
-   :param subjectInfo: The subject information about the :term:`principal` that made the reservation. This can be obtained by a call to :func:`CNIdentity.getSubjectInfo`.
-   :type subjectInfo: :class:`Types.SubjectInfo`
+   :param subject: The subject of the :term:`principal` (user) that made the reservation.
+   :type subject: :class:`Types.Subject`
 
    :param pid: The identifier that is being checked for existing as a reserved identifier or is in use as an identifier for an existing object.
    :type pid: :class:`Types.Identifier`

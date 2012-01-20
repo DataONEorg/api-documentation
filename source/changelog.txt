@@ -8,6 +8,12 @@ Change Log
   remove requirement for a Member Node call to the CN to support create
   operations.
 
+- Added InvalidToken exception to :func:`MNReplication.replicate`,
+  :func:`CNCore.registerSystemMetadata`, :func:`CNIdentity.registerAccount`,
+  :func:`CNIdentity.updateAccount`, :func:`CNIdentity.getPendingMapIdentity`,
+  :func:`CNRegister.register`.
+
+
 
 2012-01-19 : Version 1.0, MethodCrossReference.xls
 --------------------------------------------------

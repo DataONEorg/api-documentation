@@ -102,6 +102,8 @@
 
      The subject of the session does not match the subject of the person.
 
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=4526)``
+
 
 
 
@@ -140,6 +142,8 @@
    :raises Exceptions.NotFound: ``(errorCode=404, detailCode=4535)``
 
      Raised if the account does not exist.
+
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=4536)``
 
 
 
@@ -436,6 +440,8 @@
      The specified principal does not exist in the DataONE system, or the mapping between the subjects has no yet been initiated.
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2361)``
+
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=4961)``
 
 
 
