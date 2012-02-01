@@ -114,11 +114,11 @@
    * - Tier 2
      - ``GET /accounts/{subject}``
      - :func:`CNIdentity.getSubjectInfo`
-     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` :class:`Types.SubjectList`
+     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` :class:`Types.SubjectInfo`
    * - Tier 2
      - ``GET /accounts?query={query}[&status={status}&start={start}&count={count}]``
      - :func:`CNIdentity.listSubjects`
-     - (:class:`session<Types.Session>`, :class:`query<Types.String>`, :class:`status<Types.String>`, ``start``, ``count``) ``->`` :class:`Types.SubjectList`
+     - (:class:`session<Types.Session>`, :class:`query<Types.String>`, :class:`status<Types.String>`, ``start``, ``count``) ``->`` :class:`Types.SubjectInfo`
    * - Tier 2
      - ``POST /accounts/map``
      - :func:`CNIdentity.mapIdentity`

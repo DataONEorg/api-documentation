@@ -41,7 +41,7 @@
    :Use Cases:
      :doc:`UC10 </design/UseCases/10_uc>`
    :REST URL: ``GET /monitor/ping``
-   :returns: Null body or Exception
+   :returns: Null body or Exception. The body of the message is ignored by the caller. The HTTP header *Date* MUST be set in the response.
    :rtype: null
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2041)``

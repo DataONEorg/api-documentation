@@ -1,6 +1,21 @@
 Change Log
 ==========
 
+2012-02-01 : Version 1.0, MethodCrossReference.xls
+
+- Updated description of ping() to emphasize that the timestamp in the response
+  is transmitted in the HTTP header.
+
+- Response type for :func:`CNIdentity.getSubjectInfo` and
+  :func:`CNIdentity.listSubjects` changed from :class:`Types.SubjectList` to
+  :class:`Types.SubjectInfo`
+
+- Response for :func:`MNReplication.getReplica` corrected in the documentation
+  to indicate response is an octetStream of bytes that represent the requested
+  object.
+
+
+
 2012-01-20 : Version 1.0, MethodCrossReference.xls
 --------------------------------------------------
 

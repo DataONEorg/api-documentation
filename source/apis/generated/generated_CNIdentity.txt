@@ -25,11 +25,11 @@
    * - Tier 2
      - ``GET /accounts/{subject}``
      - :func:`getSubjectInfo`
-     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` :class:`Types.SubjectList`
+     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` :class:`Types.SubjectInfo`
    * - Tier 2
      - ``GET /accounts?query={query}[&status={status}&start={start}&count={count}]``
      - :func:`listSubjects`
-     - (:class:`session<Types.Session>`, :class:`query<Types.String>`, :class:`status<Types.String>`, ``start``, ``count``) ``->`` :class:`Types.SubjectList`
+     - (:class:`session<Types.Session>`, :class:`query<Types.String>`, :class:`status<Types.String>`, ``start``, ``count``) ``->`` :class:`Types.SubjectInfo`
    * - Tier 2
      - ``POST /accounts/map``
      - :func:`mapIdentity`
@@ -183,7 +183,7 @@
 
 
 
-.. function:: getSubjectInfo(session,subject) -> SubjectList
+.. function:: getSubjectInfo(session,subject) -> SubjectInfo
 
    Get the information about a Person (their equivalent identities, and the Groups to which they belong) or the Group (including members).
 
@@ -197,7 +197,7 @@
    :type subject: :class:`Types.Subject`
 
    :returns: The Person or Group details are contained in the returned SubjectList for the given Subject
-   :rtype: :class:`Types.SubjectList`
+   :rtype: :class:`Types.SubjectInfo`
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4560)``
 
@@ -214,7 +214,7 @@
 
 
 
-.. function:: listSubjects(session,query,status,start,count) -> SubjectList
+.. function:: listSubjects(session,query,status,start,count) -> SubjectInfo
 
    List the subjects, including users, groups, and systems, that match search criteria.
 
@@ -237,7 +237,7 @@
    :type count: integer
 
    :returns: The list of people and groups that match the query.
-   :rtype: :class:`Types.SubjectList`
+   :rtype: :class:`Types.SubjectInfo`
 
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2290)``
 

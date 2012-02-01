@@ -17,7 +17,7 @@
    * - Tier 4
      - ``GET /replica/{pid}``
      - :func:`getReplica`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` boolean
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.OctetStream`
 
 
 
@@ -67,7 +67,7 @@
 
 
 
-.. function:: getReplica(session,pid) -> boolean
+.. function:: getReplica(session,pid) -> OctetStream
 
    Called by a target Member Node to fullfill the replication request originated by a Coordinating Node calling :func:`MNReplication.replicate`. This is a request to make a replica copy of the object, and differs from a call to GET /object in that it should be logged as a replication event rather than a read event on that object.
 
@@ -84,8 +84,8 @@
    :param pid: The identifier of the object to get as a replica
    :type pid: :class:`Types.Identifier`
 
-   :returns: True if everything works OK, otherwise an error is returned.
-   :rtype: boolean
+   :returns: Bytes of the specified object.
+   :rtype: :class:`Types.OctetStream`
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2180)``
 

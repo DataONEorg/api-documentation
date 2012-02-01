@@ -57,7 +57,7 @@
    :param pid: The identifier for the object to be retrieved.
    :type pid: :class:`Types.Identifier`
 
-   :returns: Bytes of the specified object. For data objects, this will be the actual bytes of data. For metadata objects, this will be the representation of the object as provided by the Member Node.
+   :returns: Bytes of the specified object.
    :rtype: :class:`Types.OctetStream`
 
    :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=1000)``
