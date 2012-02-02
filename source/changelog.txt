@@ -1,6 +1,17 @@
 Change Log
 ==========
 
+2012-02-02 : Version 1.0, MethodCrossReference.xls
+--------------------------------------------------
+
+- :func:`CNIdentity.updateAccount` REST URL changed to ``PUT /accounts/{subject}``
+
+- :func:`CNIdentity.verifyAccount` REST URL changed to ``PUT /accounts/verification/{subject}``
+
+- IMPORTANT: Encoding practice for simple types transmitted as part of a MIME
+  multipart/mixed message has been changed to simple string encoding, not XML
+  encoding. See :doc:`apis/REST_overview`.
+
 2012-02-01 : Version 1.0, MethodCrossReference.xls
 --------------------------------------------------
 

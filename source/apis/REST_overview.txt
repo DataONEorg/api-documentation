@@ -5,6 +5,8 @@ This document describes how the Member (:doc:`MN_APIs`) and Coordinating
 (:doc:`CN_APIs`) Node APIs are implemented using a Representational State
 Transfer (REST) approach over HTTP.
 
+Key points on REST interactions in DataONE:
+
 - Content is modeled as collections, with :class:`PIDs <Types.Identifier>`
   identifying individual items of a collection.
 
@@ -14,7 +16,7 @@ Transfer (REST) approach over HTTP.
 
 - State information, if required, is passed in the HTTP headers.
 
-- Identity transfer is performed using SSL, with the :term:`subject` certificate
+- Identity transfer is performed using SSL, with the client certificate
   accessible through implementation specific mechanisms supported by the
   respective server environment.
 
@@ -25,6 +27,18 @@ Transfer (REST) approach over HTTP.
   value pairs. Unless otherwise indicted, the key and value are case sensitive
   and SHOULD be preserved or the request MAY be rejected with an
   :exc:`Exceptions.InvalidRequest` exception.
+
+- Message bodies are encoded using MIME Multipart, mixed (RFC2046_).
+
+- Messages containing complex DataONE types (i.e. types that have more than a
+  single value) are encoded in their XML representation.
+
+- Simple types are transmitted as parameter parts in the MIME Multipart mixed
+  body.
+
+- Complex types and octet streams are transmitted as file parts in the MIME
+  Multipart mixed body.
+
 
 Collections exposed by :term:`Member Node`\s and :term:`Coordinating Node`\s
 include:
@@ -69,8 +83,8 @@ The format of the response (except for responses from :func:`MNRead.get` or
 request. 
 
 Version 1.0 of the DataONE services only support XML serialization, and this
-format MUST be supported by all services and client interacting with the DataONE
-system.
+format MUST be supported by all services and clients interacting with the
+DataONE system.
 
 All request and response documents MUST be encoded using the UTF-8 character
 set.
@@ -114,10 +128,10 @@ the get() operation)::
   URL: https://mn.example.com/mn/v1/object/10.1000%2F182
 
   PID: http://example.com/data/mydata?row=24
-  URL: http://mn.example.com/mn/v1/object/http:%2F%2Fexample.com%2Fdata%2Fmydata%3Frow=24
+  URL: https://mn.example.com/mn/v1/object/http:%2F%2Fexample.com%2Fdata%2Fmydata%3Frow=24
 
-  PID: Is féidir liom ithe gloine
-  URL: http://mn.example.com/mn/v1/object/Is%20f%C3%A9idir%20liom%20ithe%20gloine
+  PID: Is_féidir_liom_ithe_gloine
+  URL: https://mn.example.com/mn/v1/object/Is_f%C3%A9idir_liom_ithe_gloine
 
 
 URL Query Parameters
@@ -175,14 +189,15 @@ parameters).
 Example of a HTTP POST request to the MN create() method using *curl*::
 
   curl -X POST \
-       -H "Content-Length: 3524" \
+       --cert /tmp/x509up_u502 \
        -H "Charset: utf-8" \
-       -H "Content-Type: multipart/form-data; boundary=----------6B3C785C-6290-11DF-A355-A6ECDED72085_$" \
+       -H "Content-Type: multipart/mixed; boundary=----------6B3C785C-6290-11DF-A355-A6ECDED72085_$" \
        -H "Accept: text/xml" \
-       -H "User-Agent: pyd1/0.5 +http://dataone.org/" \
+       -H "User-Agent: pyd1/1.0 +http://dataone.org/" \
+       -F pid=10Dappend1.txt \
        -F object=@content.bin \
-       -F sysmeta=@systemmetadata.abc 
-       "http://localhost:80/mn/object/10Dappend1.txt"
+       -F sysmeta=@systemmetadata.abc \
+       "https://demo1.test.dataone.org/knb/d1/mn/v1/object"
 
 Example serialized body of a HTTP POST request to the MN create() method
 (excluding session information)::

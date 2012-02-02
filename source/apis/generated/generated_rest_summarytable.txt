@@ -131,10 +131,10 @@
    * - POST /accounts
      - :func:`CNIdentity.registerAccount`
      - Create a new :term:`subject` in the DataONE system.  Note that there should probably be a lot more metadata captured about the new user, and there should be a mechanism for specifying the default access control rules for the new account.
-   * - PUT /accounts
+   * - PUT /accounts/{subject}
      - :func:`CNIdentity.updateAccount`
-     - Update an existing :term:`subject` in the DataONE system. The target subject is determined from the X509Certificate provided with the session.  Note that there should be a policy for verifying the details that change via this method.
-   * - POST /accounts
+     - Update an existing :term:`subject` in the DataONE system. The target subject is determined from subject provided in the URL.  The use calling this method must have write access to the account details. Note that there should be a policy for verifying the details that change via this method.
+   * - PUT /accounts/verification/{subject}
      - :func:`CNIdentity.verifyAccount`
      - Verify that the Person data associated with this Subject is a true representation of the real world person. This service can only be called by users who have an administrative role for the domain of users in question. A successful completion of this operation is indicated by returning a HTTP status of 200. An exeption MUST be returned if the account verification is not successful.
    * - GET /accounts/{subject}

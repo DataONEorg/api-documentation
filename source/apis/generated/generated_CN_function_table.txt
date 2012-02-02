@@ -104,11 +104,11 @@
      - :func:`CNIdentity.registerAccount`
      - (:class:`session<Types.Session>`, :class:`person<Types.Person>`) ``->`` :class:`Types.Subject`
    * - Tier 2
-     - ``PUT /accounts``
+     - ``PUT /accounts/{subject}``
      - :func:`CNIdentity.updateAccount`
      - (:class:`session<Types.Session>`, :class:`person<Types.Person>`) ``->`` :class:`Types.Subject`
    * - Tier 2
-     - ``POST /accounts``
+     - ``PUT /accounts/verification/{subject}``
      - :func:`CNIdentity.verifyAccount`
      - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
    * - Tier 2

@@ -4,10 +4,12 @@ The outgoing request body *must* be encoded as `MIME multipart/form-data`_ with 
 
 (POST) Create a new object with a given identifier (*XYZ33256*)::
 
-  curl -H "AuthToken: UR45W21A1S19ZE3CC9" \
+  curl --cert mycertificate.pem \
+       -H "Content-Type: multipart/mixed;" \
+       -F "pid=XYZ33256" \
        -F "object=@datafile.csv" \
        -F "sysmeta=@sysmeta.xml" \
-       http://m1.dataone.org/mn/object/XYZ33256
+       https://m1.dataone.org/mn/object/XYZ33256
   
   HTTP/1.1 200 Success
   Content-Type: 

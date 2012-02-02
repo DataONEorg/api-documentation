@@ -15,11 +15,11 @@
      - :func:`registerAccount`
      - (:class:`session<Types.Session>`, :class:`person<Types.Person>`) ``->`` :class:`Types.Subject`
    * - Tier 2
-     - ``PUT /accounts``
+     - ``PUT /accounts/{subject}``
      - :func:`updateAccount`
      - (:class:`session<Types.Session>`, :class:`person<Types.Person>`) ``->`` :class:`Types.Subject`
    * - Tier 2
-     - ``POST /accounts``
+     - ``PUT /accounts/verification/{subject}``
      - :func:`verifyAccount`
      - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
    * - Tier 2
@@ -109,13 +109,15 @@
 
 .. function:: updateAccount(session,person) -> Subject
 
-   Update an existing :term:`subject` in the DataONE system. The target subject is determined from the X509Certificate provided with the session.
+   Update an existing :term:`subject` in the DataONE system. The target subject is determined from subject provided in the URL.
+
+   The use calling this method must have write access to the account details.
 
    Note that there should be a policy for verifying the details that change via this method.
 
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`
-   :REST URL: ``PUT /accounts``
+   :REST URL: ``PUT /accounts/{subject}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
@@ -158,11 +160,11 @@
 
    An exeption MUST be returned if the account verification is not successful.
 
-   :REST URL: ``POST /accounts``
+   :REST URL: ``PUT /accounts/verification/{subject}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
-   :param subject: The Subject identifier of the Person to be verified.  After this service is called for a subject by an authorized user, the account is marked as verified by this user. Transmitted as a *Param Part* of a mime-multipart mixed message body.
+   :param subject: The Subject identifier of the Person to be verified.  After this service is called for a subject by an authorized user, the account is marked as verified by this user. Transmitted as part of the URL, and so must be properly path encoded.
    :type subject: :class:`Types.Subject`
 
    :returns: True if the account verification succeeds, otherwise false.

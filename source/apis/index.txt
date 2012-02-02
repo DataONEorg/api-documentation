@@ -1,10 +1,10 @@
 DataONE APIs
 ============
 
-This document describes the outward facing application programming interfaces
-(APIs) available for the three major components of the DataONE infrastructure:
-Coordinating and Member Nodes and the Investigator Toolkit.
-
+The DataONE infrastructure exposes application programming interfaces (APIs)
+that support interaction between components (:term:`Coordinating Node`s,
+:term:`Member Node`s, and the :term:`Investigator Toolkit`) and to support
+development of applications that interact with the DataONE infrastructure.
 
 .. figure:: images/componentMethods.png 
    :figwidth: 100%
@@ -16,11 +16,11 @@ Coordinating and Member Nodes and the Investigator Toolkit.
 Services are implemented using a RESTful model using HTTP as the transport
 protocol and XML for encoding messages.
 
-Member Nodes can expose different levels of functionality while participating
-in the DataONE network. Four tiers of MN functionality have been identified,
-The tiers and Member Node APIs necessary to support are summarized in the
-table below. Also indicated are the corresponding Coordinating Node APIs
-that are necessary for functionality expressed for each tier.
+Member Nodes can expose different levels of functionality that equate to four
+different tiers while participating in the DataONE network. The tiers and Member
+Node APIs necessary to support are summarized in the table below. Also indicated
+are the corresponding Coordinating Node APIs that are necessary for
+functionality expressed for each tier.
 
 .. list-table::
    :widths: 1 5 5 5

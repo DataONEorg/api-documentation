@@ -256,7 +256,8 @@ Note that there should probably be a lot more metadata captured about the new us
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
    * - \
      - :func:`CNIdentity.updateAccount`
-     - Update an existing :term:`subject` in the DataONE system. The target subject is determined from the X509Certificate provided with the session. 
+     - Update an existing :term:`subject` in the DataONE system. The target subject is determined from subject provided in the URL. 
+The use calling this method must have write access to the account details.
 Note that there should be a policy for verifying the details that change via this method.
 
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
