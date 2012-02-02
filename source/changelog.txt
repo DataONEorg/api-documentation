@@ -2,6 +2,7 @@ Change Log
 ==========
 
 2012-02-01 : Version 1.0, MethodCrossReference.xls
+--------------------------------------------------
 
 - Updated description of ping() to emphasize that the timestamp in the response
   is transmitted in the HTTP header.
@@ -13,6 +14,28 @@ Change Log
 - Response for :func:`MNReplication.getReplica` corrected in the documentation
   to indicate response is an octetStream of bytes that represent the requested
   object.
+
+
+- Signature of :func:`MNStorage.create`
+
+  - pid removed from URL, it should be a param in the message body.
+
+- Signature of :func:`CNCore.create`
+
+  - pid removed from URL, it should be a param in the message body.
+
+- Signature of :func:`CNIdentity.verifyAccount`
+
+  - subject removed from the URL, it should be a param in the message body.
+
+- Signature of :func:`CNIdentity.requestMapIdentity`
+
+  - subject removed from URL, it should be a param in the message body.
+
+- Signature of :func:`CNCore.registerSystemMetadata`
+
+  - pid removed from URL, should be a param in the message body
+
 
 
 

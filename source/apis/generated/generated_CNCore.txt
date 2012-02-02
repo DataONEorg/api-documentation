@@ -15,7 +15,7 @@
      - :func:`ping`
      - () ``->`` null
    * - Tier 1
-     - ``POST /object/{pid}``
+     - ``POST /object``
      - :func:`create`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, ``object``, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
    * - Tier 1
@@ -51,7 +51,7 @@
      - :func:`listNodes`
      - () ``->`` :class:`Types.NodeList`
    * - Tier 1
-     - ``POST /meta/{pid}``
+     - ``POST /meta``
      - :func:`registerSystemMetadata`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
    * - 
@@ -102,17 +102,17 @@
 
    :Use Cases:
      :doc:`UC04 </design/UseCases/04_uc>`, :doc:`UC09 </design/UseCases/09_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
-   :REST URL: ``POST /object/{pid}``
+   :REST URL: ``POST /object``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
-   :param pid: The identifier that should be used in DataONE to identify and access the object. This is an Unicode string that follows the constraints on identifiers described in :doc:`/design/PIDs`.
+   :param pid: The identifier that should be used in DataONE to identify and access the object. This is an Unicode string that follows the constraints on identifiers described in :doc:`/design/PIDs`. Transmitted as a *Param Part* of a mime-multipart mixed message body.
    :type pid: :class:`Types.Identifier`
 
-   :param object: The object (i.e. Science Metadata) bytes.
+   :param object: The object (i.e. Science Metadata) bytes. Transmitted as a *File Part* of a mime-multipart mixed message body.
    :type object: bytes
 
-   :param sysmeta: The complete system metadata document describing the object.
+   :param sysmeta: The complete system metadata document describing the object. Transmitted as a *File Part* of a mime-multipart mixed message body.
    :type sysmeta: :class:`Types.SystemMetadata`
 
    :returns: The identifier that was used to insert the document into the system. This should be the same as the identifier provided as the *pid* parameter.
@@ -259,7 +259,7 @@
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
-   :param pid: The identifier used by the client.
+   :param pid: The identifier that is to be reserved. Transmitted as a *Param Part* of a mime-multipart mixed message body.
    :type pid: :class:`Types.Identifier`
 
    :returns: The identifier that was reserved
@@ -298,10 +298,10 @@
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
-   :param scheme: The name of the identifier scheme to be used, drawn from a DataONE-specific vocabulary of identifier scheme names, including several common syntaxes such as DOI, ARK, LSID, UUID, and LSRN, among others. The first version of this method only supports the UUID scheme, and ignores the fragment parameter.
+   :param scheme: The name of the identifier scheme to be used, drawn from a DataONE-specific vocabulary of identifier scheme names, including several common syntaxes such as DOI, ARK, LSID, UUID, and LSRN, among others. The first version of this method only supports the UUID scheme, and ignores the fragment parameter. Transmitted as a *Param Part* of a mime-multipart mixed message body.
    :type scheme: string
 
-   :param fragment: The optional fragment to include in the generated Identifier
+   :param fragment: The optional fragment to include in the generated Identifier. Transmitted as a *Param Part* of a mime-multipart mixed message body. This parameter is optional and may not be present in the message body.
    :type fragment: string
 
    :returns: The identifier that was generated
@@ -355,13 +355,13 @@
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The :term:`Subject` of the session MUST have *write* permission on the object.
    :type session: :class:`Types.Session`
 
-   :param pid: Identifier of the object system metadata being updated.
+   :param pid: Identifier of the object system metadata being updated. The identifier is transmitted as part of the URL and so MUST be path encoded.
    :type pid: :class:`Types.Identifier`
 
-   :param obsoletedByPid: Identifier of the object that obsoletes the object identified by *pid*
+   :param obsoletedByPid: Identifier of the object that obsoletes the object identified by *pid*. Transmitted as a *Param Part* of a mime-multipart mixed message body.
    :type obsoletedByPid: :class:`Types.Identifier`
 
-   :param serialVersion: The serial version of the system metadata being updated. If the specified *serialVersion* does not match the current version at the Coordinating Nodes, then a :exc:`Exceptions.VersionMismatch` error is raised and no changes are made.
+   :param serialVersion: The serial version of the system metadata being updated. If the specified *serialVersion* does not match the current version at the Coordinating Nodes, then a :exc:`Exceptions.VersionMismatch` error is raised and no changes are made. Transmitted as a *Param Part* of a mime-multipart mixed message body.
    :type serialVersion: unsigned long
 
    :returns: True if the operation succeeds, otherwise false.
@@ -421,14 +421,14 @@
 
    This method is used internally by Coordinating Nodes.
 
-   :REST URL: ``POST /meta/{pid}``
+   :REST URL: ``POST /meta``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
-   :param pid:
+   :param pid: Transmitted as a *Param Part* of a mime-multipart mixed message body.
    :type pid: :class:`Types.Identifier`
 
-   :param sysmeta:
+   :param sysmeta: Transmitted as a *File Part* of a mime-multipart mixed message body.
    :type sysmeta: :class:`Types.SystemMetadata`
 
    :returns: The pid that was updated.
@@ -463,10 +463,10 @@
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to an authority trusted by the DataONE Coordinating Nodes.
    :type session: :class:`Types.Session`
 
-   :param subject: The subject of the :term:`principal` (user) that made the reservation.
+   :param subject: The subject of the :term:`principal` (user) that made the reservation. Transmitted as a *Param Part* of a mime-multipart mixed message body.
    :type subject: :class:`Types.Subject`
 
-   :param pid: The identifier that is being checked for existing as a reserved identifier or is in use as an identifier for an existing object.
+   :param pid: The identifier that is being checked for existing as a reserved identifier or is in use as an identifier for an existing object. Transmitted as a *Param Part* of a mime-multipart mixed message body.
    :type pid: :class:`Types.Identifier`
 
    :returns: True - subject has the reservation on the PID; False - the PID does not exist; False - the PID is already in use; False - the PID is reserved by somone else.

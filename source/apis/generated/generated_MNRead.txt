@@ -267,7 +267,7 @@
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
-   :param message: An instance of the :exc:`Exceptions.SynchronizationFailed` exception with body appropriately filled.
+   :param message: An instance of the :exc:`Exceptions.SynchronizationFailed` exception with body appropriately filled. Transmitted as a *File Part* of a mime-multipart mixed message body.
    :type message: :class:`Types.Exception`
 
    :returns: A successful response is indicated by a HTTP 200 status. An unsuccessful call is indicated by returing the appropriate exception.

@@ -314,7 +314,7 @@ Groups are lists of subjects that allow all members of the group to be reference
    * - \
      - :func:`CNIdentity.updateGroup`
      - Add members to the named group.
-Group members can be added by the original creator of the group, otherwise a NotAuthorized exception is thrown.  Group members are provided as a list of subjects to be added to the group.
+Group members can be modified only by the original creator of the group, otherwise a NotAuthorized exception is thrown.  Group members are provided as a list of subjects that replace the group membership.
 Successful completion of this operation is indicated by a HTTP response status code of 200.
 Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception.
    * - :mod:`CNReplication`

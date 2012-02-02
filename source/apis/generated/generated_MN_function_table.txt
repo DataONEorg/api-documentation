@@ -52,7 +52,7 @@
      - :func:`MNAuthorization.isAuthorized`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`action<Types.Permission>`) ``->`` boolean
    * - Tier 3
-     - ``POST /object/{pid}``
+     - ``POST /object``
      - :func:`MNStorage.create`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, ``object``, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
    * - Tier 3

@@ -15,7 +15,7 @@
      - :func:`CNCore.ping`
      - () ``->`` null
    * - Tier 1
-     - ``POST /object/{pid}``
+     - ``POST /object``
      - :func:`CNCore.create`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, ``object``, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
    * - Tier 1
@@ -51,7 +51,7 @@
      - :func:`CNCore.listNodes`
      - () ``->`` :class:`Types.NodeList`
    * - Tier 1
-     - ``POST /meta/{pid}``
+     - ``POST /meta``
      - :func:`CNCore.registerSystemMetadata`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
    * - 
@@ -108,7 +108,7 @@
      - :func:`CNIdentity.updateAccount`
      - (:class:`session<Types.Session>`, :class:`person<Types.Person>`) ``->`` :class:`Types.Subject`
    * - Tier 2
-     - ``POST /accounts/{subject}``
+     - ``POST /accounts``
      - :func:`CNIdentity.verifyAccount`
      - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
    * - Tier 2
@@ -128,7 +128,7 @@
      - :func:`CNIdentity.removeMapIdentity`
      - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
    * - Tier 2
-     - ``POST /accounts/pendingmap/{subject}``
+     - ``POST /accounts/pendingmap``
      - :func:`CNIdentity.requestMapIdentity`
      - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
    * - Tier 2

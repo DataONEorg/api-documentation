@@ -50,16 +50,16 @@
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the public user if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
-   :param pid: Identifier of the object to be replicated between Member Nodes
+   :param pid: Identifier of the object to be replicated between Member Nodes. Transmitted as part of the URL and so must be properly encoded.
    :type pid: :class:`Types.Identifier`
 
-   :param nodeRef: Reference to the Node which made the setReplicationStatus call. If this is a Member Node, the checksum must be compared with that of the authoritative Member Node. If not, this step can be ignored as the call is not signifying a replication is complete.
+   :param nodeRef: Reference to the Node which made the setReplicationStatus call. If this is a Member Node, the checksum must be compared with that of the authoritative Member Node. If not, this step can be ignored as the call is not signifying a replication is complete. Transmitted as a *Param Part* of a mime-multipart mixed message body.
    :type nodeRef: :class:`Types.NodeReference`
 
-   :param status: Replication status. See system metadata schema for possible values.
+   :param status: Replication status. See system metadata schema for possible values. Transmitted as a *Param Part* of a mime-multipart mixed message body.
    :type status: :class:`Types.ReplicationStatus`
 
-   :param failure: A BaseException object or one of it's subclasses, or null.  If the status is set to 'failed', this exception object can provide more detail. Appropriate sub-classes include InsufficientResource, NotAuthorized, ServiceFailure, etc.
+   :param failure: A BaseException object or one of it's subclasses, or null.  If the status is set to 'failed', this exception object can provide more detail. Appropriate sub-classes include InsufficientResource, NotAuthorized, ServiceFailure, etc. Transmitted as a *File Part* of a mime-multipart mixed message body.
    :type failure: :class:`Types.BaseException`
 
    :returns: True if the operation is allowed and expected, otherwise an exception should be raised.
@@ -92,13 +92,13 @@
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.
    :type session: :class:`Types.Session`
 
-   :param pid:
+   :param pid: Transmitted as part of the URL, and so must be properly path encoded.
    :type pid: :class:`Types.Identifier`
 
-   :param replicaMetadata:
+   :param replicaMetadata: Transmitted as a *File Part* of a mime-multipart mixed message body.
    :type replicaMetadata: :class:`Types.Replica`
 
-   :param serialVersion: The serialVersion of the system metadata that is the intended target for the change.
+   :param serialVersion: The serialVersion of the system metadata that is the intended target for the change. Transmitted as a *Param Part* of a mime-multipart mixed message body.
    :type serialVersion: unsigned long
 
    :returns: True on success
@@ -137,13 +137,13 @@
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
-   :param pid:
+   :param pid: The identifier is transmitted as a part of the URL and so must be properly path encoded.
    :type pid: :class:`Types.Identifier`
 
-   :param policy:
+   :param policy: Transmitted as a *File Part* of a mime-multipart mixed message body.
    :type policy: :class:`Types.ReplicationPolicy`
 
-   :param serialVersion: The serialVersion of the system metadata that is the intended target for the change.
+   :param serialVersion: The serialVersion of the system metadata that is the intended target for the change. Transmitted as a *Param Part* of a mime-multipart mixed message body.
    :type serialVersion: unsigned long
 
    :returns: True on success
@@ -228,13 +228,13 @@
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session MUST be a Coordinating Node.
    :type session: :class:`Types.Session`
 
-   :param pid: The identifier of the object whose replication metadata is being modified.
+   :param pid: The identifier of the object whose replication metadata is being modified. Transmitted as part of the URL, and so must be properly path encoded.
    :type pid: :class:`Types.Identifier`
 
-   :param nodeId: The identifier of the node replication information that is being removed from the system metadata record.
+   :param nodeId: The identifier of the node replication information that is being removed from the system metadata record. Transmitted as a *Param Part* of a mime-multipart mixed message body.
    :type nodeId: :class:`Types.NodeReference`
 
-   :param serialVersion: The :attr:`Types.SystemMetadata.serialVersion` of the system metadata being updated. This MUST match the latest version of system metadata available for the object on the Coordinating Node
+   :param serialVersion: The :attr:`Types.SystemMetadata.serialVersion` of the system metadata being updated. This MUST match the latest version of system metadata available for the object on the Coordinating Node. Transmitted as a *Param Part* of a mime-multipart mixed message body.
    :type serialVersion: unsigned long
 
    :returns: True if the replication metadata was successfully deleted.

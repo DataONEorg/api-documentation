@@ -34,10 +34,10 @@
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
-   :param nodeid: The identifier of the existing node entry being updated.
+   :param nodeid: The identifier of the existing node entry being updated. Transmitted as part of the request URL, and so must be properly encoded.
    :type nodeid: :class:`Types.NodeReference`
 
-   :param node: An instance of :class`Types.Node` that contains the updated information.
+   :param node: An instance of :class`Types.Node` that contains the updated information. Transmitted as a *File Part* of a mime-multipart mixed message body.
    :type node: :class:`Types.Node`
 
    :returns: True if operation is successful
@@ -74,7 +74,7 @@
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
-   :param node: An instance of :class:`Types.Node` that fully describes the node being registered. Note that some attributes will be set by the Coordinating Node.
+   :param node: An instance of :class:`Types.Node` that fully describes the node being registered. Note that some attributes will be set by the Coordinating Node. Transmitted as a *File Part* of a mime-multipart mixed message body.
    :type node: :class:`Types.Node`
 
    :returns: The identifier of the new node entry if successful, otherwise an error is raised.

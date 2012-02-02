@@ -19,7 +19,7 @@
      - :func:`updateAccount`
      - (:class:`session<Types.Session>`, :class:`person<Types.Person>`) ``->`` :class:`Types.Subject`
    * - Tier 2
-     - ``POST /accounts/{subject}``
+     - ``POST /accounts``
      - :func:`verifyAccount`
      - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
    * - Tier 2
@@ -39,7 +39,7 @@
      - :func:`removeMapIdentity`
      - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
    * - Tier 2
-     - ``POST /accounts/pendingmap/{subject}``
+     - ``POST /accounts/pendingmap``
      - :func:`requestMapIdentity`
      - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
    * - Tier 2
@@ -119,7 +119,7 @@
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
-   :param person: New information about the Person. The subject of the Person cannot be updated with this method and must match the subject of the X.509 certificate associated with the authenticated SSL session via client-side authentication.
+   :param person: New information about the Person. The subject of the Person cannot be updated with this method and must match the subject of the X.509 certificate associated with the authenticated SSL session via client-side authentication. Transmitted as a *File Part* of a mime-multipart mixed message body.
    :type person: :class:`Types.Person`
 
    :returns: The Subject in the DataONE system that was updated.
@@ -158,11 +158,11 @@
 
    An exeption MUST be returned if the account verification is not successful.
 
-   :REST URL: ``POST /accounts/{subject}``
+   :REST URL: ``POST /accounts``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
-   :param subject: The Subject identifier of the Person to be verified.  After this service is called for a subject by an authorized user, the account is marked as verified by this user.
+   :param subject: The Subject identifier of the Person to be verified.  After this service is called for a subject by an authorized user, the account is marked as verified by this user. Transmitted as a *Param Part* of a mime-multipart mixed message body.
    :type subject: :class:`Types.Subject`
 
    :returns: True if the account verification succeeds, otherwise false.
@@ -266,10 +266,10 @@
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.
    :type session: :class:`Types.Session`
 
-   :param primarySubject: The Subject identifier that will have a mapped identity to the other given subject
+   :param primarySubject: The Subject identifier that will have a mapped identity to the other given subject. Transmitted as a *Param Part* of a mime-multipart mixed message body.
    :type primarySubject: :class:`Types.Subject`
 
-   :param secondarySubject: The Subject identifier that will have a mapped identity to the other given subject
+   :param secondarySubject: The Subject identifier that will have a mapped identity to the other given subject. Transmitted as a *Param Part* of a mime-multipart mixed message body.
    :type secondarySubject: :class:`Types.Subject`
 
    :returns: True if the mapping was successfully initiated, false otherwise.
@@ -310,7 +310,7 @@
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.
    :type session: :class:`Types.Session`
 
-   :param subject: The Subject identifier to be used for equivalentIdentity. This Subject will not match the Subject named in the certificate.
+   :param subject: The Subject identifier to be used for equivalentIdentity. This Subject will not match the Subject named in the certificate. The subject is transmitted as part of the URL and so MUST be path encoded.
    :type subject: :class:`Types.Subject`
 
    :returns: True if the map was successfully created, false otherwise.
@@ -343,11 +343,11 @@
 
    A failed request MUST be indicated by returning an appropriate exception and setting the response HTTP status accordingly.
 
-   :REST URL: ``POST /accounts/pendingmap/{subject}``
+   :REST URL: ``POST /accounts/pendingmap``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.
    :type session: :class:`Types.Session`
 
-   :param subject: The Subject identifier to be used for equivalentIdentity. This Subject will not match the Subject named in the certificate.
+   :param subject: The Subject identifier to be used for equivalentIdentity. This Subject will not match the Subject named in the certificate. Transmitted as a *Param Part* of a mime-multipart mixed message body.
    :type subject: :class:`Types.Subject`
 
    :returns: True if the mapping was successfully initiated, false otherwise.
@@ -388,7 +388,7 @@
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.
    :type session: :class:`Types.Session`
 
-   :param subject: The Subject identifier to be used for equivalentIdentity. This Subject will not match the Subject named in the certificate.
+   :param subject: The Subject identifier to be used for equivalentIdentity. This Subject will not match the Subject named in the certificate. Transmitted as part of the URL and so should be properly path encoded.
    :type subject: :class:`Types.Subject`
 
    :returns: True if the map was successfully created, false otherwise.
@@ -491,7 +491,7 @@
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
 
-   :param group: The Group to be created.
+   :param group: The Group to be created. Transmitted as a *File Part* of a mime-multipart mixed message body.
    :type group: :class:`Types.Group`
 
    :returns: The Subject of the group that was created.
@@ -518,17 +518,17 @@
 
    Add members to the named group.
 
-   Group members can be added by the original creator of the group, otherwise a NotAuthorized exception is thrown.  Group members are provided as a list of subjects to be added to the group.
+   Group members can be modified only by the original creator of the group, otherwise a NotAuthorized exception is thrown.  Group members are provided as a list of subjects that replace the group membership.
 
    Successful completion of this operation is indicated by a HTTP response status code of 200.
 
    Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception.
 
    :REST URL: ``PUT /groups``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session is used to determine  if the request is being made by the creator of the group.
    :type session: :class:`Types.Session`
 
-   :param group: The new Group object that will replace the old Group. The Group.Subject must match the groupName and an update cannot modify this value.
+   :param group: The new Group object that will replace the old Group. The Group.Subject must match the groupName and an update cannot modify this value. Transmitted as a *File Part* of a mime-multipart mixed message body.
    :type group: :class:`Types.Group`
 
    :returns: True if the group that was modified successfully, false otherwise
