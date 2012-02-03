@@ -114,7 +114,7 @@
    :param object: The bytes of the data or science metadata object that will be deprecating the exsting object.  Transmitted as an UTF-8 encoded XML structure for the respective type as defined in the DataONE types schema, as a *File part* of the MIME multipart/mixed message.
    :type object: bytes
 
-   :param newPid: The identifier that will become the replacement identifier for the existing object after the update. This identifier must have been previously reserved. Transmitted as a *Param Part* of a mime-multipart mixed message body. Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
+   :param newPid: The identifier that will become the replacement identifier for the existing object after the update. This identifier must have been previously reserved.  Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
    :type newPid: :class:`Types.Identifier`
 
    :param sysmeta: A System Metadata document describing *object*. The :attr:`SystemMetadata.obsoletes` field *must* contain the identifier of the object being obsoleted and the Member Node will raise an InvalidRequest exception if the attribute value does not match the *pid* in the request. Other required client provided fields as described for :class:`Types.SystemMetadata` must be filled.  Transmitted as an UTF-8 encoded XML structure for the respective type as defined in the DataONE types schema, as a *File part* of the MIME multipart/mixed message.
