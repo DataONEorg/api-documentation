@@ -35,13 +35,13 @@
    :Use Cases:
      :doc:`UC01 </design/UseCases/01_uc>`, :doc:`UC37 </design/UseCases/37_uc>`
    :REST URL: ``GET /isAuthorized/{pid}?action={action}``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param pid: The identifer of the resource for which access is being checked.
+   :param pid: The identifer of the resource for which access is being checked. Transmitted as part of the URL path and must be escaped accordingly.
    :type pid: :class:`Types.Identifier`
 
-   :param action: The type of operation which is being requested for the given pid.
+   :param action: The type of operation which is being requested for the given pid. Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type action: :class:`Types.Permission`
 
    :returns: True if the operation is allowed

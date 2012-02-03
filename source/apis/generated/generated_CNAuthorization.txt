@@ -33,16 +33,16 @@
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`
    :REST URL: ``PUT /owner/{pid}``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param pid: Identifier of the object to be modified. Transmitted as part of the URL and so MUST be path encoded.
+   :param pid: Identifier of the object to be modified. Transmitted as part of the URL path and must be escaped accordingly.
    :type pid: :class:`Types.Identifier`
 
-   :param userId: The subject that will be taking ownership of the specified object. Transmitted as a *Param Part* of a mime-multipart mixed message body.
+   :param userId: The subject that will be taking ownership of the specified object.  Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
    :type userId: :class:`Types.Subject`
 
-   :param serialVersion: The serialVersion of the system metadata that is the intended target for the change. Transmitted as a *Param Part* of a mime-multipart mixed message body.
+   :param serialVersion: The serialVersion of the system metadata that is the intended target for the change. Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
    :type serialVersion: unsigned long
 
    :returns: Identifier of the object that was modified
@@ -88,13 +88,13 @@
    :Use Cases:
      :doc:`UC01 </design/UseCases/01_uc>`, :doc:`UC02 </design/UseCases/02_uc>`, :doc:`UC36 </design/UseCases/36_uc>`, :doc:`UC37 </design/UseCases/37_uc>`
    :REST URL: ``GET /isAuthorized/{pid}?action={action}``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param pid: The identifer of the resource for which access is being checked.
+   :param pid: The identifer of the resource for which access is being checked. Transmitted as part of the URL path and must be escaped accordingly.
    :type pid: :class:`Types.Identifier`
 
-   :param action: The type of operation which is being requested for the given pid.
+   :param action: The type of operation which is being requested for the given pid. Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type action: :class:`Types.Permission`
 
    :returns: True if the operation is allowed
@@ -130,16 +130,16 @@
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`
    :REST URL: ``PUT /accessRules/{pid}``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param pid: The object for which access control is being updated. Transmitted as part of the URL, and so must be properly path encoded.
+   :param pid: The object for which access control is being updated. Transmitted as part of the URL path and must be escaped accordingly.
    :type pid: :class:`Types.Identifier`
 
-   :param accessPolicy: The desired privileges to be assigned to the object. Transmitted as a *File Part* of a mime-multipart mixed message body.
+   :param accessPolicy: The desired privileges to be assigned to the object. Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
    :type accessPolicy: :class:`Types.AccessPolicy`
 
-   :param serialVersion: The serialVersion of the system metadata that is the intended target for the change. Transmitted as a *Param Part* of a mime-multipart mixed message body.
+   :param serialVersion: The serialVersion of the system metadata that is the intended target for the change. Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
    :type serialVersion: unsigned long
 
    :returns: True if the operation succeeds, otherwise false.

@@ -75,10 +75,10 @@
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`
    :REST URL: ``POST /accounts``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param person: Information about the Person to be registered with the account, including the real name and email address for the individual.  The Subject with the Person must match the subject of the X.509 certificate associated with the authenticated SSL session via client-side authentication, and must not have been registered previously.
+   :param person: Information about the Person to be registered with the account, including the real name and email address for the individual.  The Subject with the Person must match the subject of the X.509 certificate associated with the authenticated SSL session via client-side authentication, and must not have been registered previously. Transmitted as an UTF-8 encoded XML structure for the respective type as defined in the DataONE types schema, as a *File part* of the MIME multipart/mixed message.
    :type person: :class:`Types.Person`
 
    :returns: The new subject in the DataONE system.  This may be a simple identifier.
@@ -118,13 +118,13 @@
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`
    :REST URL: ``PUT /accounts/{subject}``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param subject: The subject of the person being updated.
+   :param subject: The subject of the person being updated. Transmitted as part of the URL path and must be escaped accordingly.
    :type subject: :class:`Types.Subject`
 
-   :param person: New information about the Person. The subject of the Person cannot be updated with this method and must match the subject of the X.509 certificate associated with the authenticated SSL session via client-side authentication. Transmitted as a *File Part* of a mime-multipart mixed message body.
+   :param person: New information about the Person. The subject of the Person cannot be updated with this method and must match the subject of the X.509 certificate associated with the authenticated SSL session via client-side authentication. Transmitted as an UTF-8 encoded XML structure for the respective type as defined in the DataONE types schema, as a *File part* of the MIME multipart/mixed message.
    :type person: :class:`Types.Person`
 
    :returns: The Subject in the DataONE system that was updated.
@@ -164,10 +164,10 @@
    An exeption MUST be returned if the account verification is not successful.
 
    :REST URL: ``PUT /accounts/verification/{subject}``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param subject: The Subject identifier of the Person to be verified.  After this service is called for a subject by an authorized user, the account is marked as verified by this user. Transmitted as part of the URL, and so must be properly path encoded.
+   :param subject: The Subject identifier of the Person to be verified.  After this service is called for a subject by an authorized user, the account is marked as verified by this user. Transmitted as part of the URL path and must be escaped accordingly.
    :type subject: :class:`Types.Subject`
 
    :returns: True if the account verification succeeds, otherwise false.
@@ -195,10 +195,10 @@
    :Use Cases:
      :doc:`UC12 </design/UseCases/12_uc>`
    :REST URL: ``GET /accounts/{subject}``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param subject: The Subject identifier of the Person or Group details to be returned.
+   :param subject: The Subject identifier of the Person or Group details to be returned.  Transmitted as part of the URL path and must be escaped accordingly.
    :type subject: :class:`Types.Subject`
 
    :returns: The Person or Group details are contained in the returned SubjectList for the given Subject
@@ -226,19 +226,19 @@
    The list can be restricted to subjects whose identifier matches certain substrings, and the size of the resultset can be paged through.
 
    :REST URL: ``GET /accounts?query={query}[&status={status}&start={start}&count={count}]``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param query: A query string criteria to be matched using a case-insensitive substring match against the identifier for the principal, the givenName or familyName of users, and the groupName of groups.  The function returns the union of all successful matches against these fields.
+   :param query: A query string criteria to be matched using a case-insensitive substring match against the identifier for the principal, the givenName or familyName of users, and the groupName of groups.  The function returns the union of all successful matches against these fields. Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type query: :class:`Types.String`
 
-   :param status: When provided, the status field can limit the returned list of Subjects to only those with the given status. Currently the 'verified' status is supported.
+   :param status: When provided, the status field can limit the returned list of Subjects to only those with the given status. Currently the 'verified' status is supported. Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type status: :class:`Types.String`
 
-   :param start: The starting record number for the records to be returned (default = 0).
+   :param start: The starting record number for the records to be returned (default = 0). Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type start: integer
 
-   :param count: The number of records to be returned (default = 100).
+   :param count: The number of records to be returned (default = 100). Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type count: integer
 
    :returns: The list of people and groups that match the query.
@@ -268,13 +268,13 @@
    A failed request MUST be indicated by returning an appropriate exception and setting the response HTTP status accordingly.
 
    :REST URL: ``POST /accounts/map``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.  Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param primarySubject: The Subject identifier that will have a mapped identity to the other given subject. Transmitted as a *Param Part* of a mime-multipart mixed message body.
+   :param primarySubject: The Subject identifier that will have a mapped identity to the other given subject.  Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
    :type primarySubject: :class:`Types.Subject`
 
-   :param secondarySubject: The Subject identifier that will have a mapped identity to the other given subject. Transmitted as a *Param Part* of a mime-multipart mixed message body.
+   :param secondarySubject: The Subject identifier that will have a mapped identity to the other given subject.  Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
    :type secondarySubject: :class:`Types.Subject`
 
    :returns: True if the mapping was successfully initiated, false otherwise.
@@ -312,10 +312,10 @@
    A failed request MUST be indicated by returning an appropriate exception and setting the response HTTP status accordingly.
 
    :REST URL: ``DELETE /accounts/map/{subject}``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.  Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param subject: The Subject identifier to be used for equivalentIdentity. This Subject will not match the Subject named in the certificate. The subject is transmitted as part of the URL and so MUST be path encoded.
+   :param subject: The Subject identifier to be used for equivalentIdentity. This Subject will not match the Subject named in the certificate. Transmitted as part of the URL path and must be escaped accordingly.
    :type subject: :class:`Types.Subject`
 
    :returns: True if the map was successfully created, false otherwise.
@@ -349,10 +349,10 @@
    A failed request MUST be indicated by returning an appropriate exception and setting the response HTTP status accordingly.
 
    :REST URL: ``POST /accounts/pendingmap``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.  Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param subject: The Subject identifier to be used for equivalentIdentity. This Subject will not match the Subject named in the certificate. Transmitted as a *Param Part* of a mime-multipart mixed message body.
+   :param subject: The Subject identifier to be used for equivalentIdentity. This Subject will not match the Subject named in the certificate. Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
    :type subject: :class:`Types.Subject`
 
    :returns: True if the mapping was successfully initiated, false otherwise.
@@ -390,10 +390,10 @@
    A failed request MUST be indicated by returning an appropriate exception and setting the response HTTP status accordingly.
 
    :REST URL: ``PUT /accounts/pendingmap/{subject}``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.  Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param subject: The Subject identifier to be used for equivalentIdentity. This Subject will not match the Subject named in the certificate. Transmitted as part of the URL and so should be properly path encoded.
+   :param subject: The Subject identifier to be used for equivalentIdentity. This Subject will not match the Subject named in the certificate. Transmitted as part of the URL path and must be escaped accordingly.
    :type subject: :class:`Types.Subject`
 
    :returns: True if the map was successfully created, false otherwise.
@@ -425,10 +425,10 @@
    A failed request MUST be indicated by returning an appropriate exception and setting the response HTTP status accordingly.
 
    :REST URL: ``GET /accounts/pendingmap/{subject}``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.  Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param subject: The Subject identifier to be used for equivalentIdentity. This Subject will not match the Subject named in the certificate.
+   :param subject: The Subject identifier to be used for equivalentIdentity. This Subject will not match the Subject named in the certificate. Transmitted as part of the URL path and must be escaped accordingly.
    :type subject: :class:`Types.Subject`
 
    :returns: The SubjectInfo
@@ -460,10 +460,10 @@
    A failed request MUST be indicated by returning an appropriate exception and setting the response HTTP status accordingly.
 
    :REST URL: ``DELETE /accounts/pendingmap/{subject}``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.  Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param subject: The Subject identifier to be used for equivalentIdentity. This Subject will not match the Subject named in the certificate.
+   :param subject: The Subject identifier to be used for equivalentIdentity. This Subject will not match the Subject named in the certificate. Transmitted as part of the URL path and must be escaped accordingly.
    :type subject: :class:`Types.Subject`
 
    :returns: True if the map was successfully created, false otherwise.
@@ -493,10 +493,10 @@
    Groups are lists of subjects that allow all members of the group to be referenced by listing solely the subject name of the group.  Group names must be unique within the DataONE system. Groups can only be modified by Subjects listed as rightsHolders.
 
    :REST URL: ``POST /groups``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param group: The Group to be created. Transmitted as a *File Part* of a mime-multipart mixed message body.
+   :param group: The Group to be created. Transmitted as an UTF-8 encoded XML structure for the respective type as defined in the DataONE types schema, as a *File part* of the MIME multipart/mixed message.
    :type group: :class:`Types.Group`
 
    :returns: The Subject of the group that was created.
@@ -530,10 +530,10 @@
    Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception.
 
    :REST URL: ``PUT /groups``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session is used to determine  if the request is being made by the creator of the group.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session is used to determine  if the request is being made by the creator of the group. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param group: The new Group object that will replace the old Group. The Group.Subject must match the groupName and an update cannot modify this value. Transmitted as a *File Part* of a mime-multipart mixed message body.
+   :param group: The new Group object that will replace the old Group. The Group.Subject must match the groupName and an update cannot modify this value. Transmitted as an UTF-8 encoded XML structure for the respective type as defined in the DataONE types schema, as a *File part* of the MIME multipart/mixed message.
    :type group: :class:`Types.Group`
 
    :returns: True if the group that was modified successfully, false otherwise

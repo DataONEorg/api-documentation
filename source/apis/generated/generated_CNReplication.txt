@@ -47,19 +47,19 @@
    :Use Cases:
      :doc:`UC09 </design/UseCases/09_uc>`
    :REST URL: ``PUT /replicaNotifications/{pid}``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the public user if the certificate was not provided with the request.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the public user if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param pid: Identifier of the object to be replicated between Member Nodes. Transmitted as part of the URL and so must be properly encoded.
+   :param pid: Identifier of the object to be replicated between Member Nodes. Transmitted as part of the URL path and must be escaped accordingly.
    :type pid: :class:`Types.Identifier`
 
-   :param nodeRef: Reference to the Node which made the setReplicationStatus call. If this is a Member Node, the checksum must be compared with that of the authoritative Member Node. If not, this step can be ignored as the call is not signifying a replication is complete. Transmitted as a *Param Part* of a mime-multipart mixed message body.
+   :param nodeRef: Reference to the Node which made the setReplicationStatus call. If this is a Member Node, the checksum must be compared with that of the authoritative Member Node. If not, this step can be ignored as the call is not signifying a replication is complete. Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
    :type nodeRef: :class:`Types.NodeReference`
 
-   :param status: Replication status. See system metadata schema for possible values. Transmitted as a *Param Part* of a mime-multipart mixed message body.
+   :param status: Replication status. See system metadata schema for possible values.  Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
    :type status: :class:`Types.ReplicationStatus`
 
-   :param failure: A BaseException object or one of it's subclasses, or null.  If the status is set to 'failed', this exception object can provide more detail. Appropriate sub-classes include InsufficientResource, NotAuthorized, ServiceFailure, etc. Transmitted as a *File Part* of a mime-multipart mixed message body.
+   :param failure: A BaseException object or one of it's subclasses, or null.  If the status is set to 'failed', this exception object can provide more detail. Appropriate sub-classes include InsufficientResource, NotAuthorized, ServiceFailure, etc. Transmitted as an UTF-8 encoded XML structure for the respective type as defined in the DataONE types schema, as a *File part* of the MIME multipart/mixed message.
    :type failure: :class:`Types.BaseException`
 
    :returns: True if the operation is allowed and expected, otherwise an exception should be raised.
@@ -89,16 +89,16 @@
    Failure of the operation MUST be indicated by returning an appropriate exception.
 
    :REST URL: ``PUT /replicaMetadata/{pid}``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.  Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param pid: Transmitted as part of the URL, and so must be properly path encoded.
+   :param pid:  Transmitted as part of the URL path and must be escaped accordingly.
    :type pid: :class:`Types.Identifier`
 
-   :param replicaMetadata: Transmitted as a *File Part* of a mime-multipart mixed message body.
+   :param replicaMetadata:  Transmitted as an UTF-8 encoded XML structure for the respective type as defined in the DataONE types schema, as a *File part* of the MIME multipart/mixed message.
    :type replicaMetadata: :class:`Types.Replica`
 
-   :param serialVersion: The serialVersion of the system metadata that is the intended target for the change. Transmitted as a *Param Part* of a mime-multipart mixed message body.
+   :param serialVersion: The serialVersion of the system metadata that is the intended target for the change.  Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
    :type serialVersion: unsigned long
 
    :returns: True on success
@@ -134,16 +134,16 @@
    Failure of the operation MUST be indicated by returning an appropriate exception.
 
    :REST URL: ``PUT /replicaPolicies/{pid}``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param pid: The identifier is transmitted as a part of the URL and so must be properly path encoded.
+   :param pid:  Transmitted as part of the URL path and must be escaped accordingly.
    :type pid: :class:`Types.Identifier`
 
-   :param policy: Transmitted as a *File Part* of a mime-multipart mixed message body.
+   :param policy:  Transmitted as an UTF-8 encoded XML structure for the respective type as defined in the DataONE types schema, as a *File part* of the MIME multipart/mixed message.
    :type policy: :class:`Types.ReplicationPolicy`
 
-   :param serialVersion: The serialVersion of the system metadata that is the intended target for the change. Transmitted as a *Param Part* of a mime-multipart mixed message body.
+   :param serialVersion: The serialVersion of the system metadata that is the intended target for the change. Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
    :type serialVersion: unsigned long
 
    :returns: True on success
@@ -177,13 +177,13 @@
    Failure of the operation MUST be indicated by returning an appropriate exception.
 
    :REST URL: ``GET /replicaAuthorizations/{pid}``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param targetNodeSubject: The subject that identifies the target node, with a value extracted from the X.509 certificate passed in during the call to MNReplication.replicate().
+   :param targetNodeSubject: The subject that identifies the target node, with a value extracted from the X.509 certificate passed in during the call to MNReplication.replicate(). Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type targetNodeSubject: :class:`Types.Subject`
 
-   :param pid: The identifier of the object to be replicated.
+   :param pid: The identifier of the object to be replicated. Transmitted as part of the URL path and must be escaped accordingly.
    :type pid: :class:`Types.Identifier`
 
    :returns: True on success
@@ -225,16 +225,16 @@
    This method is normally only called by Coordinating Nodes.
 
    :REST URL: ``PUT /removeReplicaMetadata/{pid}``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session MUST be a Coordinating Node.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session MUST be a Coordinating Node. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param pid: The identifier of the object whose replication metadata is being modified. Transmitted as part of the URL, and so must be properly path encoded.
+   :param pid: The identifier of the object whose replication metadata is being modified.  Transmitted as part of the URL path and must be escaped accordingly.
    :type pid: :class:`Types.Identifier`
 
-   :param nodeId: The identifier of the node replication information that is being removed from the system metadata record. Transmitted as a *Param Part* of a mime-multipart mixed message body.
+   :param nodeId: The identifier of the node replication information that is being removed from the system metadata record. Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
    :type nodeId: :class:`Types.NodeReference`
 
-   :param serialVersion: The :attr:`Types.SystemMetadata.serialVersion` of the system metadata being updated. This MUST match the latest version of system metadata available for the object on the Coordinating Node. Transmitted as a *Param Part* of a mime-multipart mixed message body.
+   :param serialVersion: The :attr:`Types.SystemMetadata.serialVersion` of the system metadata being updated. This MUST match the latest version of system metadata available for the object on the Coordinating Node. Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
    :type serialVersion: unsigned long
 
    :returns: True if the replication metadata was successfully deleted.

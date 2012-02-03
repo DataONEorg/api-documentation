@@ -41,16 +41,16 @@
    :Use Cases:
      :doc:`UC04 </design/UseCases/04_uc>`, :doc:`UC09 </design/UseCases/09_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
    :REST URL: ``POST /object``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param pid: The identifier that should be used in DataONE to identify and access the object. This is an Unicode string that follows the constraints on identifiers described in :doc:`/design/PIDs`. If the identifier is already in use, :exc:`Exceptions.IdentifierNotUnique` will be raised and the client SHOULD try again with a different, unique identifier. Transmitted as a *Param Part* of a mime-multipart mixed message body.
+   :param pid: The identifier that should be used in DataONE to identify and access the object. This is an Unicode string that follows the constraints on identifiers described in :doc:`/design/PIDs`. If the identifier is already in use, :exc:`Exceptions.IdentifierNotUnique` will be raised and the client SHOULD try again with a different, unique identifier.  Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
    :type pid: :class:`Types.Identifier`
 
-   :param object: The data bytes that are to be added to the Member Node. Transmitted as a *File Part* of a mime-multipart mixed message body.
+   :param object: The data bytes that are to be added to the Member Node.  Transmitted as an UTF-8 encoded XML structure for the respective type as defined in the DataONE types schema, as a *File part* of the MIME multipart/mixed message.
    :type object: bytes
 
-   :param sysmeta: The system metadata document that provides basic information about the object, including a reference to its identifier, access control information, etc. Attributes of the sysmeta that are the responsibility of the client MUST be set. Note that the obsoletes and obsoletedBy elements MUST not be set. It is the role of the update() method to ensure these are properly updated to ensure object lineage is as expected. Transmitted as a *File Part* of a mime-multipart mixed message body.
+   :param sysmeta: The system metadata document that provides basic information about the object, including a reference to its identifier, access control information, etc. Attributes of the sysmeta that are the responsibility of the client MUST be set. Note that the obsoletes and obsoletedBy elements MUST not be set. It is the role of the update() method to ensure these are properly updated to ensure object lineage is as expected. Transmitted as an UTF-8 encoded XML structure for the respective type as defined in the DataONE types schema, as a *File part* of the MIME multipart/mixed message.
    :type sysmeta: :class:`Types.SystemMetadata`
 
    :returns: The identifier that was used to insert the document into the system.
@@ -105,19 +105,19 @@
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`
    :REST URL: ``PUT /object/{pid}``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param pid: The identifier of the object that is being updated. If this identifier does not exist in the system, an error is raised and the operation does not cause any changes to the objects or their metadata. Transmitted as part of the URL, and so must be properly path encoded.
+   :param pid: The identifier of the object that is being updated. If this identifier does not exist in the system, an error is raised and the operation does not cause any changes to the objects or their metadata.  Transmitted as part of the URL path and must be escaped accordingly.
    :type pid: :class:`Types.Identifier`
 
-   :param object: The bytes of the data or science metadata object that will be deprecating the exsting object. Transmitted as a *File Part* of a mime-multipart mixed message body.
+   :param object: The bytes of the data or science metadata object that will be deprecating the exsting object.  Transmitted as an UTF-8 encoded XML structure for the respective type as defined in the DataONE types schema, as a *File part* of the MIME multipart/mixed message.
    :type object: bytes
 
-   :param newPid: The identifier that will become the replacement identifier for the existing object after the update. This identifier must have been previously reserved. Transmitted as a *Param Part* of a mime-multipart mixed message body.
+   :param newPid: The identifier that will become the replacement identifier for the existing object after the update. This identifier must have been previously reserved. Transmitted as a *Param Part* of a mime-multipart mixed message body. Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
    :type newPid: :class:`Types.Identifier`
 
-   :param sysmeta: A System Metadata document describing *object*. The :attr:`SystemMetadata.obsoletes` field *must* contain the identifier of the object being obsoleted and the Member Node will raise an InvalidRequest exception if the attribute value does not match the *pid* in the request. Other required client provided fields as described for :class:`Types.SystemMetadata` must be filled. Transmitted as a *File Part* of a mime-multipart mixed message body.
+   :param sysmeta: A System Metadata document describing *object*. The :attr:`SystemMetadata.obsoletes` field *must* contain the identifier of the object being obsoleted and the Member Node will raise an InvalidRequest exception if the attribute value does not match the *pid* in the request. Other required client provided fields as described for :class:`Types.SystemMetadata` must be filled.  Transmitted as an UTF-8 encoded XML structure for the respective type as defined in the DataONE types schema, as a *File part* of the MIME multipart/mixed message.
    :type sysmeta: :class:`Types.SystemMetadata`
 
    :returns: The identifier of the document that is replacing the original, which should be the same as *newPid*.
@@ -167,10 +167,10 @@
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`
    :REST URL: ``DELETE /object/{pid}``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param pid: The identifier of the object to be deleted.
+   :param pid: The identifier of the object to be deleted. Transmitted as part of the URL path and must be escaped accordingly.
    :type pid: :class:`Types.Identifier`
 
    :returns: The identifier that was used to delete the document from the system.
@@ -204,16 +204,16 @@
    Access control for this method MUST be configured to allow calling by Coordinating Nodes.
 
    :REST URL: ``POST /dirtySystemMetadata``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param pid: Identifier of the object for which system metadata was changed. Transmitted as a *Param Part* of a mime-multipart mixed message body.
+   :param pid: Identifier of the object for which system metadata was changed.  Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
    :type pid: :class:`Types.Identifier`
 
-   :param serialVersion: The serialVersion of the system metadata. Transmitted as a *Param Part* of a mime-multipart mixed message body.
+   :param serialVersion: The serialVersion of the system metadata. Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
    :type serialVersion: unsigned long
 
-   :param dateSysMetaLastModified: The time stamp for when the system metadata was changed. Transmitted as a *Param Part* of a mime-multipart mixed message body.
+   :param dateSysMetaLastModified: The time stamp for when the system metadata was changed. Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
    :type dateSysMetaLastModified: :class:`Types.DateTime`
 
    :returns: True if notification was received OK, otherwise an error is returned.

@@ -71,22 +71,22 @@
    Access control for this method MUST be configured to allow calling by Coordinating Nodes and MAY be configured to allow more general access.
 
    :REST URL: ``GET /log``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param fromDate: Records with time stamp greater than or equal to (>=) this value will be returned.
+   :param fromDate: Records with time stamp greater than or equal to (>=) this value will be returned. Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type fromDate: :class:`Types.DateTime`
 
-   :param toDate: Records with a time stamp less than (<) this value will be returned. If not specified, then defaults to *now*.
+   :param toDate: Records with a time stamp less than (<) this value will be returned. If not specified, then defaults to *now*. Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type toDate: :class:`Types.DateTime`
 
-   :param event: Return only log records for the specified type of event.  Default is *all*.
+   :param event: Return only log records for the specified type of event.  Default is *all*. Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type event: :class:`Types.Event`
 
-   :param start=0: Optional zero based offset from the first record in the set of matching log records. Used to assist with paging the response.
+   :param start=0: Optional zero based offset from the first record in the set of matching log records. Used to assist with paging the response. Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type start=0: integer
 
-   :param count=1000: Optional maximum number of log records to return in the response. Used to assist with paging the response.
+   :param count=1000: Optional maximum number of log records to return in the response. Used to assist with paging the response. Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type count=1000: integer
 
    :returns:

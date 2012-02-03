@@ -49,10 +49,10 @@
    :Use Cases:
      :doc:`UC01 </design/UseCases/01_uc>`, :doc:`UC16 </design/UseCases/16_uc>`, :doc:`UC09 </design/UseCases/09_uc>`
    :REST URL: ``GET /object/{pid}``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param pid: Identifier of the object to be retrieved
+   :param pid: Identifier of the object to be retrieved Transmitted as part of the URL path and must be escaped accordingly.
    :type pid: :class:`Types.Identifier`
 
    :returns: For science metadata objects, this will be the exact byte stream of the science metadata object as it was original ingested. Note that additional object types may in the future be returned by the get method.
@@ -83,10 +83,10 @@
    :Use Cases:
      :doc:`UC36 </design/UseCases/36_uc>`, :doc:`UC37 </design/UseCases/37_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
    :REST URL: ``GET /meta/{pid}``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param pid: Identifier for the object of interest.
+   :param pid: Identifier for the object of interest. Transmitted as part of the URL path and must be escaped accordingly.
    :type pid: :class:`Types.Identifier`
 
    :returns: A system metadata document describing the object.
@@ -125,10 +125,10 @@
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`
    :REST URL: ``HEAD /object/{pid}``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param pid: Identifier for the object in question.
+   :param pid: Identifier for the object in question. Transmitted as part of the URL path and must be escaped accordingly.
    :type pid: :class:`Types.Identifier`
 
    :returns: A set of values providing a basic description of the object.
@@ -161,10 +161,10 @@
    :Use Cases:
      :doc:`UC36 </design/UseCases/36_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
    :REST URL: ``GET /resolve/{pid}``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param pid: Identifier being resolved.
+   :param pid: Identifier being resolved. Transmitted as part of the URL path and must be escaped accordingly.
    :type pid: :class:`Types.Identifier`
 
    :returns: A list of nodes known to contain copies of the target object, plus the URLs known to resolve to the node get methods.
@@ -197,10 +197,10 @@
    :Use Cases:
      :doc:`UC09 </design/UseCases/09_uc>`
    :REST URL: ``GET /checksum/{pid}``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param pid: Identifier of the object for which checksum is being requested
+   :param pid: Identifier of the object for which checksum is being requested Transmitted as part of the URL path and must be escaped accordingly.
    :type pid: :class:`Types.Identifier`
 
    :returns: The checksum of the specified object
@@ -232,25 +232,25 @@
    :Use Cases:
      :doc:`UC06 </design/UseCases/06_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
    :REST URL: ``GET /object[?fromDate={fromDate}&toDate={toDate}&formatid= {formatId}&replicaStatus={replicaStatus}&start={start}&count={count}]``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param fromDate: Entries with :attr:`SystemMetadata.dateSysMetadataModified` greater than or equal to (>=) *fromDate* must be returned.
+   :param fromDate: Entries with :attr:`SystemMetadata.dateSysMetadataModified` greater than or equal to (>=) *fromDate* must be returned.  Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type fromDate: :class:`Types.DateTime`
 
-   :param toDate: Entries with :attr:`SystemMetadata.dateSysMetadataModified` less than (<) *toDate* must be returned.
+   :param toDate: Entries with :attr:`SystemMetadata.dateSysMetadataModified` less than (<) *toDate* must be returned. Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type toDate: :class:`Types.DateTime`
 
-   :param formatId: Restrict results to the specified object format.
+   :param formatId: Restrict results to the specified object format. Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type formatId: :class:`Types.ObjectFormatIdentifier`
 
-   :param replicaStatus: Indicates if replicated objects should be returned in the list (i.e. any entries present in the :attr:`SystemMetadata.replica`, objects that have been replicated to this node). If ``false``, then no objects that have been replicated should be returned. If ``true``, then any objects can be returned, regardless of replication status. The default value is ``true``.
+   :param replicaStatus: Indicates if replicated objects should be returned in the list (i.e. any entries present in the :attr:`SystemMetadata.replica`, objects that have been replicated to this node). If ``false``, then no objects that have been replicated should be returned. If ``true``, then any objects can be returned, regardless of replication status. The default value is ``true``. Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type replicaStatus: boolean
 
-   :param start=0: The zero-based index of the first value, relative to the first record of the resultset that matches the parameters.
+   :param start=0: The zero-based index of the first value, relative to the first record of the resultset that matches the parameters. Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type start=0: integer
 
-   :param count=1000: The maximum number of entries that should be returned in the response. The Member Node may return less entries than specified in this value.
+   :param count=1000: The maximum number of entries that should be returned in the response. The Member Node may return less entries than specified in this value. Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type count=1000: integer
 
    :returns: The list of PIDs that match the query criteria. If none match, an empty list is returned.
@@ -282,10 +282,10 @@
    :Use Cases:
      :doc:`UC02 </design/UseCases/02_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
    :REST URL: ``GET /search?q={query}``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param query: The criteria for matching the characteristics of the metadata objects of interest, expressed in the syntax of the chosen queryType.
+   :param query: The criteria for matching the characteristics of the metadata objects of interest, expressed in the syntax of the chosen queryType. Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type query: string
 
    :returns: A list of objects that match the specified search criteria

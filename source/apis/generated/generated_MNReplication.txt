@@ -35,13 +35,13 @@
    :Use Cases:
      :doc:`UC09 </design/UseCases/09_uc>`
    :REST URL: ``POST /replicate``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param sysmeta: Copy of the CN held system metadata for the object. Transmitted as a *File Part* of a mime-multipart mixed message body.
+   :param sysmeta: Copy of the CN held system metadata for the object. Transmitted as an UTF-8 encoded XML structure for the respective type as defined in the DataONE types schema, as a *File part* of the MIME multipart/mixed message.
    :type sysmeta: :class:`Types.SystemMetadata`
 
-   :param sourceNode: A reference to node from which the content should be retrieved. The reference should be resolved by checking the CN node registry. Transmitted as a *Param Part* of a mime-multipart mixed message body.
+   :param sourceNode: A reference to node from which the content should be retrieved. The reference should be resolved by checking the CN node registry. Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
    :type sourceNode: :class:`Types.NodeReference`
 
    :returns: True if everything works OK, otherwise an error is returned.
@@ -78,10 +78,10 @@
    :Use Cases:
      :doc:`UC09 </design/UseCases/09_uc>`
    :REST URL: ``GET /replica/{pid}``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param pid: The identifier of the object to get as a replica
+   :param pid: The identifier of the object to get as a replica Transmitted as part of the URL path and must be escaped accordingly.
    :type pid: :class:`Types.Identifier`
 
    :returns: Bytes of the specified object.
