@@ -106,7 +106,7 @@
    * - Tier 2
      - ``PUT /accounts/{subject}``
      - :func:`CNIdentity.updateAccount`
-     - (:class:`session<Types.Session>`, :class:`person<Types.Person>`) ``->`` :class:`Types.Subject`
+     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`, :class:`person<Types.Person>`) ``->`` :class:`Types.Subject`
    * - Tier 2
      - ``PUT /accounts/verification/{subject}``
      - :func:`CNIdentity.verifyAccount`

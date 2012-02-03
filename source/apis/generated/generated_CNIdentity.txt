@@ -17,7 +17,7 @@
    * - Tier 2
      - ``PUT /accounts/{subject}``
      - :func:`updateAccount`
-     - (:class:`session<Types.Session>`, :class:`person<Types.Person>`) ``->`` :class:`Types.Subject`
+     - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`, :class:`person<Types.Person>`) ``->`` :class:`Types.Subject`
    * - Tier 2
      - ``PUT /accounts/verification/{subject}``
      - :func:`verifyAccount`
@@ -107,7 +107,7 @@
 
 
 
-.. function:: updateAccount(session,person) -> Subject
+.. function:: updateAccount(session,subject,person) -> Subject
 
    Update an existing :term:`subject` in the DataONE system. The target subject is determined from subject provided in the URL.
 
@@ -120,6 +120,9 @@
    :REST URL: ``PUT /accounts/{subject}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request.
    :type session: :class:`Types.Session`
+
+   :param subject: The subject of the person being updated.
+   :type subject: :class:`Types.Subject`
 
    :param person: New information about the Person. The subject of the Person cannot be updated with this method and must match the subject of the X.509 certificate associated with the authenticated SSL session via client-side authentication. Transmitted as a *File Part* of a mime-multipart mixed message body.
    :type person: :class:`Types.Person`

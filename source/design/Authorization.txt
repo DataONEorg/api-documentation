@@ -19,22 +19,25 @@ within the DataONE framework. Requirements for Authorization are listed here:
 
 Privacy and access control in DataONE are primarily for the protection and
 integrity of user contributed data and metadata via Member Nodes. There are,
-however, other entities in DataONE that also need protection, including
-DataONE specific services and system resources, like system metadata and
-components of the general software stack (e.g., databases, web servers) for
-Coordinating and Member Nodes. For this reason, all resources in DataONE, from
-data and metadata objects to system services, have a rule, called an *access
-control rule* (:class:`Types.AccessRule`), that is used to determine who may
-access the resource. The process of confirming whether a user has privileges
-to access a resource in DataONE is called *authorization*. The act of
-authorization uses attribute information contained in the security token and
-compares such information to the resource access control rule. If the rule
-permits access by the :term:`principal` requesting the resource, then
-authorization succeeds and permission is granted to access the resource.
+however, other entities in DataONE that also need protection, including DataONE
+specific services and system resources, like system metadata and components of
+the general software stack (e.g., databases, web servers) for Coordinating and
+Member Nodes. For this reason, all resources in DataONE, from data and metadata
+objects to system services, have an access policy (:class:`Types.AccessPolicy`),
+made up of one or more *access control rules* (:class:`Typespes.AccessRule`),
+that is used to determine who may access the resource. The process of confirming
+whether a user has privileges to access a resource in DataONE is called
+*authorization*. The act of authorization uses attribute information contained
+in the security token obtained by the user when authenticating with their
+identity provider, and compares such information to the resource access control
+rule. If the rule permits access by the :term:`principal` requesting the
+resource, then authorization succeeds and permission is granted to access the
+resource. The algorithm used to evaluate authorization for a resource is
+described in the section *Object Access Control* below.
 
 Because nodes that form the DataONE federation are managed by various
-administrative domains and may cross multiple political boundaries, a "trust"
-relationship is crucial for DataONE to succeed in its security plan. In simple
+administrative domains and may cross multiple political boundaries, "trust"
+relationships are crucial for DataONE to succeed in its security plan. In simple
 terms, this means that access control rules that are defined by one member of
 the federation are upheld be another member. It also means that trust may be
 revoked if a particular member does not behave accordingly within the
@@ -51,6 +54,11 @@ also known as the :term:`Subject`, the type of permission granted (e.g.,
 *read*, *write*, or *changePermission*), and the :term:`identifier` of the
 resource being requested. 
 
+An access policy is an optional element of the :term:`System Metadata`
+associated with an object. The default access policy is to deny access to the
+object to all users except the *subject* identified as the
+:attr:`Types.SystemMetadata.rightsHolder` in the System Metadata.
+
 DataONE will provide, where reasonable, a conversion of the internal access
 control rule to a subset of one or more industry standard policy languages to
 support interoperability between different organizations.
@@ -60,33 +68,63 @@ Trust Relationships
 -------------------
 
 Any authorization system in a federation requires trust among participants.
-For DataONE, there are four types of trust relationships among nodes in the
+For DataONE, there are five types of trust relationships among nodes in the
 federation:
 
-- **MN to MN**: Member Node to Member Node trust relies on one Member Node
-  believing that another Member Node will respect the authorization policies
-  that they publish for their objects and services.  In the case of restricted
-  access content, Member Nodes that house replicas of an object would need to
-  faithfully enforce authorization policies that were expressed by the data
-  owner. Because of this, Member Nodes can express replication policies for
-  objects that indicate which other Member Nodes are acceptable targets for
-  replication, and for which nodes they are willing to serve as replica stores.
 
-- **MN to CN**: Member Nodes need to have trust that Coordinating Nodes will
-  respect and enforce their authorization policies, including any restrictions
-  placed on where and when to create replicas of objects, and on the
-  presentation of search results for restricted content.
+1. 
 
-- **CN to MN**: Coordinating Nodes rely upon Member Nodes for limited
-  services, and mainly expect Member Nodes to accurately implement the DataONE
-  Service API, including replication services.
+   **MN to CN**: Member Nodes need to have trust that Coordinating Nodes will
+   respect and enforce their authorization policies, including any restrictions
+   placed on where and when to create replicas of objects, and on the
+   presentation of search results for restricted content.
 
-- **CN to CN**: Each Coordinating Node contains a replica of the content of
-  the others, and are configured to provide seamless failover and
-  load-balancing for all incoming requests across the three nodes.
-  Consequently, the Coordinating Nodes inherently trust one another fully. As
-  the suite of Coordinating Node instances expands to other continents, this
-  relationship may need to be re-examined.
+2. 
+
+   **CN to MN**: Coordinating Nodes rely upon Member Nodes for limited services,
+   and mainly expect Member Nodes to accurately implement the DataONE Service
+   API, including replication services.
+
+3. 
+
+   **CN to CN**: Each Coordinating Node contains a replica of the content of the
+   others, and are configured to provide seamless failover and load-balancing
+   for all incoming requests across the three nodes. Consequently, the
+   Coordinating Nodes inherently trust one another fully. As the suite of
+   Coordinating Node instances expands to other continents, this relationship
+   may need to be re-examined.
+
+4. 
+
+   **MN to MN**: Member Node to Member Node trust relies on one Member Node
+   believing that another Member Node will respect the authorization policies
+   that they publish for their objects and services. In the case of restricted
+   access content, Member Nodes that house replicas of an object would need to
+   faithfully enforce authorization policies that were expressed by the data
+   owner. Because of this, Member Nodes can express replication policies for
+   objects that indicate which other Member Nodes are acceptable targets for
+   replication, and for which nodes they are willing to serve as replica stores.
+
+5. 
+
+   **User to DataONE**: Users trust that the DataONE system, that is, the
+   combination of Member and Coordinating Nodes interacting to provide the
+   DataONE infrastructure and services, implements access control rules
+   consistently and in compliance with the specifications provided when content
+   was added to the system or subsequently modified. This implies minimal
+   latency in propagation of rules between components of the system.
+
+Verification of proper technical implementation of these trust relationships is
+achieved through integration testing of the various components. This involves
+exercising a wide array of combinations of users, groups, and access control
+rules to ensure expected behavior as content moves around the DataONE
+infrastructure.
+
+The DataNet projects have a loosely defined requirement of interoperability
+between their respective implementations. This also implies that content and
+services *may* be shared between projects, and thus there will likely be
+additional trust relationships that need to be taken into consideration as the
+DataNet projects progress towards interoperability.
 
 
 Object Access Control
@@ -147,6 +185,17 @@ SUBJECT is the *subject* making the request, and PERMISSION is the
     if PERMISSION is IN accessRule.Permission 
       Is SUBJECT IN accessRule.Subject? Yes -> return True
   return False
+
+DataONE supports *equivalent identities*, where a single principal may have
+multiple subjects associated with them. As such, the ``SUBJECT`` in algorithm
+described above is actually a list of 1 or more subjects. The list of subjects
+to be used for comparison is determined from the *Session* parameter of an API
+call as follows::
+
+  SUBJECTS = [Session.subject, ]
+  
+  
+
 
 
 Adjusting Object Access Control
@@ -211,6 +260,8 @@ should be retrieved from the Coordinating Node through the
 Changes to node registration information can only be performed by subjects
 listed in the *subject* property of the :class:`Types.Node` document for the
 node.
+
+
 
 
 Additional Authorization Constraints
