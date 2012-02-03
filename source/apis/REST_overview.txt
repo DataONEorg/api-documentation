@@ -7,37 +7,73 @@ Transfer (REST) approach over HTTP.
 
 Key points on REST interactions in DataONE:
 
-- Content is modeled as collections, with :class:`PIDs <Types.Identifier>`
-  identifying individual items of a collection.
+1. Content is generally modeled as collections, with :class:`PIDs
+   <Types.Identifier>` identifying individual items of a collection.
 
-- The HTTP verbs HEAD, GET, POST, PUT, DELETE are used for retrieving
-  information about content, retrieving content, creating content, updating
-  content, and deleting content respectively.
+2. The HTTP verbs HEAD, GET, POST, PUT, DELETE are used for retrieving
+   information about content, retrieving content, creating content, updating
+   content, and deleting content respectively.
 
-- State information, if required, is passed in the HTTP headers.
+3. State information, if required, is passed in the HTTP headers.
 
-- Identity transfer is performed using SSL, with the client certificate
-  accessible through implementation specific mechanisms supported by the
-  respective server environment.
+4. Identity transfer is performed using SSL, with the client certificate
+   accessible through implementation specific mechanisms supported by the
+   respective server environment.
 
-- Hints to support efficient caching (e.g. content time stamps) should be
-  respected. Caching is an important mechanism for achieving scalability.
+5. The identity information described in (4) is indicated as a *Session* in the
+   method signatures and their descriptions.
 
-- Several URL patterns described in these documents support parameters as key,
-  value pairs. Unless otherwise indicted, the key and value are case sensitive
-  and SHOULD be preserved or the request MAY be rejected with an
-  :exc:`Exceptions.InvalidRequest` exception.
+6. Hints to support efficient caching (e.g. content time stamps) should be
+   respected. Caching is an important mechanism for assisting with service 
+   scalability.
 
-- Message bodies are encoded using MIME Multipart, mixed (RFC2046_).
+7. Names of parameters passed in URLs or message bodies are case sensitive
+   unless explicitly indicated otherwise. If the case of the parameters names
+   does not match the method signature, the request MAY be rejected with an
+   :exc:`Exceptions.InvalidRequest` exception.
 
-- Messages containing complex DataONE types (i.e. types that have more than a
-  single value) are encoded in their XML representation.
+8. GET, HEAD, DELETE requests only pass parameters as part of the URL. The
+   parameter values are converted to UTF-8 Strings and appropriately escaped for
+   incorporating into the URL.
 
-- Simple types are transmitted as parameter parts in the MIME Multipart mixed
-  body.
+9. Message bodies (e.g. for POST and PUT requests) are encoded using MIME
+   Multipart, mixed (RFC2046_).
 
-- Complex types and octet streams are transmitted as file parts in the MIME
-  Multipart mixed body.
+10. PUT requests are for updating an existing resource. An identifier of some
+    sort will typically appear in the URL (e.g. a PID or a Subject), which should
+    be a UTF-8 string and appropriately URL path encoded. The message body will
+    be MIME multipart/mixed and may contain values expressed as parameter and /
+    or file parts as described in (12) below.
+
+11. POST requests are for creating resources. All information for creating the
+    new object or resource is transmitted in the message body, which is encoded
+    as a MIME multipart/mixed message.
+
+12. We use two types of content in MIME multipart/mixed messages: parameters and
+    files. Parameters are to be used for all simple types (13, below). Files are
+    to be used for all complex types (14, below) and for octet streams.
+
+13. Simple types are structures that contain a single value. When creating the
+    parameter entry, the value is converted to a UTF-8 String using formatting
+    equivalent to what is used when expressing the same value as part of an XML
+    document (e.g. when serializing using PyxB or JibX). The expression of a
+    simple type as a String in a MIME multipart/mixed parameter should be
+    equivalent to expressing the same value as part of a URL (before escaping).
+
+14. Complex types are any structures that contain more than a single value. A
+    simple example of a complex type is the :class:`Types.Checksum` type. It is
+    a String (the checksum) with an attribute (the algorithm). Complex types are
+    serialized to UTF-8 encoded XML structures that are defined by the DataONE
+    Types Schema.
+
+15. File parts of MIME multipart/mixed have three properties: the name of the
+    entry, the file name of the content, and the content. The name of the entry
+    must match the parameter name as described in the signature of the method
+    being called. The content of the entry is XML encoded structure as described
+    in (13) above (or an octet stream). The file name property is not used, and
+    can be set to whatever the client considers appropriate. The file name MAY
+    be ignored by the service receiving the request.
+
 
 
 Collections exposed by :term:`Member Node`\s and :term:`Coordinating Node`\s
