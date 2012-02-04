@@ -164,7 +164,7 @@
      - :func:`CNReplication.setReplicationPolicy`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`policy<Types.ReplicationPolicy>`, ``serialVersion``) ``->`` boolean
    * - Tier 4
-     - ``GET /replicaAuthorizations/{pid}``
+     - ``GET /replicaAuthorizations/{pid}?targetNodeSubject={targetNodeSubject}``
      - :func:`CNReplication.isNodeAuthorized`
      - (:class:`session<Types.Session>`, :class:`targetNodeSubject<Types.Subject>`, :class:`pid<Types.Identifier>`) ``->`` boolean
    * - 
