@@ -116,9 +116,9 @@
    * - GET /object[?fromDate={fromDate}&toDate={toDate}&formatid= {formatId}&replicaStatus={replicaStatus}&start={start}&count={count}]
      - :func:`CNRead.listObjects`
      - Retrieve the list of objects present on the CN that match the calling parameters. At a minimum, this method should be able to return a list of objects that match::   fromDate < SystemMetadata.dateSysMetadataModified but is expected to also support date range (by also specifying *toDate*), and should also support slicing of the matching set of records by indicating the starting *index* of the response (where 0 is the index of the first item) and the *count* of elements to be returned. Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed.
-   * - GET /search?q={query}
+   * - GET /search/{queryType}?query={query}
      - :func:`CNRead.search`
-     - Search the metadata catalog and return identifiers of metadata records that match the criteria. Implemented as a connection to the SOLR search index. The query syntax is the same as for SOLR. Examples queries and available search fields are described in :doc:`SearchMetadata`.
+     - Search the metadata catalog and return identifiers of metadata records that match the criteria. Search may be implemented by more than one type of search engine. The queryType parameter indicates which search engine should be targeted. The remaining parameters for the request are specific to the search engine being targeted and are described in :doc:`design/QueryingContent`. Currently supported search engines include: "SOLR"
    * - PUT /owner/{pid}
      - :func:`CNAuthorization.setRightsHolder`
      - Changes ownership (RightsHolder) of the specified object to the :term:`subject` specified by `userId`

@@ -136,7 +136,7 @@
    :param pid: The object for which access control is being updated. Transmitted as part of the URL path and must be escaped accordingly.
    :type pid: :class:`Types.Identifier`
 
-   :param accessPolicy: The desired privileges to be assigned to the object. Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
+   :param accessPolicy: The desired privileges to be assigned to the object. Transmitted as an UTF-8 encoded XML structure for the respective type as defined in the DataONE types schema, as a *File part* of the MIME multipart/mixed message.
    :type accessPolicy: :class:`Types.AccessPolicy`
 
    :param serialVersion: The serialVersion of the system metadata that is the intended target for the change. Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.

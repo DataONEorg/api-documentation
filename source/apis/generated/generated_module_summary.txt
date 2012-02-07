@@ -222,7 +222,8 @@ Note that date time precision is limited to one millisecond. If no timezone info
    * - \
      - :func:`CNRead.search`
      - Search the metadata catalog and return identifiers of metadata records that match the criteria.
-Implemented as a connection to the SOLR search index. The query syntax is the same as for SOLR. Examples queries and available search fields are described in :doc:`SearchMetadata`.
+Search may be implemented by more than one type of search engine. The queryType parameter indicates which search engine should be targeted. The remaining parameters for the request are specific to the search engine being targeted and are described in :doc:`design/QueryingContent`.
+Currently supported search engines include: "SOLR"
 
        Appears in functional use cases: :doc:`UC02 </design/UseCases/02_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
    * - :mod:`CNAuthorization`

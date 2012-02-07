@@ -149,11 +149,32 @@ whereas the DNs provide arbitrary depth for scoping the names. The TeraGrid
 initiative has standardized on this approach for representing subjects (see
 TeraGridPrincipalNames_).
 
+Within DataONE, values of :class:`Types.Subject` are represented as the string
+form of LDAP Distinguished Names (DN) as defined in RFC4514_. Distinguished
+Names are composed of a sequence of Relative Distiguished Names (RDNs), each of
+which is composed of an attribute type and a value. Subjects are serialized to
+strings with attribute types in upper case (a DataONE convention), case is
+preserved for all values. RDNs are separated by commas, and ordering is
+preserved. Values must be converted to strings following the encoding rules in
+section 2.4 of RFC4514_. In summary, Subjects in DataONE are represented as LDAP
+Distinguished Names with the additional constraint that attribute types are in
+upper case.  
+
+This approach enables simple string comparison to provide accurate results
+within the DataONE infrastructure and services and is fully compatible with
+existing services that utilize Distinguished Names as defined in RFC4510_.
+
+
 .. _eduPersonPrincipalName: http://middleware.internet2.edu/eduperson/docs/internet2-mace-dir-eduperson-200806.html#eduPersonPrincipalName
 
 .. _TeraGridPrincipalNames: http://www.teragridforum.org/mediawiki/index.php?title=SAML_NameIDs_for_TeraGrid#TeraGrid_Principal_Name_Format
 
 .. _FOAF: http://xmlns.com/foaf/spec/#term_Person
+
+.. _RC4510: http://tools.ietf.org/html/rfc4510
+
+.. _RFC4514: http://tools.ietf.org/html/rfc4514
+
 
 Symbolic Principals
 ~~~~~~~~~~~~~~~~~~~
