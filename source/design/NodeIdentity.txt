@@ -1,5 +1,5 @@
-Nodes and Node Identity in DataONE
-==================================
+Node Identity and Registration
+==============================
 
 .. contents::
 
@@ -19,23 +19,27 @@ while the URL endpoint for a node's services may change over time, possibly even
 moving across domains, the NodeReference will always be constant.  The DataONE 
 NodeReference takes the following form::
 
-    NodeReference = urn ":" dataone ":" type ":" id
+    NodeReference = urn ":" node ":" identifier
     urn           = "urn"
-    dataone       = "dataone"
-    type          = "mn" / "cn"
-    identifier    = *( unreserved )
-    unreserved    = ALPHA / DIGIT / "-" / "." / "_" / "~"
-  
-For definitions of unreserved, ALPHA, and DIGIT, see RFC3986_.
-Thus, ``urn:dataone:`` is a constant prefix, always in lowercase, ``type`` is an
-indicator of the type of the node, and can either be ``mn`` or ``cn``, and ``identifier``
-is a short, unique name for the node.  For example, valid NodeReferences might include::
+    node          = "node"
+    identifier    = *( idchars )
+    idchars    = ALPHA / DIGIT / "_"
+      
+ALPHA and DIGIT are patterns representing the upper and lower ASCII letters [A-Za-z] and the
+ASCII digits [0-9], defined in the ABNF_ standard.
+Thus, ``urn:node:`` is a constant prefix, always in lowercase, and ``identifier``
+is a short, unique name for the node that is case sensitive.  For example, 
+valid NodeReferences might include::
 
-    urn:dataone:mn:KNB
-    urn:dataone:mn:DRYAD
-    urn:dataone:cn:UCSB
+    urn:node:KNB
+    urn:node:DRYAD
+    urn:node:CN_UCSB
 
-.. _RFC3986: http://www.rfc-editor.org/rfc/rfc3986.txt
+By policy, the length of nodes identifiers will generally be restricted to 25 characters, and
+will be reviewed for appropriateness for the node during the node approval process
+see `Node Registration`_ below). 
+
+.. _ABNF: http://www.apps.ietf.org/rfc/rfc5234.txt
 
 Node Authentication and Contact
 -------------------------------
@@ -46,7 +50,10 @@ a node is to request a DataONE node certificate that can be used to authenticate
 This certificate is an X.509 certificate that is backed by a cryptographic key.  The
 certificate will contain the subject name of the node, which can be used to refer to the
 node.  Over time, these node certificates will expire and will need to be renewed by
-associating the new certificate with the NodeRefernce for this node.
+associating the new certificate with the NodeRefernce for this node.  Thus, the Node
+description provided in DataONE can contain a list of nodeSubjects, each of which 
+corresponds to a valid DataONE certificate that can be used to authenticate the node
+for service operations.
 
 In addition, every node must have a contact person with whom DataONE can communicate
 about DataONE operations and policies as needed.  In order to register, the Distinguished
@@ -59,7 +66,8 @@ Member Node (or Coordinating Node) through an existing Coordinating Node
 registration service (see :func:`CNRegister.register`). This service takes a :class:`Types.Node` 
 description as input, including
 a proposed :class:`Types.NodeReference` for this node and additional metadata such as the nodeContact
-in the Node description.   If the NodeReference is syntactically correct and is unique, 
+in the Node description.   If the NodeReference is syntactically correct and is unique, and
+the nodeContact is a verified account registered with DataONE, then
 the registration service will successfully return the :class:`Types.NodeReference` value for this node, which is
 then permanently assigned and can not be reused or reassigned.  At this point, the
 the :class:`Types.Node` has been registered but has not yet been approved.  The request to become a
