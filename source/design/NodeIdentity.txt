@@ -23,7 +23,7 @@ NodeReference takes the following form::
     urn           = "urn"
     node          = "node"
     identifier    = *( idchars )
-    idchars    = ALPHA / DIGIT / "_"
+    idchars       = ALPHA / DIGIT / "_"
       
 ALPHA and DIGIT are patterns representing the upper and lower ASCII letters [A-Za-z] and the
 ASCII digits [0-9], defined in the ABNF_ standard.
