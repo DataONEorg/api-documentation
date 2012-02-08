@@ -1,0 +1,70 @@
+Nodes and Node Identity in DataONE
+==================================
+
+.. contents::
+
+DataONE nodes are of two types, Coordinating Nodes and Member Nodes. Member Nodes
+are data and metadata providers that serve particular communities and that 
+agree to interoperate with other nodes using the DataONE Service Interface.
+Coordinating Nodes provide services to each other and to the network of Member 
+Nodes to enable DataONE to function as an integrated federation.
+
+Node Identifiers
+----------------
+Each node in DataONE is assigned a unique, immutable identifier which serves to
+link all information about the node together in the system.  References in various
+metadata documents in DataONE always utilize this NodeReference, as this will
+remain constant even as protocols and service endpoints evolve over time.  Thus,
+while the URL endpoint for a node's services may change over time, possibly even
+moving across domains, the NodeReference will always be constant.  The DataONE 
+NodeReference takes the following form::
+
+    NodeReference = urn ":" dataone ":" type ":" id
+    urn           = "urn"
+    dataone       = "dataone"
+    type          = "mn" / "cn"
+    identifier    = *( unreserved )
+    unreserved    = ALPHA / DIGIT / "-" / "." / "_" / "~"
+  
+For definitions of unreserved, ALPHA, and DIGIT, see RFC3986_.
+Thus, ``urn:dataone:`` is a constant prefix, always in lowercase, ``type`` is an
+indicator of the type of the node, and can either be ``mn`` or ``cn``, and ``identifier``
+is a short, unique name for the node.  For example, valid NodeReferences might include::
+
+    urn:dataone:mn:KNB
+    urn:dataone:mn:DRYAD
+    urn:dataone:cn:UCSB
+
+.. _RFC3986: http://www.rfc-editor.org/rfc/rfc3986.txt
+
+Node Authentication and Contact
+-------------------------------
+In order to become a Member Node (or Coordinating Node) in DataONE, the node must be
+able to be authenticated in order to be able to securely communicate with other nodes
+in the network using the DataONE service interface.  Thus, the first step in becoming
+a node is to request a DataONE node certificate that can be used to authenticate the node.
+This certificate is an X.509 certificate that is backed by a cryptographic key.  The
+certificate will contain the subject name of the node, which can be used to refer to the
+node.  Over time, these node certificates will expire and will need to be renewed by
+associating the new certificate with the NodeRefernce for this node.
+
+In addition, every node must have a contact person with whom DataONE can communicate
+about DataONE operations and policies as needed.  In order to register, the Distinguished
+Name for this person must be provided at registration.
+
+Node Registration
+-----------------
+Registration as a node in the DataONE network is accomplished by registering as a
+Member Node (or Coordinating Node) through an existing Coordinating Node 
+registration service (see :func:`CNRegister.register`). This service takes a :class:`Types.Node` 
+description as input, including
+a proposed :class:`Types.NodeReference` for this node and additional metadata such as the nodeContact
+in the Node description.   If the NodeReference is syntactically correct and is unique, 
+the registration service will successfully return the :class:`Types.NodeReference` value for this node, which is
+then permanently assigned and can not be reused or reassigned.  At this point, the
+the :class:`Types.Node` has been registered but has not yet been approved.  The request to become a
+node will be reviewed by DataONE, and, if approved, will be added to the list of
+Nodes in the federation.  At this point, the Node will be be able to participate in
+all synchronization and replication services available in DataONE.
+
+
