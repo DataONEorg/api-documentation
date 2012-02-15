@@ -55,7 +55,7 @@
      - :func:`registerSystemMetadata`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
    * - 
-     - ``POST /hasReservation``
+     - ``GET /reserve/{pid}?subject={subject}``
      - :func:`hasReservation`
      - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`, :class:`pid<Types.Identifier>`) ``->`` boolean
 
@@ -457,16 +457,14 @@
 
    A negative response is indicated by an exception and the associated HTTP status code.
 
-   The *pid* and *subjectInfo* are transmitted as a MIME Multipart/form-data message body.
-
-   :REST URL: ``POST /hasReservation``
+   :REST URL: ``GET /reserve/{pid}?subject={subject}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to an authority trusted by the DataONE Coordinating Nodes.  Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param subject: The subject of the :term:`principal` (user) that made the reservation.  Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
+   :param subject: The subject of the :term:`principal` (user) that made the reservation.  Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type subject: :class:`Types.Subject`
 
-   :param pid: The identifier that is being checked for existing as a reserved identifier or is in use as an identifier for an existing object. Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
+   :param pid: The identifier that is being checked for existing as a reserved identifier or is in use as an identifier for an existing object. Transmitted as part of the URL path and must be escaped accordingly.
    :type pid: :class:`Types.Identifier`
 
    :returns: True - subject has the reservation on the PID; False - the PID does not exist; False - the PID is already in use; False - the PID is reserved by somone else.

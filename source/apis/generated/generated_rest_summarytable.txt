@@ -95,9 +95,9 @@
    * - POST /meta
      - :func:`CNCore.registerSystemMetadata`
      - Provides a mechanism for adding system metadata independently of its associated object, such as when adding system metadata for data objects. This method is used internally by Coordinating Nodes.
-   * - POST /hasReservation
+   * - GET /reserve/{pid}?subject={subject}
      - :func:`CNCore.hasReservation`
-     - Checks to determine if the supplied *subject* is the owner of the reservation of *pid*. A positive response (that the *pid* is reserved and owned by *subject*) is indicated by a return of a HTTP status of 200. A negative response is indicated by an exception and the associated HTTP status code. The *pid* and *subjectInfo* are transmitted as a MIME Multipart/form-data message body.
+     - Checks to determine if the supplied *subject* is the owner of the reservation of *pid*. A positive response (that the *pid* is reserved and owned by *subject*) is indicated by a return of a HTTP status of 200. A negative response is indicated by an exception and the associated HTTP status code.
    * - GET /object/{pid}
      - :func:`CNRead.get`
      - Retrieves the object identified by *pid* from the node. If the object is not present on the node, then an :exc:`Exceptions.NotFound` error is raised, regardless of whether the object exists on another node in the DataONE system.

@@ -55,7 +55,7 @@
      - :func:`CNCore.registerSystemMetadata`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
    * - 
-     - ``POST /hasReservation``
+     - ``GET /reserve/{pid}?subject={subject}``
      - :func:`CNCore.hasReservation`
      - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`, :class:`pid<Types.Identifier>`) ``->`` boolean
 
