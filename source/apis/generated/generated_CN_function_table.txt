@@ -84,7 +84,7 @@
      - :func:`CNRead.listObjects`
      - (:class:`session<Types.Session>`, :class:`[fromDate]<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[formatId]<Types.ObjectFormatIdentifier>`, ``[replicaStatus]``, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.ObjectList`
    * - Tier 1
-     - ``GET /search/{queryType}?query={query}``
+     - ``GET /search/{queryType}/{query}``
      - :func:`CNRead.search`
      - (:class:`session<Types.Session>`, ``queryType``, ``query``) ``->`` :class:`Types.ObjectList`
    * - Tier 2

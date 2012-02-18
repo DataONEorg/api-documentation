@@ -35,7 +35,7 @@
      - :func:`listObjects`
      - (:class:`session<Types.Session>`, :class:`[fromDate]<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[formatId]<Types.ObjectFormatIdentifier>`, ``[replicaStatus]``, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.ObjectList`
    * - Tier 1
-     - ``GET /search/{queryType}?query={query}``
+     - ``GET /search/{queryType}/{query}``
      - :func:`search`
      - (:class:`session<Types.Session>`, ``queryType``, ``query``) ``->`` :class:`Types.ObjectList`
 
@@ -277,20 +277,20 @@
 
    Search the metadata catalog and return identifiers of metadata records that match the criteria.
 
-   Search may be implemented by more than one type of search engine. The queryType parameter indicates which search engine should be targeted.
+   Search may be implemented by more than one type of search engine. The queryType parameter indicates which search engine should be targeted. The value and form of *query* is determined by the search engine.
 
-   Currently supported search engines include: "SOLR"
+   Currently supported search engines include: "solr"
 
    :Use Cases:
      :doc:`UC02 </design/UseCases/02_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
-   :REST URL: ``GET /search/{queryType}?query={query}``
+   :REST URL: ``GET /search/{queryType}/{query}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
    :param queryType: Indicates which search engine will be used to handle the query. Currently supported search engines include: "SOLR". Transmitted as part of the URL path and must be escaped accordingly.
    :type queryType: string
 
-   :param query: The HTTP query string that will be passed on to the underlying search engine. This provides the criteria for matching the characteristics of the metadata objects of interest, expressed in the syntax of the chosen queryType. Transmitted as a URL query parameter, and so must be escaped accordingly.
+   :param query: The remainder of the URL is passed verbatim to the respective search engine implementation. Hence it may contain additional path elements and query elements as determined by the functinality of the search engine. Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type query: string
 
    :returns: A list of objects that match the specified search criteria

@@ -221,8 +221,8 @@ Note that date time precision is limited to one millisecond. If no timezone info
    * - \
      - :func:`CNRead.search`
      - Search the metadata catalog and return identifiers of metadata records that match the criteria.
-Search may be implemented by more than one type of search engine. The queryType parameter indicates which search engine should be targeted. 
-Currently supported search engines include: "SOLR"
+Search may be implemented by more than one type of search engine. The queryType parameter indicates which search engine should be targeted. The value and form of *query* is determined by the search engine.
+Currently supported search engines include: "solr"
 
        Appears in functional use cases: :doc:`UC02 </design/UseCases/02_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
    * - :mod:`CNAuthorization`
