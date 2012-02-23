@@ -1,0 +1,144 @@
+**Example**
+
+.. Note:: The *xml* command is implemented by XMLStarlet_, and is used here to
+          format the output for easier reading.
+
+.. _XMLStarlet: http://xmlstar.sourceforge.net/
+
+::
+
+  $ curl -s "http://cn-dev.dataone.org/cn/v1/node" | xml fo
+
+  <?xml version="1.0" encoding="UTF-8"?>
+  <?xml-stylesheet type="text/xsl" href="/cn/xslt/dataone.types.v1.xsl"?>
+  <d1:nodeList xmlns:d1="http://ns.dataone.org/service/types/v1">
+    <node replicate="false" synchronize="false" type="cn" state="up">
+      <identifier>c3p0</identifier>
+      <name>cn_dev</name>
+      <description>Development Protocol Coordinating Node</description>
+      <baseURL>https://cn-dev.dataone.org/cn</baseURL>
+      <services>
+        <service name="CNCore" version="v1" available="true"/>
+        <service name="CNRead" version="v1" available="true"/>
+        <service name="CNAuthorization" version="v1" available="true"/>
+        <service name="CNIdentity" version="v1" available="true"/>
+        <service name="CNReplication" version="v1" available="true"/>
+        <service name="CNRegister" version="v1" available="true"/>
+      </services>
+      <subject>cn=cn-dev.dataone.org,dc=dataone,dc=org</subject>
+      <contactSubject>cn=Robert Waltz A610,o=Google,c=US,dc=cilogon,dc=org</contactSubject>
+    </node>
+    <node replicate="false" synchronize="false" type="cn" state="up">
+      <identifier>c0t2</identifier>
+      <name>cn_dev_2</name>
+      <description>Development Protocol Coordinating Node 2</description>
+      <baseURL>https://cn-dev-2.dataone.org/cn</baseURL>
+      <services>
+        <service name="CNCore" version="v1" available="true"/>
+        <service name="CNRead" version="v1" available="true"/>
+        <service name="CNAuthorization" version="v1" available="true"/>
+        <service name="CNIdentity" version="v1" available="true"/>
+        <service name="CNReplication" version="v1" available="true"/>
+        <service name="CNRegister" version="v1" available="true"/>
+      </services>
+      <subject>cn=cn-dev-2.dataone.org,dc=dataone,dc=org</subject>
+      <contactSubject>cn=Robert Waltz A610,o=Google,c=US,dc=cilogon,dc=org</contactSubject>
+    </node>
+    <node replicate="false" synchronize="false" type="cn" state="up">
+      <identifier>c0t3</identifier>
+      <name>cn_dev_3</name>
+      <description>Development Protocol Coordinating Node Number 3</description>
+      <baseURL>https://cn-dev-3.dataone.org/cn</baseURL>
+      <services>
+        <service name="CNCore" version="v1" available="true"/>
+        <service name="CNRead" version="v1" available="true"/>
+        <service name="CNAuthorization" version="v1" available="true"/>
+        <service name="CNIdentity" version="v1" available="true"/>
+        <service name="CNReplication" version="v1" available="true"/>
+        <service name="CNRegister" version="v1" available="true"/>
+      </services>
+      <subject>cn=cn-dev-3.dataone.org,dc=dataone,dc=org</subject>
+      <contactSubject>cn=Robert Waltz A610,o=Google,c=US,dc=cilogon,dc=org</contactSubject>
+    </node>
+    <node replicate="true" synchronize="true" type="mn" state="up">
+      <identifier>r2d2</identifier>
+      <name>gmn-dev</name>
+      <description>Development AstroMech Member Node</description>
+      <baseURL>https://gmn-dev.test.dataone.org/mn</baseURL>
+      <services>
+        <service name="MNCore" version="v1" available="true"/>
+        <service name="MNRead" version="v1" available="true"/>
+        <service name="MNAuthorization" version="v1" available="true"/>
+        <service name="MNStorage" version="v1" available="true"/>
+        <service name="MNReplication" version="v1" available="true"/>
+      </services>
+      <synchronization>
+        <schedule hour="*" mday="*" min="0,5,10,15,20,25,30,35,40,45,50,55" mon="*" sec="0" wday="?" year="*"/>
+        <lastHarvested>2011-12-06T20:48:12.397+00:00</lastHarvested>
+        <lastCompleteHarvest>1900-01-01T00:00:00.000+00:00</lastCompleteHarvest>
+      </synchronization>
+      <subject>cn=r2d2,dc=dataone,dc=org</subject>
+      <contactSubject>cn=Robert Waltz A610,o=Google,c=US,dc=cilogon,dc=org</contactSubject>
+    </node>
+    <node replicate="true" synchronize="true" type="mn" state="up">
+      <identifier>m0t1</identifier>
+      <name>knb-test-1</name>
+      <description>Development Metacat Member Node 1</description>
+      <baseURL>https://knb-test-1.test.dataone.org/knb/d1/mn</baseURL>
+      <services>
+        <service name="MNCore" version="v1" available="true"/>
+        <service name="MNRead" version="v1" available="true"/>
+        <service name="MNAuthorization" version="v1" available="true"/>
+        <service name="MNStorage" version="v1" available="true"/>
+        <service name="MNReplication" version="v1" available="true"/>
+      </services>
+      <synchronization>
+        <schedule hour="*" mday="*" min="0,5,10,15,20,25,30,35,40,45,50,55" mon="*" sec="30" wday="?" year="*"/>
+        <lastHarvested>1900-01-01T00:00:00.000+00:00</lastHarvested>
+        <lastCompleteHarvest>1900-01-01T00:00:00.000+00:00</lastCompleteHarvest>
+      </synchronization>
+      <subject>cn=m0t1,dc=dataone,dc=org</subject>
+      <contactSubject>cn=Robert Waltz A610,o=Google,c=US,dc=cilogon,dc=org</contactSubject>
+    </node>
+    <node replicate="false" synchronize="false" type="mn" state="down">
+      <identifier>r6K4</identifier>
+      <name>Waltz Testing Node 1</name>
+      <description>A node to demonstrate DataONE services.</description>
+      <baseURL>https://waltz.test.net/knb/d1/mn</baseURL>
+      <services>
+        <service name="MNRead" version="1.0.0" available="true"/>
+        <service name="MNCore" version="1.0.0" available="true"/>
+        <service name="MNAuthorization" version="1.0.0" available="true"/>
+        <service name="MNStorage" version="1.0.0" available="true"/>
+        <service name="MNReplication" version="1.0.0" available="true"/>
+      </services>
+      <synchronization>
+        <schedule hour="*" mday="*" min="0,5,10,15,20,25,30,35,40,45,50,55" mon="*" sec="10" wday="?" year="*"/>
+        <lastHarvested>1900-01-01T00:00:00.000+00:00</lastHarvested>
+        <lastCompleteHarvest>1900-01-01T00:00:00.000+00:00</lastCompleteHarvest>
+      </synchronization>
+      <subject>cn=waltz.test.net,dc=dataone,dc=org</subject>
+      <contactSubject>cn=Robert Waltz A610,o=Google,c=US,dc=cilogon,dc=org</contactSubject>
+    </node>
+    <node replicate="false" synchronize="false" type="mn" state="up">
+      <identifier>t5z6</identifier>
+      <name>MBJ Test Node Updated</name>
+      <description>Updating Matt's test node description.</description>
+      <baseURL>http://mbjdev.magisa.org:8080/metacat/d1/mn</baseURL>
+      <services>
+        <service name="MNRead" version="v1" available="true"/>
+        <service name="MNCore" version="v1" available="true"/>
+        <service name="MNAuthorization" version="v1" available="true"/>
+        <service name="MNStorage" version="v1" available="true"/>
+        <service name="MNReplication" version="v1" available="true"/>
+      </services>
+      <synchronization>
+        <schedule hour="*" mday="*" min="0/3" mon="*" sec="10" wday="?" year="*"/>
+        <lastHarvested>1900-01-01T00:00:00.000+00:00</lastHarvested>
+        <lastCompleteHarvest>1900-01-01T00:00:00.000+00:00</lastCompleteHarvest>
+      </synchronization>
+      <subject>cn=MBJTEST,dc=dataone,dc=org</subject>
+      <contactSubject>cn=Robert Waltz A610,o=Google,c=US,dc=cilogon,dc=org</contactSubject>
+    </node>
+  </d1:nodeList>
+  
