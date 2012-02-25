@@ -451,16 +451,18 @@ Data Types in CICore
 ..                                    ######
 .. class:: CrontabEntry
 
-    A single value in the series of values that together form a single crontab entry. The format follows the syntax conventions defined by the `Quartz Scheduler`_.
+    A single value in the series of values that together form a single crontab entry. The format follows the syntax conventions defined by the `Quartz Scheduler`_, as excerpted here under the Apache 2 license:
 
     .. _Quartz Scheduler: http://www.quartz-scheduler.org/api/2.1.0/org/quartz/CronExpression.html
+
+    .. include:: Types_crontabentry.txt
 
     .. code-block:: xml
 
 
       <xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="CrontabEntry">
          <xs:restriction base="xs:token">
-            <xs:pattern xmlns:d1="http://ns.dataone.org/service/types/v1" value="([\?\*\d]{1,2}[\-,]?)+"/>
+            <xs:pattern xmlns:d1="http://ns.dataone.org/service/types/v1" value="([\?\*\d/#,\-a-zA-Z])+"/>
          </xs:restriction>
       </xs:simpleType>
 
@@ -740,7 +742,7 @@ Data Types in CICore
 
     Periodically a CN checks each replica to be sure it is both available and valid (matching checksum with original), and if it is either inaccessible or invalid then it marks it as *invalidated*, which indicates that the object replication needs to be invoked again.
 
-    The replication process is described in :doc:`UC09 &lt;/design/UseCases/09_uc&gt;`.
+    The replication process is described in Use Case 09 (:doc:`/design/UseCases/09_uc`).
 
     .. code-block:: xml
 
@@ -1023,7 +1025,7 @@ Data Types in CICore
 ..                                    ######
 .. class:: Identifier
 
-    An :term:`identifier` (:term:`PID`) in the DataONE system that is used to uniquely and globally identify an object. Identifiers can not be reused once assigned. Identifiers are represented by a Unicode string of printable characters, excluding :term:`whitespace`. All representations of identifiers must be encoded in 7-bit ASCII or UTF-8.
+    An :term:`identifier` (:term:`PID`) in the DataONE system that is used to uniquely and globally identify an object. Identifiers can not be reused once assigned. Identifiers can not be deleted from the DataONE system.Identifiers are represented by a Unicode string of printable characters, excluding :term:`whitespace`. All representations of identifiers must be encoded in 7-bit ASCII or UTF-8.
 
     Identifiers have a maximum length of 800 characters, and a variety of other properties designed for preservation and longevity. Some discussion on this is described in the `PID documentation`_ and in decision `ticket 577`_.
 
@@ -1089,7 +1091,7 @@ Data Types in CICore
 ..                                    ######
 .. class:: LogEntry
 
-    A single log entry as reported by a Member Node or Coordinating Node through the :func:`MNCore.getLogRecords` and :func:`CNCore.getLogRecords` methods.
+    A single log entry as reported by a Member Node or Coordinating Node through the :func:`MNCore.getLogRecords` or :func:`CNCore.getLogRecords` methods.
 
     .. attribute:: entryId
 
@@ -1123,7 +1125,7 @@ Data Types in CICore
 
       Type: :class:`Types.Subject`
 
-      The :term:`Subject` used for making the request. This may be the DataONE *public* user if the request is not authenticated, otherwise it will be the Subject of the certificate used for authenticating the request.
+      The :term:`Subject` used for making the request. This may be the DataONE :term:`public` user if the request is not authenticated, otherwise it will be the *Subject* of the certificate used for authenticating the request.
 
 
     .. attribute:: event
@@ -1270,7 +1272,7 @@ Data Types in CICore
 
       Type: :class:`Types.Subject`
 
-      The appropriate person or group to contact regarding the disposition, management, and status of this Member Node. The *Node.contactSubject* is an term:`X.509 Distinguished Name` for a person or group that can be used to look up current contact details (e.g., name, email address) for the contact in the DataONE Identity service. DataONE uses the *contactSubject* to provide notices of interest to DataONE nodes, including information such as policy changes, maintenance updates, node outage notifications, among other information useful for administering a node. Each node that is registered with DataONE must provide at least one *contactSubject* that has been :term:`verified` with DataONE.
+      The appropriate person or group to contact regarding the disposition, management, and status of this Member Node. The *Node.contactSubject* is an :term:`X.509 Distinguished Name` for a person or group that can be used to look up current contact details (e.g., name, email address) for the contact in the DataONE Identity service. DataONE uses the *contactSubject* to provide notices of interest to DataONE nodes, including information such as policy changes, maintenance updates, node outage notifications, among other information useful for administering a node. Each node that is registered with DataONE must provide at least one *contactSubject* that has been :term:`verified` with DataONE.
 
 
     .. attribute:: replicate
@@ -1383,7 +1385,7 @@ Data Types in CICore
 
       Type: :class:`Types.xs.unsignedLong`
 
-      An optional statement of the maximum size in bytes of objects this node is willing to accept for replication.
+      An optional statement of the maximum size in octets (8-bit bytes) of objects this node is willing to accept for replication.
 
 
     .. attribute:: spaceAllocated
@@ -1479,7 +1481,7 @@ Data Types in CICore
 ..                                    ######
 .. class:: NodeReference
 
-    A unique identifier for a Member Node. The *NodeReference* must be unique across Member Nodes, and must always be assigned to one Member Node instance even in the event of the *BaseURL* or other characteristics changing.
+    A unique identifier for a DataONE Node. The *NodeReference* must be unique across nodes, and must always be assigned to one Member or Coordinating Node instance even in the event of the *BaseURL* or other characteristics changing.
 
     .. code-block:: xml
 
@@ -1691,7 +1693,7 @@ Data Types in CICore
 ..                                    ######
 .. class:: ObjectLocation
 
-    Portion of an :class:`Types.ObjectLocationList` indicating the node from which the object can be retrieved. The principal information on each location is found in the *nodeIdentifier*, all other fields are provided for convenience, but could also be looked up from the Node list information.
+    Portion of an :class:`Types.ObjectLocationList` indicating the node from which the object can be retrieved. The principal information on each location is found in the *nodeIdentifier*, all other fields are provided for convenience, but could also be looked up from the :class:`Types.NodeList` information obtained from :func:`CNCore.listNodes`.
 
     .. attribute:: nodeIdentifier
 
@@ -1721,14 +1723,14 @@ Data Types in CICore
       The full (absolute) URL that can be used to retrieve the object using the get() method of the rest interface.
 
 
-      For example, if identifier was "ABX154", and the node had a base URL of ``http://mn1.dataone.org/mn`` then the value would be ``http://mn1.dataone.org/mn/object/ABX154``
+      For example, if identifier was "ABX154", and the node had a base URL of ``http://mn1.dataone.org/mn`` then the value would be ``http://mn1.dataone.org/mn/v1/object/ABX154``
 
 
     .. attribute:: preference
 
       Type: :class:`Types.xs.int`
 
-      A weighting parameter that provides a hint to the caller for the relative preference for nodes from which the content should be retrieved.
+      A weighting parameter that provides a hint to the caller for the relative preference for nodes from which the content should be retrieved. Higher values have higher preference.
 
 
     .. code-block:: xml
@@ -1826,14 +1828,14 @@ Data Types in CICore
 
       Type: :class:`Types.Subject`
 
-      The unique, immutable identifier for the person.
+      The unique, immutable identifier for the *Person*.
 
 
     .. attribute:: givenName
 
       Type: :class:`Types.NonEmptyString`
 
-      The given name of the Person, repeatable if they have more than one given name.
+      The given name of the *Person*, repeatable if they have more than one given name.
 
 
     .. attribute:: familyName
@@ -1854,7 +1856,7 @@ Data Types in CICore
 
       Type: :class:`Types.Subject`
 
-      A group or role in which the *Person* is a member, expressed using the unique :class:`Types.Subject` identifier for that :class:`Types.Group`, and repeatable if they are a member of more than one group.
+      A *group* or role in which the *Person* is a member, expressed using the unique :class:`Types.Subject` identifier for that :class:`Types.Group`, and repeatable if they are a member of more than one group.
 
 
     .. attribute:: equivalentIdentity
@@ -1868,7 +1870,7 @@ Data Types in CICore
 
       Type: :class:`Types.xs.boolean`
 
-      *true* if the name and email address of the *Person* have been :term:`verified` to ensure that the *givenName* and *familyName* represent the real person's legal name, and that the email address is correct for that person and is in the control of the indicated individual. Verification occurs through a established procedure within DataONE as part of the Identity Management system. A Person can not change their own *verified* field, but rather must be verified and changed through this DataONE established process.
+      *true* if the name and email address of the *Person* have been :term:`verified` to ensure that the *givenName* and *familyName* represent the real person's legal name, and that the email address is correct for that person and is in the control of the indicated individual. Verification occurs through an established procedure within DataONE as part of the Identity Management system. A Person can not change their own *verified* field, but rather must be verified and changed through this DataONE established process.
 
 
     .. code-block:: xml
@@ -1963,7 +1965,7 @@ Data Types in CICore
 ..                                    ######
 .. class:: Replica
 
-    Replica information that describes the existence of a replica, and its status.
+    Replica information that describes the existence of a replica of some object managed by the DataONE infrastructure, and its status.
 
     .. attribute:: replicaMemberNode
 
@@ -2441,7 +2443,7 @@ Data Types in CICore
 
     An identifier for a Person (user), Group, Organization, or System.
 
-    The :term:`Subject` is a string that provides a formal name to identify a user or group in the DataONE Identity Management Service. The *subject* is represented by a unique, persistent, non-reassignable identifier string that follows the same constraints as :class:`Types.Identifier`.
+    The :term:`Subject` is a string that provides a formal name to identify a user or group in the DataONE Identity Management Service. The *subject* is represented by a unique, persistent, non-reassignable identifier string that follows the same constraints as :class:`Types.Identifier`. Subjects are immutable and can not be deleted.
 
     .. code-block:: xml
 
@@ -2471,7 +2473,7 @@ Data Types in CICore
 ..                                    ######
 .. class:: SubjectInfo
 
-    A list of :term:`Subjects`, including both :class:`Types.Person`s and :class:`Types.Group`s, that is returned from the :func:`CNIdentity.getSubjectInfo` service and :func:`CNIdentity.listSubjects` service.
+    A list of :term:`Subjects`, including both :class:`Types.Person` and :class:`Types.Group` entries returned from the :func:`CNIdentity.getSubjectInfo` service and :func:`CNIdentity.listSubjects` services.
 
     .. attribute:: person
 
@@ -2542,7 +2544,7 @@ Data Types in CICore
 ..                                    ######
 .. class:: SystemMetadata
 
-    System metadata (often referred to as :term:`sysmeta`) is the information used by DataONE to track and manage objects across the distributed Coordinating and Member Nodes of the network. System metadata documents contain low level information (e.g. size, type, owner, access control rules) about managed objects such as science data, science metadata, and resource map objects and the relationships between objects (e.g. obsoletes and obsoletedBy).
+    System metadata (often referred to as :term:`sysmeta`) is the information used by DataONE to track and manage objects across the distributed Coordinating and Member Nodes of the network. System metadata documents contain low level information (e.g. size, type, owner, access control rules) about managed objects such as science data, science metadata, and resource map objects and the relationships between objects (e.g. *obsoletes* and *obsoletedBy*).
 
     The information is maintained dynamically by Coordinating Nodes and is mutable in that it reflects the current state of an object in the system. Initial properties of system metadata are generated by clients and Member Nodes. After object synchronization, the Coordinating Nodes hold authoritative copies of system metadata. Mirror copies of system metadata are maintained at each of the Coordinating nodes.
 
@@ -2570,7 +2572,7 @@ Data Types in CICore
       would be:
 
 
-      ``http://mn1.server.name/mn/http:%2F%2Fsome.location.name%2Fmydata.cgi%3Fid%3D2088``
+      ``http://mn1.server.name/mn/v1/object/http:%2F%2Fsome.location.name%2Fmydata.cgi%3Fid%3D2088``
 
 
       .. _RFC3896: http://www.ietf.org/rfc/rfc3896.txt
@@ -2587,7 +2589,7 @@ Data Types in CICore
 
       Type: :class:`Types.xs.unsignedLong`
 
-      The size of the object in bytes.
+      The size of the object in octets (8-bit bytes).
 
 
     .. attribute:: checksum
@@ -2678,7 +2680,7 @@ Data Types in CICore
 
       Type: :class:`Types.Replica`
 
-      A container field used to repeatedly provide several metadata fields about each replica that exists in the system, or is being replicated. Note that a Replica field exists even for the Authoritative/Origin Member Nodes so that the status of those objects can be tracked.
+      A container field used to repeatedly provide several metadata fields about each replica that exists in the system, or is being replicated. Note that a *replica* field exists even for the Authoritative/Origin Member Nodes so that the status of those objects can be tracked.
 
 
     .. code-block:: xml

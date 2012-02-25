@@ -66,9 +66,9 @@
   The milliseconds may be left off if that precision is not available.
 
   In addition, in any methods that use date time values in HTTP headers, the
-  serialization will follow the HTTP Full DateTime standard (RFC 1123):
+  serialization will follow the `HTTP Full Date`_ standard (RFC 1123), e.g::
 
-    - `HTTP Full Date`_ format. e.g. `Sun, 06 Nov 1994 08:49:37 GMT`
+    Sun, 06 Nov 1994 08:49:37 GMT
 
   In Java, code against `java.util.Date`_, though serialization and
   deserialization will be performed with `org.joda.DateTime`_ to ensure
@@ -152,7 +152,7 @@
 
   Example of a HEAD response on object "ABC123"::
 
-    curl -I http://mn1.dataone.org/mn/object/ABC123
+    curl -I http://mn1.dataone.org/mn/v1/object/ABC123
 
     HTTP/1.1 200 OK
     Last-Modified: Wed, 16 Dec 2009 13:58:34 GMT
