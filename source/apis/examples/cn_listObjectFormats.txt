@@ -1,127 +1,25 @@
-**Response**
+**Example**
 
-:class:`Types.ObjectFormatList` serialized according to the requested format as
-indicated in the ``Accept:`` HTTP header.
+::
 
-The expected response when a user agent sends a GET request to a Coordinating 
-Node exposing the DataONE REST API ``/formats`` collection is a full list of 
-object formats that the Coordinating Node has registered.
-
-Expressed in a JSON representation::
-
-  {
-    'start': <integer>,
-    'count': <integer>,
-    'total': <integer>,
-    'objectFormat':
-    [
-      {
-        'identifier': <IdentifierType>,
-        'formatName': <string>
-      },
-      ...
-    ]
-  }
-  
-Expressed in a CSV representation, with one entry per line, comma delimited 
-fields, new line delimited records::
-
-  identifier, formatName
-  "<identifier>", "<object format name>"
-
-Expressed in an XML representation::
-
-  <?xml version="1.0" encoding="utf-8" ?>
-  <d1:objectFormatList
-    xmlns:d1="http://dataone.org/service/types/ObjectFormatList/0.6"
-    xmlns:common="http://dataone.org/service/types/common/0.6"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    start="_integer_" count="_integer_" total="_integer_">
-    <objectFormat identifier="_identifier_">
-      <formatName>_object format name_</formatName>
+  curl "http://cn.dataone.org/cn/v1/formats"
+  <?xml version="1.0" encoding="UTF-8"?>
+  <?xml-stylesheet type="text/xsl" href="/cn/xslt/dataone.types.v1.xsl"?>
+  <d1:objectFormatList xmlns:d1="http://ns.dataone.org/service/types/v1" count="67" start="0" total="67">
+    <objectFormat>
+      <formatId>-//ecoinformatics.org//eml-access-2.0.0beta4//EN</formatId>
+      <formatName>Ecological Metadata Language, Access module, version 2.0.0beta4</formatName>
+      <formatType>METADATA</formatType>
+    </objectFormat>
+    <objectFormat>
+      <formatId>-//ecoinformatics.org//eml-attribute-2.0.0beta4//EN</formatId>
+      <formatName>Ecological Metadata Language, Attribute module, version 2.0.0beta4</formatName>
+      <formatType>METADATA</formatType>
+    </objectFormat>
+    <objectFormat>
+      <formatId>-//ecoinformatics.org//eml-constraint-2.0.0beta4//EN</formatId>
+      <formatName>Ecological Metadata Language, Constraint module, version 2.0.0beta4</formatName>
+      <formatType>METADATA</formatType>
     </objectFormat>
     ...
   </d1:objectFormatList>
-  
-Expressed in an RDF/XML representation::
-
-  <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:d1='http://ns.dataone.org/core/objects/'>
-    <rdf:Description rdf:about="_requesting URL_">
-      <d1:start>_integer_</d1:start>
-      <d1:count>_integer_</d1:count>
-      <d1:total>_integer_</d1:total>
-    </rdf:Description>
-    <rdf:Description rdf:about="_requesting URL_">
-      <d1:objectFormat rdf:parseType="Collection">
-        <rdf:Description rdf:about="http://cn.dataone.org/d1/formats/_identifier_">
-          <d1:formatName>_object format name_</d1:formatName>
-        </rdf:Description>
-      </d1:objectFormat>
-    </rdf:Description>  
-  </rdf:RDF>
-
-**Examples**
-
-Retrieve a list of object formats from a Coordinating Node in XML format::
-
-  curl -X GET -H "Accept: application/xml" http://cn.dataone.org/d1/formats/
-  
-  <?xml version="1.0" encoding="utf-8" ?>
-  <d1:objectFormatList
-    xmlns:d1="http://dataone.org/service/types/ObjectFormatList/0.6"
-    xmlns:common="http://dataone.org/service/types/common/0.6"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    start="0" count="453" total="453">
-    <objectFormat identifier="eml://ecoinformatics.org/eml-2.0.0">
-      <formatName>Ecological Metadata Language, version 2.0.0</formatName>
-    </objectFormat>
-    <objectFormat identifier="FGDC-STD-001.1-1999">
-      <formatName>
-        Federal Geographic Data Committee Content Standard 
-        for Digital Geospatial Metadata, version 001.1-1999
-      </formatName>
-    </objectFormat>
-    <objectFormat identifier="text/csv">
-      <formatName>Comma Separated Values</formatName>
-    </objectFormat>
-    ...
-  </d1:objectFormatList>
-
-Retrieve a list of object formats from a Coordinating Node in JSON format::
-
-  curl -X GET -H "Accept: application/json" http://cn.dataone.org/d1/formats/
-  
-  {
-    'start': 0,
-    'count': 453,
-    'total': 453,
-    'objectFormat': 
-      [
-        {
-          'identifier': 'eml://ecoinformatics.org/eml-2.0.0',
-          'formatName': 'Ecological Metadata Language, version 2.0.0'
-        },
-        {
-          'identifier': 'FGDC-STD-001.1-1999',
-          'formatName': 'Federal Geographic Data Committee Content Standard 
-                         for Digital Geospatial Metadata, version 001.1-1999'
-        },
-        {
-          'identifier': 'text/csv',
-          'formatName': 'Comma Separated Values'
-        },
-        ...
-      ]
-  }
-
-Retrieve a list of object formats from a Coordinating Node in CSV format::
-
-  curl -X GET -H "Accept: text/csv" http://cn.dataone.org/d1/formats/
-
-  identifier, formatName
-  eml://ecoinformatics.org/eml-2.0.0, Ecological Metadata Language, version 2.0.0
-  FGDC-STD-001.1-1999, Federal Geographic Data Committee Content Standard for Digital Geospatial Metadata, version 001.1-1999
-  text/csv, Comma Separated Values
-  ...
-  

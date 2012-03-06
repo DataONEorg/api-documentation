@@ -2,7 +2,7 @@
 
 (HEAD) Retrieve information about the object with identifier "ABC123"::
 
-  curl -I http://mn1.dataone.org/mn/object/ABC123
+  curl -I http://mn1.dataone.org/mn/v1/object/ABC123
 
   HTTP/1.1 200 OK
   Last-Modified: Wed, 16 Dec 2009 13:58:34 GMT
@@ -15,7 +15,7 @@
 
 (HEAD) An error response to a describe() request for object "IDONTEXIST"::
 
-  curl -I http://mn1.dataone.org/mn/object/IDONTEXIST
+  curl -I http://mn1.dataone.org/mn/v1/object/IDONTEXIST
 
   HTTP/1.1 404 Not Found
   Last-Modified: Wed, 16 Dec 2009 13:58:34 GMT

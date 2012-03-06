@@ -2,7 +2,8 @@
 
 ::
 
-  $ curl -i  "http://cn-dev.dataone.org/cn/v1/monitor/ping"
+  export NODE=http://cn-dev.dataone.org/cn
+  $ curl -i  "$NODE/v1/monitor/ping"
   HTTP/1.1 200 OK
   Date: Mon, 13 Feb 2012 15:47:57 GMT
   Server: Apache/2.2.14 (Ubuntu)

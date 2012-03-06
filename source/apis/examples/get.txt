@@ -1,44 +1,25 @@
-**Examples**
+  **Examples**
 
-(GET) Retrieve the object with identifier "XYZ332"::
+  (GET) Retrieve the object with identifier "XYZ332"::
 
-  curl http://m1.dataone.org/mn/object/XYZ332
-  
-  ... data ...
+    export NODE="https://demo2.test.dataone.org/knb/d1/mn"
+    curl -k "$NODE/object/XYZ332"
 
-(GET) Attempt to retrieve a non-existent object (and show headers in response)::
+    ... data ...
 
-  curl -D - http://m1.dataone.org/mn/object/XYZ33255
+  (GET) Attempt to retrieve a non-existent object (and show headers in response)::
 
-  HTTP/1.1 404 Not Found
-  Content-Type: 
-  Date: Wed, 16 Dec 2009 13:58:34 GMT
-  Content-Length: 355
+    export NODE="https://demo2.test.dataone.org/knb/d1/mn"
+    curl -D - "$NODE/v1/object/DOESNTEXIST"
 
+    HTTP/1.1 404 Not Found
+    Date: Tue, 06 Mar 2012 15:25:35 GMT
+    Server: Apache/2.2.14 (Ubuntu)
+    Content-Length: 196
+    Vary: Accept-Encoding
+    Content-Type: text/xml
 
-  <html>
-    <head>
-      <meta http-equiv="content-type" content="text/html;charset=utf-8">
-      <title>Error: 404 Not Found (1020)</title>
-    </head>
-    <body>
-      <p>
-        <dl>
-          <dt>Code</dt>
-          <dd class="errorCode">404</dd>
-          <dt>Detail Code</dt>
-          <dd class="detailCode">1020</dd>
-        </dl>
-      </p>
-      <p class="description">The specificed object does not exist on this node.</p>
-      <dl class="traceInformation">
-        <dt>identifier</dt>
-        <dd>123XYZ</dd>
-        <dt>method</dt>
-        <dd>mn.get</dd>
-        <dt>hint</dt>
-        <dd>Please try <a href='http://cn.dataone.org/cn/resolve/123XYZ'> resolving</a>
-            at a <a href='http://dataone.org'>DataONE</a> Coordinating Node.</dd>
-      </dl>
-    </body>
-  </html>
+    <?xml version="1.0" encoding="UTF-8"?>
+    <error detailCode="1800" errorCode="404" name="NotFound">
+       <description>No system metadata could be found for given PID: DOESNTEXIST</description>
+    </error>
