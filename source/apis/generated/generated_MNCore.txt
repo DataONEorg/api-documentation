@@ -17,7 +17,7 @@
    * - Tier 1
      - ``GET /log``
      - :func:`getLogRecords`
-     - (:class:`session<Types.Session>`, :class:`[fromDate]<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.Log`
+     - (:class:`session<Types.Session>`, :class:`[fromDate]<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`, ``[start=0]``, ``[count=1000]``, :class:`[pid]<Types.Identifier>`) ``->`` :class:`Types.Log`
    * - Tier 1
      - ``GET /  and  GET /node``
      - :func:`getCapabilities`
@@ -58,7 +58,7 @@
 
 
 
-.. function:: getLogRecords(session,[fromDate],[toDate],[event],[start=0],[count=1000]) -> Log
+.. function:: getLogRecords(session,[fromDate],[toDate],[event],[start=0],[count=1000],[pid]) -> Log
 
    Retrieve log information from the Member Node for the specified date range and even type.
 
@@ -88,6 +88,9 @@
 
    :param count=1000: Optional maximum number of log records to return in the response. Used to assist with paging the response. Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type count=1000: integer
+
+   :param pid: Return only log records for identifiers that start with the supplied identifier string. Support for this parameter is optional and MAY be ignored by the Member Node implementation with no warning.  Transmitted as a URL query parameter, and so must be escaped accordingly.
+   :type pid: :class:`Types.Identifier`
 
    :returns:
    :rtype: :class:`Types.Log`

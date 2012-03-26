@@ -29,7 +29,7 @@
    * - Tier 1
      - ``GET /log?[fromdate={fromDate}][&todate={toDate}][&event={event}][&start={start}][&count={count}]``
      - :func:`getLogRecords`
-     - (:class:`session<Types.Session>`, :class:`[fromDate]<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`, ``[start]``, ``[count]``) ``->`` :class:`Types.Log`
+     - (:class:`session<Types.Session>`, :class:`[fromDate]<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`, ``[start]``, ``[count]``, :class:`[pid]<Types.Identifier>`) ``->`` :class:`Types.Log`
    * - Tier 1
      - ``POST /reserve``
      - :func:`reserveIdentifier`
@@ -200,7 +200,7 @@
 
 
 
-.. function:: getLogRecords(session,[fromDate],[toDate],[event],[start],[count]) -> Log
+.. function:: getLogRecords(session,[fromDate],[toDate],[event],[start],[count],[pid]) -> Log
 
    Retrieves consolidated log information for the specified date range (fromDate < timestamp <= toDate) for the entire DataONE infrastructure
 
@@ -226,6 +226,9 @@
 
    :param count: The number of log records to return in the response. Default is 1000. Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type count: integer
+
+   :param pid: Return only log records for identifiers that start with the supplied identifier string. Support for this parameter is optional and MAY be ignored by the Coordinating Node implementation with no warning.  Transmitted as a URL query parameter, and so must be escaped accordingly.
+   :type pid: :class:`Types.Identifier`
 
    :returns:
    :rtype: :class:`Types.Log`

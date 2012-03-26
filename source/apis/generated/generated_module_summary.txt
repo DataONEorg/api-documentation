@@ -93,6 +93,10 @@ The modified system metadata entries must then be available in :func:`MNRead.lis
 
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
    * - \
+     - :func:`MNStorage.generateIdentifier`
+     - Given a scheme and optional fragment, generates an identifier with that scheme and fragment that is unique.
+The message body is encoded as MIME Multipart/form-data
+   * - \
      - :func:`MNStorage.delete`
      - Deletes an object managed by DataONE from the Member Node. This method is called by clients to delete objects on Member nodes. Member Nodes MUST check that the caller is authorized to perform this function.
 The operation does not delete the object bytes, but instead sets the :attr:`Types.SystemMetadata.archived` flag to True. This ensures that the object can still be resolved (and hence remain valid for existing citations and cross references), though will not appear in searches.

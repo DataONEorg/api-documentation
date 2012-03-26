@@ -1,6 +1,24 @@
 Change Log
 ==========
 
+2012-03-25: Version 1.0, MethodCrossReference.xls
+-------------------------------------------------
+
+- :func:`MNCore.getLogRecords` added an optional parameter *pid* that specifies
+  the prefix of the pid for matching on log records. Support for this parameter
+  is optional, and a MN implementation may silently ignore if present in the
+  request and the node is unable to support the pid prefix filter.
+
+- :func:`CNCore.getLogRecords` added an optional parameter *pid* that specifies
+  the prefix of the pid for matching on log records. Support for this parameter
+  is currently optional for CNs, and may be ignored if present in the request.
+
+- :func:`MNStorage.GenerateIdentifier` new method added to the MNStorage API.
+  This signature mirrors the CNCore.GenerateIdentifier method and is made
+  available on Member Nodes as they may choose to have an organizational
+  association with an identifier service.
+
+
 2012-02-27: Version 1.0, MethodCrossReference.xls
 --------------------------------------------------
 

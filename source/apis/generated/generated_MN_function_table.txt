@@ -17,7 +17,7 @@
    * - Tier 1
      - ``GET /log``
      - :func:`MNCore.getLogRecords`
-     - (:class:`session<Types.Session>`, :class:`[fromDate]<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.Log`
+     - (:class:`session<Types.Session>`, :class:`[fromDate]<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`, ``[start=0]``, ``[count=1000]``, :class:`[pid]<Types.Identifier>`) ``->`` :class:`Types.Log`
    * - Tier 1
      - ``GET /  and  GET /node``
      - :func:`MNCore.getCapabilities`
@@ -59,6 +59,10 @@
      - ``PUT /object/{pid}``
      - :func:`MNStorage.update`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, ``object``, :class:`newPid<Types.Identifier>`, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
+   * - Tier 3
+     - ``POST /generate``
+     - :func:`MNStorage.generateIdentifier`
+     - (:class:`session<Types.Session>`, ``scheme``, ``[fragment]``) ``->`` :class:`Types.Identifier`
    * - Tier 3
      - ``DELETE /object/{pid}``
      - :func:`MNStorage.delete`

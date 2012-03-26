@@ -19,6 +19,10 @@
      - :func:`update`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, ``object``, :class:`newPid<Types.Identifier>`, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
    * - Tier 3
+     - ``POST /generate``
+     - :func:`generateIdentifier`
+     - (:class:`session<Types.Session>`, ``scheme``, ``[fragment]``) ``->`` :class:`Types.Identifier`
+   * - Tier 3
      - ``DELETE /object/{pid}``
      - :func:`delete`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Identifier`
@@ -153,6 +157,46 @@
 
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=1202)``
 
+
+
+
+.. function:: generateIdentifier(session,scheme,[fragment]) -> Identifier
+
+   Given a scheme and optional fragment, generates an identifier with that scheme and fragment that is unique.
+
+   The message body is encoded as MIME Multipart/form-data
+
+   :REST URL: ``POST /generate``
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
+   :type session: :class:`Types.Session`
+
+   :param scheme: The name of the identifier scheme to be used, drawn from a DataONE-specific vocabulary of identifier scheme names, including several common syntaxes such as DOI, ARK, LSID, UUID, and LSRN, among others. The first version of this method only supports the UUID scheme, and ignores the fragment parameter.  Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
+   :type scheme: string
+
+   :param fragment: The optional fragment to include in the generated Identifier. This parameter is optional and may not be present in the message body. Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
+   :type fragment: string
+
+   :returns: The identifier that was generated
+   :rtype: :class:`Types.Identifier`
+
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=2190)``
+
+     The supplied authentication token is not a proper certificate, or missing required fields, or otherwise proves invalid.
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2191)``
+
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=2192)``
+
+     Supplied credentials does not have WRITE permission
+
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=2193)``
+
+     The scheme requested is not a valid scheme accepted by this service
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2194)``
+
+.. TODO::
+    Need to provide a list of recommended identifier schemes.
 
 
 
