@@ -15,9 +15,9 @@
      - :func:`MNCore.ping`
      - () ``->`` null
    * - Tier 1
-     - ``GET /log``
+     - ``GET /log?[fromdate={fromDate}][&todate={toDate}][&event={event}][&start={start}][&count={count}][&pidFilter={pidFilter}]``
      - :func:`MNCore.getLogRecords`
-     - (:class:`session<Types.Session>`, :class:`[fromDate]<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`, ``[start=0]``, ``[count=1000]``, :class:`[pid]<Types.Identifier>`) ``->`` :class:`Types.Log`
+     - (:class:`session<Types.Session>`, :class:`[fromDate]<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`, ``[start=0]``, ``[count=1000]``, ``[pidFilter]``) ``->`` :class:`Types.Log`
    * - Tier 1
      - ``GET /  and  GET /node``
      - :func:`MNCore.getCapabilities`

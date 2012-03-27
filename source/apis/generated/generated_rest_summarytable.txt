@@ -8,7 +8,7 @@
    * - GET /monitor/ping
      - :func:`MNCore.ping`
      - Low level "are you alive" operation. A valid ping response is indicated by a HTTP status of 200. A timestmap indicating the current system time (UTC) on the node MUST be returned in the HTTP Date header. The Member Node should perform some minimal internal functionality testing before answering. However, ping checks will be frequent (every few minutes) so the internal functionality test should not be high impact. Any status response other than 200 indicates that the node is offline for DataONE operations. Note that the timestamp returned in the Date header should follow the semantics as described in the HTTP specifications, http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.18 The response body will be ignored by the caller expect in the case of an error, in which case the response body should contain the appropriate DataONE exception.
-   * - GET /log
+   * - GET /log?[fromdate={fromDate}][&todate={toDate}][&event={event}][&start={start}][&count={count}][&pidFilter={pidFilter}]
      - :func:`MNCore.getLogRecords`
      - Retrieve log information from the Member Node for the specified date range and even type. This method is used primarily by the log aggregator to generate aggregate statistics for nodes, objects, and the methods of access. The response MUST contain only records for which the requestor has permission to read. Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed. Access control for this method MUST be configured to allow calling by Coordinating Nodes and MAY be configured to allow more general access.
    * - GET /  and  GET /node
@@ -77,7 +77,7 @@
    * - GET /formats/{formatId}
      - :func:`CNCore.getFormat`
      - Returns the object format registered in the DataONE Object Format Vocabulary for the given format identifier.
-   * - GET /log?[fromdate={fromDate}][&todate={toDate}][&event={event}][&start={start}][&count={count}]
+   * - GET /log?[fromdate={fromDate}][&todate={toDate}][&event={event}][&start={start}][&count={count}][&pidFilter={pidFilter}]
      - :func:`CNCore.getLogRecords`
      - Retrieves consolidated log information for the specified date range (fromDate < timestamp <= toDate) for the entire DataONE infrastructure Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed.
    * - POST /reserve

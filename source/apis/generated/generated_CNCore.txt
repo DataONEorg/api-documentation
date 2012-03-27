@@ -27,9 +27,9 @@
      - :func:`getFormat`
      - (:class:`formatId<Types.ObjectFormatIdentifier>`) ``->`` :class:`Types.ObjectFormat`
    * - Tier 1
-     - ``GET /log?[fromdate={fromDate}][&todate={toDate}][&event={event}][&start={start}][&count={count}]``
+     - ``GET /log?[fromdate={fromDate}][&todate={toDate}][&event={event}][&start={start}][&count={count}][&pidFilter={pidFilter}]``
      - :func:`getLogRecords`
-     - (:class:`session<Types.Session>`, :class:`[fromDate]<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`, ``[start]``, ``[count]``, :class:`[pid]<Types.Identifier>`) ``->`` :class:`Types.Log`
+     - (:class:`session<Types.Session>`, :class:`[fromDate]<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`, ``[start]``, ``[count]``, ``[pidFilter]``) ``->`` :class:`Types.Log`
    * - Tier 1
      - ``POST /reserve``
      - :func:`reserveIdentifier`
@@ -200,7 +200,7 @@
 
 
 
-.. function:: getLogRecords(session,[fromDate],[toDate],[event],[start],[count],[pid]) -> Log
+.. function:: getLogRecords(session,[fromDate],[toDate],[event],[start],[count],[pidFilter]) -> Log
 
    Retrieves consolidated log information for the specified date range (fromDate < timestamp <= toDate) for the entire DataONE infrastructure
 
@@ -208,7 +208,7 @@
 
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`
-   :REST URL: ``GET /log?[fromdate={fromDate}][&todate={toDate}][&event={event}][&start={start}][&count={count}]``
+   :REST URL: ``GET /log?[fromdate={fromDate}][&todate={toDate}][&event={event}][&start={start}][&count={count}][&pidFilter={pidFilter}]``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
@@ -227,8 +227,8 @@
    :param count: The number of log records to return in the response. Default is 1000. Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type count: integer
 
-   :param pid: Return only log records for identifiers that start with the supplied identifier string. Support for this parameter is optional and MAY be ignored by the Coordinating Node implementation with no warning.  Transmitted as a URL query parameter, and so must be escaped accordingly.
-   :type pid: :class:`Types.Identifier`
+   :param pidFilter: Return only log records for identifiers that start with the supplied identifier string. Support for this parameter is optional and MAY be ignored by the Coordinating Node implementation with no warning.  Transmitted as a URL query parameter, and so must be escaped accordingly.
+   :type pidFilter: string
 
    :returns:
    :rtype: :class:`Types.Log`

@@ -29,7 +29,7 @@
    * - Tier 2
      - ``GET /accounts?query={query}[&status={status}&start={start}&count={count}]``
      - :func:`listSubjects`
-     - (:class:`session<Types.Session>`, :class:`query<Types.String>`, :class:`status<Types.String>`, ``start``, ``count``) ``->`` :class:`Types.SubjectInfo`
+     - (:class:`session<Types.Session>`, ``query``, ``status``, ``start``, ``count``) ``->`` :class:`Types.SubjectInfo`
    * - Tier 2
      - ``POST /accounts/map``
      - :func:`mapIdentity`
@@ -230,10 +230,10 @@
    :type session: :class:`Types.Session`
 
    :param query: A query string criteria to be matched using a case-insensitive substring match against the identifier for the principal, the givenName or familyName of users, and the groupName of groups.  The function returns the union of all successful matches against these fields. Transmitted as a URL query parameter, and so must be escaped accordingly.
-   :type query: :class:`Types.String`
+   :type query: string
 
    :param status: When provided, the status field can limit the returned list of Subjects to only those with the given status. Currently the 'verified' status is supported. Transmitted as a URL query parameter, and so must be escaped accordingly.
-   :type status: :class:`Types.String`
+   :type status: string
 
    :param start: The starting record number for the records to be returned (default = 0). Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type start: integer

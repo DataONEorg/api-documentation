@@ -27,9 +27,9 @@
      - :func:`CNCore.getFormat`
      - (:class:`formatId<Types.ObjectFormatIdentifier>`) ``->`` :class:`Types.ObjectFormat`
    * - Tier 1
-     - ``GET /log?[fromdate={fromDate}][&todate={toDate}][&event={event}][&start={start}][&count={count}]``
+     - ``GET /log?[fromdate={fromDate}][&todate={toDate}][&event={event}][&start={start}][&count={count}][&pidFilter={pidFilter}]``
      - :func:`CNCore.getLogRecords`
-     - (:class:`session<Types.Session>`, :class:`[fromDate]<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`, ``[start]``, ``[count]``, :class:`[pid]<Types.Identifier>`) ``->`` :class:`Types.Log`
+     - (:class:`session<Types.Session>`, :class:`[fromDate]<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`, ``[start]``, ``[count]``, ``[pidFilter]``) ``->`` :class:`Types.Log`
    * - Tier 1
      - ``POST /reserve``
      - :func:`CNCore.reserveIdentifier`
@@ -118,7 +118,7 @@
    * - Tier 2
      - ``GET /accounts?query={query}[&status={status}&start={start}&count={count}]``
      - :func:`CNIdentity.listSubjects`
-     - (:class:`session<Types.Session>`, :class:`query<Types.String>`, :class:`status<Types.String>`, ``start``, ``count``) ``->`` :class:`Types.SubjectInfo`
+     - (:class:`session<Types.Session>`, ``query``, ``status``, ``start``, ``count``) ``->`` :class:`Types.SubjectInfo`
    * - Tier 2
      - ``POST /accounts/map``
      - :func:`CNIdentity.mapIdentity`
