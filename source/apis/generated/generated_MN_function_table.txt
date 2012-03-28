@@ -15,9 +15,9 @@
      - :func:`MNCore.ping`
      - () ``->`` null
    * - Tier 1
-     - ``GET /log?[fromdate={fromDate}][&todate={toDate}][&event={event}][&start={start}][&count={count}][&pidFilter={pidFilter}]``
+     - ``GET /log?[fromdate={fromDate}][&todate={toDate}][&event={event}][&pidFilter={pidFilter}][&start={start}][&count={count}]``
      - :func:`MNCore.getLogRecords`
-     - (:class:`session<Types.Session>`, :class:`[fromDate]<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`, ``[start=0]``, ``[count=1000]``, ``[pidFilter]``) ``->`` :class:`Types.Log`
+     - (:class:`session<Types.Session>`, :class:`[fromDate]<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`, ``[pidFilter]``, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.Log`
    * - Tier 1
      - ``GET /  and  GET /node``
      - :func:`MNCore.getCapabilities`
@@ -40,7 +40,7 @@
      - :func:`MNRead.getChecksum`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, ``[checksumAlgorithm]``) ``->`` :class:`Types.Checksum`
    * - Tier 1
-     - ``GET /object[?fromDate={fromDate}&toDate={toDate}&formatid={formatId}&replicaStatus={replicaStatus}&start={start}&count={count}]``
+     - ``GET /object[?fromDate={fromDate}&toDate={toDate}&formatId={formatId}&replicaStatus={replicaStatus}&start={start}&count={count}]``
      - :func:`MNRead.listObjects`
      - (:class:`session<Types.Session>`, :class:`[fromDate]<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[formatId]<Types.ObjectFormatIdentifier>`, ``[replicaStatus]``, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.ObjectList`
    * - Tier 1

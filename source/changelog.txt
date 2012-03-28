@@ -4,6 +4,16 @@ Change Log
 2012-03-26: Version 1.0, MethodCrossReference.xls
 -------------------------------------------------
 
+- Corrected typo in REST description for listObjects which had lowercase
+  *formatid*, corrected to *formatId*.
+
+- Corrected order of parameters for getLogRecords, moving *start* and *count* to
+  the end to be consistent with other method signatures.
+
+
+2012-03-26: Version 1.0, MethodCrossReference.xls
+-------------------------------------------------
+
 - :func:`MNCore.getLogRecords` updated 'pid' parameter to string and renamed to 
   'pidFilter'
   

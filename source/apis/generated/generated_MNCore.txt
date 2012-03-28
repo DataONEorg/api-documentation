@@ -15,9 +15,9 @@
      - :func:`ping`
      - () ``->`` null
    * - Tier 1
-     - ``GET /log?[fromdate={fromDate}][&todate={toDate}][&event={event}][&start={start}][&count={count}][&pidFilter={pidFilter}]``
+     - ``GET /log?[fromdate={fromDate}][&todate={toDate}][&event={event}][&pidFilter={pidFilter}][&start={start}][&count={count}]``
      - :func:`getLogRecords`
-     - (:class:`session<Types.Session>`, :class:`[fromDate]<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`, ``[start=0]``, ``[count=1000]``, ``[pidFilter]``) ``->`` :class:`Types.Log`
+     - (:class:`session<Types.Session>`, :class:`[fromDate]<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`, ``[pidFilter]``, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.Log`
    * - Tier 1
      - ``GET /  and  GET /node``
      - :func:`getCapabilities`
@@ -58,7 +58,7 @@
 
 
 
-.. function:: getLogRecords(session,[fromDate],[toDate],[event],[start=0],[count=1000],[pidFilter]) -> Log
+.. function:: getLogRecords(session,[fromDate],[toDate],[event],[pidFilter],[start=0],[count=1000]) -> Log
 
    Retrieve log information from the Member Node for the specified date range and even type.
 
@@ -70,7 +70,7 @@
 
    Access control for this method MUST be configured to allow calling by Coordinating Nodes and MAY be configured to allow more general access.
 
-   :REST URL: ``GET /log?[fromdate={fromDate}][&todate={toDate}][&event={event}][&start={start}][&count={count}][&pidFilter={pidFilter}]``
+   :REST URL: ``GET /log?[fromdate={fromDate}][&todate={toDate}][&event={event}][&pidFilter={pidFilter}][&start={start}][&count={count}]``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
@@ -83,14 +83,14 @@
    :param event: Return only log records for the specified type of event.  Default is *all*. Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type event: :class:`Types.Event`
 
+   :param pidFilter: Return only log records for identifiers that start with the supplied identifier string. Support for this parameter is optional and MAY be ignored by the Member Node implementation with no warning.  Transmitted as a URL query parameter, and so must be escaped accordingly.
+   :type pidFilter: string
+
    :param start=0: Optional zero based offset from the first record in the set of matching log records. Used to assist with paging the response. Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type start=0: integer
 
    :param count=1000: Optional maximum number of log records to return in the response. Used to assist with paging the response. Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type count=1000: integer
-
-   :param pidFilter: Return only log records for identifiers that start with the supplied identifier string. Support for this parameter is optional and MAY be ignored by the Member Node implementation with no warning.  Transmitted as a URL query parameter, and so must be escaped accordingly.
-   :type pidFilter: string
 
    :returns:
    :rtype: :class:`Types.Log`
