@@ -35,29 +35,39 @@ valid NodeReferences might include::
     urn:node:DRYAD
     urn:node:CN_UCSB
 
-By policy, the length of nodes identifiers will generally be restricted to 25 characters, and
-will be reviewed for appropriateness for the node during the node approval process
-see `Node Registration`_ below). 
+By policy, the length of nodes identifiers will generally be restricted to 25 characters, 
+inclusive of the ``urn:node:`` prefix, and will be reviewed for appropriateness 
+for the node during the node approval process (see `Node Registration`_ below).
+
+
+In this case, appropriateness means concise, memorable, and durable.  
+In general,  the identifier should not contain terms that are likely to change 
+over the very long term - implementation details such as host names, software service names, 
+and versions. Identifier length is restricted to make it easy for system administrators 
+and other programmers to read, recall, and type them.  DataONE UI's will make use
+of the name field of the Node record for display, so the identifier does not have
+to be meaningful for end-users.
+
 
 .. _ABNF: http://www.apps.ietf.org/rfc/rfc5234.txt
 
 Node Authentication and Contact
 -------------------------------
 In order to become a Member Node (or Coordinating Node) in DataONE, the node must be
-able to be authenticated in order to be able to securely communicate with other nodes
-in the network using the DataONE service interface.  Thus, the first step in becoming
-a node is to request a DataONE node certificate that can be used to authenticate the node.
+authenticated by DataONE in order to securely communicate with other DataONE nodes.
+One of the first steps in preparing the node for registration is receiving a DataONE
+certificate that will be used for negotiating secure connections with other nodes.
 This certificate is an X.509 certificate that is backed by a cryptographic key.  The
-certificate will contain the subject name of the node, which can be used to refer to the
-node.  Over time, these node certificates will expire and will need to be renewed by
-associating the new certificate with the NodeRefernce for this node.  Thus, the Node
-description provided in DataONE can contain a list of nodeSubjects, each of which 
-corresponds to a valid DataONE certificate that can be used to authenticate the node
-for service operations.
+certificate will contain a distinguished name, that is included as the subject field
+in the node record. Over time, these node certificates will expire and will need to be
+renewed by installing the new certificate on the Member Node, and updating the subject
+field if necessary.  The Node record provided in DataONE can contain a list of subjects
+representing the node, each corresponding to a valid DataONE certificate installed
+on the node that can be used for authentication.
 
 In addition, every node must have a contact person with whom DataONE can communicate
-about DataONE operations and policies as needed.  In order to register, the Distinguished
-Name for this person must be provided at registration.
+about DataONE operations (such as new node certificates) and policies as needed. 
+This contact person must be registered and verified with DataONE prior to registration. 
 
 Node Registration
 -----------------
@@ -69,10 +79,79 @@ a proposed :class:`Types.NodeReference` for this node and additional metadata su
 in the Node description.   If the NodeReference is syntactically correct and is unique, and
 the nodeContact is a verified account registered with DataONE, then
 the registration service will successfully return the :class:`Types.NodeReference` value for this node, which is
-then permanently assigned and can not be reused or reassigned.  At this point, the
+then permanently assigned and can not be reused or reassigned.  At this point, 
 the :class:`Types.Node` has been registered but has not yet been approved.  The request to become a
 node will be reviewed by DataONE, and, if approved, will be added to the list of
 Nodes in the federation.  At this point, the Node will be be able to participate in
 all synchronization and replication services available in DataONE.
 
 
+Registration Procedure
+----------------------
+Along with the production environment, DataONE maintains a few other environments 
+of inter-communicating Coordinating and Member Nodes for various testing purposes.  Aside
+from a unique list of nodes, each environment maintains their own sets
+ of data objects, object formats, and user accounts. The registration steps described
+below pertain to a single environment, so registering a node to a new environment
+would require running through the procedure in its entirety for the new environment. 
+
+
+Step 1: Stand-alone testing
+Prior to registration, the node needs to be tested for proper functionality 
+of its services, and proper form of its content. Certain integration tests used
+by the core team have been deployed to a web server (http://mncheck.test.dataone.org)
+so member node implementers can test basic services in a stand-alone environment.
+
+Step 2: Content checking
+Not every aspect of the node can be checked prior to testing, and some tests take
+too long to be automated in a web-based platform.  Also better done prior to node
+registration, content checking should be done to make sure that:
+1. all object formats used by the member node are registered with DataONE.
+2. the member node supports the required checksum algorithms.
+3. the system metadata of each object contains accurate AccessPolicies as per 
+that node's agreement with their submitters.
+4. system metadata RightsHolders are valid subjects, representable by X.509 certificate
+distinguished names, or a plan is in place to map these accounts to accounts that
+are representable in such a way.
+5. any other tests determined to be relevant for that node.
+
+This step is best done in close coordination with the DataONE core developer team.
+
+
+Step 3: Node Registering
+Registering the node involves the following steps:
+1. Registering the nodeContact account with the environment via the identity portal.
+This account needs to be one compatible with CiLogon.  Using the portal:
+a). go to https://cn-{ENVIRONMENT}.dataone.org/portal
+b). choose your account provider (this step may be bypassed if you have already logged in
+c). At the My Account tab, fill out the Account Details fields, and click "Register."
+    (This will register this account and display the subject.  If there is no button
+    labeled "Register", but one labeled "Update", your account is already registered.)
+
+The subject displayed is the part within the parentheses, in the format "CN=foo,DC=cilogon,DC=org",
+and it is this value that must match what is in the Node record's subject field.
+
+(installation requires ssh, and availability of ports 80, 443, 389 on the machine)
+
+2. Submitting a cn.register(session, node) request, where the Session contains the
+certificate of the person making the request, and the Node is, in most cases, the Node
+record served by the mn.getCapabilities() service call  ("GET /node").  Problems
+with the node record will be reported back as an exception.
+  
+3. Approving the node.
+a). Contact the DataONE contact person that the node has been registered and ready
+for approval.  
+b). Review any content checking test results with the node contact.
+c). DataONE will approve the node.
+
+4. Functional Integration testing (except in PROD environment)
+At this point, the appropriate multi-node functional tests (for synchronization, 
+replication, and updateSystemMetadata) will be run.  Tests in this arena 
+are intended to shake out remaining bugs, and will in most cases be done in close
+coordination with the DataONE core developers team.  Success at this step requires
+a dedicated developer resource on the member node for a 1-2 week period, as bug 
+fixing at this point tends to be sequential.
+
+
+
+  
