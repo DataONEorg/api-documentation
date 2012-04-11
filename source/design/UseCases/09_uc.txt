@@ -115,6 +115,17 @@ Member Node replication.
   end note
   
   cnXrepl -> cnXrepl : entryAdded(EntryEvent<pid, sysmeta>)
+  cnXrepl -> cnXrepl : queueEvent(pid)
+  cnXrepl -> cnXrepl : itemAdded(pid)
+  note right
+    hzReplicationEvents.offer(pid) is called to keep track of
+    frequent hzSystemMetadata change events. When popped 
+    off of the queue, identifiers are placed into the 
+    hzHandledReplicationEvents set until the evaluation
+    to create a task or not is complete. This prevents
+    multiple task creation across CNs for the same event
+  end note
+  
   cnXrepl -> cnXrepl : createAndQueueTasks(pid)
   
   loop for each ReplicationTask
@@ -132,57 +143,18 @@ Member Node replication.
   deactivate cnXrepl
   end loop
 
-  == Regular Replication Audit ==
-
-   [-> cnXrepl : auditReplicas()
-   activate cnXrepl #D74F57
-
-   cnXrepl -> cnXrepl : getLock(hzAuditString)
-   note right
-     Query the SOLR Index to receive a short list of tasks which have not 
-     had their checksums verified in greater than 2 months
-   end note
-   cnXrepl ->] : getAuditShortList()
-   cnXrepl <--] : shortList
-
-   note over cnXrepl
-   Bin the tasks by NodeReference for 
-   bulk processing my MNAuditTask
-   end note
-   loop for each Identifier in shortList
-   cnXrepl -> cnXrepl : hzSystemMetadata.get(Identifier).getReplicaList()
-   loop for each Replica in List<Replica>
-   alt if Replica.replicaVerified is older than 2 months
-   alt if auditTaskMap.containsKey(Replica.replicaMemberNode)
-   cnXrepl -> cnXrepl : auditTaskMap.get(Replica.replicaMemberNode).add(Identifier)
-   else else
-   cnXrepl -> cnXrepl : auditTaskMap.put(Replica.replicaMemberNode, new List<Identifier>())\nauditTaskMap.get(Replica.replicaMemberNode).add(Identifier)
-   end
-   end
-   end loop
-   end loop
-   loop for each NodeReference in auditTaskMap.keySet()
-   cnXrepl -> cnXrepl : taskid = idGenerator.newId()
-   cnXrepl -> cnXrepl : auditTask = MNAuditTask(NodeReference, List<Identifier>)
-   cnXrepl -> cnXrepl : hzAuditTaskQueue.put(taskid, auditTask)
-   end loop
-   note right
-     Hazelcast distributes Audit
-     Tasks to all CNs
-   end note
-   deactivate cnXrepl
-
   == Process Replication Tasks ==  
           
-  cnZ -> cnZ: entryAdded(EntryEvent<taskid, task>)
+  cnZ -> cnZ: itemAdded(task)
   activate cnZ #D74F57
   cnZ -> cnZ: hzReplicationTaskQueue.poll()
   note left
-    Each ReplicationService
-    polls the replication task
-    queue when events are fired
+    Each ReplicationService polls the replication task
+    queue when events are fired. The first to get the lock
+    handles the task.  The others will also get the lock,
+    but during evaluation, will not create a task because
+    of the new state of the replica in the system metadata 
   end note
-  cnZ --> cnZ: task
 
   cnZ -> cnZ: ExecutorService.submit(task)
   activate cnZ #DarkSalmon
@@ -197,15 +169,13 @@ Member Node replication.
    Object's system metadata get's updated
   end note
   
-  cnZ -> cnZ: hzSystemMetadata.lock(pid)
   cnZ -> cnZ: updateSystemMetadata(pid)
-  cnZ -> cnZ: hzSystemMetadata.unlock(pid)
   cnZ --> cnZ: statusResponse
   
   mnB -> mnA: getReplica(mnBSession, pid)
   deactivate mnB
   activate mnA #D74F57
-  mnA -> cnZ: isNodeAuthorized(mnASession, \n    mnBSubject, pid, replicationPermission)
+  mnA -> cnZ: isNodeAuthorized(mnASession, mnBSubject, pid)
   cnZ --> mnA: authorizationResponse
   mnA --> mnB: replicaBytes
   deactivate mnA
@@ -222,43 +192,11 @@ Member Node replication.
   end note
   
   deactivate mnA
-  cnZ -> cnZ: hzSystemMetadata.lock(pid)
   cnZ -> cnZ: updateSystemMetadata(pid)
-  cnZ -> cnZ: hzSystemMetadata.unlock(pid)
   cnZ --> cnZ: statusResponse
   deactivate cnZ
 
-  == Process Audit Tasks ==  
-
-  cnZ -> cnZ: entryAdded(EntryEvent<taskid, auditTask>)
-  activate cnZ #D74F57
-  cnZ -> cnZ: hzAuditTaskQueue.poll()
-  note left
-    Each ReplicationService polls 
-    the audit task queue when 
-    events are fired
-  end note
-  cnZ --> cnZ: auditTask
-
-  cnZ -> cnZ : ExecutorService.submit(auditTask)
-  activate cnZ #DarkSalmon
-  cnZ -> cnZ : auditTask.call()
-
-  loop for each pid in List<Identifier>
-  cnZ -> mnB : getChecksum(pid)
-  activate mnB #D74F57
-  mnB --> cnZ : checksum
-  deactivate mnB
-  alt if ( cnZ.getChecksum(pid) != checksum )
-  cnZ -> cnZ : setReplicationStatus(session, pid, nodeRef,  \n    ReplicationStatus.INVALIDATED) \ncreateAndQueueTasks(pid)
-  note left 
-    ReplicationStatus has been set to invalid due to 
-    disagreement in the object's checksum between the 
-    MN and CN
-  end note
-  end
-  end loop
-
+ 
   deactivate cnZ
   deactivate cnZ
 
@@ -266,6 +204,135 @@ Member Node replication.
 
 
 .. image:: images/09_seq.png
+
+
+..
+  @startuml images/09_seq_audit_1.png
+  skinparam notebordercolor #AAAAAA
+  skinparam notefontcolor #222222
+  title Audit replicas on Member Nodes.\n\n
+  participant "ReplicaAuditQuartzJob" as cnQuartz <<CN-1>> 
+  participant "ReplicaAuditService" as cnAudit <<CN-1>>
+  participant "ReplicaAuditDao" as auditDao <<CN-1>>
+  participant "DistributedExecutorService" as cnZ <<CN-Z>>
+
+ == Replication Audit ==
+ 	
+ 	note left of cnQuartz
+ 	 Quartz scheduled execution 
+ 	 of replica audit processing.
+ 	end note
+ 	
+   	cnQuartz -> cnAudit : auditReplicas()
+ 	activate cnAudit #D74F57
+
+   	cnAudit -> cnAudit : aquireReplicaAuditingLock();
+
+   note over auditDao
+     Query the Metacat replica system metadata replica status 
+     table for pids of replica records which have not been audited 
+     for the audit period length of time.  May be a paged result.
+   end note
+   cnAudit -> auditDao : getReplicasByDate()
+   cnAudit <-- auditDao : List<Identifier> pidsToAudit
+
+   loop for each Identifier pid in pidsToAudit
+	   note over cnAudit
+		   Create ReplicaAuditTasks if not already being handled.  
+		   Tasks can be configured to batch several Identifiers
+		   into tasks or to create a task for each Identifier.
+	   end note
+   		alt if pid NOT in hzProcessingAuditIdentifiers
+   			cnAudit -> cnAudit : replicaAuditTasks.add(new ReplicaAuditTask(pid));
+   		end
+   		alt if replicaAuditTasks.size => replicaBatchSize
+   			note over cnAudit
+   			    accumulatedTaskFuture List holds futures generated on this iteration.
+   			    futuresToHandle holds futures generated on last iteration.
+   			    Assumption is futures provided to distributed execution service on 
+   			    previous iteration should have executed asynch already.
+   			end note
+   			cnAudit -> cnAudit : futuresToHandle = accumulatedTaskFutures;  // futures from last batch
+   			cnAudit -> cnAudit : accumulatedTaskFutures.clear();
+   			loop for each ReplicaAuditTask auditTask in replicaAuditTasks
+   				note over cnZ
+   					Hazelcast distributed executor service used to 
+   					distribute audit tasks among CN nodes.
+   				end note
+   				cnAudit -> cnZ : submit(auditTask);
+   				cnAudit -> cnAudit : hzProcessingAuditIdentfiers.removeAll(auditTask.pid);
+   				cnZ --> cnAudit : Future replicaTaskFuture;
+   				cnAudit -> cnAudit : accumulatedTaskFutures.add(replicaTaskFuture);
+   			end loop
+   			cnAudit -> cnAudit : replicaAuditTasks.clear(); // prepare for next batch tasks.
+   			loop for each Future replicaTaskFuture in futuresToHandle
+   				cnAudit -> cnAudit : handleResult(replicaTaskFuture.get());
+   			end loop
+   		end
+   end loop
+   note over cnAudit
+   		Handle futures from last batch of audit tasks
+   end note
+   loop for each Future replicaTaskFuture in accumulatedTaskFutures
+   		cnAudit->cnAudit: handleResult(replicaTaskFuture);
+   end loop
+   deactivate cnAudit
+
+  @enduml
+
+
+
+
+.. image:: images/09_seq_audit_1.png
+
+..
+	@startuml images/09_seq_audit_2.png
+  	skinparam notebordercolor #AAAAAA
+  	skinparam notefontcolor #222222
+  	title Replica Audit Task Procesing.\n\n
+	participant "ReplicaAuditService" as cnAudit <<CN-1>>
+  	participant "DistributedExecutorService" as cnZ <<CN-Z>>
+  	participant "ReplicaAuditTask" as auditTask <<CN-Z>>
+  	participant "d1Client.CNode : CNodeClient" as cNodeClient <<CN-Z>>
+	participant "d1Client.MNode : MNodeClient" as mnA <<MN-A>>
+	participant "ReplicationManager" as repManager <<CN-Z>>
+
+ == Process replication audit. ==
+	cnAudit -> cnZ : submit(replicaAuditTask);
+  	cnZ -> cnZ: execute(replicaAuditTask);
+  	cnZ -> auditTask : call()
+  	activate auditTask #D74F57
+	
+	loop for each Identifier pid in auditTask.pids
+  		auditTask -> cNodeClient : getSystemMetadata(pid);
+  		cNodeClient --> auditTask : sysMetadata;
+  		auditTask -> auditTask : verifiedReplicaCount = 0;
+  		loop for each Replica replica in sysMetadata.getReplicaList()
+  			auditTask -> auditTask : mnA = getMNodeClient(replica.getReplicaMemberNode());
+  			auditTask -> mnA : replicaChecksum = getChecksum(pid, sysMeta.getChecksum());
+  			alt if replicaChecksum == sysMetadata.getChecksum()
+  				auditTask -> auditTask : verfiedReplicaCount++;
+  				auditTask -> auditTask : replica.updateVerifiedDate(today);
+  				auditTask -> cNodeClient : updateReplicationMetadata(pid, replica);
+  			else else
+  				auditTask -> auditTask : replica.setReplicationStatus(INVALID);
+  				auditTask -> cNodeClient : updateReplicationMetadata(pid, replica);
+  				auditTask -> repManager : createAndQueueTasks(pid);
+  			end
+  		end loop
+  		alt if sysMetadata.getReplicationPolicy().getNumberReplicas !== verifiedReplicaCount
+  			auditTask -> repManager : createAndQueueTasks(pid);
+  		end
+  	end loop
+	
+	auditTask --> cnZ : String audit result
+	deactivate auditTask
+	
+	cnZ --> cnAudit : Future - audit results including exceptions
+
+  @enduml
+.. image:: images/09_seq_audit_2.png
+
 
 *Figure 2.* Interactions for use case 09. The diagram describes transfer of a
 single object from MN_A to MN_B as directed by a CN. It is assumed that the
@@ -292,7 +359,7 @@ Replication can be initiated in three ways:
     CN (not implemented)
 
 Replication Events
------------------------------
+------------------
 
 The CN's maintain a synchronized, distributed Hazelcast Map of system
 metadata (hzSystemMetadata). This map reflects the current state of the
@@ -327,7 +394,7 @@ ReplicationTask.
 
 
 Processing Replication Tasks
------------------------------
+----------------------------
 
 As the hzReplicationTasks queue is populated, each CN's Replication Service
 receives entry added events and polls the queue with a short timeout to submit
