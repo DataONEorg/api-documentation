@@ -281,59 +281,6 @@ Member Node replication.
   @enduml
 
 
-
-
-.. image:: images/09_seq_audit_1.png
-
-..
-	@startuml images/09_seq_audit_2.png
-  	skinparam notebordercolor #AAAAAA
-  	skinparam notefontcolor #222222
-  	title Replica Audit Task Procesing.\n\n
-	participant "ReplicaAuditService" as cnAudit <<CN-1>>
-  	participant "DistributedExecutorService" as cnZ <<CN-Z>>
-  	participant "ReplicaAuditTask" as auditTask <<CN-Z>>
-  	participant "d1Client.CNode : CNodeClient" as cNodeClient <<CN-Z>>
-	participant "d1Client.MNode : MNodeClient" as mnA <<MN-A>>
-	participant "ReplicationManager" as repManager <<CN-Z>>
-
- == Process replication audit. ==
-	cnAudit -> cnZ : submit(replicaAuditTask);
-  	cnZ -> cnZ: execute(replicaAuditTask);
-  	cnZ -> auditTask : call()
-  	activate auditTask #D74F57
-	
-	loop for each Identifier pid in auditTask.pids
-  		auditTask -> cNodeClient : getSystemMetadata(pid);
-  		cNodeClient --> auditTask : sysMetadata;
-  		auditTask -> auditTask : verifiedReplicaCount = 0;
-  		loop for each Replica replica in sysMetadata.getReplicaList()
-  			auditTask -> auditTask : mnA = getMNodeClient(replica.getReplicaMemberNode());
-  			auditTask -> mnA : replicaChecksum = getChecksum(pid, sysMeta.getChecksum());
-  			alt if replicaChecksum == sysMetadata.getChecksum()
-  				auditTask -> auditTask : verfiedReplicaCount++;
-  				auditTask -> auditTask : replica.updateVerifiedDate(today);
-  				auditTask -> cNodeClient : updateReplicationMetadata(pid, replica);
-  			else else
-  				auditTask -> auditTask : replica.setReplicationStatus(INVALID);
-  				auditTask -> cNodeClient : updateReplicationMetadata(pid, replica);
-  				auditTask -> repManager : createAndQueueTasks(pid);
-  			end
-  		end loop
-  		alt if sysMetadata.getReplicationPolicy().getNumberReplicas !== verifiedReplicaCount
-  			auditTask -> repManager : createAndQueueTasks(pid);
-  		end
-  	end loop
-	
-	auditTask --> cnZ : String audit result
-	deactivate auditTask
-	
-	cnZ --> cnAudit : Future - audit results including exceptions
-
-  @enduml
-.. image:: images/09_seq_audit_2.png
-
-
 *Figure 2.* Interactions for use case 09. The diagram describes transfer of a
 single object from MN_A to MN_B as directed by a CN. It is assumed that the
 object does not exist on MN_A and the object has been identified as requiring
@@ -436,5 +383,62 @@ it is public, not token is needed.
 Note that the call setReplicationStatus with a value of *COMPLETE* is 
 functionally equivalent to the *notify(objectCreated, identifier)* call 
 indicated in use case 06.
+
+
+Replication Auditing
+---------------------
+
+
+
+.. image:: images/09_seq_audit_1.png
+
+..
+	@startuml images/09_seq_audit_2.png
+  	skinparam notebordercolor #AAAAAA
+  	skinparam notefontcolor #222222
+  	title Replica Audit Task Procesing.\n\n
+	participant "ReplicaAuditService" as cnAudit <<CN-1>>
+  	participant "DistributedExecutorService" as cnZ <<CN-Z>>
+  	participant "ReplicaAuditTask" as auditTask <<CN-Z>>
+  	participant "d1Client.CNode : CNodeClient" as cNodeClient <<CN-Z>>
+	participant "d1Client.MNode : MNodeClient" as mnA <<MN-A>>
+	participant "ReplicationManager" as repManager <<CN-Z>>
+
+ == Process replication audit. ==
+	cnAudit -> cnZ : submit(replicaAuditTask);
+  	cnZ -> cnZ: execute(replicaAuditTask);
+  	cnZ -> auditTask : call()
+  	activate auditTask #D74F57
+	
+	loop for each Identifier pid in auditTask.pids
+  		auditTask -> cNodeClient : getSystemMetadata(pid);
+  		cNodeClient --> auditTask : sysMetadata;
+  		auditTask -> auditTask : verifiedReplicaCount = 0;
+  		loop for each Replica replica in sysMetadata.getReplicaList()
+  			auditTask -> auditTask : mnA = getMNodeClient(replica.getReplicaMemberNode());
+  			auditTask -> mnA : replicaChecksum = getChecksum(pid, sysMeta.getChecksum());
+  			alt if replicaChecksum == sysMetadata.getChecksum()
+  				auditTask -> auditTask : verfiedReplicaCount++;
+  				auditTask -> auditTask : replica.updateVerifiedDate(today);
+  				auditTask -> cNodeClient : updateReplicationMetadata(pid, replica);
+  			else else
+  				auditTask -> auditTask : replica.setReplicationStatus(INVALID);
+  				auditTask -> cNodeClient : updateReplicationMetadata(pid, replica);
+  				auditTask -> repManager : createAndQueueTasks(pid);
+  			end
+  		end loop
+  		alt if sysMetadata.getReplicationPolicy().getNumberReplicas !== verifiedReplicaCount
+  			auditTask -> repManager : createAndQueueTasks(pid);
+  		end
+  	end loop
+	
+	auditTask --> cnZ : String audit result
+	deactivate auditTask
+	
+	cnZ --> cnAudit : Future - audit results including exceptions
+
+  @enduml
+.. image:: images/09_seq_audit_2.png
+
 
 .. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/09_uc.txt
