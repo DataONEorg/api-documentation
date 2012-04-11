@@ -96,13 +96,13 @@ single environment, so registering a node to a new environment would require run
 through the procedure in its entirety for the new environment. 
 
 
-Step 1: Stand-alone testing
+**Step 1: Stand-alone testing**
   Prior to registration, the node needs to be tested for proper functionality 
   of its services, and proper form of its content. Certain integration tests used
   by the core team have been deployed to a web server (http://mncheck.test.dataone.org)
   so member node implementers can test basic services in a stand-alone environment.
 
-Step 2: Content checking
+**Step 2: Content checking**
   Not every aspect of the node can be checked prior to testing, and some tests take
   too long to be automated in a web-based platform.  Also better done prior to node
   registration, content checking should be done to make sure that:
@@ -119,43 +119,43 @@ Step 2: Content checking
   This step is best done in close coordination with the DataONE core developer team.
 
 
-Step 3: Node Registering
+**Step 3: Node Registering**
   Registering the node involves the following steps.
   
-  - Registering the nodeContact account with the environment via the identity portal.
-    This account needs to be one compatible with CiLogon.  
+  A. Registering the nodeContact account with the environment via the identity portal.
+     This account needs to be one compatible with CiLogon.  
     
-    Using the portal
+     Using the portal
 
-    1. go to ``https://cn-{ENVIRONMENT}.dataone.org/portal``
-    2. choose your account provider (this step may be bypassed if you have already logged in
-    3. At the My Account tab, fill out the Account Details fields, and click "Register."
-       (This will register this account and display the subject.  If there is no button
-       labeled "Register", but one labeled "Update", your account is already registered.)
+     1. go to ``https://cn-{ENVIRONMENT}.dataone.org/portal``
+     2. choose your account provider (this step may be bypassed if you have already logged in
+     3. At the My Account tab, fill out the Account Details fields, and click "Register."
+        (This will register this account and display the subject.  If there is no button
+        labeled "Register", but one labeled "Update", your account is already registered.)
 
-    The subject displayed is the part within the parentheses, in the format "CN=foo,DC=cilogon,DC=org",
-    and it is this value that must match what is in the Node record's subject field.
+     The subject displayed is the part within the parentheses, in the format "CN=foo,DC=cil ogon,DC=org",
+     and it is this value that must match what is in the Node record's subject field.
 
-  - Submitting a cn.register(Session, Node) request, where the Session parameter
-    contains the certificate of the person making the request, and the Node parameter 
-    is, in most cases, the Node record served by the mn.getCapabilities() service call
-    (``GET /node``).  Problems with the node record will be reported back as an exception.
+  B. Submitting a cn.register(Session, Node) request, where the Session parameter
+     contains the certificate of the person making the request, and the Node parameter 
+     is, in most cases, the Node record served by the mn.getCapabilities() service call
+     (``GET /node``).  Problems with the node record will be reported back as an exception.
   
-  - Approving the node.
+  C. Approving the node.
     
-    1. Contact the DataONE contact person that the node has been registered and ready
-       for approval.  
-    2. Review any content checking test results with the node contact.
-    3. DataONE will approve the node.
+     1. Contact the DataONE contact person that the node has been registered and ready
+        for approval.  
+     2. Review any content checking test results with the node contact.
+     3. DataONE will approve the node.
 
-Step 4: Functional Integration testing (except in PROD environment)
+**Step 4: Functional Integration testing (except in PROD environment)**
 
   At this point, the appropriate multi-node functional tests (for synchronization, 
   replication, and updateSystemMetadata) will be run.  Tests in this arena 
   are intended to shake out remaining bugs, and will in most cases be done in close
   coordination with the DataONE core developers team.  Success at this step requires
-  a dedicated developer resource on the member node for a 1-2 week period, as bug 
-  fixing at this point tends to be sequential.
+  a dedicated developer resource from the member node implementation team for about
+  a 1-2 week period, as bug fixing at this point tends to be sequential.
 
 
 
