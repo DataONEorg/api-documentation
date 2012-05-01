@@ -216,6 +216,36 @@
      - InvalidToken
      - 401
      - 2164
+   * - :mod:`MNRead`
+     - :func:`getReplica <MNRead.getReplica>`
+     - NotImplemented
+     - 501
+     - 2180
+   * - :mod:`MNRead`
+     - :func:`getReplica <MNRead.getReplica>`
+     - ServiceFailure
+     - 500
+     - 2181
+   * - :mod:`MNRead`
+     - :func:`getReplica <MNRead.getReplica>`
+     - NotAuthorized
+     - 401
+     - 2182
+   * - :mod:`MNRead`
+     - :func:`getReplica <MNRead.getReplica>`
+     - InvalidToken
+     - 401
+     - 2183
+   * - :mod:`MNRead`
+     - :func:`getReplica <MNRead.getReplica>`
+     - InsufficientResources
+     - 413
+     - 2184
+   * - :mod:`MNRead`
+     - :func:`getReplica <MNRead.getReplica>`
+     - NotFound
+     - 404
+     - 2185
    * - :mod:`MNAuthorization`
      - :func:`isAuthorized <MNAuthorization.isAuthorized>`
      - ServiceFailure
@@ -451,36 +481,6 @@
      - InvalidToken
      - 401
      - 2156
-   * - :mod:`MNReplication`
-     - :func:`getReplica <MNReplication.getReplica>`
-     - NotImplemented
-     - 501
-     - 2180
-   * - :mod:`MNReplication`
-     - :func:`getReplica <MNReplication.getReplica>`
-     - ServiceFailure
-     - 500
-     - 2181
-   * - :mod:`MNReplication`
-     - :func:`getReplica <MNReplication.getReplica>`
-     - NotAuthorized
-     - 401
-     - 2182
-   * - :mod:`MNReplication`
-     - :func:`getReplica <MNReplication.getReplica>`
-     - InvalidToken
-     - 401
-     - 2183
-   * - :mod:`MNReplication`
-     - :func:`getReplica <MNReplication.getReplica>`
-     - InsufficientResources
-     - 413
-     - 2184
-   * - :mod:`MNReplication`
-     - :func:`getReplica <MNReplication.getReplica>`
-     - NotFound
-     - 404
-     - 2185
    * - :mod:`CNCore`
      - :func:`ping <CNCore.ping>`
      - NotImplemented

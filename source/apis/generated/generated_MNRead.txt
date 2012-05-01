@@ -27,13 +27,17 @@
      - :func:`getChecksum`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, ``[checksumAlgorithm]``) ``->`` :class:`Types.Checksum`
    * - Tier 1
-     - ``GET /object[?fromDate={fromDate}&toDate={toDate}&formatId={formatId}&replicaStatus={replicaStatus}&start={start}&count={count}]``
+     - ``GET /object[?fromDate={fromDate}&toDate={toDate} &formatId={formatId}&replicaStatus={replicaStatus} &start={start}&count={count}]``
      - :func:`listObjects`
      - (:class:`session<Types.Session>`, :class:`[fromDate]<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[formatId]<Types.ObjectFormatIdentifier>`, ``[replicaStatus]``, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.ObjectList`
    * - Tier 1
      - ``POST /error``
      - :func:`synchronizationFailed`
      - (:class:`session<Types.Session>`, :class:`message<Types.Exception>`) ``->`` :class:`Types.Boolean`
+   * - Tier 1
+     - ``GET /replica/{pid}``
+     - :func:`getReplica`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.OctetStream`
 
 
 
@@ -206,7 +210,7 @@
 
    :Use Cases:
      :doc:`UC06 </design/UseCases/06_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
-   :REST URL: ``GET /object[?fromDate={fromDate}&toDate={toDate}&formatId={formatId}&replicaStatus={replicaStatus}&start={start}&count={count}]``
+   :REST URL: ``GET /object[?fromDate={fromDate}&toDate={toDate} &formatId={formatId}&replicaStatus={replicaStatus} &start={start}&count={count}]``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
@@ -219,8 +223,7 @@
    :param formatId: Restrict results to the specified object format identifier. Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type formatId: :class:`Types.ObjectFormatIdentifier`
 
-   :param replicaStatus: Indicates if replicated objects should be returned in the list (i.e. any entries present in the :attr:`SystemMetadata.replica`, objects that have been replicated to this member node). If ``false``, then no objects that have been replicated should be returned. If ``true``, then any objects can be returned, regardless of replication status. If not present, then the replicaStatus filter should be ignored.
- Transmitted as a URL query parameter, and so must be escaped accordingly.
+   :param replicaStatus: Indicates if replicated objects should be returned in the list (i.e. any entries present in the :attr:`SystemMetadata.replica`, objects that have been replicated to this member node). If ``false``, then no objects that have been replicated should be returned. If ``true``, then any objects can be returned, regardless of replication status. If not present, then the replicaStatus filter should be ignored. Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type replicaStatus: boolean
 
    :param start=0: The zero-based index of the first value, relative to the first record of the resultset that matches the parameters. Transmitted as a URL query parameter, and so must be escaped accordingly.
@@ -281,5 +284,44 @@
    :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=2164)``
 
      Optionally raised by the receiving MN, depending on implementation.
+
+
+
+
+.. function:: getReplica(session,pid) -> OctetStream
+
+   Called by a target Member Node to fullfill the replication request originated by a Coordinating Node calling :func:`MNReplication.replicate`. This is a request to make a replica copy of the object, and differs from a call to GET /object in that it should be logged as a replication event rather than a read event on that object.
+
+   If the object being retrieved is restricted access, then a Tier 2 or higher Member Node MUST make a call to :func:`CNReplication.isNodeAuthorized` to verify that the Subject of the caller is authorized to retrieve the content.
+
+   A successful operation is indicated by a HTTP status of 200 on the response.
+
+   Failure of the operation MUST be indicated by returning an appropriate exception.
+
+   :Use Cases:
+     :doc:`UC09 </design/UseCases/09_uc>`
+   :REST URL: ``GET /replica/{pid}``
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
+   :type session: :class:`Types.Session`
+
+   :param pid: The identifier of the object to get as a replica Transmitted as part of the URL path and must be escaped accordingly.
+   :type pid: :class:`Types.Identifier`
+
+   :returns: Bytes of the specified object.
+   :rtype: :class:`Types.OctetStream`
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2180)``
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2181)``
+
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=2182)``
+
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=2183)``
+
+   :raises Exceptions.InsufficientResources: ``(errorCode=413, detailCode=2184)``
+
+     The node is unable to service the request due to insufficient resources such as CPU, memory, or bandwidth being over utilized.
+
+   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=2185)``
 
 

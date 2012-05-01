@@ -1,6 +1,15 @@
 Change Log
 ==========
 
+2012-05-01: Version 1.0, MethodCrossReference.xls
+-------------------------------------------------
+
+- The MN method *getReplica* was incorrectly located in Tier 4, effectively
+  preventing any MN implementation except Tier 4 nodes from acting as
+  replication sources. This has been corrected, with the method moved to the
+  MNRead Tier1 API. The method description was updated accordingly.
+
+
 2012-03-26: Version 1.0, MethodCrossReference.xls
 -------------------------------------------------
 

@@ -14,10 +14,6 @@
      - ``POST /replicate``
      - :func:`replicate`
      - (:class:`session<Types.Session>`, :class:`sysmeta<Types.SystemMetadata>`, :class:`sourceNode<Types.NodeReference>`) ``->`` boolean
-   * - Tier 4
-     - ``GET /replica/{pid}``
-     - :func:`getReplica`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.OctetStream`
 
 
 
@@ -63,42 +59,5 @@
 
 
 .. include:: /apis/examples/replicate.txt
-
-
-
-
-.. function:: getReplica(session,pid) -> OctetStream
-
-   Called by a target Member Node to fullfill the replication request originated by a Coordinating Node calling :func:`MNReplication.replicate`. This is a request to make a replica copy of the object, and differs from a call to GET /object in that it should be logged as a replication event rather than a read event on that object.
-
-   A successful operation is indicated by a HTTP status of 200 on the response.
-
-   Failure of the operation MUST be indicated by returning an appropriate exception.
-
-   :Use Cases:
-     :doc:`UC09 </design/UseCases/09_uc>`
-   :REST URL: ``GET /replica/{pid}``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
-   :type session: :class:`Types.Session`
-
-   :param pid: The identifier of the object to get as a replica Transmitted as part of the URL path and must be escaped accordingly.
-   :type pid: :class:`Types.Identifier`
-
-   :returns: Bytes of the specified object.
-   :rtype: :class:`Types.OctetStream`
-
-   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2180)``
-
-   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2181)``
-
-   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=2182)``
-
-   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=2183)``
-
-   :raises Exceptions.InsufficientResources: ``(errorCode=413, detailCode=2184)``
-
-     The node is unable to service the request due to insufficient resources such as CPU, memory, or bandwidth being over utilized.
-
-   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=2185)``
 
 

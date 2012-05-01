@@ -26,12 +26,15 @@
    * - GET /checksum/{pid}[?checksumAlgorithm={checksumAlgorithm}]
      - :func:`MNRead.getChecksum`
      - Returns a :class:`Types.Checksum` for the specified object using an accepted hashing algorithm. The result is used to determine if two instances referenced by a PID are identical, hence it is necessary that MNs can ensure that the returned checksum is valid for the referenced object either by computing it on the fly or by using a cached value that is certain to be correct.
-   * - GET /object[?fromDate={fromDate}&toDate={toDate}&formatId={formatId}&replicaStatus={replicaStatus}&start={start}&count={count}]
+   * - GET /object[?fromDate={fromDate}&toDate={toDate} &formatId={formatId}&replicaStatus={replicaStatus} &start={start}&count={count}]
      - :func:`MNRead.listObjects`
      - Retrieve the list of objects present on the MN that match the calling parameters. This method is required to support the process of :term:`Member Node synchronization`. At a minimum, this method MUST be able to return a list of objects that match::   fromDate < SystemMetadata.dateSysMetadataModified but is expected to also support date range (by also specifying *toDate*), and should also support slicing of the matching set of records by indicating the starting *index* of the response (where 0 is the index of the first item) and the *count* of elements to be returned. Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed. Access control for this method MUST be configured to allow calling by Coordinating Nodes and MAY be configured to allow more general access.
    * - POST /error
      - :func:`MNRead.synchronizationFailed`
      - This is a callback method used by a CN to indicate to a MN that it cannot complete synchronization of the science metadata identified by *pid*. When called, the MN should take steps to record the problem description and notify an administrator or the data owner of the issue. A successful response is indicated by a HTTP status of 200. An unsuccessful call is indicated by a returned exception and associated HTTP status code. Access control for this method MUST be configured to allow calling by Coordinating Nodes and MAY be configured to allow more general access.
+   * - GET /replica/{pid}
+     - :func:`MNRead.getReplica`
+     - Called by a target Member Node to fullfill the replication request originated by a Coordinating Node calling :func:`MNReplication.replicate`. This is a request to make a replica copy of the object, and differs from a call to GET /object in that it should be logged as a replication event rather than a read event on that object. If the object being retrieved is restricted access, then a Tier 2 or higher Member Node MUST make a call to :func:`CNReplication.isNodeAuthorized` to verify that the Subject of the caller is authorized to retrieve the content. A successful operation is indicated by a HTTP status of 200 on the response. Failure of the operation MUST be indicated by returning an appropriate exception.
    * - GET /isAuthorized/{pid}?action={action}
      - :func:`MNAuthorization.isAuthorized`
      - Test if the user identified by the provided session has authorization for operation on the specified object. A successful operation is indicated by a return HTTP status of 200. Failure is indicated by an exception such as :exc:`NotAuthorized` being returned. The body of the response is arbitrary and SHOULD be ignored by the caller. If the action is not authorized, then a :exc:`NotAuthorized` exception MUST be raised. .. Note:: Should perhaps add convenience methods for "canRead()" and "canWrite()" to verify that a user is able to read / write an object.
@@ -53,9 +56,6 @@
    * - POST /replicate
      - :func:`MNReplication.replicate`
      - Called by a Coordinating Node to request that the Member Node create a copy of the specified object by retrieving it from another Member Nodeode and storing it locally so that it can be made accessible to the DataONE system.   A successful operation is indicated by a HTTP status of 200 on the response.  Failure of the operation MUST be indicated by returning an appropriate exception. Access control for this method MUST be configured to allow calling by Coordinating Nodes.
-   * - GET /replica/{pid}
-     - :func:`MNReplication.getReplica`
-     - Called by a target Member Node to fullfill the replication request originated by a Coordinating Node calling :func:`MNReplication.replicate`. This is a request to make a replica copy of the object, and differs from a call to GET /object in that it should be logged as a replication event rather than a read event on that object. A successful operation is indicated by a HTTP status of 200 on the response. Failure of the operation MUST be indicated by returning an appropriate exception.
 
 
 .. list-table:: REST URLs implemented on Coordinating Nodes.
@@ -77,7 +77,7 @@
    * - GET /formats/{formatId}
      - :func:`CNCore.getFormat`
      - Returns the object format registered in the DataONE Object Format Vocabulary for the given format identifier.
-   * - GET /log?[fromdate={fromDate}][&todate={toDate}][&event={event}][&pidFilter={pidFilter}][&start={start}][&count={count}]
+   * - GET /log?[fromDate={fromDate}][&toDate={toDate}][&event={event}][&pidFilter={pidFilter}][&start={start}][&count={count}]
      - :func:`CNCore.getLogRecords`
      - Retrieves consolidated log information for the specified date range (fromDate < timestamp <= toDate) for the entire DataONE infrastructure Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed.
    * - POST /reserve
