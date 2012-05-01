@@ -46,6 +46,14 @@
      - ``PUT /obsoletedBy/{pid}``
      - :func:`setObsoletedBy`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`obsoletedByPid<Types.Identifier>`, ``serialVersion``) ``->`` boolean
+   * - Tier 3
+     - ``DELETE /object/{pid}``
+     - :func:`delete`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Identifier`
+   * - Tier 3
+     - ``PUT /archive/{pid}``
+     - :func:`archive`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Identifier`
    * - Tier 1
      - ``GET /node``
      - :func:`listNodes`
@@ -397,6 +405,72 @@
    :raises Exceptions.VersionMismatch: ``(errorCode=409, detailCode=4946)``
 
      The provided *serialVersion* does not match the latest version that is held by the CN. The client should refresh it's copy, verify that the update is still necessary, and resubmit the request with the updated information.
+
+
+
+
+.. function:: delete(session,pid) -> Identifier
+
+   Deletes an object from the entire DataONE system, including all nodes known to hold a copy of the object. The PID of the object will continue to be shown as in use (preventing its reuse for other objects), however the object should not be resolvable (NotFound) or retrievable.
+
+   The delete operation is used only by administrators in response to a request to remove an object from DataONE, perhaps because of legal requirements or the object has been identified as containing malicious content.
+
+   :Use Cases:
+     :doc:`UC16 </design/UseCases/16_uc>`
+   :REST URL: ``DELETE /object/{pid}``
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
+   :type session: :class:`Types.Session`
+
+   :param pid: The identifier of the object to be deleted. Transmitted as part of the URL path and must be escaped accordingly.
+   :type pid: :class:`Types.Identifier`
+
+   :returns: The identifier of the object that was deleted.
+   :rtype: :class:`Types.Identifier`
+
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=4960)``
+
+   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=4961)``
+
+     The delete operation failed because the object does not exist.
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4962)``
+
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=4963)``
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4964)``
+
+
+
+
+.. function:: archive(session,pid) -> Identifier
+
+   Hides an object managed by DataONE from search operations, effectively preventing its discovery during normal operations.
+
+   The operation does not delete the object bytes, but instead sets the :attr:`Types.SystemMetadata.archived` flag to True. This ensures that the object can still be resolved (and hence remain valid for existing citations and cross references), though will not appear in searches.
+
+   The CN should ensure that all MNs holding a copy of the object are informed of the change so that they may update their information about the object.
+
+   :REST URL: ``PUT /archive/{pid}``
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
+   :type session: :class:`Types.Session`
+
+   :param pid: The identifier of the object to be archived. Transmitted as part of the URL path and must be escaped accordingly.
+   :type pid: :class:`Types.Identifier`
+
+   :returns: The identifier of the object that was archived.
+   :rtype: :class:`Types.Identifier`
+
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=4970)``
+
+   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=4971)``
+
+     The archive operation failed because the object does not exist.
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4972)``
+
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=4973)``
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4974)``
 
 
 

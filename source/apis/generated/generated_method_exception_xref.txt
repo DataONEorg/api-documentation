@@ -400,27 +400,52 @@
      - :func:`delete <MNStorage.delete>`
      - NotAuthorized
      - 401
-     - 1320
+     - 2900
    * - :mod:`MNStorage`
      - :func:`delete <MNStorage.delete>`
      - NotFound
      - 404
-     - 1340
+     - 2901
    * - :mod:`MNStorage`
      - :func:`delete <MNStorage.delete>`
      - ServiceFailure
      - 500
-     - 1350
+     - 2902
    * - :mod:`MNStorage`
      - :func:`delete <MNStorage.delete>`
      - InvalidToken
      - 401
-     - 1330
+     - 2903
    * - :mod:`MNStorage`
      - :func:`delete <MNStorage.delete>`
      - NotImplemented
      - 501
-     - 1321
+     - 2904
+   * - :mod:`MNStorage`
+     - :func:`archive <MNStorage.archive>`
+     - NotAuthorized
+     - 401
+     - 2910
+   * - :mod:`MNStorage`
+     - :func:`archive <MNStorage.archive>`
+     - NotFound
+     - 404
+     - 2911
+   * - :mod:`MNStorage`
+     - :func:`archive <MNStorage.archive>`
+     - ServiceFailure
+     - 500
+     - 2912
+   * - :mod:`MNStorage`
+     - :func:`archive <MNStorage.archive>`
+     - InvalidToken
+     - 401
+     - 2913
+   * - :mod:`MNStorage`
+     - :func:`archive <MNStorage.archive>`
+     - NotImplemented
+     - 501
+     - 2914
    * - :mod:`MNStorage`
      - :func:`systemMetadataChanged <MNStorage.systemMetadataChanged>`
      - NotImplemented
@@ -696,6 +721,56 @@
      - VersionMismatch
      - 409
      - 4946
+   * - :mod:`CNCore`
+     - :func:`delete <CNCore.delete>`
+     - NotAuthorized
+     - 401
+     - 4960
+   * - :mod:`CNCore`
+     - :func:`delete <CNCore.delete>`
+     - NotFound
+     - 404
+     - 4961
+   * - :mod:`CNCore`
+     - :func:`delete <CNCore.delete>`
+     - ServiceFailure
+     - 500
+     - 4962
+   * - :mod:`CNCore`
+     - :func:`delete <CNCore.delete>`
+     - InvalidToken
+     - 401
+     - 4963
+   * - :mod:`CNCore`
+     - :func:`delete <CNCore.delete>`
+     - NotImplemented
+     - 501
+     - 4964
+   * - :mod:`CNCore`
+     - :func:`archive <CNCore.archive>`
+     - NotAuthorized
+     - 401
+     - 4970
+   * - :mod:`CNCore`
+     - :func:`archive <CNCore.archive>`
+     - NotFound
+     - 404
+     - 4971
+   * - :mod:`CNCore`
+     - :func:`archive <CNCore.archive>`
+     - ServiceFailure
+     - 500
+     - 4972
+   * - :mod:`CNCore`
+     - :func:`archive <CNCore.archive>`
+     - InvalidToken
+     - 401
+     - 4973
+   * - :mod:`CNCore`
+     - :func:`archive <CNCore.archive>`
+     - NotImplemented
+     - 501
+     - 4974
    * - :mod:`CNCore`
      - :func:`listNodes <CNCore.listNodes>`
      - NotImplemented

@@ -49,7 +49,10 @@
      - Given a scheme and optional fragment, generates an identifier with that scheme and fragment that is unique. The message body is encoded as MIME Multipart/form-data
    * - DELETE /object/{pid}
      - :func:`MNStorage.delete`
-     - Deletes an object managed by DataONE from the Member Node. This method is called by clients to delete objects on Member nodes. Member Nodes MUST check that the caller is authorized to perform this function. The operation does not delete the object bytes, but instead sets the :attr:`Types.SystemMetadata.archived` flag to True. This ensures that the object can still be resolved (and hence remain valid for existing citations and cross references), though will not appear in searches. If the object does not exist on the node servicing the request, then an :exc:`Exceptions.NotFound` exception is raised. The message body of the exception SHOULD contain a hint as to the location of the :func:`CNRead.resolve` method.
+     - Deletes an object managed by DataONE from the Member Node. Member Nodes MUST check that the caller (typically a Coordinating Node) is authorized to perform this function. The delete operation will be used primarily by Coordinating Nodes to help manage the number of replicas of an object that are present in the entire system. The operation removes the object from further interaction with DataONE services. The implementation may delete the object bytes, and in general should do so since a delete operation may be in response to a problem with the object (e.g. it contains malicious content, is innappropriate, or is the subject of a legal request).  If the object does not exist on the node servicing the request, then an :exc:`Exceptions.NotFound` exception is raised. The message body of the exception SHOULD contain a hint as to the location of the :func:`CNRead.resolve` method.
+   * - PUT /archive/{pid}
+     - :func:`MNStorage.archive`
+     - Hides an object managed by DataONE from search operations, effectively preventing its discovery during normal operations.  The operation does not delete the object bytes, but instead sets the :attr:`Types.SystemMetadata.archived` flag to True. This ensures that the object can still be resolved (and hence remain valid for existing citations and cross references), though will not appear in searches. Member Nodes MUST check that the caller is authorized to perform this function. If the object does not exist on the node servicing the request, then an :exc:`Exceptions.NotFound` exception is raised. The message body of the exception SHOULD contain a hint as to the location of the :func:`CNRead.resolve` method.
    * - POST /dirtySystemMetadata
      - :func:`MNStorage.systemMetadataChanged`
      - Notifies the Member Node that the authoritative copy of system metadata on the Coordinating Nodes has changed. The Member Node SHOULD schedule an update to its information about the affected object by retrieving an authoritative copy from a Coordinating Node. Note that date time precision is limited to one millisecond.  Access control for this method MUST be configured to allow calling by Coordinating Nodes.
@@ -92,6 +95,12 @@
    * - PUT /obsoletedBy/{pid}
      - :func:`CNCore.setObsoletedBy`
      - Updates the :attr:`Types.SystemMetadata.obsoletedBy` property for an object, indicating that the object specified by *pid* has been obsoleted by the identifier in *obsoletedByPid*.
+   * - DELETE /object/{pid}
+     - :func:`CNCore.delete`
+     - Deletes an object from the entire DataONE system, including all nodes known to hold a copy of the object. The PID of the object will continue to be shown as in use (preventing its reuse for other objects), however the object should not be resolvable (NotFound) or retrievable. The delete operation is used only by administrators in response to a request to remove an object from DataONE, perhaps because of legal requirements or the object has been identified as containing malicious content.
+   * - PUT /archive/{pid}
+     - :func:`CNCore.archive`
+     - Hides an object managed by DataONE from search operations, effectively preventing its discovery during normal operations.  The operation does not delete the object bytes, but instead sets the :attr:`Types.SystemMetadata.archived` flag to True. This ensures that the object can still be resolved (and hence remain valid for existing citations and cross references), though will not appear in searches. The CN should ensure that all MNs holding a copy of the object are informed of the change so that they may update their information about the object.
    * - GET /node
      - :func:`CNCore.listNodes`
      - Returns a list of nodes that have been registered with the DataONE infrastructure.

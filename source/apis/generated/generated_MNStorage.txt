@@ -26,6 +26,10 @@
      - ``DELETE /object/{pid}``
      - :func:`delete`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Identifier`
+   * - Tier 3
+     - ``PUT /archive/{pid}``
+     - :func:`archive`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Identifier`
    * - Tier 2
      - ``POST /dirtySystemMetadata``
      - :func:`systemMetadataChanged`
@@ -202,9 +206,11 @@
 
 .. function:: delete(session,pid) -> Identifier
 
-   Deletes an object managed by DataONE from the Member Node. This method is called by clients to delete objects on Member nodes. Member Nodes MUST check that the caller is authorized to perform this function.
+   Deletes an object managed by DataONE from the Member Node. Member Nodes MUST check that the caller (typically a Coordinating Node) is authorized to perform this function.
 
-   The operation does not delete the object bytes, but instead sets the :attr:`Types.SystemMetadata.archived` flag to True. This ensures that the object can still be resolved (and hence remain valid for existing citations and cross references), though will not appear in searches.
+   The delete operation will be used primarily by Coordinating Nodes to help manage the number of replicas of an object that are present in the entire system.
+
+   The operation removes the object from further interaction with DataONE services. The implementation may delete the object bytes, and in general should do so since a delete operation may be in response to a problem with the object (e.g. it contains malicious content, is innappropriate, or is the subject of a legal request).
 
    If the object does not exist on the node servicing the request, then an :exc:`Exceptions.NotFound` exception is raised. The message body of the exception SHOULD contain a hint as to the location of the :func:`CNRead.resolve` method.
 
@@ -217,23 +223,56 @@
    :param pid: The identifier of the object to be deleted. Transmitted as part of the URL path and must be escaped accordingly.
    :type pid: :class:`Types.Identifier`
 
-   :returns: The identifier that was used to delete the document from the system.
+   :returns: The identifier of the object that was deleted.
    :rtype: :class:`Types.Identifier`
 
-   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=1320)``
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=2900)``
 
-   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=1340)``
+   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=2901)``
 
      The delete operation failed because the object is not present on the node servicing the request.
 
-   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=1350)``
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2902)``
 
-   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=1330)``
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=2903)``
 
-   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=1321)``
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2904)``
 
-.. TODO::
-    As DataONE is to be an archival system, we need to determine what the semantics of the DELETE function really should be. Can any user delete their objects at any time? What if they have published and referenced the identifier in past? Should DELETE simply be a mechanism to move the object out of commonly found search mechanisms? What about copyrighted or illegal content that is uploaded?
+
+
+
+.. function:: archive(session,pid) -> Identifier
+
+   Hides an object managed by DataONE from search operations, effectively preventing its discovery during normal operations.
+
+   The operation does not delete the object bytes, but instead sets the :attr:`Types.SystemMetadata.archived` flag to True. This ensures that the object can still be resolved (and hence remain valid for existing citations and cross references), though will not appear in searches.
+
+   Member Nodes MUST check that the caller is authorized to perform this function.
+
+   If the object does not exist on the node servicing the request, then an :exc:`Exceptions.NotFound` exception is raised. The message body of the exception SHOULD contain a hint as to the location of the :func:`CNRead.resolve` method.
+
+   :REST URL: ``PUT /archive/{pid}``
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
+   :type session: :class:`Types.Session`
+
+   :param pid: The identifier of the object to be archived. Transmitted as part of the URL path and must be escaped accordingly.
+   :type pid: :class:`Types.Identifier`
+
+   :returns: The identifier of the object that was archived.
+   :rtype: :class:`Types.Identifier`
+
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=2910)``
+
+   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=2911)``
+
+     The archive operation failed because the object is not present on the node servicing the request.
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2912)``
+
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=2913)``
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2914)``
+
 
 
 

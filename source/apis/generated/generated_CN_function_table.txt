@@ -46,6 +46,14 @@
      - ``PUT /obsoletedBy/{pid}``
      - :func:`CNCore.setObsoletedBy`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`obsoletedByPid<Types.Identifier>`, ``serialVersion``) ``->`` boolean
+   * - Tier 3
+     - ``DELETE /object/{pid}``
+     - :func:`CNCore.delete`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Identifier`
+   * - Tier 3
+     - ``PUT /archive/{pid}``
+     - :func:`CNCore.archive`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Identifier`
    * - Tier 1
      - ``GET /node``
      - :func:`CNCore.listNodes`

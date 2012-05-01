@@ -9,6 +9,21 @@ Change Log
   replication sources. This has been corrected, with the method moved to the
   MNRead Tier1 API. The method description was updated accordingly.
 
+- Existing MNStorage.delete renamed to MNStorage.archive, better reflecting its
+  action.
+
+- New MNStorage.delete operation added for Tier3. This operation does actually
+  delete the content from the node, removing it from DataONE services (the node
+  may choose to also delete the bytes)
+
+- New CNCore.archive operation performs the same action as MN.archive, except
+  the operation triggers a change notification to all nodes containing the
+  object.
+
+- New CNCore.delete operation intended to be used only by administrators when
+  there is a requirement to remove an object from the entire DataONE system.
+  Memory of the identifier persists, preventing its reuse.
+
 
 2012-03-26: Version 1.0, MethodCrossReference.xls
 -------------------------------------------------
