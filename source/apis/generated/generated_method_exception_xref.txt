@@ -276,6 +276,31 @@
      - InvalidRequest
      - 400
      - 1761
+   * - :mod:`MNAuthorization`
+     - :func:`systemMetadataChanged <MNAuthorization.systemMetadataChanged>`
+     - NotImplemented
+     - 501
+     - 1330
+   * - :mod:`MNAuthorization`
+     - :func:`systemMetadataChanged <MNAuthorization.systemMetadataChanged>`
+     - NotAuthorized
+     - 401
+     - 1331
+   * - :mod:`MNAuthorization`
+     - :func:`systemMetadataChanged <MNAuthorization.systemMetadataChanged>`
+     - InvalidToken
+     - 401
+     - 1332
+   * - :mod:`MNAuthorization`
+     - :func:`systemMetadataChanged <MNAuthorization.systemMetadataChanged>`
+     - ServiceFailure
+     - 500
+     - 1333
+   * - :mod:`MNAuthorization`
+     - :func:`systemMetadataChanged <MNAuthorization.systemMetadataChanged>`
+     - InvalidRequest
+     - 400
+     - 1334
    * - :mod:`MNStorage`
      - :func:`create <MNStorage.create>`
      - NotAuthorized
@@ -446,31 +471,6 @@
      - NotImplemented
      - 501
      - 2914
-   * - :mod:`MNStorage`
-     - :func:`systemMetadataChanged <MNStorage.systemMetadataChanged>`
-     - NotImplemented
-     - 501
-     - 1330
-   * - :mod:`MNStorage`
-     - :func:`systemMetadataChanged <MNStorage.systemMetadataChanged>`
-     - NotAuthorized
-     - 401
-     - 1331
-   * - :mod:`MNStorage`
-     - :func:`systemMetadataChanged <MNStorage.systemMetadataChanged>`
-     - InvalidToken
-     - 401
-     - 1332
-   * - :mod:`MNStorage`
-     - :func:`systemMetadataChanged <MNStorage.systemMetadataChanged>`
-     - ServiceFailure
-     - 500
-     - 1333
-   * - :mod:`MNStorage`
-     - :func:`systemMetadataChanged <MNStorage.systemMetadataChanged>`
-     - InvalidRequest
-     - 400
-     - 1334
    * - :mod:`MNReplication`
      - :func:`replicate <MNReplication.replicate>`
      - NotImplemented

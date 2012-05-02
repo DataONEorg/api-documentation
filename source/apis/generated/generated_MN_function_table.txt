@@ -55,6 +55,10 @@
      - ``GET /isAuthorized/{pid}?action={action}``
      - :func:`MNAuthorization.isAuthorized`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`action<Types.Permission>`) ``->`` boolean
+   * - Tier 2
+     - ``POST /dirtySystemMetadata``
+     - :func:`MNAuthorization.systemMetadataChanged`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, ``serialVersion``, :class:`dateSysMetaLastModified<Types.DateTime>`) ``->`` boolean
    * - Tier 3
      - ``POST /object``
      - :func:`MNStorage.create`
@@ -75,10 +79,6 @@
      - ``PUT /archive/{pid}``
      - :func:`MNStorage.archive`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Identifier`
-   * - Tier 2
-     - ``POST /dirtySystemMetadata``
-     - :func:`MNStorage.systemMetadataChanged`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, ``serialVersion``, :class:`dateSysMetaLastModified<Types.DateTime>`) ``->`` boolean
    * - Tier 4
      - ``POST /replicate``
      - :func:`MNReplication.replicate`

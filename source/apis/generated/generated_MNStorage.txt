@@ -30,10 +30,6 @@
      - ``PUT /archive/{pid}``
      - :func:`archive`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Identifier`
-   * - Tier 2
-     - ``POST /dirtySystemMetadata``
-     - :func:`systemMetadataChanged`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, ``serialVersion``, :class:`dateSysMetaLastModified<Types.DateTime>`) ``->`` boolean
 
 
 
@@ -272,44 +268,5 @@
    :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=2913)``
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2914)``
-
-
-
-
-.. function:: systemMetadataChanged(session,pid,serialVersion,dateSysMetaLastModified) -> boolean
-
-   Notifies the Member Node that the authoritative copy of system metadata on the Coordinating Nodes has changed.
-
-   The Member Node SHOULD schedule an update to its information about the affected object by retrieving an authoritative copy from a Coordinating Node.
-
-   Note that date time precision is limited to one millisecond.
-
-   Access control for this method MUST be configured to allow calling by Coordinating Nodes.
-
-   :REST URL: ``POST /dirtySystemMetadata``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
-   :type session: :class:`Types.Session`
-
-   :param pid: Identifier of the object for which system metadata was changed.  Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
-   :type pid: :class:`Types.Identifier`
-
-   :param serialVersion: The serialVersion of the system metadata. Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
-   :type serialVersion: unsigned long
-
-   :param dateSysMetaLastModified: The time stamp for when the system metadata was changed. Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
-   :type dateSysMetaLastModified: :class:`Types.DateTime`
-
-   :returns: True if notification was received OK, otherwise an error is returned.
-   :rtype: boolean
-
-   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=1330)``
-
-   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=1331)``
-
-   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=1332)``
-
-   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=1333)``
-
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=1334)``
 
 
