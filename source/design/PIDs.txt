@@ -1,25 +1,34 @@
 Identifiers in DataONE
 ======================
 
-Identifiers (PIDs, Persistent IDentifiers) are handles utilized by data
-providers as a mechanism to specifically identify the individual objects
-(documents, data sets, data records) they manage. Identifiers in use by the
-provider are unique at least within the scope of the data provider itself. In
-some cases the data provider will use a system that expands the scope of
-guaranteed uniqueness to a larger domain either through an `algorithmic approach
-<guid>`_ (where likelihood of duplication is statistically improbable) or
-through segmenting by namespaces, with values appearing within the namespace
-under the control of the identifier generator and namespace control enforced at
-a higher level to thus ensure uniqueness within the domain of interest.
+Identifiers (PIDs, Persistent IDentifiers) are handles that uniquely identify
+objects within the DataONE system.
+
+* All data, metadata, and resource map objects in DataONE have a unique
+  identifier.
+
+* PIDs will always refer to the same set of bytes accessed through the DataONE
+  API methods such as :func:`MNRead.get`.
+
+* The location of content identified by a PID is determined by calling the
+  :func:`CNCore.resolve` method.
+
+* PIDs are persistent. Once content is registered with DataONE, the identifier
+  for that content will remain in the DataONE system.
+
+* PIDs are unique, and can not be reused once assigned.
+
+* PIDs are generally controlled by Member Nodes, however their uniqueness and
+  immutability is enforced primarily by the Coordinating Nodes.
 
 
 Uniqueness
 ~~~~~~~~~~
 
-Uniqueness of identifiers in DataONE is largely under the control of the Member
+Generation of identifiers in DataONE is largely under the control of the Member
 Nodes (i.e. the data providers), with the requirement that an existing
 identifier (i.e. one that is already registered in the DataONE system) can not
-be reused. This is enforced for new content by checking the uniqueness of a
+be reused. This rule is enforced for new content by checking the uniqueness of a
 proposed identifier in the :func:`MNStorage.create` method, and for existing
 content by ignoring content with identifiers that are already in use. The
 :func:`CNCore.reserveIdentifier` method may be used to reserve an identifier, so
@@ -28,17 +37,6 @@ new content to storage on the Member Node. Similarly, Tier 3 and above Member
 Nodes may support the :func:`MNStorage.generateIdentifier` which will typically
 delegate to a third party persistent identifier service such as EZID [1]_ to
 return an identifier guaranteed to be unique within the DataONE system.
-
-.. Note:: 
-
-  For many existing, large repositories, this approach of MN controlled
-  identifiers is unlikely to be a problem. As many, perhaps smaller or less
-  controlled Member Nodes come online, this approach of MN only controlled
-  uniqueness is less likely to be reliable. A simple solution would be to
-  provide each new MN with a suggested prefix for their new content. Such a
-  prefix could be ignored by an MN during creation of identifiers with no harm
-  other than reduced guarantee of uniqueness. Its use however, would help
-  ensure uniqueness of new identifiers within the DataONE infrastructure.
 
 
 Authority
@@ -61,9 +59,8 @@ conform to schemes such as the LSID [2]_ and DOI [3]_ specifications. DataONE
 does not directly utilize implied functionality and services that might be
 available for some of the identifier schemes. This is not to say that mechanisms
 such as metadata retrieval for LSIDs is not used by any components of the
-DataONE infrastructure, but rather indicates that the DataONE infrastructure and
-services operate independently of such external services, with no functional
-dependency.
+DataONE infrastructure, but rather that the DataONE infrastructure and services
+have no functional dependency on such external services.
 
 Identifiers are treated as opaque strings in the DataONE system, with no meaning
 inferred from structure or pattern that may be present in identifiers. The rules
@@ -87,12 +84,14 @@ Resolvability
 ~~~~~~~~~~~~~
 
 A fundamental goal of DataONE is to ensure that any identifier utilized in the
-system is resolvable, that is, DataONE provides a method that will enable
-retrieval of the bytes associated with the object (the actual object bytes or
-metadata associated with the object). Resolution is handled by the Coordinating
-Nodes through the :func:`CNCore.resolve` method. A guarantee of resolvability is
-a fundamental function of the DataONE infrastructure upon which many other
-services may be constructed, both within DataONE and by third party systems.
+system is resolvable, that is, DataONE provides a mechanism that will enable the
+location of the object to be determined. Resolution is handled by the
+Coordinating Nodes through the :func:`CNCore.resolve` method, which returns a
+list of nodes from which the object may be retrieved.
+
+A guarantee of identifier resolvability is an important, core function of the
+DataONE infrastructure upon which many other services may be constructed, both
+within DataONE and by third party systems.
 
 
 Granularity
@@ -108,12 +107,13 @@ contained within some package.
 Structure
 ~~~~~~~~~
 
-The content of identifiers acceptable to the DataONE system is constrained by
-the XMLSchema definition (:class:`Types.Identifier`), which is essentially a
-string of length greater than zero but less than 800 characters with no
-whitespace (spaces, tabs, non-printing characters, carriage returns, new lines).
-Examples of valid identifiers in DataONE are shown in the section *Serializing*
-below.
+The characters that may appear in an identifier string acceptable to the DataONE
+system is constrained by the XMLSchema definition (:class:`Types.Identifier`),
+which is essentially a string of length greater than zero but less than 800
+characters with no whitespace (spaces, tabs, non-printing characters, carriage
+returns, new lines). Identifiers may be Unicode provided they conform to the
+fairly liberal restrictions imposed by the XML specification [4]_. Examples of
+valid identifiers in DataONE are shown in the section *Serializing* below.
 
 
 Serializing
@@ -146,7 +146,7 @@ according to RFC3986_ encoding guidelines for URI path segments::
   
 **Escaping spaces in URLs**
 
-While RFC3986 [4]_ encodes ' ' (space) characters with "%20", previous encoding
+While RFC3986 [5]_ encodes ' ' (space) characters with "%20", previous encoding
 guidelines used "+" as the space encoding for readability. In order to support
 clients that use these older parsers, DataONE will treat '+' as a character to
 percent-escape when encoding, and will decode '+' characters to ' '
@@ -179,9 +179,9 @@ identifier::
 
 The necessary encoding of URLs can be usually achieved through standard
 libraries available in many languages, with the caveat that the encoding
-follows the RFC3986[4]_ encoding rules. Many packages over-escape, keeping only
+follows the RFC3986 encoding rules. Many packages over-escape, keeping only
 the unreserved character set unescaped. For its client libraries, DataONE is
-taking a minimal escaping approach within the latitude RFC3986[4]_ allows.
+taking a minimal escaping approach within the latitude RFC3986 allows.
 Specifically, using [pchar] - ['+'] as the set of unescaped characters for
 identifiers in path segments, and [pchar] - ['+', '&', '='] + ['/', '?'] for
 identifiers in query segments, (segments in both cases meaning characters
@@ -404,7 +404,9 @@ The following commands should output the same as ``cat test_ids.txt``::
 
 .. [3] http://www.doi.org/
 
-.. [4] http://tools.ietf.org/html/rfc3986
+.. [4] http://www.w3.org/TR/xml11/#charsets
+
+.. [5] http://tools.ietf.org/html/rfc3986
 
 
 .. 
