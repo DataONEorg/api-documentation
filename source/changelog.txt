@@ -1,6 +1,13 @@
 Change Log
 ==========
 
+2012-05-31: Version 1.0, Correction to URIs in Resource Maps
+------------------------------------------------------------
+
+- Corrected URI constructs in the resource map data package documents to use
+  resolve rather than getObject URIs so that clients can take advantage of the
+  ObjectLocationList or HTTP status 302 redirect.
+
 2012-05-02: Version 1.0, MethodCrossReference.xls
 -------------------------------------------------
 
