@@ -3,21 +3,24 @@ Data Packaging
 
 .. contents::
 
+Overview
+--------
+
 Data, in the context of DataONE, is a discrete unit of digital content that is
 expected to represent information obtained from some experiment or scientific
-study. The :term:`data` are accompanied by :term:`science metadata`, which is a
-separate unit of digital content that describes properties of the data. Each
+study. The :term:`data` are accompanied by :term:`science metadata`, which is
+a separate unit of digital content that describes properties of the data. Each
 unit of science data or science metadata is accompanied by a :term:`system
-metadata` document which contains attributes that describe the digital object it
-accompanies (e.g. hash, time stamps, ownership, relationships). 
+metadata` document which contains attributes that describe the digital object
+it accompanies (e.g. hash, time stamps, ownership, relationships).
 
-In the initial version of DataONE, data are treated as opaque sets of bytes
-and, along with their associated science metadata, are stored on :term:`Member
-Node`\s (MN). A copy of the science metadata is held by the
-:term:`Coordinating Node`\s (CN) and is parsed to extract attributes to assist
-the discovery process (i.e. users searching for content).
+In DataONE, data are treated as opaque sets of bytes and, along with their
+associated science metadata, are stored on :term:`Member Node`\s (MN). A copy
+of the science metadata is held by the :term:`Coordinating Node`\s (CN) and is
+parsed to extract attributes to assist the discovery process (i.e. users
+searching for content).
 
-The opaqueness of data in DataONE is likely to change in the future to enable
+The opacity of data in DataONE is likely to change in the future to enable
 processing of the data with operations such as translation (e.g. for format
 migration), extraction (e.g. for rendering), and merging (e.g. to combine
 multiple instances of data that are expressed in different formats). Such
@@ -25,24 +28,19 @@ operations rely upon a stable, accessible framework supporting reliable data
 access, and so are targeted after the initial requirements of DataONE are met
 and the core infrastructure is demonstrably robust.
 
-Data Packages
--------------
-
-A :term:`data package` is a set of one or more :term:`data` objects,
-:term:`science metadata` objects, and :term:`system metadata` documents that
-together represent a scientifically useful unit of information. In order to
-properly interpret, preserve, and utilize the opaque set of bytes found in a
-data object, users and their software agents need access to the science
-metadata and system metadata that describe those data objects. A data package
-provides the conceptual relationships among the various components of the
-package that describe which objects are described by which metadata documents,
-and the role in that description that they play. This model accommodates use
-of well-established existing metadata specifications such as EML, BDP, and ISO
-19115 for describing science metadata while recognizing that some of these do
-not readily incorporate mechanisms for consistent linkages to and inclusion of
-data objects. The data package concept also provides a consistent mechanism to
-define one or more serialized representations of a package that can be used to
-transport the components of a data package from one system to another.
+In order to properly interpret, preserve, and utilize a data object, users and
+their software agents need access to the science metadata describing the data
+objects. A :term:`data package` in DataONE provides the conceptual
+relationships among the various components of the package that describe which
+:term:`data` objects are described by which :term:`science metadata`
+documents, and the role in that description that they play. This model
+accommodates use of well-established existing metadata specifications such as
+EML, BDP, and ISO 19115 for documenting science metadata while recognizing that
+some of these do not readily incorporate mechanisms for consistent linkages to
+and inclusion of data objects. The data package concept also provides a
+consistent mechanism to define one or more serialized representations of a
+package that can be used to transport the components of a data package from
+one system to another.
 
 .. Note::
 
@@ -53,12 +51,14 @@ transport the components of a data package from one system to another.
   describe the relationship between two objects where one replaces the other
   from a scientific utility perspective (such as an error-corrected version of
   an existing data file).
-  
 
-.. 
-  deprecated: derivedFrom defines the lineage of one object that was produced
-  from and may not be independent of an original source object. describes,
-  describedBy
+A *data package* will be represented in DataONE as a unique, additional class
+of object with its own unique identifier different from the identifiers of its
+components. Each of these data packages in DataONE will be represented by an
+OAI-ORE Resource Map that contains an Aggregation indicating relationships
+among the components of the package. The BagIt specification will be used to
+optionally provide these components as a single serialized object. Background
+on OAI-ORE and BagIt follow the User Stories section below.
 
 
 User stories 
@@ -108,21 +108,151 @@ User stories
   an existing data package
 
 
-Representation of Data Packages in DataONE
+
+Package Content Associations Using OAI-ORE
 ------------------------------------------
 
-A Data Package will be represented in DataONE as a unique, additional class of
-object with its own unique identifier different from the identifiers of its
-components.  Each of these Data Packages in DataONE will be represented by an
-OAI-ORE Resource Map that contains an Aggregation indicating relationships
-among the components of the package.  The BagIt specification will be used to
-package these components into a single serialized object. Background on BagIt
-and OAI-ORE follow, and then a description of the use of the standards for
-DataONE data packages.
+The Open Archives Initiative's Object Reuse and Exchange (OAI-ORE)
+[Lagoze-2008]_ "defines standards for the description and exchange of
+aggregations of Web resources". OAI-ORE provides a mechanism for describing
+aggregations of distinct resources on the web by using their respective URIs
+to provide linkages in an RDF model. Each Aggregation is given its own
+distinct identifying URI, and ORE recommends the use of `Cool URIs`_ for the
+Semantic Web [Sauermann_Cyganiak-2008]_ as a mechanism to redirect from the
+Aggregation URI to a specific representation of the Aggregation, called a
+Resource Map, that can be represented in one of several different
+serializations such as RDF/XML, turtle, and Atom XML. Because relationships
+among resources are provided using RDF predicates, there is tremendous
+flexibility in the type of relationships that can be defined. ORE provides
+specific predicates that define relationship types between the Aggregation and
+a Resource Map ('ore:describes') and between the Aggregation and the Resources
+that it aggregates ('ore:aggregates'). These concepts relate closely to
+similar concepts in DataONE.
+
+Beneficial features
+  * Uses traditional web URIs as global identifiers
+  * Compatible with the Linked Data philosophy
+  * Supports arbitrary graphs of resources and aggregations
+
+Issues
+  * Does not provide a direct serialization of the Aggregation with the bytes
+    inline
+  * No data model for internal structure of enclosed resources
+
+Questions
+  * Do URIs really have to be used, or can other resource identifiers such as
+    DOIs be used?
+  * Is there a more elegant way to link the Aggregation to a Resource Map than
+    using the `Cool URIs`_ approach of redirection, especially when multiple
+    physical copies of a Resource might exist at multiple physical locations?
+
+.. figure:: http://www.openarchives.org/ore/1.0/datamodel-images/ore_uml.png
+
+   **Figure 1.** General model for an OAI-ORE document.
+
+.. figure:: images/package_eg_1.png
+
+   **Figure 2.** Simple OAI-ORE representation of a data package with single
+   science metadata (*scimeta_id*) and data(*scidata_id*) objects. There are
+   two issues that need to be resolved for DataONE: a) how to assert that the
+   aggregated object *scidata_id* is described by the metadata *scimeta_id*;
+   and b) identifiers in OAI-ORE *must* be "protocol-based URIs", which is
+   more restrictive that DataONE requires.
 
 
-BagIt
-~~~~~
+**Issue:** 
+
+There are no predicates in ORE that can be used to indicate that the
+aggregated object *scimeta_id* describes the data indicated by *scidata_id*.
+
+**Options:**
+
+1. References between *scimeta_id* and *scidata_id* can be supported through
+   non-ORE RDF elements. Reuse of existing terms should be emphasized.
+
+   For example, the DCMI Type Vocabulary defines a *Dataset* type that could be
+   used to indicate that *scidata_id* refers to a data object by attaching the
+   Dublin Core Terms Type predicate to the ORE aggregated object. Other
+   possibilities from dcterms include `references`_ and `isReferencedBy`_,
+   `requires`_ and `isRequiredBy`_, and `relation`_.
+
+   In the document Mapping DataCite Metadata Scheme Terms (v2.0) to ontologies
+   (DataCite2RDF_), Shotton and Peroni provide a mapping between concepts
+   described in the DataCite schema and existing ontologies with the general
+   goal of expressing DataCite in RDF. The recommendation provided therein is to
+   use terms drawn from the Citation Typing Ontology (CiTO_) and others. The
+   semantics of the CiTO terms *documents* and *isDocumentedBy* match nicely
+   with the relationships between data and science metadata objects.
+
+2. 
+
+   That a science metadata object actually describes one or more data objects
+   can be inferred simply from its presence in a resource map aggregation.
+   Detection of science metadata vs. data would be highly dependent on the
+   object format for the object as expressed in it's system metadata. This could
+   be augmented by adding the `format`_ predicate from dcterms, with the object
+   being the corresponding entry in the object format registry. However, this
+   approach will not indicate which data objects are described by which metadata
+   documents in the case where multiple metadata documents exist in a package.
+
+
+**Resolution:**
+
+Relationships between aggregated objects are indicated using terms drawn from
+the CiTO_ ontology, with *cito:documents* attached to an aggregated science
+metadata entry with the object of the triple being the URI of the relevant
+aggregated data object, and the converse indicated by *cito:isDocumentedBy*.
+
+
+**Issue:**
+
+Identifiers in OAI-ORE documents must technically be "protocol-based URIs"
+(http://www.openarchives.org/ore/1.0/datamodel#Aggregated_Resource), whereas
+identifiers in DataONE can be essentially any non-blank string. 
+
+**Options:**
+
+1. 
+
+   Ignore the OAI-ORE requirement for URI identifiers. The identifiers will
+   still work fine in the DataONE context, but would not be friendly for anyone
+   accessing the ORE document without an appropriate DataONE client to resolve
+   and retrieve the referenced objects.
+
+2. 
+
+   Wrap the identifiers with a DataONE REST service URL that retrieves the
+   object being referenced. So for example, if the DataONE identifier for the
+   object was *scimeta_id*, then the URI used in the ORE document to reference
+   the aggregated object would *http://cn.dataone.org/object/scimeta_id*. The
+   :func:`CN_read.get` operation would be modified to do a resolve, then a HTTP
+   302 redirect to the node that contains the content. This would also require
+   that the client libraries are updated to support redirection.
+
+   This option has the advantage of keeping the the ORE document functional for
+   non-DataONE users but has the disadvantage of obfuscating the object
+   identifiers. The later issue could be addressed by adding the dcterms
+   `identifier`_ property to the aggregated object with the object being the
+   actual DataONE identifier.
+
+
+**Resolution:**
+
+ORE URIs for aggregated objects are constructed by prepending the
+:func:`CNCore.resolve` REST URL to the identifier (with the identifier
+appropriately URI path encoded). :func:`CNRead.resolve` returns an
+:class:`Types.ObjectLocationList` as the response body, and a HTTP status of
+302 with the first node listed in the ObjectLocationList being the target of
+the redirect. The literal DataONE identifier for the aggregated object is
+added to the ORE aggregate entry as a dcterms `identifier`_ property. DataONE
+clients will utilize the *dcterms:identifier* entry to determine the DataONE
+identifier of the object and utilize the normal *resolve* and *get* approach
+for retrieving the object. The URLs contained in the ORE document will
+continue to be handled as expected by other clients.
+
+
+Package Serialization Using BagIt
+---------------------------------
 
 The BagIt File Packaging Format [Boyko-2009]_ "is a hierarchical file
 packaging format designed to support disk-based or network-based storage and
@@ -161,143 +291,23 @@ Questions
   * How are large objects that would normally exceed file system size
     limitations be handled?
 
+.. Note:: 
 
-OAI-ORE
-~~~~~~~
-
-The Open Archives Initiative's Object Reuse and Exchange (OAI-ORE)
-[Lagoze-2008]_ "defines standards for the description and exchange of
-aggregations of Web resources". OAI-ORE provides a mechanism for describing
-aggregations of distinct resources on the web by using their respective URIs to
-provide linkages in an RDF model. Each Aggregation is given its own distinct
-identifying URI, and ORE recommends the use of `Cool URIs`_ for the Semantic Web
-[Sauermann_Cyganiak-2008]_ as a mechanism to redirect from the Aggregation URI
-to a specific representation of the Aggregation, called a Resource Map, that can
-be represented in one of several different serializations such as RDF/XML,
-turtle, and Atom XML. Because relationships among resources are provided using
-RDF predicates, there is tremendous flexibility in the type of relationships
-that can be defined. ORE provides specific predicates that define relationship
-types between the Aggregation and a Resource Map ('ore:describes') and between
-the Aggregation and the Resources that it aggregates ('ore:aggregates'). These
-concepts relate closely to similar concepts in DataONE.
-
-Beneficial features
-  * Uses traditional web URIs as global identifiers
-  * Compatible with the Linked Data philosophy
-  * Supports arbitrary graphs of resources and aggregations
-
-Issues
-  * Does not provide a direct serialization of the Aggregation with the bytes
-    inline
-  * No data model for internal structure of enclosed resources
-
-Questions
-  * Do URIs really have to be used, or can other resource identifiers such as
-    DOIs be used?
-  * Is there a more elegant way to link the Aggregation to a Resource Map than
-    using the `Cool URIs`_ approach of redirection, especially when multiple
-    physical copies of a Resource might exist at multiple physical locations?
-
-.. figure:: http://www.openarchives.org/ore/1.0/datamodel-images/ore_uml.png
-
-   **Figure 1.** General model for an OAI-ORE document.
-
-.. figure:: images/package_eg_1.png
-
-   **Figure 2.** Simple OAI-ORE representation of a data package with single
-   science metadata (*scimeta_id*) and data(*scidata_id*) objects. There are two
-   issues that need to be resolved for DataONE: a) how to assert that the
-   aggregated object *scidata_id* is described by the metadata *scimeta_id*; and
-   b) identifiers in OAI-ORE *must* be "protocol-based URIs", which is more
-   restrictive that DataONE requires.
+   The BagIt specification is not used in Version 1.0 of the DataONE services,
+   though is likely to be supported by Member Nodes especially for
+   :func:`MNStorage.create` for conveniently adding a data package to the
+   system, and by client libraries to facilitate download of all objects that
+   together constitute a data package.
 
 
-Though there are no predicates in ORE that can be used to indicate that the
-aggregated object *scimeta_id* describes the data indicated by *scidata_id*,
-there are a couple of options:
+Examples
+--------
 
-1. References between *scimeta_id* and *scidata_id* can be supported through
-   non-ORE RDF elements. Reuse of existing terms should be emphasized.
-
-   For example, the DCMI Type Vocabulary defines a *Dataset* type that could be
-   used to indicate that *scidata_id* refers to a data object by attaching the
-   Dublin Core Terms Type predicate to the ORE aggregated object. Other
-   possibilities from dcterms include `references`_ and `isReferencedBy`_,
-   `requires`_ and `isRequiredBy`_, and `relation`_.
-
-   In the document Mapping DataCite Metadata Scheme Terms (v2.0) to ontologies
-   (DataCite2RDF_), Shotton and Peroni provide a mapping between concepts
-   described in the DataCite schema and existing ontologies with the general
-   goal of expressing DataCite in RDF. The recommendation provided therein is to
-   use terms drawn from the Citation Typing Ontology (CiTO_) and others. The
-   semantics of the CiTO terms *documents* and *isDocumentedBy* match nicely
-   with the relationships between data and science metadata objects.
-
-
-2. 
-
-   That a science metadata object actually describes one or more data objects
-   can be inferred simply from its presence in a resource map aggregation.
-   Detection of science metadata vs. data would be highly dependent on the
-   object format for the object as expressed in it's system metadata. This could
-   be augmented by adding the `format`_ predicate from dcterms, with the object
-   being the corresponding entry in the object format registry. However, this
-   approach will not indicate which data objects are described by which metadata
-   documents in the case where multiple metadata documents exist in a package.
-
-
-Identifiers in OAI-ORE documents must technically be "protocol-based URIs"
-(http://www.openarchives.org/ore/1.0/datamodel#Aggregated_Resource), whereas
-identifiers in DataONE can be essentially any non-blank string. There's a couple
-of options here:
-
-1. 
-
-   Ignore the OAI-ORE requirement for URI identifiers. The identifiers will
-   still work fine in the DataONE context, but would not be friendly for anyone
-   accessing the ORE document without an appropriate DataONE client to resolve
-   and retrieve the referenced objects.
-
-2. 
-
-   Wrap the identifiers with a DataONE REST service URL that retrieves the
-   object being referenced. So for example, if the DataONE identifier for the
-   object was *scimeta_id*, then the URI used in the ORE document to reference
-   the aggregated object would *http://cn.dataone.org/object/scimeta_id*. The
-   :func:`CN_read.get` operation would be modified to do a resolve, then a HTTP
-   302 redirect to the node that contains the content. This would also require
-   that the client libraries are updated to support redirection.
-
-   This option has the advantage of keeping the the ORE document functional for
-   non-DataONE users but has the disadvantage of obfuscating the object
-   identifiers. The later issue could be addressed by adding the dcterms
-   `identifier`_ property to the aggregated object with the object being the
-   actual DataONE identifier.
-
-
-The recommendation (requires discussion) is as follows: 
-
-1. 
-
-   ORE URIs for aggregated objects are constructed by prepending a CN REST URL
-   to the identifier. The CN REST URL will be a new service similar to the
-   current CN.get except that it will issue a HTTP 302 redirect to a node from
-   which the item can be retrieved. The literal DataONE identifier for the
-   aggregated object is added to the ORE aggregate entry as a dcterms
-   `identifier`_ property. DataONE clients will utilize the *dcterms:identifier*
-   entry to determine the DataONE identifier of the object and utilize the
-   normal *resolve* and *get* approach for retrieving the object.
-
-2. 
-
-   Relationships between aggregated objects are indicated using terms drawn from
-   the CiTO_ ontology, with *cito:documents* attached to an aggregated science
-   metadata entry with the object of the triple being the URI of the relevant
-   aggregated data object, and the converse indicated by *cito:isDocumentedBy*.
-
-
-An RDF-XML rendering of the example from Figure 2 following the recommendations
-as generated using the `Foresite python library`_ is presented below:
+An RDF-XML rendering of the example from Figure 2 following the
+recommendations as generated using the `Foresite python library`_ is presented
+below. This OAI-ORE document is an example of a simple data package in
+DataONE, where a single science metadata document (identifier = *scimeta_id*)
+describes a single data object (identifier = *scidata_id*).
 
 .. code-block:: xml
 
@@ -315,8 +325,8 @@ as generated using the `Foresite python library`_ is presented below:
        <foaf:mbox>foresite@googlegroups.com</foaf:mbox>
        <foaf:name>Foresite Toolkit (Python)</foaf:name>
      </rdf:Description>
-     <rdf:Description rdf:about="https://cn.dataone.org/object/scimeta_id">
-       <cito:documents rdf:resource="https://cn.dataone.org/object/scidata_id"/>
+     <rdf:Description rdf:about="https://cn.dataone.org/cn/v1/resolve/scimeta_id">
+       <cito:documents rdf:resource="https://cn.dataone.org/cn/v1/resolve/scidata_id"/>
        <dcterms:identifier>scimeta_id</dcterms:identifier>
        <dcterms:description>A reference to a science metadata document using a DataONE identifier.</dcterms:description>
      </rdf:Description>
@@ -324,7 +334,7 @@ as generated using the `Foresite python library`_ is presented below:
        <rdfs1:isDefinedBy rdf:resource="http://www.openarchives.org/ore/terms/"/>
        <rdfs1:label>ResourceMap</rdfs1:label>
      </rdf:Description>
-     <rdf:Description rdf:about="https://cn.dataone.org/object/resource_map_id">
+     <rdf:Description rdf:about="https://cn.dataone.org/cn/v1/resolve/resource_map_id">
        <dcterms:identifier>resource_map_id</dcterms:identifier>
        <dcterms:modified>2011-08-12T12:55:16Z</dcterms:modified>
        <rdf:type rdf:resource="http://www.openarchives.org/ore/terms/ResourceMap"/>
@@ -340,17 +350,15 @@ as generated using the `Foresite python library`_ is presented below:
      <rdf:Description rdf:about="aggregation_id">
        <rdf:type rdf:resource="http://www.openarchives.org/ore/terms/Aggregation"/>
        <dcterms:title>Simple aggregation of science metadata and data</dcterms:title>
-       <ore:aggregates rdf:resource="https://cn.dataone.org/object/scidata_id"/>
-       <ore:aggregates rdf:resource="https://cn.dataone.org/object/scimeta_id"/>
+       <ore:aggregates rdf:resource="https://cn.dataone.org/cn/v1/resolve/scidata_id"/>
+       <ore:aggregates rdf:resource="https://cn.dataone.org/cn/v1/resolve/scimeta_id"/>
      </rdf:Description>
-     <rdf:Description rdf:about="https://cn.dataone.org/object/scidata_id">
-       <cito:isDocumentedBy rdf:resource="https://cn.dataone.org/object/scimeta_id"/>
+     <rdf:Description rdf:about="https://cn.dataone.org/cn/v1/resolve/scidata_id">
+       <cito:isDocumentedBy rdf:resource="https://cn.dataone.org/cn/v1/resolve/scimeta_id"/>
        <dcterms:identifier>scidata_id</dcterms:identifier>
        <dcterms:description>A reference to a science data object using a DataONE identifier</dcterms:description>
      </rdf:Description>
    </rdf:RDF>
-
-
 
 
 The same in N3::
@@ -362,7 +370,7 @@ The same in N3::
   @prefix ore: <http://www.openarchives.org/ore/terms/> .
   @prefix rdfs1: <http://www.w3.org/2001/01/rdf-schema#> .
 
-  <https://cn.dataone.org/object/resource_map_id> a <http://www.openarchives.org/ore/terms/ResourceMap>;
+  <https://cn.dataone.org/cn/v1/resolve/resource_map_id> a <http://www.openarchives.org/ore/terms/ResourceMap>;
       dc:format "text/rdf+n3";
       dcterms:created "2011-08-12T12:57:03Z";
       dcterms:creator <http://foresite-toolkit.googlecode.com/#pythonAgent>;
@@ -372,8 +380,8 @@ The same in N3::
 
   <aggregation_id> a <http://www.openarchives.org/ore/terms/Aggregation>;
       dcterms:title "Simple aggregation of science metadata and data";
-      ore:aggregates <https://cn.dataone.org/object/scidata_id>,
-          <https://cn.dataone.org/object/scimeta_id> .
+      ore:aggregates <https://cn.dataone.org/cn/v1/resolve/scidata_id>,
+          <https://cn.dataone.org/cn/v1/resolve/scimeta_id> .
 
   <http://foresite-toolkit.googlecode.com/#pythonAgent> foaf:mbox "foresite@googlegroups.com";
       foaf:name "Foresite Toolkit (Python)" .
@@ -386,12 +394,11 @@ The same in N3::
 
   <https://cn.dataone.org/object/scidata_id> dcterms:description "A reference to a science data object using a DataONE identifier";
       dcterms:identifier "scidata_id";
-      cito:isDocumentedBy <https://cn.dataone.org/object/scimeta_id> .
+      cito:isDocumentedBy <https://cn.dataone.org/cn/v1/resolve/scimeta_id> .
 
   <https://cn.dataone.org/object/scimeta_id> dcterms:description "A reference to a science metadata document using a DataONE identifier.";
       dcterms:identifier "scimeta_id";
-      cito:documents <https://cn.dataone.org/object/scidata_id> .
-
+      cito:documents <https://cn.dataone.org/cn/v1/resolve/scidata_id> .
 
 
 
@@ -421,8 +428,17 @@ The same in N3::
 
 .. _CiTO: http://purl.org/spar/cito/
 
-Data Package Structure
-----------------------
+
+
+
+BagIt Data Package Serialization
+--------------------------------
+
+.. Note::
+
+   This section outlines a currently (Version 1.0) un-implemented approach for
+   serializing data packages in DataONE using the BagIt specification.
+
 
 The structure of a Data Package will follow the BagIt specification with the
 exception of the following additions and changes described here.  The basic
@@ -445,8 +461,8 @@ directory that uses the object identifiers for DataONE objects and describes
 the relationships among the objects in the package.
 
 
-Data Package Client design
---------------------------
+Data Package Client Design
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Although DataONE CNs and MNs will treat data as opaque, it is useful to design
 clients that understand the structure of Data Packages and have a common
@@ -465,8 +481,8 @@ on science metadata and annotations, allowing advanced data querying,
 processing, and analysis on highly heterogeneous sources of data.
 
 
-Classes, fields, and methods
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Classes, Fields, and Methods
+............................
 
 * DataPackage
    * Fields
@@ -503,8 +519,8 @@ Classes, fields, and methods
        * getObsoltedByList(): List<Identifier>
 
 
-Algorithm for constructing Data Packages
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Algorithm for Constructing Data Packages
+........................................
 
 Constructing a data package involves taking a PID as passed to the client,
 and using that PID to query the system metadata to find all associated
@@ -539,7 +555,7 @@ associated data objects. In pseudocode:
 
 
 Additional Packaging Technologies
----------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 A number of additional existing technologies can and have been used for
 describing the linkages between science metadata, data, and system metadata.
@@ -550,7 +566,7 @@ considered but not selected, in favor of using BagIt and OAI-ORE.
 
 
 Ecological Metadata Language (EML)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+..................................
 
 The Ecological Metadata Language (EML) [EML-2010]_ is a science metadata specification
 that specifically is modeled around the idea of a 'data package' that consists
@@ -598,7 +614,7 @@ Questions
 
 
 NetCDF
-~~~~~~
+......
 
 "NetCDF is an abstraction that supports a view of data as a collection of
 self-describing, portable objects that can be accessed through a simple
@@ -640,7 +656,7 @@ Questions
 
 
 References
-----------
+..........
 
 .. [Boyko-2009] Boyko, A., Kunze, J., Littman, J., Madden, L., Vargas, B. (2009). The BagIt File
    Packaging Format (V0.96). Retrieved April 2, 2010, from
