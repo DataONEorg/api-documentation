@@ -107,13 +107,14 @@ contained within some package.
 Structure
 ~~~~~~~~~
 
-The characters that may appear in an identifier string acceptable to the DataONE
-system is constrained by the XMLSchema definition (:class:`Types.Identifier`),
-which is essentially a string of length greater than zero but less than 800
-characters with no whitespace (spaces, tabs, non-printing characters, carriage
-returns, new lines). Identifiers may be Unicode provided they conform to the
-fairly liberal restrictions imposed by the XML specification [4]_. Examples of
-valid identifiers in DataONE are shown in the section *Serializing* below.
+The characters that may appear in an identifier string acceptable to the
+DataONE system is constrained by the XMLSchema definition
+(:class:`Types.Identifier`), which is essentially a string of length greater
+than zero but less than 800 characters with no whitespace (spaces, tabs,
+non-printing characters, carriage returns, new lines). Identifiers may be
+Unicode provided they conform to the fairly liberal restrictions imposed by
+the XML specification [4]_. Examples of valid identifiers in DataONE are shown
+in the section *Serializing* below.
 
 
 Serializing
@@ -131,7 +132,7 @@ serialization format. For example, the identifiers::
   http://example.com/data/mydata?row=24
   ldap://ldap1.example.net:6666/o=University%20of%20Michigan,c=US??sub?(cn=Babs%20Jensen)
   ฉันกินกระจกได้
-  Is féidir liom ithe gloine
+  Is_féidir_liom_ithe_gloine
 
 would be serialized in DataONE :func:`MNRead.get` URLs (or any other URL path)
 according to RFC3986_ encoding guidelines for URI path segments::
@@ -141,41 +142,18 @@ according to RFC3986_ encoding guidelines for URI path segments::
   http://mn.example.com/mn/object/http:%2F%2Fexample.com%2Fdata%2Fmydata%3Frow=24
   http://mn.example.com/mn/object/ldap:%2F%2Fldap1.example.net:6666%2Fo=University%2520of%2520Michigan,c=US%3F%3Fsub%3F(cn=Babs%2520Jensen)
   http://mn.example.com/mn/object/%E0%B8%89%E0%B8%B1%E0%B8%99%E0%B8%81%E0%B8%B4%E0%B8%99%E0%B8%81%E0%B8%A3%E0%B8%B0%E0%B8%88%E0%B8%81%E0%B9%84%E0%B8%94%E0%B9%89
-  http://mn.example.com/mn/object/Is%20f%C3%A9idir%20liom%20ithe%20gloine
-
-  
-**Escaping spaces in URLs**
-
-While RFC3986 [5]_ encodes ' ' (space) characters with "%20", previous encoding
-guidelines used "+" as the space encoding for readability. In order to support
-clients that use these older parsers, DataONE will treat '+' as a character to
-percent-escape when encoding, and will decode '+' characters to ' '
-characters. The effect is uniform decoding under both encoding methods.
-
-Take for instance the following identifier::
-
-    id__  ___+___
-
-with encoding under both methods::
-
-    rfc3986:    id__%20___%2B___
-       plus:    id__+___%2B___
-
-The RFC3986-encoded identifier decoded under either methods yields the same
-result::
-
-    rfc3986 decoding: id__ ___+___
-       plus decoding: id__ ___+___
-
-However, the plus-encoded identifier decoded under each method gives
-inconsistent results. The RFC3986 decoding not returning us to the original
-identifier::
-
-    rfc3986 decoding: id__+___+___
-       plus decoding: id__ ___+___
+  http://mn.example.com/mn/object/Is_f%C3%A9idir_liom_ithe_gloine
 
 
-----
+.. Note::
+
+   The "+" (plus) character is a special case since it was once treated as a
+   space character in URLs, and was changed in RFC3986 [5]_ such that the "+"
+   would not be treated as a space. To minimize confusion when the plus
+   character appears in an identifier, DataONE recommends that the character
+   is percent escaped (``%2B``) when it appears in DataONE service URLs. All
+   DataONE libraries and services operate in this manner.
+
 
 The necessary encoding of URLs can be usually achieved through standard
 libraries available in many languages, with the caveat that the encoding
@@ -200,11 +178,11 @@ and encoded in the query section to::
   example-location-dependent-__/__?__%26__%3D__
   example-common-unescaped-;:@$-_.!*()',~
 
-Note that RFC3986[4] treats the query section of the URI as a blackbox, so '&'
+Note that RFC3986 [5]_ treats the query section of the URI as a blackbox, so '&'
 and '=' are unescaped (to be used as sub-delimiters). For the purpose of
 encoding content, we take the approach of encoding at the segment level, so
-need to escape those characters. For those implementing standard encoding
-routines, it is important to know that package's treatment of this.
+need to escape those characters. For those implementations using standard
+encoding routines, it is important to know that package's treatment of this.
 
 The following examples in Python and Java illustrate percent encoding of data
 such as an identifier appropriate for appending to a URL. Each processes utf-8
@@ -377,15 +355,15 @@ responses. In java pseudo-code the general process is as follows.
   }
 
 
-Given this code and a utf-8 encoded source file test_ids.txt such as::
+Given this code and a utf-8 encoded source file *test_ids.txt* such as::
 
   ö
   10.1000/182
   urn:lsid:ubio.org:namebank:11815
   http://example.com/data/mydata?row=24
-  ldap://ldap1.example.net:6666/o=University%20of%20Michigan, c=US??sub?(cn=Babs%20Jensen)",
+  ldap://ldap1.example.net:6666/o=University%20of%20Michigan,%20c=US??sub?(cn=Babs%20Jensen)",
   ฉันกินกระจกได้
-  Is féidir liom ithe gloine
+  Is_féidir_liom_ithe_gloine
 
 The following commands should output the same as ``cat test_ids.txt``::
 
