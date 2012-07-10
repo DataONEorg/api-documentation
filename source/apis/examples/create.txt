@@ -32,6 +32,9 @@ using the sequence of commands::
   
   MYSUBJECT=`python my_subject.py /tmp/x509up_u502`
   echo $MYSUBJECT
+  
+  CN=Dave Vieglais T799,O=Google,C=US,DC=cilogon,DC=org
+  
   python generate_sysmeta.py -f sciencemetadata.xml \
                              -i "XYZ33256" \
                              -s "$MYSUBJECT" \
@@ -63,7 +66,7 @@ The generated system metadata document is presented below::
       </allow>
       <allow>
         <subject>CN=Dave Vieglais T799,O=Google,C=US,DC=cilogon,DC=org</subject>
-        <permission>write</permission>
+        <permission>changePermission</permission>
       </allow>
     </accessPolicy>
     <replicationPolicy replicationAllowed="true"/>

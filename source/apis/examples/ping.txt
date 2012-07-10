@@ -10,11 +10,12 @@
 
   Example of ping request and response for a Member Node. Lines prefixed with
   “>” indicate outgoing information, lines prefixed with “<” show content
-  returned from the server. Lines associated with SSL connection initiation and
-  close are not shown here. Note that the actual response headers may vary, the
-  only required header is the first status line. However, in order to fully
-  support clients that may cache the response, it is recommended that the
-  *Date*, *Expires*, and *Cache-Control* headers are returned.
+  returned from the server. Lines associated with SSL connection initiation
+  and close are not shown here. Note that the actual response headers may
+  vary, the only required header fields are the first status line and a *Date*
+  entry. However, in order to fully support clients that may cache the
+  response, it is recommended that the *Expires*, and *Cache-Control* headers
+  are returned.
 
   ::
 

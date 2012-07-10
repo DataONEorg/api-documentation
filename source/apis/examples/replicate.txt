@@ -6,21 +6,23 @@ response must have a HTTP status code of 200. In case of an error condition,
 the appropriate HTTP status code must be set, and an exception or error
 information *may* be returned in the response.
 
-The outgoing request body *must* be encoded as `MIME multipart/form-data`_ with the system metadata portion as a file attachment and the sourceNode parameter as a form field.
+The outgoing request body *must* be encoded as `MIME multipart/form-data`_
+with the system metadata portion as a file attachment and the sourceNode
+parameter as a form field.
 
 ::
 
-  curl -v -X POST "http://localhost:8000/mn/replicate" \
+  curl -v -X POST "https://localhost:8000/mn/v1/replicate" \
     -H "Content-type: multipart/form-data" \
     -F "sysmeta=@systemmetadata.xml" \
-    -F "sourceNode=MN_B"
+    -F "sourceNode=urn:node:MN_B"
 
   * About to connect() to localhost port 8000 (#0)
   *   Trying ::1... Connection refused
   *   Trying fe80::1... Connection refused
   *   Trying 127.0.0.1... connected
   * Connected to localhost (127.0.0.1) port 8000 (#0)
-  > POST /mn/replicate HTTP/1.1
+  > POST /mn/v1/replicate HTTP/1.1
   > User-Agent: curl/7.19.7 (universal-apple-darwin10.0) libcurl/7.19.7 OpenSSL/0.9.8l zlib/1.2.3
   > Host: localhost:8000
   > Accept: */*

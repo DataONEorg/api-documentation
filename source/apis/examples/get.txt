@@ -3,7 +3,7 @@
   (GET) Retrieve the object with identifier "XYZ332"::
 
     export NODE="https://demo2.test.dataone.org/knb/d1/mn"
-    curl -k "$NODE/object/XYZ332"
+    curl -k "$NODE/v1/object/XYZ332"
 
     ... data ...
 
