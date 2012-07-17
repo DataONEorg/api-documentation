@@ -439,18 +439,36 @@ structure of a bag is:
         |   bagit.txt
         |   manifest-<algorithm>.txt
         |   oai-ore.txt
-        |   [optional additional tag files]
+        |   pid-mapping.txt
         \--- data/
               |   data-file-1.csv
               |   data-file-2.csv
-              |   data-file-3.
-        \--- [optional tag directories]/
-              |   [optional tag files]
+              |   data-file-3.hdf
+              |   metadata-file-1.xml
 
-The major addition is the presence of an OAI-ORE document within the base
+The first addition is the presence of an OAI-ORE document within the base
 directory that uses the object identifiers for DataONE objects and describes
-the relationships among the objects in the package.
+the relationships among the objects in the package. The second addition is the
+inclusion of pid-mapping.txt tag file showing the correspondence between the
+persistent identifier for an object and its file location in the bag, expressed
+relative to the 'data' directory.  The contents of the file consist of one line
+for each data object in the bag, with each line of the form:
 
+PID FILEPATH
+
+where PID is the persistent identifier for the object and FILEPATH is the path
+in the bag to the file containing the bytes of the file.  For example, a
+typical pid-mapping.txt file might contain:
+
+doi://10.xxxx/AA/TG43 data/data-file-1.csv
+doi://10.xxxx/AA/7AW3 data/data-file-2.csv
+doi://10.xxxx/AA/790I data/data-file-3.csv
+doi://10.xxxx/AA/76AV data/metadata-file-1.xml
+
+The bag can be serialized as a single file for transport following the BagIt
+specifications.  Any objects that are listed in the OAI-ORE file but are
+missing from the bag data directory (and therefore from the pid-mapping.txt)
+must be downloaded independently via the DataONE MNRead service.
 
 Data Package Client Design
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
