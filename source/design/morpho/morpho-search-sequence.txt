@@ -1,0 +1,22 @@
+@startuml images/morpho_search_seq.png
+
+
+   participant "Query Input Dialog" as query_dialog <<Morpho Query Plugin>>
+   participant "Query Plugin" as query_class <<Morpho Query Plugin>>
+   participant "Remote Repository Plugin" as repository_plugin <<Morpho>>
+   participant "Dataone Java Client Library" as dataone_client <<Morpho>>
+   participant "Coordinating Node" as c_node <<Dataone Coordinating Node>>
+   query_dialog -> query_class: build query string
+   query_class -> repository_plugin: query(String query)
+   repository_plugin -> dataone_client:search()
+   dataone_client -> c_node: search()
+   alt exceptions
+    query_class <- c_node: exceptions
+    else success
+    repository_plugin <- c_node: objectList
+    query_class <- repository_plugin: Resultset resultSet
+    
+      query_class <- query_class: build result panel
+    
+    end
+  @enduml

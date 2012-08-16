@@ -1,0 +1,55 @@
+@startuml images/morpho_save_new_package_seq.png
+
+  
+   participant ": AbstractDataPackage" as abstract_package <<Morpho>>
+   participant ": FileSystemDataStore" as file_data_store <<Morpho>>
+   participant ": DataoneDataStore" as data_store <<Morpho>>
+   participant ": D1Object" as d1_object <<D1_libclient_java>>
+   participant ": DataPackage" as d1_datapackage <<D1_libclient_java>>
+   
+   abstract_package -> file_data_store: load(oreIdentifier)
+   activate file_data_store
+   file_data_store -> d1_object: read(oreIdentifier)//from both local store and cache
+   alt Get a D1Object object
+     activate d1_object
+     abstract_package <- d1_object: oreD1Object
+     deactivate d1_object
+     deactivate file_data_store
+   else FileNotFoundException
+     data_store -> d1_object: read(oreIdentifier)
+     activate data_store
+     activate d1_object
+     d1_object -> d1_object: D1Object.download(oreIdentifier)
+     d1_object -> d1_object: serialize()// serialize the object to cache
+     abstract_package <- d1_object: oreD1Object
+     deactivate d1_object
+     deactivate data_store
+   end
+   abstract_package <- d1_object: oreD1Object.getData()
+   abstract_package->abstract_package: transform the data to the resourceMap string  
+   abstract_package <- d1_datapackage: DataPackage.deserializePackageWithoutData(resourceMap)
+   activate d1_datapackage
+   abstract_package <- d1_datapackage: getMetadataMap()
+   deactivate d1_datapackage
+   abstract_package -> abstract_package: extract the metadataIdentifier 
+   file_data_store -> d1_object: read(metadataIdentifier)//from both local store and cache
+   activate file_data_store
+   alt Get a D1Object object
+     activate d1_object
+     abstract_package <- d1_object: metadataD1Object
+     deactivate d1_object
+     deactivate file_data_store
+   else FileNotFoundException
+     
+     data_store -> d1_object: read(metadataIdentifier)
+     activate data_store
+     activate d1_object
+     d1_object -> d1_object: D1Object.download(metadataIdentifier)
+     d1_object -> d1_object: serialize()// serialize the object to cache
+     abstract_package <- d1_object: metadataD1Object
+     deactivate d1_object
+     deactivate data_store
+   end
+   abstract_package <- d1_object: metadataD1Object.getData()
+   abstract_package -> abstract_package: create the DOM tree
+  @enduml
