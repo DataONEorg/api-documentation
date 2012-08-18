@@ -1,55 +1,32 @@
 @startuml images/morpho_save_new_package_seq.png
 
   
-   participant ": AbstractDataPackage" as abstract_package <<Morpho>>
-   participant ": FileSystemDataStore" as file_data_store <<Morpho>>
-   participant ": DataoneDataStore" as data_store <<Morpho>>
-   participant ": D1Object" as d1_object <<D1_libclient_java>>
-   participant ": DataPackage" as d1_datapackage <<D1_libclient_java>>
+   participant ": DataStoreController" as data_store_controller <<Morpho>>
+   participant ": DataStoreInterface" as data_store <<D1_lib>>
+   participant "abstractMetadata: AbstractMetadata" as abstract_metadata <<Morpho>>
+   participant "entity: Entity" as entity <<Morpho>>
+   participant "dataPackage: DataPackage" as d1_datapackage <<D1_lib>>
    
-   abstract_package -> file_data_store: load(oreIdentifier)
-   activate file_data_store
-   file_data_store -> d1_object: read(oreIdentifier)//from both local store and cache
-   alt Get a D1Object object
-     activate d1_object
-     abstract_package <- d1_object: oreD1Object
-     deactivate d1_object
-     deactivate file_data_store
-   else FileNotFoundException
-     data_store -> d1_object: read(oreIdentifier)
-     activate data_store
-     activate d1_object
-     d1_object -> d1_object: D1Object.download(oreIdentifier)
-     d1_object -> d1_object: serialize()// serialize the object to cache
-     abstract_package <- d1_object: oreD1Object
-     deactivate d1_object
-     deactivate data_store
+   data_store_controller -> data_store: load(oreId, storeId)
+   activate data_store
+   data_store_controller <- data_store: get(oreId) return the output stream object
+   data_store_controller <- data_store: getSystemMetadata(oreId) return the system metadata object
+   deactivate data_store
+   data_store_controller -> data_store_controller: parse the ORE input stream and get list of ids
+   data_store_controller -> abstract_metadata: metadataId
+   activate abstract_metadata
+   data_store_controller -> abstract_metadata: storeId 
+   abstract_metadata -> d1_datapackage: dataPackage.add(abstractMetadata)
+   deactivate abstract_metadata
+   activate d1_datapackage  
+   loop iterate the entityId list    
+       data_store_controller -> entity: entityId
+       activate entity
+       data_store_controller -> entity: storeId
+       entity -> d1_datapackage: dataPackage.add(entity)
+       deactivate entity
    end
-   abstract_package <- d1_object: oreD1Object.getData()
-   abstract_package->abstract_package: transform the data to the resourceMap string  
-   abstract_package <- d1_datapackage: DataPackage.deserializePackageWithoutData(resourceMap)
-   activate d1_datapackage
-   abstract_package <- d1_datapackage: getMetadataMap()
+   data_store_controller -> d1_datapackage: dataPackage.addRelationShip()
+   data_store_controller <- d1_datapackage: dataPackage
    deactivate d1_datapackage
-   abstract_package -> abstract_package: extract the metadataIdentifier 
-   file_data_store -> d1_object: read(metadataIdentifier)//from both local store and cache
-   activate file_data_store
-   alt Get a D1Object object
-     activate d1_object
-     abstract_package <- d1_object: metadataD1Object
-     deactivate d1_object
-     deactivate file_data_store
-   else FileNotFoundException
-     
-     data_store -> d1_object: read(metadataIdentifier)
-     activate data_store
-     activate d1_object
-     d1_object -> d1_object: D1Object.download(metadataIdentifier)
-     d1_object -> d1_object: serialize()// serialize the object to cache
-     abstract_package <- d1_object: metadataD1Object
-     deactivate d1_object
-     deactivate data_store
-   end
-   abstract_package <- d1_object: metadataD1Object.getData()
-   abstract_package -> abstract_package: create the DOM tree
   @enduml
