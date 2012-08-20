@@ -1,0 +1,30 @@
+ @startuml images/morpho-delete-datapackage-sequence.png
+
+  
+   participant ": DataStoreController" as data_store_controller <<Morpho>>
+   participant "abstractObject: AbstractObject" as abstract_object <<D1_lib>>
+   participant ": DataStoreInterface" as data_store <<D1_lib>>
+  
+   activate data_store_controller
+   data_store_controller -> data_store: delete(oreId, []storeIds)
+   activate data_store
+   abstract_object <- data_store: read(oreId, storeId) creates the abstractObject 
+   deactivate data_store
+   activate abstract_object
+   data_store_controller <- abstract_object: getData() creates the output stream object
+   data_store_controller <- abstract_object: getSystemMetadata() creates the system metadata object
+   deactivate abstract_object
+   data_store_controller -> data_store_controller: parse the ORE input stream and get list of ids
+   data_store_controller -> data_store: identifier list
+   loop iterate the store id list
+   	loop iterate the identifier list    
+       		activate data_store
+       		data_store -> data_store: delete(identifier)
+       		
+   	end
+   
+   data_store -> data_store: delete(oreId)
+   deactivate data_store
+   end
+   deactivate data_store_controller
+  @enduml
