@@ -4,13 +4,15 @@
    participant ": ResultPanel " as result_panel <<Morpho Query Result>>
    participant ": DataStoreController" as data_store_controller <<Morpho>>
    participant "dataStore: DataStore" as data_store <<D1_lib>>
-   participant "abstractScienceMetadata: AbstractScienceMetadata" as abstract_metadata <<Morpho>>
+   participant ": AbstractScienceMetadata" as abstract_metadata <<Morpho>>
    participant "entity: Entity" as entity <<Morpho>>
    participant "dataPackage: DataPackage" as d1_datapackage <<D1_lib>>
 
    activate open_package_command
-   open_package_command -> result_panel: getSelectId(),getDataStore()
-   open_package_command <- result_panel: oreID, dataStore
+   open_package_command -> result_panel: getSelectId()
+   open_package_command <- result_panel: oreID
+   open_package_command -> result_panel: getDataStore()
+   open_package_command <- result_panel: dataStore object
    open_package_command -> data_store_controller: read(oreID, dataStore)
    activate data_store_controller
    data_store_controller -> data_store: get(oreID)
@@ -21,18 +23,32 @@
    deactivate data_store
    data_store_controller -> data_store_controller: parse the ORE input stream and get list of ids of the metadata and data objects
    data_store_controller -> d1_datapackage: create the dataPackage object
-   activate d1_datapackage  
-   data_store_controller -> data_store: read(metadataId,storeId)
+   activate d1_datapackage 
+   data_store_controller -> abstract_metadata: create a concrete object of abstractScienceMetadata
+   activate abstract_metadata 
+   data_store_controller -> data_store: get(metadataId)
    activate data_store
-   data_store_controller <- data_store: abstractScienceMetadata
+   data_store_controller <- data_store: the output stream object
+   data_store_controller -> data_store: getSystemMetadata(metadataId)
+   data_store_controller <- data_store: systemMetadata
    deactivate data_store
+   data_store_controller -> abstract_metadata: setData(inputStream)
+   data_store_controller -> abstract_metadata: setSystemMetadata(systemMetadata) 
    data_store_controller -> d1_datapackage: dataPackage.add(abstractMetadata)
+   deactivate abstract_metadata
    loop iterate the entityId list    
-       data_store_controller -> data_store: read(entityId, dataStore)
+       data_store_controller -> entity: create an entity object
+       activate entity 
+       data_store_controller -> data_store: get(entityId)
        activate data_store
-       data_store_controller <- data_store: entity
+       data_store_controller <- data_store: the output stream object
+       data_store_controller -> data_store: getSystemMetadata(entityId)
+       data_store_controller <- data_store: systemMetadata
        deactivate data_store
-       data_store_controller-> d1_datapackage: dataPackage.add(entity)
+       data_store_controller -> entity: setData(inputStream)
+       data_store_controller -> entity: setSystemMetadata(systemMetadata) 
+       data_store_controller -> d1_datapackage: dataPackage.add(entity)
+       deactivate entity
    end
    data_store_controller -> d1_datapackage: dataPackage.addRelationShip()
    deactivate data_store_controller
