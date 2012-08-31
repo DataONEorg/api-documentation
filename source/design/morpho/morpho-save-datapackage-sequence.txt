@@ -1,34 +1,40 @@
- @startuml images/morpho-delete-datapackage-sequence.png
+ @startuml images/morpho-save-datapackage-sequence.png
 
-  
+   participant ": SavePackageCommand" as save_package_command <<Morpho>>
    participant ": DataStoreController" as data_store_controller <<Morpho>>
    participant "dataPackage: DataPackage" as data_package <<D1_lib>>
-   participant "abstractObject: AbstractObject" as abstract_object <<D1_lib>>
-   participant ": DataStoreInterface" as data_store <<D1_lib>>
+   participant "d1Object: D1Object" as d1_object <<D1_lib>>
+   participant ": DataStore" as data_store <<D1_lib>>
   
+   -> save_package_command: dataPackage, []dataStores
+   activate save_package_command
+   save_package_command -> data_store_controller: save(dataPackage, dataStores)
    activate data_store_controller
-   data_store_controller -> data_package: save(dataPackage, []storeIds)
+   data_store_controller -> data_package: identifiers()
    activate data_package
-   data_store_controller <- data_package: identifiers()
-   
-   loop iterate the store id list
-   	loop iterate the identifier list
-         data_store_controller -> data_package: identifier
-         data_package -> abstract_object: dataPackage.get(identifier) creates the obstract object
+   data_store_controller <- data_package: the set of identifiers
+   loop iterate the data store arrary
+   	loop iterate the identifier set
+         data_store_controller -> data_package: get(identifier)
+         data_store_controller <- data_package: d1Object
          
-         activate abstract_object
-         
-         abstract_object -> data_store: abstractObject.getData()
-         activate data_store
-         abstract_object -> data_store: abstractObject.getSystemMetadata()
-         deactivate abstract_object     
-         data_store -> data_store: create()/update()
+         data_store_controller -> d1_object: getData(identifer)
+         activate d1_object
+         data_store_controller <- d1_object: OutputStream object
+         data_store_controller -> d1_object: getSystemMetdata(identifier)
+         data_store_controller <- d1_object: SystemMetadata object
+         deactivate d1_object
+         data_store_controller ->data_store: create(identifier, inputStream, systemMeta)/update()
+      
         end
-        data_package -> data_store: serialize() creates a string representation of the ore document
-        data_package -> data_store: getSystemMetadata()
-        data_store -> data_store: create()/update()
+        data_store_controller -> data_package: serialize() 
+        data_store_controller <- data_package: the string representation of the ORE document
+        data_store_controller -> data_package: getSystemMetadata()
+        data_store_controller <- data_package: the system metadata object of the dataPackage
+        deactivate data_package
+        data_store_controller -> data_store: create(oreId, oreDocumentInput, oreSystemMeta)/update()
         deactivate data_store
-	deactivate data_package
    end
    deactivate data_store_controller
+   deactivate save_package_command
   @enduml
