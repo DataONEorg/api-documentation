@@ -18,7 +18,7 @@
          data_store_controller -> data_package: get(identifier)
          data_store_controller <- data_package: d1Object
          
-         data_store_controller -> d1_object: getData(identifer)
+         data_store_controller -> d1_object: get(identifer)
          activate d1_object
          data_store_controller <- d1_object: OutputStream object
          data_store_controller -> d1_object: getSystemMetdata(identifier)
