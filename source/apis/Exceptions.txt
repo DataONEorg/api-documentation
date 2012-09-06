@@ -85,7 +85,7 @@ Expressed in xml-schema:
 HTTP Exception Handling Codes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-HTTP error codes of relevance to the DataONE cicore are repeated here for
+HTTP error codes of relevance to the DataONE services are repeated here for
 convenience. Refer to the `HTTP specification`_ for a complete reference.
 
 .. list-table::
@@ -139,55 +139,15 @@ convenience. Refer to the `HTTP specification`_ for a complete reference.
 
 
 
-Serializing Exception Information
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Serializing Exceptions
+~~~~~~~~~~~~~~~~~~~~~~
 
-Exceptions can be serialized in different formats that vary according to where
-the error occurs and what caller the error message is being sent to. Four
-common serialization formats will be HTML, XML, JSON, and Log. The general
-approach for serializing error messages is indicated by way of example below.
-For errors raised in response to a HTTP call (e.g. through the REST interface),
-the error should be serialized in the format indicated in the request Accept
-header, defaulting to HTML.
+All error messages in DataONE are serialized in XML. In the future, DataONE
+interfaces may support additional serialization formats such as HTML and JSON,
+and the serialization format will be selected through normal HTTP content
+negotiation procedures (RFC2616_). 
 
-Examples of a :exc:`Exceptions.NotFound` error raised by a request to
-:func:`MNRead.get` object ``123XYZ`` from a Member Node. The trace
-information contains ``{'method':'mn.get'}``.
-
-In HTML:
-
-.. code-block:: html
-
-  <html>
-    <head>
-      <meta http-equiv="content-type" content="text/html;charset=utf-8" />
-      <title>Error: 404 Not Found (1020.1)</title>
-    </head>
-    <body>
-      <p>
-        <dl>
-          <dt>Error</dt>
-          <dd class='erroName'>NotFound</dd>
-          <dt>Code</dt>
-          <dd class='errorCode'>404</dd>
-          <dt>Detail Code</dt>
-          <dd class='detailCode'>1020.1</dd>
-          <dt>Identifier</dt>
-          <dd class='pid'>123XYZ</dd>
-          <dt>Node Identifier</dt>
-          <dd class='nodeId'>c3p0</dd>
-        </dl>
-      </p>
-      <p class='description'>The specified object does not exist on this node.</p>
-      <pre class='traceInformation'>
-        method: mn.get
-        hint: Please try resolving http://cn.dataone.org/cn/resolve/123XYZ
-      </pre>
-    </body>
-  </html>
-
-
-In XML:
+An example of an XML serialized error message:
 
 .. code-block:: xml
 
@@ -195,7 +155,7 @@ In XML:
          errorCode='404' 
          detailCode='1020.1' 
          pid='123XYZ'
-         nodeId='c3p0'>
+         nodeId='urn:node:DEMO1'>
     <description>The specified object does not exist on this node.</description>
     <traceInformation>
       method: mn.get
@@ -203,27 +163,81 @@ In XML:
     </traceInformation>
   </error>
 
+Note that the *detailCode*, *pid*, and *nodeId* attributes are optional. The
+*description* element is optional but strongly recommended, and
+*traceInformation* is optional though especially useful during development and
+testing.
 
-In JSON::
+.. 
+    Exceptions can be serialized in different formats that vary according to
+    where the error occurs and what caller the error message is being sent to. Four
+    common serialization formats will be HTML, XML, JSON, and Log. The general
+    approach for serializing error messages is indicated by way of example below.
+    For errors raised in response to a HTTP call (e.g. through the REST interface),
+    the error should be serialized in the format indicated in the request Accept
+    header, defaulting to HTML.
 
-  {
-    'name': 'NotFound',
-    'errorCode':404,
-    'detailCode': '1020.1',
-    'pid': '123XYZ',
-    'nodeId': 'c3p0',
-    'description': 'The specified object does not exist on this node.',
-    'traceInformation': 'method: mn.get
-      hint: http://cn.dataone.org/cn/resolve/123XYZ'
-  }
+    Examples of a :exc:`Exceptions.NotFound` error raised by a request to
+    :func:`MNRead.get` object ``123XYZ`` from a Member Node. The trace
+    information contains ``{'method':'mn.get'}``.
+
+    In HTML:
+
+    .. code-block:: html
+
+      <html>
+        <head>
+          <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+          <title>Error: 404 Not Found (1020.1)</title>
+        </head>
+        <body>
+          <p>
+            <dl>
+              <dt>Error</dt>
+              <dd class='erroName'>NotFound</dd>
+              <dt>Code</dt>
+              <dd class='errorCode'>404</dd>
+              <dt>Detail Code</dt>
+              <dd class='detailCode'>1020.1</dd>
+              <dt>Identifier</dt>
+              <dd class='pid'>123XYZ</dd>
+              <dt>Node Identifier</dt>
+              <dd class='nodeId'>c3p0</dd>
+            </dl>
+          </p>
+          <p class='description'>The specified object does not exist on this node.</p>
+          <pre class='traceInformation'>
+            method: mn.get
+            hint: Please try resolving http://cn.dataone.org/cn/resolve/123XYZ
+          </pre>
+        </body>
+      </html>
 
 
-Log message body. This type of representation is presented here as a
-suggestion. The actual log representation may differ according to the actual
-implementation::
+    In XML:
 
-  [detail:1020.1][pid:123XYZ, nodeId:c3p0, method:mn.get]The specified object does not exist on this node.
+    In JSON::
 
+      {
+        'name': 'NotFound',
+        'errorCode':404,
+        'detailCode': '1020.1',
+        'pid': '123XYZ',
+        'nodeId': 'c3p0',
+        'description': 'The specified object does not exist on this node.',
+        'traceInformation': 'method: mn.get
+          hint: http://cn.dataone.org/cn/resolve/123XYZ'
+      }
+
+
+    Log message body. This type of representation is presented here as a
+    suggestion. The actual log representation may differ according to the actual
+    implementation::
+
+      [detail:1020.1][pid:123XYZ, nodeId:c3p0, method:mn.get]The specified object does not exist on this node.
+
+
+.. _RFC2616: http://tools.ietf.org/html/rfc2616
 
 
 The Exceptions
