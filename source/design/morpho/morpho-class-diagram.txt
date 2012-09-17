@@ -90,15 +90,16 @@
   + void setActiveMNode(MNode activeMNode)
   }
   
-  D1Object "*" o-- "1" DataPackage
   D1Object <|-- Entity
   DataPackage <|-- MetadataObject
   MetadataObject <|-- AbstractDataPackage
   AbstractDataPackage <|-- EML2Beta6DataPackage
   AbstractDataPackage <|-- EML200DataPackage
-  Entity "*" o-- AbstractDataPackage
+  
+  Entity "*" --o AbstractDataPackage
+  D1Object "*" --o DataPackage
     
-  DataStore "1" o-- "1" D1Object
+  DataStore "1" --o "1" D1Object
   DataStore <|-- FileSystemDataStore
   DataStore <|-- MemoryDataStore
   
