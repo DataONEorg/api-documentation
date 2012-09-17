@@ -96,6 +96,7 @@
   MetadataObject <|-- AbstractDataPackage
   AbstractDataPackage <|-- EML2Beta6DataPackage
   AbstractDataPackage <|-- EML200DataPackage
+  Entity "*" o-- AbstractDataPackage
     
   DataStore "1" o-- "1" D1Object
   DataStore <|-- FileSystemDataStore
