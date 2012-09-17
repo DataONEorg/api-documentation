@@ -12,7 +12,7 @@
 		<exec dir = "${basedir}/UseCases" executable = "${basedir}/UseCases/interaction2plant.py"/>
 	</target>
 
-	<taskdef  name = "plantuml" classname = "net.sourceforge.plantuml.ant.PlantuTask" classpath = "${basedir}/UseCases/plantuml.jar"/>
+	<taskdef  name = "plantuml" classname = "net.sourceforge.plantuml.ant.PlantUmlTask" classpath = "${basedir}/../tools/docutils/plantuml.jar"/>
 
 <!--
   <target name="diagrams" depends="interactions" description="Generate sequence diagrams">
