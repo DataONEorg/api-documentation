@@ -1,93 +1,105 @@
 ..
   @startuml images/morpho-class-diagram.png
   
-  class D1Object {
-  - DataStore dataStore
-  - SystemMetadata systemMetadata
-  + D1Object(Identifier identifier)
-  + OutputStream getData()
-  + void setData(InputStream input)  
-  + SystemMetadata getSystemMetadata()
-  + void setSystemMetadata(SystemMetadata systemMetadata)
-  + DataStore getDataStore()
-  + void setDataStore(DataStore dataStore)
+  package DataONE {
+  
+	  class D1Object {
+	  - DataStore dataStore
+	  - SystemMetadata systemMetadata
+	  + D1Object(Identifier identifier)
+	  + OutputStream getData()
+	  + void setData(InputStream input)  
+	  + SystemMetadata getSystemMetadata()
+	  + void setSystemMetadata(SystemMetadata systemMetadata)
+	  + DataStore getDataStore()
+	  + void setDataStore(DataStore dataStore)
+	  }
+
+	  class DataPackage {
+	  - SystemMetadata systemMetadata
+	  + void add(AbstractObject obj)
+	  + boolean contains(Identifier id)
+	  + D1Object get(Identifier id)
+	  + ResourceMap getMap()
+	  + Map<Identifier, List<Identifier>> getMetadataMap()
+	  + Set<Identifier> identifiers()
+	  + void insertRelationship(Identifier metadataId, List<Identifier>dataIDList)
+	  + void remove(Identifier id)
+	  + OutputStream serialize()
+	  }
+	  
+	  interface DataStore {
+	  + OutputStream get(Identifier id) throws Exception;
+	  + void set(Identifier id, InputStream data) throws Exception;
+	  }
+	  
+	  class MemoryDataStore {
+	  - byte[] data
+	  }
   }
   
-  class Entity {
-  - Node entRoot
-  - boolean isDirty = false
-  + boolean isDirty()
-  + void setIsDirty(boolean isDirty)
-  }
+  package Morpho {
   
-  class DataPackage {
-  - SystemMetadata systemMetadata
-  + void add(AbstractObject obj)
-  + boolean contains(Identifier id)
-  + D1Object get(Identifier id)
-  + ResourceMap getMap()
-  + Map<Identifier, List<Identifier>> getMetadataMap()
-  + Set<Identifier> identifiers()
-  + void insertRelationship(Identifier metadataId, List<Identifier>dataIDList)
-  + void remove(Identifier id)
-  + OutputStream serialize()
-  }
-  
-  class MetadataObject {
-  - Document doc
-  }
-  
-  abstract AbstractDataPackage {
-  - boolean isDirty = false
-  + abstract OutputStream serialize() throws Exception
-  + boolean isDirty()
-  + void setIsDirty(boolean isDirty)
-  }
-  
-  
-  interface DataStore {
-  + OutputStream get(Identifier id) throws Exception;
-  + void set(Identifier id, InputStream data) throws Exception;
-  }
-  
-  class MemoryDataStore {
-  - byte[] data
-  }
-  
-  class FileSystemDataStore {
-  - HashMap<Identifier, List<File>> fileIDMap
-  + OutputStream get(Identifier id) throws Exception
-  + void set(Identifier id, InputStream data) throws Exception
-  }
-  
-  
-  interface DataStoreServiceInterface {
-  + AbstractDataPackage read(Identifier pid) throws Exception
-  + Identifier save(AbstractDataPackage adp) throws Exception
-  + void delete(AbstractDataPackage adp) throws Exception
-  + Identifier generateIdentifier() throws Exception
-  + boolean exists(Identifier pid) throws Exception
-  }
-  
-  abstract DataStoreService {
-    CONSIDER REMOVING
-  - String dataDir
-  - String cacheDir
-  - String incompleteDir
-  }
-  
-  class LocalDataStoreService {
-  - String dotMorphoDir
-  }
-  
-  class MetacatDataStoreService {
-  - String metacatURL
-  }
-  
-  class DataONEDataStoreService {
-  - MNode activeMNode;
-  + MNode getActiveMNode()
-  + void setActiveMNode(MNode activeMNode)
+	  class Entity {
+	  - Node entRoot
+	  - boolean isDirty = false
+	  + boolean isDirty()
+	  + void setIsDirty(boolean isDirty)
+	  }
+	  
+	  class EML2Beta6DataPackage {
+	  }
+	  
+	  class EML200DataPackage {
+	  }
+	  
+	  class MetadataObject {
+	  - Document doc
+	  }
+	  
+	  abstract AbstractDataPackage {
+	  - boolean isDirty = false
+	  + abstract OutputStream serialize() throws Exception
+	  + boolean isDirty()
+	  + void setIsDirty(boolean isDirty)
+	  }
+	  
+	  class FileSystemDataStore {
+	  - HashMap<Identifier, List<File>> fileIDMap
+	  + OutputStream get(Identifier id) throws Exception
+	  + void set(Identifier id, InputStream data) throws Exception
+	  }
+	  
+	  
+	  interface DataStoreServiceInterface {
+	  + AbstractDataPackage read(Identifier pid) throws Exception
+	  + Identifier save(AbstractDataPackage adp) throws Exception
+	  + void delete(AbstractDataPackage adp) throws Exception
+	  + Identifier generateIdentifier() throws Exception
+	  + boolean exists(Identifier pid) throws Exception
+	  }
+	  
+	  abstract DataStoreService {
+	    CONSIDER REMOVING
+	  - String dataDir
+	  - String cacheDir
+	  - String incompleteDir
+	  }
+	  
+	  class LocalDataStoreService {
+	  - String dotMorphoDir
+	  }
+	  
+	  class MetacatDataStoreService {
+	  - String metacatURL
+	  }
+	  
+	  class DataONEDataStoreService {
+	  - MNode activeMNode;
+	  + MNode getActiveMNode()
+	  + void setActiveMNode(MNode activeMNode)
+	  }
+	  
   }
   
   D1Object <|-- Entity
