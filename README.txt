@@ -8,5 +8,6 @@ http://mule1.dataone.org/ArchitectureDocs/index.html
 
 Procedures for working with a local copy are described in:
 
-http://mule1.dataone.org/ArchitectureDocs/about.html
+http://mule1.dataone.org/ArchitectureDocs-current/about.html
+
 
