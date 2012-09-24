@@ -17,7 +17,7 @@
 
 	  class DataPackage {
 	  - SystemMetadata systemMetadata
-	  + void add(AbstractObject obj)
+	  + void add(D1Object obj)
 	  + boolean contains(Identifier id)
 	  + D1Object get(Identifier id)
 	  + ResourceMap getMap()
