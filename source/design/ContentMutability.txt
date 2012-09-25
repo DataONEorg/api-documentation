@@ -1,0 +1,214 @@
+Mutability of Content in DataONE
+================================
+
+
+.. index:: mutability
+
+.. note::
+
+   This document is a draft reflecting discussion from the 2012 AHM held in
+   Albuquerque during the week of September 18.
+
+
+.. contents::
+
+
+Overview
+--------
+
+DataONE requires that an identifier for any object can always be used to
+retrieve the exact same set of bytes that represent the object when it was
+initially registered with DataONE. This requirement helps to ensure
+repeatability of any use of an object, so for example, analysis on a data set
+repeated sometime in the future should yield identical results (within the
+limits of precision of the analytical tools).
+
+The requirement for immutability also implies that content can not change once
+registered with DataONE, and so a checksum computed on an object should always
+be the same. Hence checksums provide a convenient mechanism for fixity
+checking - a recomputed checksum will always yield the same results.
+
+Immutability applies to all object types in DataONE which currently includes
+data, science metadata, and resource maps. However, there are practical
+examples where some changes can, and should be affected to science metadata
+documents in order to support the general goal of continual improvement of
+metadata quality which in turn improves reusability of content.
+
+Examples of changes to science metadata include:
+
+- Correction of punctuation or spelling within textual fields such as *Title*
+  or *Abstract*
+
+- Change of policy description such as the license for re-use
+
+- Providing more appropriate keywords
+
+- Adding descriptive fields in alternate languages
+
+- Correcting the name of a data column definition to match the actual name in
+  a data file
+
+- Changing the description of spatial, temporal, taxonomic, or some other
+  extent
+
+- Correcting the description of units used in a data column
+
+Each of these changes are valid operations that improve the utility of the
+science metadata document for the purposes of discovery or re-use of the
+content the metadata document describes. Some, such as correcting the units
+used or the name of a column can, and likely will, significantly impact
+analysis of the data described by the metadata document. However, since the
+changes are correcting previous errors, it stands to reason that such changes
+should be allowed. 
+
+The current implementation of DataONE (1.0.x) supports such changes through
+re-submission of the content with a new identifier. Hence, any correction of a
+metadata document requires that a new metadata document is created, the
+obsolescence relationships between the old and new objects are set, and a new
+resource map with a new identifier is generated for the data package. This
+process ensures that citation of the original data package and it's associated
+bits will always refer to the same object. While technically convenient, it
+can be argued that such an approach is inconvenient for end users, and in fact
+promotes re-use of uncorrected content even when effort has been expended to
+correct errors and thus improve quality. This approach also complicates
+implementation for data providers (since *any* edit requires re-issue of the
+metadata) and is contrary to the policy for identifier generation of groups
+such as Data Cite.
+
+An alternative scenario, and the model that has practically emerged for many
+environments, enables identifiers to always refer to the most recent updated
+version of content. This is convenient for users and helps to promote quality
+improvements to metadata which further enhances content re-use.
+
+
+Implementation Approaches
+-------------------------
+
+Some implementation scenarios are described below along with some observations
+on implications for DataONE and it's stakeholders.
+
+
+A. No Change
+~~~~~~~~~~~~
+
+No changes are made to the DataONE infrastructure, all content remains
+immutable, any changes require generation of new object(s) and associated
+identifier(s).
+
+Observations:
+
+- Zero direct cost to DataONE (implied indirect costs through loss of
+  potential member nodes)
+
+- Implementation more difficult for member nodes, since any change requires
+  generation of a new object, new resource map and associated identifiers.
+
+- End users not directly exposed to content updates since these can only be
+  retrieved through the indirect approach of traversing the obsolescence path
+
+- End users always receive exactly the same bytes for an object, and thus
+  analytical repeatability should be assured (within limits of tools)
+
+
+B. Internal Copies Maintained by DataONE 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In this scenario, a method such as "UpdateScienceMetadata* is implemented by
+CNs and is called by MNs to cause a change to science metadata to be recorded
+with no change to identifier. The original science metadata document is
+preserved by the CNs, the modified copy is propagated to replica locations,
+and future retrieval of the object bytes retrieve the revised version of the
+object. An additional API method such as "GetAtTime" may be implemented by the
+CNs to retrieve a copy of an object in its state at a specified time. 
+
+Observations:
+
+- API changes required, as are internal changes to CNs to support multiple
+  versions of objects per PID
+
+- Onus is on DataONE to maintain previous versions of content
+
+- Recreation of CNs in event of catastrophic failure may not be possible since
+  old copies of objects are not maintained outside of the CNs
+
+- API changes required for tier 4 MNs to support overwriting of an existing
+  object with a different version
+
+- User default view is always of the most recent version of an object
+
+- PIDs resolve to the most recent, and presumably most accurate revision of an
+  object
+
+- Users may retrieve a copy of an object as it was known at some point in
+  time, and thus reproducibility can be assured
+
+- Fixity checking is more difficult since checksums recorded in system
+  metadata refer to the latest revision of an object
+
+
+C. Object Differences Preserved
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In this scenario, a new class of object ("diff package") is defined to contain
+differences between versions of an object. A *diff package* contains all
+changes made to a particular object, and thus enables recreation of the object
+at any recorded revision. The *diff package* is bound to an object through the
+resource map, and is treated like any other object in the system in that it
+has a unique identifier, associated system metadata, and may be replicated to
+other locations. Since changes are recorded in the *diff package*, it is
+necessary for this object to be mutable.
+
+Observations:
+
+- No API signature changes required
+
+- Logic for handling changes to science metadata and diff package mutation
+  required
+
+- Additional entry required in resource maps to bind the diff package and
+  science metadata
+
+- Convenience methods need to be implemented in libraries to support
+  reconstruction of an object state from a diff package
+
+- User default view is always of the most recent version of an object
+
+- PIDs resolve to the most recent, and presumably most accurate revision of an
+  object
+
+- Users may retrieve a copy of an object as it was known at some point in
+  time, and thus reproducibility can be assured
+
+- Fixity checking is more difficult since checksums recorded in system
+  metadata refer to the latest revision of an object
+
+- Diff packages are distributed across the participating nodes, hence CNs can
+  be reconstructed in the event of catastrophic failure
+
+
+D. Two Classes of Identifier
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+A revision control system such as Git effectively exposes two different types
+of identifier for any object being maintained: the file name of the object;
+and the revision identifier for the object. The file name is that typically
+exposed and utilized by the end user of the system. The revision identifier
+refers to the state of an object at a point in time, and in the case of Git,
+is a UUID. Thus in this case the external or "citation" identifier is the file
+name, and the internal identifier is the revision UUID.
+
+In the case of DataONE, PIDs are essentially equivalent to Git UUIDs, since
+de-referencing a PID will always yield the same set of bytes. There is
+currently no equivalent to the concept of a citation identifier in DataONE,
+which in some respects is in conflict with the intended use of some types of
+identifiers such as DOIs.
+
+Implementing support for two classes of identifier in DataONE would likely
+have significant implications, similar to (B) above, but with additional
+changes to system metadata to support tracking of multiple identifiers and
+revisions for a particular object. It may be feasible to use a time stamp as a
+proxy for an object revision identifier, and so this option may simply be a
+more general expression of option (B).
+
+
+
