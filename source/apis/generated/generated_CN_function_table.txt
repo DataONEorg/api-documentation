@@ -95,6 +95,18 @@
      - ``GET /search/{queryType}/{query}``
      - :func:`CNRead.search`
      - (:class:`session<Types.Session>`, ``queryType``, ``query``) ``->`` :class:`Types.ObjectList`
+   * - Tier 1
+     - ``GET/query/{queryEngine}/{query}``
+     - :func:`CNRead.query`
+     - (:class:`session<Types.Session>`, ``queryEngine``, ``query``) ``->`` :class:`Types.OctetStream`
+   * - Tier 1
+     - ``GET /query/{queryType}``
+     - :func:`CNRead.getQueryEngineDescription`
+     - (:class:`session<Types.Session>`, ``queryEngine``) ``->`` :class:`Types.QueryEngineDescription`
+   * - Tier 1
+     - ``GET /query``
+     - :func:`CNRead.listQueryEngines`
+     - (:class:`session<Types.Session>`) ``->`` :class:`Types.QueryEngineList`
    * - Tier 2
      - ``PUT /owner/{pid}``
      - :func:`CNAuthorization.setRightsHolder`

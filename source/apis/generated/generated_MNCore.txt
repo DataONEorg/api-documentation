@@ -15,7 +15,7 @@
      - :func:`ping`
      - () ``->`` null
    * - Tier 1
-     - ``GET /log?[fromdate={fromDate}][&todate={toDate}][&event={event}][&pidFilter={pidFilter}][&start={start}][&count={count}]``
+     - ``GET /log?[fromDate={fromDate}][&toDate={toDate}][&event={event}][&pidFilter={pidFilter}][&start={start}][&count={count}]``
      - :func:`getLogRecords`
      - (:class:`session<Types.Session>`, :class:`[fromDate]<Types.DateTime>`, :class:`[toDate]<Types.DateTime>`, :class:`[event]<Types.Event>`, ``[pidFilter]``, ``[start=0]``, ``[count=1000]``) ``->`` :class:`Types.Log`
    * - Tier 1
@@ -36,17 +36,21 @@
 
    Note that the timestamp returned in the Date header should follow the semantics as described in the HTTP specifications, http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.18
 
-   The response body will be ignored by the caller expect in the case of an error, in which case the response body should contain the appropriate DataONE exception.
+   The response body will be ignored by the caller except in the case of an error, in which case the response body should contain the appropriate DataONE exception.
 
    :Use Cases:
      :doc:`UC10 </design/UseCases/10_uc>`
    :REST URL: ``GET /monitor/ping``
-   :returns: Null body or Exception. The body of the message is ignored by the caller. The HTTP header *Date* MUST be set in the response.
+   :returns: Null body or Exception. The body of the message may be ignored by the caller. The HTTP header *Date* MUST be set in the response.
    :rtype: null
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2041)``
 
+     Ping is a required operation and so an operational member node should never return this exception unless under development.
+
    :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=2042)``
+
+     A ServiceFailure exception indicates that the node is not currently operational as a member node. A coordinating node or monitoring service may use this as an indication that the member node should be taken out of the pool of active nodes, though ping should be called on a regular basis to determine when the node might b ready to resume normal operations.
 
    :raises Exceptions.InsufficientResources: ``(errorCode=413, detailCode=2045)``
 
@@ -60,17 +64,17 @@
 
 .. function:: getLogRecords(session,[fromDate],[toDate],[event],[pidFilter],[start=0],[count=1000]) -> Log
 
-   Retrieve log information from the Member Node for the specified date range and even type.
+   Retrieve log information from the Member Node for the specified slice parameters.
 
    This method is used primarily by the log aggregator to generate aggregate statistics for nodes, objects, and the methods of access.
 
    The response MUST contain only records for which the requestor has permission to read.
 
-   Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed.
+   Note that date time precision is limited to one millisecond. If no timezone information is provided UTC will be assumed.
 
    Access control for this method MUST be configured to allow calling by Coordinating Nodes and MAY be configured to allow more general access.
 
-   :REST URL: ``GET /log?[fromdate={fromDate}][&todate={toDate}][&event={event}][&pidFilter={pidFilter}][&start={start}][&count={count}]``
+   :REST URL: ``GET /log?[fromDate={fromDate}][&toDate={toDate}][&event={event}][&pidFilter={pidFilter}][&start={start}][&count={count}]``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 

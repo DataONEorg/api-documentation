@@ -38,6 +38,18 @@
      - ``GET /search/{queryType}/{query}``
      - :func:`search`
      - (:class:`session<Types.Session>`, ``queryType``, ``query``) ``->`` :class:`Types.ObjectList`
+   * - Tier 1
+     - ``GET/query/{queryEngine}/{query}``
+     - :func:`query`
+     - (:class:`session<Types.Session>`, ``queryEngine``, ``query``) ``->`` :class:`Types.OctetStream`
+   * - Tier 1
+     - ``GET /query/{queryType}``
+     - :func:`getQueryEngineDescription`
+     - (:class:`session<Types.Session>`, ``queryEngine``) ``->`` :class:`Types.QueryEngineDescription`
+   * - Tier 1
+     - ``GET /query``
+     - :func:`listQueryEngines`
+     - (:class:`session<Types.Session>`) ``->`` :class:`Types.QueryEngineList`
 
 
 
@@ -305,5 +317,104 @@
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4300)``
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4281)``
+
+
+
+
+.. function:: query(session,queryEngine,query) -> OctetStream
+
+   Submit a query against the specified *queryEngine* and return the response as formatted by the queryEngine.
+
+   The *query()* operation may be implemented by more than one type of search engine and the *queryEngine* parameter indicates which search engine is targeted. The value and form of *query* is determined by the specific query engine.
+
+   For example, the SOLR search engine will accept many of the standard parameters of SOLR, including field restrictions and faceting.
+
+   .. NOTE:: This method is in DRAFT status and is scheduled for version 1.1 of the APIs
+
+   :Use Cases:
+     :doc:`UC02 </design/UseCases/02_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
+   :REST URL: ``GET/query/{queryEngine}/{query}``
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
+   :type session: :class:`Types.Session`
+
+   :param queryEngine: Indicates which search engine will be used to handle the query. Supported search engines can be determined through the CNRead.listQueryEngines API call. Transmitted as part of the URL path and must be escaped accordingly.
+   :type queryEngine: string
+
+   :param query: The remainder of the URL is passed verbatim to the respective search engine implementation. Hence it may contain additional path elements and query elements as determined by the functionality of the search engine. The caller is reponsible for providing a '?' to indicate the start of the query string portion of the URL, as well as proper URL escaping.   Transmitted as part of the URL path and must be escaped accordingly.
+   :type query: string
+
+   :returns: The structure of the response is determined by the chosen search engine and parameters provided to it.
+   :rtype: :class:`Types.OctetStream`
+
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=4320)``
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4321)``
+
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=4322)``
+
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4323)``
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4324)``
+
+   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=4325)``
+
+     The specified queryEngine does not exist
+
+
+
+
+.. function:: getQueryEngineDescription(session,queryEngine) -> QueryEngineDescription
+
+   Provides metadata about the query service of the specified *queryEngine*. The metadata provides a brief description of hte query engine, its version, its schema version, and an optional list of fields supported by the query engine.
+
+   .. NOTE:: This method is in DRAFT status and is scheduled for version 1.1 of the APIs
+
+   :REST URL: ``GET /query/{queryType}``
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate provided with the request. The certificate must be traceable to an authority recognized by DataONE, currently CILogon. Transmitted as part of the SSL handshake process.
+   :type session: :class:`Types.Session`
+
+   :param queryEngine: Indicates which query engine for which to provide descriptive metadata. Currently supported search engines can be determined through CNRead.listQueryEngines. Transmitted as part of the URL path and must be escaped accordingly.
+   :type queryEngine: string
+
+   :returns: A list of fields that are supported by the search index and additional metadata.
+   :rtype: :class:`Types.QueryEngineDescription`
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4410)``
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4411)``
+
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=4412)``
+
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=4413)``
+
+   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=4414)``
+
+     The specified queryEngine does not exist
+
+
+
+
+.. function:: listQueryEngines(session) -> QueryEngineList
+
+   Returns a list of query engines, i.e. supported values for the *queryEngine* parameter of the *getQueryEngineDescription* and *query* operations.
+
+   The list of search engines available may be influenced by the authentication status of the request.
+
+   .. NOTE:: This method is in DRAFT status and is scheduled for version 1.1 of the APIs
+
+   :REST URL: ``GET /query``
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate provided with the request. The certificate must be traceable to an authority recognized by DataONE, currently CILogon. Transmitted as part of the SSL handshake process.
+   :type session: :class:`Types.Session`
+
+   :returns: A list of names of queryEngines available to the user identified by *session*.
+   :rtype: :class:`Types.QueryEngineList`
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4420)``
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4421)``
+
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=4422)``
+
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=4423)``
 
 

@@ -7,10 +7,10 @@
      - Description
    * - GET /monitor/ping
      - :func:`MNCore.ping`
-     - Low level "are you alive" operation. A valid ping response is indicated by a HTTP status of 200. A timestmap indicating the current system time (UTC) on the node MUST be returned in the HTTP Date header. The Member Node should perform some minimal internal functionality testing before answering. However, ping checks will be frequent (every few minutes) so the internal functionality test should not be high impact. Any status response other than 200 indicates that the node is offline for DataONE operations. Note that the timestamp returned in the Date header should follow the semantics as described in the HTTP specifications, http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.18 The response body will be ignored by the caller expect in the case of an error, in which case the response body should contain the appropriate DataONE exception.
-   * - GET /log?[fromdate={fromDate}][&todate={toDate}][&event={event}][&pidFilter={pidFilter}][&start={start}][&count={count}]
+     - Low level "are you alive" operation. A valid ping response is indicated by a HTTP status of 200. A timestmap indicating the current system time (UTC) on the node MUST be returned in the HTTP Date header. The Member Node should perform some minimal internal functionality testing before answering. However, ping checks will be frequent (every few minutes) so the internal functionality test should not be high impact. Any status response other than 200 indicates that the node is offline for DataONE operations. Note that the timestamp returned in the Date header should follow the semantics as described in the HTTP specifications, http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.18 The response body will be ignored by the caller except in the case of an error, in which case the response body should contain the appropriate DataONE exception.
+   * - GET /log?[fromDate={fromDate}][&toDate={toDate}][&event={event}][&pidFilter={pidFilter}][&start={start}][&count={count}]
      - :func:`MNCore.getLogRecords`
-     - Retrieve log information from the Member Node for the specified date range and even type. This method is used primarily by the log aggregator to generate aggregate statistics for nodes, objects, and the methods of access. The response MUST contain only records for which the requestor has permission to read. Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed. Access control for this method MUST be configured to allow calling by Coordinating Nodes and MAY be configured to allow more general access.
+     - Retrieve log information from the Member Node for the specified slice parameters. This method is used primarily by the log aggregator to generate aggregate statistics for nodes, objects, and the methods of access. The response MUST contain only records for which the requestor has permission to read. Note that date time precision is limited to one millisecond. If no timezone information is provided UTC will be assumed. Access control for this method MUST be configured to allow calling by Coordinating Nodes and MAY be configured to allow more general access.
    * - GET /  and  GET /node
      - :func:`MNCore.getCapabilities`
      - Returns a document describing the capabilities of the Member Node. The response at the Member Node base URL is for convenience only. Clients of Member Nodes SHOULD use the /node URL to retrieve the node capabilities document.
@@ -131,6 +131,15 @@
    * - GET /search/{queryType}/{query}
      - :func:`CNRead.search`
      - Search the metadata catalog and return identifiers of metadata records that match the criteria. Search may be implemented by more than one type of search engine. The queryType parameter indicates which search engine should be targeted. The value and form of *query* is determined by the search engine. Currently supported search engines include: "solr"
+   * - GET/query/{queryEngine}/{query}
+     - :func:`CNRead.query`
+     - Submit a query against the specified *queryEngine* and return the response as formatted by the queryEngine. The *query()* operation may be implemented by more than one type of search engine and the *queryEngine* parameter indicates which search engine is targeted. The value and form of *query* is determined by the specific query engine. For example, the SOLR search engine will accept many of the standard parameters of SOLR, including field restrictions and faceting. .. NOTE:: This method is in DRAFT status and is scheduled for version 1.1 of the APIs
+   * - GET /query/{queryType}
+     - :func:`CNRead.getQueryEngineDescription`
+     - Provides metadata about the query service of the specified *queryEngine*. The metadata provides a brief description of hte query engine, its version, its schema version, and an optional list of fields supported by the query engine. .. NOTE:: This method is in DRAFT status and is scheduled for version 1.1 of the APIs
+   * - GET /query
+     - :func:`CNRead.listQueryEngines`
+     - Returns a list of query engines, i.e. supported values for the *queryEngine* parameter of the *getQueryEngineDescription* and *query* operations. The list of search engines available may be influenced by the authentication status of the request. .. NOTE:: This method is in DRAFT status and is scheduled for version 1.1 of the APIs
    * - PUT /owner/{pid}
      - :func:`CNAuthorization.setRightsHolder`
      - Changes ownership (RightsHolder) of the specified object to the :term:`subject` specified by `userId`

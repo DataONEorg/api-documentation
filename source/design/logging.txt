@@ -1,16 +1,16 @@
 Event Logging and Reporting
 ===========================
 
-The DataONE system should log various interactions and operations in the
-system to provide operational status information about the entire system, to
-report on specific node operations, and to inform DataONE participants (users,
+The DataONE system should log various interactions and operations in the system
+to provide operational status information about the entire system, to report on
+specific node operations, and to inform DataONE participants (users,
 contributors, administrators) about their specific domain of interest in the
 system. For example, a contributor might like to monitor use of their data and
-where it is being replicated to. The methods :func:MN.getLogRecords and
-:func:CN.getLogRecords provide the outward facing methods for retrieving log
-information from member and coordinating nodes respectively.
+where it is being replicated to. The methods :func:`MNCore.getLogRecords` and
+:func:`CNCore.getLogRecords` provide outward facing services for retrieving
+log information from member and coordinating nodes respectively.
 
-Logging is described in use case 16, 17, 18, 20, and potentially 19.
+Logging is described in use cases 16, 17, 18, 20, and potentially 19.
 
 .. toctree::
    :maxdepth: 1

@@ -15,7 +15,7 @@ PLANTUML      = $(JAVA) -jar "$(CURDIR)/tools/docutils/plantuml.jar" -config "$(
 DOCGENERATOR  = $(PYTHON) "$(CURDIR)/tools/ihwd/ihwd.py"
 METHODXLS     = MethodCrossReference.xls
 ZIPHTML       = architecture.zip
-SCHEMADIR     = source/D1_SCHEMA_v1
+SCHEMADIR     = source/D1_SCHEMA_v1.1
 XSD2RST       = tools/xsd2rst
 #SCHEMADIR     = /Users/vieglais/Workspaces/DataONE_trunk/d1_schemas
 
