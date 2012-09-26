@@ -100,6 +100,20 @@
 	  + void setActiveMNode(MNode activeMNode)
 	  }
 	  
+	  class DataStoreServiceController {
+	  - Map<String, DataStoreServiceInterface> dataStoreServices
+	  + {static} String LOCAL
+	  + {static} String METACAT
+	  + {static} String DATAONE
+	  + {static} String ALL
+	  + DataStoreServiceController getInstance()
+	  + AbstractDataPackage read(Identifier pid, String location) 
+	  + Identifier save(AbstractDataPackage adp, String location)
+	  + void delete(AbstractDataPackage adp, String location)
+	  + Identifier generateIdentifier(String location)
+	  + boolean exists(Identifier pid, String location)
+	  }
+	  
   }
   
   D1Object <|-- Entity
@@ -118,7 +132,10 @@
   DataStoreServiceInterface <|-- DataStoreService
   DataStoreService <|-- LocalDataStoreService
   DataStoreService <|-- MetacatDataStoreService
-  DataStoreService <|-- DataONEDataStoreService  
+  DataStoreService <|-- DataONEDataStoreService 
+  
+  DataStoreServiceController o-- "*" DataStoreServiceInterface
+  
   
   @enduml
 .. image:: images/morpho-class-diagram.png
