@@ -83,4 +83,16 @@
      - ``POST /replicate``
      - :func:`MNReplication.replicate`
      - (:class:`session<Types.Session>`, :class:`sysmeta<Types.SystemMetadata>`, :class:`sourceNode<Types.NodeReference>`) ``->`` boolean
+   * - Tier 1
+     - ``GET /query/{queryEngine}/{query}``
+     - :func:`MNQuery.query`
+     - (:class:`session<Types.Session>`, ``queryEngine``, ``query``) ``->`` :class:`Types.OctetStream`
+   * - Tier 1
+     - ``GET /query/{queryType}``
+     - :func:`MNQuery.getQueryEngineDescription`
+     - (:class:`session<Types.Session>`, ``queryEngine``) ``->`` :class:`Types.QueryEngineDescription`
+   * - Tier 1
+     - ``GET /query``
+     - :func:`MNQuery.listQueryEngines`
+     - (:class:`session<Types.Session>`) ``->`` :class:`Types.QueryEngineList`
 

@@ -39,7 +39,7 @@
      - :func:`search`
      - (:class:`session<Types.Session>`, ``queryType``, ``query``) ``->`` :class:`Types.ObjectList`
    * - Tier 1
-     - ``GET/query/{queryEngine}/{query}``
+     - ``GET /query/{queryEngine}/{query}``
      - :func:`query`
      - (:class:`session<Types.Session>`, ``queryEngine``, ``query``) ``->`` :class:`Types.OctetStream`
    * - Tier 1
@@ -333,7 +333,7 @@
 
    :Use Cases:
      :doc:`UC02 </design/UseCases/02_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
-   :REST URL: ``GET/query/{queryEngine}/{query}``
+   :REST URL: ``GET /query/{queryEngine}/{query}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
@@ -365,7 +365,7 @@
 
 .. function:: getQueryEngineDescription(session,queryEngine) -> QueryEngineDescription
 
-   Provides metadata about the query service of the specified *queryEngine*. The metadata provides a brief description of hte query engine, its version, its schema version, and an optional list of fields supported by the query engine.
+   Provides metadata about the query service of the specified *queryEngine*. The metadata provides a brief description of the query engine, its version, its schema version, and an optional list of fields supported by the query engine.
 
    .. NOTE:: This method is in DRAFT status and is scheduled for version 1.1 of the APIs
 

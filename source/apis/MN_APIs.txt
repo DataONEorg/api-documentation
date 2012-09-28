@@ -13,6 +13,9 @@ Member Node APIs
      class MNRead {
    
      }
+     class MNQuery {
+     
+     }
    }
    package Tier2 {
      class MNAuthorization{
@@ -61,10 +64,24 @@ Read API
 .. module:: MNRead
    :synopsis: Provide tier 1 operations for sharing content from a Member Node.
 
-The *MN_read* API implements methods that enable object management
+The *MNRead* API implements methods that enable object management
 operations on a :term:`Member Node`.  
 
 .. include:: generated/generated_MNRead.txt
+
+
+Query API
+~~~~~~~~~
+
+.. module:: MNQuery
+   :synopsis: An optional tier 1 API for Member Node support of local query.
+
+The *MNQuery* API is an optional API that may be implemented by Member Nodes
+that intend to support querying the local repository. The actual form of the
+query is undefined, and t is expected that a small set of well known query
+engine types will be supported.
+
+.. include:: generated/generated_MNQuery.txt
 
 
 Authorization API

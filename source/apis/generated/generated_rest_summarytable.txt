@@ -59,6 +59,15 @@
    * - POST /replicate
      - :func:`MNReplication.replicate`
      - Called by a Coordinating Node to request that the Member Node create a copy of the specified object by retrieving it from another Member Nodeode and storing it locally so that it can be made accessible to the DataONE system.   A successful operation is indicated by a HTTP status of 200 on the response.  Failure of the operation MUST be indicated by returning an appropriate exception. Access control for this method MUST be configured to allow calling by Coordinating Nodes.
+   * - GET /query/{queryEngine}/{query}
+     - :func:`MNQuery.query`
+     - Submit a query against the specified *queryEngine* and return the response as formatted by the queryEngine. The *query()* operation may be implemented by more than one type of search engine and the *queryEngine* parameter indicates which search engine is targeted. The value and form of *query* is determined by the specific query engine. For example, the SOLR search engine will accept many of the standard parameters of SOLR, including field restrictions and faceting. This method is optional for Member Nodes, but if implemented, both getQueryEngineDescription and listQueryEngines must also be implemented. .. NOTE:: This method is in DRAFT status and is scheduled for version 1.1 of the APIs
+   * - GET /query/{queryType}
+     - :func:`MNQuery.getQueryEngineDescription`
+     - Provides metadata about the query service of the specified *queryEngine*. The metadata provides a brief description of the query engine, its version, its schema version, and an optional list of fields supported by the query engine. .. NOTE:: This method is in DRAFT status and is scheduled for version 1.1 of the APIs
+   * - GET /query
+     - :func:`MNQuery.listQueryEngines`
+     - Returns a list of query engines, i.e. supported values for the *queryEngine* parameter of the *getQueryEngineDescription* and *query* operations. The list of search engines available may be influenced by the authentication status of the request. .. NOTE:: This method is in DRAFT status and is scheduled for version 1.1 of the APIs
 
 
 .. list-table:: REST URLs implemented on Coordinating Nodes.
@@ -131,12 +140,12 @@
    * - GET /search/{queryType}/{query}
      - :func:`CNRead.search`
      - Search the metadata catalog and return identifiers of metadata records that match the criteria. Search may be implemented by more than one type of search engine. The queryType parameter indicates which search engine should be targeted. The value and form of *query* is determined by the search engine. Currently supported search engines include: "solr"
-   * - GET/query/{queryEngine}/{query}
+   * - GET /query/{queryEngine}/{query}
      - :func:`CNRead.query`
      - Submit a query against the specified *queryEngine* and return the response as formatted by the queryEngine. The *query()* operation may be implemented by more than one type of search engine and the *queryEngine* parameter indicates which search engine is targeted. The value and form of *query* is determined by the specific query engine. For example, the SOLR search engine will accept many of the standard parameters of SOLR, including field restrictions and faceting. .. NOTE:: This method is in DRAFT status and is scheduled for version 1.1 of the APIs
    * - GET /query/{queryType}
      - :func:`CNRead.getQueryEngineDescription`
-     - Provides metadata about the query service of the specified *queryEngine*. The metadata provides a brief description of hte query engine, its version, its schema version, and an optional list of fields supported by the query engine. .. NOTE:: This method is in DRAFT status and is scheduled for version 1.1 of the APIs
+     - Provides metadata about the query service of the specified *queryEngine*. The metadata provides a brief description of the query engine, its version, its schema version, and an optional list of fields supported by the query engine. .. NOTE:: This method is in DRAFT status and is scheduled for version 1.1 of the APIs
    * - GET /query
      - :func:`CNRead.listQueryEngines`
      - Returns a list of query engines, i.e. supported values for the *queryEngine* parameter of the *getQueryEngineDescription* and *query* operations. The list of search engines available may be influenced by the authentication status of the request. .. NOTE:: This method is in DRAFT status and is scheduled for version 1.1 of the APIs

@@ -132,6 +132,24 @@ Failure of the operation MUST be indicated by returning an appropriate exception
 Access control for this method MUST be configured to allow calling by Coordinating Nodes.
 
        Appears in functional use cases: :doc:`UC09 </design/UseCases/09_uc>`
+   * - :mod:`MNQuery`
+     - :func:`MNQuery.query`
+     - Submit a query against the specified *queryEngine* and return the response as formatted by the queryEngine.
+The *query()* operation may be implemented by more than one type of search engine and the *queryEngine* parameter indicates which search engine is targeted. The value and form of *query* is determined by the specific query engine.
+For example, the SOLR search engine will accept many of the standard parameters of SOLR, including field restrictions and faceting.
+This method is optional for Member Nodes, but if implemented, both getQueryEngineDescription and listQueryEngines must also be implemented.
+.. NOTE:: This method is in DRAFT status and is scheduled for version 1.1 of the APIs
+
+       Appears in functional use cases: :doc:`UC02 </design/UseCases/02_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
+   * - \
+     - :func:`MNQuery.getQueryEngineDescription`
+     - Provides metadata about the query service of the specified *queryEngine*. The metadata provides a brief description of the query engine, its version, its schema version, and an optional list of fields supported by the query engine.
+.. NOTE:: This method is in DRAFT status and is scheduled for version 1.1 of the APIs
+   * - \
+     - :func:`MNQuery.listQueryEngines`
+     - Returns a list of query engines, i.e. supported values for the *queryEngine* parameter of the *getQueryEngineDescription* and *query* operations.
+The list of search engines available may be influenced by the authentication status of the request.
+.. NOTE:: This method is in DRAFT status and is scheduled for version 1.1 of the APIs
    * - :mod:`CNCore`
      - :func:`CNCore.ping`
      - Low level "are you alive" operation. A valid ping response is indicated by a HTTP status of 200. A timestmap indicating the current system time (UTC) on the node MUST be returned in the HTTP Date header.
@@ -258,7 +276,7 @@ For example, the SOLR search engine will accept many of the standard parameters 
        Appears in functional use cases: :doc:`UC02 </design/UseCases/02_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
    * - \
      - :func:`CNRead.getQueryEngineDescription`
-     - Provides metadata about the query service of the specified *queryEngine*. The metadata provides a brief description of hte query engine, its version, its schema version, and an optional list of fields supported by the query engine.
+     - Provides metadata about the query service of the specified *queryEngine*. The metadata provides a brief description of the query engine, its version, its schema version, and an optional list of fields supported by the query engine.
 .. NOTE:: This method is in DRAFT status and is scheduled for version 1.1 of the APIs
    * - \
      - :func:`CNRead.listQueryEngines`
