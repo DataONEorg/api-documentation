@@ -116,6 +116,16 @@
 	  + boolean exists(Identifier pid, String location)
 	  }
 	  
+	  class RevisionManager {
+	  - Map<String, String> obsoletes
+	  - Map<String, String> obsoletedBy
+	  + List<String> getAllRevisions(String identifer)
+	  + String getObsoletes(String identifer)
+	  + String getObsoletedBy(String identifer)
+	  + void setObsoletes(String new, String old)
+	  + void setObsoletedBy(String old, String new)
+	  }
+	  
   }
   
   D1Object <|-- Entity
@@ -137,6 +147,7 @@
   DataStoreService <|-- DataONEDataStoreService 
   
   FileSystemDataStore "*" --o LocalDataStoreService
+  RevisionManager "1" --o LocalDataStoreService
   
   DataStoreServiceController o-- "*" DataStoreServiceInterface
   
