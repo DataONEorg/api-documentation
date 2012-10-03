@@ -65,11 +65,13 @@
 	  }
 	  
 	  class FileSystemDataStore {
-	  - HashMap<Identifier, List<File>> fileIDMap
+	  - HashMap<Identifier, File> fileIDMap
+	  - String directory
 	  + OutputStream get(Identifier id) throws Exception
 	  + void set(Identifier id, InputStream data) throws Exception
+	  + String getDirectory()
+	  + void setDirectory(String dir)
 	  }
-	  
 	  
 	  interface DataStoreServiceInterface {
 	  + AbstractDataPackage read(Identifier pid) throws Exception
@@ -133,6 +135,8 @@
   DataStoreService <|-- LocalDataStoreService
   DataStoreService <|-- MetacatDataStoreService
   DataStoreService <|-- DataONEDataStoreService 
+  
+  FileSystemDataStore "*" --o LocalDataStoreService
   
   DataStoreServiceController o-- "*" DataStoreServiceInterface
   
