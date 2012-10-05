@@ -29,7 +29,7 @@
 	  }
 	  
 	  interface DataStore {
-	  + OutputStream get(Identifier id) throws Exception;
+	  + InputStream get(Identifier id) throws Exception;
 	  + void set(Identifier id, InputStream data) throws Exception;
 	  }
 	  
@@ -67,7 +67,7 @@
 	  class FileSystemDataStore {
 	  - HashMap<Identifier, File> fileIDMap
 	  - String directory
-	  + OutputStream get(Identifier id) throws Exception
+	  + InputStream get(Identifier id) throws Exception
 	  + void set(Identifier id, InputStream data) throws Exception
 	  + String getDirectory()
 	  + void setDirectory(String dir)
