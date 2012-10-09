@@ -235,7 +235,7 @@
    :param start: The zero based index of the first log record to return. Default is 0. Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type start: integer
 
-   :param count: The number of log records to return in the response. Default is 1000. Transmitted as a URL query parameter, and so must be escaped accordingly.
+   :param count: The maximum number of log records that should be returned in the response. The Member Node may return fewer and the caller should check the *total* in the response to determine if further pages may be retrieved. Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type count: integer
 
    :returns:

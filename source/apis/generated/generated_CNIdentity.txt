@@ -238,7 +238,7 @@
    :param start: The starting record number for the records to be returned (default = 0). Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type start: integer
 
-   :param count: The number of records to be returned (default = 100). Transmitted as a URL query parameter, and so must be escaped accordingly.
+   :param count: The maximum number of entries that should be returned in the response. The Member Node may return fewer and the caller should check the *total* in the response to determine if further pages may be retrieved (default = 100). Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type count: integer
 
    :returns: The list of people and groups that match the query.

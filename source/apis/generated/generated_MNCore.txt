@@ -93,7 +93,7 @@
    :param start=0: Optional zero based offset from the first record in the set of matching log records. Used to assist with paging the response. Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type start=0: integer
 
-   :param count=1000: Optional maximum number of log records to return in the response. Used to assist with paging the response. Transmitted as a URL query parameter, and so must be escaped accordingly.
+   :param count=1000: The maximum number of log records that should be returned in the response. The Member Node may return fewer and the caller should check the *total* in the response to determine if further pages may be retrieved. Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type count=1000: integer
 
    :returns:
