@@ -227,6 +227,8 @@ Data Types in CICore
     + formatId : ObjectFormatIdentifier[1..1]
     + formatName : xs.string[1..1]
     + formatType : xs.string[1..1]
+    + mimeType : xs.string[0..*]
+    + extension : xs.string[0..*]
   }
   ObjectFormat .. ObjectFormatIdentifier
   ObjectFormat .. xs.string
@@ -1241,7 +1243,7 @@ Data Types in CICore
 
       Type: :class:`Types.NodeReference`
 
-      A unique identifier for the node. Although this may initially be the same as the *baseURL*, such practice is not recommended however as this value MUST NOT change for future implementations of the same node, whereas the *baseURL* may change in the future.
+      A unique identifier for the node of the form ``urn:node:NODEID`` where NODEID is the node specific identifier. This value MUST NOT change for future implementations of the same node, whereas the *baseURL* may change in the future.
 
 
     .. attribute:: name
@@ -1325,7 +1327,7 @@ Data Types in CICore
 
       Type: :class:`Types.NodeType`
 
-      The type of the node (Coordinating, Member, Monitor), chosen from the :class:`Types.NodeType` type.
+      The type of the node (Coordinating, Member), chosen from the :class:`Types.NodeType` type.
 
 
     .. attribute:: state
@@ -1565,6 +1567,20 @@ Data Types in CICore
       A string field indicating whether or not this format is :term:`science data` (*DATA*), :term:`science metadata` (*METADATA*) or a :term:`resource map` (*RESOURCE*). If the format is a self-describing data format that includes science metadata, then the field should also be set to science metadata.
 
 
+    .. attribute:: mimeType
+
+      Type: :class:`Types.xs.string`
+
+      The string representation of a MIME-type that could be used to represent an object format. MIME-type values are registered with IANA and provide a coarse-grained mechanism to indicate the type of media that might be delivered using an object format.
+
+
+    .. attribute:: extension
+
+      Type: :class:`Types.xs.string`
+
+      A string field listing one of the filename extensions that might be commonly associated with an object format. The file extension should be listed with any common separator (such as a .). For example, text/plain files frequently use the extension '.txt'.
+
+
     .. code-block:: xml
 
 
@@ -1575,6 +1591,10 @@ Data Types in CICore
             <xs:element name="formatName" type="xs:string" minOccurs="1" maxOccurs="1">
             </xs:element>
             <xs:element name="formatType" type="xs:string" minOccurs="1" maxOccurs="1">
+            </xs:element>
+            <xs:element name="mimeType" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+            </xs:element>
+            <xs:element name="extension" type="xs:string" minOccurs="0" maxOccurs="unbounded">
             </xs:element>
          </xs:sequence>
       </xs:complexType>
@@ -1589,6 +1609,8 @@ Data Types in CICore
         + formatId : ObjectFormatIdentifier[1..1]
         + formatName : xs.string[1..1]
         + formatType : xs.string[1..1]
+        + mimeType : xs.string[0..*]
+        + extension : xs.string[0..*]
       }
       ObjectFormat .. ObjectFormatIdentifier
       ObjectFormat .. xs.string
