@@ -138,16 +138,19 @@
   D1Object "*" --o DataPackage
     
   DataStore "1" --o "1" D1Object
-  DataStore <|-- FileSystemDataStore
   DataStore <|-- MemoryDataStore
+  
+  'When we want to include the D1 object model in Morpho we can add this relationship
+  'DataStore <|-- FileSystemDataStore
+  
   
   DataStoreServiceInterface <|-- DataStoreService
   DataStoreService <|-- LocalDataStoreService
   DataStoreService <|-- MetacatDataStoreService
   DataStoreService <|-- DataONEDataStoreService 
   
-  FileSystemDataStore "*" --o LocalDataStoreService
-  RevisionManager "1" --o LocalDataStoreService
+  FileSystemDataStore "*" --o DataStoreService
+  RevisionManager "1" --o DataStoreService
   
   DataStoreServiceController o-- "*" DataStoreServiceInterface
   
