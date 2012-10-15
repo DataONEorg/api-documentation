@@ -67,10 +67,12 @@
 	  class FileSystemDataStore {
 	  - HashMap<Identifier, File> fileIDMap
 	  - String directory
-	  + InputStream get(Identifier id) throws Exception
+	  + {static} FileSystemDataStore getInstance(String directory)
+	  + File get(Identifier id) throws Exception
 	  + void set(Identifier id, InputStream data) throws Exception
 	  + String getDirectory()
 	  + void setDirectory(String dir)
+	  + List<String> getIdentifiers()
 	  }
 	  
 	  interface DataStoreServiceInterface {
