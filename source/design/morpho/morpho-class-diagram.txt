@@ -64,6 +64,10 @@
 	  + void setIsDirty(boolean isDirty)
 	  }
 	  
+	  class MorphoDataPackage {
+	  + AbstractDataPackage getAbstractDataPackage()
+	  }
+	  
 	  class FileSystemDataStore {
 	  - HashMap<Identifier, File> fileIDMap
 	  - String directory
@@ -131,10 +135,12 @@
   }
   
   D1Object <|-- Entity
-  DataPackage <|-- MetadataObject
+  D1Object <|-- MetadataObject  
   MetadataObject <|-- AbstractDataPackage
   AbstractDataPackage <|-- EML2Beta6DataPackage
   AbstractDataPackage <|-- EML200DataPackage
+  
+  DataPackage <|-- MorphoDataPackage
   
   Entity "*" --o AbstractDataPackage
   D1Object "*" --o DataPackage
