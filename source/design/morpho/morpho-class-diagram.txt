@@ -80,11 +80,11 @@
 	  }
 	  
 	  interface DataStoreServiceInterface {
-	  + AbstractDataPackage read(Identifier pid) throws Exception
-	  + Identifier save(AbstractDataPackage adp) throws Exception
-	  + void delete(AbstractDataPackage adp) throws Exception
-	  + Identifier generateIdentifier() throws Exception
-	  + boolean exists(Identifier pid) throws Exception
+	  + MorphoDataPackage read(Identifier pid) throws Exception
+	  + String save(MorphoDataPackage mdp) throws Exception
+	  + void delete(MorphoDataPackage mdp) throws Exception
+	  + String generateIdentifier() throws Exception
+	  + boolean exists(String identifier) throws Exception
 	  }
 	  
 	  abstract DataStoreService {
@@ -115,11 +115,11 @@
 	  + {static} String DATAONE
 	  + {static} String ALL
 	  + DataStoreServiceController getInstance()
-	  + AbstractDataPackage read(Identifier pid, String location) 
-	  + Identifier save(AbstractDataPackage adp, String location)
-	  + void delete(AbstractDataPackage adp, String location)
-	  + Identifier generateIdentifier(String location)
-	  + boolean exists(Identifier pid, String location)
+	  + MorphoDataPackage read(String identifier, String location) 
+	  + String save(MorphoDataPackage mdp, String location)
+	  + void delete(MorphoDataPackage mdp, String location)
+	  + String generateIdentifier(String location)
+	  + boolean exists(String identifier, String location)
 	  }
 	  
 	  class RevisionManager {
