@@ -143,6 +143,46 @@ Member Node replication.
   deactivate cnXrepl
   end loop
 
+  == Regular Replication Audit ==
+
+   [-> cnXrepl : auditReplicas()
+   activate cnXrepl #D74F57
+
+   note right
+     Query the Metacat database to receive a short list of 
+     tasks which have not had their checksums verified in 
+     greater than 2 months
+   end note
+   cnXrepl ->] : getAuditShortList()
+   cnXrepl <--] : shortList
+
+   note over cnXrepl
+   Bin the tasks by NodeReference for 
+   bulk processing my MNAuditTask
+   end note
+   loop for each Identifier in shortList
+   cnXrepl -> cnXrepl : hzSystemMetadata.get(Identifier).getReplicaList()
+   loop for each Replica in List<Replica>
+   alt if Replica.replicaVerified is older than 2 months
+   alt if auditTaskMap.containsKey(Replica.replicaMemberNode)
+   cnXrepl -> cnXrepl : auditTaskMap.get(Replica.replicaMemberNode).add(Identifier)
+   else else
+   cnXrepl -> cnXrepl : auditTaskMap.put(Replica.replicaMemberNode, new List<Identifier>())\nauditTaskMap.get(Replica.replicaMemberNode).add(Identifier)
+   end
+   end
+   end loop
+   end loop
+   loop for each NodeReference in auditTaskMap.keySet()
+   cnXrepl -> cnXrepl : taskid = idGenerator.newId()
+   cnXrepl -> cnXrepl : auditTask = MNAuditTask(NodeReference, List<Identifier>)
+   cnXrepl -> cnXrepl : hzAuditTaskQueue.put(taskid, auditTask)
+   end loop
+   note right
+     Hazelcast distributes Audit
+     Tasks to all CNs
+   end note
+   deactivate cnXrepl
+
   == Process Replication Tasks ==  
           
   cnZ -> cnZ: itemAdded(task)
