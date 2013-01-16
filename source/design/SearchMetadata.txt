@@ -129,15 +129,15 @@ directly as part of a URL, must also be properly URL escaped.
 
      id:"some_prefix*"
 
-3. Index entries that match a particular object format::
+3. Index entries that match a particular format id::
 
-     objectFormat:"formatId"
+     formatId:"format_a"
 
-   where formatId = the formatId being located
+   where format_a = the formatId being located
 
 4. Entries with formatId matching "fmtid_1" or "fmtid_2"::
 
-     objectformat:"fmtid_1" || objectFormat:"fmtid_2"
+     formatId:"fmtid_1" || formatId:"fmtid_2"
 
 5. Entries with byte size less than or equal to 10000::
 
@@ -157,7 +157,7 @@ directly as part of a URL, must also be properly URL escaped.
 
 9. Objects of a formatId equal to "format_a" and modified within one day::
 
-     objectformat:"format_a" AND datemodified:[NOW-1DAY TO *]
+     formatId:"format_a" AND datemodified:[NOW-1DAY TO *]
 
 10. Metadata associated with data objects of relevance to Photosynthesis::
 
