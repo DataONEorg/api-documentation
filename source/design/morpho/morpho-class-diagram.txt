@@ -7,8 +7,10 @@
 	  - DataStore dataStore
 	  - SystemMetadata systemMetadata
 	  + D1Object(Identifier identifier)
-	  + InputStream getData()
-	  + void setData(InputStream input)  
+	  + InputStream getDataInputStream()
+	  + void setDataInputStream(InputStream input) 
+	  + byte[] getData()
+	  + void setData(byte[] data)
 	  + SystemMetadata getSystemMetadata()
 	  + void setSystemMetadata(SystemMetadata systemMetadata)
 	  + DataStore getDataStore()
