@@ -4,17 +4,15 @@
   package DataONE {
   
 	  class D1Object {
-	  - DataStore dataStore
+	  - DataSource dataSource
 	  - SystemMetadata systemMetadata
-	  + D1Object(Identifier identifier)
-	  + InputStream getDataInputStream()
-	  + void setDataInputStream(InputStream input) 
-	  + byte[] getData()
-	  + void setData(byte[] data)
+	  + D1Object()
 	  + SystemMetadata getSystemMetadata()
 	  + void setSystemMetadata(SystemMetadata systemMetadata)
-	  + DataStore getDataStore()
-	  + void setDataStore(DataStore dataStore)
+	  + DataSource getDataSource()
+	  + void setDataSource(DataSource dataSource)
+	  + byte[] getData() (deprecated)
+      + void setData(byte[] data) (deprecated)
 	  }
 
 	  class DataPackage {
@@ -30,14 +28,6 @@
 	  + OutputStream serialize()
 	  }
 	  
-	  interface DataStore {
-	  + InputStream get(Identifier id) throws Exception;
-	  + void set(Identifier id, InputStream data) throws Exception;
-	  }
-	  
-	  class MemoryDataStore {
-	  - byte[] data
-	  }
   }
   
   package Morpho {
@@ -147,8 +137,6 @@
   Entity "*" --o AbstractDataPackage
   D1Object "*" --o DataPackage
     
-  DataStore "1" --o "1" D1Object
-  DataStore <|-- MemoryDataStore
   
   'When we want to include the D1 object model in Morpho we can add this relationship
   'DataStore <|-- FileSystemDataStore
