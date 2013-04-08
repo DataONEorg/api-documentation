@@ -1,84 +1,99 @@
 Mutability of Content in DataONE
 ================================
 
-
 .. index:: mutability
 
 .. note::
 
-   This document is a draft reflecting discussion from the 2012 AHM held in
-   Albuquerque during the week of September 18.
+   This document is a draft proposal for supporting the mutable content model
+   employed by several institutions wanting to become member nodes in DataONE.
+   It incorporates discussions starting from the September 2012 AHM held in
+   Albuquerque, the follow-up CCIT teleconference, and CCIT meeting in February
+   2013 in Santa Barbara.
 
 
 .. contents::
 
-
 Overview
---------
+------------
 
-DataONE requires that an identifier for any object can always be used to
-retrieve the exact same set of bytes that represent the object when it was
-initially registered with DataONE. This requirement helps to ensure
-repeatability of any use of an object, so for example, analysis on a data set
-repeated sometime in the future should yield identical results (within the
-limits of precision of the analytical tools).
+   This document is a draft proposal for supporting the mutable content model
+   employed by several institutions wanting to become member nodes in DataONE.
+   In short, the mutable content model is where changes to content overwrite the
+   existing content returned by an identifier. Currently, DataONE follows an 
+   immutable content model, whereby any changes to an object are 'saved as' a 
+   new object with a new identifier which formally obsoletes the previous one.  
+   Both the difference in how content is associated with identifiers as well as 
+   how to maintain past versions of content from this type of node is a barrier 
+   to membership in DataONE for such nodes, and lost opportunity for DataONE.
 
-The requirement for immutability also implies that content can not change once
-registered with DataONE, and so a checksum computed on an object should always
-be the same. Hence checksums provide a convenient mechanism for fixity
-checking - a recomputed checksum will always yield the same results.
+   The current immutability requirement helps to ensure repeatability of any use 
+   of an object, meaning that any analysis on a data set repeated sometime in the 
+   future should yield identical results (within the limits of precision of the 
+   analytical tools).
+   
+   However, there are practical examples where some changes can, and should be 
+   affected to science metadata documents that don't affect reproducibility in a 
+   significant way, and where past versions are not merited.  For example:
 
-Immutability applies to all object types in DataONE which currently includes
-data, science metadata, and resource maps. However, there are practical
-examples where some changes can, and should be affected to science metadata
-documents in order to support the general goal of continual improvement of
-metadata quality which in turn improves reusability of content.
+   - Correction of punctuation or spelling within textual fields such as *Title*
+     or *Abstract*
 
-Examples of changes to science metadata include:
+   - Change of policy description such as the license for re-use
 
-- Correction of punctuation or spelling within textual fields such as *Title*
-  or *Abstract*
+   - Providing more appropriate keywords
 
-- Change of policy description such as the license for re-use
+   - Adding descriptive fields in alternate languages
 
-- Providing more appropriate keywords
+   - Correcting the name of a data column definition to match the actual name in
+     a data file
 
-- Adding descriptive fields in alternate languages
+   - Changing the description of spatial, temporal, taxonomic, or some other
+     extent
 
-- Correcting the name of a data column definition to match the actual name in
-  a data file
+   - Correcting the description of units used in a data column
 
-- Changing the description of spatial, temporal, taxonomic, or some other
-  extent
+   In these situations, having identifiers that always point to the most recently
+   updated version of content is convenient for users and helps to promote 
+   quality improvements to metadata which further enhances content re-use.
 
-- Correcting the description of units used in a data column
+   Despite some changes not requiring versioning, organizations employing a 
+   mutable content model do so for all types of content, including data and 
+   resource maps, where all changes have to be considered significant.
+   
+   So the question remains: how to ensure repeatability of use for this content, 
+   or conversely, how to communicate to potential users that repeatability is 
+   not assured for this object?  Who is ultimately responsible for ensuring 
+   repeatable retrieval, the submitter, the member node, the coordinating 
+   nodes, or the end-user ?
 
-Each of these changes are valid operations that improve the utility of the
-science metadata document for the purposes of discovery or re-use of the
-content the metadata document describes. Some, such as correcting the units
-used or the name of a column can, and likely will, significantly impact
-analysis of the data described by the metadata document. However, since the
-changes are correcting previous errors, it stands to reason that such changes
-should be allowed. 
+   Related development plans
+   -----------------------------------
+   Regardless of how the mutable content issue is resolved, DataONE will be 
+   providing a new CN service for navigating to the latest version of an object, 
+   since the only way to do it currently is for the clients to serially retrieve 
+   the metadata for versions in the chain until they reach the head version, 
+   which is very inefficient. A new method to retrieve the entire version history 
+   is also under consideration.
+   
 
-The current implementation of DataONE (1.0.x) supports such changes through
-re-submission of the content with a new identifier. Hence, any correction of a
-metadata document requires that a new metadata document is created, the
-obsolescence relationships between the old and new objects are set, and a new
-resource map with a new identifier is generated for the data package. This
-process ensures that citation of the original data package and it's associated
-bits will always refer to the same object. While technically convenient, it
-can be argued that such an approach is inconvenient for end users, and in fact
-promotes re-use of uncorrected content even when effort has been expended to
-correct errors and thus improve quality. This approach also complicates
-implementation for data providers (since *any* edit requires re-issue of the
-metadata) and is contrary to the policy for identifier generation of groups
-such as Data Cite.
+  Workspace oriented member nodes 
+  ----------------------------------------------
+  Original thinking about member nodes are as the originators of selected versions 
+  of reviewed content.  That is, not every intermediate save on the way to a final
+  product should be saved for future reference.  Organizations following the mutable 
+  content model for storage do not necessarily have to make this distinction, but
+  if the member node itself is operating as the workspace, where draft content is
+  worked on until it is presentable form, this may complicate the original issue of 
+  what should be made available.  
 
-An alternative scenario, and the model that has practically emerged for many
-environments, enables identifiers to always refer to the most recent updated
-version of content. This is convenient for users and helps to promote quality
-improvements to metadata which further enhances content re-use.
+  Such potential member nodes may wish to introduce in their native interface
+  the concept of a "publish" or "export" step that would distinguish between draft 
+  versions that should not be made available, and those that are published / exported.
+  This may be useful regardless of how the main issue of mutable content handling 
+  resolves, simply to keep internal drafts from wider distribution.
+  
+
 
 
 Implementation Approaches
@@ -105,6 +120,7 @@ Observations:
 
 - End users not directly exposed to content updates since these can only be
   retrieved through the indirect approach of traversing the obsolescence path
+  (Would probably offer a CN.resolveLatest() to make it a one-stepper)
 
 - End users always receive exactly the same bytes for an object, and thus
   analytical repeatability should be assured (within limits of tools)
@@ -211,3 +227,34 @@ proxy for an object revision identifier, and so this option may simply be a
 more general expression of option (B).
 
 
+E.  Two Classes of Objects
+~~~~~~~~~~~~~~~~~~~~~~~~
+Objects would be marked as mutable or static, with mutable objects only
+indexed, but not replicated.  End users wanting to cite the object would need
+to decide whether a static version is needed or whether citing the series
+is good enough.  If a static version is needed, the citer would call 
+MN.makeVersion(seriesID, checksum) that would create a static copy of the 
+content for future reference.  If the checksum passed in didn't match the 
+current checksum (or one already saved), it would return a 'VersionNotAvailable'
+exception and the end-user would re-download the item, make sure it
+was still suitable, and call MN.makeVersion again with the new checksum.
+
+The new version would inherit the accessPolicy, submitter, and rightsHolder fields
+of what it is versioning. 
+
+Advantages of this approach are:
+
+ - DataONE can remain neutral about identifier semantics and would be
+   respecting the citation policy of the originating identifier issuer, like Data Cite.
+
+ - DataONE users wanting to cite exact versions could do so
+
+ - by returning an exception, end users having out of date content would 
+   be properly notified that the content had changed, and be required to 
+   reconcile any differences, which is what content owners would want..
+ 
+ - Member Nodes would not be required to maintain unnecessary
+   back versions. 
+ 
+- this has more potential to work for other types of mutable content, such
+  as data objects and resource maps. 
