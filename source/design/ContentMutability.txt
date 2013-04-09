@@ -17,24 +17,142 @@ Mutability of Content in DataONE
 Overview
 ------------
 
-This document is a draft proposal for supporting the mutable content model
-employed by several institutions wanting to become member nodes in DataONE.
-In short, the mutable content model is where changes to content overwrite the
-existing content returned by an identifier. Currently, DataONE follows an 
-immutable content model, whereby any changes to an object are 'saved as' a 
-new object with a new identifier which formally obsoletes the previous one.  
-Both the difference in how content is associated with identifiers as well as 
-how to maintain past versions of content from this type of node is a barrier 
-to membership in DataONE for such nodes, and lost opportunity for DataONE.
+Several institutions wanting to become member nodes in DataONE have existing 
+infrastructure employing a mutable content model.  In short, the mutable content 
+model is where changes to content overwrite the existing content returned by an 
+identifier. DataONE currently follows an immutable content model, whereby member
+nodes are required to save any changes to an object as a new object with a new 
+identifier which formally obsoletes the previous one.  The challenge is to find
+the optimal way to support member nodes using a mutable content model, while 
+preserving the reproducibility assurances the current approach offers.
 
-The current immutability requirement helps to ensure repeatability of any use 
-of an object, meaning that any analysis on a data set repeated sometime in the 
-future should yield identical results (within the limits of precision of the 
-analytical tools).
 
-However, there are practical examples where some changes can, and should be 
-affected to science metadata documents that don't affect reproducibility in a 
-significant way, and where past versions are not merited.  For example:
+The Problem
+-----------
+Current DataONE replication processes and fixity checks depend on content 
+immutability. Mutable content from a member node cannot be differentiated from
+corrupt copies of the object that need to be fixed by recovery from other replicas.
+The current immutability requirement helps to ensure repeatability of any use of
+an object, meaning that any analysis on a data set repeated sometime in the future
+should yield identical results (within the limits of precision of the analytical 
+tools).  By overwriting previous version, nodes following the mutable content 
+model cannot ensure repeatable retrieval of content.
+
+New features and behavior is needed in DataONE to work mutable content.  The
+use cases below organize the identified requirements related to mutable content,
+with the most relevant use cases listed first.
+
+Prioritized Use Cases
+---------------------
+
+# Data preservation
+  Defined as activities that help ensure continued discoverability and usefulness
+  and usually in reference to metadata, not data.
+ - metadata adaptation / improvement
+ - metadata correction
+ - absent a "push" notification, users should be able to easily determine if they
+   have the most current version of something, and easily and quickly get it.
+
+# Member node support
+  For institutions following a mutable content model:
+ - Provide a path forward for integrating into DataONE network. 
+ - Minimize the burden of adaptation to working with versioned content.
+ - Allow use of their identifiers in DataONE in the context they are familiar with
+  - (if their identifier always points to the latest, in DataONE it should too)
+ - Options for maintaining past versions
+ - Differentiating between incremental internal saves, vs. new revision.
+
+# Citation support: 
+ - avoid unnecessary costs associated with obtaining DOIs for each version
+ - coordinating citation by a common identifier for citation tracking
+ - ensuring that the a cited object is the same when accessed as when it was 
+   originally used
+ - ability to cite a version as well as the conceptual object
+
+
+Related Use Cases 
+------------------
+
+# support for combined metadata - data objects
+  Some formats combine data with metadata, for example netCDF, so allowing the 
+  metadata to change without impacting the consistency assessment of the data itself.
+  - possible solutions include controlling / validating the dimensions of change,
+    and annotating the dimensions of change allowed (which elements are immutable?)
+   
+# support for accumulating datasets?
+  This means supporting data objects that add records over time, either:
+ - within pre-defined bounds  e.g. "2013 year-to-date"  (the metadata could stay 
+   the same, while data changes)
+ - without pre-defined bounds e.g. "JGoodall primate observation log"?
+
+# support for frequently changing / overwritten data
+  What is the best way to version mutable data that frequently changes but may or 
+  not be used.  For example a "current time" object, replaced every minute, or 
+  "current weather radar" that's replaced every 3 hours.
+  - preserving every version could be very expensive for very little value
+  - what mechanisms could be employed to minimize the overhead?
+  
+  An underlying dynamic is the the rate of mutation vs. the rate of synchronization
+ 
+Out of Scope
+------------
+# supporting 'unrecorded' data streams
+  Mutable content can theoretically include things that are live feeds from 
+  sensors, but are otherwise uncaptured.  Should we allow identifiers to resolve
+  to a URL that returns an input stream?  Can we prevent it?  Can we mark it as 
+  the user's responsibility to do the mn.create?
+
+
+Requirements Analysis
+----------------------
+Support for mutable content breaks down into 3 distinct issues.  First, who is 
+responsible for creating back-versions of content - the submitter, the member node,
+the coordinating node or the end-user who wants to be able to point to a consistent
+object?  Second, what functionality is required to support people using citations
+or otherwise wanting to refer to consistent objects?  Third, what types of 
+mutable objects can be supported?
+ 
+
+Versioning
+~~~~~~~~~~
+Mutable content implies that back-versions of content are not readily available
+on the nodes that produce the mutable content. For those wanting an immutable copy,
+the pragmatic, albeit perhaps sub-ethical, approach is to create and submit a 
+personal copy of the data, which suggests that DataONE and member nodes should 
+offer an alternative.  Some identifier issuers, such as Data Cite, discourage 
+generation of new Data Cite identifiers for new versions with trivial changes,
+suggesting that if DataONE versions trivial changes, they should all have the 
+DOI associated with them.
+
+The current DataONE storage model, through the MN_Storage.update method, places 
+responsibility for storing back versions squarely on the submitter. For the nodes
+under discussion, it can be assumed that submitters do not have the ability to 
+do that, other than saving as separate, unrelated objects with similar names (not 
+a realistic approach).  The 3 other options are presented:
+
+- Member Node saves versions
+  With this option, the member node must either adapt their entire storage model
+  or if they are working with a third party system, such as DSpace
+
+
+Support for mutable content amounts support for retrieval of or possibly just 
+resolution to the current object bytes by at least one identifier that can serve 
+as a citation identifier.  Accordingly, CNs will be required to support calculating 
+which is the current version of something and returning it.  DataONE architecture 
+also needs to adapt to accomodate the notion of a "citation identifier".  This can 
+only be done using either a special identifier or special services to indicate 
+the semantics of what is "current").  With either mechanism, DataONE will need 
+to define what to return when the latest version is not "current", i.e. it's 
+archived.  As a starting point, it is safe to assume that when the latest is 
+archived, it is the intention of the archiver that no content is returned from 
+a "get current" request.  Resolution services, on the other hand, may need to 
+return the latest, whether archived or not.
+
+
+  However, there are practical examples where some changes can,
+and should be affected to science metadata documents that don't affect 
+reproducibility in a significant way, and where past versions are not merited.  
+For example:
 
 - Correction of punctuation or spelling within textual fields such as *Title*
   or *Abstract*
@@ -59,13 +177,12 @@ quality improvements to metadata which further enhances content re-use.
 
 Despite some changes not requiring versioning, organizations employing a 
 mutable content model do so for all types of content, including data and 
-resource maps, where all changes have to be considered significant.
+resource maps, where all changes have to be considered significant.  So the 
+question remains: how to ensure reproducibility of use for mutable content, 
+or conversely, how to communicate to potential users that reproducibility is 
+not assured?  Who is ultimately responsible for producing versions of the content, 
+the submitter, the member node, the coordinating nodes, the end-user, or nobody?
 
-So the question remains: how to ensure repeatability of use for this content, 
-or conversely, how to communicate to potential users that repeatability is 
-not assured for this object?  Who is ultimately responsible for ensuring 
-repeatable retrieval, the submitter, the member node, the coordinating 
-nodes, or the end-user?
 
 
 Related development plans
@@ -76,6 +193,7 @@ since the only way to do it currently is for the clients to serially retrieve
 the metadata for versions in the chain until they reach the head version, 
 which is very inefficient. A new method to retrieve the entire version history 
 is also under consideration.
+
 
 
 Workspace oriented member nodes 
@@ -243,18 +361,18 @@ of what it is versioning.
 
 Advantages of this approach are:
 
- - DataONE can remain neutral about identifier semantics and would be
-   respecting the citation policy of the originating identifier issuer, like 
-   Data Cite.
+- DataONE can remain neutral about identifier semantics and would be
+  respecting the citation policy of the originating identifier issuer, like 
+  Data Cite.
 
- - DataONE users wanting to cite exact versions could do so
+- DataONE users wanting to cite exact versions could do so
 
- - by returning an exception, end users having out of date content would 
-   be properly notified that the content had changed, and be required to 
-   reconcile any differences, which is what content owners would want..
+- by returning an exception, end users having out of date content would 
+  be properly notified that the content had changed, and be required to 
+  reconcile any differences, which is what content owners would want..
  
- - Member Nodes would not be required to maintain unnecessary
-   back versions. 
+- Member Nodes would not be required to maintain unnecessary
+  back versions. 
  
- - this has more potential to work for other types of mutable content, such
-   as data objects and resource maps. 
+- this has more potential to work for other types of mutable content, such
+  as data objects and resource maps. 
