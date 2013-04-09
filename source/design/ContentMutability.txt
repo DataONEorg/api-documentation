@@ -17,83 +17,82 @@ Mutability of Content in DataONE
 Overview
 ------------
 
-   This document is a draft proposal for supporting the mutable content model
-   employed by several institutions wanting to become member nodes in DataONE.
-   In short, the mutable content model is where changes to content overwrite the
-   existing content returned by an identifier. Currently, DataONE follows an 
-   immutable content model, whereby any changes to an object are 'saved as' a 
-   new object with a new identifier which formally obsoletes the previous one.  
-   Both the difference in how content is associated with identifiers as well as 
-   how to maintain past versions of content from this type of node is a barrier 
-   to membership in DataONE for such nodes, and lost opportunity for DataONE.
+This document is a draft proposal for supporting the mutable content model
+employed by several institutions wanting to become member nodes in DataONE.
+In short, the mutable content model is where changes to content overwrite the
+existing content returned by an identifier. Currently, DataONE follows an 
+immutable content model, whereby any changes to an object are 'saved as' a 
+new object with a new identifier which formally obsoletes the previous one.  
+Both the difference in how content is associated with identifiers as well as 
+how to maintain past versions of content from this type of node is a barrier 
+to membership in DataONE for such nodes, and lost opportunity for DataONE.
 
-   The current immutability requirement helps to ensure repeatability of any use 
-   of an object, meaning that any analysis on a data set repeated sometime in the 
-   future should yield identical results (within the limits of precision of the 
-   analytical tools).
-   
-   However, there are practical examples where some changes can, and should be 
-   affected to science metadata documents that don't affect reproducibility in a 
-   significant way, and where past versions are not merited.  For example:
+The current immutability requirement helps to ensure repeatability of any use 
+of an object, meaning that any analysis on a data set repeated sometime in the 
+future should yield identical results (within the limits of precision of the 
+analytical tools).
 
-   - Correction of punctuation or spelling within textual fields such as *Title*
-     or *Abstract*
+However, there are practical examples where some changes can, and should be 
+affected to science metadata documents that don't affect reproducibility in a 
+significant way, and where past versions are not merited.  For example:
 
-   - Change of policy description such as the license for re-use
+- Correction of punctuation or spelling within textual fields such as *Title*
+  or *Abstract*
 
-   - Providing more appropriate keywords
+- Change of policy description such as the license for re-use
 
-   - Adding descriptive fields in alternate languages
+- Providing more appropriate keywords
 
-   - Correcting the name of a data column definition to match the actual name in
-     a data file
+- Adding descriptive fields in alternate languages
 
-   - Changing the description of spatial, temporal, taxonomic, or some other
-     extent
+- Correcting the name of a data column definition to match the actual name in
+  a data file
 
-   - Correcting the description of units used in a data column
+- Changing the description of spatial, temporal, taxonomic, or some other
+  extent
 
-   In these situations, having identifiers that always point to the most recently
-   updated version of content is convenient for users and helps to promote 
-   quality improvements to metadata which further enhances content re-use.
+- Correcting the description of units used in a data column
 
-   Despite some changes not requiring versioning, organizations employing a 
-   mutable content model do so for all types of content, including data and 
-   resource maps, where all changes have to be considered significant.
-   
-   So the question remains: how to ensure repeatability of use for this content, 
-   or conversely, how to communicate to potential users that repeatability is 
-   not assured for this object?  Who is ultimately responsible for ensuring 
-   repeatable retrieval, the submitter, the member node, the coordinating 
-   nodes, or the end-user ?
+In these situations, having identifiers that always point to the most recently
+updated version of content is convenient for users and helps to promote 
+quality improvements to metadata which further enhances content re-use.
 
-   Related development plans
-   -----------------------------------
-   Regardless of how the mutable content issue is resolved, DataONE will be 
-   providing a new CN service for navigating to the latest version of an object, 
-   since the only way to do it currently is for the clients to serially retrieve 
-   the metadata for versions in the chain until they reach the head version, 
-   which is very inefficient. A new method to retrieve the entire version history 
-   is also under consideration.
-   
+Despite some changes not requiring versioning, organizations employing a 
+mutable content model do so for all types of content, including data and 
+resource maps, where all changes have to be considered significant.
 
-  Workspace oriented member nodes 
-  ----------------------------------------------
-  Original thinking about member nodes are as the originators of selected versions 
-  of reviewed content.  That is, not every intermediate save on the way to a final
-  product should be saved for future reference.  Organizations following the mutable 
-  content model for storage do not necessarily have to make this distinction, but
-  if the member node itself is operating as the workspace, where draft content is
-  worked on until it is presentable form, this may complicate the original issue of 
-  what should be made available.  
+So the question remains: how to ensure repeatability of use for this content, 
+or conversely, how to communicate to potential users that repeatability is 
+not assured for this object?  Who is ultimately responsible for ensuring 
+repeatable retrieval, the submitter, the member node, the coordinating 
+nodes, or the end-user?
 
-  Such potential member nodes may wish to introduce in their native interface
-  the concept of a "publish" or "export" step that would distinguish between draft 
-  versions that should not be made available, and those that are published / exported.
-  This may be useful regardless of how the main issue of mutable content handling 
-  resolves, simply to keep internal drafts from wider distribution.
-  
 
+Related development plans
+-------------------------
+Regardless of how the mutable content issue is resolved, DataONE will be 
+providing a new CN service for navigating to the latest version of an object, 
+since the only way to do it currently is for the clients to serially retrieve 
+the metadata for versions in the chain until they reach the head version, 
+which is very inefficient. A new method to retrieve the entire version history 
+is also under consideration.
+
+
+Workspace oriented member nodes 
+-------------------------------
+Original thinking about member nodes are as the originators of selected versions 
+of reviewed content.  That is, not every intermediate save on the way to a final
+product should be saved for future reference.  Organizations following the mutable 
+content model for storage do not necessarily have to make this distinction, but
+if the member node itself is operating as the workspace, where draft content is
+worked on until it is presentable form, this may complicate the original issue of 
+what should be made available.
+
+Such potential member nodes may wish to introduce in their native interface
+the concept of a "publish" or "export" step that would distinguish between draft 
+versions that should not be made available, and those that are published / exported.
+This may be useful regardless of how the main issue of mutable content handling 
+resolves, simply to keep internal drafts from wider distribution.
 
 
 Implementation Approaches
@@ -227,8 +226,8 @@ proxy for an object revision identifier, and so this option may simply be a
 more general expression of option (B).
 
 
-E.  Two Classes of Objects
-~~~~~~~~~~~~~~~~~~~~~~~~
+E. Two Classes of Objects
+~~~~~~~~~~~~~~~~~~~~~~~~~
 Objects would be marked as mutable or static, with mutable objects only
 indexed, but not replicated.  End users wanting to cite the object would need
 to decide whether a static version is needed or whether citing the series
@@ -245,7 +244,8 @@ of what it is versioning.
 Advantages of this approach are:
 
  - DataONE can remain neutral about identifier semantics and would be
-   respecting the citation policy of the originating identifier issuer, like Data Cite.
+   respecting the citation policy of the originating identifier issuer, like 
+   Data Cite.
 
  - DataONE users wanting to cite exact versions could do so
 
@@ -256,5 +256,5 @@ Advantages of this approach are:
  - Member Nodes would not be required to maintain unnecessary
    back versions. 
  
-- this has more potential to work for other types of mutable content, such
-  as data objects and resource maps. 
+ - this has more potential to work for other types of mutable content, such
+   as data objects and resource maps. 
