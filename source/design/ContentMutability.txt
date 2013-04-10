@@ -38,7 +38,7 @@ should yield identical results (within the limits of precision of the analytical
 tools).  By overwriting previous version, nodes following the mutable content 
 model cannot ensure repeatable retrieval of content.
 
-New features and behavior is needed in DataONE to work mutable content.  The
+New features and behaviors are needed in DataONE to work with mutable content.  The
 use cases below organize the identified requirements related to mutable content,
 with the most relevant use cases listed first.
 
@@ -130,23 +130,134 @@ under discussion, it can be assumed that submitters do not have the ability to
 do that, other than saving as separate, unrelated objects with similar names (not 
 a realistic approach).  The 3 other options are presented:
 
-- Member Node saves versions
-  With this option, the member node must either adapt their entire storage model
-  or if they are working with a third party system, such as DSpace
+- Member Node saves versions:
+  With this option, the member node maintains back-versions of the content under
+  unique identifiers, synchronization occurs as normal.  The "mutable" identifier
+  would either be the persistent identifier of the first version of that content,
+  or is included in the system metadata in a dedicated field ("series
+  identifier"), depending on the design of retrieval functionality.  The goal is 
+  making that identifier able to direct users to the latest version of the content. 
+  (The section on retrieval will go into this in more detail).
 
+  
+- Coordinating Nodes saves versions:
+  In this scenario, the member node maintains system metadata consistent with 
+  the current version of the object, and the coordinating node learns about the
+  new version of content during synchronization, and spawns a new version that 
+  gets indexed and replicated.  Multiple revisions between synchronization periods
+  would not result in multiple new versions - just the latest revision would be
+  persisted as a version in DataONE.  This leaves open the possibility of an 
+  end user retrieving and working on an unpersisted version.  
+  
+  In synchronization, the CN would need to recognize the object as a new version
+  by comparing the checksum with what's on record, and recognize it as a mutable
+  object (instead of a corrupt copy of a static object), before indexing and 
+  initiating replication.
+  
+- End-user saves versions:
+  In this approach, the latest version is exposed by the member node as a mutable
+  object.  Synchronization picks up any changes to the object that would update
+  the index, but skips replication.  Static versions are created with an 
+  MN_Read.persistVersion(seriesId, checksum) call, that returns either a pid of
+  the newly created version, or a "VersionNotAvailable" if the checksum doesn't
+  match any versions already spawned, or the current version.  This precautionary
+  measure of comparing checksums ensures that the version the end user is requesting
+  can be saved off.  The accessPolicy and ownership rights would be inherited from
+  the mutable object.
+  
+  This approach minimizes excessive versions that may or may not be referenced, 
+  which could be beneficial for more regularly updated items.  The member node
+  would also be involved in creating the version
 
-Support for mutable content amounts support for retrieval of or possibly just 
-resolution to the current object bytes by at least one identifier that can serve 
+Retrieval / Citation Support
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Implicit in the support for mutable content is support for retrieval of, or possibly 
+just resolution to, the current object bytes by at least one identifier that can serve 
 as a citation identifier.  Accordingly, CNs will be required to support calculating 
-which is the current version of something and returning it.  DataONE architecture 
-also needs to adapt to accomodate the notion of a "citation identifier".  This can 
-only be done using either a special identifier or special services to indicate 
-the semantics of what is "current").  With either mechanism, DataONE will need 
-to define what to return when the latest version is not "current", i.e. it's 
-archived.  As a starting point, it is safe to assume that when the latest is 
-archived, it is the intention of the archiver that no content is returned from 
-a "get current" request.  Resolution services, on the other hand, may need to 
-return the latest, whether archived or not.
+which is the current version of something and returning it or its identifier. This 
+can only be done using either a special identifier or special services to indicate 
+the semantics of what is "current").  With either mechanism, DataONE will need to 
+define what to return when the latest version is not "current", i.e. it's archived.
+As a starting point, it is safe to assume that when the latest is archived, it is 
+the intention of the archiver that no content is returned from a "get current" 
+request.  Resolution services, on the other hand, may need to return the latest, 
+version, whether current or not.
+
+DataONE will also need to accommodate the notion of a "citable" identifier - one
+that may be tied to the semantics of an identifier issuing service, like Data Cite,
+or simply refer to the conceptual object, rather than one specific version of it.
+The major question is whether to model that identifier separate from the persistent
+identifier, or designate one of the existing identifiers as the one to cite, for
+example, the pid of the first version, or the earliest pid matching a specific
+character pattern.
+
+Option A: Use of special services
+---------------------------------
+In this scenario, identifiers still only associate with a specific version of the 
+content.  Alternative Read API services are used to provide the current version 
+of an object. Resource Maps wanting to point to the latest version would use the 
+"cn/resolveLatest" URL resource, instead of the current "cn/resolve." Service 
+implementation of these services could be as simple as definition of URL query 
+parameter "currentVersion" that would apply to CN|MN Read API methods: get, 
+getSystemMetadata, getChecksum, describe, and CN Read API methods: resolve, 
+search, and query.  (getCurrent, getCurrentSystemMetadata, getCurrentChecksum, 
+etc.)
+
+This approach offers 3 advantages over use of special identifiers. First is 
+transparency: by using special services implies that the user knows the context 
+of the request and will not expect consistent results for repeated requests over
+time.  Second is that the identifier for any version can be used to return the 
+current version.  Third, and not least, is that the DataONE types schema would 
+not need to be altered, triggering the need provide v2 DataONE services.
+
+The use case of having a diverse and uncoordinated user population coordinate 
+around one of the version identifiers for citation is the main limitation of 
+this approach.  It would be impossible to enforce, and difficult to encourage, 
+since the concept of "citation identifier" would not be modeled.  The best DataONE 
+could do would be to recommend the best practice of informally designating the 
+identifier of the original version as the "citation identifier".  This practice 
+would come up short for situations where the identifier to be used for citation 
+is not yet issued to the submitter before the object is submitted to DataONE, as 
+in the case of a third-party identifier authority.
+
+
+
+Option B: Use of Special Identifiers
+-----------------------------------------------------
+The other option is to model and implement a "series identifier" that could be 
+used for (albeit ambiguous) citations.  In this approach, a second identifier 
+unique to the version-chain is (optionally) assigned to each object, which can 
+be can be used to return the latest version. This series identifier, once 
+assigned to the version-chain, would similarly be immutable, and inherited by 
+all new versions of the item.  It is also assumed that in order to coordinate 
+users to use one identifier for citations, that the cardinality for the citation 
+identifier would be 0..1. The 3 main advantages of this approach are:
+
+1. avoiding the need for a new set of API methods called for in option A (but 
+  possibly the definition of a CN.setSeriesID() method).
+2. flexibility in the timing of assigning the citation identifier.
+3. having an identifier that can be used for citations.
+
+The major drawbacks of the special identifier mechanism are:
+
+1. more complicated identifier semantics, since users cannot distinguish between 
+  a series identifier and a version-level identifier, resolving the series 
+  identifier will return something with a different pid.
+2. the limitation of navigating to current versions from only the series 
+  identifier, or the need to also define "getLatestVersion" methods.
+3. complications to search implementations, where both the version-level 
+  identifier and citation-identifier need to have their own search result record.  
+  An "also-known-as" field might serve the purpose of indicating when two result 
+  records are actually the same thing.
+
+
+
+
+
+
+
+
+==================
 
 
   However, there are practical examples where some changes can,
