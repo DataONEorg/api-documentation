@@ -92,6 +92,12 @@ Glossary
      exception to help identify the location in the code where the exception
      originated. See also :mod:`Exceptions`.
 
+   formatId
+
+     An element in :term:`System Metadata` that is used to indicate the type of
+     content represented by the digital object. The complete list of formats can
+     be retrieved through the :func:`CNCore.listFormats` operation.
+
    Group
    group
 
@@ -123,6 +129,7 @@ Glossary
 
    MN
    Member Node
+   Member Nodes
 
      A data holding node that implements all or the essential elements of the
      member mode :term:`API`\s (see :doc:`apis/MN_APIs`). Member Nodes accept
@@ -182,7 +189,10 @@ Glossary
    resource map
    resource maps
 
-     TODO
+     An OAI-ORE RDF document serialized in RDF/XML format that is used to
+     indicate the relationships between :term:`data` and :term:`science
+     metadata` in a :term:`data package`. Resource maps have the
+     :term:`formatId` of ``http://www.openarchives.org/ore/terms``
 
    rightsHolder
    Rights Holder
