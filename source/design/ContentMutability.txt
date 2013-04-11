@@ -3,14 +3,15 @@ Mutability of Content in DataONE
 
 .. index:: mutability
 
-.. note::
 
-   This document is a draft proposal for supporting the mutable content model
-   employed by several institutions wanting to become member nodes in DataONE.
-   It incorporates discussions starting from the September 2012 AHM held in
-   Albuquerque, the follow-up CCIT teleconference, and CCIT meeting in February
-   2013 in Santa Barbara.
-
+:Document Status:
+  ======== ==================================================================
+  Status   Comment
+  ======== ==================================================================
+  DRAFT    (rnahf) Initial draft, based on discussions at Sep 2012 AHM in 
+           Albuquerque, the follow-up CCIT t.c. in Oct 2012, and the CCIT 
+           meeting in Feb 2013 in Santa Barbara
+  ======== ==================================================================
 
 .. contents::
 
@@ -18,13 +19,13 @@ Overview
 ------------
 
 Several institutions wanting to become member nodes in DataONE have existing 
-infrastructure employing a mutable content model.  In short, the mutable content 
-model is where changes to content overwrite the existing content returned by an 
-identifier. DataONE currently follows an immutable content model, whereby member
-nodes are required to save any changes to an object as a new object with a new 
-identifier which formally obsoletes the previous one.  The challenge is to find
-the optimal way to support member nodes using a mutable content model, while 
-preserving the reproducibility assurances the current approach offers.
+infrastructure employing a mutable content model - where changes to content 
+overwrite the existing content returned by an identifier. DataONE currently 
+follows an immutable content model, whereby member nodes are required to save 
+any changes to an object as a new object with a new identifier which formally 
+obsoletes the previous one.  The challenge is to find the optimal way to support 
+member nodes using a mutable content model, while preserving the reproducibility 
+assurances the current approach offers.
 
 
 The Problem
