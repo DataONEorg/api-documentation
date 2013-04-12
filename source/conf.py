@@ -60,7 +60,7 @@ try:
                 'sphinx.ext.pngmath', 
                 'sphinx.ext.ifconfig',
                 'sphinx.ext.graphviz',
-                'rst2pdf.pdfbuilder', 
+                #'rst2pdf.pdfbuilder', 
                 'sphinx.ext.todo',
                 'sphinx.ext.inheritance_diagram',
                 'sphinx.ext.extlinks',
@@ -106,7 +106,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'' #u'DataONE Architecture'
-copyright = u'2009-2012, DataONE'
+copyright = u'2009-2013, DataONE'
 #copyright = u'''- INTEROP: Creation of an International Virtual Data Center for the Biodiversity, 
 #Ecological and Environmental Sciences (NSF Award 0753138); 
 #
