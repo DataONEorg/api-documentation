@@ -41,8 +41,10 @@ In general, the basic rules for constructing are:
 3. each resource with a representation in dataone should be described with an
    identifier field, containing the identifier.
 4. when expressing an identifier in a URI, it should be URL encoded.  When expressing
-   in the identifier field, it should not.
+   in the identifier field, it should not.  (Of course any XML encoding would need 
+   to be applied as well, in this case there is none needed).
    
+      
 For example, the triple representing 'scimeta_id1/foo documents scidata_id1' would 
 look like the following::
   
@@ -63,8 +65,9 @@ and the aggregation resource would look like the following::
 
 In this case, the aggregation resource is given a unique identifier by combining 
 resource_map_id with the word "aggregation", and using the URL '#' reserved character
-to join them. Other ways of generating unique resource names are also allowed.
-See the Examples section below for full example.
+to join them. Other ways of generating unique resource names for the aggregation
+are also allowed.  See the Examples section under Background Discussion below 
+for full example.
 
 
 Background Discussion
