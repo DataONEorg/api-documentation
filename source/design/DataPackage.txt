@@ -32,18 +32,29 @@ DataONE provides tools in both the Java and Python client libraries for building
 and serializing / deserializing resource maps, both based on the foresite-toolkit
 project (https://code.google.com/p/foresite-toolkit/).
 
-In general, the basic rules for constructing are:
+The ORE data model itself is flexible and general purpose.  In order to use it
+for our purposes DataONE, places a few additional constraints on the model.  (See
+http://www.openarchives.org/ore/1.0/datamodel for details on the ORE data model).
 
-1. all objects in the map should be expressed as a URI, using DataONE's resolving 
-   service, to separate current physcial location from the resource itself.
-2. The aggregation resource, which does not have a representation, should also
-   be expressed as a unique URI.
-3. each resource with a representation in dataone should be described with an
-   identifier field, containing the identifier.
-4. when expressing an identifier in a URI, it should be URL encoded.  When expressing
-   in the identifier field, it should not.  (Of course any XML encoding would need 
-   to be applied as well, in this case there is none needed).
+1. all DataONE objects in the map MUST be expressed as a URI using DataONE's 
+   resolving service, instead of reference to a specific replica on a member
+   node.  This is to separate the current physical location from the resource 
+   itself.
+2. The aggregation resource, which does not have a representation, MUST also be 
+   expressed as a globally unique URI (not just unique within the resource map). 
+3. each resource with a representation in DataONE MUST be described with an
+   dcterms:identifier field containing the DataONE identifier.
+4. when expressing an identifier in a URI, it must be URL encoded.  When expressing
+   in the dcterms:identifier field, it must not.  (Of course any XML encoding 
+   would need to be applied as well, in the example below, there is none needed).
+5. the resource map MUST assert a triple with the ore:isDescribedBy relationship 
+   between the resource map and the aggregation, following the recommendation that
+   aggregations with multiple resource maps express this relationship.  (see 
+   http://www.openarchives.org/ore/1.0/datamodel#ReM-to-aggr)  Since resource map 
+   creation and updating is a decentralized process, DataONE should always assume 
+   that there will be multiple resource maps.
    
+
       
 For example, the triple representing 'scimeta_id1/foo documents scidata_id1' would 
 look like the following::
@@ -59,15 +70,17 @@ and the aggregation resource would look like the following::
   <rdf:Description rdf:about="https://cn.dataone.org/cn/v1/resolve/resource_map_id#aggregation">
     <rdf:type rdf:resource="http://www.openarchives.org/ore/terms/Aggregation"/>
     <dcterms:title>Simple aggregation of science metadata and data</dcterms:title>
+    <ore:isDescribedBy rdf:resource="https://cn.dataone.org/cn/v1/resolve/resource_map_id"/>
     <ore:aggregates rdf:resource="https://cn.dataone.org/cn/v1/resolve/scidata_id%2Ffoo"/>
     <ore:aggregates rdf:resource="https://cn.dataone.org/cn/v1/resolve/scimeta_id"/>
   </rdf:Description>
 
 In this case, the aggregation resource is given a unique identifier by combining 
 resource_map_id with the word "aggregation", and using the URL '#' reserved character
-to join them. Other ways of generating unique resource names for the aggregation
-are also allowed.  See the Examples section under Background Discussion below 
-for full example.
+to join them.  (see http://www.openarchives.org/ore/1.0/primer#remHashURIs).
+Other ways of generating unique resource names for the aggregation are also allowed.  
+See the Examples section under Background Discussion below for a full example of 
+a resource map.
 
 
 Background Discussion
@@ -373,6 +386,7 @@ describes a single data object (identifier = *scidata_id*).
      <rdf:Description rdf:about="https://cn.dataone.org/cn/v1/resolve/aggregation_id">
        <rdf:type rdf:resource="http://www.openarchives.org/ore/terms/Aggregation"/>
        <dcterms:title>Simple aggregation of science metadata and data</dcterms:title>
+       <ore:isDescribedBy rdf:resource="https://cn.dataone.org/cn/v1/resolve/resource_map_id"/>
        <ore:aggregates rdf:resource="https://cn.dataone.org/cn/v1/resolve/scidata_id"/>
        <ore:aggregates rdf:resource="https://cn.dataone.org/cn/v1/resolve/scimeta_id"/>
      </rdf:Description>
