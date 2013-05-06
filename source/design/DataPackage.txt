@@ -33,27 +33,33 @@ and serializing / deserializing resource maps, both based on the foresite-toolki
 project (https://code.google.com/p/foresite-toolkit/).
 
 The ORE data model itself is flexible and general purpose.  In order to use it
-for our purposes DataONE, places a few additional constraints on the model.  (See
+for our purposes, DataONE places a few additional constraints on the model.  (See
 http://www.openarchives.org/ore/1.0/datamodel for details on the ORE data model).
+
 
 1. all DataONE objects in the map MUST be expressed as a URI using DataONE's 
    resolving service, instead of reference to a specific replica on a member
    node.  This is to separate the current physical location from the resource 
    itself.
-2. The aggregation resource, which does not have a representation, MUST also be 
-   expressed as a globally unique URI (not just unique within the resource map). 
-3. each resource with a representation in DataONE MUST be described with an
+2. The aggregation resource URI SHOULD be expressed as a hash URI based on the 
+   resource map URI, as recommended by ORE (see: http://www.openarchives.org/ore/1.0/primer#remHashURIs,
+   and http://www.openarchives.org/ore/1.0/http#Simple) This ensures that the 
+   aggregation can be referenced directly in other resource maps and still be 
+   resolved.
+3. When referencing another DataONE data package, the URI of the package being
+   referenced MUST resolve to a resource map.  The URI can either be the resource
+   map URI or the aggregation URI if it follows the hash URI format.  Since some
+   existing resource maps do not use aggregation URI's that resolve to the 
+   resource map, it is necessary to check their format before deciding which to use.
+4. each resource with a representation in DataONE MUST be described with an
    dcterms:identifier field containing the DataONE identifier.
-4. when expressing an identifier in a URI, it must be URL encoded.  When expressing
+5. when expressing an identifier in a URI, it must be URL encoded.  When expressing
    in the dcterms:identifier field, it must not.  (Of course any XML encoding 
    would need to be applied as well, in the example below, there is none needed).
-5. the resource map MUST assert a triple with the ore:isDescribedBy relationship 
+6. the resource map MUST assert a triple with the pre:isDescribedBy relationship 
    between the resource map and the aggregation, following the recommendation that
-   aggregations with multiple resource maps express this relationship.  (see 
-   http://www.openarchives.org/ore/1.0/datamodel#ReM-to-aggr)  Since resource map 
-   creation and updating is a decentralized process, DataONE should always assume 
-   that there will be multiple resource maps.
-   
+   aggregations with multiple resource maps express this relationship.
+   (see http://www.openarchives.org/ore/1.0/datamodel#ReM-to-aggr)
 
       
 For example, the triple representing 'scimeta_id1/foo documents scidata_id1' would 
@@ -62,25 +68,66 @@ look like the following::
   <rdf:Description rdf:about="https://cn.dataone.org/cn/v1/resolve/scimeta_id%2Ffoo">
     <cito:documents rdf:resource="https://cn.dataone.org/cn/v1/resolve/scidata_id"/>
     <dcterms:identifier>scimeta_id/foo</dcterms:identifier>
-    <dcterms:description>A reference to a science metadata document using a DataONE identifier.</dcterms:description>
+    ...
   </rdf:Description>
 
 and the aggregation resource would look like the following::
   
   <rdf:Description rdf:about="https://cn.dataone.org/cn/v1/resolve/resource_map_id#aggregation">
     <rdf:type rdf:resource="http://www.openarchives.org/ore/terms/Aggregation"/>
-    <dcterms:title>Simple aggregation of science metadata and data</dcterms:title>
     <ore:isDescribedBy rdf:resource="https://cn.dataone.org/cn/v1/resolve/resource_map_id"/>
     <ore:aggregates rdf:resource="https://cn.dataone.org/cn/v1/resolve/scidata_id%2Ffoo"/>
     <ore:aggregates rdf:resource="https://cn.dataone.org/cn/v1/resolve/scimeta_id"/>
+    ...
   </rdf:Description>
 
-In this case, the aggregation resource is given a unique identifier by combining 
-resource_map_id with the word "aggregation", and using the URL '#' reserved character
-to join them.  (see http://www.openarchives.org/ore/1.0/primer#remHashURIs).
-Other ways of generating unique resource names for the aggregation are also allowed.  
+
 See the Examples section under Background Discussion below for a full example of 
 a resource map.
+
+
+Referencing other data packages
+-------------------------------
+The main use case in DataONE for referencing other data packages in a resource map 
+is that of nesting one inside another, which makes the 'other' data package itself 
+something that is being aggregated.  Especially in such cases, it is necessary
+that the URI used to represent the data package being aggregated can be resolved 
+to its resource map.  If the aggregation URI follows the has URI format, it will
+resolve to the resource map when following the URI.  Otherwise, the URI of the 
+resource map should be used.  In both cases clients following the URI of the 
+aggregated resource will get the resource map, as desired. 
+
+To check that the aggregation is in hash URI form, the following check can be used::
+
+  aggregation_X_uri startsWith resourceMap_X_URI + "#"
+
+
+Notes:  Future infrastructure development will likely involve standing up a triple-store
+where all resource maps will be held.  Any aggregation not in hash URI form cannot
+be relied upon to be unique, otherwise incorrect connections between unrelated
+objects are possible.  Likely solutions for incorporation of existing non-hashURI 
+aggregations include either renaming the aggregations upon import, or treating 
+them as relative URIs that would be appended to the resourceMap URI.
+
+
+Very large data packages
+------------------------
+Current tools for building and parsing resource maps are not able to handle data
+packages that aggregate a very large number of objects.  The DataPackage class
+in d1_libclient_java was used to attempt to create serialized resource maps of
+increasing size.  Results are summarized below::
+
+====================  ===================================
+ # of data objects    time to build 
+====================  ===================================
+100                    2  seconds
+1000                   3  seconds
+3000                  20  seconds
+10000                  5  minutes
+30000                 heap memory error after 45 minutes
+====================  ===================================
+
+TODO:  provide statistics for deserialization times for various size resource maps
 
 
 Background Discussion
