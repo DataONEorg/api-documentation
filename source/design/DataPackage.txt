@@ -85,6 +85,21 @@ and the aggregation resource would look like the following::
 See the Examples section under Background Discussion below for a full example of 
 a resource map.
 
+Deviation from the ORE model
+----------------------------
+Because DataONE already contains resource maps whose aggregation URIs do not
+conform to the ORE specification that they can be resolved to a resource map, we
+cannot assert that the collection of resource maps adhere to the specification,
+and therefore will not will not require conformity in this aspect for resource
+maps submitted in the future.
+
+As a result, users must be careful when referencing aggregations directly from 
+other data packages, as not all of them will resolve to a resource map.  Similarly, 
+if the collection of resource maps is put together into a triple store, these
+non-resolving aggregation URIs cannot be guaranteed to be unique, the result of
+which is that mistaken relationships between unrelated items would occur.
+
+
 
 Referencing other data packages
 -------------------------------
@@ -99,7 +114,7 @@ aggregated resource will get the resource map, as desired.
 
 To check that the aggregation is in hash URI form, the following check can be used::
 
-  aggregation_X_uri startsWith resourceMap_X_URI + "#"
+  aggregation_X_uri startsWith resourceMap_X_uri + "#"
 
 
 Notes:  Future infrastructure development will likely involve standing up a triple-store
@@ -128,6 +143,17 @@ increasing size.  Results are summarized below::
 ====================  ===================================
 
 TODO:  provide statistics for deserialization times for various size resource maps
+
+
+Resource map validation
+^^^^^^^^^^^^^^^^^^^^^^^
+Because DataONE indexing relies on the integrity of the resource maps it receives
+from the member nodes, each resource map will be validated against the set of
+constraints enumerated above.  Resource maps that do not validate will fail
+synchronization, and the exception returned to the member node via the method
+MN_Read.syncrhonizationFailed.
+
+
 
 
 Background Discussion
