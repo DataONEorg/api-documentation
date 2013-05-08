@@ -39,22 +39,25 @@ Common Components
       d1_libclient_java;
       d1_libclient_python;
       d1_architecture;
+      d1_jibx_extensions;
+      d1_test_resources;
 
-      d1_architecture -> schema [style="dashed"];
+      d1_architecture -> schema;
       d1_common_java -> schema;
       d1_common_java -> d1_jibx_extensions;
-      d1_common_java -> d1_test_resources;
-      d1_common_java -> d1_architecture [style="dashed"];
+      d1_common_java -> d1_test_resources [style="dashed"];
+      d1_common_java -> d1_architecture [style="dotted"];
       d1_common_python -> schema;
-      d1_common_python  -> d1_architecture [style="dashed"];
+      d1_common_python  -> d1_architecture [style="dotted"];
       d1_libclient_java -> d1_common_java;
       d1_libclient_java -> d1_test_resources [style="dashed"];
-      d1_libclient_java  -> d1_architecture [style="dashed"];
+      d1_libclient_java  -> d1_architecture [style="dotted"];
       d1_libclient_python -> d1_common_python;
-      d1_libclient_python -> d1_architecture [style="dashed"];
+      d1_libclient_python -> d1_architecture [style="dotted"];
    
    }
 
+NEEDS VERIFYING
 
 Integration Test Tools
 ----------------------
@@ -93,16 +96,21 @@ Integration Test Tools
         d1_libclient_java;
         d1_libclient_python;
         d1_architecture;
+        d1_jibx_extensions;
+        d1_test_resources;
 
-        d1_architecture -> schema [style="dashed"];
+        d1_architecture -> schema;
         d1_common_java -> schema;
-        d1_common_java -> d1_architecture [style="dashed"];
+        d1_common_java -> d1_jibx_extensions;
+        d1_common_java -> d1_test_resources [style="dashed"];
+        d1_common_java -> d1_architecture [style="dotted"];
         d1_common_python -> schema;
-        d1_common_python  -> d1_architecture [style="dashed"];
+        d1_common_python  -> d1_architecture [style="dotted"];
         d1_libclient_java -> d1_common_java;
-        d1_libclient_java  -> d1_architecture [style="dashed"];
+        d1_libclient_java -> d1_test_resources [style="dashed"];
+        d1_libclient_java  -> d1_architecture [style="dotted"];
         d1_libclient_python -> d1_common_python;
-        d1_libclient_python -> d1_architecture [style="dashed"];
+        d1_libclient_python -> d1_architecture [style="dotted"];
       }
    
       d1_integration;
@@ -158,16 +166,21 @@ Coordinating Node Components
         d1_libclient_java;
         d1_libclient_python;
         d1_architecture;
+        d1_jibx_extensions;
+        d1_test_resources;
 
-        d1_architecture -> schema [style="dashed"];
+        d1_architecture -> schema;
         d1_common_java -> schema;
-        d1_common_java -> d1_architecture [style="dashed"];
+        d1_common_java -> d1_jibx_extensions;
+        d1_common_java -> d1_test_resources [style="dashed"];
+        d1_common_java -> d1_architecture [style="dotted"];
         d1_common_python -> schema;
-        d1_common_python  -> d1_architecture [style="dashed"];
+        d1_common_python  -> d1_architecture [style="dotted"];
         d1_libclient_java -> d1_common_java;
-        d1_libclient_java  -> d1_architecture [style="dashed"];
+        d1_libclient_java -> d1_test_resources [style="dashed"];
+        d1_libclient_java  -> d1_architecture [style="dotted"];
         d1_libclient_python -> d1_common_python;
-        d1_libclient_python -> d1_architecture [style="dashed"];
+        d1_libclient_python -> d1_architecture [style="dotted"];
       }
    
 
@@ -176,87 +189,123 @@ Coordinating Node Components
       LDAP [style="filled" bgcolor="grey80"];
       SOLR [style="filled" bgcolor="grey80"];
       
-      cn_metacat;
+      d1_cn_version_tool;
       d1_cn_common;
       d1_cn_index_common;
       d1_cn_index_generator;
-      d1_cn_index_processor;
       d1_cn_noderegistry;
-      d1_cn_service;
+      d1_mercury_common;
+      d1_portal;
+      d1_cn_approve_node;
+      d1_identity_manager;
+      d1_log_aggregation;
+      d1_mercury_ui;
+      d1_portal_servlet;
       d1_cn_rest;
       d1_cn_rest_proxy;
-      indexerapi;
-      d1_process_daemon;
-      d1_replication;
-      d1_simple_search;
+      d1_cn_service;
+      d1_solr_extensions;
       d1_synchronization;
-      one_mercury;
-      d1_identity_manager;
-      d1_portal;
-      d1_portal_servlet;
-      
-      
-      cn_metacat -> d1_common_java;
-      cn_metacat -> d1_libclient_java;
-      cn_metacat -> postgres [style="dashed"];
-      
+      d1_cn_index_processor;
+      d1_replication;
+      d1_cn_index_tool;
+      d1_process_daemon;
+      cn_metacat;
+
       d1_cn_common -> d1_common_java;
-      
-      indexerapi -> d1_common_java;
-      indexerapi -> d1_libclient_java;
+      d1_cn_common -> hazelcast [style="dashed"];
       
       d1_cn_index_common -> d1_common_java;
+      d1_cn_index_common -> postgres [style="dashed"];
       
       d1_cn_index_generator -> d1_cn_index_common;
       d1_cn_index_generator -> d1_common_java;
       d1_cn_index_generator -> d1_cn_common;
       d1_cn_index_generator -> postgres [style="dashed"];
       d1_cn_index_generator -> hazelcast [style="dashed"];
-      
+
+      d1_cn_noderegistry -> d1_cn_common;
+      d1_cn_noderegistry -> LDAP  [style="dashed"];
+      d1_cn_noderegistry -> hazelcast [style="dashed"];
+
+      d1_mercury_common -> d1_common_java;
+      d1_mercury_common -> d1_libclient_java;
+      d1_mercury_common -> d1_portal;
+
+      d1_portal -> d1_common_java;
+      d1_portal -> d1_libclient_java;
+
+      d1_cn_approve_node -> d1_cn_noderegistry;
+      d1_cn_approve_node -> d1_libclient_java;
+
+      d1_identity_manager -> d1_libclient_java;
+      d1_identity_manager -> d1_cn_noderegistry;
+
+      d1_log_aggregation -> d1_libclient_java;
+      d1_log_aggregation -> d1_cn_noderegistry;
+
+      d1_mercury_ui -> d1_common_java;
+      d1_mercury_ui -> d1_libclient_java;
+      d1_mercury_ui -> d1_portal;
+
+      d1_portal_servlet -> cilogon_portal_servlet [style="dashed" label="cilogon-portal-servlet"];
+      d1_portal_servlet -> d1_portal;
+      d1_portal_servlet -> hazelcast [style="dashed"];
+
+      d1_cn_rest_proxy -> d1_cn_common;
+
+      d1_cn_rest -> d1_libclient_java;
+      d1_cn_rest -> d1_identity_manager;
+      d1_cn_rest -> d1_portal;
+      d1_cn_rest -> d1_cn_rest_proxy;
+      d1_cn_rest -> d1_cn_node_registry;
+      d1_cn_rest -> d1_cn_common;
+
+      d1_cn_service -> d1_cn_rest;
+      d1_cn_service -> d1_cn_rest_proxy;
+
+      d1_solr_extensions -> d1_libclient_java;
+      d1_solr_extensions -> d1_cn_common;
+      d1_solr_extensions -> d1_identity_manager;
+      d1_solr_extensions -> d1_cn_noderegistry;
+      d1_solr_extensions -> d1_portal;
+
+      d1_synchronization -> d1_libclient_java;
+      d1_synchronization -> d1_cn_noderegistry;
+      d1_synchronization -> d1_identity_manager;
+      d1_synchronization -> hazelcast [style="dashed"];
+
       d1_cn_index_processor -> d1_cn_common;
+      d1_cn_index_processor -> d1_libclient_java;
       d1_cn_index_processor -> d1_cn_index_common;
       d1_cn_index_processor -> d1_cn_index_generator;
       d1_cn_index_processor -> indexerapi;
       d1_cn_index_processor -> postgres [style="dashed"];
       d1_cn_index_processor -> SOLR [style="dashed"];
-      
-      one_mercury -> SOLR [style="dashed"];
-      
-      d1_cn_noderegistry -> d1_cn_common;
-      d1_cn_noderegistry -> LDAP  [style="dashed"];
-      
-      d1_cn_service -> d1_cn_rest;
-      d1_cn_service -> d1_cn_rest_proxy;
-      
-      d1_cn_rest -> d1_libclient_java;
-      d1_cn_rest -> d1_cn_rest_proxy;
-      d1_cn_rest -> d1_cn_noderegistry;
-      d1_cn_rest -> d1_cn_common;
-      
-      d1_cn_rest_proxy -> d1_common_java;
-      
-      d1_process_daemon -> d1_synchronization;
-      d1_process_daemon -> d1_replication;
-      
+
       d1_replication -> d1_cn_noderegistry;
       d1_replication -> d1_cn_common;
       d1_replication -> d1_libclient_java;
       d1_replication -> hazelcast [style="dashed"];
-      
-      d1_synchronization -> d1_libclient_java;
-      d1_synchronization -> d1_cn_noderegistry;
-      d1_synchronization -> hazelcast [style="dashed"];
-      
-      d1_identity_manager -> d1_cn_common;
-      d1_identity_manager -> d1_libclient_java;
-      d1_identity_manager -> d1_cn_noderegistry;
-      
-      d1_portal -> d1_common_java;
-      d1_portal -> d1_libclient_java;
-      
-      d1_portal_servlet -> d1_portal;
-      
-      d1_simple_search -> SOLR;
+
+      d1_cn_index_tool -> d1_common_java;
+      d1_cn_index_tool -> d1_libclient_java;
+      d1_cn_index_tool -> d1_cn_common;
+      d1_cn_index_tool -> d1_cn_index_common;
+      d1_cn_index_tool -> d1_cn_index_generator;
+      d1_cn_index_tool -> d1_cn_index_processor;
+
+      d1_process_daemon -> d1_synchronization;
+      d1_process_daemon -> d1_log_aggregation;
+      d1_process_daemon -> d1_replication;
+      d1_process_daemon -> hazelcast [style="dashed"];
+
+      cn_metacat -> d1_common_java;
+      cn_metacat -> d1_libclient_java;
+      cn_metacat -> postgres [style="dashed"];
+      cn_metacat -> hazelcast [style="dashed"];
+      cn_metacat -> foresite [style="dashed"];
+
    }
 
 
@@ -265,6 +314,7 @@ Member Node Components and Instances
 
 **Figure 4.** Member node implementations (ovals) and instances (rectangles).
 
+NEEDS UPDATING
 
 .. graphviz::
 
@@ -357,6 +407,7 @@ Investigator Toolkit Components
 
 **Figure 5.** Investigator toolkit.
 
+NEEDS UPDATING
 
 .. graphviz::
 
