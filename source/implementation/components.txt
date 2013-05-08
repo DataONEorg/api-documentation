@@ -42,10 +42,13 @@ Common Components
 
       d1_architecture -> schema [style="dashed"];
       d1_common_java -> schema;
+      d1_common_java -> d1_jibx_extensions;
+      d1_common_java -> d1_test_resources;
       d1_common_java -> d1_architecture [style="dashed"];
       d1_common_python -> schema;
       d1_common_python  -> d1_architecture [style="dashed"];
       d1_libclient_java -> d1_common_java;
+      d1_libclient_java -> d1_test_resources [style="dashed"];
       d1_libclient_java  -> d1_architecture [style="dashed"];
       d1_libclient_python -> d1_common_python;
       d1_libclient_python -> d1_architecture [style="dashed"];
