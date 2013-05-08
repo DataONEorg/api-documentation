@@ -41,6 +41,8 @@ Common Components
       d1_architecture;
       d1_jibx_extensions;
       d1_test_resources;
+      foresite_java [style="filled" bgcolor="grey80"];
+      foresite_python [style="filled" bgcolor="grey80"];
 
       d1_architecture -> schema;
       d1_common_java -> schema;
@@ -52,8 +54,10 @@ Common Components
       d1_libclient_java -> d1_common_java;
       d1_libclient_java -> d1_test_resources [style="dashed"];
       d1_libclient_java  -> d1_architecture [style="dotted"];
+      d1_libclient_java  -> foresite_java;
       d1_libclient_python -> d1_common_python;
       d1_libclient_python -> d1_architecture [style="dotted"];
+      d1_libclient_python -> foresite_python;
    
    }
 
@@ -98,6 +102,8 @@ Integration Test Tools
         d1_architecture;
         d1_jibx_extensions;
         d1_test_resources;
+        foresite_java [style="filled" bgcolor="grey80"];
+        foresite_python [style="filled" bgcolor="grey80"];
 
         d1_architecture -> schema;
         d1_common_java -> schema;
@@ -109,8 +115,10 @@ Integration Test Tools
         d1_libclient_java -> d1_common_java;
         d1_libclient_java -> d1_test_resources [style="dashed"];
         d1_libclient_java  -> d1_architecture [style="dotted"];
+        d1_libclient_java  -> foresite_java;
         d1_libclient_python -> d1_common_python;
         d1_libclient_python -> d1_architecture [style="dotted"];
+        d1_libclient_python -> foresite_python;
       }
    
       d1_integration;
@@ -168,6 +176,8 @@ Coordinating Node Components
         d1_architecture;
         d1_jibx_extensions;
         d1_test_resources;
+        foresite_java [style="filled" bgcolor="grey80"];
+        foresite_python [style="filled" bgcolor="grey80"];
 
         d1_architecture -> schema;
         d1_common_java -> schema;
@@ -179,8 +189,10 @@ Coordinating Node Components
         d1_libclient_java -> d1_common_java;
         d1_libclient_java -> d1_test_resources [style="dashed"];
         d1_libclient_java  -> d1_architecture [style="dotted"];
+        d1_libclient_java  -> foresite_java;
         d1_libclient_python -> d1_common_python;
         d1_libclient_python -> d1_architecture [style="dotted"];
+        d1_libclient_python -> foresite_python;
       }
    
 
@@ -213,20 +225,20 @@ Coordinating Node Components
       cn_metacat;
 
       d1_cn_common -> d1_common_java;
-      d1_cn_common -> hazelcast [style="dashed"];
+      d1_cn_common -> hazelcast;
       
       d1_cn_index_common -> d1_common_java;
-      d1_cn_index_common -> postgres [style="dashed"];
+      d1_cn_index_common -> postgres;
       
       d1_cn_index_generator -> d1_cn_index_common;
       d1_cn_index_generator -> d1_common_java;
       d1_cn_index_generator -> d1_cn_common;
-      d1_cn_index_generator -> postgres [style="dashed"];
-      d1_cn_index_generator -> hazelcast [style="dashed"];
+      d1_cn_index_generator -> postgres;
+      d1_cn_index_generator -> hazelcast;
 
       d1_cn_noderegistry -> d1_cn_common;
-      d1_cn_noderegistry -> LDAP  [style="dashed"];
-      d1_cn_noderegistry -> hazelcast [style="dashed"];
+      d1_cn_noderegistry -> LDAP;
+      d1_cn_noderegistry -> hazelcast;
 
       d1_mercury_common -> d1_common_java;
       d1_mercury_common -> d1_libclient_java;
@@ -250,7 +262,7 @@ Coordinating Node Components
 
       d1_portal_servlet -> cilogon_portal_servlet [style="dashed" label="cilogon-portal-servlet"];
       d1_portal_servlet -> d1_portal;
-      d1_portal_servlet -> hazelcast [style="dashed"];
+      d1_portal_servlet -> hazelcast;
 
       d1_cn_rest_proxy -> d1_cn_common;
 
@@ -258,7 +270,7 @@ Coordinating Node Components
       d1_cn_rest -> d1_identity_manager;
       d1_cn_rest -> d1_portal;
       d1_cn_rest -> d1_cn_rest_proxy;
-      d1_cn_rest -> d1_cn_node_registry;
+      d1_cn_rest -> d1_cn_noderegistry;
       d1_cn_rest -> d1_cn_common;
 
       d1_cn_service -> d1_cn_rest;
@@ -273,20 +285,19 @@ Coordinating Node Components
       d1_synchronization -> d1_libclient_java;
       d1_synchronization -> d1_cn_noderegistry;
       d1_synchronization -> d1_identity_manager;
-      d1_synchronization -> hazelcast [style="dashed"];
+      d1_synchronization -> hazelcast;
 
       d1_cn_index_processor -> d1_cn_common;
       d1_cn_index_processor -> d1_libclient_java;
       d1_cn_index_processor -> d1_cn_index_common;
       d1_cn_index_processor -> d1_cn_index_generator;
-      d1_cn_index_processor -> indexerapi;
-      d1_cn_index_processor -> postgres [style="dashed"];
-      d1_cn_index_processor -> SOLR [style="dashed"];
+      d1_cn_index_processor -> postgres;
+      d1_cn_index_processor -> SOLR;
 
       d1_replication -> d1_cn_noderegistry;
       d1_replication -> d1_cn_common;
       d1_replication -> d1_libclient_java;
-      d1_replication -> hazelcast [style="dashed"];
+      d1_replication -> hazelcast;
 
       d1_cn_index_tool -> d1_common_java;
       d1_cn_index_tool -> d1_libclient_java;
@@ -298,13 +309,13 @@ Coordinating Node Components
       d1_process_daemon -> d1_synchronization;
       d1_process_daemon -> d1_log_aggregation;
       d1_process_daemon -> d1_replication;
-      d1_process_daemon -> hazelcast [style="dashed"];
+      d1_process_daemon -> hazelcast;
 
       cn_metacat -> d1_common_java;
       cn_metacat -> d1_libclient_java;
-      cn_metacat -> postgres [style="dashed"];
-      cn_metacat -> hazelcast [style="dashed"];
-      cn_metacat -> foresite [style="dashed"];
+      cn_metacat -> postgres;
+      cn_metacat -> hazelcast;
+      cn_metacat -> foresite_java;
 
    }
 
@@ -348,16 +359,23 @@ NEEDS UPDATING
         d1_libclient_java;
         d1_libclient_python;
         d1_architecture;
+        foresite_java [style="filled" bgcolor="grey80"];
+        foresite_python [style="filled" bgcolor="grey80"];
 
-        d1_architecture -> schema [style="dashed"];
+        d1_architecture -> schema;
         d1_common_java -> schema;
-        d1_common_java -> d1_architecture [style="dashed"];
+        d1_common_java -> d1_jibx_extensions;
+        d1_common_java -> d1_test_resources [style="dashed"];
+        d1_common_java -> d1_architecture [style="dotted"];
         d1_common_python -> schema;
-        d1_common_python  -> d1_architecture [style="dashed"];
+        d1_common_python  -> d1_architecture [style="dotted"];
         d1_libclient_java -> d1_common_java;
-        d1_libclient_java  -> d1_architecture [style="dashed"];
+        d1_libclient_java -> d1_test_resources [style="dashed"];
+        d1_libclient_java  -> d1_architecture [style="dotted"];
+        d1_libclient_java  -> foresite_java;
         d1_libclient_python -> d1_common_python;
-        d1_libclient_python -> d1_architecture [style="dashed"];
+        d1_libclient_python -> d1_architecture [style="dotted"];
+        d1_libclient_python -> foresite_python;
       }
    
       Metacat;
@@ -441,16 +459,23 @@ NEEDS UPDATING
         d1_libclient_java;
         d1_libclient_python;
         d1_architecture;
+        foresite_java [style="filled" bgcolor="grey80"];
+        foresite_python [style="filled" bgcolor="grey80"];
 
-        d1_architecture -> schema [style="dashed"];
+        d1_architecture -> schema;
         d1_common_java -> schema;
-        d1_common_java -> d1_architecture [style="dashed"];
+        d1_common_java -> d1_jibx_extensions;
+        d1_common_java -> d1_test_resources [style="dashed"];
+        d1_common_java -> d1_architecture [style="dotted"];
         d1_common_python -> schema;
-        d1_common_python  -> d1_architecture [style="dashed"];
+        d1_common_python  -> d1_architecture [style="dotted"];
         d1_libclient_java -> d1_common_java;
-        d1_libclient_java  -> d1_architecture [style="dashed"];
+        d1_libclient_java -> d1_test_resources [style="dashed"];
+        d1_libclient_java  -> d1_architecture [style="dotted"];
+        d1_libclient_java  -> foresite_java;
         d1_libclient_python -> d1_common_python;
-        d1_libclient_python -> d1_architecture [style="dashed"];
+        d1_libclient_python -> d1_architecture [style="dotted"];
+        d1_libclient_python -> foresite_python;
       }
 
       d1_client_cli;
