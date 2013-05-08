@@ -148,7 +148,7 @@ Coordinating Node Components
 
       color="#888888";
       fontname = "Bitstream Vera Sans";
-      fontsize = 8;
+      fontsize = 10;
 
       edge [
         fontname = "Bitstream Vera Sans"
@@ -161,7 +161,7 @@ Coordinating Node Components
 
       node [
         fontname = "Courier"
-        fontsize = 8
+        fontsize = 10
         fontcolor = "black"];   
 
       subgraph cluster_CORE {
@@ -200,6 +200,7 @@ Coordinating Node Components
       hazelcast [style="filled" bgcolor="grey80"];
       LDAP [style="filled" bgcolor="grey80"];
       SOLR [style="filled" bgcolor="grey80"];
+      cilogon_portal_servlet [style="filled" bgcolor="grey80" label="cilogon-portal-servlet"];
       
       d1_cn_version_tool;
       d1_cn_common;
@@ -260,7 +261,7 @@ Coordinating Node Components
       d1_mercury_ui -> d1_libclient_java;
       d1_mercury_ui -> d1_portal;
 
-      d1_portal_servlet -> cilogon_portal_servlet [style="dashed" label="cilogon-portal-servlet"];
+      d1_portal_servlet -> cilogon_portal_servlet;
       d1_portal_servlet -> d1_portal;
       d1_portal_servlet -> hazelcast;
 
