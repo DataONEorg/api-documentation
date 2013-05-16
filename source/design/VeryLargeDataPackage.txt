@@ -5,7 +5,7 @@ Very Large Data Packages
   ======== ==================================================================
   Status   Comment
   ======== ==================================================================
-  DRAFT    (rnahf) Initial draft
+  DRAFT    (rnahf) Initial draft with formatting corrections and content cleanup
   ======== ==================================================================
 
 .. contents::
@@ -86,7 +86,7 @@ reasoning.  The reasoning model adds an additional 268 triples from the ORE sche
 
 
 ==========  =======  ========  ========  =======  ========  ========
-               Default (simple) model     Reasoning (OWL) model
+            Default model                Reasoning model
 ----------  ---------------------------  ---------------------------
  # objects  triples   time      memory   triples   time      memory 
 ==========  =======  ========  ========  =======  ========  ========
@@ -144,7 +144,8 @@ Such many-membered fields are difficult to impossible to display, and are time-
 consuming to search when queried.
 
 Indexing is by necessity a single-threaded process, one that can update on the 
-order of 100 records/minute.  Therefore
+order of 100 records/minute.  Therefore a package containing 100,000 members will
+take about 1000 minutes, or about 17 hours.
 
 
 Whole-Package Download
