@@ -51,17 +51,19 @@ with the number of objects in the package.
 Test results on different size resource maps are summarized below.  In all cases
 there is one metadata object that documents all of the objects.
 
- # of objects    time to build             memory           Resulting file size
-==============  ========================  ================  ===================
-    10                                                               7 K
-    33                                                              20 K
-   100              2  seconds                45 MB                 60 K
-   330                                                             192 K
-  1000              6  seconds                20 MB                600 K
-  3300             24  seconds                23 MB	   21/25         2 Mb      
- 10000            4.5  minutes                30 MB     55           6 Mb            
- 33000             66  minutes               142 MB           	    20 Mb
-==============  ========================  ================  ==================
+==============  ================  ===========  ===========
+ # of objects    time to build     memory       file size
+==============  ================  ===========  ===========
+    10                                               7 K
+    33                                              20 K
+   100              2  seconds        45 MB         60 K
+   330                                             192 K
+  1000              6  seconds        20 MB        600 K
+  3300             24  seconds        23 MB          2 Mb      
+ 10000            4.5  minutes        30 MB          6 Mb            
+ 33000             66  minutes       142 MB         20 Mb
+==============  ================  ===========  ===========
+
 
 
 For creating very large resource maps, generation time using the java foresite 
@@ -85,7 +87,7 @@ reasoning.  The reasoning model adds an additional 268 triples from the ORE sche
 
 ==========  =======  ========  ========  =======  ========  ========
                Default (simple) model     Reasoning (OWL) model
-            ---------------------------  ---------------------------
+----------  ---------------------------  ---------------------------
  # objects  triples   time      memory   triples   time      memory 
 ==========  =======  ========  ========  =======  ========  ========
     10           61    1 sec.     9 Mb       329    2 sec.    13 Mb 
