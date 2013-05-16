@@ -17,7 +17,8 @@ While many data packages are of modest size (<100 objects), some large studies
 generate upwards of 100,000 datasets that form a data package.   These very large 
 (VL) packages challenge performance limits in the DataONE data ingest cycle and
 can present usability issues in user interfaces not prepared for them.  Both memory
-and processor time increase geometrically with increased number of data objects.
+and processor time increase dramatically with increased number of data objects
+and relationships expressed.
 
 Submitters of packages containing large numbers of data objects should be mindful
 that packages of such an enormous number of objects is likely to be unusable for 
@@ -26,22 +27,20 @@ the individual objects into fewer objects to allow easier download and inspectio
 This should be especially considered if the objects in the package would not be
 usefully retrieved individually.
 
-large packages are likely to be too large to be 
-memory and cpu are affFor example, 
-building and serializing a 10000 member resource map into RDF, using the java foresite 
-toolkit takes about 5 minutes, and a 30000 member resource map takes ~45 minutes,
-and uses more than 200Mb - the typical allocated java heap space - so may fail 
-after 40 minutes of processing.
+Creation of large resource maps is potentially the most time consuming activity,
+depending on the tool used.  Deserialization is comparatively quick, but the memory
+requirements are high, depending on the type of model used during parsing.  At the
+stage of indexing, at issue is the time needed to process index record updates, as
+well as the resulting number items in the solr records.  Finally, high-level client
+methods would like to safely be able to do whole-package downloads, but need to be 
+able to detect large data packages which could overwhelm their ability to handle
+such as large package.
 
-Member Node and ITK developers need to be aware of the issues and dynamics related 
-to VL resource maps in order to be prepared when users encounter and try to work
-with them.  
-
-Known Issues
--------------
+Below are the results of performance tests done to better understand the dynamics
+involved.
 
 Resource map creation
-~~~~~~~~~~~~~~~~~~~~~
+---------------------
 Use of the foresite library for building resource maps includes many checks to make
 sure that the map validates.  First the identifiers of the data and metadata are 
 added to a graph held in memory, then the graph is serialized to RDF/XML format.
@@ -52,55 +51,36 @@ with the number of objects in the package.
 Test results on different size resource maps are summarized below.  In all cases
 there is one metadata object that documents all of the objects.
 
- # of objects    time to build             heap allocation  Resulting file size
+ # of objects    time to build             memory           Resulting file size
 ==============  ========================  ================  ===================
     10                                                               7 K
     33                                                              20 K
    100              2  seconds                45 MB                 60 K
    330                                                             192 K
   1000              6  seconds                20 MB                600 K
-  3300             20  seconds                23 MB	                 2 Mb      
- 10000            300  seconds (5 min.)                              6 Mb            
- 33000           2700  seconds (45 min.)    >200 MB            	    20 Mb
-100000           (could not complete)      exceeded heap space      60 Mb
+  3300             24  seconds                23 MB	   21/25         2 Mb      
+ 10000            4.5  minutes                30 MB     55           6 Mb            
+ 33000             66  minutes               142 MB           	    20 Mb
 ==============  ========================  ================  ==================
 
-Resource map generation is typically a client-side activity, where computational 
-resources may be limited.
 
-For creating very large resource maps, generation time using foresite is an issue.
-Directly creating a serialized resource map can be much faster.  For example, using
-an existing resource map as a template, and a short perl script, we were able to
-generate a 100000 member resource map in approximately 10 seconds, with the only 
-memory cost that of holding an identifier array in memory.
+For creating very large resource maps, generation time using the java foresite 
+toolkit is an issue.  Directly creating a serialized resource map is much faster.
+For example, using an existing resource map as a template, and a short perl script, 
+a 100000 member resource map was created in approximately 10 seconds with the only 
+memory cost that of holding an identifier array in memory and any output buffering.
 
-TODO: check out the addTriples way of adding triples, it may use a bulk import
-methodology that skips validation and might be much faster.
-http://grepcode.com/file/repo1.maven.org/maven2/com.googlecode.foresite-toolkit/foresite/0.9/org/dspace/foresite/jena/OREResourceJena.java#OREResourceJena.addTriples%28java.util.List%29
-and http://jena.apache.org/documentation/javadoc/jena/com/hp/hpl/jena/rdf/model/Model.html#add(java.util.List)
 
 
 RDF Deserialization
-~~~~~~~~~~~~~~~~~~~~
-VL resource maps do not take much time to deserialize, approximately 6 seconds
-for up to 10,000 items.  The major impact for users would be download time and
-again memory used to model the graph before converting into an identifier list.
-A fully expressed resource map is about 600 bytes per object, so 100,000 member 
-data package is approximately 60MB, which for some connections can take several 
-minutes to download just to inspect. .
-
-
-
-
-Deserialization
-~~~~~~~~~~~~~~~
+---------------------
 Deserialization happens both on the client side when downloading resource maps, 
 and on coordinating nodes, both when validating the resource map, and also when
 indexing the relationships into the solr index.  Performance metrics obtained 
 from JUnit tests monitored with Java Visual VM are summarized below.  Fully
 expressed resource maps were deserialized using both the default simple model,
-plus an OWL model loaded with the ORE schema to be able to do semantic reasoning.
-The reasoning model adds an additional 268 triples from the ORE schema. 
+and again using an OWL model loaded with the ORE schema to be able to do semantic 
+reasoning.  The reasoning model adds an additional 268 triples from the ORE schema. 
 
 
 ==========  =======  ========  ========  =======  ========  ========
@@ -151,7 +131,7 @@ triples    time     memory   model type
 
 
 Indexing
-~~~~~~~~
+---------
 When resource maps are synchronized, the map is read and - once all of the package
 members are indexed - the relationships in the map are added to the index records
 of the data members.  A 10000 member package will trigger the update of 10000
@@ -166,7 +146,7 @@ order of 100 records/minute.  Therefore
 
 
 Whole-Package Download
-~~~~~~~~~~~~~~~~~~~~~~~
+------------------------
 The high-level DataPackage.download(packageID) method in d1_libclient implementations
 by default downloads the entire collection of data package objects for local usage.  
 For VL packages, this could be terabytes of information.  In order to better support
@@ -174,7 +154,7 @@ such convenience features, there needs to be ways for determining the number of
 members of a package prior to download.  
 
 Determining Member Count
-~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------
 It is useful for applications to know when a given data package is too large for 
 it to work with.  Ideally, this could be determined before deserializing the xml,
 and even for some clients, prior to download of the resource map itself.  
@@ -190,7 +170,7 @@ TODO: define followup query for total package size q=resourceMap:{pid}&fl=size&r
 
 
 Determining Memory Requirements for deserialization
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+---------------------------------------------------
 It is the number of triples and type of model used, moreso than the number of 
 package members, that best determines the graph model's memory requirement, and 
 so any additional triples expressed for each member would multiply the model size. 
@@ -234,26 +214,3 @@ Note that long identifiers and identifiers predominated by non-ascii characters
 that would be percent encoded in the file (3bytes per character) can lead to 
 an even higher upper limit than expected, and similarly, short identifiers in 
 the resource map could lead to a less robust upper limit.
-
-
-Users and developers alike may wish to estimate the number of   deserializing the 
-package are determined most by the model
-which is determined by the number of triples.  File size will give an indication
-of the number of triples in the resource map, but could be misleading in terms
-of the number of package members.  For example, a resource map may assert the 'aggregates'
-relationship, but not the inverse 'isAggregatedBy'.  Additional provenance relations
-may also be contained in the file, or ore:proxies used. However, the number of triples
-probably estimates well the model size, and thus the amount of memory needed.
-
-The basic formula 
-
-The serialized form of the resource map, while verbose, requires less memory than
-the model, so use of XPath or Dom to get counts off the XML
-
-
-
-
-
-From the serialized form, this could be done simply
-from a Linux / Unix command line:  "grep ore:aggregates <resMap.xml | wc -l", but
-programmatically, 
