@@ -11,7 +11,7 @@ Very Large Data Packages
 .. contents::
 
 Synopsis
----------
+~~~~~~~~~
 
 While many data packages are of modest size (<100 objects), some large studies 
 generate upwards of 100,000 datasets that form a data package.   These very large 
@@ -36,8 +36,11 @@ methods would like to safely be able to do whole-package downloads, but need to 
 able to detect large data packages which could overwhelm their ability to handle
 such as large package.
 
-Below are the results of performance tests done to better understand the dynamics
-involved.
+Below are discussions and performance test results of the known issues related 
+to very large resource maps.
+
+Identified Issues
+~~~~~~~~~~~~~~~~~
 
 Resource map creation
 ---------------------
@@ -109,6 +112,7 @@ in terms of number of triples, the reasoning model uses significantly more memor
 The somewhat irregular increases indicate that perhaps this is due to pre-allocation
 of memory in larger blocks as the number of items increases.
 
+
 ========  =======  ========  ==========
 triples    time     memory   model type
 ========  =======  ========  ==========
@@ -130,7 +134,7 @@ triples    time     memory   model type
  165279   10 sec.  264 Mb     reasoning
  500011   15 sec.  138 Mb      simple
  500279   26 sec.  792 Mb     reasoning
- ========  =======  ========  ==========
+========  =======  ========  ==========
 
 
 Indexing
@@ -177,10 +181,6 @@ query::
 
   cn/v1/query/solr/?q=resourceMap:{pid}&rows=0
   
-This does not estimate the size of the model or the memory requirements, but from
-the chart above, deserialization memory requirements seem to proportional to 
-the cube-root of the number of triples.
-
 
 
 Determining Memory Requirements for deserialization
@@ -201,7 +201,7 @@ would use an XML parser of choice to count all of the sub-elements of all of the
   tripleCount = 0;
   descriptionList = getRDFDescriptionElements();
   foreach descriptionElement in descriptionList {
-     tripleCount += descriptionElement.getElements().size;
+     tripleCount += descriptionElement.getElementList().size;
   }
 
 To estimate from the file size, an upper limit of the number of triples can deduced.
@@ -227,5 +227,20 @@ Also note that long identifiers and identifiers predominated by non-ascii charac
 that would be percent encoded in the file (3bytes per character) can lead to 
 an even higher upper limit than expected, and similarly, short identifiers in 
 the resource map could lead to a less robust upper limit.
+
+
+Determining the memory requirement from the number of triples can be done either
+by interpolating from the tables above, or by equation.  Curve-fits of the 
+deserialization performance tests using polynomial equations give the following:: 
+
+ simple model memory(Mb) ~  2.6E-15 * t^3 - 1.7E-09 * t^2 + 0.00044 * t + 12.7
+ (R2 = 0.99466)
+
+ reasoning model memory(Mb) ~   1.25E-10 * t^2 + 0.0015 * t + 14.3
+ (R2 = 0.99997)
+ 
+Note that the simple model required (rightly or wrongly) a third-order equation 
+to get a curve-fit with R2 > 0.9, whereas the reasoning model data could be highly
+corelated with a binomial equation.
 
 
