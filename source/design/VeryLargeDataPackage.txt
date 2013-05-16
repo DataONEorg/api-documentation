@@ -86,7 +86,7 @@ reasoning.  The reasoning model adds an additional 268 triples from the ORE sche
 
 
 ==========  =======  ========  ========  =======  ========  ========
-            Default model                Reasoning model
+    ..             Default model              Reasoning model
 ----------  ---------------------------  ---------------------------
  # objects  triples   time      memory   triples   time      memory 
 ==========  =======  ========  ========  =======  ========  ========
@@ -109,6 +109,7 @@ in terms of number of triples, the reasoning model uses significantly more memor
 The somewhat irregular increases indicate that perhaps this is due to pre-allocation
 of memory in larger blocks as the number of items increases.
 
+========  =======  ========  ==========
 triples    time     memory   model type
 ========  =======  ========  ==========
      61	   1 sec.    9 Mb      simple
@@ -145,7 +146,8 @@ consuming to search when queried.
 
 Indexing is by necessity a single-threaded process, one that can update on the 
 order of 100 records/minute.  Therefore a package containing 100,000 members will
-take about 1000 minutes, or about 17 hours.
+take about 1000 minutes, or about 17 hours.  During this time, no other updates
+will be processed.
 
 
 Whole-Package Download
@@ -154,7 +156,15 @@ The high-level DataPackage.download(packageID) method in d1_libclient implementa
 by default downloads the entire collection of data package objects for local usage.  
 For VL packages, this could be terabytes of information.  In order to better support
 such convenience features, there needs to be ways for determining the number of
-members of a package prior to download.  
+members of a package prior to download.  To get the total size of the package, the
+following solr queries can be used::
+
+  # returns only records of package members
+  cn/v1/query/solr/?q=resourceMap:{pid}&fl=id,size  
+
+  # returns records for package members and the resource map itself
+  cn/v1/query/solr/?q=resourceMap:{pid} OR id:{pid}&fl=id,size  
+
 
 Determining Member Count
 ------------------------
@@ -167,9 +177,10 @@ query::
 
   cn/v1/query/solr/?q=resourceMap:{pid}&rows=0
   
-This does not estimate the size of the model or the memory requirements.
+This does not estimate the size of the model or the memory requirements, but from
+the chart above, deserialization memory requirements seem to proportional to 
+the cube-root of the number of triples.
 
-TODO: define followup query for total package size q=resourceMap:{pid}&fl=size&rows={rowcount} 
 
 
 Determining Memory Requirements for deserialization
@@ -193,7 +204,6 @@ would use an XML parser of choice to count all of the sub-elements of all of the
      tripleCount += descriptionElement.getElements().size;
   }
 
-The number of triples can then be used to 
 To estimate from the file size, an upper limit of the number of triples can deduced.
 RDF/XML organizes triples as predicate-object sub-elements under an rdf:Description
 element for each subject. If the ratio of subjects to triples is low, then the number
@@ -213,7 +223,9 @@ objects, expressing the 'ore:aggregates', 'ore:isAggregatedBy', 'cito:documents'
 approximation, (600K / 100 = 6K) gives 6000 triples, an over-estimate matching 
 the number of subjects.
 
-Note that long identifiers and identifiers predominated by non-ascii characters
+Also note that long identifiers and identifiers predominated by non-ascii characters
 that would be percent encoded in the file (3bytes per character) can lead to 
 an even higher upper limit than expected, and similarly, short identifiers in 
 the resource map could lead to a less robust upper limit.
+
+
