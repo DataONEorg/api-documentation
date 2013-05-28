@@ -5,7 +5,8 @@ Very Large Data Packages
   ======== ==================================================================
   Status   Comment
   ======== ==================================================================
-  DRAFT    (rnahf) Initial draft with formatting corrections and content cleanup
+  DRAFT    (rnahf) Added more structure and content to issue mitigation
+           discussion.
   ======== ==================================================================
 
 .. contents::
@@ -37,7 +38,8 @@ able to detect large data packages which could overwhelm their ability to handle
 such as large package.
 
 Below are discussions and performance test results of the known issues related 
-to very large resource maps.
+to very large resource maps, presented in order of when encountered in the object
+lifecycle.
 
 Identified Issues
 ~~~~~~~~~~~~~~~~~
@@ -109,8 +111,7 @@ see that memory requirements are not a simple function of number of triples, but
 also a function of the model type.  The reasoning model uses more memory per
 triple than the simple model.  Especially noticeable is that at very large sizes,
 in terms of number of triples, the reasoning model uses significantly more memory.
-The somewhat irregular increases indicate that perhaps this is due to pre-allocation
-of memory in larger blocks as the number of items increases.
+
 
 
 ========  =======  ========  ==========
@@ -153,6 +154,14 @@ order of 100 records/minute.  Therefore a package containing 100,000 members wil
 take about 1000 minutes, or about 17 hours.  During this time, no other updates
 will be processed.
 
+Workarounds for this issue requires a redesign of the index processor so that the 
+large resource map does not delay other items in the indexing queue.  Ultimately,
+the solution would be to implement a different search engine for tracking package 
+relationships, and implementing another search endpoint using SPARQL 
+(http://en.wikipedia.org/wiki/SPARQL), and probably hiding the search query details
+behind new DataONE API methods to spare the end user from having to learn another
+query language to interact with DataONE.
+
 
 Whole-Package Download
 ------------------------
@@ -160,27 +169,51 @@ The high-level DataPackage.download(packageID) method in d1_libclient implementa
 by default downloads the entire collection of data package objects for local usage.  
 For VL packages, this could be terabytes of information.  In order to better support
 such convenience features, there needs to be ways for determining the number of
-members of a package prior to download.  To get the total size of the package, the
-following solr queries can be used::
+members of a package prior to download.  
 
-  # returns only records of package members
-  cn/v1/query/solr/?q=resourceMap:{pid}&fl=id,size  
 
-  # returns records for package members and the resource map itself
-  cn/v1/query/solr/?q=resourceMap:{pid} OR id:{pid}&fl=id,size  
+Mitigations
+~~~~~~~~~~~~
+It is useful for applications to know when a given data package is too large for 
+it to work with, or will require special handling.  Ideally, this could be 
+determined before deserializing the xml, and even for some clients, prior to 
+download of the resource map itself.  
+
+Indexing performance is a function of member count, while deserialization performance
+is a function of the number of triples. Download performance is a function of 
+total file size.
 
 
 Determining Member Count
 ------------------------
-It is useful for applications to know when a given data package is too large for 
-it to work with.  Ideally, this could be determined before deserializing the xml,
-and even for some clients, prior to download of the resource map itself.  
 
 For indexed resource maps, the easiest way to get the member count is with the 
 query::
 
   cn/v1/query/solr/?q=resourceMap:{pid}&rows=0
   
+For unindexed resource maps, the count of the number of occurences of the term 
+"ore:isAggregatedBy" in the RDF file will suffice.
+
+
+Determining total package size for download
+-------------------------------------------
+To get the total size of the package, the following solr queries can be used::
+
+  # returns only sizes of package members
+  cn/v1/query/solr/?q=resourceMap:{pid}&fl=id,size  
+
+  # returns sizes for package members and the resource map itself
+  cn/v1/query/solr/?q=resourceMap:{pid} OR id:{pid}&fl=id,size 
+
+from which the client could calculate the sum of the sizes returned.
+
+To get the size of the resource map itself (useful for estimating memory requirements)::
+  
+  # returns size of only the resource map
+  cn/v1/query/solr/?q=id:{pid}&fl=id,size   
+
+
 
 
 Determining Memory Requirements for deserialization
@@ -189,7 +222,7 @@ It is the number of triples and type of model used, moreso than the number of
 package members, that best determines the graph model's memory requirement, and 
 so any additional triples expressed for each member would multiply the model size. 
 The use of ORE proxies, for example, or the inclusion of provenance information 
-are situations where this would be the case.  DataONE is planning for the 
+are situations where this would be the case.  DataONE *is* planning for the 
 inclusion of provenance statements in the resource maps, so users and developers 
 alike should take this into consideration.
 
@@ -204,7 +237,7 @@ would use an XML parser of choice to count all of the sub-elements of all of the
      tripleCount += descriptionElement.getElementList().size;
   }
 
-To estimate from the file size, an upper limit of the number of triples can deduced.
+To estimate from the file size, an upper limit of the number of triples can be deduced.
 RDF/XML organizes triples as predicate-object sub-elements under an rdf:Description
 element for each subject. If the ratio of subjects to triples is low, then the number
 of bytes per triple is determined by the length of the predicate-object sub-element.
@@ -231,16 +264,22 @@ the resource map could lead to a less robust upper limit.
 
 Determining the memory requirement from the number of triples can be done either
 by interpolating from the tables above, or by equation.  Curve-fits of the 
-deserialization performance tests using polynomial equations give the following:: 
+deserialization performance tests using polynomial equations gave the following:: 
 
- simple model memory(Mb) ~  2.6E-15 * t^3 - 1.7E-09 * t^2 + 0.00044 * t + 12.7
+ simple model memory(Mb) ~  2.6E-15 * triples^3 - 1.7E-09 * triples^2 + 0.00044 * triples + 12.7
  (R2 = 0.99466)
 
- reasoning model memory(Mb) ~   1.25E-10 * t^2 + 0.0015 * t + 14.3
+ reasoning model memory(Mb) ~   1.25E-10 * triples^2 + 0.0015 * triples + 14.3
  (R2 = 0.99997)
  
 Note that the simple model required (rightly or wrongly) a third-order equation 
 to get a curve-fit with R2 > 0.9, whereas the reasoning model data could be highly
 corelated with a binomial equation.
 
+Expressed as a function of file size (bytes)::
 
+ simple model memory(Mb) ~  2.6E-21 * size^3 - 1.7E-13 * size^2 + 4.4E-06 * size + 12.7
+
+ reasoning model memory(Mb) ~   1.25E-14 * size^2 + 1.5E-05 * size + 14.3
+
+ 
