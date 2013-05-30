@@ -5,8 +5,8 @@ Very Large Data Packages
   ======== ==================================================================
   Status   Comment
   ======== ==================================================================
-  DRAFT    (rnahf) Added more structure and content to issue mitigation
-           discussion.
+  DRAFT    (rnahf) committed minor modifications shortly (1hr) after email 
+           to developers@dataone.org
   ======== ==================================================================
 
 .. contents::
@@ -16,30 +16,29 @@ Synopsis
 
 While many data packages are of modest size (<100 objects), some large studies 
 generate upwards of 100,000 datasets that form a data package.   These very large 
-(VL) packages challenge performance limits in the DataONE data ingest cycle and
+data packages challenge performance limits in the DataONE data ingest cycle and
 can present usability issues in user interfaces not prepared for them.  Both memory
 and processor time increase dramatically with increased number of data objects
 and relationships expressed.
 
-Submitters of packages containing large numbers of data objects should be mindful
-that packages of such an enormous number of objects is likely to be unusable for 
-the majority of interested parties, and should consider consolidating and compressing
-the individual objects into fewer objects to allow easier download and inspection.
-This should be especially considered if the objects in the package would not be
-usefully retrieved individually.
+Potential submitters of packages containing large numbers of data objects must be 
+mindful that packages of such an large number of objects is likely to be unusable 
+for the majority of interested parties, and should consider consolidating and 
+compressing the individual objects into fewer objects to allow easier discovery/ 
+inspection and download. This should be especially considered if the objects in 
+the package would not be usefully retrieved individually.
 
 Creation of large resource maps is potentially the most time consuming activity,
 depending on the tool used.  Deserialization is comparatively quick, but the memory
 requirements are high, depending on the type of model used during parsing.  At the
 stage of indexing, at issue is the time needed to process index record updates, as
-well as the resulting number items in the solr records.  Finally, high-level client
-methods would like to safely be able to do whole-package downloads, but need to be 
-able to detect large data packages which could overwhelm their ability to handle
-such as large package.
+well as the resulting number items in certain fields in the solr records.  Last, 
+high-level client methods would like to safely be able to do whole-package downloads, 
+but need to be able to detect large data packages which could overwhelm their 
+ability to handle such as large package.
 
-Below are discussions and performance test results of the known issues related 
-to very large resource maps, presented in order of when encountered in the object
-lifecycle.
+Below are discussions and test results of the known issues related to very large 
+resource maps, presented in order of when encountered in the object lifecycle.
 
 Identified Issues
 ~~~~~~~~~~~~~~~~~
@@ -137,7 +136,18 @@ triples    time     memory   model type
  500279   26 sec.  792 Mb     reasoning
 ========  =======  ========  ==========
 
+The impact of this is that especially automated applications that deserialize RDF
+files (such as the index processor) will need to be able to detect when they are
+dealing with a resource map that could exceed available system resources.  
 
+It also seems wise, given that memory issues weigh larger than RDF file size,
+to specify that resource maps with more than 50,000 triples need to fully express 
+relationships, instead of relying on reasoning models to infer semantically-defined
+inverse relationships. This implies that if DataONE allows resource maps to sparsely
+populate their relationships, that there also be tools to tell whether an RDF
+is fully expressing relationships, or will be relying on semantic reasoning.
+
+ 
 Indexing
 ---------
 When resource maps are synchronized, the map is read and - once all of the package
@@ -167,9 +177,12 @@ Whole-Package Download
 ------------------------
 The high-level DataPackage.download(packageID) method in d1_libclient implementations
 by default downloads the entire collection of data package objects for local usage.  
-For VL packages, this could be terabytes of information.  In order to better support
-such convenience features, there needs to be ways for determining the number of
-members of a package prior to download.  
+For these very-large data packages, the total package size is likely to be gigabytes
+of information. In order to better support such convenience features, there needs 
+to be ways for determining the number of members of a package prior to download. 
+
+This would also help in situations where the number of package members is small,
+but the individual data objects are large. 
 
 
 Mitigations
@@ -282,4 +295,3 @@ Expressed as a function of file size (bytes)::
 
  reasoning model memory(Mb) ~   1.25E-14 * size^2 + 1.5E-05 * size + 14.3
 
- 
