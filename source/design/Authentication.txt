@@ -99,8 +99,7 @@ system.  They need to be represented in access policies, authentication
 sessions, and other places within the system.  
 
 The values for identifiers representing principals are unique, persistent, 
-non-reassignable strings that follow the length and character constraints of
-DataONE Identifiers.  Within those constraints, it is useful to use a
+non-reassignable strings.  Within those constraints, it is useful to use a
 common convention for representing and scoping these principal names.
 Conventions in widespread use include:
 
@@ -151,7 +150,7 @@ TeraGridPrincipalNames_).
 
 Within DataONE, values of :class:`Types.Subject` are represented as the string
 form of LDAP Distinguished Names (DN) as defined in RFC4514_. Distinguished
-Names are composed of a sequence of Relative Distiguished Names (RDNs), each of
+Names are composed of a sequence of Relative Distinguished Names (RDNs), each of
 which is composed of an attribute type and a value. Subjects are serialized to
 strings with attribute types in upper case (a DataONE convention), case is
 preserved for all values. RDNs are separated by commas, and ordering is
