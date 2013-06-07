@@ -228,6 +228,9 @@ recorded in the log record, then they will be denied access to the log entry.
 Adjustments to access control for log records are made indirectly by adjusting
 access control for the referenced object(s).
 
+EDIT: Log records are now completely restricted to administrative users so as 
+not to expose raw usage patterns for any/all public objects.
+
 
 Service Access Control
 ----------------------
@@ -243,6 +246,11 @@ Node.
 The optional *restriction* property of the *service* lists subjects that have
 permission to invoke the service. If a *restriction* is not included with the
 service description, then any agent may call that service endpoint.
+
+NOTE: It is at the discretion of individual Node implementations as to whether these 
+defined service restrictions will be enforced for the method in question. The service method
+restriction is meant only as a mechanism for node operators to record/manage 
+restrictions to be enforced in a transparent manner.
 
 
 Adjusting Service Access Control
