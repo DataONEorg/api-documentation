@@ -230,7 +230,7 @@ the DataONE VO.
 
 The general application flow for a user to use DataONE services is to first log
 into CILogon with an identity of their choice, then to register that identity
-with DataONE by calling the :func:`CN_auth.newAccount` service. A authorized
+with DataONE by calling the :func:`CN_auth.registerAccount` service. A authorized
 third party (such as a site manager) can then call :func:`CN_auth.verifyAccount`
 to verify that the real name, email address, and other biographical information
 about the Person are correct. A user with more than one Identity can call
@@ -266,12 +266,12 @@ can be used by services to make authorization decisions.
   Confirm an equivalence mapping between the identities listed for the users
   authenticated and represented by session1 and session2.
   
-* :func:`CN_auth.getPrincipalInfo` 
+* :func:`CN_auth.getSubjectInfo` 
 
   Get the information about a Person, their equivalent identities, and the
   Groups to which they belong.
 
-* :func:`CN_auth.listPrincipals`
+* :func:`CN_auth.listSubjects`
 
   Query for a matching set of users, groups, and systems.
 
@@ -296,7 +296,7 @@ can be used by services to make authorization decisions.
 **Figure 1.** Identity Service is used to register an existing identity with
 DataONE. In this example, the same user has two distinct pre-existing
 identities. We register the primary identity with DataONE. We then request that
-a secondary identity is mapped to the same Types.Principal. The user must then
+a secondary identity is mapped to the same Types.Subject. The user must then
 confirm this equivalence between the two identities.
 
 .. 
@@ -471,7 +471,7 @@ certificate that contains the relevant properties for that session.
 The CILogon service supports authentication by redirecting authentication
 requests to a pre-approved list of Identity Providers associated with user's
 home institutions. The main source of these Identity Providers are the
-institutions that are members of the InCommon federation. User's only need to
+institutions that are members of the InCommon federation. Users only need to
 authenticate with their home institution, thereby protecting user credentials by
 preventing 3rd party clients and services from handling those credentials, and
 rather only passing the credentials to the user's trusted institutional
@@ -494,12 +494,12 @@ information information necessary to perform authorization processing.
 
 DataONE web clients will likely use CILogon Portal Delegation
 (http://www.cilogon.org/portal-delegation) to manage user certificates (rather
-than the browser). The portal acts as a proxy for the user when intereacting
+than the browser). The portal acts as a proxy for the user when interacting
 with underlying DataONE services that require authentication or authorization.
 Instead of direct browser-based certificate management, the portal requests and
 stores user certificates and opaquely presents them to DataONE. This does
-require developmenet of an extra web application "layer" that provides user
-session/certififcate management and pass-throughs for most of the defined
+require development of an extra web application "layer" that provides user
+session/certificate management in conjunction with the defined
 DataONE services.
 
 Obtaining a CILogon X.509 certificate requires that the user authenticate
@@ -592,14 +592,6 @@ in the certificate to make authorization decisions regarding the request.
 **Figure 5.** Authentication and session management assuming that the CN only
 runs an Identity service, and that the CILogon server runs the session
 management service as part of the authentication process.
-
-
-Service Methods
-~~~~~~~~~~~~~~~
-
-* CILogon.authenticate() returns :class:`Types.X509Certificate`
-
-  This method from CILogon results in an X.509 certificate on the client side.
 
 
 Authenticated Session Management
