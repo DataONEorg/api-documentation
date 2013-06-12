@@ -110,7 +110,7 @@ to the structure of a populated system metadata document.
    :language: xml
 
 Roadmap to System Metadata Control Changes (DRAFT - to be reviewed)
---------------------------------------------------
+-------------------------------------------------------------------
 
 The following outline describes the policy and technical steps needed to shift the majority of control of system metadata attributes to Member Nodes such that client operations are more responsive.  The changes would require a new DataONE API v2 that involve changes to the DataONE Types schema, changes to the Member Node APIs, changes to the Coordinating Node APIs, and changes to the various software stacks that implement these APIs.  It will also involve a release and deployment schedule that allows both v1 and v2 of the APIs to be in operation simultaneously.
 
@@ -119,9 +119,9 @@ In transferring control to the Member Nodes, they also adopt the responsibility 
 Rationale
 ~~~~~~~~~
 
-The main use case involves access control. When an scientist using an ITK client creates an object through MN.create(), control of the system metadata is currently transferred to the CN once synchronization happens. After that point, the ITK client (and scientist) has to make CN.setAccessPolicy() calls to make any changes. If the MN is set to sync once a week, this is problematic, since the scientist would naturally expect that the access control changes should be in effect immediately.
+The main use case involves access control.  When a scientist using an ITK client creates an object through MN.create(), control of the system metadata is currently transferred to the CN once synchronization happens. After that point, the ITK client (and scientist) has to make CN.setAccessPolicy() calls to make any changes. If the MN is set to sync once a week, this is problematic, since the scientist would naturally expect that the access control changes should take effect immediately.
 
-Example sequence  diagrams show the differnce follows:
+Example sequence diagrams show the differnce follows:
 
 .. 
    @startuml images/sysmeta_cn_control.png
@@ -148,10 +148,6 @@ Example sequence  diagrams show the differnce follows:
    CN -> MN : MNread.getSystemMetadata(pid)
    activate MN #D74F57
    MN --> CN : sysmeta
-   deactivate MN
-   CN -> MN : MNRead.get(pid)
-   activate MN #D74F57
-   MN --> CN : object
    deactivate MN
    CN -> CN : CNCore.registerSystemMetadata(pid, sysmeta)
    activate CN #D74F57
@@ -214,7 +210,7 @@ The `Types Schema`_ could be changed in two ways:
 
 2.1 Modify the Replica Type
 
-By adding an optional `version` attribute to the Replica Type, the Coordinating Nodes would no longer need to rely on the `serialVersion` attribute of the entire system metadata document to manage versions.  An example, with the version line highlighted, would be:
+By adding an optional `version` attribute to the Replica Type, the Coordinating Nodes would no longer need to rely on the `serialVersion` attribute of the entire system metadata document to manage versions.  A Replica example, with the version line highlighted, would be:
 
 .. code-block:: xml
   :emphasize-lines: 1
@@ -229,7 +225,7 @@ By making the `version` attribute optional, this approach would be backwards-com
 
 2.2 Remove the Replica
 
-Another approach is to remove the Replica entry from the SystemMetadata Type entirely, and manage replicas separately.  This approach would be backward-incompatible with existing system metadata documents, but once upgraded, all Replica information would be obtained through the CN services.
+Another approach is to remove the Replica entry from the SystemMetadata Type entirely, and manage replicas separately.  This approach would be backwards-incompatible with existing system metadata documents, but once upgraded, all Replica information would be obtained through the CN services.
 
 .. TODO:: Needs discussion.
 
@@ -238,7 +234,7 @@ Another approach is to remove the Replica entry from the SystemMetadata Type ent
 3. Change DataONE APIS
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Changes would be required for both the Member Node and Coordinating Node APIs, in both the architecture doocumentation and the d1_common_java and d1_common_python libraries:
+Changes would be required for both the Member Node and Coordinating Node APIs, in both the architecture doocumentation and the `d1_common_java` and `d1_common_python` libraries:
 
 3.1 MN and CN API changes
 
@@ -296,11 +292,11 @@ With these changes, d1_synchronization classes will need to consult the node reg
 
 5.3 MN to MN Replication
 
-The CN ReplicationManager code will need to be adjusted to 1) Get authoritative copies of system metadata from the MN, 2) use CNReplication.getReplicaVersion() and CNReplication.setReplicaVersion() when processing replica tasks rather than setting the serial version of the system metadata document.
+The CN ReplicationManager code will need to be adjusted to 1) Get authoritative copies of system metadata from the MN, 2) use CNReplication.getReplicaVersion() and CNReplication.setReplicaVersion() when processing replica tasks rather than setting the `serialVersion` of the system metadata document.
 
 5.4 Metacat CNodeService and schema
 
-The CNodeService class will need to be modified to implement the above CN API calls.  Likewise, the database schema will need to change to store a new `version` column in the smreplicastatus SQL table.  this will also affect other classes that manage the persistence of system metadata, namely IndetifierService.  Upgrade classes and scripts will need to be written for existing installations.
+The MetacatCNodeService class will need to be modified to implement the above CN API calls.  Likewise, the database schema will need to change to store a new `version` column in the `smreplicationstatus` SQL table.  This will also affect other classes that manage the persistence of system metadata, namely IndetifierManager.  Upgrade classes and scripts will need to be written for existing installations.
 
 6. Change Member Node implementations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -319,4 +315,4 @@ We will need to establish a release schedule and deploy software stacks, likely 
 4. CN implementations
 5. MN implementations
 
-Note that we plan on introducing other changes into the DataONE types schema to accomodate mutable content and other features.  changes to the type schema should be consolidated to reduce the impact on software that depend on the types.
+Note that we plan on introducing other changes into the DataONE types schema to accomodate mutable content and other features.  Changes to the type schema should be consolidated to reduce the impact on software that depend on the types.
