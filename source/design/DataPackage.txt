@@ -30,7 +30,9 @@ http://www.openarchives.org/ore/1.0/rdfxml.html
 
 DataONE provides tools in both the Java and Python client libraries for building
 and serializing / deserializing resource maps, both based on the foresite-toolkit
-project (https://code.google.com/p/foresite-toolkit/).
+project (https://code.google.com/p/foresite-toolkit/).  These are highly recommended
+for those who do not want to spend time on learning the OAI-ORE implementation model
+in detail in order to build and maintain a custom implementation. 
 
 The ORE data model itself is flexible and general purpose.  In order to use it
 for our purposes, DataONE places a few additional constraints on the model.  (See
@@ -114,7 +116,7 @@ aggregated resource will get the resource map, as desired.
 
 To check that the aggregation is in hash URI form, the following check can be used::
 
-  aggregation_X_uri startsWith resourceMap_X_uri + "#"
+  aggregation_X_uri startsWith (resourceMap_X_uri + "#")
 
 
 Notes:  Future infrastructure development will likely involve standing up a triple-store
