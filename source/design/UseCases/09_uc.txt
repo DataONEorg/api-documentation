@@ -480,6 +480,8 @@ Replication Auditing
   @enduml
 .. image:: images/09_seq_audit_2.png
 
+
+
 .. 
    @startuml images/09_uc_audit_components.png
 
@@ -507,7 +509,13 @@ Replication Auditing
 		[REST Service] <-- [Replication Service] : update replica status/verified date
 	}
 	
-	cloud "CN Audit Log Cloud" {
+	cloud "hazelcast" {
+		frame "d1-processing" {
+			[Replication Event Queue] <-- [Replication Service] : submit pids to replication
+		}
+	}
+	
+	cloud "CN Audit Log Cloud" as auditCloud {
 	
 		node "Zookeeper" {
 			[index config] --> [cn-audit-index] : aquire cloud config
@@ -522,13 +530,13 @@ Replication Auditing
 		}
 	}
 	
-	cloud "hazelcast" {
-		frame "d1-processing" {
-			[Replication Event Queue] <-- [Replication Service]
-		}
-	}
+	
+	
+	note "Each CN will be running its own instance of the zookeeper and jetty/solr.\n This forms the cloud cluster." as N1
 	
 	@enduml
+   
+   
    
 .. image:: images/09_uc_audit_components.png
    
