@@ -480,5 +480,57 @@ Replication Auditing
   @enduml
 .. image:: images/09_seq_audit_2.png
 
+.. 
+   @startuml images/09_uc_audit_components.png
+
+	title CN Replication Auditing Components
+		
+	node "CN Audit Process(D1 Processing)" {
+		frame "CN Replication Auditor" {
+			frame "CN Common" {
+				[ReplicationDao]
+		  	}
+		  	frame "CN Replication" {
+		  		[Replication Service]
+			}	  	
+	  		[CNAuditLogClient] --> [cn-audit-index] : add/remove log entries
+	  	}
+	}
+	
+	database "psql" {
+		frame "metacat" {
+			[smreplicationstatus] --> [ReplicationDao] : select audit candidates
+		}
+	}
+	
+	node "CN Service" {
+		[REST Service] <-- [Replication Service] : update replica status/verified date
+	}
+	
+	cloud "CN Audit Log Cloud" {
+	
+		node "Zookeeper" {
+			[index config] --> [cn-audit-index] : aquire cloud config
+			[leader election] --> [cn-audit-index] : coordinate leader
+			[replication] --> [cn-audit-index] : coordinate cloud
+		}
+		node "jetty" {
+			node "Solr 4" {
+				frame "cn-audit-index"{
+				}
+			}
+		}
+	}
+	
+	cloud "hazelcast" {
+		frame "d1-processing" {
+			[Replication Event Queue] <-- [Replication Service]
+		}
+	}
+	
+	@enduml
+   
+.. image:: images/09_uc_audit_components.png
+   
 
 .. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/09_uc.txt
