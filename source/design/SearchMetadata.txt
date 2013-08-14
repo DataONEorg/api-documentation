@@ -185,7 +185,7 @@ populated with more than a single value per document (PID) indexed.
 Populating Object Relation Fields
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The fields *resourceMaps*, *contains*, *documents*, and *isDocumentedBy* contain
+The fields *resourceMap*, *documents*, and *isDocumentedBy* contain
 identifiers of other objects in the DataONE system related to the subject of
 the current record. These relationships are recorded in OAI-ORE resource map
 documents as described in the section :doc:`DataPackage`. Since the values for
@@ -232,22 +232,18 @@ Index entries after Package 1 is added.
    
      * - PID
        - resourceMaps
-       - contains
        - documents
        - isDocumentedBy
      * - A
        - 
-       - B, C
        -
        -
      * - B
        - A
-       -
        - C
        -
      * - C
        - A
-       -
        -
        - B
 
@@ -280,32 +276,26 @@ are indicated in **bold**.
    
      * - PID
        - resourceMaps
-       - contains
        - documents
        - isDocumentedBy
      * - A
        - 
-       - B, C
        -
        -
      * - B
        - A, **D**
-       -
        - C, **E**
        -
      * - C
        - A
        -
-       -
        - B
      * - D
        - 
-       - **B, E**
        -
        - 
      * - E
        - **D**
-       -
        -
        - **B**
 
@@ -336,42 +326,34 @@ are indicated in **bold**.
    
      * - PID
        - resourceMaps
-       - contains
        - documents
        - isDocumentedBy
      * - A
        - 
-       - B, C
        -
        -
      * - B
        - A, D
-       -
        - C, E
        -
      * - C
        - A
        -
-       -
        - B
      * - D
        - **F**
-       - B, E
        -
        - **G**
      * - E
        - D
        -
-       -
        - B
      * - F
        - 
-       - **D, G**
        -
        - 
      * - G
        - **F**
-       -
        - **D**
        - 
 
