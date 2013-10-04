@@ -1,0 +1,52 @@
+.. _ReplicationOverview:
+
+Replication Overview
+====================
+
+.. index:: Use Case 09, UC09, Replicate MN, replicate
+
+Revision History
+  View document revision history_.
+
+
+
+DataONE provides replication services to satisfy both data and metadata preservation needs and to provide the potential for fault-tolerance and load balancing services for data and metadata access. Tier 4 Member Nodes within the federation are set up to house replicas of content, and provide this service to other Member Nodes based on certain policy agreements.  Replication is handled on a per-object basis within DataONE, with the RightsHolder and/or Authoritative Member Node controlling the ReplicationPolicy for each object, which determines whether it will be replicated.  In addition, each Member Node decides whether it will accept replicas in general (by supporting the Tier 4 :class:`CNReplication` API and setting `replicate=true`), and can decide whether it will accept any given request to replicate an object. Coordinating Nodes monitor the :class:`Types.ReplicationPolicy` for each object in DataONE, and ensure that the appropriate :term:`replication target` nodes house an accurate replica of the object. Each replica of an object is recorded by the Coordinating Nodes, so when a consumer wishes to retrieve the object, they can use :func:`CNRead.resolve` to list the replicas and :func:`MNRead.get` to retrieve any of the replicas in the network.
+
+Object Replication Policy
+-------------------------
+The :class:`Types.ReplicationPolicy` for an object defines if replication should be attempted for this object, and if so, how many replicas should be maintained. It also permits specification of preferred and blocked nodes as potential replication targets. 
+
+If a ReplicationPolicy is provided in the :term:`System Metadata` for an object, then that policy is followed precisely.
+In the absence of a defined ReplicationPolicy for an object, DataONE will by default attempt to maintain two replicas for the object, as long as the object's size is below a threshold size that would allow transfer over networks in reasonable time periods. As network transfer capabilities improve among DataONE nodes, this threshold size will be increased.
+
+.. code-block:: xml
+
+    <replicationPolicy replicationAllowed="true" numberReplicas="2">
+        <preferredMemberNode>urn:node:KNB</preferredMemberNode>
+        <preferredMemberNode>urn:node:PISCO</preferredMemberNode>
+        <blockedMemberNode>urn:node:SOMEBADNODE</blockedMemberNode>
+    </replicationPolicy>
+
+Node Replication Policy
+-----------------------
+Nodes that wish to serve as a replication target and thereby are available to store replicas of data from around the network set :attr:`Types.Node.replicate` to 'true' in their :class:`Types.Node` description when registering their node. In addition, these nodes must support the Tier 4 Member Node API to allow Coordinating Nodes to perform all necessary operations.  Nodes can expresses constraints on object size, total replication space available, source nodes, and object format types that a node will replicate by providing a :class:`Types.NodeReplicationPolicy` as part of a it's :class:`Types.Node` description. A node may choose to restrict replication from only certain peer nodes, may have file size limits, total allocated size limits, or may want to focus on being a :term:`replication target` for domain-specific object formats.  
+
+.. code-block:: xml
+
+    <nodeReplicationPolicy>
+        <maxObjectSize>524288000</maxObjectSize>
+        <spaceAllocated>1099511627776</spaceAllocated>
+        <allowedNode>urn:node:KNB</allowedNode>
+        <allowedNode>urn:node:ESA</allowedNode>
+        <allowedNode>urn:node:SANPARKS</allowedNode>
+        <allowedObjectFormat>FGDC-STD-001.1-1999</allowedObjectFormat>
+        <allowedObjectFormat>eml://ecoinformatics.org/eml-2.1.1</allowedObjectFormat>
+        <allowedObjectFormat>text/csv</allowedObjectFormat>
+    </nodeReplicationPolicy>
+
+The :attr:`Types.NodeReplicationPolicy.maxObjectSize` indicates the maximum allowable size of an object to be replicated in bytes.  The :attr:`Types.NodeReplicationPolicy.spaceAllocated` field sets an upper limit on space usage for replica storage on the given node.  Once the spaceAllocated has been reached for a node, the Coordinating Nodes will no longer request that additional replicas be stored on that node. :attr:`Types.NodeReplicationPolicy.allowedNode` is used to list all nodes that are allowed to replicate to the target.  If it is absent, then any node may replicate to the target. :attr:`Types.NodeReplicationPolicy.allowedObjectFormat` is used to list all object formats that may be replicated to the target.  If it is absent, then any object format may be replicated to the target. 
+
+.. Note::
+	Node Replication Policy is not currently implemented on the CN for scheduling purposes, and is planned for a future release.
+
+.. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/ReplicationOverview.txt
