@@ -16,8 +16,7 @@ Object Replication Policy
 -------------------------
 The :class:`Types.ReplicationPolicy` for an object defines if replication should be attempted for this object, and if so, how many replicas should be maintained. It also permits specification of preferred and blocked nodes as potential replication targets. 
 
-If a ReplicationPolicy is provided in the :term:`System Metadata` for an object, then that policy is followed precisely.
-In the absence of a defined ReplicationPolicy for an object, DataONE will by default attempt to maintain two replicas for the object, as long as the object's size is below a threshold size that would allow transfer over networks in reasonable time periods. As network transfer capabilities improve among DataONE nodes, this threshold size will be increased.
+If a ReplicationPolicy is provided in the :term:`System Metadata` for an object, then that policy is followed precisely by the Coordinating Nodes when managing replication.  In the absence of a defined ReplicationPolicy for an object, DataONE will by default attempt to maintain two replicas for the object, as long as the object's size is below a threshold size that would allow transfer over networks in reasonable time periods. As network transfer capabilities improve among DataONE nodes, this threshold size will be increased.
 
 .. code-block:: xml
 
@@ -29,7 +28,7 @@ In the absence of a defined ReplicationPolicy for an object, DataONE will by def
 
 Node Replication Policy
 -----------------------
-Nodes that wish to serve as a replication target and thereby are available to store replicas of data from around the network set :attr:`Types.Node.replicate` to 'true' in their :class:`Types.Node` description when registering their node. In addition, these nodes must support the Tier 4 Member Node API to allow Coordinating Nodes to perform all necessary operations.  Nodes can expresses constraints on object size, total replication space available, source nodes, and object format types that a node will replicate by providing a :class:`Types.NodeReplicationPolicy` as part of a it's :class:`Types.Node` description. A node may choose to restrict replication from only certain peer nodes, may have file size limits, total allocated size limits, or may want to focus on being a :term:`replication target` for domain-specific object formats.  
+Nodes that wish to serve as a replication target and thereby are available to store replicas of data from around the network set :attr:`Types.Node.replicate` to 'true' in their :class:`Types.Node` description when registering their node. In addition, these nodes must support the Tier 4 :class:`CNReplication` API to allow Coordinating Nodes to perform all necessary operations.  Nodes can express constraints on object size, total replication space available, source nodes, and object format types that a node will replicate by providing a :class:`Types.NodeReplicationPolicy` as part of a it's :class:`Types.Node` description. A node may choose to restrict replication from only certain peer nodes, may have file size limits, total allocated size limits, or may want to focus on being a :term:`replication target` for domain-specific object formats.  
 
 .. code-block:: xml
 
