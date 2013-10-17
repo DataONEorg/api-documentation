@@ -101,6 +101,8 @@
 
    :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=1460)``
 
+     Raised if the user making the request is not authorized to access the log records. This is determined by the policy of the Member Node.
+
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=1480)``
 
      The request parameters were malformed or an invalid date range was specified.

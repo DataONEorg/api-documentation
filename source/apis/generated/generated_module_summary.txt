@@ -175,6 +175,7 @@ This method is not publicly exposed by a Coordinating Node.
      - :func:`CNCore.getLogRecords`
      - Retrieves consolidated log information for the specified date range (fromDate < timestamp <= toDate) for the entire DataONE infrastructure
 Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed.
+Note that full access to log records requires access through a priviledged account. A public user may be presented with an empty response.
 
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
    * - \

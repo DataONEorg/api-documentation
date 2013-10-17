@@ -40,9 +40,6 @@ Data Types in CICore
 - :class:`Types.Permission`
 - :class:`Types.Person`
 - :class:`Types.Ping`
-- :class:`Types.QueryEngineDescription`
-- :class:`Types.QueryEngineList`
-- :class:`Types.QueryField`
 - :class:`Types.Replica`
 - :class:`Types.ReplicationPolicy`
 - :class:`Types.ReplicationStatus`
@@ -227,8 +224,6 @@ Data Types in CICore
     + formatId : ObjectFormatIdentifier[1..1]
     + formatName : xs.string[1..1]
     + formatType : xs.string[1..1]
-    + mimeType : xs.string[0..*]
-    + extension : xs.string[0..*]
   }
   ObjectFormat .. ObjectFormatIdentifier
   ObjectFormat .. xs.string
@@ -296,35 +291,6 @@ Data Types in CICore
   }
   Ping .. xs.boolean
   Ping .. xs.dateTime
-
-  class QueryEngineDescription {
-    + queryEngineVersion : xs.string[1..1]
-    + querySchemaVersion : xs.string[0..1]
-    + name : xs.string[1..1]
-    + additionalInfo : NonEmptyString[0..*]
-    + queryField : QueryField[0..*]
-  }
-  QueryEngineDescription .. xs.string
-  QueryEngineDescription .. NonEmptyString
-  QueryEngineDescription .. QueryField
-
-  class QueryEngineList {
-    + queryEngine : NonEmptyString[0..*]
-  }
-  QueryEngineList .. NonEmptyString
-
-  class QueryField {
-    + name : NonEmptyString[1..1]
-    + description : xs.string[0..*]
-    + type : NonEmptyString[1..1]
-    + searchable : xs.boolean[1..1]
-    + returnable : xs.boolean[1..1]
-    + sortable : xs.boolean[1..1]
-    + multivalued : xs.boolean[0..1]
-  }
-  QueryField .. NonEmptyString
-  QueryField .. xs.string
-  QueryField .. xs.boolean
 
   class Replica {
     + replicaMemberNode : NodeReference[1..1]
@@ -1567,20 +1533,6 @@ Data Types in CICore
       A string field indicating whether or not this format is :term:`science data` (*DATA*), :term:`science metadata` (*METADATA*) or a :term:`resource map` (*RESOURCE*). If the format is a self-describing data format that includes science metadata, then the field should also be set to science metadata.
 
 
-    .. attribute:: mimeType
-
-      Type: :class:`Types.xs.string`
-
-      The string representation of a MIME-type that could be used to represent an object format. MIME-type values are registered with IANA and provide a coarse-grained mechanism to indicate the type of media that might be delivered using an object format.
-
-
-    .. attribute:: extension
-
-      Type: :class:`Types.xs.string`
-
-      A string field listing one of the filename extensions that might be commonly associated with an object format. The file extension should be listed with any common separator (such as a .). For example, text/plain files frequently use the extension '.txt'.
-
-
     .. code-block:: xml
 
 
@@ -1591,10 +1543,6 @@ Data Types in CICore
             <xs:element name="formatName" type="xs:string" minOccurs="1" maxOccurs="1">
             </xs:element>
             <xs:element name="formatType" type="xs:string" minOccurs="1" maxOccurs="1">
-            </xs:element>
-            <xs:element name="mimeType" type="xs:string" minOccurs="0" maxOccurs="unbounded">
-            </xs:element>
-            <xs:element name="extension" type="xs:string" minOccurs="0" maxOccurs="unbounded">
             </xs:element>
          </xs:sequence>
       </xs:complexType>
@@ -1609,8 +1557,6 @@ Data Types in CICore
         + formatId : ObjectFormatIdentifier[1..1]
         + formatName : xs.string[1..1]
         + formatType : xs.string[1..1]
-        + mimeType : xs.string[0..*]
-        + extension : xs.string[0..*]
       }
       ObjectFormat .. ObjectFormatIdentifier
       ObjectFormat .. xs.string
@@ -2012,221 +1958,6 @@ Data Types in CICore
       }
       Ping .. xs.boolean
       Ping .. xs.dateTime
-
-      @enduml
-
-
-..                                    ######
-.. class:: QueryEngineDescription
-
-    Describes a query engine that can be used to search content on the node. Query engines may be general purpose or specialized for particular communities or domains.
-
-    .. attribute:: queryEngineVersion
-
-      Type: :class:`Types.xs.string`
-
-      The version of the underlying query engine. Used by clients to determine possible compatibility concerns or features available.
-
-
-    .. attribute:: querySchemaVersion
-
-      Type: :class:`Types.xs.string`
-
-      Version of the schema in use by the query engine, e.g. "1.0.1"
-
-
-    .. attribute:: name
-
-      Type: :class:`Types.xs.string`
-
-      The full, human readable name of the query engine. For example: "Apache SOLR"
-
-
-    .. attribute:: additionalInfo
-
-      Type: :class:`Types.NonEmptyString`
-
-      An optional human readable description of the query engine. This can be used to describe any special capabilities or intended uses for the query engine. For example, a query engine may be tuned to suit a particular audience or domain as opposed to providing a general purpose discovery mechanism.
-
-
-      This field may also contain links to additional information about the query engine, such as documentation for the search syntax provided by the query engine implemntors.
-
-
-    .. attribute:: queryField
-
-      Type: :class:`Types.QueryField`
-
-      A list of query fields supported by the query engine.
-
-
-    .. code-block:: xml
-
-
-      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="QueryEngineDescription">
-         <xs:sequence>
-            <xs:element name="queryEngineVersion" type="xs:string" minOccurs="1" maxOccurs="1">
-            </xs:element>
-            <xs:element name="querySchemaVersion" type="xs:string" minOccurs="0" maxOccurs="1">
-            </xs:element>
-            <xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1">
-            </xs:element>
-            <xs:element name="additionalInfo" type="d1:NonEmptyString" minOccurs="0" maxOccurs="unbounded">
-            </xs:element>
-            <xs:element name="queryField" type="d1:QueryField" minOccurs="0" maxOccurs="unbounded">
-            </xs:element>
-         </xs:sequence>
-      </xs:complexType>
-
-
-    .. image:: images/class_QueryEngineDescription.png
-
-    ..
-      @startuml images/class_QueryEngineDescription.png
-
-      class QueryEngineDescription {
-        + queryEngineVersion : xs.string[1..1]
-        + querySchemaVersion : xs.string[0..1]
-        + name : xs.string[1..1]
-        + additionalInfo : NonEmptyString[0..*]
-        + queryField : QueryField[0..*]
-      }
-      QueryEngineDescription .. xs.string
-      QueryEngineDescription .. NonEmptyString
-      QueryEngineDescription .. QueryField
-
-      @enduml
-
-
-..                                    ######
-.. class:: QueryEngineList
-
-    A list of query engine names that indicate the possible values for CNRead.getQueryEngineDescription and CNRead.query REST API endpoints.
-
-    .. attribute:: queryEngine
-
-      Type: :class:`Types.NonEmptyString`
-
-      The name of a queryEngine. This value will be used as a path element in REST API calls and so should not contain characters that will need to be escaped.
-
-
-    .. code-block:: xml
-
-
-      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="QueryEngineList">
-         <xs:sequence>
-            <xs:element name="queryEngine" type="d1:NonEmptyString" minOccurs="0" maxOccurs="unbounded">
-            </xs:element>
-         </xs:sequence>
-      </xs:complexType>
-
-
-    .. image:: images/class_QueryEngineList.png
-
-    ..
-      @startuml images/class_QueryEngineList.png
-
-      class QueryEngineList {
-        + queryEngine : NonEmptyString[0..*]
-      }
-      QueryEngineList .. NonEmptyString
-
-      @enduml
-
-
-..                                    ######
-.. class:: QueryField
-
-    
-
-    .. attribute:: name
-
-      Type: :class:`Types.NonEmptyString`
-
-      The name of the field as used programmatically when constructing queries or other rferences to the field.
-
-
-    .. attribute:: description
-
-      Type: :class:`Types.xs.string`
-
-      An optional, repeatable, brief description of the field that can be used to help guide developers or end users in appropriate use of the field. May for example, contain a links to additional documentation.
-
-
-    .. attribute:: type
-
-      Type: :class:`Types.NonEmptyString`
-
-      The type of the field, expressed in the language peculiar to the query engine being described.
-
-
-    .. attribute:: searchable
-
-      Type: :class:`Types.xs.boolean`
-
-      Indicates if the field may be used in constructing queries (as opposed to only appearing in results)
-
-
-    .. attribute:: returnable
-
-      Type: :class:`Types.xs.boolean`
-
-      Indicates if the field values may be returned in search results.
-
-
-    .. attribute:: sortable
-
-      Type: :class:`Types.xs.boolean`
-
-      Indicates if the field can be used for sorting results.
-
-
-    .. attribute:: multivalued
-
-      Type: :class:`Types.xs.boolean`
-
-      Indicates if the field may contain multiple values. Some query engines such as SOLR support this capability.
-
-
-    .. code-block:: xml
-
-
-      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="QueryField">
-         <xs:sequence>
-            <xs:element name="name" type="d1:NonEmptyString" minOccurs="1" maxOccurs="1">
-            </xs:element>
-            <xs:element name="description" type="xs:string" minOccurs="0" maxOccurs="unbounded">
-            </xs:element>
-            <xs:element name="type" type="d1:NonEmptyString" minOccurs="1" maxOccurs="1">
-            </xs:element>
-            <xs:element name="searchable" type="xs:boolean" minOccurs="1" maxOccurs="1">
-            </xs:element>
-            <xs:element name="returnable" type="xs:boolean" minOccurs="1" maxOccurs="1">
-            </xs:element>
-            <xs:element name="sortable" type="xs:boolean" minOccurs="1" maxOccurs="1">
-            </xs:element>
-            <xs:element name="multivalued" type="xs:boolean" minOccurs="0" maxOccurs="1">
-            </xs:element>
-         </xs:sequence>
-      </xs:complexType>
-
-
-    .. image:: images/class_QueryField.png
-
-    ..
-      @startuml images/class_QueryField.png
-
-      class QueryField {
-        + name : NonEmptyString[1..1]
-        + description : xs.string[0..*]
-        + type : NonEmptyString[1..1]
-        + searchable : xs.boolean[1..1]
-        + returnable : xs.boolean[1..1]
-        + sortable : xs.boolean[1..1]
-        + multivalued : xs.boolean[0..1]
-      }
-      QueryField .. NonEmptyString
-      QueryField .. xs.string
-      QueryField .. xs.boolean
 
       @enduml
 

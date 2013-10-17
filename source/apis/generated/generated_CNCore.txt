@@ -214,6 +214,8 @@
 
    Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed.
 
+   Note that full access to log records requires access through a priviledged account. A public user may be presented with an empty response.
+
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`
    :REST URL: ``GET /log?[fromDate={fromDate}][&toDate={toDate}][&event={event}][&pidFilter={pidFilter}][&start={start}][&count={count}]``

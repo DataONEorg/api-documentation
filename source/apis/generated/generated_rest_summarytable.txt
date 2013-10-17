@@ -91,7 +91,7 @@
      - Returns the object format registered in the DataONE Object Format Vocabulary for the given format identifier.
    * - GET /log?[fromDate={fromDate}][&toDate={toDate}][&event={event}][&pidFilter={pidFilter}][&start={start}][&count={count}]
      - :func:`CNCore.getLogRecords`
-     - Retrieves consolidated log information for the specified date range (fromDate < timestamp <= toDate) for the entire DataONE infrastructure Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed.
+     - Retrieves consolidated log information for the specified date range (fromDate < timestamp <= toDate) for the entire DataONE infrastructure Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed. Note that full access to log records requires access through a priviledged account. A public user may be presented with an empty response.
    * - POST /reserve
      - :func:`CNCore.reserveIdentifier`
      - Reserves the identifier that is unique and can not be used by any other sessions. Future calls to :func:`MNStorage.create` and :func:`MNStorage.update` that reference this ID must be made by the same :term:`principal` making the reservation, otherwise an error is raised on those methods. The requested identifier is transmitted in a MIME Multipart/form-data body with *pid* as key, and the identifier string as value.

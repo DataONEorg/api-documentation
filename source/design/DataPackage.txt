@@ -23,8 +23,64 @@ users the data identifiers associated with the metadata used for searches.
 
 .. _ORE Vocabulary Document: http://www.openarchives.org/ore/1.0/vocabulary
 
+
+.. image:: images/datapackage_class.png
+
+Overview class diagram for content model in DataONE. Class attributes refer to the equivalent SOLR index entry
+
+..
+
+  @startuml images/datapackage_class.png
+  left to right direction
+  
+  class DataONEObject {
+    String id
+    Integer size
+    String formatId
+    String AuthoritativeMN
+    Date dateUploaded
+    Boolean isPublic
+    String obsoletedBy
+  }
+  
+  class ResourceMap {
+    Relation[]: relations
+  }
+  
+  class Relation {
+    URI cito:documents
+    URI cito:isDocumentedBy
+  }
+  
+  class ScienceMetadata {
+    String title
+    String abstract
+    String[] authors
+    Date beginDate
+    Date endDate
+    Float eastBoundingCoord
+    Float westBoundingCoord
+    Float northBoundingCoord
+    Float southBoundingCoord
+  }
+  
+  class ScienceData {
+  
+  }
+  
+  DataONEObject <|-- ResourceMap
+  DataONEObject <|-- ScienceMetadata
+  DataONEObject <|-- ScienceData
+  ScienceData "0..*" - "0..*" ScienceMetadata
+  (ScienceMetadata, ScienceData) . Relation
+  ResourceMap o-- Relation
+  
+  @enduml
+
+
 Generating Resource Maps
 ^^^^^^^^^^^^^^^^^^^^^^^^
+
 While there are several formats discussed in the general discussion below, DataONE
 currently only supports the RDF/XML serialization format, using the :term:`formatId`
 of ``http://www/openarchives.org/ore/terms``. For more information on OAI-ORE
