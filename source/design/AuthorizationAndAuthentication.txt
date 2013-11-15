@@ -82,3 +82,44 @@ The DataONE landing page for CILogon is here_.
 .. _FAQ: http://www.cilogon.org/faq
 .. _here: https://cilogon.org/?skin=DataONE
 
+
+Member Node Client Certificates
+--------------------------------
+Both CNs and MNs are expected to trust DataONE and CILogon-signed certificates,
+as well as commercial certificates. DataONE issues DataONE-signed certificates 
+to MNs when they register their node to facilitate association of the certificate
+Subject with the NodeID, which is involved in some authorization decisions.
+
+
+Trust Relationships
+--------------------
+
+When issuing requests, two types of certificates are used: CILogon-signed and 
+DataONE-signed certificates.  In all cases, the requester can expect a 
+commercially-signed certificate from the server.
+
+===================  ========================  ==============
+Client / Requester    CA of certificate         trusted CAs
+===================  ========================  ==============
+End-user              CILogon (short-lived)     commercial         
+-------------------  ------------------------  --------------
+Coordinating Node     DataONE (long-lived)      commercial
+-------------------  ------------------------  --------------
+Member Node           DataONE (long-lived)      commercial
+===================  ========================  ==============
+
+
+
+From a server perspective, only CILogon or DataONE certificates are used
+for communication (or no certificate).  Both CNs and MNs are expected to trust
+CILogon and DataONE certificates.
+
+===================  ===================  ===================
+Server                CA of certificate    trusted CAs                     
+===================  ===================  ===================
+Coordinating Node     commercial           CILogon, DataONE        
+-------------------  -------------------  -------------------
+Member Node           commercial           CILogon, DataONE        
+===================  ===================  ===================
+
+
