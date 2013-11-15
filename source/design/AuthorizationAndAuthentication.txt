@@ -9,25 +9,24 @@ determining whether or not a user is who they say they are. Both are required of
 a security architecture to ensure that the right people have the right access to 
 resources and services.
 
-Authorization is achieved through the association of Subjects (user names) and 
+Authorization is achieved through the association of Subjects (usernames) and 
 permissions with the resources and services being secured.  Typically, this is 
 done using access control lists (ACL). When a request is made, the identity of 
 the user is looked up in the ACL, and the appropriate action is taken based on 
-the user's privileges.  DataONE uses Subjects contained in a resource's 
+the user's permissions.  DataONE uses Subjects contained in a resource's 
 SystemMetadata, as well as Subjects in the Authoritative Member Node's Node
 document when making authorization decisions.  The latter is used primarily for
 administrative actions and to secure services.
 
-In authentication, the user provides their user-name (a.k.a. Subject) along with 
+In authentication, the user provides their username along with 
 other information that gives assurances that they are who they say they are.  
 Typical computer logon accounts are examples of authentication, where the password 
 serves as the information used to assure a user's identity.  Username-password 
 systems over the internet need to be a bit more complicated than that, in that 
 even the username and password have to be secured before sending them to the 
-remote server.  The user needs to trust that she's sending them to the right 
-server, and that no one else is reading the information before sending it to the 
-right server.  X.509 emerged as the de-facto standard used to do this, and is
-what DataONE uses for authentication.
+remote server.  That is, the user needs to authenticate the remote server and 
+encrypt her confidential information before sending it.  X.509 has emerged as the 
+de-facto standard used to do this, and is what DataONE uses for authentication.
 
 X.509 Authentication
 --------------------
@@ -38,18 +37,20 @@ issue certificates to entities that they can send to end-users and use for encry
 communication.  Through chain-of-trust, if the issuing CA (who's identity is 
 contained in the certificate sent to the end-user) is trusted by the end-user, 
 then the end-user trusts the entity sending them the certificate.  Major internet 
-browsers come prepackaged with a set of well-established and reputable CA certificates.
+browsers come prepackaged with a set of CA certificates from well-established and 
+reputable CAs.
  
 
 For example, VeriSign and Thawte are two well-known CAs.  Imagine a bank purchases
 a certificate from VeriSign to use in online transactions with customers.  When 
 customers connect to the bank's web-site, their browser receives the bank's 
-certificate, and looks up the CA of the certificate, finding VeriSign as the 
-signer. If it finds the VeriSign public key in its local trusted CA list, then 
-it can authenticate the connection.  Otherwise, authentication fails, and the 
-web page is not loaded. (At this point, some browsers appeal to the user that it 
-doesn't trust the signer of the certificate, and asks the user if they should, 
-by adding the signer to their list of trusted CAs.)
+certificate, and traces the signing chain, finding VeriSign as the signer. If it 
+finds the VeriSign certificate in its local trusted CA list, then it trusts that 
+the certificate it just received is the bank's, and can authenticate the connection.  
+Otherwise, authentication fails, and the web page is not loaded. (At this point, 
+some browsers appeal to the user that it doesn't trust the signer of the certificate, 
+and asks the user if they should, by adding the signer to their list of trusted CAs.)
+
 
 
 DataONE Authentication
@@ -62,21 +63,22 @@ DataONE relies on both end-users and servers (the MNs and CNs) to use these X.50
 certificates to authenticate themselves, and relies on CILogon to provide 
 certificates to end-users.
 
-The use of CILogon has two main advantages.  First, end-users can use existing
-accounts to obtain certificates, and don't need to create and remember another 
-username and password combination.  Second, once the user has downloaded the 
+The use of CILogon has two main advantages for end-users.  First, they can use existing
+accounts to obtain certificates, so don't need to create and remember another 
+username and password combination.  Second, once they have downloaded the 
 certificate, it will secure connections with all DataONE nodes throughout
-the day.  This technique is known as single-sign-on.
+the day, and can be used by multiple DataONE applications.  This technique is 
+known as single-sign-on.
 
 CILogon certificates issued for DataONE also have a third feature: they include
-additional DataONE Subjects associated with that CILogon Subject that will be 
-used for authorization decisions.  DataONE provides an Identity Management web
-application to end-users to set up and manage these associations.
+additional DataONE Subjects mapped to the certificate's Subject through DataONE's
+identity management service, the DataONE Portal.  In a nutshell, a DataONE identity
+is the set of user accounts and groups that a person maintains.
 
+For more information on CILogon see their FAQ_.
 
-CILogon overview 
-----------------
+The DataONE landing page for CILogon is here_.
 
-
-
+.. _FAQ: http://www.cilogon.org/faq
+.. _here: https://cilogon.org/?skin=DataONE
 
