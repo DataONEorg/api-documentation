@@ -4,20 +4,28 @@ DataONE Overview
 The major goal of NSFs `DataNet program`_ is to catalyze development of a
 system addressing the vision outlined in Chapter 3 (Data, Data Analysis, and
 Visualization) of NSF’s `Cyberinfrastructure Vision`_ for 21st Century
-Discovery [2] in which “science and engineering digital data are routinely
+Discovery in which “science and engineering digital data are routinely
 deposited in well-documented form, are regularly and easily consulted and
 analyzed by specialists and non-specialists alike, are openly accessible while
 suitably protected, and are reliably preserved.” The DataNet project DataONE_
 (Data Observation Network for Earth) is a federated data network built to
-improve access to Earth science data, and to support science by: (1) engaging
-the relevant science, data, and policy communities; (2) facilitating easy,
-secure, and persistent storage of data; and (3) disseminating integrated and
-user-friendly tools for data discovery, analysis, visualization, and
-decision-making.
+improve access to Earth science data, and to support science by: 
 
-.. image:: images/core_components.png
+  1. engaging the relevant science, data, and policy communities; 
+
+  2. facilitating easy, secure, and persistent storage of data;
+
+  3. disseminating integrated and user-friendly tools for data discovery,
+     analysis, visualization, and decision-making.
+
+.. image:: images/ReferenceArchitecture.png
+
+*Figure 1.* An overview of the major components of the DataONE architecture.
+
 
 ..
+  .. image:: images/core_components.png
+  
   @startuml images/core_components.png
   [lib_common]
   package ITK {
@@ -33,9 +41,7 @@ decision-making.
   [Coordinating Node] .. [lib_common]
   @enduml
 
-.. image:: images/ReferenceArchitecture.png
 
-*Figure 1* An overview of the major components of the DataONE architecture.
 
 There are three major components in the DataONE infrastructure: Member Nodes
 which represent data repositories, Coordinating Nodes which serve data
@@ -61,23 +67,58 @@ core, community building services include:
 ..
   [[ Member Node APIs diagram ]]
 
-Member Nodes are primarily existing data repositories (e.g. Dryad_, the
-`Knowledge Network for Biodiversity`_, `ORNL DAAC`_) that already fill an
-important role in their respective communities supporting data management,
-curation, discovery and access functions. Existing or new repositories can
-participate in the DataONE infrastructure by implementing a simple set of APIs
-(Application Programming Interfaces) which represent a convergence of
-functionality expressed in a variety of existing systems. These APIs include
-basic operations such as listing and retrieving objects, support for creation
-of content, and the ability to generate low level system metadata describing
-the various objects (data, metadata) exposed by the service. Member Nodes may
-implement a subset of the full suite of :doc:`Member Node
+Member Nodes are primarily existing data repositories (e.g. the `Knowledge
+Network for Biodiversity`_, `ORNL DAAC`_, `Partnership for Interdisciplinary
+Studies of Coastal Oceans`_) that already fill an important role in their
+respective communities supporting data management, curation, discovery and
+access functions. There are two main technical aspects to Member Node
+participation in DataONE - the service interfaces to be implemented (i.e. the
+:doc:`Member Node APIs</apis/MN_APIs>`), and the content that is to be served.
+At a fundamental level, all content in DataONE is treated as discrete,
+immutable objects, each of which has a unique identifier. A Member Node would
+be considered functionally complete if it were able to support the required
+services interfaces for :term:`Tier 1` participation (i.e. public access, read
+only content), and so enable the discovery of all objects available on the
+Member Node (through :func:`MNRead.listObjects`), low level description of
+each object (through :func:`MNRead.getSystemMetadata`), retrieval of the
+object given it's identifier (:func:`MNRead.get`), and reporting of activity
+(:func:`MNCore.getLogRecords`).
+
+There are basically three types of object being made available by Member Nodes
+and processed by DataONE: :term:`data object`s, :term:`science metadata`
+objects, and :term:`resource map documents`. Each of these are identifiable by
+their unique identifier (PID), and each has associated System Metadata which
+describes the type, size, and so forth of the object.
+
+:term:`Data objects` are treated as opaque blobs. The object availability is
+registered by the coordinating nodes, and the blob is retrievable via the
+:func:`MNRead.get` method given its identifier.
+
+:term:`Science metadata` objects are metadata documents such as EML, FGDC,
+ISO19115 and so forth that provide metadata describing some data object(s).
+These are represented in XML according to their respective schema.
+
+:term:`Resource map` documents describe the relationships between data and
+metadata - they are basically RDF documents that conform to the OAI-ORE
+specifications.
+
+From an object or class inheritance perspective, science metadata and resource
+maps might be considered specializations of the data object type in that more
+functionality is provided to DataONE by those types of object.
+
+From a purely technical perspective, a Member Node may be completely
+functional and not provide any metadata or resource map documents. It will
+mean that the content provided will not be discoverable through the search
+interfaces.
+
+Member Nodes may implement a subset of the full suite of :doc:`Member Node
 APIs</apis/MN_APIs>`, and in this way participate in the network with minimal
-effort (e.g. as a "read only" data source). Member Nodes that implement the
-full suite of APIs will be able to accept data from other Member Nodes which
-in turn assists with data preservation by ensuring multiple copies of all
-content are available, thus reducing the risk that content will be lost or
-inaccessible if a Member Node should go offline.
+effort (e.g. as a "read only" or :term:`Tier 1` Member Node). Member Nodes
+that implement the full suite of APIs (a :term:`Tier 4` Member Node) will be
+able to accept data from other Member Nodes which in turn assists with data
+preservation by ensuring multiple copies of all content are available, thus
+reducing the risk that content will be lost or inaccessible if a Member Node
+should go offline.
 
 Member Nodes may eventually number in the thousands as progressively smaller
 repositories come online, perhaps even to the level of individual labs
@@ -87,7 +128,7 @@ enabled by DataONE.
 ..
   [[ Coordinating Node APIs diagram ]]
 
-Coordinating Nodes implement critical services through the
+Coordinating Nodes make critical services available through the
 :doc:`APIs</apis/CN_APIs>` that enable identifier resolution, data
 preservation, data discovery, and supplement the federated identity system.
 Coordinating Nodes replicate all content between themselves, an in doing so
@@ -115,19 +156,11 @@ Similar extensions are being developed for workflow tools such as Kepler,
 VisTrails and Science Pipes to enable interaction with the core DataONE
 services.
 
-The :doc:`implementation roadmap</implementation/roadmap>` of DataONE targets
-an initial public release of the core cyberinfrastructure towards the end of
-2011, with considerable emphasis on stable implementation of the core
-services. At that point, the infrastructure will support content replication,
-identifier resolution, content discovery and retrieval, and a significant
-proportion of the federated identity infrastructure. The Investigator Toolkit
-will contain several components widely used by the community, and at least six
-significant data collections will be participating as Member Nodes. Several
-relatively minor subsequent releases will provide incremental enhancements to
-core capabilities. Additional Member Nodes will be progressively added to the
-infrastructure as resources permit- some repositories may have resources to
-independently implement the necessary APIs, others may require assistance from
-the DataONE development team.
+The DataONE infrastructure was released for public use in July 2012 and at
+that point supported identifier resolution, content discovery and retrieval
+and the federated identity management infrastructure. The replication service
+was implemented with release 1.1 of the infrastructure which occurred in May
+of 2013 and completed the core services of the infrastructure.
 
 
 .. _DataNet program:  http://www.nsf.gov/pubs/2007/nsf07601/nsf07601.htm
@@ -137,6 +170,8 @@ the DataONE development team.
 .. _DataONE: http://dataone.org/
 
 .. _Dryad: http://datadryad.org/
+
+.. _Partnership for Interdisciplinary Studies of Coastal Oceans: http://www.piscoweb.org/
 
 .. _Knowledge Network for Biodiversity: http://knb.ecoinformatics.org/
 

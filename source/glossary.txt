@@ -62,6 +62,8 @@ Glossary
 
    data
    Data
+   data object
+   Data object
 
      Typically refers to :term:`science data`. Where ambiguity between the
      science data and another form of data may be interpreted or implied, the
@@ -188,6 +190,8 @@ Glossary
 
    resource map
    resource maps
+   Resource map
+   Resource Map
 
      An OAI-ORE RDF document serialized in RDF/XML format that is used to
      indicate the relationships between :term:`data` and :term:`science
@@ -205,8 +209,8 @@ Glossary
      In the context of DataONE, a session refers to the operations that occur
      with a single authentication token.
 
-   data
    science data
+   Science data
 
      Science data that is stored in the DataONE system. See
      :doc:`design/WhatIsData` for a description of what is considered data in
@@ -214,6 +218,7 @@ Glossary
      as submitted to DataONE.
 
    science metadata
+   Science metadata
 
      Metadata that describes the data that is replicated across the Member
      Nodes.
@@ -241,6 +246,20 @@ Glossary
      properties about each object stored in the DataONE system. See
      :class:`Types.SystemMetadata` and :mod:`SystemMetadata`. Also referred to
      as :term:`sysmeta`\.
+
+   tier 1
+   Tier 1
+
+     A Member Node that implements the minimal set of programming interfaces
+     and operates as a read only, public access repository.
+
+   tier 4
+   Tier 4
+
+     A Member Node that implements the full set of programming interfaces, and
+     so supports authenticated read and write, and the ability to accept
+     copies of content from other Member Nodes under the direction of a
+     Coordinating Node.
 
    token
 
