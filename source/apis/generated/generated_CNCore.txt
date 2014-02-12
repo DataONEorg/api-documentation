@@ -450,6 +450,10 @@
 
    The operation does not delete the object bytes, but instead sets the :attr:`Types.SystemMetadata.archived` flag to True. This ensures that the object can still be resolved (and hence remain valid for existing citations and cross references), though will not appear in searches.
 
+   Objects that are archived can not be updated through the :func:`MNStorage.update` operation.
+
+   Archived objects can not be un-archived. This behavior may change in future versions of the DataONE API.
+
    The CN should ensure that all MNs holding a copy of the object are informed of the change so that they may update their information about the object.
 
    :REST URL: ``PUT /archive/{pid}``

@@ -140,6 +140,16 @@ components of a MIME multipart-mixed message body.
 Unless otherwise indicated, all parameter names and values should be considered
 case sensitive. 
 
+
+.. Note:: 
+
+   The default configuration of web servers such as Apache introduces some
+   ambiguity in the interpretation of URLs that include slashes and other
+   reserved characters that are used as path separators for example. The
+   document :doc:`/notes/ApacheConfiguration` describes appropriate
+   configuration details for the Apache web server.
+
+
 Session Information
 ...................
 
@@ -254,12 +264,4 @@ accompanying integration tests that exercise the technologies involved.
 .. _RFC2046: http://tools.ietf.org/html/rfc2046#section-5.1.3
 
 .. _RFC3986: http://tools.ietf.org/html/rfc3986
-
-
-
-REST Endpoint Summary
-~~~~~~~~~~~~~~~~~~~~~
-
-.. include:: generated/generated_rest_summarytable.txt
-
 

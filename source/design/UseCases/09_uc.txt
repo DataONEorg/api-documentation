@@ -257,16 +257,16 @@ Member Node replication.
   participant "DistributedExecutorService" as cnZ <<CN-Z>>
 
  == Replication Audit ==
- 	
- 	note left of cnQuartz
- 	 Quartz scheduled execution 
- 	 of replica audit processing.
- 	end note
- 	
-   	cnQuartz -> cnAudit : auditReplicas()
- 	activate cnAudit #D74F57
+   
+   note left of cnQuartz
+    Quartz scheduled execution 
+    of replica audit processing.
+   end note
+   
+     cnQuartz -> cnAudit : auditReplicas()
+   activate cnAudit #D74F57
 
-   	cnAudit -> cnAudit : aquireReplicaAuditingLock();
+     cnAudit -> cnAudit : aquireReplicaAuditingLock();
 
    note over auditDao
      Query the Metacat replica system metadata replica status 
@@ -277,44 +277,44 @@ Member Node replication.
    cnAudit <-- auditDao : List<Identifier> pidsToAudit
 
    loop for each Identifier pid in pidsToAudit
-	   note over cnAudit
-		   Create ReplicaAuditTasks if not already being handled.  
-		   Tasks can be configured to batch several Identifiers
-		   into tasks or to create a task for each Identifier.
-	   end note
-   		alt if pid NOT in hzProcessingAuditIdentifiers
-   			cnAudit -> cnAudit : replicaAuditTasks.add(new ReplicaAuditTask(pid));
-   		end
-   		alt if replicaAuditTasks.size => replicaBatchSize
-   			note over cnAudit
-   			    accumulatedTaskFuture List holds futures generated on this iteration.
-   			    futuresToHandle holds futures generated on last iteration.
-   			    Assumption is futures provided to distributed execution service on 
-   			    previous iteration should have executed asynch already.
-   			end note
-   			cnAudit -> cnAudit : futuresToHandle = accumulatedTaskFutures;  // futures from last batch
-   			cnAudit -> cnAudit : accumulatedTaskFutures.clear();
-   			loop for each ReplicaAuditTask auditTask in replicaAuditTasks
-   				note over cnZ
-   					Hazelcast distributed executor service used to 
-   					distribute audit tasks among CN nodes.
-   				end note
-   				cnAudit -> cnZ : submit(auditTask);
-   				cnAudit -> cnAudit : hzProcessingAuditIdentfiers.removeAll(auditTask.pid);
-   				cnZ --> cnAudit : Future replicaTaskFuture;
-   				cnAudit -> cnAudit : accumulatedTaskFutures.add(replicaTaskFuture);
-   			end loop
-   			cnAudit -> cnAudit : replicaAuditTasks.clear(); // prepare for next batch tasks.
-   			loop for each Future replicaTaskFuture in futuresToHandle
-   				cnAudit -> cnAudit : handleResult(replicaTaskFuture.get());
-   			end loop
-   		end
+     note over cnAudit
+       Create ReplicaAuditTasks if not already being handled.  
+       Tasks can be configured to batch several Identifiers
+       into tasks or to create a task for each Identifier.
+     end note
+       alt if pid NOT in hzProcessingAuditIdentifiers
+         cnAudit -> cnAudit : replicaAuditTasks.add(new ReplicaAuditTask(pid));
+       end
+       alt if replicaAuditTasks.size => replicaBatchSize
+         note over cnAudit
+             accumulatedTaskFuture List holds futures generated on this iteration.
+             futuresToHandle holds futures generated on last iteration.
+             Assumption is futures provided to distributed execution service on 
+             previous iteration should have executed asynch already.
+         end note
+         cnAudit -> cnAudit : futuresToHandle = accumulatedTaskFutures;  // futures from last batch
+         cnAudit -> cnAudit : accumulatedTaskFutures.clear();
+         loop for each ReplicaAuditTask auditTask in replicaAuditTasks
+           note over cnZ
+             Hazelcast distributed executor service used to 
+             distribute audit tasks among CN nodes.
+           end note
+           cnAudit -> cnZ : submit(auditTask);
+           cnAudit -> cnAudit : hzProcessingAuditIdentfiers.removeAll(auditTask.pid);
+           cnZ --> cnAudit : Future replicaTaskFuture;
+           cnAudit -> cnAudit : accumulatedTaskFutures.add(replicaTaskFuture);
+         end loop
+         cnAudit -> cnAudit : replicaAuditTasks.clear(); // prepare for next batch tasks.
+         loop for each Future replicaTaskFuture in futuresToHandle
+           cnAudit -> cnAudit : handleResult(replicaTaskFuture.get());
+         end loop
+       end
    end loop
    note over cnAudit
-   		Handle futures from last batch of audit tasks
+       Handle futures from last batch of audit tasks
    end note
    loop for each Future replicaTaskFuture in accumulatedTaskFutures
-   		cnAudit->cnAudit: handleResult(replicaTaskFuture);
+       cnAudit->cnAudit: handleResult(replicaTaskFuture);
    end loop
    deactivate cnAudit
 
@@ -330,7 +330,7 @@ MN has notified the CN of such, and the CN will schedule a synchronize
 operation that will verify the copy as legitimate.
 
 Implementation Details
-----------------------
+~~~~~~~~~~~~~~~~~~~~~~
 
 Replication of objects between Member Nodes (MN) within the DataONE system is
 managed by the Coordinating Nodes (CN). CNs are aware of the replication
@@ -346,7 +346,7 @@ Replication can be initiated in three ways:
     CN (not implemented)
 
 Replication Events
-------------------
+~~~~~~~~~~~~~~~~~~
 
 The CN's maintain a synchronized, distributed Hazelcast Map of system
 metadata (hzSystemMetadata). This map reflects the current state of the
@@ -381,7 +381,7 @@ ReplicationTask.
 
 
 Processing Replication Tasks
-----------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 As the hzReplicationTasks queue is populated, each CN's Replication Service
 receives entry added events and polls the queue with a short timeout to submit
@@ -426,56 +426,56 @@ indicated in use case 06.
 
 
 Replication Auditing
----------------------
+~~~~~~~~~~~~~~~~~~~~
 
 
 
 .. image:: images/09_seq_audit_1.png
 
 ..
-	@startuml images/09_seq_audit_2.png
-  	skinparam notebordercolor #AAAAAA
-  	skinparam notefontcolor #222222
-  	title Replica Audit Task Procesing.\n\n
-	participant "ReplicaAuditService" as cnAudit <<CN-1>>
-  	participant "DistributedExecutorService" as cnZ <<CN-Z>>
-  	participant "ReplicaAuditTask" as auditTask <<CN-Z>>
-  	participant "d1Client.CNode : CNodeClient" as cNodeClient <<CN-Z>>
-	participant "d1Client.MNode : MNodeClient" as mnA <<MN-A>>
-	participant "ReplicationManager" as repManager <<CN-Z>>
+  @startuml images/09_seq_audit_2.png
+    skinparam notebordercolor #AAAAAA
+    skinparam notefontcolor #222222
+    title Replica Audit Task Procesing.\n\n
+  participant "ReplicaAuditService" as cnAudit <<CN-1>>
+    participant "DistributedExecutorService" as cnZ <<CN-Z>>
+    participant "ReplicaAuditTask" as auditTask <<CN-Z>>
+    participant "d1Client.CNode : CNodeClient" as cNodeClient <<CN-Z>>
+  participant "d1Client.MNode : MNodeClient" as mnA <<MN-A>>
+  participant "ReplicationManager" as repManager <<CN-Z>>
 
  == Process replication audit. ==
-	cnAudit -> cnZ : submit(replicaAuditTask);
-  	cnZ -> cnZ: execute(replicaAuditTask);
-  	cnZ -> auditTask : call()
-  	activate auditTask #D74F57
-	
-	loop for each Identifier pid in auditTask.pids
-  		auditTask -> cNodeClient : getSystemMetadata(pid);
-  		cNodeClient --> auditTask : sysMetadata;
-  		auditTask -> auditTask : verifiedReplicaCount = 0;
-  		loop for each Replica replica in sysMetadata.getReplicaList()
-  			auditTask -> auditTask : mnA = getMNodeClient(replica.getReplicaMemberNode());
-  			auditTask -> mnA : replicaChecksum = getChecksum(pid, sysMeta.getChecksum());
-  			alt if replicaChecksum == sysMetadata.getChecksum()
-  				auditTask -> auditTask : verfiedReplicaCount++;
-  				auditTask -> auditTask : replica.updateVerifiedDate(today);
-  				auditTask -> cNodeClient : updateReplicationMetadata(pid, replica);
-  			else else
-  				auditTask -> auditTask : replica.setReplicationStatus(INVALID);
-  				auditTask -> cNodeClient : updateReplicationMetadata(pid, replica);
-  				auditTask -> repManager : createAndQueueTasks(pid);
-  			end
-  		end loop
-  		alt if sysMetadata.getReplicationPolicy().getNumberReplicas !== verifiedReplicaCount
-  			auditTask -> repManager : createAndQueueTasks(pid);
-  		end
-  	end loop
-	
-	auditTask --> cnZ : String audit result
-	deactivate auditTask
-	
-	cnZ --> cnAudit : Future - audit results including exceptions
+  cnAudit -> cnZ : submit(replicaAuditTask);
+    cnZ -> cnZ: execute(replicaAuditTask);
+    cnZ -> auditTask : call()
+    activate auditTask #D74F57
+  
+  loop for each Identifier pid in auditTask.pids
+      auditTask -> cNodeClient : getSystemMetadata(pid);
+      cNodeClient --> auditTask : sysMetadata;
+      auditTask -> auditTask : verifiedReplicaCount = 0;
+      loop for each Replica replica in sysMetadata.getReplicaList()
+        auditTask -> auditTask : mnA = getMNodeClient(replica.getReplicaMemberNode());
+        auditTask -> mnA : replicaChecksum = getChecksum(pid, sysMeta.getChecksum());
+        alt if replicaChecksum == sysMetadata.getChecksum()
+          auditTask -> auditTask : verfiedReplicaCount++;
+          auditTask -> auditTask : replica.updateVerifiedDate(today);
+          auditTask -> cNodeClient : updateReplicationMetadata(pid, replica);
+        else else
+          auditTask -> auditTask : replica.setReplicationStatus(INVALID);
+          auditTask -> cNodeClient : updateReplicationMetadata(pid, replica);
+          auditTask -> repManager : createAndQueueTasks(pid);
+        end
+      end loop
+      alt if sysMetadata.getReplicationPolicy().getNumberReplicas !== verifiedReplicaCount
+        auditTask -> repManager : createAndQueueTasks(pid);
+      end
+    end loop
+  
+  auditTask --> cnZ : String audit result
+  deactivate auditTask
+  
+  cnZ --> cnAudit : Future - audit results including exceptions
 
   @enduml
 .. image:: images/09_seq_audit_2.png
@@ -485,56 +485,56 @@ Replication Auditing
 .. 
    @startuml images/09_uc_audit_components.png
 
-	title CN Replication Auditing Components
-		
-	node "CN Audit Process(D1 Processing)" {
-		frame "CN Replication Auditor" {
-			frame "CN Common" {
-				[ReplicationDao]
-		  	}
-		  	frame "CN Replication" {
-		  		[Replication Service]
-			}	  	
-	  		[CNAuditLogClient] --> [cn-audit-index] : add/remove log entries
-	  	}
-	}
-	
-	database "psql" {
-		frame "metacat" {
-			[smreplicationstatus] --> [ReplicationDao] : select audit candidates
-		}
-	}
-	
-	node "CN Service" {
-		[REST Service] <-- [Replication Service] : update replica status/verified date
-	}
-	
-	cloud "hazelcast" {
-		frame "d1-processing" {
-			[Replication Event Queue] <-- [Replication Service] : submit pids to replication
-		}
-	}
-	
-	cloud "CN Audit Log Cloud" as auditCloud {
-	
-		node "Zookeeper" {
-			[index config] --> [cn-audit-index] : aquire cloud config
-			[leader election] --> [cn-audit-index] : coordinate leader
-			[replication] --> [cn-audit-index] : coordinate cloud
-		}
-		node "jetty" {
-			node "Solr 4" {
-				frame "cn-audit-index"{
-				}
-			}
-		}
-	}
-	
-	
-	
-	note "Each CN will be running its own instance of the zookeeper and jetty/solr.\n This forms the cloud cluster." as N1
-	
-	@enduml
+  title CN Replication Auditing Components
+    
+  node "CN Audit Process(D1 Processing)" {
+    frame "CN Replication Auditor" {
+      frame "CN Common" {
+        [ReplicationDao]
+        }
+        frame "CN Replication" {
+          [Replication Service]
+      }      
+        [CNAuditLogClient] --> [cn-audit-index] : add/remove log entries
+      }
+  }
+  
+  database "psql" {
+    frame "metacat" {
+      [smreplicationstatus] --> [ReplicationDao] : select audit candidates
+    }
+  }
+  
+  node "CN Service" {
+    [REST Service] <-- [Replication Service] : update replica status/verified date
+  }
+  
+  cloud "hazelcast" {
+    frame "d1-processing" {
+      [Replication Event Queue] <-- [Replication Service] : submit pids to replication
+    }
+  }
+  
+  cloud "CN Audit Log Cloud" as auditCloud {
+  
+    node "Zookeeper" {
+      [index config] --> [cn-audit-index] : aquire cloud config
+      [leader election] --> [cn-audit-index] : coordinate leader
+      [replication] --> [cn-audit-index] : coordinate cloud
+    }
+    node "jetty" {
+      node "Solr 4" {
+        frame "cn-audit-index"{
+        }
+      }
+    }
+  }
+  
+  
+  
+  note "Each CN will be running its own instance of the zookeeper and jetty/solr.\n This forms the cloud cluster." as N1
+  
+  @enduml
    
    
    

@@ -100,7 +100,9 @@
 
    Updates an existing object by creating a new object identified by *newPid* on the Member Node which explicitly obsoletes the object identified by *pid* through appropriate changes to the SystemMetadata of *pid* and *newPid*.
 
-   The Member Node sets :attr:`SystemMetadata.obsoletedBy` on the object being obsoleted to the *pid* of the new object. It then updates :attr:`SystemMetadata.dateSysMetadataModified` on both the new and old objects. The modified system metadata entries then become available in :func:`MNRead.listObjects`. This ensures that a Coordinating Node will pick up the changes when filtering on :attr:`SystmeMetadata.dateSysMetadataModified`.
+   The Member Node sets :attr:`Types.SystemMetadata.obsoletedBy` on the object being obsoleted to the *pid* of the new object. It then updates :attr:`Types.SystemMetadata.dateSysMetadataModified` on both the new and old objects. The modified system metadata entries then become available in :func:`MNRead.listObjects`. This ensures that a Coordinating Node will pick up the changes when filtering on :attr:`Types.SystemMetadata.dateSysMetadataModified`.
+
+   The update operation MUST fail with :exc:`Exceptions.InvalidRequest` on objects that have the :attr:`Types.SystemMetadata.archived` property set to true.
 
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`
@@ -152,6 +154,8 @@
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=1201)``
 
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=1202)``
+
+     Raised when the request parameters are incorrect or the operation is not applicable to the current state of the object (e.g. an archived object can not be updated)
 
 
 
@@ -238,6 +242,10 @@
    Hides an object managed by DataONE from search operations, effectively preventing its discovery during normal operations.
 
    The operation does not delete the object bytes, but instead sets the :attr:`Types.SystemMetadata.archived` flag to True. This ensures that the object can still be resolved (and hence remain valid for existing citations and cross references), though will not appear in searches.
+
+   Objects that are archived can not be updated through the :func:`MNStorage.update` operation.
+
+   Archived objects can not be un-archived. This behavior may change in future versions of the DataONE API.
 
    Member Nodes MUST check that the caller is authorized to perform this function.
 

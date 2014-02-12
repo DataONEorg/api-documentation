@@ -9,6 +9,18 @@ Glossary
      Application Programming Interface. Software interacts with libraries,
      applications, and systems through APIs they expose. See also :doc:`apis/index`.
 
+   archived
+
+     Refers to a boolean property in System Metadata which when set to true,
+     indicates that the object is in an archived state. Conceptually, this
+     means that no further derivatives may be made from this object, it is at
+     the terminus of its version lineage. Technically, this means that the
+     object is removed from search indexes and the update method will fail
+     when applied to the object, other properties such as access control and
+     ownership information are unchanged. This is enforced by the
+     Coordinating Nodes and expected of Member Nodes. Compare with
+     :term:`obsoleted`.
+
    authentication
 
      Authentication is the process of verifying a claim made by a subject that
@@ -44,21 +56,22 @@ Glossary
 
    CN
    Coordinating Node
+   Coordinating Nodes
 
      One of at least three nodes in the DataONE cyberinfrastructure that is
      responsible for maintaining a complete collection of all :term:`science
      metadata`, all :term:`system metadata`, a record of the location of all
      objects stored in the :term:`DataONE` system, and provides mechanisms for
-     search and retrieval of all content. Coordinating Nodes store all original
-     copies of :term:`science metadata`. All Coordinating Node content is
-     replicated between other Coordinating Nodes. Coordinating Nodes drive
-     the replication of content between Member Nodes.
+     search and retrieval of all content. Coordinating Nodes store all
+     original copies of :term:`science metadata`. All Coordinating Node
+     content is replicated between other Coordinating Nodes. Coordinating
+     Nodes drive the replication of content between Member Nodes.
 
    Coordinating Node Replication
 
-     Refers to the process by which content that appears on any one Coordinating
-     Node is mirrored to all other Coordinating Nodes. See also :term:`Member
-     Node synchronization` and :term:`data replication`.
+     Refers to the process by which content that appears on any one
+     Coordinating Node is mirrored to all other Coordinating Nodes. See also
+     :term:`Member Node synchronization` and :term:`data replication`.
 
    data
    Data
@@ -96,9 +109,10 @@ Glossary
 
    formatId
 
-     An element in :term:`System Metadata` that is used to indicate the type of
-     content represented by the digital object. The complete list of formats can
-     be retrieved through the :func:`CNCore.listFormats` operation.
+     An element in :term:`System Metadata` that is used to indicate the type
+     of content represented by the digital object. The complete list of
+     formats can be retrieved through the :func:`CNCore.listFormats`
+     operation.
 
    Group
    group
@@ -112,8 +126,8 @@ Glossary
    pid
    PID
 
-     Persistent Unique Identifier. A string of printable Unicode characters that
-     uniquely identifies an object within the DataONE infrastructure. See
+     Persistent Unique Identifier. A string of printable Unicode characters
+     that uniquely identifies an object within the DataONE infrastructure. See
      :class:`Types.Identifier`
 
    identity 
@@ -135,8 +149,8 @@ Glossary
 
      A data holding node that implements all or the essential elements of the
      member mode :term:`API`\s (see :doc:`apis/MN_APIs`). Member Nodes accept
-     content from users and may store content replicated from other member nodes
-     as directed by a Coordinating Node.
+     content from users and may store content replicated from other member
+     nodes as directed by a Coordinating Node.
 
    metadata
 
@@ -155,6 +169,18 @@ Glossary
      A list of nodes participating in DataONE maintained by Coordinating
      Nodes. Entries in node registry may be retrieved through the
      :func:`CNCore.listNodes` method of a Coordinating Node.
+
+   obsoleted
+
+     An object is in an obsoleted state when the obsoletedBy property of its
+     system metadata contains an entry to a newer revision of the object. The
+     system metadata of the newer object will contain an obsoletes entry in
+     its system metadata, which contains the PID of the obsoleted object. An
+     object may obsolete another object and be obsoleted as well, indicating
+     that the object has bother older and newer revisions of itself. Obsoleted
+     content will continue to be discoverable through the search index, though
+     not by default.
+
 
    Origin Member Node 
 
@@ -227,7 +253,8 @@ Glossary
    subjects
    Subject
 
-     Princpals (users) that are a recognized :term:`identity` in the DataONE system.
+     Princpals (users) that are a recognized :term:`identity` in the DataONE
+     system.
 
    synchronized
    synchronization

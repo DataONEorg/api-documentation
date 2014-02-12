@@ -2,9 +2,9 @@ DataONE APIs
 ============
 
 The DataONE infrastructure exposes application programming interfaces (APIs)
-that support interaction between components (:term:`Coordinating Node`,
-:term:`Member Node`, and the :term:`Investigator Toolkit`) and to support
-development of applications that interact with the DataONE infrastructure.
+that support interaction between :term:`Member Node` and :term:`Coordinating
+Node`, and to support development of applications that interact with the
+DataONE infrastructure (elements of the :term:`Investigator Toolkit`).
 
 .. figure:: images/componentMethods.png 
    :figwidth: 100%
@@ -13,8 +13,8 @@ development of applications that interact with the DataONE infrastructure.
    by each component. An arrow to a target indicates the origin is calling the
    method on the target.
 
-Services are implemented using a RESTful model using HTTP as the transport
-protocol and XML for encoding messages.
+All services in DataONE are implemented using a RESTful approach with HTTPS
+(or HTTP) as the transport protocol and XML for encoding messages. 
 
 Member Nodes can expose different levels of functionality that equate to four
 different tiers while participating in the DataONE network. The tiers and Member

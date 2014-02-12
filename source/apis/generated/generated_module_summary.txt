@@ -101,7 +101,8 @@ The caller MUST have authorization to write or create content on the Member Node
      - :func:`MNStorage.update`
      - This method is called by clients to update objects on Member Nodes.
 Updates an existing object by creating a new object identified by *newPid* on the Member Node which explicitly obsoletes the object identified by *pid* through appropriate changes to the SystemMetadata of *pid* and *newPid*.
-The Member Node sets :attr:`SystemMetadata.obsoletedBy` on the object being obsoleted to the *pid* of the new object. It then updates :attr:`SystemMetadata.dateSysMetadataModified` on both the new and old objects. The modified system metadata entries then become available in :func:`MNRead.listObjects`. This ensures that a Coordinating Node will pick up the changes when filtering on :attr:`SystmeMetadata.dateSysMetadataModified`.
+The Member Node sets :attr:`Types.SystemMetadata.obsoletedBy` on the object being obsoleted to the *pid* of the new object. It then updates :attr:`Types.SystemMetadata.dateSysMetadataModified` on both the new and old objects. The modified system metadata entries then become available in :func:`MNRead.listObjects`. This ensures that a Coordinating Node will pick up the changes when filtering on :attr:`Types.SystemMetadata.dateSysMetadataModified`.
+The update operation MUST fail with :exc:`Exceptions.InvalidRequest` on objects that have the :attr:`Types.SystemMetadata.archived` property set to true.
 
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
    * - \
@@ -120,6 +121,8 @@ If the object does not exist on the node servicing the request, then an :exc:`Ex
      - :func:`MNStorage.archive`
      - Hides an object managed by DataONE from search operations, effectively preventing its discovery during normal operations. 
 The operation does not delete the object bytes, but instead sets the :attr:`Types.SystemMetadata.archived` flag to True. This ensures that the object can still be resolved (and hence remain valid for existing citations and cross references), though will not appear in searches.
+Objects that are archived can not be updated through the :func:`MNStorage.update` operation. 
+Archived objects can not be un-archived. This behavior may change in future versions of the DataONE API.
 Member Nodes MUST check that the caller is authorized to perform this function.
 If the object does not exist on the node servicing the request, then an :exc:`Exceptions.NotFound` exception is raised. The message body of the exception SHOULD contain a hint as to the location of the :func:`CNRead.resolve` method.
    * - :mod:`MNReplication`
@@ -133,21 +136,18 @@ Access control for this method MUST be configured to allow calling by Coordinati
    * - :mod:`MNQuery`
      - :func:`MNQuery.query`
      - Submit a query against the specified *queryEngine* and return the response as formatted by the queryEngine.
-The *query()* operation may be implemented by more than one type of search engine and the *queryEngine* parameter indicates which search engine is targeted. The value and form of *query* is determined by the specific query engine.
+The :func:`MNQuery.query` operation may be implemented by more than one type of search engine and the *queryEngine* parameter indicates which search engine is targeted. The value and form of *query* is determined by the specific query engine.
 For example, the SOLR search engine will accept many of the standard parameters of SOLR, including field restrictions and faceting.
 This method is optional for Member Nodes, but if implemented, both getQueryEngineDescription and listQueryEngines must also be implemented.
-.. NOTE:: This method is in DRAFT status and is scheduled for version 1.1 of the APIs
 
        Appears in functional use cases: :doc:`UC02 </design/UseCases/02_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
    * - \
      - :func:`MNQuery.getQueryEngineDescription`
      - Provides metadata about the query service of the specified *queryEngine*. The metadata provides a brief description of the query engine, its version, its schema version, and an optional list of fields supported by the query engine.
-.. NOTE:: This method is in DRAFT status and is scheduled for version 1.1 of the APIs
    * - \
      - :func:`MNQuery.listQueryEngines`
      - Returns a list of query engines, i.e. supported values for the *queryEngine* parameter of the *getQueryEngineDescription* and *query* operations.
 The list of search engines available may be influenced by the authentication status of the request.
-.. NOTE:: This method is in DRAFT status and is scheduled for version 1.1 of the APIs
    * - :mod:`CNCore`
      - :func:`CNCore.ping`
      - Low level "are you alive" operation. A valid ping response is indicated by a HTTP status of 200. A timestmap indicating the current system time (UTC) on the node MUST be returned in the HTTP Date header.
@@ -204,6 +204,8 @@ The delete operation is used only by administrators in response to a request to 
      - :func:`CNCore.archive`
      - Hides an object managed by DataONE from search operations, effectively preventing its discovery during normal operations. 
 The operation does not delete the object bytes, but instead sets the :attr:`Types.SystemMetadata.archived` flag to True. This ensures that the object can still be resolved (and hence remain valid for existing citations and cross references), though will not appear in searches.
+Objects that are archived can not be updated through the :func:`MNStorage.update` operation. 
+Archived objects can not be un-archived. This behavior may change in future versions of the DataONE API.
 The CN should ensure that all MNs holding a copy of the object are informed of the change so that they may update their information about the object.
    * - \
      - :func:`CNCore.listNodes`
