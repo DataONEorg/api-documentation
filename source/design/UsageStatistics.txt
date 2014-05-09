@@ -1,0 +1,60 @@
+
+Introduction
+------------
+
+DataONE Member Nodes and Coordinating Nodes record access events that result from DataONE API calls. A 
+list of access events and the API calls that triggered them is shown in *Table 1*
+
+
+The following queries illustrate some of the information that can be obtained from the Event Log Solr index.
+
+**Download volume for pids created by subject *smith* with download size statistics aggregated by formatId**
+   
+::
+ 
+  https://cn.dataone.org/cn/v1/log/select?q=*:*&fq=subject:uid=*smith*&fq=event:read&stats=true&stats.field=size&rows=0&stats.facet=formatId
+ 
+**Time range based on date of access event**
+   
+::
+
+  https://cn.dataone.org/cn/v1/log/select?q=dateLogged:[2014-03-01T00:00:01Z%20TO%202014-03-31T00:00:01Z]
+
+**Counts of event types**
+
+::
+
+  https://cn.dataone.org/cn/v1/log/select?q=dateLogged:[* TO NOW]&facet=true&facet.field=event
+
+**Wildcard search for pids**
+
+::
+                                                                                                                                                                                                                                                      
+  https://cn.dataone.org/cn/v1/log/select?q=pid:sla.1*&facet=true&facet.field=pid&facet.mincount=1
+
+**Spatial search for events within 10km of the latitude, longitude of Santa Barbara, CA**
+
+::
+
+  https://cn.dataone.org/cn/v1/log/select?q=*:*&fq={!geofilt sfield=location pt=34.4329,-119.837 d=10}
+
+**Search by city name for events occuring in Albuquerque**
+
+::
+
+  https://cn.dataone.org/cn/v1/log/select?q*:*&fq=city:Albuquerque
+
+**Aggregated by location name**
+
+::
+
+ https://cn.dataone.org/cn/v1/log/select?q=event:create&facet=true&facet.field=city
+ 
+ **Data read counts by month**
+ https://cn.dataone.org/solr/d1-cn-log/select/?q=*:*&fq=event:read&formatType=DATA&facet=true&facet.range=dateLogged&facet.range.start=2014-01-01T00:00:00.000Z&facet.range.end=2015-01-01T00:00:00.000Z&facet.range.gap=%2B1MONTH
+ 
+ 
+ **Metadata read counts by month**
+ 
+  https://cn.dataone.org/solr/d1-cn-log/select/?q=*:*&fq=event:read&formatType=METADATA&facet=true&facet.range=dateLogged&facet.range.start=2014-01-01T00:00:00.000Z&facet.range.end=2015-01-01T00:00:00.000Z&facet.range.gap=%2B1MONTH
+ 
