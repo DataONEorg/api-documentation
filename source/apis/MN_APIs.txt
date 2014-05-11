@@ -83,6 +83,17 @@ engine types will be supported.
 
 .. include:: generated/generated_MNQuery.txt
 
+View API
+~~~~~~~~~
+
+.. module:: MNView
+   :synopsis: An optional tier 1 API for Member Node support of metadata and data views.
+
+The *MNView* API is an optional API that may be implemented by Member Nodes
+that intend to support providing rendered views of content on their repository. Each repository can implement multipe themed views of their content, each accesed using the name of the theme and the identifier of the content to be viewed.  Unlike the MNRead service, which returns the exact bytes of content, the MNView service provides a rendered view of the content which can transform the content into different formats.  The most common use of the view service will likely be to provide a rendered HTML landing page at a well-known URL that can be used to provide a human-readable view of metadata and data.  Other potential uses include providing alternative formats for metadata and data.  Each Member Node that implements the MNView service must implement at least one theme named 'default' which provides the default view of all content.  Other themes can be provided for use by various clients.
+
+.. include:: generated/generated_MNView.txt
+
 
 Authorization API
 ~~~~~~~~~~~~~~~~~

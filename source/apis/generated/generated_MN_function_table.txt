@@ -95,4 +95,12 @@
      - ``GET /query``
      - :func:`MNQuery.listQueryEngines`
      - (:class:`session<Types.Session>`) ``->`` :class:`Types.QueryEngineList`
+   * - Tier 1
+     - ``GET /views/{theme}/{pid}``
+     - :func:`MNView.view`
+     - (:class:`session<Types.Session>`, ``theme``, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.OctetStream`
+   * - Tier 1
+     - ``GET /views``
+     - :func:`MNView.listViews`
+     - (:class:`session<Types.Session>`) ``->`` :class:`Types.OptionList`
 

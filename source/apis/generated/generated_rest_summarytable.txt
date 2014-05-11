@@ -68,6 +68,12 @@
    * - GET /query
      - :func:`MNQuery.listQueryEngines`
      - Returns a list of query engines, i.e. supported values for the *queryEngine* parameter of the *getQueryEngineDescription* and *query* operations. The list of search engines available may be influenced by the authentication status of the request.
+   * - GET /views/{theme}/{pid}
+     - :func:`MNView.view`
+     - Provides a formatted view of an object (science metadata, data, resource, or other) using the given named theme. If this service is implemented, the :func:`MNView.view` operation must implement at least one {theme} named 'default' to provide a standard (possibly minimalistic) view of the content in HTML format. If the {theme} parameter is not recognized, the service must render the object using the default theme rather than throwing an error.  Note that the return type of Types.OctetStream requires that the consuming client has a priori knowledge of the theme being returned (like HTML). Response headers must include the correct mime-type of the view being returned. This method is optional for Member Nodes, but if implemented,  MNView.listViews must also be implemented.
+   * - GET /views
+     - :func:`MNView.listViews`
+     - Provides a list of usable themes for rendering content in a view, including a required 'default' theme. The list of themes is provided as an OptionList, where the option key should be used as the theme name in calls to MNView.view, and the description provides a human readable description of what will be returned fo rthat theme. This method is optional for Member Nodes, but if implemented,  MNView.view must also be implemented.
 
 
 .. list-table:: REST URLs implemented on Coordinating Nodes.
