@@ -31,6 +31,17 @@ system metadata and exposes log records held by CNs.
 
 .. include:: generated/generated_CNRead.txt
 
+View API
+~~~~~~~~
+
+.. module:: CNView
+   :synopsis: View operations to see formatted versions of metadata and data for Coordinating Nodes
+
+The *CNView* API implements methods that enable viewing content 
+on a :term:`Coordinating Node`. Like the MNView service, the CNView service provides a transformed view of a metadata file, data file, or package.  The CNView service provides a default view for all content, and may choose to redirect a review request to the authoritative Member Node for a given PID. 
+
+.. include:: generated/generated_CNView.txt
+
 
 Authorization API
 ~~~~~~~~~~~~~~~~~

@@ -94,6 +94,16 @@ that intend to support providing rendered views of content on their repository. 
 
 .. include:: generated/generated_MNView.txt
 
+Package API
+~~~~~~~~~~~
+
+.. module:: MNPackage
+   :synopsis: An optional tier 1 API for Member Node support of downloads of whole packages. 
+
+The *MNPackage* API is an optional API that may be implemented by Member Nodes
+that intend to support downloading all of the contents of a data package in a single API call. Without this service, a client application must individually retrieve each of the metadata and data components of a package as they are listed in the ORE document that describes the package.  Using the MNPackage service, a caller can instead request a serialized form of all of the data in a package, which is returned in the format requested.  All implementations must support the BagIt format specification, but may also support additional well-defined packaging standards and specifications.
+
+.. include:: generated/generated_MNPackage.txt
 
 Authorization API
 ~~~~~~~~~~~~~~~~~

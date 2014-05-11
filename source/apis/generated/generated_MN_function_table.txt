@@ -103,4 +103,8 @@
      - ``GET /views``
      - :func:`MNView.listViews`
      - (:class:`session<Types.Session>`) ``->`` :class:`Types.OptionList`
+   * - Tier 1
+     - ``GET /packages/{packageType}/{pid}``
+     - :func:`MNPackage.getPackage`
+     - (:class:`session<Types.Session>`, :class:`packageType<Types.ObjectFormatIdentifier>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.OctetStream`
 

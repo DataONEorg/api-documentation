@@ -74,6 +74,9 @@
    * - GET /views
      - :func:`MNView.listViews`
      - Provides a list of usable themes for rendering content in a view, including a required 'default' theme. The list of themes is provided as an OptionList, where the option key should be used as the theme name in calls to MNView.view, and the description provides a human readable description of what will be returned fo rthat theme. This method is optional for Member Nodes, but if implemented,  MNView.view must also be implemented.
+   * - GET /packages/{packageType}/{pid}
+     - :func:`MNPackage.getPackage`
+     - Provides all of the content of a DataONE data package as defined by an OAI-ORE document in DataONE, in one of several possible package serialization formats.  The serialized package will contain all of the data described in the ORE aggregation. The default implementation will include packages in the BagIt format.  The packageType formats must be specified using the associated ObjectFormat formatId for that package serialization format. The {pid} parameter can be the PID associated with an ORE package description, or it can be the PID of one of the science metadata documents or data files contained within the package.  The Member Node should locate the package associated with such a PID and return that, so calling applications should be aware that the PID of the returned package may differ from the PID that was requested. This method is optional for Member Nodes.
 
 
 .. list-table:: REST URLs implemented on Coordinating Nodes.
@@ -224,3 +227,9 @@
    * - POST /node
      - :func:`CNRegister.register`
      - Register a new node in the system. If the node already exists, then a :exc:`IdentifierNotUnique` exception MUST be returned.
+   * - GET /views/{theme}/{pid}
+     - :func:`CNView.view`
+     - Provides a formatted view of an object (science metadata, data, resource, or other) using the given named theme. The service :func:`CNView.view` operation will implement at least one {theme} named 'default' to provide a standard (possibly minimalistic) view of the content in HTML format. In addition, a CN may redirect a client to the view service of the authoritative Member Node for a PID if that node has implemented the :func:`MNView.view` service and implements a compatible theme. If the {theme} parameter is not recognized, the service must render the object using the default theme rather than throwing an error.  Note that the return type of Types.OctetStream requires that the consuming client has a priori knowledge of the theme being returned (like HTML). Response headers must include the correct mime-type of the view being returned.
+   * - GET /views
+     - :func:`CNView.listViews`
+     - Provides a list of usable themes for rendering content in a view, including a required 'default' theme. The list of themes is provided as an OptionList, where the option key should be used as the theme name in calls to MNView.view, and the description provides a human readable description of what will be returned fo rthat theme.
