@@ -3,59 +3,25 @@ License and Copyright Policy
 
 DataONE is developing software and distributing software that originates from
 multiple institutions that each have their own policies governing copyright and
-licensing of software. As a project, we are committed both philosophically and
+licensing of software. As a project, DataONE is committed both philosophically and
 through our cooperative agreement with NSF to distribute our work as open source
-software. However, we must do so within the guidelines provided by each of our
-institutions. This document outlines our general policy towards the assignment
+software. This document outlines our general policy towards the assignment
 of copyright and licensing of software developed as a part of DataONE
 activities.
-
-Copyright
----------
-Individuals employed by different universities contribute to the development of
-DataONE software, and generally those individuals or the institution that
-employs them would hold copyright on their work. The subcontract agreements
-between DataONE organizations has a special condition that states that
-subcontractors will grant a license to work to enable the Prime Recipient to 
-meets its obligations to NSF, but it does not transfer copyright in any way.
-However, essentially all DataONE software products have been and will continue
-to be jointly designed and created by individuals spread across the DataONE
-participating institutions. No one individual or institution can claim creative
-ownership of any of the DataONE software products. Therefore, our general
-policy will be that each DataONE software product will contain a copyright
-statement that indicates that all of the participating organizations hold joint
-copyright in the work.
-
-An alternative approach to joint copyright was also considered in which
-individual contributors and their institutions would assign copyright to a
-holding entity that would ensure the long-term availability of the
-copyrighted materials. We did not feel that an existing University should
-play this role, but there was some agreement that a 501(c)(3) entity that had 
-appropriate language built into its charter documents that would guarantee 
-perpetual availability of the copyrighted material would be appropriate. No
-such entity currently exists, and the institutional agreements to contribute
-copyrighted materials would need to be worked out, so we felt this solution
-would not work for our short term needs, but should be considered for our
-longer-term strategy. We noted that existing groups like the Apache Software
-Foundation use this model effectively for cross-institutional development,
-although it does take overhead to create and maintain the institutional
-arrangements that make this model possible. Joint copyright is simpler if
-only because it is the de facto state of our products when multiple
-institutions contribute to development.
 
 Open source licensing
 ---------------------
 Because DataONE is committed to open science and open source principles, all
-software developed will be licensed under an approved open source license.
+software developed will be licensed under an OSI-approved open source license.
 Because different open source licenses can have implications for the re-use and
-distribution of that software, we want to have a general policy that guides
-choice of licenses. However, we also recognize that existing software that we
-may wish to use may already contain existing open source licenses that can not
-be changed easily or at all, and we do not want as a matter of policy to exclude
-the use of these open source products.
+distribution of that software, DataONE will have a general policy that guides
+choice of licenses. However, DataONE also recognizes that existing software that is
+useful to the project may already use open source licenses that can not
+be changed easily or at all. DataONE does not want as a matter of policy to exclude
+the use of these open source products that use alternate licenses.
 
-We recognize the benefits of various open source licenses, but as a general
-policy DataONE will use the Apache 2.0 open source license for all newly
+DataONE recognizes the benefits of various open source licenses, but as a general
+policy DataONE will use the Apache 2.0 open source license for newly
 developed code: http://www.opensource.org/licenses/apache2.0.php. The Apache
 license was selected because it:
 
@@ -64,17 +30,27 @@ license was selected because it:
 * Includes a disclaimer that the software is distributed without warranty
 * Inlcudes a limitation of liability
 
-We also considered other licenses which were not selected, including the BSD
+DataONE also considered other licenses which were not selected, including the BSD
 license (no patent license) and the GPL (includes requirement that derivative
 works also be GPL licensed).
 
-We recognize that DataONE will likely need to incorporate other existing
+In addition, DataONE will need to incorporate other existing
 software products into the system, and this general license policy should not be
 used to exclude open source software from use within DataONE. Rather, DataONE
-participants can incorporate software to the extent permitted by their licenses
+participants can incorporate OSI-compliant software to the extent permitted by their licenses
 and can contribute to other software products that use alternate licenses when
 it will benefit the DataONE project. Questions should be directed to the
 DataONE Leadership Team.
+
+Copyright
+---------
+Individuals employed by different universities contribute to the development of
+DataONE software, and those individuals or the institution that
+employs them hold copyright on their work. Typically authorship of DataONE software
+is done by participants from multiple institutions holding joint copyright. Therefore, 
+our general policy will be that each DataONE software product will contain a copyright
+statement that indicates that all of the participating organizations hold joint
+copyright in the work.
 
 Copyright and license notification
 ----------------------------------
@@ -103,60 +79,3 @@ each source code file that reads::
 Each DataONE product should also include a copy of the Apache 2.0 license at the
 root of its source code tree in order to make the license easily accessible to
 people that receive the product.
-
-..
-  Commented out this section, due to informal tone and lack of conclusions about existing organizational policies.
-
-  Copyright and patent policies for individual institutions
-  ----------------------------------------------------------
-  
-  University of Tennessee
-  ~~~~~~~~~~~~~~~~~~~~~~~
-  
-  The University's policy on such issues is here:  http://utrf.tennessee.edu/faculty/forms/IP_Policy.PDF  Section E.1 is relevant, page 4. The gist
-  is that the agreement from UNM is dominant.   I don't have a copy of that agreement handy, but UT also lists a goal that the results of the work
-  available to industry and the public on an effective and nondiscriminatory basis. The document seems mostly concerned with whether faculty and
-  staff have rights to work done while employed by UT.
-  
-  Based on what I'm reading and examples, the correct format for the copyright statement for UT contributions is
-  Copyright (year) The University of Tennessee
-  
-  The College of Communication and Information has rights too since the School of Information Sciences and the Center for Communication and Information Studies is involed. Carol Tenopir suggested a statement such as 
-  
-  Copyright (year) College of Communication and Information · The University of Tennessee
-  
-  Oak Ridge National Laboratory
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  
-  ORNL is a Federally Funded Research and Development Center (FFRDC), currently operated by UT-Battelle (a 50/50 joint venture LLC between Battelle
-  Memorial Institute and the University of Tennessee). Based on what I've read, we should be OK to go ahead and assert copyright, though there is a
-  technical requirement to get DOE permission. I need to see what's in the actual contract from UNM, and I'm checking that question.
-  
-  The correct format for our copyright is
-  Copyright (year) UT-Battelle, LLC
-  
-  University of California, Santa Barbara
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  UCSB policy on copyright is here:
-  http://www.ucop.edu/ucophome/coordrev/policy/8-19-92att.html
-  
-  Note in particular sections IV.D and V.
-  
-  NESCent and Duke University 
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  
-  Duke's intellectual property policies are here:
-  http://www.provost.duke.edu/pdfs/intelProp.pdf
-  
-  Todd Vision says:
-  We discussed this policy with Duke's legal folks ~5 yrs ago, and the
-  agreed interpretation of that language is that, since research
-  software at NESCent is not commissioned by Duke or serving a
-  'utilitarian' purpose within the institution, the copyright for that
-  software vests with the individual creators, unless the grant
-  explicitly specifies some other arrangement....So with DataONE
-  products, we are like UT Knoxville, in that whatever terms DataONE
-  decides will govern the software produced in that collaboration. And
-  if nothing is decided, the copyright to any work that Ryan creates
-  under DataONE is assigned to Ryan.
-
