@@ -11,6 +11,9 @@ Mutability of Content in DataONE
   DRAFT    (rnahf) Initial draft, based on discussions at Sep 2012 AHM in 
            Albuquerque, the follow-up CCIT t.c. in Oct 2012, and the CCIT 
            meeting in Feb 2013 in Santa Barbara
+           
+  PROPOSAL (leinfelder) Distillation of ongoing CCIT teleconferences about 
+  			seriesId as a means to support mutability.
   ======== ==================================================================
 
 .. contents::
@@ -30,24 +33,318 @@ assurances the current approach offers.
 
 The Problem
 -----------
-Current DataONE replication processes and fixity checks depend on content 
-immutability. Mutable content from a member node cannot be differentiated from
-corrupt copies of the object that need to be fixed by recovery from other replicas.
-The current immutability requirement helps to ensure repeatability of any use of
-an object, meaning that any analysis on a data set repeated sometime in the future
-should yield identical results (within the limits of precision of the analytical 
-tools).  By overwriting previous version, nodes following the mutable content 
-model cannot ensure repeatable retrieval of content.
+Current DataONE replication processes and fixity checks depend on content identified by a PID
+that does not change. If this were not enforced, mutable content from a member node would not be differentiated from
+corrupt copies of the object and our replication and recovery features would attempt to correct the byte inconsistency.
+The immutability requirement helps to ensure reproducible results of any use of an object. 
+Any analysis on a data set repeated sometime in the future should yield identical results 
+(within the limits of precision of the analytical tools) and this is one of the major guiding 
+principles in creating DataONE as a long term data repository federation.  
+By simply overwriting existing content using the same identifier, nodes cannot be relied upon for repeatable retrieval of content.
 
-New features and behaviors are needed in DataONE to work with mutable content.  
-The use cases below organize the identified requirements related to mutable 
-content, with the most relevant use cases listed first.
+
+
+Proposal
+--------
+The proposal for supporting "mutable" content is to allow a series identifier (SID)
+to facilitate the semantics of citing an object at the conceptual level, instead
+of the version level. As content changes over time, new identifiers (PIDs) will still be used 
+to mark each change, but the conceptual object can continue to be referred to with an unchanging
+identifier (SID). 
+The member node will be responsible for creating each version and assigning a unique PID
+to it and these objects will be synchronized and replicated to other DataONE member nodes as they are today.
+So instead of allowing content to be directly modified, we are allowing strongly-versioned chains to be referenced by
+an identifier; and relaxing the requirement that all revisions be resolvable forever.
+
+
+The Series Identifier
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+The proposed solution is to model and implement a "series identifier" (SID) along with 
+modified services that would work with both SIDs and PIDs.  From a 
+DataONE perspective, the series identifiers would be assigned to all versions of 
+an object, be unique in DataONE (assigned to only one version chain), and would
+be reserved just as PIDs - from the same namespace.  The series identifier, once 
+assigned to the version chain, would similarly be immutable, and could apply to 
+all new versions of the item.   It is also assumed that in order to coordinate 
+users to use one identifier for citations, that the cardinality for the citation 
+identifier would be 0..1.  The semantics for making API calls with a SID would, in general, be to 
+return responses as if the call were made with the most current PID.
+
+Member Nodes that only maintain the latest version of an item would be required to 
+use a new PID for any updated content, and modify the System Metadata 
+appropriately so that the new version can be synchronized with the network. The same SID would
+typically be used for the updated object, although we would allow the revision chain to shift to a new SID 
+as desired by the client and/or member node.
+
+It cannot be assumed that a user with an identifier in hand knows whether it is 
+a SID or a PID, so DataONE expects the user to refer to the System Metadata once 
+it has the item to determine if the identifier used in the call matches the PID 
+or the SID.  Similarly, they could interrogate search results for the same 
+information.  For high-level interfaces, like D1Client.getD1Object(id), the PID 
+of the object returned may or may not match the passed in 'id'.  So, high-level 
+functions or applications that use resolve will have to make sure they handle 
+the new resolving semantics.
+
+It is recommended that search indexes include a search field for the
+series identifier that can also be returned in the results.
+
+
+Semantics of "Current"
+~~~~~~~~~~~~~~~~~~~~~~
+DataONE defines the latest version as "current" if the object in question has a matching SID
+and no value in the "obsoletedBy" field, regardless if it is "archived" or not. Consumers of 
+the data should inspect the system metadata and/or search results to determine if the object has been 
+explicitly archived if they are concerned about using stale data.
+
+
+Version Storage
+^^^^^^^^^^^^^^^
+Mutable content implies that back-versions of content may not be readily available
+on the nodes that originally produce the content. For metadata and resource maps,
+the coordinating nodes will store previous versions of objects during the synchronization process,
+but any data updates will result in only the latest version being available at the originating node.
+If the data objects were replicated (as is the hope), it is likely that previous versions of 
+the data can still be resolved from replica target nodes, though this is dependent on replication policies,
+synchronization schedules and the availability of replica storage across the federation.
+
+The current DataONE storage model, through the MN_Storage.update method, places 
+responsibility for storing versions squarely on the submitter. Each update to the object requires 
+a new unique identifier (PID) and must state which PID the new version is obsoleting.
+We will continue to require that unique PIDs are provided for each 
+and every version of an object, but the member node will not be required to maintain a copy of previous revisions
+if it chooses not to. An optional series identifier (SID) can be provided with object SystemMetadata 
+to group revisions together and to provide a convenient way to refer to the latest version of the object.
+
+
+Version preservation
+~~~~~~~~~~~~~~~~~~~~~
+As is currently the case, the member node should maintain all versions of content using
+unique identifiers (PID) and synchronization will harvest each new revision to the network.  
+While there will be no requirement that the Member node continue to make available the object identified 
+by the obsoleted PID, the hope is that they will persist the data history as best they can. 
+If the objects in the revision chain have a SID assigned, the new PID will be considered the latest 
+version of this series.
+
+The member node can allow access to the current version of the object using MN_Read.get(sid) as a convenience and 
+any reference to the SID would resolve to the latest version of the object with a potentially different checksum and PID 
+from what was originally present when the citation was distributed.
+
+The member node must [minimally] maintain system metadata for the current revision of the object. 
+Any updated object is still required to be identified by a new unique PID, but would include the same SID used 
+in the previous version. The obsoletes field should indicate that the new PID replaces the previous PID.
+The coordinating node learns about the updated content during synchronization because there is:
+	- a new PID
+	- an updated dateSystemMetadataUpdated timestamp
+	- an updated checksum (other fields may also be updated).
+
+N.B. Multiple revisions between synchronization periods would not 
+result in multiple versions recorded in the federation - just the revision[s] that happened to be 
+synchronized would be persisted in DataONE. This leaves open the possibility of an end user retrieving a version from the MN that 
+will ultimately not be persisted in perpetuity.
+
+
+Working drafts vs. Repository publishing
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+DataONE essentially considers member nodes as the originators of *selected* versions of 
+content.  That is, not every intermediate revision on the way to a final
+product should neccessarily be saved for future reference.  Organizations following the mutable 
+content model for storage may wish to limit the objects returned by listObjects() to those that
+are considered in their publishable form. Certainly theses objects can later be updated as needed, 
+but minimizing draft-status objects will reduce the amount of [possibly irretrievable] draft content floating around
+the federated network.
+
+
+
+Types of Mutable Objects
+^^^^^^^^^^^^^^^^^^^^^^^^
+As illustrated in the optional use cases, the rate and regularity of change of 
+objects can be widely variable. The more frequent the change, the less likely
+that all versions would need to be reproduced, and the utility of complete version
+history diminishes.  One can imagine a member node serving up an unrecorded data 
+stream, such as a web-cam, delaying creating a version until a user calls MN.get()
+on the item, by tee'ing the output stream to file while returning the object.
+
+Additionally the need to keep past versions may be less important for metadata 
+objects (correcting typos that do not change the meaning or interpretation of the data)
+than data objects or resource maps.  
+
+Accumulating datasets
+~~~~~~~~~~~~~~~~~~~~~
+The use case of mutable data objects that grow with new records appended to the
+end of a table, for example, was given as a common practice for some groups, and
+one that would produce progressively redundant information with each persisted
+version.  The motivation for rolling up records accumulated over time instead
+of new data files for each is the ease of use for end users. Using a SID to access 
+the data object will always give the latest snapshot of the data records where old revisions 
+may or may not also be accessible.
+
+
+Mixed metadata-data objects
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Objects like NetCDF files that include both metadata and data in the same object 
+will be managed with the same PID and SID considerations. If only the metadata portion of 
+the file is modified, the SID may remain the same, but a new PID and checksum must be created and 
+made available for synchronization. The old revision may immediately become inaccessible using the PID
+and that is allowable under the proposal.
+
+
+Retrieval / Citation Support
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Implicit in the support for versioned content is support for retrieval of, or possibly 
+just resolution to, the current object bytes by the identifier assigned in the 
+originating system.  At a minimum CNs will be required to support calculating 
+which is the current version of series of versions and returning it or its 
+identifier. This will be accomplished using the series identifier (SID) associated with object[s]
+in a revision chain. The "current" version of an object is defined as the non-obsoleted object with 
+a SID that matches the requested identifier. Objects that are marked as "archived" may be returned as the 
+most current version, but they should not be seen in default search interfaces. 
+Since DataONE identifiers have no special formating semantics, those following a citation
+will not know by looking at the identifier whether it is referring to a specific
+version (PID) or the latest version of the item (SID), so services may be provided to easily investigate
+an entire version series. Existing services allow clients to deduce this information by inspecting the system 
+metadata for the identifier and following any obsolescence properties as needed.
+
+Retrieval vs. Resolution
+~~~~~~~~~~~~~~~~~~~~~~~~
+Because the content of an object is retrieved in a separate call from its system
+metadata, use of the SID for MN Read API calls is troublesome because the content may be updated 
+between the two calls. 
+It would be impossible to tell if the bytes retrieved were incorrect (bit rot) or correct (newer version) 
+when comparing checksums in this case. If data consistency is important to the caller, the PID should be used 
+to guarantee that only the expected bytes (or a NotFound exception) are returned by any MN.get calls.
+
+Those making a citation may wish to cite a specific version, or the latest current
+version.  Followers of citations may wish to, if given an identifier representing
+a specific version (PID), find out what is the latest version (another, newer PID, or the SID). 
+Conversely, if given a series identifier that navigates to the latest version, they may wish to find
+out what the content was at some previous point in time (e.g., the time of the citation) by following 
+the obsolescence chain backward.
+
+
+Service development plans
+~~~~~~~~~~~~~~~~~~~~~~~~~
+DataONE will be providing CN services for navigating to the latest version of an object, since the only way 
+to do it currently is for the clients to serially retrieve the system metadata for 
+versions in the chain until they reach the head version, which is can be inefficient. 
+A new method to retrieve the entire version history is also under consideration.
+
+
+MN API method changes
+~~~~~~~~~~~~~~~~~~~~~~
+
+MN.get(Identifier id):
+	Identifier can be either a PID or SID, and if a SID, return the bytes of the HEAD PID in the series.
+
+MN.getSystemMetadata(Identifier id): 
+	If PID, return SystemMetadata of PID.
+	If SID, return HEAD PID SystemMetadata.
+	
+MN.describe(Identifier id): 
+	If PID, return header for PID.
+	If SID, return header for HEAD PID.
+	
+MN.getChecksum(Identifier pid): 
+	Requires PID to effectively verify data integrity.
+		
+MN.create(Identifier pid, object, SystemMetadata):
+	Identifier must be PID and included in accompanying systemMetadata. 
+	SID may be included in accompanying systemMetadata if known at time of creation.
+
+MN.update(Identifier id, Identifier newPid, SystemMetadata):
+	Identifier may be a PID or SID -- in the case of a SID, the method works with the HEAD PID of the chain. 
+	The new Identifier must be a PID and must match the accompanying SystemMetadata. 
+	The new SID can match the old SID in previous SystemMetadata (objects are in the same series), 
+	or it can be any unique SID that does not already exist in the system (newly assigning a SID or shifting the SID because of a "scientifically meaningful change"). 
+
+MN.getLogRecords(?idFilter): 
+	Filter results to include:
+	PIDs that match the idFilter.
+	SIDs that match the idFiler.
+	N.B. Log.identifier field will only contain PID values, no SIDs. 
+
+MN.delete(Identifier id): 
+	Identifier can be PID or SID. 
+	If PID, delete that specific version; 
+	If a SID, delete the HEAD PID version.
+
+MN.archive(Identifier id): 
+	Identifier can be PID or SID. 
+	If PID, archive that specific version.
+	If a SID, archive the HEAD PID.
+
+MN.isAuthorized(Identifier id):
+	Can accept either PID or SID, but in the case of a SID parameter only reports on the the accessPolicy for HEAD PID.
+
+MN.synchronizationFailed(Identifier pid): 
+	Inter-node communication should only use PIDs for identifying objects.
+
+MN.replicate(): 
+	No changes in behavior. SystemMetadata object has changed structure so there is a change in signature.
+	Replication is based on the PID so that we can ensure content has not been corrupted.
+
+MN.getReplica(Identifier): 
+	Can only make requests for PIDs so that checksum integrity can be verified.
+	
+MN.systemMetadataChanged(Identifier, serialVersion, dateSysMetaModified):  
+	May be called on the MN if the CN infers an obsoletes relationship for a new PID based on a shared SID. 
+	Identifier can be either a PID or a SID. 
+	If a SID, the MN will fetch SystemMetadata from the CN using SID (which will return the HEAD PID SystemMetadata).
+
+
+CN API method changes
+~~~~~~~~~~~~~~~~~~~~~~
+
+CN.get(Identifier id):
+	Behaves the same as MN
+
+CN.describe(Identifier id):
+	Behaves the same as MN
+	
+CN.getSystemMetadata(Identifier id): 
+	Behaves the same as MN. 
+	N.B. This method can be used with a SID to locate the PID of the latest version which may be sufficient without implementing a
+	getHead() method.
+
+CN.registerSystemMetadata(Identifier pid):
+	Requires a PID, allows a SID in the SystemMetadata.
+
+CN.reserveIdentifier(Identifier id):
+	Accepts PID or SID values and treats them exactly the same.
+	
+CN.hasReservation(Identifier id):
+	Accepts PID or SID values and treats them exactly the same.
+
+CN.resolve(Identifier):
+	If PID, resolve it.
+	If a SID, then resolve the HEAD PID.
+
+CN.setReplicationPolicy():
+	Policies apply to particular revisions, not the entire chain. 
+	If a SID is passed in to a method that affects one of these policies, the change is applied to the HEAD PID for that series.
+	
+CN.setAccessPolicy():
+	Policies apply to particular revisions, not the entire chain. 
+	If a SID is passed in to a method that affects one of these policies, the change is applied to the HEAD PID for that series.
+
+CN.setObsoletedBy(Identifier id, Identifier obsoletedByPid):
+	Only PIDs can be used when expressing obsolescence chain.
+	The existing id can be referenced using SID and this method behaves as if it were called with the HEAD PID.
+	
+CN.listObjects(?identifier=XXX): 
+	Returns an ObjectList like normal, but can be filtered by identifer (SID or PID).
+	If the Identifier is a PID, it returns just the single entry for that PID.  
+	If the Identifier is a SID, it returns the objects (PIDs) of all objects that have that SID.
+	
+
 
 Use Cases
 ---------
 
-Prioritized
-^^^^^^^^^^^
+The use cases below organize the identified requirements related to mutable 
+content, with the most relevant use cases listed first.
+
+Prioritized goals
+^^^^^^^^^^^^^^^^^
 
 1. Data preservation
 ~~~~~~~~~~~~~~~~~~~~
@@ -72,9 +369,9 @@ For institutions following a mutable content model:
 
 3. Citation support
 ~~~~~~~~~~~~~~~~~~~~
-- avoid unnecessary costs associated with obtaining DOIs for each version
+- avoid unnecessary costs associated with obtaining resolvable (e.g., DOIs) for each version
 - coordinating citation by a common identifier for citation tracking
-- ensuring that the a cited object is the same when accessed as when it was originally used
+- ensuring that the cited object is the same when accessed as when it was originally used
 - ability to cite a version as well as the conceptual object
 
 Optional
@@ -83,7 +380,7 @@ Optional
 4. Support for frequently changing / overwritten data
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 What is the best way to version mutable data that frequently changes but may or 
-not be use d.  For example a "current time" object, replaced every minute, or 
+not be used.  For example a "current time" object, replaced every minute, or 
 "current weather radar" that's replaced every 3 hours.
 
 - preserving every version could be very expensive for very little value
@@ -100,290 +397,25 @@ This means supporting data objects that add records over time, either:
 - without pre-defined bounds e.g. "JGoodall primate observation log"?
 
 
-6. Support for mixed metadata - data objects
+6. Support for mixed metadata/data objects
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Some formats combine data with metadata, for example netCDF, so allowing the 
 metadata to change without impacting the consistency assessment of the data itself.
 
-- possible solutions include controlling / validating the dimensions of change,
-  and enumerating the dimensions of change allowed in the format datatype.
+- changes in the file are treated like any other change; they will be versioned, 
+	but may be referenced using a seriesId
    
 
 7. Supporting 'unrecorded' data streams
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Mutable content can theoretically include things that are live feeds from 
-sensors, but are otherwise uncaptured.  
+sensors, but are otherwise not captured.  
+
+This proposal does not accommodate streams unless they have discrete snapshots that can be referenced as part of
+a seriesId.
 
 - Should we allow identifiers to resolve to a URL that returns an input stream?  
 - Can we prevent it?  
 - Can we mark it as the user's responsibility to do the mn.create?
-
-
-Assessment
-----------
-Support for mutable content breaks down into 3 mostly orthogonal issues.  First, 
-who is responsible for initiating storage of back-versions of content - the 
-submitter, the member node, the coordinating node or the end-user who wants to 
-be able to point to a consistent object?  Second, what types of mutable objects 
-can be supported? Finally, what functionality is required to support those creating
-and those following citations, or otherwise wanting to refer to consistent objects?  
-
- 
-
-Version Storage
-^^^^^^^^^^^^^^^
-Mutable content implies that back-versions of content are not readily available
-on the nodes that produce the mutable content. For those wanting an immutable copy,
-the most pragmatic, albeit sub-ethical, approach would be to create and submit a 
-personal copy of the data, which suggests that DataONE and member nodes should 
-offer an alternative.  Some identifier issuers, such as Data Cite, discourage 
-generation of new Data Cite identifiers for new versions with trivial changes,
-suggesting that if DataONE versions trivial changes, they should all have the 
-DOI associated with them in a separate field.
-
-The current DataONE storage model, through the MN_Storage.update method, places 
-responsibility for storing back versions squarely on the submitter. For the nodes
-under discussion, it can be assumed that submitters do not have the ability to 
-do that, other than saving as separate, unrelated objects with similar names (not 
-a realistic option).  The 3 other options are presented:
-
-Member Node saves versions
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-With this option, the member node maintains back-versions of the content under
-unique identifiers, and synchronization occurs as normal.  The "mutable" identifier
-would either be the persistent identifier of the first version of that content,
-or is included in the system metadata in a dedicated field ("series
-identifier"), depending on the design of retrieval functionality.  The goal is 
-allowing that "mutable" identifier to be used to direct users to the latest 
-version of the content.  (This will be discussed further in the Retrieval / 
-Citation Support section.)
-
-All versions of all objects would be preserved in DataONE, and the member node
-would maintain a persistent store for these immutable objects.  If DataONE is
-using a series identifier (see Retrieval / Citation Support), then if the member
-node includes the current object using MN_Read.get(sid) as a convenience, there 
-should not be a record in listObjects for it. 
-
-
-Coordinating Nodes save versions
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In this scenario, the member node maintains system metadata consistent with 
-the current revision of the object, and the coordinating node learns about the
-new content during synchronization, and spawns a new version that gets indexed 
-and replicated.  Multiple revisions between synchronization periods would not 
-result in multiple new versions - just the latest revision would be persisted as 
-a version in DataONE.  This leaves open the possibility of an end user retrieving 
-and working on an unpersisted version.  
-  
-During synchronization, the CN would need to recognize the object as a new version
-by comparing the checksum with what's on record, and recognize it as a mutable
-object (instead of a corrupt copy of a static object), before indexing and 
-initiating replication.
-
-Aside from missing multiple revision due to synchronization timing, the main 
-problem with this approach is that the CN would need to become a primary storage
-node for not only metadata and resource maps, but also data.  Centralizing storage
-of data is contrary to the federated storage strategy of DataONE, and would not
-scale in the long term.
-
-  
-End-user triggers versioning
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In this approach, the latest version is exposed by the member node as a mutable
-object.  Changes to the content are reflected in an updated system metadata object
-that would be picked up in listObjects by synchronization.  The synchronization 
-process would pick up any changes to the object that would update the index, 
-but would skip replication.  Static versions are created with an  
-MN_Read.persistVersion(seriesId, checksum) call that returns either a pid of
-the newly created version, or a "VersionNotAvailable" if the checksum doesn't
-match any versions already spawned, or the current version.  This precautionary
-measure of comparing checksums ensures that the version the end user is requesting
-can be saved off.  The accessPolicy and ownership rights would be inherited from
-the mutable object.
-  
-This approach minimizes excessive versions that may or may not be referenced in
-the future, which could be beneficial for more regularly updated items.  This 
-could be seen as a more sophisticated approach to member nodes saving versions.
-
-
-Workspace vs. Repository
-~~~~~~~~~~~~~~~~~~~~~~~~
-DataONE considers member nodes as the originators of *selected* versions of 
-reviewed content.  That is, not every intermediate save on the way to a final
-product should be saved for future reference.  Organizations following the mutable 
-content model for storage currently do not have to make this distinction, but
-if the member node itself is operating as the workspace, where draft content is
-worked on until it is presentable form, and available through the DataONE Read
-api, the extraneous versions complicate the original issue of what should be made 
-available, and how it should be accomplished.
-
-Such potential member nodes may wish to introduce in their native interface
-the concept of a "publish to DataONE" step that would distinguish between draft 
-versions that should not be made available, and those that are meant to be shared.
-This may be useful regardless of how the main issue of mutable content handling 
-resolves, simply to keep internal drafts from wider distribution.
-
-
-Types of Mutable Objects
-^^^^^^^^^^^^^^^^^^^^^^^^
-As illustrated in the optional use cases, the rate and regularity of change of 
-objects can be widely variable. The more frequent the change, the less likely
-that all versions would need to be reproduced, and the utility of complete version
-history diminishes.  One can imagine a member node serving up an unrecorded data 
-stream, such as a web-cam, delaying creating a version until a user calls MN.get()
-on the item, by tee'ing the output stream to file while returning the object.
-
-Additionally the need to keep past versions may be less important for metadata 
-objects than data objects or resource maps.  Characterizing the nature of change
-in the system metadata may help fine-tune versioning strategies in the future, 
-and should be considered along with decisions to change the system metadata
-schema.
-
-Accumulating datasets
-~~~~~~~~~~~~~~~~~~~~~
-The use case of mutable data objects that grow with new records appended to the
-end of a table, for example, was given as a common practice for some groups, and
-one that would produce progressively redundant information with each persisted
-version.  The motivation for rolling up records accumulated over time instead
-of new data files for each is the ease of use for end users.  For text-based 
-objects, member nodes might consider using a system such as Git or SVN for their
-version-based repository, as only the differences between are saved.  Issues
-around the ability to reliably generate an object with the same checksum would
-need to be explored.
-
-
-Mixed metadata-data objects
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A new version of data needs to be treated differently from a new version of metadata,
-yet datatypes exist that contain both, for example netCDF.  To support data preservation
-activities for these types, we need to allow the metadata portions of the file
-to change, while not allowing changes within data portions.  For these types of 
-objects, versioning is necessary to allow post-hoc validation of any change.
-
-To the degree that it may be possible, either the data elements or metadata elements
-should be associated with the data format, so that users unfamiliar with the format
-can validate that data elements remained unchanged, for example.
-
-
-Retrieval / Citation Support
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Implicit in the support for mutable content is support for retrieval of, or possibly 
-just resolution to, the current object bytes by the identifier assigned in the 
-originating system.  At a minimum CNs will be required to support calculating 
-which is the current version of series of versions and returning it or its 
-identifier. This can only be done using either a special identifier or special 
-services to indicate the semantics of what is "current".  Additionally, since 
-DataONE identifiers have no special formating semantics, those following a citation
-will not know by looking at the identifier whether it is referring to a specific
-version or the current item, so services will be needed to easily investigate
-an entire version series.
-
-Retrieval vs. Resolution
-~~~~~~~~~~~~~~~~~~~~~~~~
-Because the content of an object is retrieved in a separate call from its system
-metadata, use of the mutable identifier for MN Read API calls is troublesome, due
-to the fact that the content may be updated between the two calls, and it would
-be impossible to tell without recalculating the checksum on the object retrieved
-whether the system metadata downloaded corresponds to the content downloaded.  
-The correct approach is to use CN.resolve to provide the Object Location List 
-for the appropriate version for a given identifier and parameters.  MN Read API 
-calls for the version-level identifier from the object location list would then
-be called, ensuring consistent results.
-
-
-Special Services vs. Special Identifiers
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Those making a citation may wish to cite a specific version, or the latest current
-version.  Followers of citations may wish to, if given an identifier representing
-a specific version, find out what is the latest version. Conversely, if given
-a DOI type identifier that navigates to the latest version, they may wish to find
-out what the content was at the time of the citation.  If DataONE relied on special
-resolution services alone for navigation to the latest, or the version at a 
-specific time and date, the needs of the citation follower have been met.  However,
-the person making the citation is not able to cite something in the abstract, as
-is the case with Dryad's use of DOIs, where the intention is to make a citation
-to the latest version of an item.
-
-It is recommended, therefore, that DataONE model special identifiers called 
-"series identifiers" to give those making citations to do so for the conceptual
-object, rather than just to a specific version.
-
-
-Related development plans
-~~~~~~~~~~~~~~~~~~~~~~~~~
-Regardless of how citation support is resolved, DataONE will be providing a new 
-CN service for navigating to the latest version of an object, since the only way 
-to do it currently is for the clients to serially retrieve the metadata for 
-versions in the chain until they reach the head version, which is very inefficient. 
-A new method to retrieve the entire version history is also under consideration.
-
-
-Proposal
---------
-The proposal for supporting mutable content is to model a version-series identifier 
-to facilitate the semantics of citing an object at the conceptual level, instead
-of the version level.  The member node needs to be primarily responsible for 
-creating the versions that will be replicated to other DataONE member nodes. 
-Undecided yet is whether an MN method should be added to allow end-users to trigger
-persisting specified versions, and whether that would apply to only certain
-types of mutable data. 
-
-
-The Series Identifier Approach
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-The proposed solution is to model and implement a "series identifier" along with 
-resolution services that would work with series ids ("sids") and pids.  From a 
-DataONE perspective, the series identifiers would be assigned to all versions of 
-an object, be unique in dataone (assigned to only one version chain), and would
-be reserved just as pids - from the same namespace.  This series identifier, once 
-assigned to the version chain, would similarly be immutable, and inherited by 
-all new versions of the item.   It is also assumed that in order to coordinate 
-users to use one identifier for citations, that the cardinality for the citation 
-identifier would be 0..1.  The semantics for resolving a sid would be to 
-return an object location list for the latest version from the series.
-
-Member Nodes only maintaining the latest version of an item would be required to 
-use a new pid for the resulting new version, and modify the system metadata 
-appropriately so that the new version can be picked up by synchronization.  A 
-new CN method will be available for MNs to notify CNs what versions are no longer 
-available at that node, whereupon replication will determine the new authoritative 
-node and replicate the content to the required number of replicas.
-
-It cannot be assumed that a user with an identifier in hand knows whether it is 
-a sid or a pid, so DataONE expects the user to refer to the system metadata once 
-it has the item to determine if the identifier used in resolve matches the pid 
-or the sid.  Similarly, they could interrogate the search results for the same 
-information.  For high-level interfaces, like D1Client.getD1Object(id), the pid 
-of the object returned may or may not match the passed in 'id'.  So, high-level 
-functions or applications that use resolve will have to make sure they handle 
-the new resolving semantics.
-
-It is also recommended that search indexes create a search result record for the
-series identifier (that would match  the latest version search record).  This 
-could complicate searches, so including an "also-known-as" field in the search
-result records might serve the purpose of indicating when two result records are 
-actually the same thing.
-
-
-Semantics of "Current"
-~~~~~~~~~~~~~~~~~~~~~~
-DataONE will need to define what to return when the latest version is not "current", 
-i.e. it's archived.  As a starting point, it is safe to assume that when the 
-latest is archived, it is the intention of the archiver that no content is returned 
-from a "get current" request.  Resolution services, on the other hand, may need 
-to return the latest version, whether current or not.
-
-
-Versioning Approach
-^^^^^^^^^^^^^^^^^^^
-Involving the Coordinating node in triggering which versions to persist does not
-scale and does not capture all versions the member node exposes.  Therefore, main
-responsibility for generating persisted versions must remain with the member nodes,
-whether prompted from an MN_Read.persistVersion() method or not.  Further discussion
-on different strategies for the different types of mutable content is warranted.
-
-
-
-
 
 
