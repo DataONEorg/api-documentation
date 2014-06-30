@@ -1,0 +1,218 @@
+Supporting multiple API versions
+================================
+
+.. index:: versioning
+
+
+:Document Status:
+  ======== ==================================================================
+  Status   Comment
+  ======== ==================================================================           
+  DRAFT    (leinfelder) Listing scenarios for v1 and v2 interactions. 
+  ======== ==================================================================
+
+.. contents::
+
+Overview
+------------
+
+In order to accommodate changes to the the SystemMetadata type, new API methods 
+will be introduced. Many existing v1 methods will have the same signatures but 
+any method that deals with the SystemMetadata type will need to have a v2 version.
+
+
+Requirements
+------------
+
+* All v1 objects are valid v2 objects, save for namespace.
+* All implementations of v2 must implement v1 methods.
+* TDB: only the minimally-necessary v2 methods will be defined. This would require
+mixed-calls in when interacting with the API.
+
+
+Scenarios
+---------
+
+MN running v1 of the API (Tier 1)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# MN.v1.create()
+# Synch
+	* MN.v1.listOjects()
+	* CN.v1.create()
+# Valid getSystemMetadata() calls	
+	* CN.v2.getSystemMetadata() --> v2.SystemMetadata
+	* CN.v1.getSystemMetadata() --> v1.SystemMetadata
+	* MN.v1.getSystemMetadata() --> v1.SystemMetadata
+	
+
+MN running v2 of the API (Tier 1)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# MN.v2.create()
+# Synch
+	* MN.v2.listOjects()
+	* CN.v2.create()
+# Valid getSystemMetadata() calls	
+	* CN.v2.getSystemMetadata() --> v2.SystemMetadata
+	* MN.v2.getSystemMetadata() --> v2.SystemMetadata
+	* CN.v1.getSystemMetadata() --> v1.SystemMetadata
+	* MN.v1.getSystemMetadata() --> v1.SystemMetadata
+
+
+MN running v1 of the API (Tier 4)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# MN.v1.create()
+# Synch
+	* MN.v1.listOjects()
+	* CN.[v1|v2].create()
+# Valid get() calls
+	* CN.v2.getSystemMetadata() --> v2.SystemMetadata
+	* CN.v1.getSystemMetadata() --> v1.SystemMetadata
+	* MN.v1.getSystemMetadata() --> v1.SystemMetadata
+# Replication to MN.target1 running v1 API
+	* MN.v1.getReplica()
+	* MN.target1.v1.getSystemMetadata() --> v1.SystemMetadata
+# Replication to MN.target2 running v2 API
+	* MN.v1.getReplica()
+	* MN.target2.v1.getSystemMetadata() --> v1.SystemMetadata
+	* MN.target2.v2.getSystemMetadata() --> v2.SystemMetadata
+# Updates
+	* CN.v1.setAccessPolicy() --> MN.target1.v1.systemMetadataChanged()
+	* CN.v1.setAccessPolicy() --> MN.target2.v2.systemMetadataChanged()
+	* CN.v2.setAccessPolicy() --> MN.target1.v1.systemMetadataChanged() ALLOWED?
+	* CN.v2.setAccessPolicy() --> MN.target2.v2.systemMetadataChanged()
+	
+	
+.. figure:: images/versions_01.png
+
+**Figure 1.** Mixed MN API version interactions with replication
+
+.. 
+  @startuml images/versions_01.png
+  title Replicate content across mixed API versions (authMN.v1)
+  participant "User" as client
+  participant "MN.v1" as MN
+  participant "MN.target.v1" as MN.target.v1
+  participant "MN.target.v2" as MN.target.v2
+  participant "CN" as CN
+  
+  group Create, Synch, Read
+    'create content on the MN
+    client -> MN: v1.create()
+    'Synchronize on the CN
+    CN -> MN: v1.listObjects()
+    CN -> CN: v1.create()
+    'Retrieve objects
+    client --> MN: v1.getSystemMetadata()
+    client <-- MN: v1.SystemMetadata
+    client --> CN: v1.getSystemMetadata()
+    client <-- CN: v1.SystemMetadata
+    client --> CN: v2.getSystemMetadata()
+    client <-- CN: v2.SystemMetadata
+  end
+  ...
+  group Replicate
+  	'replicate to a v1 MN
+    CN -> MN.target.v1: v1.replicate()
+    MN.target.v1 -> MN:  v1.getReplica()
+    client --> MN.target.v1: v1.getSystemMetadata()
+    client <-- MN.target.v1: v1.SystemMetadata
+    'replicate to a v2 MN
+    CN -> MN.target.v2: v1.replicate()
+    MN.target.v2 -> MN:  v1.getReplica()
+    client --> MN.target.v2: v1.getSystemMetadata()
+    client <-- MN.target.v2: v1.SystemMetadata
+    client --> MN.target.v2: v2.getSystemMetadata()
+    client <-- MN.target.v2: v2.SystemMetadata
+  end
+  ...
+  group Update
+  	'update the access policy
+    client -> CN: v1.setAccessPolicy()
+    CN -> MN.target.v1:  v1.systemMetadataChanged()
+    MN.target.v1 -> CN: v1.getSystemMetadata()
+    MN.target.v1 <- CN: v1.SystemMetadata
+    
+    CN -> MN.target.v2:  v1.systemMetadataChanged()
+    MN.target.v2 -> CN: v1.getSystemMetadata()
+    MN.target.v2 <- CN: v1.SystemMetadata
+  end
+  
+   @enduml
+	
+
+
+MN running v2 of the API (Tier 4)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# MN.v2.create()
+# Synch
+	* MN.v1.listOjects()
+	* CN.[v1|v2].create()
+# Valid get() calls
+	* CN.v2.getSystemMetadata() --> v2.SystemMetadata
+	* CN.v1.getSystemMetadata() --> v1.SystemMetadata
+	* MN.v1.getSystemMetadata() --> v1.SystemMetadata
+# Replication to MN.target running v1 API
+	* NOT ALLOWED
+# Replication to MN.target running v2 API
+	* MN.v1.getReplica()
+	* MN.target.v1.getSystemMetadata() --> v1.SystemMetadata
+	* MN.target.v2.getSystemMetadata() --> v2.SystemMetadata
+
+
+.. figure:: images/versions_02.png
+
+**Figure 2.** Mixed MN API version interactions with replication
+The original MN is running v2 of the API
+
+.. 
+  @startuml images/versions_02.png
+  title Replicate content across mixed API versions (authMN.v2)
+  participant "User" as client
+  participant "MN.v2" as MN
+  participant "MN.target.v1" as MN.target.v1
+  participant "MN.target.v2" as MN.target.v2
+  participant "CN" as CN
+  
+  group Create, Synch, Read
+    'create content on the MN
+    client -> MN: create()
+    'Synchronize on the CN
+    CN -> MN: v2.listObjects()
+    CN -> CN: v2.create()
+    ...
+    'Retrieve objects
+    client --> MN: v1.getSystemMetadata()
+    client <-- MN: v1.SystemMetadata
+    client --> MN: v2.getSystemMetadata()
+    client <-- MN: v2.SystemMetadata
+    client --> CN: v1.getSystemMetadata()
+    client <-- CN: v1.SystemMetadata
+    client --> CN: v2.getSystemMetadata()
+    client <-- CN: v2.SystemMetadata
+  end
+  ...
+  group Replicate
+    CN -> MN.target.v2: v2.replicate()
+    MN.target.v2 -> MN:  v2.getReplica()
+    client --> MN.target.v2: v1.getSystemMetadata()
+    client <-- MN.target.v2: v1.SystemMetadata
+    client --> MN.target.v2: v2.getSystemMetadata()
+    client <-- MN.target.v2: v2.SystemMetadata
+    CN --> MN.target.v1: v1.replicate() NOT ALLOWED
+  end
+  ...
+  group Update
+  	'update the access policy using v1
+    client -> CN: v1.setAccessPolicy()
+    CN -> MN.target.v2:  v1.systemMetadataChanged()
+    MN.target.v2 -> CN: v1.getSystemMetadata()
+    MN.target.v2 <- CN: v1.SystemMetadata
+    ...
+    'update the access policy using v2
+    client -> CN: v2.setAccessPolicy()
+    CN -> MN.target.v2:  v2.systemMetadataChanged()
+    MN.target.v2 -> CN: v2.getSystemMetadata()
+    MN.target.v2 <- CN: v2.SystemMetadata
+  end
+  
+   @enduml
