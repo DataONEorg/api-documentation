@@ -50,6 +50,6 @@ Nodes that wish to serve as a replication target and thereby are available to st
 The :attr:`Types.NodeReplicationPolicy.maxObjectSize` indicates the maximum allowable size of an object to be replicated in bytes.  The :attr:`Types.NodeReplicationPolicy.spaceAllocated` field sets an upper limit on space usage for replica storage on the given node.  Once the spaceAllocated has been reached for a node, the Coordinating Nodes will no longer request that additional replicas be stored on that node. :attr:`Types.NodeReplicationPolicy.allowedNode` is used to list all nodes that are allowed to replicate to the target.  If it is absent, then any node may replicate to the target. :attr:`Types.NodeReplicationPolicy.allowedObjectFormat` is used to list all object formats that may be replicated to the target.  If it is absent, then any object format may be replicated to the target. 
 
 .. Note::
-	Node Replication Policy is not currently implemented on the CN for scheduling purposes, and is planned for a future release.
+	:class:`Types.NodeReplicationPolicy` is not currently implemented on the CN and so is ignored when making decisions as to which MN should be used for replication.  In a future release, the CN scheduler will utilize the :class:`Types.NodeReplicationPolicy` to limit the types of objects that are scheduled to be replicated to a MN, but for now the information is not used at all.
 
 .. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/ReplicationOverview.txt
