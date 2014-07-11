@@ -241,15 +241,15 @@ Changes would be required for both the Member Node and Coordinating Node APIs, i
 +------------+----------------------------------+-----------------------------+
 | **Action** |  **Method**                      | **Notes**                   |
 +------------+----------------------------------+-----------------------------+
-| Add        | MNCore.setObsoletedBy()          |                             |
+| Add        | MNStorage.updateSystemMetadata() | Instead of multiple methods |
 +------------+----------------------------------+-----------------------------+
-| Change     | MNCore.sytemMetadataChanged()    | Move from MNAuthorization   |
+| Change     | MNRead.systemMetadataChanged()   | Move from MNAuthorization   |
 +------------+----------------------------------+-----------------------------+
-| Add        | MNAuthorization.setRightsHolder()|                             |
+| Reject     | MNAuthorization.setRightsHolder()|                             |
 +------------+----------------------------------+-----------------------------+
-| Add        | MNAuthorization.setAccessPolicy()|                             |
+| Reject     | MNAuthorization.setAccessPolicy()|                             |
 +------------+----------------------------------+-----------------------------+
-| Add        | CNCore.sytemMetadataChanged()    | Required to push notifiy CNs|
+| Discuss    | CNCore.sytemMetadataChanged()    | Required to push notify CNs |
 +------------+----------------------------------+-----------------------------+
 | Add        | CNCore.updateSytemMetadata()     | Keeps the CN copy in sync   |
 +------------+----------------------------------+-----------------------------+
@@ -259,9 +259,9 @@ Changes would be required for both the Member Node and Coordinating Node APIs, i
 +------------+----------------------------------+-----------------------------+
 | Deprecate  | CNAuthorization.setRightsHolder()|                             |
 +------------+----------------------------------+-----------------------------+
-| Add        | CNReplication.getReplicaVersion()|                             |
+| Reject     | CNReplication.getReplicaVersion()|                             |
 +------------+----------------------------------+-----------------------------+
-| Add        | CNReplication.setReplicaVersion()|                             |
+| Reject     | CNReplication.setReplicaVersion()|                             |
 +------------+----------------------------------+-----------------------------+
 
 As an alternative to individual MN APIs above, we might want to consider using a single MN call to update system metadata documents:
@@ -269,10 +269,11 @@ As an alternative to individual MN APIs above, we might want to consider using a
 +------------+----------------------------------+-----------------------------+
 | **Action** |  **Method**                      | **Notes**                   |
 +------------+----------------------------------+-----------------------------+
-| Add        | MNCore.updateSytemMetadata()     |                             |
+| Add        | MNCore.updateSytemMetadata()     |  Using this method now      |
 +------------+----------------------------------+-----------------------------+
 
-.. TODO:: Needs discussion.
+.. Note:: CJ and BRL discussed this and decided the single updateSystemMetadata method would suffice and implementations could determine which mutable fields from the SystemMetadata it would update.
+			TBD: do we reject updates if an immutable field differs from the original value  even if we never intend to save that new value anyway?
 
 4. Change Library Implementations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -288,7 +289,7 @@ The CN REST Service will need to be modified to add and deprecate the methods li
 
 5.2 MN to CN Synchronization
 
-With these changes, d1_synchronization classes will need to consult the node registry to determine if an MN implements v1 or v2 of the API, and act accordingly.  As the sychronization code adds in replica entries, it should notify the authoritative Member Node and all replica Member Nodes of the change using MNCore.systemMetadataChanged() calls.  It will also need to call CNReplication.setReplicaVersion() for new entries.
+With these changes, d1_synchronization classes will need to consult the node registry to determine if an MN implements v1 or v2 of the API, and act accordingly.  As the synchronization code adds in replica entries, it should notify the authoritative Member Node and all replica Member Nodes of the change using MNRead.systemMetadataChanged() calls.  It will also need to call CNReplication.setReplicaVersion() for new entries.
 
 5.3 MN to MN Replication
 
@@ -315,4 +316,4 @@ We will need to establish a release schedule and deploy software stacks, likely 
 4. CN implementations
 5. MN implementations
 
-Note that we plan on introducing other changes into the DataONE types schema to accomodate mutable content and other features.  Changes to the type schema should be consolidated to reduce the impact on software that depend on the types.
+Note that we plan on introducing other changes into the DataONE types schema to accommodate mutable content and other features.  Changes to the type schema should be consolidated to reduce the impact on software that depend on the types.
