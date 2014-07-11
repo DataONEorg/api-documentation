@@ -199,18 +199,20 @@ Example sequence diagrams show the differnce follows:
 1. Change architecture to shift authority to MNs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This document describes the management of system metadata across nodes, and has been updated to reflect control of system metadata attributes by the MN rather than the CN, except for the Replicas listed per object.  Text changes are highlighted here_.
+This document describes the management of system metadata across nodes, and has been updated to reflect control of system metadata attributes by the MN rather than the CN, except for the Replicas listed per object.  
+Text changes are highlighted here_.
 
 .. _here: https://redmine.dataone.org/projects/d1/repository/diff/documents/Projects/cicore/architecture/api-documentation/source/design/SystemMetadata.txt?rev=11619&rev_to=6100
 
-2. Change DataONE Types Schema
+2. Evaluate DataONE Types Schema
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The `Types Schema`_ could be changed in two ways:
 
 2.1 Modify the Replica Type
 
-By adding an optional `version` attribute to the Replica Type, the Coordinating Nodes would no longer need to rely on the `serialVersion` attribute of the entire system metadata document to manage versions.  A Replica example, with the version line highlighted, would be:
+By adding an optional `version` attribute to the Replica Type, the Coordinating Nodes would no longer need to rely on the `serialVersion` attribute of the entire system metadata document to manage versions.  
+A Replica example, with the version line highlighted, would be:
 
 .. code-block:: xml
   :emphasize-lines: 1
@@ -221,20 +223,28 @@ By adding an optional `version` attribute to the Replica Type, the Coordinating 
     <replicaVerified>2012-07-10T00:00:00.000+00:00</replicaVerified>
   </replica>
 
-By making the `version` attribute optional, this approach would be backwards-compatible with existing system metadata documents in the system. However, the Replica list in system Metadata documents on the MN may be out of sync with the list on the CN during times of rapid change such as MN-to-MN replication operations.
+By making the `version` attribute optional, this approach would be backwards-compatible with existing system metadata documents in the system. 
+However, the Replica list in System Metadata documents on the MN may be out of sync with the list on the CN during times of rapid change such as MN-to-MN replication operations.
 
 2.2 Remove the Replica
 
-Another approach is to remove the Replica entry from the SystemMetadata Type entirely, and manage replicas separately.  This approach would be backwards-incompatible with existing system metadata documents, but once upgraded, all Replica information would be obtained through the CN services.
+Another approach is to remove the Replica entry from the SystemMetadata Type entirely, and manage replicas separately.  
+This approach would be backwards-incompatible with existing system metadata documents, but once upgraded, all Replica information would be obtained through the CN services.
 
 .. TODO:: Needs discussion.
+
+2.3 Leave the data types as is and let the CN have control over both the replica list and the serialVersion as it currently does. 
+We always hope and intend that the MN and CN will have the same consistent SystemMetadata eventually. In this scenario, the CN would ignore any values the MN provided for SM.serialVersion and SM.replica and the MN would accept
+those values as provided by the CN's copy of SystemMetadata. This allows much of our processing on the CN to remain as is and the different types of nodes then choose which parts of SM to manage/ignore.
+BRL: I believe we decided to pursue this course for now.
+
 
 .. _`Types Schema`: http://mule1.dataone.org/ArchitectureDocs-current/apis/Types.html
 
 3. Change DataONE APIS
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Changes would be required for both the Member Node and Coordinating Node APIs, in both the architecture doocumentation and the `d1_common_java` and `d1_common_python` libraries:
+Changes would be required for both the Member Node and Coordinating Node APIs, in both the architecture documentation and the `d1_common_java` and `d1_common_python` libraries:
 
 3.1 MN and CN API changes
 
