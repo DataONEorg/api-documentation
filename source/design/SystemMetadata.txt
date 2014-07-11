@@ -175,23 +175,47 @@ Example sequence diagrams show the differnce follows:
    activate MN #D74F57
    MN --> Client : pid
    deactivate MN
-   Client -> MN : MNAuthorization.setAccessPolicy(pid, accessPolicy, serialVersion)
+   Client -> MN : MNStorage.updateSystemMetadata(pid, SystemMetadata)
+   note left
+   	SystemMetadata includes AccessPolicy
+   end note
    activate MN #D74F57
    MN --> Client :    true
    note right 
      Success. The client calls directly 
      to the MN without delay.
    end note
-   MN -> CN : CNCore.systemMetadataChanged(pid, sysmeta, serialVersion)
+      deactivate MN
+   
+   MN -> CN : CNCore.updateSystemMetadata(pid, sysmeta)
    activate CN #D74F57
-   CN --> MN : true
-   CN -> MN : MNread.getSystemMetadata(pid)
-   MN --> CN : sysmeta
+   CN --> MN :    [true | false]
    deactivate CN
+   note right 
+     The MN calls the CN;
+     best-faith effort to keep
+     it synchronized, but fine if the object
+     has not been harvested.
+   end note
+   
+   ... <b>Potentially long delay due to sync schedule</b> ...
+   CN -> MN : MNRead.listObjects(fromDate, toDate)
+   activate MN #D74F57
+   MN --> CN : objectList
    deactivate MN
-   CN -> CN : CNCore.updateSystemMetadata(pid, sysmeta)
+   CN -> MN : MNread.getSystemMetadata(pid)
+   activate MN #D74F57
+   MN --> CN : sysmeta
+   deactivate MN
+   CN -> CN : CNCore.registerSystemMetadata(pid, sysmeta)
    activate CN #D74F57
-   deactivate CN   
+   deactivate CN
+   note left 
+     Now the CN finally gets the 
+     SystemMetadata, with most recent values
+     already set on the MN
+   end note
+      
    @enduml
 
 .. image:: images/sysmeta_mn_control.png
@@ -259,7 +283,7 @@ Changes would be required for both the Member Node and Coordinating Node APIs, i
 +------------+----------------------------------+-----------------------------+
 | Reject     | MNAuthorization.setAccessPolicy()|                             |
 +------------+----------------------------------+-----------------------------+
-| Discuss    | CNCore.sytemMetadataChanged()    | Required to push notify CNs |
+| Reject     | CNCore.sytemMetadataChanged()    | Required to push notify CNs |
 +------------+----------------------------------+-----------------------------+
 | Add        | CNCore.updateSytemMetadata()     | Keeps the CN copy in sync   |
 +------------+----------------------------------+-----------------------------+
