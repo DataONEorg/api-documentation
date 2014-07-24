@@ -336,7 +336,8 @@ The MetacatCNodeService class will need to be modified to implement the above CN
 6. Change Member Node implementations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Member node software stacks will need to implement the API methods listed above, and will need to ensure that other calls that affect system Metadata entries also update Coordinating Node system metadata copy.  For instance, a call to MNStorage.update() should also call CNCore.systemMetadataChanged() so that the CNs remain in sync with the MNs with regard to system metadata.
+Member node software stacks will need to implement the API methods listed above, and will need to ensure that other calls that affect system Metadata entries also update Coordinating Node system metadata copy.  
+For instance, a call to MNStorage.update() should also call CNCore.updateSystemMetadata() so that the CNs remain in sync with the MNs with regard to system metadata.
 
 
 7. Release and Deploy New Nodes
