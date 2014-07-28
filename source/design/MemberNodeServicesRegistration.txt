@@ -1,0 +1,118 @@
+(Proposal) Member Node Service Registration
+===========================================
+
+.. Note:: This document describes work proposed for Phase II of the DataONE
+          project. It is not currently implemented.
+
+:Status: DRAFT for comment
+
+The goal of Member Node Service Registration (MNSR) is to assist clients in
+discovery of services exposed by Member Nodes that may be applicable to a
+particular type of object. One approach is to expose this information through
+the Member Node getCapabilities method, with the node description response
+document modified to include additional basic information about the service(s)
+provided by the Member Node and the format types each supports. An alternative
+approach is to add a new MN API method that lists services available for
+different formats.
+
+The services will be identified by some identifier that is uniquely associated
+with that service type. Included with the entry will be connection information
+so that a client application of the service type is able to connect and
+perform the necessary operations.
+
+Connection to, and interaction with the advertised service is not defined by
+DataONE APIs. Only the availability of services that may be applicable to
+different object format types is advertised.
+
+Note that there may be many services that can operate on a particular data
+type, and any particular service may support multiple types of content.
+
+The association between service types and object format types will need to be
+maintained on a service by service basis, since particular service
+implementations may support different types of content. For example, one
+instance of OGC-WCS (Web Coverage Service) may support GeoTIFF imagery only,
+while another may support multiple raster formats.
+
+If all service information is returned in getCapabilites, then the entry for a
+service record in the services list may be structured as (cardinality
+indicated in parentheses)::
+
+  (1) <services>
+    (0..n)<service>
+      (1) <serviceType>{Unique Service Type identifier}</serviceType>
+      (1) <name>Descriptve human readable name of the service</name>
+      (0..1) <description>Brief human readable description of service to be 
+                          presented in user interfaces.</description>
+      (1) <connection>http://some.service.endpoint/here</connection>
+      (1) <formatTypes>
+        (1..n) <formatType>{Some format ID}</formatType>
+              ...
+          </formtTypes>
+        </servce>
+        ...
+  </services>
+
+If an API call is added to describe available services then it may be modelled
+as accessing a collection of services. For example::
+
+  URL: /v2/services
+  API: MN.listServices() -> List of all services on node
+
+  URL: /v2/services/service/{SERVICE_TYPE_ID}
+  API: MN.getService(SERVICE_TYPE_ID) -> Service description
+
+  UR: /v2/services/formats/{OBJECT_FORMAT_TYPE}
+  API: MN.listFormatServices(object_format_type) -> List of services applicable 
+                                                    to an object format
+
+A typical imagined user interaction scenario is described in MNSR-S01. Similar
+scenarios can be constructed for other combinations of data and service types.
+For example: a CSV subsetting service might return a selection of rows from a
+CSV file; a rendering service might provide a HTML rendering of different
+types of content (such as metadata, resource maps, and data objects).
+
+Services advertised will likely be mostly third-party implemenations, though
+it is conceivable that this mechanism for advertising the availability of
+services might also be applied to advertising the availability of DataONE
+defined services that may be optional for Member Node implementations.
+
+
+Scenario MNSR-S01, Spatial Subset
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+A user has a PID for a data object. Using a DataONE service aware client tool,
+the user discovers that the object is a fairly large (system metadata) set of
+imagery (system metadata, science metadata) that provides high resolution
+measurements on ground surface reflectance in the range of 400 to 700nm
+(science metadata). The science metaata describing the imagery indicates a
+very broad spatial coverage and the the file is too large to justify
+downloading for the small area of terrain being worked on.
+
+The client tool indicates to the user that a Member Node holding a copy of the
+data is known to be running a service (MN.getCapabilities) that will allow
+extraction of a spatial window from the large data object (the OGC Web
+Coverage Service, indicated by a unique identifier associated with the service
+type) and also provides the URL of the GetCapabilities endpoint for the
+service.
+
+The user utilizes an OGC-WCS client application to connect with the service
+operating on the Member Node and retrieves the desired window from the
+coverage identified by the PID.
+
+
+Use Case MNSR-UC01
+~~~~~~~~~~~~~~~~~~
+
+A client application is able to discover services available at a Member Node
+through the MN.getCapabilities method. Services thus listed must also provide
+a link to getCapabilities of the service (or equivalent introspection or well
+known service endpoint) so that a compatible client may determine interaction
+parameters.
+
+Use Case MNSR-UC02
+~~~~~~~~~~~~~~~~~~
+
+A client application is able to discover services available from registered
+Member Nodes for a particular object formatType. As for Use Case MNS-UC01,
+service registrations must provide references to the respective introspection
+mechanisms so that a compatible client may determine interaction parameters.
