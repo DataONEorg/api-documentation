@@ -14,14 +14,11 @@ list of access events and the API calls that logged these events is shown in *Ta
     ============           ===========================     ================
     Access event           DataONE MN API call             Metacat API call
     ============           ===========================     ================
-    create                 MNStorage.create()          
-    delete                 MNStorage.delete(),             action=delete
-                           MNStorage.archive           
-    insert                                                 action=insert
+    create                 MNStorage.create()              action=insert
+    delete                 MNStorage.delete()              action=delete
     read                   MNRead.get()                    action=read
     replicate              MNReplication.replicate()   
     update                 MNStoreage.update()             action=update
-    upload                                                 action=upload
     ============           ===========================     ================
 
 The content of the access event log records are described here: `<LoggingSchema.html>`_.
@@ -29,7 +26,7 @@ The content of the access event log records are described here: `<LoggingSchema.
 The access event log records are harvested from each MN in the network and aggregated
 into a common search index by the Log Aggregation Facility which is described here: `<LogAggregator.html>`_. The
 Event Log Index is implemented as an Apache Solr instance and can be queried
-using standard Solr queries using the DataONE service endpoint \https://cn.dataone.org/cn/v1/logSolr.
+using standard Solr queries using the DataONE service endpoint \https://cn.dataone.org/cn/v1/logsolr.
 
 The Solr search platform provides query capabilities such as field faceting, range filtering,
 numeric field statistics and more that provide usage information based on the access events,
@@ -41,14 +38,15 @@ obtained from the Event Log Index.
 Event Log Index
 _______________
 
+*Table 2.* Solr index schema
+
 .. include:: EventLogIndexSchema.txt
 
 
 Access to Event Log index
 _________________________
-Access to the Event Log Index adheres to the DataONE identity and authentication protocols described here:
-`<Authentication.html.html`_. T
-he level of access allowed
+Access to the Event Log Index adheres to the DataONE identity and authentication protocols described here: `<Authentication.html>`_.
+The level of access allowed
 when querying the index is determined by your DataONE Authentication Session Identity
 
 *CN Administrators*
@@ -59,10 +57,10 @@ view the entire contents of the index entries.
 *Authenticated session access*
 
 Clients (i.e. web browsers) that have established an authenticated session using a DataONE identity have
-access to summary information for index entries for which they have access rights based on the pid contained
-in each index entry. For example, if the authenticated principal is 'uid=smith,o=NCEAS,dc=ecoinformatics,dc=org'
-then the client can query index entries for pids that have access policies allowing read access to the
-authenticated principal. This level of access only allows
+access to information for any pids for which they are the rightsholder, or pids for which they have an access
+policy granting write access. For example, if the authenticated subject is 'uid=smith,o=NCEAS,dc=ecoinformatics,dc=org'
+then the client can query index entries for pids that have access policies allowing write access to the
+authenticated subject. This level of access allows 
 summary information to be viewed, so the full content of index entries cannot be viewed.
 
 *Public Access* 
@@ -79,235 +77,296 @@ and *readPermission*.
 Statistics Service Usage
 ------------------------
 
-The following sections shows example queries that can be sent to the Event Log Solr index.
+The following sections shows example queries that can be sent to the Event Log Solr index. Note: in order to make the examples easier to
+read, the output of some of the examples queries has been editied, with removed lines replaced with ellipses, i.e. '...'.
 
 **Retrieve pids for a specified subject**
 
-The following example shows a query for download volume for pids created by subject=smith with download size statistics aggregated by pid::
+The following example shows a query for download volume for pids created by subjects matching 'uid*smith*' with download size statistics aggregated by pid::
 
-   https://cn.dataone.org/cn/v1/logsolr/select?q=*:*&fq=subject=smith*&fq=event:read&stats=true&stats.field=size&rows=0&stats.facet=pid
+   https://cn.dataone.org/cn/v1/query/logsolr/select?q=*:*&fq=subject:uid*smith*&fq=event:read&stats=true&stats.field=size&rows=0&stats.facet=pid
 
-The following result is returned::
-
-   <?xml version="1.0" encoding="UTF-8"?>
-   <response>
-     ...
-     <result name="response" numFound="8" start="0"/>
-     <lst name="stats">
-       <lst name="stats_fields">
-         <lst name="size">
-           <double name="min">30.0</double>
-           <double name="max">1000.0</double>
-           <double name="sum">3150.0</double>
-           <long name="count">8</long>
-           <long name="missing">0</long>
-           <double name="sumOfSquares">3004500.0</double>
-           <double name="mean">393.75</double>
-           <double name="stddev">502.0226944215627</double>
-           <lst name="facets">
-             <lst name="pid">
-               <lst name="sla.3.1">
-                 <double name="min">1000.0</double>
-                 <double name="max">1000.0</double>
-                 <double name="sum">3000.0</double>
-                 <long name="count">3</long>
-                 <long name="missing">0</long>
-                 <double name="sumOfSquares">3000000.0</double>
-                 <double name="mean">1000.0</double>
-                 <double name="stddev">0.0</double>
-               </lst>
-               <lst name="sla.2.1">
-                 <double name="min">30.0</double>
-                 <double name="max">30.0</double>
-                 <double name="sum">150.0</double>
-                 <long name="count">5</long>
-                 <long name="missing">0</long>
-                 <double name="sumOfSquares">4500.0</double>
-                 <double name="mean">30.0</double>
-                 <double name="stddev">0.0</double>
-               </lst>
-             </lst>
-           </lst>
-         </lst>
-       </lst>
-     </lst>
-   </response>
-   
-The previous query can be constrained to a specific time by adding a time range, i.e.::
-
-   &fq=datetime:%[2013-01-01T23:59:59Z TO 2013-04-31T23:59:59Z]
-
-**Data upload counts**
-
-The following query shows counts of data uploads by format type by a specified user::
-
-   https://cn.dataone.org/cn/v1/logsolr/select?q=*:*&fq=subject:uid=smith*&fq=event:create&facet=true&facet.field=formatId&rows=0
+The following result is returned:
 
 ::
 
-   <?xml version="1.0" encoding="UTF-8"?>
-   <response>
-     ...
-     <result name="response" numFound="3" start="0"/>
-     <lst name="facet_counts">
-       <lst name="facet_queries"/>
-       <lst name="facet_fields">
-         <lst name="formatId">
-           <int name="BIN">2</int>
-           <int name="eml://ecoinformatics.org/eml-2.1.1">1</int>
-           <int name="text/csv">0</int>
-         </lst>
-       </lst>
-       <lst name="facet_dates"/>
-       <lst name="facet_ranges"/>
-     </lst>
-   </response>
+  <?xml version="1.0"?>
+  <response>
+    ...
+    <result name="response" numFound="96" start="0"/>
+    <lst name="stats">
+      <lst name="stats_fields">
+        <lst name="size">
+          <double name="min">135.0</double>
+          <double name="max">1.5209072E8</double>
+          <double name="sum">1.082767665E9</double>
+          <long name="count">96</long>
+          <long name="missing">0</long>
+          <double name="sumOfSquares">1.13751276670495792E17</double>
+          <double name="mean">1.127882984375E7</double>
+          <double name="stddev">3.2692977584385287E7</double>
+          <lst name="facets">
+            <lst name="pid">
+              <lst name="doi:10.6085/AA/pisco_intertidal.45.1">
+                <double name="min">2.8738045E7</double>
+                <double name="max">2.8738045E7</double>
+                <double name="sum">2.8738045E7</double>
+                <long name="count">1</long>
+                <long name="missing">0</long>
+                <double name="sumOfSquares">8.25875230422025E14</double>
+                <double name="mean">2.8738045E7</double>
+                <double name="stddev">0.0</double>
+              </lst>
+              <lst name="doi:10.6085/AA/MLPA_intertidal.30.10">
+                <double name="min">2984.0</double>
+                <double name="max">2984.0</double>
+                <double name="sum">11936.0</double>
+                <long name="count">4</long>
+                <long name="missing">0</long>
+                <double name="sumOfSquares">3.5617024E7</double>
+                <double name="mean">2984.0</double>
+                <double name="stddev">0.0</double>
+              </lst>
+              <lst name="doi:10.6085/AA/pisco_snbs.19.1">
+                <double name="min">52335.0</double>
+                <double name="max">52335.0</double>
+                <double name="sum">104670.0</double>
+                <long name="count">2</long>
+                <long name="missing">0</long>
+                <double name="sumOfSquares">5.47790445E9</double>
+                <double name="mean">52335.0</double>
+                <double name="stddev">0.0</double>
+              </lst>
+              ...
+              </lst>
+            </lst>
+          </lst>
+        </lst>
+      </lst>
+    </lst>
+  </response>
+   
+The previous query can be constrained to a specific time by adding a time range, i.e.::
+
+   &fq=dateLogged:[2013-01-01T23:59:59Z TO 2013-12-31T23:59:59Z]
+
+**Data upload counts**
+
+The following query shows counts of data uploads by format type by a specified rightsHolder (PISCO)::
+
+   https://cn.dataone.org/cn/v1/query/logsolr/select?&q=*:*&facet=true&fq=rightsHolder:uid*PISCO*&fq=event:create&facet.field=formatId&facet.mincount=1
+::
+
+  <?xml version="1.0"?>
+  <response>
+    ... 
+    <result name="response" numFound="40928" start="0"/>
+    <lst name="facet_counts">
+      <lst name="facet_queries"/>
+      <lst name="facet_fields">
+        <lst name="formatId">
+          <int name="eml://ecoinformatics.org/eml-2.0.1">32932</int>
+          <int name="text/csv">5236</int>
+          <int name="application/octet-stream">2570</int>
+          <int name="eml://ecoinformatics.org/eml-2.0.0">100</int>
+          <int name="eml://ecoinformatics.org/eml-2.1.0">28</int>
+          <int name="-//ecoinformatics.org//eml-dataset-2.0.0beta6//EN">19</int>
+          <int name="-//ecoinformatics.org//eml-entity-2.0.0beta6//EN">12</int>
+          <int name="-//ecoinformatics.org//eml-attribute-2.0.0beta6//EN">11</int>
+          <int name="-//ecoinformatics.org//eml-access-2.0.0beta6//EN">7</int>
+          <int name="-//ecoinformatics.org//eml-physical-2.0.0beta6//EN">6</int>
+          <int name="image/jpeg">3</int>
+          <int name="text/plain">3</int>
+          <int name="-//ecoinformatics.org//eml-project-2.0.0beta6//EN">1</int>
+        </lst>
+      </lst>
+      <lst name="facet_dates"/>
+      <lst name="facet_ranges"/>
+    </lst>
+  </response>
 
 **Data download counts by month**
 
 The following query shows data download counts by a specific user for each month in 2013::
 
-    https://cn.dataone.org/cn/v1/logsolr/select?q=*:*&fq=subject:smith&fq=event:read&fq=formatId:BIN&facet=true&facet.field=event&facet.range=datetime&facet.range.start=2013-01-01T01:01:01Z&facet.range.end=2013-12-31T24:59:59Z&facet.range.gap=%2B1MONTH
-    
+  https://cn.dataone.org/cn/v1/query/logsolr/select?q=*:*&fq=rightsHolder:uid*PISCO*&fq=event:read&facet=true&facet.range=dateLogged&facet.range.start=2013-01-01T01:01:01Z&facet.range.end=2013-12-31T24:59:59Z&facet.range.gap=%2B1MONTH
 ::
 
-   <?xml version="1.0" encoding="UTF-8"?>
-   <response>
-       ...
-       <lst name="facet_ranges">
-         <lst name="datetime">
-           <lst name="counts">
-             <int name="2013-01-01T01:01:01Z">0</int>
-             <int name="2013-02-01T01:01:01Z">0</int>
-             <int name="2013-03-01T01:01:01Z">0</int>
-             <int name="2013-04-01T01:01:01Z">0</int>
-             <int name="2013-05-01T01:01:01Z">0</int>
-             <int name="2013-06-01T01:01:01Z">2</int>
-             <int name="2013-07-01T01:01:01Z">1</int>
-             <int name="2013-08-01T01:01:01Z">0</int>
-             <int name="2013-09-01T01:01:01Z">0</int>
-             <int name="2013-10-01T01:01:01Z">0</int>
-             <int name="2013-11-01T01:01:01Z">0</int>
-             <int name="2013-12-01T01:01:01Z">0</int>
-           </lst>
-           <str name="gap">+1MONTH</str>
-           <date name="start">2013-01-01T01:01:01Z</date>
-           <date name="end">2014-01-01T01:01:01Z</date>
-         </lst>
-       </lst>
-     </lst>
-   </response>
+  <?xml version="1.0"?>
+  <response>
+     ...
+    <result name="response" numFound="3623404" start="0"/>
+    <lst name="facet_counts">
+      <lst name="facet_queries"/>
+      <lst name="facet_fields"/>
+      <lst name="facet_dates"/>
+      <lst name="facet_ranges">
+        <lst name="dateLogged">
+          <lst name="counts">
+            <int name="2013-01-01T01:01:01Z">56962</int>
+            <int name="2013-02-01T01:01:01Z">23656</int>
+            <int name="2013-03-01T01:01:01Z">46167</int>
+            <int name="2013-04-01T01:01:01Z">58562</int>
+            <int name="2013-05-01T01:01:01Z">65192</int>
+            <int name="2013-06-01T01:01:01Z">203082</int>
+            <int name="2013-07-01T01:01:01Z">66013</int>
+            <int name="2013-08-01T01:01:01Z">92320</int>
+            <int name="2013-09-01T01:01:01Z">23059</int>
+            <int name="2013-10-01T01:01:01Z">16135</int>
+            <int name="2013-11-01T01:01:01Z">73831</int>
+            <int name="2013-12-01T01:01:01Z">44968</int>
+          </lst>
+          <str name="gap">+1MONTH</str>
+          <date name="start">2013-01-01T01:01:01Z</date>
+          <date name="end">2014-01-01T01:01:01Z</date>
+        </lst>
+      </lst>
+    </lst>
+  </respones>
 
 
 **Read counts for format type *EML***
 
-The following query shows EML metadata downloads by a specific user for each month in 2013::
+The following query shows all EML metadata activity by a specific user for each month in 2013::
 
-   https://cn.dataone.org/cn/v1/logsolr/select?q=*:*&fq=subject:*smith*&fq=event:read&fq=formatId:*eml*&facet=true&facet.field=event&facet.range=datetime&facet.range.start=2013-01-01T01:01:01Z&facet.range.end=2013-12-31T24:59:59Z&facet.range.gap=%2B1MONTH
-
+  https://cn.dataone.org/cn/v1/query/logsolr/select?q=*:*&fq=rightsHolder:uid*PISCO*&fq=formatId:eml*&facet=true&facet.field=event&facet.range=dateLogged&facet.range.start=2013-01-01T01:01:01Z&facet.range.end=2013-12-31T24:59:59Z&facet.range.gap=%2B1MONTH    
 ::
 
-   <?xml version="1.0" encoding="UTF-8"?>
-   <response>
-      ...
-       <lst name="facet_ranges">
-         <lst name="datetime">
-           <lst name="counts">
-             <int name="2013-01-01T01:01:01Z">0</int>
-             <int name="2013-02-01T01:01:01Z">0</int>
-             <int name="2013-03-01T01:01:01Z">0</int>
-             <int name="2013-04-01T01:01:01Z">1</int>
-             <int name="2013-05-01T01:01:01Z">1</int>
-             <int name="2013-06-01T01:01:01Z">0</int>
-             <int name="2013-07-01T01:01:01Z">2</int>
-             <int name="2013-08-01T01:01:01Z">0</int>
-             <int name="2013-09-01T01:01:01Z">0</int>
-             <int name="2013-10-01T01:01:01Z">0</int>
-             <int name="2013-11-01T01:01:01Z">0</int>
-             <int name="2013-12-01T01:01:01Z">0</int>
-           </lst>
-           <str name="gap">+1MONTH</str>
-           <date name="start">2013-01-01T01:01:01Z</date>
-           <date name="end">2014-01-01T01:01:01Z</date>
-         </lst>
-       </lst>
-     </lst>
-   </response>
+  <?xml version="1.0"?>
+  <response>
+    ...
+    <result name="response" numFound="3504705" start="0"/>
+      <lst name="facet_counts">
+        <lst name="facet_queries"/>
+        <lst name="facet_fields">
+        <lst name="event">
+          <int name="read">3327009</int>
+          <int name="delete">51249</int>
+          <int name="update">47593</int>
+          <int name="synchronization_failed">45752</int>
+          <int name="create">33060</int>
+          <int name="replicate">42</int>
+        </lst>
+      </lst>
+      <lst name="facet_dates"/>
+      <lst name="facet_ranges">
+        <lst name="dateLogged">
+          <lst name="counts">
+            <int name="2013-01-01T01:01:01Z">54815</int>
+            <int name="2013-02-01T01:01:01Z">18652</int>
+            <int name="2013-03-01T01:01:01Z">45043</int>
+            <int name="2013-04-01T01:01:01Z">58420</int>
+            <int name="2013-05-01T01:01:01Z">64208</int>
+            <int name="2013-06-01T01:01:01Z">136014</int>
+            <int name="2013-07-01T01:01:01Z">65417</int>
+            <int name="2013-08-01T01:01:01Z">92103</int>
+            <int name="2013-09-01T01:01:01Z">22899</int>
+            <int name="2013-10-01T01:01:01Z">15522</int>
+            <int name="2013-11-01T01:01:01Z">73340</int>
+            <int name="2013-12-01T01:01:01Z">44745</int>
+          </lst>
+          <str name="gap">+1MONTH</str>
+          <date name="start">2013-01-01T01:01:01Z</date>
+          <date name="end">2014-01-01T01:01:01Z</date>
+        </lst>
+      </lst>
+    </lst>
+  </response>
+
+
 
 **Download volume for pids** 
 
-  The following query shows all pids created by subject *smith* with download size statistics aggregated by formatId::
+  The following query shows all pids created by rightsHolder *PISCO* with upload size statistics aggregated by formatId:
+::
  
-  https://cn.dataone.org/cn/v1/logsolr/select?q=*:*&fq=subject:uid=*smith*&fq=event:read&stats=true&stats.field=size&rows=0&stats.facet=formatId
- 
-**Time range based on date of access event**
+  https://cn.dataone.org/cn/v1/query/logsolr/select?q=*:*&fq=rightsHolder:uid=*PISCO*&fq=event:create&stats=true&stats.field=size&rows=0&stats.facet=formatId
+  
+::
 
-  https://cn.dataone.org/cn/v1/log/select?q=dateLogged:[2014-03-01T00:00:01Z%20TO%202014-03-31T00:00:01Z]
+  <result name="response" numFound="14721" start="0"/>
+    ...
+          <lst name="facets">
+            <lst name="formatId">
+              <lst name="eml://ecoinformatics.org/eml-2.0.0">
+                <double name="min">3582.0</double>
+                <double name="max">29176.0</double>
+                <double name="sum">604461.0</double>
+                <long name="count">43</long>
+                <long name="missing">0</long>
+                <double name="sumOfSquares">1.1348783711E10</double>
+                <double name="mean">14057.232558139534</double>
+                <double name="stddev">8240.051522137841</double>
+              </lst>
+              <lst name="eml://ecoinformatics.org/eml-2.0.1">
+                <double name="min">938.0</double>
+                <double name="max">646484.0</double>
+                <double name="sum">2.37265549E8</double>
+                <long name="count">14668</long>
+                <long name="missing">0</long>
+                <double name="sumOfSquares">7.985322030167E12</double>
+                <double name="mean">16175.72600218162</double>
+                <double name="stddev">16815.75005078953</double>
+              </lst>
+              ...
+            </lst>
+          </lst>
+        </lst>
+      </lst>
+    </lst>
+  </response>
+ 
+Note: The examples that follow do not include the result output to improve legibility. The reader is encouraged to cut/paste
+the sample queries into a web browser to view the resulting output.
+
+**Select events using time range based on date of access event**
+::
+
+  https://cn.dataone.org/cn/v1/query/logsolr/select?q=dateLogged:[2014-03-01T00:00:01Z TO 2014-03-31T00:00:01Z]
 
 **Counts of event types**
+::
 
-  https://cn.dataone.org/cn/v1/logsolr/select?q=dateLogged:[* TO NOW]&facet=true&facet.field=event
+  https://cn.dataone.org/cn/v1/query/logsolr/select?q=dateLogged:[* TO NOW]&facet=true&facet.field=event
 
 **Wildcard search for pids**
-                                                                                                                                                                                                                                                    
-  https://cn.dataone.org/cn/v1/logsolr/select?q=pid:sla.1*&facet=true&facet.field=pid&facet.mincount=1
+::
+                                                                                                                                                                                                                                                  
+  https://cn.dataone.org/cn/v1/query/logsolr/select?q=pid:doi*&facet=true&facet.field=pid&facet.mincount=1
 
 **Spatial search for events within 10km of the latitude, longitude of Santa Barbara, CA**
-
 ::
 
-  https://cn.dataone.org/cn/v1/logsolr/select?q=*:*&fq={!geofilt sfield=location pt=34.4329,-119.837 d=10}
+  https://cn.dataone.org/cn/v1/query/logsolr/select?q=*:*&fq={!geofilt sfield=location pt=34.4329,-119.837 d=10}
 
 **Search by city name for events occuring in Albuquerque**
-
 ::
 
-  https://cn.dataone.org/cn/v1/logsolr/select?q=*:*&fq=city:Albuquerque
+  https://cn.dataone.org/cn/v1/query/logsolr/select?q=*:*&fq=city:Albuquerque
 
-**Aggregated by location name**
-
+**Events aggregated by location name**
 ::
 
-  https://cn.dataone.org/cn/v1/log/select?q=event:create&facet=true&facet.field=city
+  https://cn.dataone.org/cn/v1/query/logsolr/select?q=event:create&facet=true&facet.field=city
  
 **Read counts by month for all data format types**
-
 ::
 
- https://cn.dataone.org/cn/v1/logsolr/select?q=*:*&fq=event:read&formatType=DATA&facet=true&facet.range=dateLogged&facet.range.start=2014-01-01T00:00:00.000Z&facet.range.end=2015-01-01T00:00:00.000Z&facet.range.gap=%2B1MONTH
+ https://cn.dataone.org/cn/v1/query/logsolr/select?q=*:*&fq=event:read&formatType=DATA&facet=true&facet.range=dateLogged&facet.range.start=2014-01-01T00:00:00.000Z&facet.range.end=2015-01-01T00:00:00.000Z&facet.range.gap=%2B1MONTH
  
 **Metadata read counts by month for all metadata format types**
- 
-::
-
-  https://cn.dataone.org/cn/v1/logsolr/select?q=*:*&fq=event:read&formatType=METADATA&facet=true&facet.range=dateLogged&facet.range.start=2014-01-01T00:00:00.000Z&facet.range.end=2015-01-01T00:00:00.000Z&facet.range.gap=%2B1MONTH
-
-**Find all events within 15 km of Santa Barbara**
 
 ::
 
-  https://cn.dataone.org/cn/v1/logsolr/select?q=*:*&fq=%7B!geofilt%20sfield=location%20pt=34.4329,-119.8371%20d=15%7D
+  https://cn.dataone.org/cn/v1/query/logsolr/select?q=*:*&fq=event:read&formatType=METADATA&facet=true&facet.range=dateLogged&facet.range.start=2014-01-01T00:00:00.000Z&facet.range.end=2015-01-01T00:00:00.000Z&facet.range.gap=%2B1MONTH
 
 **Byte count for read events for May 2013**
-
 ::
 
-  https://cn.dataone.org/cn/v1/logsolr/select?q=event:read&fq=dateLogged:[2013-05-01T00:00:00.000Z%20TO%202013-05-31T23:59:59.999Z]&stats=true&stats.field=size&sort=size%20desc&rows=0
+  https://cn.dataone.org/cn/v1/query/logsolr/select?q=event:read&fq=dateLogged:[2013-05-01T00:00:00.000Z TO 2013-05-31T23:59:59.999Z]&stats=true&stats.field=size&sort=size%20desc&rows=0
 
-**Count of read events for all pids aggregated by month for 2013**
 
+**Bytes downloaded for subject=cjones aggregated by formatId**
 ::
 
-  https://cn.dataone.org/cn/v1/logsolr/select?q=*:*&fq=event:read&facet=true&facet.range=dateLogged&facet.range.start=2013-01-01T00:00:00.000Z&facet.range.end=2013-12-31T23:59:59.999Z&facet.range.gap=%2B1MONTH&rows=0
-
-**Count of read events for subject "Jing Tao", aggregated by city**
-
-::
-
-  https://cn.dataone.org/cn/v1/logsolr/select?q=*:*&fq=event:read&fq=subject*Jing\%20Tao*&facet=true&facet.field=city&facet.mincount=1&rows=0
-
-**Bytes downloaded for subject=slaughter aggregated by formatId**
-
-::
-
-  https://cn.dataone.org/cn/v1/logsolr/select?q=*:*&fq=subject:uid=*sla*&fq=event:read&stats=true&stats.field=size&rows=0&stats.facet=formatId
+  https://cn.dataone.org/cn/v1/query/logsolr/select?q=*:*&fq=subject:uid=*cjones*&fq=event:read&stats=true&stats.field=size&rows=0&stats.facet=formatId

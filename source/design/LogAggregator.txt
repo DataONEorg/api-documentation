@@ -172,7 +172,7 @@ LogAggregationHarvestJob runs the task LogAggregatorTask that queries each MN by
 time, starting after the last date retrieved that was recorded by the last run, if any.
 
 LogAggregatorTask then modifies
-each harvested record by adding the following fields: isPublic, dateAggregated, nodeId, readPermissions, formatId, size,
+each harvested record by adding the following fields: isPublic, dateAggregated, nodeId, readPermissions, formatId, formatType, size,
 rightsHolder, country, region, city, geohash_1 - geohash_9, location. These records are then published to the Hazelcast topic
 hzLogEntryTopic so that each CN that is running LAF will have it's LogEntryTopicListener fire, which published them to the queue indexLogEntryQueue.
 In this way one CN harvests a single MN at a time, and the processing of those records is synced with the other CNs. 
@@ -205,51 +205,20 @@ Table 2 shows the fields contained in the Event Log Solr index
 
 *Table 2.* Solr index schema
 
-   ==============  ========  ========================================================================
-   Name            Type      Comment
-   ==============  ========  ========================================================================
-   id              string    added after harvest
-   dateAggregated  date      added after harvest                                                              
-   isPublic        boolean   added after harvest, obtained from systemmetadata
-   readPermission  string    added after harvest, obtained from systemmetadata, filtered during query
-   entryId         string    obtained from MN event log
-   pid             string    added after harvest, obtained from systemmetadata
-   ipAddress       string    obtained from MN event log, filtered during query
-   userAgent       string    obtained from MN event log, filtered during query
-   subject         string    obtained from MN event log, filtered during query
-   event           string    obtained from MN event log
-   dateLogged      date      obtained from MN event log
-   nodeId          string    added after harvest
-   rightsHolder    string    added after harvest, obtained from systemmetadata, filtered during query
-   formatId        string    added after harvest, obtained from systemmetadata
-   size            slong     added after harvest, obtained from systemmetadata
-   country         string    added after harvest, determined from ipAddress
-   region          string    added after harvest, determined from ipAddress
-   city            string    added after harvest, determined from ipAddress
-   geohash_1       string    added after harvest, determined from ipAddress
-   geohash_2       string    added after harvest, determined from ipAddress
-   geohash_3       string    added after harvest, determined from ipAddress
-   geohash_4       string    added after harvest, determined from ipAddress
-   geohash_5       string    added after harvest, determined from ipAddress
-   geohash_6       string    added after harvest, determined from ipAddress
-   geohash_7       string    added after harvest, determined from ipAddress
-   geohash_8       string    added after harvest, determined from ipAddress
-   geohash_9       string    added after harvest, determined from ipAddress
-   location        location  added after harvest, determined from ipAddress
-   ==============  ========  ========================================================================
+.. include:: EventLogIndexSchema.txt
          
 Solr Query Processing
 ---------------------
 
-The Event Log Solr index can be queried from the service endpoint https://cn.dateone.org/cn/v1/log, for example, the following query
+The Event Log Solr index can be queried from the service endpoint https://cn.dataone.org/cn/v1/query/logsolr, for example, the following query
 will return read counts for each node in the network:
 
 ::
 
-  https://cn.dataone.org/cn/v1/log/select?q=event:read&facet=true&facet.field=nodeId
+  https://cn.dataone.org/cn/v1/query/logsolr/select?q=event:read&facet=true&facet.field=nodeId
 
 The Event Log Solr index requires authenticated access, because some fields in the log entries contain sensitive information, as
-shown in *Table 1*. 
+shown in *Table 2*. 
 
 Solr queries are inspected and rewritten by SolrLoggingHandler such that counts for Solr entries will be included only if the entries are
 publicly accessible, or the user is a CN administrator or the caller's identify has access privileges to the pids of the entries.
@@ -258,54 +227,9 @@ If the requesting session has a certificate then a list of authorized subjects i
 the authorized subjects. Since the Solr index contains access information from systemmetadata, the same access rules that apply to
 systemmetadata will apply to the event log. 
 
-If the certificate is
-from a CN then full access all fields will be included in the Solr result. This level of access also allows the
-requestor to view the Solr response document, otherwise only counts and statistics (if the stats component is requested) will be returned.
+If the authenticated user is the CN administrator then the entire contents of each SOLR document are available in the SOLR result.
 
 Example Queries
 ---------------
 
-The following queries illustrate some of the information that can be obtained from the Event Log Solr index.
-
-**Download volume for pids created by subject *smith* with download size statistics aggregated by formatId**
-	
-::
- 
-  https://cn.dataone.org/cn/v1/log/select?q=*:*&fq=subject:uid=*smith*&fq=event:read&stats=true&stats.field=size&rows=0&stats.facet=formatId
-
-
-**Time range based on date of access event**
-	
-::
-
-  https://cn.dataone.org/cn/v1/log/select?q=dateLogged:[2014-03-01T00:00:01Z%20TO%202014-03-31T00:00:01Z]
-
-**Counts of event types**
-
-::
-
-  https://cn.dataone.org/cn/v1/log/select?q=dateLogged:[* TO NOW]&facet=true&facet.field=event
-
-**Wildcard search for pids**
-
-::
-																																																																																		
-  https://cn.dataone.org/cn/v1/log/select?q=pid:sla.1*&facet=true&facet.field=pid&facet.mincount=1
-
-**Spatial search for events within 10km of the latitude, longitude of Santa Barbara, CA**
-
-::
-
-  https://cn.dataone.org/cn/v1/log/select?q=*:*&fq={!geofilt}&sfield=location&pt=34.4329,-119.8371&d=10
-
-**Search by city name for events occuring in Albuquerque**
-
-::
-
-  https://cn.dataone.org/cn/v1/log/select?q*:*&fq=city:Albuquerque
-
-**Aggregated by location name**
-
-::
-
- https://cn.dataone.org/cn/v1/log/select?q=event:create&facet=true&facet.field=city
+A description of how to query the Event Log Solr Index, please see the document `<UsageStatistics.html>`_.
