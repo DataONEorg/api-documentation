@@ -26,7 +26,7 @@ The content of the access event log records are described here: `<LoggingSchema.
 The access event log records are harvested from each MN in the network and aggregated
 into a common search index by the Log Aggregation Facility which is described here: `<LogAggregator.html>`_. The
 Event Log Index is implemented as an Apache Solr instance and can be queried
-using standard Solr queries using the DataONE service endpoint \https://cn.dataone.org/cn/v1/logsolr.
+using standard Solr queries using the DataONE service endpoint \https://cn.dataone.org/cn/v1/query/logsolr.
 
 The Solr search platform provides query capabilities such as field faceting, range filtering,
 numeric field statistics and more that provide usage information based on the access events,
