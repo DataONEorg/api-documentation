@@ -1,36 +1,37 @@
 .. table:: Solr index schema
 
-   ==============  ==========    ========================================================================
-   Name            Solr Type        Comment
-   ==============  ==========    ========================================================================
-   id              string        added after harvest
-   dateAggregated  date          added after harvest                                                              
-   isPublic        boolean       added after harvest, obtained from systemmetadata
-   readPermission  string        added after harvest, obtained from systemmetadata, filtered during query
-   entryId         string        obtained from MN event log
-   pid             string        added after harvest, obtained from systemmetadata
-   ipAddress       string        obtained from MN event log, filtered during query
-   userAgent       string        obtained from MN event log
-   subject         string        obtained from MN event log, filtered during query
-   event           string        obtained from MN event log
-   dateLogged      date          obtained from MN event log
-   nodeId          string    
-   rightsHolder    string        added after harvest, obtained from systemmetadata, filtered during query
-   formatId        string        added after harvest, obtained from systemmetadata
-   formatType      string        added after harvest, obtained from systemmetadata
-   size            slong         added after harvest, obtained from systemmetadata
-   country         string        added after harvest, determined from ipAddress
-   region          string        added after harvest, determined from ipAddress
-   city            string        added after harvest, determined from ipAddress
-   geohash_1       string        added after harvest, determined from ipAddress
-   geohash_2       string        added after harvest, determined from ipAddress
-   geohash_3       string        added after harvest, determined from ipAddress
-   geohash_4       string        added after harvest, determined from ipAddress
-   geohash_5       string        added after harvest, determined from ipAddress
-   geohash_6       string        added after harvest, determined from ipAddress
-   geohash_7       string        added after harvest, determined from ipAddress
-   geohash_8       string        added after harvest, determined from ipAddress
-   geohash_9       string        added after harvest, determined from ipAddress
-   location        location      added after harvest, determined from ipAddress
-   ==============  ==========    ========================================================================
+   ================  ==========    ===============================================================================
+   Name              Solr Type     Comment
+   ================  ==========    ===============================================================================
+   id                string        added after harvest
+   dateAggregated    date          added after harvest                                                              
+   isPublic          boolean       added after harvest, obtained from systemmetadata
+   readPermission    string        added after harvest, obtained from systemmetadata, filtered during query
+   entryId           string        obtained from MN event log
+   pid               string        added after harvest, obtained from systemmetadata
+   ipAddress         string        obtained from MN event log, filtered during query
+   userAgent         string        obtained from MN event log
+   subject           string        obtained from MN event log, filtered during query
+   event             string        obtained from MN event log
+   dateLogged        date          obtained from MN event log
+   nodeId            string    
+   rightsHolder      string        added after harvest, obtained from systemmetadata, filtered during query
+   formatId          string        added after harvest, obtained from systemmetadata
+   formatType        string        added after harvest, obtained from systemmetadata
+   size              slong         added after harvest, obtained from systemmetadata
+   country           string        added after harvest, determined from ipAddress
+   region            string        added after harvest, determined from ipAddress
+   city              string        added after harvest, determined from ipAddress
+   geohash_1         string        added after harvest, determined from ipAddress
+   geohash_2         string        added after harvest, determined from ipAddress
+   geohash_3         string        added after harvest, determined from ipAddress
+   geohash_4         string        added after harvest, determined from ipAddress
+   geohash_5         string        added after harvest, determined from ipAddress
+   geohash_6         string        added after harvest, determined from ipAddress
+   geohash_7         string        added after harvest, determined from ipAddress
+   geohash_8         string        added after harvest, determined from ipAddress
+   geohash_9         string        added after harvest, determined from ipAddress
+   location          location      added after harvest, determined from ipAddress
+   counterCompliant  boolean       added after harvest, determined based on log processing for COUNTER compliance
+   ================  ==========    ===============================================================================
    

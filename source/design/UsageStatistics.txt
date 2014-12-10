@@ -74,6 +74,41 @@ in Solr field queries (i.e. &fq=<field name>) or included in Solr facet queries 
 The fields from the Event Log Index that are considered sensitive are *rightsHolder*, *ipAddress*, *subject*
 and *readPermission*.
 
+COUNTER Compliance
+------------------
+While unfiltered log records are useful for some system monitoring and related activities, scientifically-meaningful 
+analysis of log records requires that we correct log records for common events that would otherwise artificially inflate
+the statistics, such as access by web-indexing robots and multiple accesses from the same individual.  Within the
+publishing community, the `COUNTER`_ standard has been used to provide a consistent set of guidelines as to how resource access
+statistics should be reported.  To be COUNTER-compliant, DataONE provides three filters on log files:
+
+1. Only allow status 200 and 304 on READ requests
+
+    - This ensures that redirect requests (302) are only counted once, and that unsuccessful requests are ignored.
+
+2. Exclude robots
+
+    - This ensures that the myriad web-robots that constantly index web-accessible content do not artifically inflate results.
+
+3. Exclude repeat visits within certain time window
+
+    - This ensures that accidental double-clicks on a link or repeated requests from a client tool in a short time period are only counted once.
+
+Implementation of these three `COUNTER`_ requirements is implemented as a boolean index field ('counterCompliant') which, 
+for each record, determines if a given record is compliant with the `COUNTER`_ standards outlined above.  Client queries 
+which wish to only report COUNTER-compliant results just add a filter expression to their query ('counterCompliant=true'), 
+and all non-compliant records will be removed from the usage statistics reports.
+
+Because processing these log files requires a collection of records and can not be done for individual records, by default 
+when an index record is created, the system will set 'counterCompliant=false'.  A daily scheduled process will then process 
+all log records from that day and determine if each is counterCompliant, updating the counterCompliant flag to true for those 
+records that meet `COUNTER`_ requirements.  Thus, any query in which the requestor asked for counterCompliant=true will only 
+return records that have been positively confirmed to have been compliant, and will exclude up to the most recent 24 hours 
+of log records until they have been processed to assess compliance. DataONE will maintain a list on known Internet robots to
+be used for filtering addresses, and this list will be updated periodically as new robots become known, at least annually.
+
+.. _COUNTER: http://www.projectcounter.org/
+
 Statistics Service Usage
 ------------------------
 
@@ -353,6 +388,11 @@ the sample queries into a web browser to view the resulting output.
 ::
 
  https://cn.dataone.org/cn/v1/query/logsolr/select?q=*:*&fq=event:read&formatType=DATA&facet=true&facet.range=dateLogged&facet.range.start=2014-01-01T00:00:00.000Z&facet.range.end=2015-01-01T00:00:00.000Z&facet.range.gap=%2B1MONTH
+ 
+**Read counts by month for all format types, counter-compliant**
+::
+
+ https://cn.dataone.org/cn/v1/query/logsolr/select?q=*:*&fq=event:read&counterCompliant=true&facet=true&facet.range=dateLogged&facet.range.start=2014-01-01T00:00:00.000Z&facet.range.end=2015-01-01T00:00:00.000Z&facet.range.gap=%2B1MONTH
  
 **Metadata read counts by month for all metadata format types**
 
