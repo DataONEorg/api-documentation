@@ -4,19 +4,20 @@ Authorization and Authentication in DataONE
 Authorization vs. Authentication: A Primer
 -------------------------------------------
 The process of confirming whether a user has privileges to access a resource 
-or use a service is called *authorization*.  *Authentication* is the process of 
+or use a service is called *authorization*.  *Authentication,*  on the other hand,
+is the process of 
 determining whether or not a user is who they say they are. Both are required of
 a security architecture to ensure that the right people have the right access to 
 resources and services.
 
-Authorization is achieved through the association of Subjects (usernames) and 
+Authorization is achieved through the association of usernames (Subjects) and 
 permissions with the resources and services being secured.  Typically, this is 
 done using access control lists (ACL). When a request is made, the identity of 
 the user is looked up in the ACL, and the appropriate action is taken based on 
 the user's permissions.  DataONE uses Subjects contained in a resource's 
 SystemMetadata, as well as Subjects in the Authoritative Member Node's Node
-document when making authorization decisions.  The latter is used primarily for
-administrative actions and to secure services.
+document as the ACL for the resource when making authorization decisions.  
+The latter is used primarily for administrative actions and to secure services.
 
 In authentication, the user provides their username along with 
 other information that gives assurances that they are who they say they are.  
@@ -37,8 +38,9 @@ issue certificates to entities that they can send to end-users and use for encry
 communication.  Through chain-of-trust, if the issuing CA (who's identity is 
 contained in the certificate sent to the end-user) is trusted by the end-user, 
 then the end-user trusts the entity sending them the certificate.  Major internet 
-browsers come prepackaged with a set of CA certificates from well-established and 
-reputable CAs.
+browsers come pre-packaged with a set of CA certificates from well-established and 
+reputable CAs.  Certificates signed by one of these CAs can be referred to as 
+"commercially-signed" certificates.  
  
 
 For example, VeriSign and Thawte are two well-known CAs.  Imagine a bank purchases
@@ -51,7 +53,15 @@ Otherwise, authentication fails, and the web page is not loaded. (At this point,
 some browsers appeal to the user that it doesn't trust the signer of the certificate, 
 and asks the user if they should, by adding the signer to their list of trusted CAs.)
 
-
+Self-signed Certificates
+------------------------
+It's possible for organizations to create their own signing authority, and use 
+those.  These types of certificates are generally only useful for situations 
+where trust can be established in other ways - in other words, where the client
+and the server know each other.  Prime examples of this are certificates used
+by corporations for internal applications, where system administrators can install
+the certificate on behalf of users.  DataONE uses this type of certificate to 
+authenticate requests between Nodes in its network.  
 
 DataONE Authentication
 ----------------------
@@ -83,43 +93,64 @@ The DataONE landing page for CILogon is here_.
 .. _here: https://cilogon.org/?skin=DataONE
 
 
-Member Node Client Certificates
---------------------------------
-Both CNs and MNs are expected to trust DataONE and CILogon-signed certificates,
-as well as commercial certificates. DataONE issues DataONE-signed certificates 
-to MNs when they register their node to facilitate association of the certificate
-Subject with the NodeID, which is involved in some authorization decisions.
+Member Node Certificates
+------------------------
+Member Nodes cannot not use CILogon certificates to make calls to other DataONE
+nodes (as they are short-lived), but rather they use long-lived X.509 certificates 
+issued by DataONE when they register their node with the DataONE network. Note 
+that this DataONE-signed certificate is only used for initiating requests, and 
+is not used when responding to requests.  In other words, it is used only when 
+the Member Node is as acting as a client making requests.  In this situation, the 
+connection manager it uses for the request will receive a commercially-signed 
+certificate from the other DataONE Node during the request handshake, and so no 
+special trust needs to be set up.
 
+Note that the behavior of the "other DataONE Node" from above is the same behavior
+the Member Node needs when responding to DataONE service API requests.  This
+certificate is known as the Member Node's *server* certificate.  
+
+In short, Member Nodes (and Coordinating Nodes) acts both as a client and as a 
+server.  In its client role, the Member Node uses its DataONE issued and signed
+certificate, and needs to trust only commercially signed certificates.  In its
+server role, it needs to accept CILogon-issued-commercially-signed certificates
+as well as DataONE signed certificates from requesters, and respond with a 
+commercially-signed certificate of its own.
+ 
 
 Trust Relationships
 --------------------
 
-When issuing requests, two types of certificates are used: CILogon-signed and 
-DataONE-signed certificates.  In all cases, the requester can expect a 
-commercially-signed certificate from the server.
-
-===================  ========================  ==============
-Client / Requester    CA of certificate         trusted CAs
-===================  ========================  ==============
-End-user              CILogon (short-lived)     commercial         
--------------------  ------------------------  --------------
-Coordinating Node     DataONE (long-lived)      commercial
--------------------  ------------------------  --------------
-Member Node           DataONE (long-lived)      commercial
-===================  ========================  ==============
+Below illustrates the  certificates used for making requests...
 
 
+===================  ========================  ===========================
+Client / Requester    requests using            request cert. type
+===================  ========================  ===========================
+End-user              CILogon-signed cert.      short-lived, commercial
+-------------------  ------------------------  ---------------------------
+Coordinating Node     DataONE-signed cert.      long-lived, non-commercial
+-------------------  ------------------------  ---------------------------
+Member Node           DataONE-signed cert.      long-lived, non-commercial
+===================  ========================  ===========================
 
-From a server perspective, only CILogon or DataONE certificates are used
-for communication (or no certificate).  Both CNs and MNs are expected to trust
-CILogon and DataONE certificates.
+... and the certificates given in response.
 
-===================  ===================  ===================
-Server                CA of certificate    trusted CAs                     
-===================  ===================  ===================
-Coordinating Node     commercial           CILogon, DataONE        
--------------------  -------------------  -------------------
-Member Node           commercial           CILogon, DataONE        
-===================  ===================  ===================
+===================  ==========================  
+Server                responds with            
+===================  ==========================  
+Coordinating Node     commercially-signed cert 
+-------------------  --------------------------  
+Member Node           commercially-signed cert 
+===================  ========================== 
+
+
+Regarding Commercially-Signed Certificates
+-------------------------------------------
+Client applications use client connection managers to set up the SSL connection
+that will exchange certificates, and most connection managers come configured
+with mostly the same set of CAs that they trust.  However, the overlap is not
+complete, so Member Nodes should take extra care to test that their server 
+certificate is widely trusted by all major browsers, (Java) JVMs, and 
+OS-specific trust-stores, so that their data is most widely accessible.
 
 
