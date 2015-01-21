@@ -92,7 +92,9 @@ series identifier that can also be returned in the results.
 Semantics of "Current"
 ~~~~~~~~~~~~~~~~~~~~~~
 DataONE defines the latest version as "current" if the object in question has a matching SID
-and no value in the "obsoletedBy" field, regardless if it is "archived" or not. Consumers of 
+and no value in the "obsoletedBy" field, regardless if it is "archived" or not. If every object matching
+the SID has the value in the "obsoletedBy" field, the "current" object is the one with the newest 
+"dateSysMetadataModified" field, regardless if it is "archived or not. Consumers of 
 the data should inspect the system metadata and/or search results to determine if the object has been 
 explicitly archived if they are concerned about using stale data.
 
@@ -248,13 +250,14 @@ MN.getChecksum(Identifier pid):
 		
 MN.create(Identifier pid, object, SystemMetadata):
 	Identifier must be PID and included in accompanying systemMetadata. 
-	SID may be included in accompanying systemMetadata if known at time of creation.
+	SID may be included in accompanying systemMetadata if known at time of creation. The SID mustn't exist in the system.
 
 MN.update(Identifier id, Identifier newPid, SystemMetadata):
-	Identifier may be a PID or SID -- in the case of a SID, the method works with the HEAD PID of the chain. 
+	Identifier id may be a PID or SID -- in the case of a SID, the method works with the HEAD PID of the chain. 
 	The new Identifier must be a PID and must match the accompanying SystemMetadata. 
 	The new SID can match the old SID in previous SystemMetadata (objects are in the same series), 
 	or it can be any unique SID that does not already exist in the system (newly assigning a SID or shifting the SID because of a "scientifically meaningful change"). 
+	Moreover, the new system metadata may not have a SID no matter the previous version has a SID or not.
 
 MN.getLogRecords(?idFilter): 
 	Filter results to include:
@@ -278,11 +281,11 @@ MN.isAuthorized(Identifier id):
 MN.synchronizationFailed(Identifier pid): 
 	Inter-node communication should only use PIDs for identifying objects.
 
-MN.replicate(): 
+MN.replicate(Identifier id): 
 	No changes in behavior. SystemMetadata object has changed structure so there is a change in signature.
 	Replication is based on the PID so that we can ensure content has not been corrupted.
 
-MN.getReplica(Identifier): 
+MN.getReplica(Identifier id): 
 	Can only make requests for PIDs so that checksum integrity can be verified.
 	
 MN.systemMetadataChanged(Identifier, serialVersion, dateSysMetaModified):  
@@ -290,6 +293,23 @@ MN.systemMetadataChanged(Identifier, serialVersion, dateSysMetaModified):
 	Identifier can be either a PID or a SID. 
 	If a SID, the MN will fetch SystemMetadata from the CN using SID (which will return the HEAD PID SystemMetadata).
 
+MN.listObjects(?identifier=XXX):
+    Returns an ObjectList like normal, but can be filtered by identifer (SID or PID).
+    If the Identifier is a PID, it returns just the single entry for that PID.  
+    If the Identifier is a SID, it returns the objects (PIDs) of all objects that have that SID.
+
+MN.view(Identifier id):
+    Can accept either PID or SID. If a PID, get the formated view for the specified version. If a SID, get the view for the HEAD PID.
+    
+MN.getPackage(Identifier id):
+    Can accept either PID or SID. If a PID, get the package of the specified version. If a SID, get the package of the HEAD PID.
+
+MN.updateSystemMetadata(Identifier id, SystemMetadata newSysmeta): 
+    Can accept either PID or SID. If a PID, update the system metadata of the specified version. If a SID, update the system metadata of the HEAD PID. Since SID is immutable, the new SID in the newSysmeta should match the current SID if it exists. If current system metadata doesn't have a SID, the new SID can be one of the following cases:
+      1. The new SID is null (without a SID).
+      2. The new SID is a unique identifier which doesn't exist in the system.
+      3. The new SID matches the SID in the system metadata of the object in the "obsoletes" value.
+      4. The new SID matches the SID in the system metadata of the object in the "obsoletedBy" value.
 
 CN API method changes
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -305,9 +325,33 @@ CN.getSystemMetadata(Identifier id):
 	N.B. This method can be used with a SID to locate the PID of the latest version which may be sufficient without implementing a
 	getHead() method.
 
-CN.registerSystemMetadata(Identifier pid):
-	Requires a PID, allows a SID in the SystemMetadata.
+CN.getChecksum(Identifier id):
+    Behaves the same as MN
+    
+CN.getLogRecords(?idFilter): 
+    Behaves the same as MN
+    
+CN.create(Identifier pid, object, SystemMetadata):
+    Identifier must be PID and included in accompanying systemMetadata. SID may be included in accompanying systemMetadata if known at time of creation. The SID can be one of the following cases:
+      1. The SID is a unique identifier which doesn't exist in the system.
+      2. The SID matches the SID in the system metadata of the object in the "obsoletes" value.
+      3. The SID matches the SID in the system metadata of the object in the "obsoletedBy" value.
 
+CN.registerSystemMetadata(Identifier pid, SystemMetadata sysmeta):
+    Requires a PID, allows a SID in the SystemMetadata. The SID can be one of the following cases:
+      1. The SID is a unique identifier which doesn't exist in the system.
+      2. The SID matches the SID in the system metadata of the object in the "obsoletes" value.
+      3. The SID matches the SID in the system metadata of the object in the "obsoletedBy" value.
+
+CN.updateSystemMetadata(Identifier id, SystemMetadata newSysmeta): 
+    Behaves the same as MN
+
+CN.delete(Identifier id): 
+    Behaves the same as MN
+
+CN.archive(Identifier id): 
+   Behaves the same as MN
+   
 CN.reserveIdentifier(Identifier id):
 	Accepts PID or SID values and treats them exactly the same.
 	
@@ -318,9 +362,28 @@ CN.resolve(Identifier):
 	If PID, resolve it.
 	If a SID, then resolve the HEAD PID.
 
+CN.isAuthorized(Identifier id):
+    Behaves the same as MN
+
+CN.isNodeAuthorized(Identifier id):
+    Only accept PID since it is a replication related method. No behavior change.
+    
+CN.updateReplicationMetadata(Identifier id):
+    Only accept PID since it is a replication related method. No behavior change.
+
+CN.deleteReplicationMetadata(Identifier id):
+    Only accept PID since it is a replication related method. No behavior change.
+
+CN.setReplicationStatus(Identifier id):
+    Only accept PID since it is a replication related method. No behavior change.
+
 CN.setReplicationPolicy():
 	Policies apply to particular revisions, not the entire chain. 
 	If a SID is passed in to a method that affects one of these policies, the change is applied to the HEAD PID for that series.
+
+CN.setRightsHolder():
+    Ownerships apply to particular revisions, not the entire chain. 
+    If a SID is passed in to a method that affects one of these policies, the change is applied to the HEAD PID for that series.
 	
 CN.setAccessPolicy():
 	Policies apply to particular revisions, not the entire chain. 
@@ -330,10 +393,11 @@ CN.setObsoletedBy(Identifier id, Identifier obsoletedByPid):
 	Only PIDs can be used when expressing obsolescence chain.
 	The existing id can be referenced using SID and this method behaves as if it were called with the HEAD PID.
 	
+CN.view(Identifier id)
+    Behaves the same as MN
+
 CN.listObjects(?identifier=XXX): 
-	Returns an ObjectList like normal, but can be filtered by identifer (SID or PID).
-	If the Identifier is a PID, it returns just the single entry for that PID.  
-	If the Identifier is a SID, it returns the objects (PIDs) of all objects that have that SID.
+	Behaves the same as MN
 	
 
 
