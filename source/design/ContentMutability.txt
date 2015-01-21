@@ -260,10 +260,9 @@ MN.update(Identifier id, Identifier newPid, SystemMetadata):
 	Moreover, the new system metadata may not have a SID no matter the previous version has a SID or not.
 
 MN.getLogRecords(?idFilter): 
-	Filter results to include:
-	PIDs that match the idFilter.
-	SIDs that match the idFilter.
-	N.B. Log.identifier field will only contain PID values, no SIDs. 
+	Filter can be PID or SID. The MN should resolve the SID to the HEAD PID, and return the log records for that PID. 
+	If a client wishes to retrieve log records for the entire family of objects referenced by a SID, then the client should retrieve a list of PIDs for the SID, the call getLogRecords for each PID to retrieve the entire set of log records. 
+	The Log.identifier field will only contain PID values, no SIDs. 
 
 MN.delete(Identifier id): 
 	Identifier can be PID or SID. 
