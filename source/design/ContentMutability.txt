@@ -91,12 +91,42 @@ series identifier that can also be returned in the results.
 
 Semantics of "Current"
 ~~~~~~~~~~~~~~~~~~~~~~
-DataONE defines the latest version as "current" if the object in question has a matching SID
-and no value in the "obsoletedBy" field, regardless if it is "archived" or not. If every object matching
-the SID has the value in the "obsoletedBy" field, the "current" object is the one with the newest 
-"dateSysMetadataModified" field, regardless if it is "archived or not. Consumers of 
-the data should inspect the system metadata and/or search results to determine if the object has been 
-explicitly archived if they are concerned about using stale data.
+DataONE uses these rules to define the latest version as "current" when the object in question has a matching SID
+regardless if it is "archived" or not. Consumers of the data should inspect the system metadata and/or search results 
+to determine if the object has been explicitly archived if they are concerned about using stale data.
+      Rule 1. If the "obsoletedBy" field is NULL for only one object from the set that has the same SID, that object is the head of the chain (current version).
+      
+      Rule 2. If the "obsoletedBy" is NULL for two or more objects from the set that has the same SID, the object with the last value of the "dateUploaded" field is the head of the chain. Note: that this assumes that the timestamps are accurate.
+      
+      Rule 3. If the "obsoletedBy" doesn't have the "NULL" value from the set that has the same SID and an object that is obsoleted by another object that does not have the same SID exists, the object is the head of the chain.
+      
+      Rule 4. If the "obsoletedBy" doesn't have "NULL" value from the set that has the same SID and an object that is obsoleted by another object that does not have the same SID doesn't exist, the object with the last value of the "dateUploaded" field is the head of the chain.
+    
+Use cases ( "->" means "obsoletedBy", "<-" means "obsoletes"):
+      
+      Case 1: P1(S1) <-> P2(S1),  S1 = P2 (Rule 1)
+      
+      case 2. P1(S1) ? P2(S1), S1 = P2 (Rule 2), Error condition, P2 not allowed (should not exist)
+      
+      case 3. P1(S1) <- P2(S1), S1 = P2 (Rule 2), Discouraged, but not error condition.
+      
+      case 4. P1(S1) <-> P2(S1) <-> P3(S2), S1 = P2 (Rule 3), S2 = P3 (Rule 1)
+      
+      case 5. P1(S1) <- P2(S1) <- P3(S2), S1 = P2 (Rule 2), S2 = P3  (Rule 1)
+      
+      case 6. P1(S1) <-> P2(S1) <-> P3(), S1 = P2 (Rule 3)
+      
+      case 7. P1(S1) <-> P2(S1) <-> P3() <-> P4(S2), S1 = P2 (Rule 3), S2 = P4 (Rule 1)
+      
+      case 8. P1(S1) <-> P2(S1) ->  ??  <- P4(S1), S1 = P4, (Rule 1) (Error, but will happen)
+      
+      case 9. P1(S1) <-> P2(S1)  ??  <- P4(S1), S1 = P4 (Rule 2) (??: object was not synchronized)
+      
+      case 10: P1(S1) <-> P2(S1) ->  XX  <- P4(S1), S1 = P4, (Rule 1) (XX: object P3 was deleted)
+      
+      case 11: P1(S1) <-> P2(S1) <-> [archived:P3(S1)], S1 = P3, (Rule 1) 
+      
+      case 12. P1(S1) <-> P2(S1) ->  ??, S1 = P2, (Rule 4) (Error, but will happen)
 
 
 Version Storage
