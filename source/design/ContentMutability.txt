@@ -407,8 +407,7 @@ CN.setReplicationStatus(Identifier id):
     Only accept PID since it is a replication related method. No behavior change.
 
 CN.setReplicationPolicy():
-	Policies apply to particular revisions, not the entire chain. 
-	If a SID is passed in to a method that affects one of these policies, the change is applied to the HEAD PID for that series.
+	Only accept PID since it is a replication related method. No behavior change.
 
 CN.setRightsHolder():
     Ownerships apply to particular revisions, not the entire chain. 
