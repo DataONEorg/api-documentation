@@ -334,11 +334,7 @@ MN.getPackage(Identifier id):
     Can accept either PID or SID. If a PID, get the package of the specified version. If a SID, get the package of the HEAD PID.
 
 MN.updateSystemMetadata(Identifier id, SystemMetadata newSysmeta): 
-    Can accept either PID or SID. If a PID, update the system metadata of the specified version. If a SID, update the system metadata of the HEAD PID. Since SID is immutable, the new SID in the newSysmeta should match the current SID if it exists. If current system metadata doesn't have a SID, the new SID can be one of the following cases:
-      1. The new SID is null (without a SID).
-      2. The new SID is a unique identifier which doesn't exist in the system.
-      3. The new SID matches the SID in the system metadata of the object in the "obsoletes" value.
-      4. The new SID matches the SID in the system metadata of the object in the "obsoletedBy" value.
+    Requires a PID.
 
 CN API method changes
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -419,7 +415,6 @@ CN.setAccessPolicy():
 
 CN.setObsoletedBy(Identifier id, Identifier obsoletedByPid):
 	Only PIDs can be used when expressing obsolescence chain.
-	The existing id can be referenced using SID and this method behaves as if it were called with the HEAD PID.
 	
 CN.view(Identifier id)
     Behaves the same as MN
