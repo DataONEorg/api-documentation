@@ -91,42 +91,63 @@ series identifier that can also be returned in the results.
 
 Semantics of "Current"
 ~~~~~~~~~~~~~~~~~~~~~~
-DataONE uses these rules to define the latest version as "current" when the object in question has a matching SID
-regardless if it is "archived" or not. Consumers of the data should inspect the system metadata and/or search results 
-to determine if the object has been explicitly archived if they are concerned about using stale data.
-      Rule 1. If the "obsoletedBy" field is NULL for only one object from the set that has the same SID, that object is the head of the chain (current version).
-      
-      Rule 2. If the "obsoletedBy" is NULL for two or more objects from the set that has the same SID, the object with the last value of the "dateUploaded" field is the head of the chain. Note: that this assumes that the timestamps are accurate.
-      
-      Rule 3. If the "obsoletedBy" doesn't have the "NULL" value from the set that has the same SID and an object that is obsoleted by another object that does not have the same SID exists, the object is the head of the chain.
-      
-      Rule 4. If the "obsoletedBy" doesn't have "NULL" value from the set that has the same SID and an object that is obsoleted by another object that does not have the same SID doesn't exist, the object with the last value of the "dateUploaded" field is the head of the chain.
+A SID chain closes with two types of ends:
+    Type 1: An object in the SID chain doesn't have the "obsoletedBy" field.  Example: P1(S1) <-> P2(S1)
+
+    Type 2: An object in the SID chain does have the "obsoletedBy" field, but the PID in the "obsoletedBy" field has a different SID (including no SID value).  Examples: P1(S1) <-> P2(S2), P1(S1) <-> P2().
+
+Ideally, if there is one and only one end in a SID chain, this end will be the HEAD (current) version. This kind of chains is called ideal chain.
+
+If there are more than one end in a SID chain because of the incompleteness of the system metadata, we can't decide which one is the real end. This kind of chain is not a ideal chain and we have to choose the one with latest dateUploaded in the chain as the HEAD version.
+
+It is tricky to determine type 2 end if the object in the "obsoletedBy" field is missing.  For example, P1(S1) <-> P2(S1) -> ??. 
+We don't have the knowledge of the series id of the object "??". So we generally consider it a type 2 end except we are sure it 
+is not an end - there is another object in the chain (has the same series id) that obsoletes the missing object. 
+
+In previous example [P1(S1) <-> P2(S1) -> ??], P2 is a type 2 end (case 12). 
+
+However,  P1(S1) <-> P2(S1) ->  ??  <- P4(S1), P2 is not an end (case 8) since "??" is in the obsoletes field of P4 that has the same series id - S1 (We are sure that the "??" has the series id S1 as well, so P2 is not an end).  
+
+In P1(S1) <-> P2(S1) ->  ??  <- P4(S2), P2 is an type 2 end even though "??" is in the  obsoletes field of P4. But P4 has a different series id - S2 (so we are not sure "??" has S1 or S2).
+
     
 Use cases ( "->" means "obsoletedBy", "<-" means "obsoletes"):
       
-      Case 1: P1(S1) <-> P2(S1),  S1 = P2 (Rule 1)
-      
-      case 2. P1(S1) ? P2(S1), S1 = P2 (Rule 2), Error condition, P2 not allowed (should not exist)
-      
-      case 3. P1(S1) <- P2(S1), S1 = P2 (Rule 2), Discouraged, but not error condition.
-      
-      case 4. P1(S1) <-> P2(S1) <-> P3(S2), S1 = P2 (Rule 3), S2 = P3 (Rule 1)
-      
-      case 5. P1(S1) <- P2(S1) <- P3(S2), S1 = P2 (Rule 2), S2 = P3  (Rule 1)
-      
-      case 6. P1(S1) <-> P2(S1) <-> P3(), S1 = P2 (Rule 3)
-      
-      case 7. P1(S1) <-> P2(S1) <-> P3() <-> P4(S2), S1 = P2 (Rule 3), S2 = P4 (Rule 1)
-      
-      case 8. P1(S1) <-> P2(S1) ->  ??  <- P4(S1), S1 = P4, (Rule 1) (Error, but will happen)
-      
-      case 9. P1(S1) <-> P2(S1)  ??  <- P4(S1), S1 = P4 (Rule 2) (??: object was not synchronized)
-      
-      case 10: P1(S1) <-> P2(S1) ->  XX  <- P4(S1), S1 = P4, (Rule 1) (XX: object P3 was deleted)
-      
-      case 11: P1(S1) <-> P2(S1) <-> [archived:P3(S1)], S1 = P3, (Rule 1) 
-      
-      case 12. P1(S1) <-> P2(S1) ->  ??, S1 = P2, (Rule 4) (Error, but will happen)
+      case 1. P1(S1) <-> P2(S1),  S1 = P2 (Type 1)
+
+      case 2. P1(S1) ? P2(S1), S1 = P2, Error condition, P2 not allowed (should not exist) (P1 and P2 are type 1 ends, not an ideal chain)
+
+      case 3. P1(S1) <- P2(S1), S1 = P2, Discouraged, but not error condition, S1 = P2 (P1 and P2 are type 1 ends, not an ideal chain )
+
+      case 4. P1(S1) <-> P2(S1) <-> P3(S2), S1 = P2 (Type 2), S2 = P3 (Type 1)
+
+      case 5. P1(S1) <- P2(S1) <- P3(S2), S1 = P2 (P1 and P2 are type 1 ends, not an ideal chain), S2 = P3  (Type 1)
+
+      case 6. P1(S1) <-> P2(S1) <-> P3(), S1 = P2 (Type 2)
+
+      case 7. P1(S1) <-> P2(S1) <-> P3() <-> P4(S2), S1 = P2 (Type 2), S2 = P4 (Type 1)
+
+      case 8. P1(S1) <-> P2(S1) ->  ??  <- P4(S1), S1 = P4, (Type 1) (Error, but will happen)
+
+      case 9. P1(S1) <-> P2(S1)  ??  <- P4(S1), S1 = P4 (P2 and P4 are type 1 ends, not an ideal chain) (??: object was not synchronized)
+
+      case 10: P1(S1) <-> P2(S1) ->  XX  <- P4(S1), S1 = P4, (Type 1) (XX: object P3 was deleted)
+
+      case 11: P1(S1) <-> P2(S1) <-> [archived:P3(S1)], S1 = P3, (Type 1) 
+
+      case 12. P1(S1) <-> P2(S1) -> ??, S1 = P2, (Type 2) (Error, but will happen)
+
+      case 13. P1(S1) <- P2(S1) -> ??, S1 = P2 (P1 is a type 1 end and P2 is a type 2 end, not an ideal chain)
+
+      case 14. P1(S1) <- P2(S1) -> P3(S2), S1 = P2 (P1 is a type one end and P2 is a type 2 end, not an ideal chain) 
+
+      case 15. P1(S1) <-> P2(S1)  ?? <- P4(S1) <-> P5(S2), S1 = P4 (P2 is a type 1 end and P4 is a type 2 end, not an ideal chain)
+
+      case 16. P1(S1) <- P2(S1) -> ?? <-P4(S2) S1 = P2 (P1 is a type 1 end and P2 is a type 2 ends, not an ideal chain), S2=P4 (rule1)
+
+      case 17. P1(S1) <- P2(S1) -> ?? <-P4(S1) S1 = P4 (P1 and P4  are type 1 ends, not an ideal chain)
+
+      case 18. P1(S1) <->P2(S1) -> ??  ???<-P5(S1) S1 = P5 (P2 is a type 2 end and P4  is a type 1 end, not an ideal chain)
 
 
 Version Storage
