@@ -500,12 +500,13 @@ CILogon generates X509 certificate and returns it to portal for use with DataONE
         posting SAML response to CILogon
     end note
     create Portal
+    D1 -> Portal
     Portal->CI: "Download Certificate"
     CI->IS: getPrincipalInfo(Principal)
     IS-->CI: PrincipalList
     CI->CI: Generate and Sign X.509
     CI-->Portal: X.509
-    ...
+    
     group For existing KNB identities
       participant "Metacat API" as Metacat
       create Metacat
@@ -596,7 +597,7 @@ Encoding Session information in HTTP headers
 * Are these just OAuth2 tokens?
 
 Portal Delegation
-------------------
+-----------------
 
 For web clients, we can use the CILogon portal delegation approach. Note that
 the CN and portal are assumed to be on the same server.
