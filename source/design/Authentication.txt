@@ -598,7 +598,8 @@ both increasing security and increasing complexity, are:
       obtaining the client public key, and so allows distributed validation. It also protects against various session 
       hijacking attacks similarly to HMAC access tokens.
         * Pros: API key not transmitted with request, access tokens can not be reused, and can be 
-          limited to specific identifiable clients, prevents sidejacking and replay attacks, does not require TLS
+          limited to specific identifiable clients, prevents sidejacking and replay attacks, does not require TLS,
+          decentralized token validation
         * Cons: Complexity of RSA-based HMAC signing for client applications, complexity of RSA signature validation 
           for service providers and nonce tracking, etc.
     * Key distribution in this scenario can be a weakness. While simple to have the authentication service generate 
