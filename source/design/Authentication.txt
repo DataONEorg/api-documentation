@@ -600,7 +600,7 @@ both increasing security and increasing complexity, are:
         * Pros: API key not transmitted with request, access tokens can not be reused, and can be 
           limited to specific identifiable clients, prevents sidejacking and replay attacks, does not require TLS
         * Cons: Complexity of RSA-based HMAC signing for client applications, complexity of RSA signature validation 
-          for service providers
+          for service providers and nonce tracking, etc.
     * Key distribution in this scenario can be a weakness. While simple to have the authentication service generate 
       both the public and private keys, it is weak to distribute the private key over the network.  Better would 
       be for the client to generate a private key and public key, then authenticate with the authentication 
@@ -617,7 +617,66 @@ both increasing security and increasing complexity, are:
 
 .. _RSA-SHA1: http://tools.ietf.org/html/rfc5849#section-3.4.3
 
+.. image:: images/auth_04.png
 
+**Figure 6.** Scenarios for using OAuth access tokens in HTTP Authorization headers as
+an alternative mechanism to establish client identity and authorization.  In all cases,
+the user authenticates with the DataONE Portal to establish their identity, and the portal
+issues a client-specific key or token.  In the Bearer Token scenario, the Portal issues
+a reusable access token that is sent to service provides and validated with the Portal.
+In the HMAC Token scenario, the Portal issues a symmetric key, and the client uses that to 
+create HMAC hashes that are validated with the Portal.  In the RSA Token scenario, the
+Portal creates a public and private key for the client, which the client uses to RSA sign
+hashes that can be validated by service providers using the public key.
+
+..
+    @startuml images/auth_04.png
+    title Detailed Access Token Authentication Scenarios
+    participant "KNB" as MN << MNode >>
+    participant "R Client" as R << Application >>
+    participant "Portal" as Portal <<CNode>>
+    participant "Web Client" as Web << Application >>
+    participant "CILogon" as CI
+    participant "Identity Provider" as IP
+
+    Web->CI: Select IdP
+    CI-->Web: IdP Redirect
+    Web->IP: Identity Verification
+    IP-->Web: CILogon Redirect
+    Web -> Portal: follow redirect to profile page
+    
+    group Bearer Token Scenario
+        Portal->R: copy access_token
+        R->MN: get(access_token, pid)
+        MN->Portal: validateToken(access_token)
+        Portal-->MN: TRUE or FALSE
+        MN-->R: data or NotAuthorized
+    end
+    
+    group HMAC Token Scenario
+        Portal->R: copy api_key and client_id
+        R->R: generateToken(api_key, client_id, service_uri, timestamp, nonce)
+        R->MN: get(access_token, pid)
+        MN->Portal: validateToken(access_token)
+        Portal->Portal: generateToken(api_key, client_id, service_uri, timestamp, nonce)
+        Portal->Portal: compareTokens(access_token, gen_token)
+        Portal-->MN: TRUE or FALSE
+        MN-->R: data or NotAuthorized
+    end
+    
+    group RSA-SHA1 Token Scenario
+        Portal->R: copy private_key and client_id
+        R->R: generateToken(private_key, client_id, service_uri, timestamp, nonce)
+        R->MN: get(access_token, pid)
+        MN->MN: validateNonce(access_token)
+        MN->Portal: getPublicKey(client_id)
+        Portal-->MN: public_key
+        MN->MN: validateToken(access_token, public_key)
+        MN-->R: data or NotAuthorized
+    end
+    
+    @enduml
+    
 Encoding Session information in HTTP headers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -698,7 +757,7 @@ the CN and portal are assumed to be on the same server.
    
 .. image:: images/portal_01.png
 
-**Figure 6.** Authenticated "read" going through CN. The browser is the client
+**Figure 7.** Authenticated "read" going through CN. The browser is the client
 with no certificate. The portal keeps the user's client certificate. The CN
 looks up the client certificate using the client cookie. The CN includes the
 client certificate in the request that is sent to Metacat. Object is returned to
@@ -790,7 +849,7 @@ make calls to :func:`CN_auth.getAuthSession`.
 
 .. figure:: images/auth_02.png
 
-**Figure 7.** Authentication and session management assuming that the CN runs a
+**Figure 8.** Authentication and session management assuming that the CN runs a
 seperate SessionService that creates and tracks sessions. This is an alternative
 scenario based on the idea that CILogon may not be able to make calls to the
 Identity Service, in which case the separate Session Service would need to be
