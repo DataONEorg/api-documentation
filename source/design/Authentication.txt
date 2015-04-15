@@ -553,9 +553,9 @@ also supports the use of **access tokens** as a mechanism for clients to identif
 for API calls.  In this scenario, the user authenticates with the DataONE Portal, and then
 obtains either an API key or an access token directly from
 the DataONE Portal. The client then uses this information to pass access tokens to
-service providers using HTTP headers.  The service provider (e.g., MN), must then 
-validate the access tokens to ensure that the request is coming from a host
-with a valid token and that the request is not being repeated via session hijacking.
+service providers using HTTP headers (e.g., "x-dataone-auth-token").  
+The service provider (e.g., MN), must then validate the access tokens to ensure that the 
+request is coming from a host with a valid token and that the request is not being repeated via session hijacking.
 
 DataONE is considering different scenarios for the structure and meaning of these access
 tokens, largely following the OAuth1.0_ and OAuth2.0_ specifications.
