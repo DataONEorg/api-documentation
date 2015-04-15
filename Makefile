@@ -15,7 +15,10 @@ PLANTUML      = $(JAVA) -jar "$(CURDIR)/tools/docutils/plantuml.jar"
 DOCGENERATOR  = $(PYTHON) "$(CURDIR)/tools/ihwd/ihwd.py"
 METHODXLS     = MethodCrossReference.xls
 ZIPHTML       = architecture.zip
-SCHEMADIR     = source/D1_SCHEMA_v1.1
+SCHEMADIR     = source/D1_SCHEMA_DEV
+SCHEMAFILE1		=	$(SCHEMADIR)/dataoneTypes.xsd
+SCHEMAFILE11	=	$(SCHEMADIR)/dataoneTypes_v1.1.xsd
+SCHEMAFILE2		=	$(SCHEMADIR)/dataoneTypes_v2.0.xsd
 XSD2RST       = tools/xsd2rst
 #SCHEMADIR     = /Users/vieglais/Workspaces/DataONE_trunk/d1_schemas
 
@@ -55,7 +58,9 @@ generate_methods: $(METHODXLS)
 	$(DOCGENERATOR) -s "$(CURDIR)/$(METHODXLS)" -d "$(CURDIR)/source/apis/generated"
 
 generate_types: 
-	$(XSLTPROC) --path ".:$(SCHEMADIR):$(XSD2RST)" dataoneTypes2rst.xsl dataoneTypes.xsd > "$(CURDIR)/source/apis/Types.txt"
+	$(XSLTPROC) --path ".:$(SCHEMADIR):$(XSD2RST)" dataoneTypes2rst.xsl $(SCHEMAFILE1) > "$(CURDIR)/source/apis/Types.txt"
+	$(XSLTPROC) --path ".:$(SCHEMADIR):$(XSD2RST)" dataoneTypes2rst.xsl $(SCHEMAFILE11) > "$(CURDIR)/source/apis/Types11.txt"
+	$(XSLTPROC) --path ".:$(SCHEMADIR):$(XSD2RST)" dataoneTypes2rst.xsl $(SCHEMAFILE2) > "$(CURDIR)/source/apis/Types2.txt"
 
 plantuml: plantuml_source plantuml_usecase plantuml_types plantuml_morpho
 
