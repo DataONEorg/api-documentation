@@ -1,0 +1,308 @@
+What is This Thing?
+===================
+
+**It does not make sense to have a string without knowing what encoding it
+uses** [Spolsky2003_].
+
+
+Media Type Metadata
+-------------------
+
+In DataONE content may be transferred multiple times between multiple locations,
+and each transfer must result in an accurate representation of the original
+content. DataONE achieves this by transferring byte copies of content between
+clients and servers using the HTTP protocol, and verifying that the checksum
+computed by the origin matches that retrieved. Hence the bytes are accurately
+transferred and can be reliably transferred again by the consumer.
+
+In order to properly interpret how to use the object, the consumer must know the
+*media type* of the object. The media type (formerly the MIME or Multipurpose
+Internet Mail Extensions Type) is metadata about an object that can be used by
+the consumer to determine what the object is. The IANA (Internet Assigned
+Numbers Authority [IANA_]) provides a controlled list of media types
+[IANA_MEDIA_] (henceforth "IANA Media Types") that are used during internet
+transfer of objects to inform the receiver of the type of object being
+transferred.
+
+The media type can be determined several ways:
+
+* examine the bytes of the object
+* infer from the file name of the object
+* additional metadata provided by the object producer
+
+The most reliable general solution is for the media type metadata to be provided
+by the object producer. This is especially important for ambiguous object types
+such as text documents since the character encoding can in many cases only be
+reliably determined by the application that created the document.
+
+In some cases, the IANA Media Type by itself does not provide sufficient
+information for a consumer to reliably process an object. For example a text
+document with IANA Media Type of ``text/plain`` may have been created using any
+of hundreds of character sets [IANA_CHARS_]. In these cases, an additional 
+``charset`` parameter is specified, and this information along with the IANA 
+Media Type is required to properly interpret a text file.
+
+DataONE expands on the metadata describing an object by recording additional
+information in :class:`Types.SystemMetadata` that accompanies every object.
+Amongst this additional metadata is a ``formatId`` that, like the IANA Media
+Type, provides a pointer to additional information (a
+:class:`Types.ObjectFormat`) about the object for the benefit of downstream
+consumers. The ``ObjectFormat`` structure is a controlled list of object
+classifications that augments the IANA Media Type to support use by analytical
+tools employed by researchers and other.
+
+In this manner the combination of an object and it's System Metadata provides
+the information necessary for a consumer to discern what the object is and so
+what applications might be used to ingest the object.
+
+
+Preserving Media Type Metadata Between Systems
+----------------------------------------------
+
+Once available, the media type metadata should be preserved with the object to
+ensure that downstream consumers can utilize the content in the same way without
+resorting to inference mechanisms with potentially different results. Hence it
+is essential that media type information is considered an integral part of the
+action of transferring an object between systems.
+
+When a server sends an object to a user agent (e.g. a CN acting as a client
+retrieving a Science Metadata document from a MN, a script accessing content, or
+a browser viewing something from a CN), the server should specify the media type 
+in the ``Content-Type`` field of the accompanying HTTP headers [RFC2616_ Section
+14.17]. The ``Content-Type`` entity-header field indicates the media type
+[IANA_MEDIA_] (formerly known as "MIME Type" or "Multipurpose Internet Mail
+Extensions Type") of the entity-body sent to the recipient [RFC2616_]. The media
+type entry of the Content-Type header is used to to inform the consumer of what
+the bytes in the payload represent.
+
+The server may also include a suggested filename in the Content-Disposition HTTP
+header [RFC6266_]. This can be useful for consumers as it specifies a filename
+that may be used by default for the content, and also provides a hint as to the
+type of content being provided (i.e. through the file name extension).
+
+All content in DataONE is accompanied by System Metadata which is used to
+provide persistent information about the associated object that is useful for
+maintaining the object state and for consumers. Content type in DataONE is
+indicated in System Metadata by freference to an :class:`Types.Object Format`, a
+complex structure that contains a ``formatId``, a ``formatName`` and a
+``formatType``. In version 2.0 APIs, :class:`V2_0.Types.objectFormat` is
+extended to include mimeType and extension.
+
+The use of a controlled list of object formats may be problematic however, when
+considering that a particular type of object may have multiple media types (e.g.
+an Excel spreadsheet) or may require more detail such as character encoding
+information (e.g. a CSV or XML document) that may not be reliably inferred from
+the object bytes.
+
+Hence, the system metadata for an object should also include optional properties
+for the media type specific to the object, the character encoding, and the
+filename. This information may be provided with the object System Metadata or in
+the Content-Type and Content-Disposition headers. Where the information in the
+headers conflicts with that in the System Metadata, the System Metadata should
+prevail (since presumably the system metadata was set correctly by the origin,
+whereas a misconfigured server may be setting an incorrect value).
+
+**Recommendations**
+
+1. (no change) The objectFormat is used to indicate to a consumer application 
+   more detailed information than is available through the media type.
+
+2. The ``mimeType`` element of the Draft v2.0 API should be renamed "mediaType" 
+   and used to specify the default media type for an object should that 
+   information not be explicitly provided through the Content-Type header 
+   provided by the producer. 
+
+3. The media type as provided by the producer of the object should be specified
+   and should be preserved as part of the system metadata so that the media type
+   may be reliably presented to downstream consumers. When specified in the 
+   ``Content-Type`` header, the media   type overrides the default value present 
+   in the associated objectFormat. When present in System Metadata, that value 
+   overrides a value presented in the ``Content-Type``header. In practice, 
+   System Metadata is retrieved separately from the object, and so such an 
+   override will optional for consumers.
+
+4. For text media sub-types, or content that is textual (e.g. media type =
+   ``application/xml`` or ``application/javascript``), a charset parameter 
+   should be provided in the ``Content-Type`` header. When provided, this value 
+   must be persisted in the system metadata associated with an object. When 
+   ``charset`` is specified in the System Metadata, it overrides a value that 
+   may be present in the Content-Type header. In practice, System Metadata is 
+   retrieved separately from the object, and so such an override will optional 
+   for consumers.
+
+5. A filename should be provided in a ``Content-Disposition`` header by a
+   producer and should be preserved in the system metadata associated with the
+   object. When present in the System Metadata, that value overrides a value in
+   the ``Content-Disposition`` header. In practice, System Metadata is retrieved 
+   separately from the object, and so such an override will optional for 
+   consumers.
+
+
+
+Rules for Various Content Types
+-------------------------------
+
+application/xml
+~~~~~~~~~~~~~~~
+
+.. Note::
+
+   ``application/xml`` and ``text/xml`` are equivalent [RFC7303_ Section
+   9.2].
+
+The use of UTF-8, without a BOM, is RECOMMENDED for all XML MIME entities
+[RFC7303_].
+
+The document character set for XML is Unicode (ISO 10646), which means that XML
+processors should behave as if they used Unicode internally. However, that does
+not mean an XML document must be transmitted in Unicode. As long as client and
+server agree on the encoding, they can use any encoding that can be converted to
+Unicode.
+
+A challenge with XML documents is that there are three locations where character
+encoding information may be provided:
+
+* A Byte Order Marker (BOM) at the begining of the entity body
+* An XML encoding property present at the start of the document
+* A charset property present in the ``Content-Type`` HTTP header
+
+Each of these are optional, and when present may provide conflicting
+information. `Section 3.2 <RFC7303>`_ of RFC7303 provides guidelines for how to
+infer the character encoding of a document. In order of priority:
+
+  1. A BOM (Section 3.3) is authoritative if it is present in an XML MIME 
+     entity;
+
+  2. In the absence of a BOM (Section 3.3), the charset parameter is
+     authoritative if it is present.
+
+  3. If an XML MIME entity is received where the charset parameter is omitted, 
+     no information is being provided about the character encoding by the MIME 
+     Content-Type header.  XML-aware consumers MUST follow the requirements in 
+     section 4.3.3 of [XML_] that directly address this case.  XML-unaware MIME 
+     consumers SHOULD NOT assume a default encoding in this case.
+
+Section 8 of RFC7303_ provides several examples of consistent and inconsistent
+XML encoding.
+
+An important consequence of the document character set is that values of numeric
+character references (such as &#x01F5; and &#501; for LATIN SMALL LETTER G WITH
+ACUTE) are interpreted as Unicode characters - no matter what encoding you use
+for your document. This is a common source of error among those who are not
+clear about the distinction.
+
+Note that not all Unicode characters can be used anywhere in XML. Certain
+characters are excluded from use in tag names (elements and attributes), and 
+`XML 1.1 <XML1.1>`_ expands significantly on the range of characters that may 
+be used compared with `XML 1.0 <XML1.0>`_.
+
+
+text/xml
+~~~~~~~~
+
+See application/xml.
+
+
+text/csv
+~~~~~~~~
+
+[RFC4180_]
+
+MIME media type name: text
+
+MIME subtype name: csv
+
+Required parameters: none
+
+Optional parameters: charset, header
+
+  Common usage of CSV is US-ASCII, but other character sets defined by IANA for
+  the "text" tree may be used in conjunction with the "charset" parameter.
+
+  The "header" parameter indicates the presence or absence of the header
+  line.Valid values are "present" or "absent". Implementors choosing not to use
+  this parameter must make their own decisions as to whether the header line is
+  present or absent.
+
+Encoding considerations:
+
+  As per section 4.1.1. of RFC 2046 [3], this media type uses CRLF to denote
+  line breaks.However, implementors should be aware that some implementations
+  may use other values.
+
+
+text/plain
+~~~~~~~~~~
+
+[RFC2046_]
+
+
+
+text/javascript
+~~~~~~~~~~~~~~~
+
+Obsoleted in favor of ``application/javascript``
+
+
+
+application/javascript
+~~~~~~~~~~~~~~~~~~~~~~
+
+
+application/json
+~~~~~~~~~~~~~~~~
+
+JSON text SHALL be encoded in Unicode_ [RFC4627_]. The default encoding is UTF-8.
+
+Since the first two characters of a JSON text will always be ASCII characters
+[RFC0020_], it is possible to determine whether an octet stream is UTF-8, UTF-16
+(BE or LE), or UTF-32 (BE or LE) by looking at the pattern of nulls in the first
+four octets::
+
+  00 00 00 xx  UTF-32BE
+  00 xx 00 xx  UTF-16BE
+  xx 00 00 00  UTF-32LE
+  xx 00 xx 00  UTF-16LE
+  xx xx xx xx  UTF-8
+
+
+
+
+
+.. _Spolsky2003: http://www.joelonsoftware.com/articles/Unicode.html
+
+.. _W3C_Headers: http://www.w3.org/International/questions/qa-headers-charset
+
+.. _IANA: http://www.iana.org/
+
+.. _IANA_MEDIA: http://www.iana.org/assignments/media-types/media-types.xhtml
+
+.. _IANA_CHARS: http://www.iana.org/assignments/character-sets/character-sets.xhtml
+
+.. _RFC2616-sec14: http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
+
+.. _XML: http://www.w3.org/TR/2008/REC-xml-20081126
+
+.. _XML1.0: http://www.w3.org/TR/REC-xml/#charsets
+
+.. _XML1.1: http://www.w3.org/TR/xml11/#charsets
+
+.. _RFC0020: http://www.ietf.org/rfc/rfc0020.txt
+
+.. _RFC2046: http://www.ietf.org/rfc/rfc2046.txt
+
+.. _RFC2616: http://www.ietf.org/rfc/rfc2616.txt
+
+.. _RFC4180: http://www.ietf.org/rfc/rfc4180.txt
+
+.. _RFC4627: http://www.ietf.org/rfc/rfc4627.txt
+
+.. _RFC6266: http://www.ietf.org/rfc/rfc6266.txt
+
+.. _RFC6657: http://www.rfc.org/rfc/rfc6657.txt
+
+.. _RFC7303: http://www.ietf.org/rfc/rfc7303.txt
+
+.. _Unicode: http://www.unicode.org/
+
+
