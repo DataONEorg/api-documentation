@@ -62,7 +62,7 @@ try:
                 'sphinx.ext.todo',
                 'sphinx.ext.inheritance_diagram',
                 'sphinx.ext.extlinks',
-                'sphinxcontrib.httpdomain',
+                # 'sphinxcontrib.httpdomain',
                 #'plantuml',
                 ]
 except:
