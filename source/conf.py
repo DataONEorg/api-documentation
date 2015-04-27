@@ -62,6 +62,7 @@ try:
                 'sphinx.ext.todo',
                 'sphinx.ext.inheritance_diagram',
                 'sphinx.ext.extlinks',
+                'sphinxcontrib.httpdomain',
                 #'plantuml',
                 ]
 except:
@@ -75,6 +76,7 @@ except:
                 'sphinx.ext.todo',
                 'sphinx.ext.inheritance_diagram',
                 'sphinx.ext.extlinks',
+                'sphinxcontrib.httpdomain',
                 #'plantuml',
                 ]
 
@@ -275,7 +277,8 @@ html_context = {
   'previous_version': previous_version,
   'current_version': release,
   'is_development': True,
-  'purl_path':"/docs/api/"
+  'purl_path':"/docs/api/",
+  'current_version_URL':'https://releases.dataone.org/online/api-documentation-v1.2.0',
 }
 
 # -- Options for PDF output  --------------------------------------------------
