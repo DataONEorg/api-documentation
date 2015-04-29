@@ -626,7 +626,7 @@ both increasing security and increasing complexity, are:
 an alternative mechanism to establish client identity and authorization.  In all cases,
 the user authenticates with the DataONE Portal to establish their identity, and the portal
 issues a client-specific key or token.  In the Bearer Token scenario, the Portal issues
-a reusable access token that is sent to service provides and validated with the Portal.
+a signed, reusable access token that is sent to service provider and verified using an asymmetric public key.
 In the HMAC Token scenario, the Portal issues a symmetric key, and the client uses that to 
 create HMAC hashes that are validated with the Portal.  In the RSA Token scenario, the
 Portal creates a public and private key for the client, which the client uses to RSA sign
@@ -651,9 +651,10 @@ hashes that can be validated by service providers using the public key.
     group Bearer Token Scenario
         Portal->R: copy access_token
         R->MN: get(access_token, pid)
-        MN->Portal: validateToken(access_token)
-        Portal-->MN: TRUE or FALSE
-        MN-->R: data or NotAuthorized
+        MN-->Portal: getPublicKey()
+        MN<--Portal: public_key
+        MN->MN: validateToken(access_token, public_key)
+        R<-MN: data or NotAuthorized
     end
     
     group HMAC Token Scenario
@@ -683,10 +684,33 @@ hashes that can be validated by service providers using the public key.
 Encoding Session information in HTTP headers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. Note::
+When clients wish to use an authentication token, they will include the 
+token value in this request header::
 
-    * Describe how to put auth tokens in headers
-    * desribe how MNs verify tokens
+  x-dataone-auth-token: <token_value>
+  
+Service providers should inspect the request for this token and use it when 
+a client x509 certificate is not present.
+
+When services wish to verify the JWT auth token, they should use the public 
+certificate of the token issuing service (i.e., the CN's public server certificate).
+A utility is included in the d1_portal project with example code below.
+
+.. Verify token::
+
+	// get the token
+	String token = request.getHeader("x-dataone-auth-token");
+	
+	// parse the JWT
+	SignedJWT signedJWT = SignedJWT.parse(token);
+	
+	// verify the token using server's public key
+	JWSVerifier verifier = new RSASSAVerifier(publicKey);
+	boolean verified = signedJWT.verify(verifier);
+	
+	// check payload for subject, ttl, expiration, etc...
+	String userId = signedJWT.getJWTClaimsSet().getClaim("userId").toString();
+	
 
 Authenticated Session Management
 --------------------------------
