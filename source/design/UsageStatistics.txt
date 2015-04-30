@@ -90,25 +90,25 @@ statistics should be reported.  To be COUNTER-compliant, DataONE provides three 
 
 2. Exclude robots
 
-    - This ensures that the myriad web-robots that constantly index web-accessible content do not artifically inflate results.
+    - This ensures that the myriad web-robots that constantly index web-accessible content do not artificially inflate results.
 
 3. Exclude repeat visits within certain time window
 
     - This ensures that accidental double-clicks on a link or repeated requests from a client tool in a short time period are only counted once.
 
-Compliance with these three `COUNTER`_ requirements is implemented as two boolean index field ('repeatVisit' and 'robotsStrict') which, 
+Compliance with these three `COUNTER`_ requirements is implemented as two boolean index field ('isRepeatVisit' and 'inFullRobotList') which, 
 for each record, determines if a given record adheres to the `COUNTER`_ standards outlined above.  Client queries 
-which wish to only report COUNTER-compliant results just add a filter expression to their query ('repeatVisit=false', 'robotsStrict=false'), 
+which wish to only report COUNTER-compliant results just add a filter expression to their query ('isRepeatVisit=false', 'inFullRobotList=false'), 
 and all non-compliant records will be removed from the usage statistics reports.
 
-The field 'robotsStrict' indicates whether or not
+The field 'inFullRobotList' indicates whether or not
 the logged event originated from a request issued by a user agent found in the full list of web robots, with the value 'true' 
 indicating that the user agent is a web robot, and thus the event record is not `COUNTER`_ compliant.
 
 DataONE will maintain a list on known Internet robots to
 be used for filtering addresses, and this list will be updated periodically as new robots become known, at least annually.
 
-The field 'repeatVisits'
+The field 'isRepeatVisit'
 indicates whether or not a duplicate request has occurred for the same IP address and pid within a certain time window
 (currently 30 seconds), with a value of 'true' indicating that an entry is a repeat request.
 
@@ -116,14 +116,15 @@ The following query will return the count of all read events that have passed th
 
 ::
 
-    https://cn.dataone.org/cn/v1/query/logsolr/select?q=*:*&fq=event:read&fq=robotsStrict:false&fq=repeatVisit:false
+    https://cn.dataone.org/cn/v1/query/logsolr/select?q=event:read&fq=inFullRobotList:false&fq=isRepeatVisit:false
 
 The event index is updated once a day with event entries from all active member nodes, with the most current information being from the previous day.
 
 In addition to the 'COUNTER_' related fields, the field
-'robotsLoose' indicates whether or not the user agent was found in a list that contains a subset of the full robots list, 
-and represents a 'looser' interpretation of which user agents are considered web robots. A value of 'true' indicates that
-a match was found in the 'looser' web robots list. This field is not used in `COUNTER`_ compliance filtering.
+'inPartialRobotList' indicates whether or not the user agent was found in a list that contains a subset of the full robots list, 
+and represents a less strict interpretation of which user agents are considered web robots, and does not include user agents such
+as 'java', 'libwww', 'Wget'. A value of 'true' indicates that
+a match was found in the less strict web robots list. This field is not used in `COUNTER`_ compliance filtering.
 
 .. _COUNTER: http://www.projectcounter.org/
 
@@ -402,12 +403,12 @@ the sample queries into a web browser to view the resulting output.
 
   https://cn.dataone.org/cn/v1/query/logsolr/select?q=event:create&facet=true&facet.field=city
  
-**Read counts by month for all data format types**
+**Download (read) counts by month for all data format types**
 ::
 
  https://cn.dataone.org/cn/v1/query/logsolr/select?q=*:*&fq=event:read&formatType=DATA&facet=true&facet.range=dateLogged&facet.range.start=2014-01-01T00:00:00.000Z&facet.range.end=2015-01-01T00:00:00.000Z&facet.range.gap=%2B1MONTH
  
-**Read counts by month for all format types, counter-compliant**
+**Download (read) counts by month for all format types, counter-compliant**
 ::
 
  https://cn.dataone.org/cn/v1/query/logsolr/select?q=*:*&fq=event:read&counterCompliant=true&facet=true&facet.range=dateLogged&facet.range.start=2014-01-01T00:00:00.000Z&facet.range.end=2015-01-01T00:00:00.000Z&facet.range.gap=%2B1MONTH
@@ -428,3 +429,8 @@ the sample queries into a web browser to view the resulting output.
 ::
 
   https://cn.dataone.org/cn/v1/query/logsolr/select?q=*:*&fq=subject:uid=*cjones*&fq=event:read&stats=true&stats.field=size&rows=0&stats.facet=formatId
+  
+**Download (read) counts for node KNB, excluding web crawler accesses and duplicate (repeat) visits (with a short time interval, i.e. 30 seconds)**
+::
+
+https://cn.dataone.org/cn/v1/query/logsolr/select?q=event:read&fq=inFullRobotList:false&fq=isRepeatVisit:false&fq=nodeId:urn\:node\:KNB
