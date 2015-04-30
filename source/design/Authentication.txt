@@ -685,12 +685,14 @@ Encoding Session information in HTTP headers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 When clients wish to use an authentication token, they will include the 
-token value in this request header::
+token value in the Authorization request header::
 
-  x-dataone-auth-token: <token_value>
+  Authorization: Bearer <token_value>
   
-Service providers should inspect the request for this token and use it when 
-a client x509 certificate is not present.
+This is consistent with the OAuth 2 specification that states how Bearer tokens_ 
+should be  transmitted to the service. 
+Service providers should inspect the request for 
+this token and use it when a client x509 certificate is not present.
 
 When services wish to verify the JWT auth token, they should use the public 
 certificate of the token issuing service (i.e., the CN's public server certificate).
@@ -699,7 +701,8 @@ A utility is included in the d1_portal project with example code below.
 .. Verify token::
 
 	// get the token
-	String token = request.getHeader("x-dataone-auth-token");
+	String token = request.getHeader("Authorization");
+	token = token.split(" ")[1];
 	
 	// parse the JWT
 	SignedJWT signedJWT = SignedJWT.parse(token);
