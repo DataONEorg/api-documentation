@@ -5,6 +5,38 @@ The service interfaces described here are exposed through the Coordinating
 Node REST interface to support interactions with Member Nodes and DataONE
 clients.
 
+The following table provides a list of API methods exposed by Coordinating
+Nodes.
+
+:Tier: 
+
+  The tier in which a method is grouped.
+
+:Version: 
+
+  Version of API method is available. The lowest version number indicates when
+  the method was added. A version number in parentheses indicates the method is
+  available in that version and is unchanged from the previous version. If more
+  than one version number is present, then the method signature or functionality
+  has changed between API versions. e.g. "1.0, 2.0" indicates that the method
+  was first introduced in Version 1.0 and has been modified in Version 2.0.
+
+:REST:
+
+  The HTTP method and path relative to the Base URL. Parameters specified in the
+  URL are indicatd by braces. Note that parameters included in a path MUST be
+  properly path encoded, and parameters included as key, value pairs MUST also
+  be properly encoded.
+
+:Function:
+
+  The function name, associated with an API grouping.
+
+:Parameters:
+
+  Indicates the parameters used when calling the method (sent in the message
+  payload) and the return type.
+
 
 .. include:: generated/generated_CN_function_table.txt
 
