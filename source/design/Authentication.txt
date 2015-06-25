@@ -673,14 +673,30 @@ Initially, DataONE will target these avenues for authentication:
 * CILogon - Users can continue to authenticate using CILogon identities much like they do today.
 The portal keeps track of their successful authnetication from whichever IdP they choose, and will 
 issue an authentication token for that user.
+To begin the CILogon authorization process in the CN portal, users can navigate to::
+
+	https://<cn-host>/portal/startRequest[?target=<some_final_uri>
+
 
 * ORCID - Using a similar workflow as with CILogon, users can opt to authenticate using their ORCID 
 accounts using OAuth 2.0. After successfully authenticating with the ORCID identity provider, an 
 authentication token can be retrieved from the portal.
+To begin the ORCID authorization process in the CN portal, users can navigate to::
+
+	https://<cn-host>/portal/oauth?action=start
 
 * LDAP - Existing Ecoinformatics account holders can opt to continue using those identites to authenticate 
 with the DataONE portal. This is a more direct method of authentication and is meant to bridge the gap between 
 our legacy account system and newer SSO options available above.
+To authenticate using LDAP, users can post to::
+
+	https://<cn-host>/portal/ldap
+	
+The following parameters are requred (*) or supported::
+
+	username* - the full LDAP DN
+	password* - the user's LDAP password
+	target - any URI to be redirected to upon successful authentiction
 
 In all cases, users will retrieve an authentication token from the CN Portal after they have successfully authenticated with 
 their IdP of choice and been redirected back to the CN Portal. The auth token endpoint is::
