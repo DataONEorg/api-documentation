@@ -6,125 +6,150 @@ Use Case 12 - User Authentication
 .. index:: Use Case 12, authentication
 
 Goal 
-  User Authentication - Person or service via client software authenticates
-  against an identify provider to establish session token that can
-  subsequently be used as a proxy for the user.
+~~~~
+
+User Authentication - A user or a service operating on behalf of a user
+authenticates against an identify provider to establish a certificate that can
+subsequently be used to identify the user.
+
 
 Summary
-  Many operations in the DataONE system require affirmation of user identity
-  to ensure that appropriate access controls can be asserted and other
-  services such as citation and notification operate as expected.
+~~~~~~~
 
-  The actual identity and authentication framework may exist outside of
-  DataONE, and the first version of the infrastructure will be utilizing the
-  certificate based services of the `CILogon service`_.
+Many operations in the DataONE system require affirmation of user identity to
+ensure that appropriate access controls can be asserted and other services such
+as citation and notification operate as expected.
 
-  The user obtains a certificate from the CILogon service, then uses that
-  certificate to obtain an authentication token that can be used in the
-  DataONE system. The authentication token is (perhaps) a SAML_ document that
-  contains information mapping the user to *n* identities that may be
-  recognized by the DataONE participant nodes.
+The actual identity and authentication framework may exist outside of DataONE,
+and the first version of the infrastructure will be utilizing the certificate
+based services of the `CILogon service`_.
 
-  .. figure:: ../images/uc_12_authentication.png
+The user obtains a certificate from the CILogon service, then uses that
+certificate to make API calls against DataONE Services.
 
-    *Figure 1.* (Note: This diagram is an initial draft subject to significant
-    change). Rough sketch of an authentication scenario augmented by a
-    centralized identity mapping. A user logs on to the CILogon service (1)
-    and retrieves a certificate (2). A later connection to login to the
-    DataONE system uses the previously generated certificate to assert
-    identity with the Coordinating Node (3). The Coordinating Node looks up
-    the user's identities (4), retrieving multiple known identities for the
-    user (5). The Coordinating Node generates an encrypted XML document (e.g.
-    SAML) which contains the known identities of the user and returns the
-    document as the authentication token (6). The token is the used to
-    identify the user in a get() request against a Member Node, which checks
-    for a known alias in its own user database (8). A successful verification
-    (9) indicates the identity of the user, and verifies that the user has
-    access to the object (not shown), then returns the object (10). An initial
-    process of identity sharing (0) is used to generate the identities
-    database at the Coordinating Nodes.
+Alternatively, a long lived certificate may be provided by DataONE for systems such as Member Nodes that need to authenticate with components of DataONE.
 
-  .. figure:: ../images/uc_12_authentication2.png
-
-    *Figure 2.* Sketch of an authentication scenario where the CILogon
-    certificate is used the authentication token when interacting with the
-    DataONE system. The user logs on to the CILogon service (1) and receives a
-    certificate (2). The user makes a request to a Member Node using the
-    certificate credentials as the authentication token (3). The Member Node
-    does not recognize the user identity in its local user database (4) and so
-    requests identity resolution from a Coordinating Node (5). The
-    Coordinating Node inspects its identity mapping tables and determines the
-    identity of the user according to the Member Node, and returns that
-    information (7). The Member Node asserts that the user has read access to
-    the object and returns it to the user (8). This approach assumes that the
-    user has had the opportunity to perform the necessary identity mapping,
-    and that the Member Node trusts the Coordinating Node's assertion about
-    the identity of the user.
-
+In each case, the provided certificate contains the subject, alternate subjects, and group memberships of the user. This information is used by services to determine if the caller has access to the requested resource. 
 
 Actors
-  User, Member Node, Coordinating Node, Authentication System
+~~~~~~
+
+User, Member Node, Coordinating Node, Authentication System
 
 Preconditions 
-  - User is not authenticated in the system
+~~~~~~~~~~~~~
+
+- User is not authenticated in the system
 
 Triggers
-  - A user logs on to the DataONE system.
+~~~~~~~~
 
-  - A user tries to perform an operation in the DataONE system that requires
-    authentication.
+- A user logs on to the DataONE system.
+
+- A user needs to access a restricted operation.
 
 Post Conditions
-  - An *auth_token* is returned to the user (application) that can be used
-    for future interactions with the DataONE system.
+~~~~~~~~~~~~~~~
 
-  - In the event of authentication failure, the *auth_token* will provide
-    identity equivalent to an anonymous user.
+- A certificate is returned to the user that can be used by DataONE services 
+  to identify the user.
 
-  - The authentication operation is recorded in CN logs (depending on where
-    the authentication attempt was made)
+- In the event of authentication failure the certificate will not be available.
 
-  - The *auth_token* is trusted by participant Member Nodes as a proxy for the
-    actual user.
+.. image:: images/12_seq_a.png
+   :scale: 100%
 
+..
+  @startuml images/12_seq_a.png
+  actor User
+  participant CILogon
+  participant IDP <<Identity Provider >>
+  participant CN <<Coordinating Node>>
+
+  note right of CILogon
+    DataONE Authentication Service
+    https://cilogon.org/?skin=dataone
+  end note
+  User -> CILogon: Authenticate
+  activate CILogon
+  CILogon -> User: auth_using_IDP
+
+  note right of IDP
+    User selected 
+    Identity Provider
+  end note
+  User -> IDP: authenticate
+  activate IDP
+  IDP -> CILogon: user metadata
+  deactivate IDP
+  CILogon -> CN: getSubjectInfo
+  activate CN
+  CN -> CILogon: SubjectInfo
+  deactivate CN
+  CILogon -> CILogon: generate certificate
+  CILogon -> User: certificate_download_tool
+  User -> CILogon: download certificate
+  CILogon -> User: certificate
+  deactivate CILogon
+
+  @enduml
+
+**Figure 1.** Obtaining a client side certificate from the CILogon service.
+
+
+.. image:: images/12_seq_b.png
+   :scale: 100%
 
 .. 
-   @startuml images/12_seq.png
-   actor User
-   participant CILogon
-   User -> CILogon:login(credentials)
-   CILogon -> User: certificate
-   participant "Client" as app_client << Application >>
-   participant "Authentication API" as cn_auth << Coordinating Node >>
-   User --> app_client: certificate
-   app_client -> cn_auth: login(certificate)
-   cn_auth -> cn_auth: getAuthToken(certificate)
-   cn_auth -> app_client: SAML_token
-   @enduml
+  @startuml images/12_seq_b.png
+  actor User
+  participant CA <<Certificate Authority>>
+  participant CertProvider 
 
-.. image:: images/12_seq.png
+  note right of CA
+    DataONE Certificate Authority. Requires
+    manual interaction with DataONE 
+    administrators to generate certificate.
+  end note
+  User -> CA: Request certificate
+  activate CA
+  CA -> CA: Generate certificate
+  CA -> User: Certificate retrieval information
+  deactivate CA
+  User -> CertProvider: download Certificate
+  activate CertProvider
+  CertProvider -> User: Certificate
+  deactivate CertProvider
 
-*Figure 3.* Interactions for use case 12.
+  @enduml
+
+**Figure 2.** Obtaining a long-lived client side certificate from DataONE.
 
 
-**Notes**
+.. image:: images/12_seq_c.png
+   :scale: 100%
 
-- To be a bit more abstract, it might be good to use something like
-  login(user, credentials) or login(subject) for the method signature. Here
-  "subject" would be similar to the `javax.security.auth.Subject
-  <http://java.sun.com/javase/6/docs/api/javax/security/auth/Subject.html>`_
-  concept. (PEA)
 
-- Can logins also happening against a MN, which simply proxies the request up
-  to the CN? (PEA)
+..
+  @startuml images/12_seq_c.png
+  actor User
+  participant MN <<Member Node>>
+  note right of MN
+    Member Node is shown, however
+    process is the same for both 
+    Member and Coordianting Nodes
+  end note
+  User -> MN: restricted operation
+  activate MN
+  MN -> MN: verify credentials
+  MN -> User: response
+  deactivate MN
+  @enduml
 
-- Need to specify a time to live for auth_tokens. Is this part of the
-  authentication sub-system? If so, can the TTL be altered by the DataONE
-  system?
+
+**Figure 3.** Authenticated interaction with service provided by a Member or 
+Coordinating Node.
 
 
 .. _CILogon service: http://www.cilogon.org/service
 
-.. _SAML: http://en.wikipedia.org/wiki/Security_Assertion_Markup_Language
-
-.. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/12_uc.txt
