@@ -21,11 +21,14 @@ This use case desribes the general pattern of updating System Metadata
 properties by agents with authority to do so.
 
 In version 1.x of the DataONE infrastructure, System Metadata may only be
-altered through Coordinating Nodes (after creation and synchronization).
+altered through Coordinating Nodes (after creation and synchronization). 
 
 In version 2.x of the DataONE infrastructure, properties of System Metadata are
 managed by the Authoritative Member Node with the exception of Replica
-information, which is managed by the Coordinating Nodes.
+information, which is managed by the Coordinating Nodes. In version 2.x, the
+System Metadata serialVersion property is only updated by Coordinating Nodes
+during replication processing. Only the Authoritative Member Node can update
+dataSysMetadataModified.
 
 
 Actors
@@ -103,17 +106,17 @@ action.
   note right of CN
     System Metadata
     Serial Version = 1
-    dateSysMetadataModified = XX
+    dateSysMetadataModified = t1
   end note
   note right of MN
     System Metadata
     Serial Version = 1
-    dateSysMetadataModified = XX
+    dateSysMetadataModified = t1
   end note
   note right of MN_repl
     System Metadata
     Serial Version = 1
-    dateSysMetadataModified = XX
+    dateSysMetadataModified = t1
   end note
   Bob -> CN : Alter Property
   activate CN
@@ -121,7 +124,7 @@ action.
   note right of CN
     System Metadata
     Serial Version = 2
-    dateSysMetadataModified = YY
+    dateSysMetadataModified = t2
   end note
   CN -> Bob: ack
   deactivate CN
@@ -137,7 +140,7 @@ action.
   note right of MN
     System Metadata
     Serial Version = 2
-    dateSysMetadataModified = YY
+    dateSysMetadataModified = t2
   end note
   deactivate MN
   MN_repl -> CN: getSystemMetadata
@@ -148,7 +151,7 @@ action.
   note right of MN_repl
     System Metadata
     Serial Version = 2
-    dateSysMetadataModified = YY
+    dateSysMetadataModified = t2
   end note
   deactivate MN_repl
   @enduml
@@ -174,29 +177,29 @@ copies throughout the federation.
   note right of MN
    System Metadata
    serialVersion = 10
-   dateSysMetadataModified = XX
+   dateSysMetadataModified = t1
   end note
   note right of CN
    System Metadata
    serialVersion = 10
-   dateSysMetadataModified = XX
+   dateSysMetadataModified = t1
   end note
   note right of MN_repl
    System Metadata
    serialVersion = 10
-   dateSysMetadataModified = XX
+   dateSysMetadataModified = t1
   end note
   activate MN
-  MN -> Bob: dateSysMetadataModified = XX
+  MN -> Bob: dateSysMetadataModified = t1
   deactivate MN
-  Bob -> MN : updateSystemMetadata\ndateSysMetadataModified=XX
+  Bob -> MN : updateSystemMetadata\ndateSysMetadataModified=t1
   activate MN
-  MN -> MN: check dateSysMetadataModified == XX
+  MN -> MN: check dateSysMetadataModified == t1
   MN -> MN: update properties\ndateSysMetadataModified = now()
   note right of MN
     System Metadata
     serialVersion = 10
-    dateSysMetadataModified = YY
+    dateSysMetadataModified = t2
     
     Mutable properties other than Replica 
     entries may be updated by a user 
@@ -217,7 +220,12 @@ copies throughout the federation.
   note right of CN
    System Metadata
    serialVersion = 10
-   dateSysMetadataModified = YY
+   dateSysMetadataModified = t2
+  end note
+  CN ->] : <<internal>> Notify System Metadata Changed
+  note right of CN
+    Indexing and other CN services
+    are notified of the change
   end note
 
   CN -> MN_repl: systemMetadataChanged
@@ -231,7 +239,7 @@ copies throughout the federation.
   note right of MN_repl
    System Metadata
    serialVersion = 10
-   dateSysMetadataModified = YY
+   dateSysMetadataModified = t2
    
    On replica MNs, all mutable System 
    Metadata properties may be updated 
@@ -250,7 +258,6 @@ for System Metadata except for replication information (for which Coordinating
 Nodes are authoritative). In this scenario, user Bob updates properties of 
 System Metadata (e.g. Access Policy) for an object, and that change is 
 propogated to copies throughout the federation.
-
 
 
 .. 
@@ -273,5 +280,7 @@ propogated to copies throughout the federation.
      app_client <- n_crud: bytes
    end
    @enduml
+
+
 
 
