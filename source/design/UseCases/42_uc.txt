@@ -1,0 +1,289 @@
+.. _UC42:
+
+Use Case 42 - Update System Metadata Properties
+-----------------------------------------------
+
+.. index:: Use Case 42, update system metadata, UC42
+
+Goal
+~~~~
+
+Alter mutable properties of System Metadata.
+
+Summary 
+~~~~~~~
+
+System Metadata provides low level information about each object in DataONE and
+inlcudes properties that are immutable and others that may be mutated by
+different agents.
+
+This use case desribes the general pattern of updating System Metadata
+properties by agents with authority to do so.
+
+In version 1.x of the DataONE infrastructure, System Metadata may only be
+altered through Coordinating Nodes (after creation and synchronization).
+
+In version 2.x of the DataONE infrastructure, properties of System Metadata are
+managed by the Authoritative Member Node with the exception of Replica
+information, which is managed by the Coordinating Nodes.
+
+
+Actors
+~~~~~~
+
+- A content owner
+- Coordinating Node
+- Member Node
+- Replication target Member Node
+
+
+Preconditions 
+~~~~~~~~~~~~~
+
+- Object exists within the DataONE system
+
+
+Triggers
+~~~~~~~~
+
+- A user or agent wishes to alter mutable properties of System Metadata for an 
+  object.
+
+
+Post Conditions
+~~~~~~~~~~~~~~~
+
+- The properties of System Metadata are altered
+- All replicas of System Metadata are in sync
+- Search indices are updated to reflect the change
+
+Includes
+~~~~~~~~
+
+- Use case 12, Authentication
+- Use case 43, Indexing content
+
+.. image:: images/42_uc.png
+
+
+..
+   @startuml images/42_uc.png
+   actor "Owner" as client
+   usecase "12. Authentication" as authen
+   note top of authen
+   Authentication may be provided 
+   by an external service
+   end note
+
+     actor "Coordinating Node" as CN
+     actor "Member Node" as MN
+     usecase "13. Authorization" as author
+     usecase "42. Archive Object" as archive
+     usecase "21. Notify subscribers" as subscribe
+     client -- archive
+     CN -- archive
+     MN -- archive
+     archive ..> author: <<includes>>
+     archive ..> authen: <<includes>>
+     archive ..> subscribe: <<includes>>   @enduml
+
+
+
+**Figure 1.** Use case 42 diagram showing actors and components involved in this
+action.
+
+.. figure:: images/42_seq_a.png
+
+..
+  @startuml images/42_seq_a.png
+  actor Bob
+  participant "Authoritative" as MN <<Member Node>>
+  participant "Coordinating Node" as CN <<Coordinating Node>>
+  participant "Replica" as MN_repl <<Member Node>>
+  note right of CN
+    System Metadata
+    Serial Version = 1
+    dateSysMetadataModified = XX
+  end note
+  note right of MN
+    System Metadata
+    Serial Version = 1
+    dateSysMetadataModified = XX
+  end note
+  note right of MN_repl
+    System Metadata
+    Serial Version = 1
+    dateSysMetadataModified = XX
+  end note
+  Bob -> CN : Alter Property
+  activate CN
+  CN -> CN : update property\nserialVersion++\ndateSysMetadataModified = now()
+  note right of CN
+    System Metadata
+    Serial Version = 2
+    dateSysMetadataModified = YY
+  end note
+  CN -> Bob: ack
+  deactivate CN
+  CN -> MN: systemMetadataChanged
+  activate MN
+  CN->MN_repl: systemMetadataChanged
+  activate MN_repl
+  MN -> CN: getSystemMetadata
+  activate CN
+  CN -> MN: SystemMetadata
+  deactivate CN
+  MN -> MN : update property
+  note right of MN
+    System Metadata
+    Serial Version = 2
+    dateSysMetadataModified = YY
+  end note
+  deactivate MN
+  MN_repl -> CN: getSystemMetadata
+  activate CN
+  CN -> MN_repl: SystemMetadata
+  deactivate CN
+  MN_repl -> MN_repl : update property
+  note right of MN_repl
+    System Metadata
+    Serial Version = 2
+    dateSysMetadataModified = YY
+  end note
+  deactivate MN_repl
+  @enduml
+
+**Figure 2a.** Sequence diagram for Use Case 42 illustrating the high level 
+sequence of operations associated with altering system metadata of an object for
+version 1.x infrastructure where Coordinating Nodes are the authoritative source 
+for System Metadata. In this scenario, user Bob updates properties of System 
+Metadata (e.g. Access Policy) for an object, and that change is propogated to 
+copies throughout the federation.
+
+
+.. figure:: images/42_seq_b.png
+
+.. 
+  @startuml images/42_seq_b.png
+  autonumber
+  actor Bob
+  participant "Authoritative" as MN <<Member Node>>
+  participant "Coordinating Node" as CN <<Coordinating Node>>
+  participant "Replica" as MN_repl <<Member Node>>
+  Bob -> MN: getSystemMetadata
+  note right of MN
+   System Metadata
+   serialVersion = 10
+   dateSysMetadataModified = XX
+  end note
+  note right of CN
+   System Metadata
+   serialVersion = 10
+   dateSysMetadataModified = XX
+  end note
+  note right of MN_repl
+   System Metadata
+   serialVersion = 10
+   dateSysMetadataModified = XX
+  end note
+  activate MN
+  MN -> Bob: dateSysMetadataModified = XX
+  deactivate MN
+  Bob -> MN : updateSystemMetadata\ndateSysMetadataModified=XX
+  activate MN
+  MN -> MN: check dateSysMetadataModified == XX
+  MN -> MN: update properties\ndateSysMetadataModified = now()
+  note right of MN
+    System Metadata
+    dateSysMetadataModified = YY
+  end note
+  MN -> CN: synchronize
+  activate CN
+  CN -> MN: ack
+  MN -> Bob: ack
+  deactivate MN
+  deactivate CN
+  CN -> MN : getSystemMetadata
+  activate CN
+  activate MN
+  MN -> CN: systemMetadata
+  deactivate MN
+  CN -> CN: update properties\nserialVersion ++
+  note right of CN
+   System Metadata
+   serialVersion = 11
+   dateSysMetadataModified = YY
+  end note
+
+  CN -> MN_repl: systemMetadataChanged
+  activate MN_repl
+  CN -> MN: systemMetadataChanged
+  deactivate CN
+  activate MN
+
+  MN_repl -> CN: getSystemMetadata
+  activate CN
+  CN -> MN_repl: SystemMetadata
+  deactivate CN
+  note right of MN_repl
+   System Metadata
+   serialVersion = 11
+   dateSysMetadataModified = YY
+   
+   On replica MNs, all mutable System 
+   Metadata properties may be updated 
+   by a CN
+  end note
+  MN_repl -> MN_repl: update properties
+  deactivate MN_repl
+  
+  MN -> CN: getSystemMetadata
+  activate CN
+  CN -> MN: SystemMetadata
+  deactivate CN
+  note right of MN
+    System Metadata
+    serialVersion = 11
+    dateSysMetadataModified = YY
+    
+    On Authoritative MN, only 
+    replication roperties are updated.
+  end note
+  MN -> MN: update properties
+  deactivate MN
+  @enduml
+
+**Figure 2b.** Sequence diagram for Use Case 42 illustrating the high level 
+sequence of operations associated with altering system metadata of an object for
+version 2.x infrastructure where Member Nodes are the authoritative source 
+for System Metadata except for replication information (for which Coordinating 
+Nodes are authoritative). In this scenario, user Bob updates properties of 
+System Metadata (e.g. Access Policy) for an object, and that change is 
+propogated to copies throughout the federation.
+
+
+
+
+
+.. 
+   @startuml images/42_seq.png
+   participant "Client" as app_client << Application >>
+   participant "Read API" as n_crud << Node >>
+   participant "Authorization API" as n_authorize << Node >>
+   participant "Object Store" as n_ostore << Node >>
+   app_client -> n_crud: get(session, PID)
+   n_crud -> n_authorize: isAuthorized(session, PID, READ)
+   n_crud <- n_authorize: True, False, Err.NotFound
+   alt NotFound
+     app_client <- n_crud: Err.NotFound
+   else False
+     app_client <- n_crud: Err.NotAuthorized
+   else True
+     n_crud -> n_ostore: read(PID)
+     n_crud <- n_ostore: bytes
+     n_crud --> n_crud: log(PID, READ)
+     app_client <- n_crud: bytes
+   end
+   @enduml
+
+
