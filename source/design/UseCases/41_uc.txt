@@ -1,0 +1,157 @@
+.. _UC41:
+
+Use Case 41 - Archive an Object
+-------------------------------
+
+.. index:: Use Case 41, archive, UC41
+
+
+Goal
+~~~~
+
+Archive an object so that it is no longer discoverable, but remains accessible
+by those that already have a reference to it. 
+
+Summary 
+~~~~~~~
+
+A content owner or manager would like to prevent further discovery of an 
+object though ensure that references to the object (using its identifier) 
+remain valid.
+
+Transition to an archived state is not reversible.
+
+Actors
+~~~~~~
+
+- Client, a content manager or owner (must have *write* permission)
+- Coordinating Node
+- Member Node
+
+.. figure:: images/41_uc.png
+
+..
+  @startuml images/41_uc.png
+  actor "Owner" as client
+  usecase "12. Authentication" as authen
+  note top of authen
+    Authentication may be provided 
+    by an external service
+  end note
+
+  actor "<<Coordinating Node>>" as CN
+  actor "<<Member Node>>" as MN
+  usecase "13. Authorization" as author
+  usecase "41. Archive Object" as archive
+  usecase "42. Update System Metadata" as update
+  client -- archive
+  CN -- archive
+  MN -- archive
+  archive ..> author: <<includes>>
+  archive ..> authen: <<includes>>
+  archive ..> update: <<includes>>   
+  @enduml
+
+*Figure 1.* Use case 41 diagram showing actors and components involved in this
+action.
+
+
+Preconditions 
+~~~~~~~~~~~~~
+
+- Client has authenticated to the desired level
+- Client has write permission on the object
+- Object has been synchronized by the Coordinating Nodes
+- The object may be replicated to other Member Nodes
+
+
+Triggers
+~~~~~~~~
+
+- A user with write permission calls :func:`CNCore.archive`
+
+
+Post Conditions
+~~~~~~~~~~~~~~~
+
+- The *archive* property of :class:`Types.SystemMetadata` is set to "true"
+- System metadata for all replicas of the object is updated
+- Search indices are updated to remove the object
+
+
+
+Process
+~~~~~~~
+
+
+.. figure:: images/41_seq.png
+
+*Figure 2.* Sequence diagram for Use Case 41 illustrating the high level 
+sequence of operations associated with archiving an object.
+
+
+Example
+~~~~~~~
+
+Using ``curl`` to archive an object. ``ANODE`` can be any Member of Coordinating
+Node that has a copy of the object:
+
+.. code-block:: bash
+
+   # The member node base URL
+   ANODE="https://my.mn.org/base/url"
+
+   # A client certificate with a subject that has write permission on the object
+   CERT="my_client_certificate.pem"
+
+   # The identifier of the object to be archived. Note that the PID will need
+   # to be URL path encoded in this example.
+   PID="object.identifier"
+
+   # Invoke the archive operation on the identifier
+   curl -E ${CERT} -X PUT "$ANODE/archive/${PID}"
+
+
+.. 
+   @startuml images/41_seq.png
+   Actor "Client" as app_client << Application >>
+   participant "Replica" as mn <<Member Node>>
+   participant "Coordinating Node" as cn <<Coordinating Node>>
+   app_client -> app_client: Use Case 12.\nAuthenticate
+   note right of mn
+     System Metadata
+     serialVersion = 1
+     dateSyMetadataModified = t1
+   end note
+   app_client -> mn:archive(PID)
+   activate app_client
+   activate mn
+   mn -> mn: check write access
+   mn -> mn: archive=true\ndatesysMetadataModified = now()
+   note right of mn
+     System Metadata
+     serialVersion = 1
+     dateSyMetadataModified = t2
+   end note
+
+   mn -> app_client: ack
+   deactivate app_client
+   deactivate mn
+   ... __Possibly Long Wait__ ...
+   note right of cn
+     Coordinating Node detects newere version of 
+     System Metadata during the synchronization process,
+     retrieves the updated information, verifies 
+     acceptable changes, then updates own copy. 
+     This process is documented in Use Case 06.
+   end note
+   mn -> cn: Use Case 06, Synchronization
+   cn ->o]: Use Case 42, Update System Metadata
+   note right of cn
+     The CN ensures that the System Metadata for 
+     replicas is updated with the current revision.
+     This is documented in Use Case 42.
+   end note
+   @enduml
+
+
