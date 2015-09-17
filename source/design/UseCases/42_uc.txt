@@ -60,39 +60,9 @@ Post Conditions
 - All replicas of System Metadata are in sync
 - Search indices are updated to reflect the change
 
-Includes
-~~~~~~~~
 
-- Use case 12, Authentication
-- Use case 43, Indexing content
-
-.. image:: images/42_uc.png
-
-
-..
-   @startuml images/42_uc.png
-   actor "Owner" as client
-   usecase "12. Authentication" as authen
-   note top of authen
-   Authentication may be provided 
-   by an external service
-   end note
-
-     actor "Coordinating Node" as CN
-     actor "Member Node" as MN
-     usecase "13. Authorization" as author
-     usecase "42. Archive Object" as archive
-     usecase "21. Notify subscribers" as subscribe
-     client -- archive
-     CN -- archive
-     MN -- archive
-     archive ..> author: <<includes>>
-     archive ..> authen: <<includes>>
-     archive ..> subscribe: <<includes>>   @enduml
-
-
-**Figure 1.** Use case 42 diagram showing actors and components involved in this
-action.
+Process
+~~~~~~~
 
 .. figure:: images/42_seq_a.png
 
@@ -126,8 +96,15 @@ action.
     Serial Version = 2
     dateSysMetadataModified = t2
   end note
+  CN ->] : <<internal>> Notify System Metadata Changed
+  note right of CN
+    Indexing and other CN services
+    are notified of the change
+  end note
   CN -> Bob: ack
   deactivate CN
+
+  group Update All Member Nodes
   CN -> MN: systemMetadataChanged
   activate MN
   CN->MN_repl: systemMetadataChanged
@@ -154,7 +131,9 @@ action.
     dateSysMetadataModified = t2
   end note
   deactivate MN_repl
+  end
   @enduml
+
 
 **Figure 2a.** Sequence diagram for Use Case 42 illustrating the high level 
 sequence of operations associated with altering system metadata of an object for
@@ -207,10 +186,14 @@ copies throughout the federation.
   end note
   MN -> CN: synchronize
   activate CN
+  CN -> CN: schedule update
   CN -> MN: ack
+  deactivate CN
   MN -> Bob: ack
   deactivate MN
-  deactivate CN
+  
+  ... __Potentially long delay__ ...
+  
   CN -> MN : getSystemMetadata
   activate CN
   activate MN
@@ -228,6 +211,7 @@ copies throughout the federation.
     are notified of the change
   end note
 
+  group Update only replica nodes
   CN -> MN_repl: systemMetadataChanged
   activate MN_repl
   deactivate CN
@@ -247,7 +231,7 @@ copies throughout the federation.
   end note
   MN_repl -> MN_repl: update properties
   deactivate MN_repl
-  
+  end
   @enduml
 
 
@@ -258,28 +242,6 @@ for System Metadata except for replication information (for which Coordinating
 Nodes are authoritative). In this scenario, user Bob updates properties of 
 System Metadata (e.g. Access Policy) for an object, and that change is 
 propogated to copies throughout the federation.
-
-
-.. 
-   @startuml images/42_seq.png
-   participant "Client" as app_client << Application >>
-   participant "Read API" as n_crud << Node >>
-   participant "Authorization API" as n_authorize << Node >>
-   participant "Object Store" as n_ostore << Node >>
-   app_client -> n_crud: get(session, PID)
-   n_crud -> n_authorize: isAuthorized(session, PID, READ)
-   n_crud <- n_authorize: True, False, Err.NotFound
-   alt NotFound
-     app_client <- n_crud: Err.NotFound
-   else False
-     app_client <- n_crud: Err.NotAuthorized
-   else True
-     n_crud -> n_ostore: read(PID)
-     n_crud <- n_ostore: bytes
-     n_crud --> n_crud: log(PID, READ)
-     app_client <- n_crud: bytes
-   end
-   @enduml
 
 
 
