@@ -88,7 +88,6 @@ Includes
      archive ..> subscribe: <<includes>>   @enduml
 
 
-
 **Figure 1.** Use case 42 diagram showing actors and components involved in this
 action.
 
@@ -96,6 +95,7 @@ action.
 
 ..
   @startuml images/42_seq_a.png
+  autonumber
   actor Bob
   participant "Authoritative" as MN <<Member Node>>
   participant "Coordinating Node" as CN <<Coordinating Node>>
@@ -195,7 +195,12 @@ copies throughout the federation.
   MN -> MN: update properties\ndateSysMetadataModified = now()
   note right of MN
     System Metadata
+    serialVersion = 10
     dateSysMetadataModified = YY
+    
+    Mutable properties other than Replica 
+    entries may be updated by a user 
+    with appropriate permission.
   end note
   MN -> CN: synchronize
   activate CN
@@ -208,18 +213,16 @@ copies throughout the federation.
   activate MN
   MN -> CN: systemMetadata
   deactivate MN
-  CN -> CN: update properties\nserialVersion ++
+  CN -> CN: update properties
   note right of CN
    System Metadata
-   serialVersion = 11
+   serialVersion = 10
    dateSysMetadataModified = YY
   end note
 
   CN -> MN_repl: systemMetadataChanged
   activate MN_repl
-  CN -> MN: systemMetadataChanged
   deactivate CN
-  activate MN
 
   MN_repl -> CN: getSystemMetadata
   activate CN
@@ -227,7 +230,7 @@ copies throughout the federation.
   deactivate CN
   note right of MN_repl
    System Metadata
-   serialVersion = 11
+   serialVersion = 10
    dateSysMetadataModified = YY
    
    On replica MNs, all mutable System 
@@ -237,21 +240,8 @@ copies throughout the federation.
   MN_repl -> MN_repl: update properties
   deactivate MN_repl
   
-  MN -> CN: getSystemMetadata
-  activate CN
-  CN -> MN: SystemMetadata
-  deactivate CN
-  note right of MN
-    System Metadata
-    serialVersion = 11
-    dateSysMetadataModified = YY
-    
-    On Authoritative MN, only 
-    replication roperties are updated.
-  end note
-  MN -> MN: update properties
-  deactivate MN
   @enduml
+
 
 **Figure 2b.** Sequence diagram for Use Case 42 illustrating the high level 
 sequence of operations associated with altering system metadata of an object for
@@ -260,8 +250,6 @@ for System Metadata except for replication information (for which Coordinating
 Nodes are authoritative). In this scenario, user Bob updates properties of 
 System Metadata (e.g. Access Policy) for an object, and that change is 
 propogated to copies throughout the federation.
-
-
 
 
 
