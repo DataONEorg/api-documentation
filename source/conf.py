@@ -91,7 +91,7 @@ extlinks = {'history': ('https://redmine.dataone.org/projects/d1/repository/chan
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
-plantuml = "java -jar " + os.path.abspath('../tools/docutils/plantuml.jar')
+plantuml = "java -jar \"" + os.path.abspath('../tools/docutils/plantuml.jar') + "\""
 #plantuml += " -config " + os.path.abspath('../tools/docutils/plantuml.conf')
 
 #Full path to the plantuml jar file.
