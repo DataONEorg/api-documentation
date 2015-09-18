@@ -28,9 +28,8 @@ Actors
 - Coordinating Node
 - Member Node
 
-.. figure:: images/41_uc.png
+.. uml::
 
-..
   @startuml images/41_uc.png
   actor "Owner" as client
   usecase "12. Authentication" as authen
@@ -52,7 +51,7 @@ Actors
   archive ..> update: <<includes>>   
   @enduml
 
-*Figure 1.* Use case 41 diagram showing actors and components involved in this
+**Figure 1.** Use case 41 diagram showing actors and components involved in this
 action.
 
 
@@ -83,36 +82,8 @@ Post Conditions
 Process
 ~~~~~~~
 
+.. uml::
 
-.. figure:: images/41_seq.png
-
-*Figure 2.* Sequence diagram for Use Case 41 illustrating the high level 
-sequence of operations associated with archiving an object.
-
-
-Example
-~~~~~~~
-
-Using ``curl`` to archive an object. ``ANODE`` can be any Member of Coordinating
-Node that has a copy of the object:
-
-.. code-block:: bash
-
-   # The member node base URL
-   ANODE="https://my.mn.org/base/url"
-
-   # A client certificate with a subject that has write permission on the object
-   CERT="my_client_certificate.pem"
-
-   # The identifier of the object to be archived. Note that the PID will need
-   # to be URL path encoded in this example.
-   PID="object.identifier"
-
-   # Invoke the archive operation on the identifier
-   curl -E ${CERT} -X PUT "$ANODE/archive/${PID}"
-
-
-.. 
    @startuml images/41_seq.png
    Actor "Client" as app_client << Application >>
    participant "Replica" as mn <<Member Node>>
@@ -153,5 +124,33 @@ Node that has a copy of the object:
      This is documented in Use Case 42.
    end note
    @enduml
+
+
+*Figure 2.* Sequence diagram for Use Case 41 illustrating the high level 
+sequence of operations associated with archiving an object.
+
+
+Example
+~~~~~~~
+
+Using ``curl`` to archive an object. ``ANODE`` can be any Member of Coordinating
+Node that has a copy of the object:
+
+.. code-block:: bash
+
+   # The member node base URL
+   ANODE="https://my.mn.org/base/url"
+
+   # A client certificate with a subject that has write permission on the object
+   CERT="my_client_certificate.pem"
+
+   # The identifier of the object to be archived. Note that the PID will need
+   # to be URL path encoded in this example.
+   PID="object.identifier"
+
+   # Invoke the archive operation on the identifier
+   curl -E ${CERT} -X PUT "$ANODE/archive/${PID}"
+
+
 
 
