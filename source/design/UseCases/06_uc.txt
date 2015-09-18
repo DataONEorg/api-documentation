@@ -5,78 +5,205 @@ Use Case 06 - MN Synchronize
 
 .. index:: Use Case 06, UC06, MN Synchronize, synchronize
 
-Revisions
-  View document revision history_.
-
 Goal
+~~~~
 
-  Science metadata records and system metadata for all objects available on a
-  Member Node are synchronized to a Coordinating Node.
+Science metadata records, resource maps, and system metadata for all objects
+available on a Member Node are synchronized to a Coordinating Node.
 
 Summary
+~~~~~~~
 
-  As content is added to Member Nodes, the associated system metadata, science
-  metadata, and resource map documents are retrieved by a Coordinating Node.
-  Once the objects are registered with the Coordinating Node, they are
-  considered to be part of the DataONE system, and so will be managed
-  accordingly - the metadata and resource map object will be replicated
-  between Coordinating Nodes, metadata will be indexed, and the objects will
-  be replicated to other Member Nodes as required.
+As content is added to Member Nodes, the associated system metadata, science
+metadata, and resource map documents are retrieved by a Coordinating Node.
+Once the objects are registered with the Coordinating Node, they are
+considered to be part of the DataONE system, and so will be managed
+accordingly - the metadata and resource map object will be replicated between
+Coordinating Nodes, metadata will be indexed, and the objects will be
+replicated to other Member Nodes as required.
+
+Content replication as managed by Coordinating Nodes is described in Use Case
+09.
+
+In version 1.x of the DataONE infrastructure, synchronization is through polling
+only. A Coordinating Node will periodically request a list of objects that are
+new or have been altered for some specified time period using the listObjects
+method.
+
+In version 2.x of the DataONE infrastructure, a new mechanism to enable clients
+or Member Nodes to request synchronization of an object was added. This helps
+ensure a more rapid update of object properties such as access control rules are
+propogated through the infrastructure.
+
 
 Actors
+~~~~~~
 
-  Member Node, Coordinating Node
+- Member Node
+- Coordinating Node
+
+.. uml::
+   
+   @startuml images/06_uc.png
+   actor "Coordinating Node" as CN
+   actor "Member Node" as MN
+
+   usecase "13. Authorization" as author
+   usecase "06. Synchronize Metadata" as SYNC
+   usecase "43. Notify Indexer" as NOTIFY
+   CN -- SYNC
+   MN -- SYNC
+   SYNC ..> author: <<includes>>
+   SYNC ..> NOTIFY: <<includes>>
+   @enduml
+
+**Figure 1.** Use case diagram indicating the components and other use cases
+involved in this use case.
+
 
 Preconditions 
+~~~~~~~~~~~~~
 
-  - CN and MN operational
-  - New content available on a Member Node
+- CN and MN operational
+- New content available on a Member Node.
+
 
 Triggers
+~~~~~~~~
 
-  - Periodic polling of MNs
-  - Signal to CN issued by a MN that is requesting synchronization
+- Periodic polling of MNs
+- Signal to CN issued by a MN that is requesting synchronization
+
 
 Post Conditions
+~~~~~~~~~~~~~~~
 
-  - All system and science metadata records from a MN are also present on the
-    CN
+- All System Metadata, science metadata, and resoruce map documents from a MN 
+  are also present on the CN
 
-  - The search index is updated with the new content
-
-
-.. image:: images/06_uc.png
+- Update to the search index is triggered (Use Case 43)
 
 
-*Figure 1.* Use case diagram indicating the components and other use cases
-involved in this use case.
+Implementation Overview
+~~~~~~~~~~~~~~~~~~~~~~~
+
+.. uml::
+
+  @startuml images/06_uc_a.png
+  autonumber "[0] "
+  participant MN <<Member Node>>
+  participant CN <<Coordinating Node>>
+  
+  CN -> MN: listObjects( timePeriod )
+  activate CN
+  MN -> CN: objectList
+  loop "for each PID"
+    CN -> CN: queue PID for synchronization
+  end
+    deactivate CN
+
+  ... <font color=red>**Possibly Lengthy Delay** ...
+
+  CN -> MN: getSystemMetadata(PID)
+  activate CN
+  activate MN
+  MN -> CN: SystemMetadata
+  deactivate MN
+  alt New Objec
+    activate CN
+    CN -> CN: store System Metadata
+    CN ->o]: Notify index of new System Metadata
+    deactivate CN
+    alt "Is Science Metadata or Resource Map"
+      CN -> MN: get(PID)
+      activate CN
+      activate MN
+      MN -> CN: object
+      deactivate MN
+      CN -> CN: store object
+      CN ->o]: Notify index of new content
+      deactivate CN
+    end
+  else "Existing Object"
+
+    activate CN
+    CN -> CN: update system metadata properties
+    CN ->o]: Notify index of modified content
+    deactivate CN
+  end
+  deactivate CN
+  @enduml
+
+**Figure 2.** Overview of synchronization process using a polling process to 
+periodically request information about objects that have changed within a time 
+period.
+
+
+.. uml::
+
+  @startuml images/06_seq_a
+  autonumber "[0] "
+  participant MN <<Member Node>>
+  participant CN <<Coordinating Node>>
+  
+  MN -> CN: synchronize(PID)
+  activate CN
+  CN -> CN: queue PID for synchronization
+  CN -> MN: ack
+  deactivate CN
+
+  ... <font color=red>**Possibly Lengthy Delay** ...
+
+  CN -> MN: getSystemMetadata(PID)
+  activate CN
+  activate MN
+  MN -> CN: SystemMetadata
+  deactivate MN
+  alt New Objec
+    activate CN
+    CN -> CN: store System Metadata
+    CN ->o]: Notify index of new System Metadata
+    deactivate CN
+    alt "Is Science Metadata or Resource Map"
+      CN -> MN: get(PID)
+      activate CN
+      activate MN
+      MN -> CN: object
+      deactivate MN
+      CN -> CN: store object
+      CN ->o]: Notify index of new content
+      deactivate CN
+    end
+  else "Existing Object"
+
+    activate CN
+    CN -> CN: update system metadata properties
+    CN ->o]: Notify index of modified content
+    deactivate CN
+  end
+  deactivate CN
+  @enduml
+
+**Figure 3.** Overview of synchronization process with an external request to 
+synchronize an object rather than relying on periodic polling. Note this is a 
+Version 2.x feature. 
+
+
+Implementation Details
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. TODO:: 2015-09-17 Review for currentness
 
 .. image:: images/06_seq.png
 
-
-*Figure 2.* Sequence diagram for use case 06. Synchronize content between
+*Figure 4.* Sequence diagram for use case 06. Synchronize content between
 Member and Coordinating Node. Detail for the *processObject()* step provided
 in the activity diagram below.
 
 .. image:: images/06_act.png
 
-*Figure 3.* Activity diagram indicating the execution flow after attempting to
+*Figure 5.* Activity diagram indicating the execution flow after attempting to
 retrieve the system metadata for the object from the CN.
-
-
-.. 
-  @startuml images/06_uc.png
-  package "DataONE"
-  actor "Coordinating Node" as CN
-  actor "Member Node" as MN
-  usecase "13. Authorization" as author
-  usecase "06. Synchronize Metadata" as SYNC
-  usecase "XX. Notify Watchers" as NOTIFY
-  CN -- SYNC
-  MN -- SYNC
-  SYNC ..> author: <<includes>>
-  SYNC ..> NOTIFY: <<includes>>
-  @enduml
 
 
 .. 
