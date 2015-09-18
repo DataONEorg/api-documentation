@@ -56,10 +56,8 @@ Post Conditions
 
 - In the event of authentication failure the certificate will not be available.
 
-.. image:: images/12_seq_a.png
-   :scale: 100%
+.. uml::
 
-..
   @startuml images/12_seq_a.png
   actor User
   participant CILogon
@@ -97,10 +95,8 @@ Post Conditions
 **Figure 1.** Obtaining a client side certificate from the CILogon service.
 
 
-.. image:: images/12_seq_b.png
-   :scale: 100%
+.. uml::
 
-.. 
   @startuml images/12_seq_b.png
   actor User
   participant CA <<Certificate Authority>>
@@ -125,12 +121,8 @@ Post Conditions
 
 **Figure 2.** Obtaining a long-lived client side certificate from DataONE.
 
+.. uml::
 
-.. image:: images/12_seq_c.png
-   :scale: 100%
-
-
-..
   @startuml images/12_seq_c.png
   actor User
   participant MN <<Member Node>>
