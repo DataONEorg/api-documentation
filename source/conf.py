@@ -63,7 +63,7 @@ try:
                 'sphinx.ext.inheritance_diagram',
                 'sphinx.ext.extlinks',
                 # 'sphinxcontrib.httpdomain',
-                #'plantuml',
+                'sphinxcontrib.plantuml',
                 ]
 except:
   extensions = ['sphinx.ext.autodoc',
@@ -91,14 +91,17 @@ extlinks = {'history': ('https://redmine.dataone.org/projects/d1/repository/chan
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
+plantuml = "java -jar " + os.path.abspath('../tools/docutils/plantuml.jar')
+#plantuml += " -config " + os.path.abspath('../tools/docutils/plantuml.conf')
+
 #Full path to the plantuml jar file.
-plantumljar = os.path.abspath('../tools/docutils/plantuml.jar')
+#plantumljar = os.path.abspath('../tools/docutils/plantuml.jar')
 
 #Full path to the plantuml configuration file
-plantumlconf = os.path.abspath('../tools/docutils/plantuml.conf')
+#plantumlconf = os.path.abspath('../tools/docutils/plantuml.conf')
 
 #Full set of argument for executing plantuml expressed as a list. Note that java must be on your path
-plantuml = ['java', '-jar', plantumljar, '-config', plantumlconf]
+#plantuml = ['java', '-jar', plantumljar, '-config', plantumlconf]
 
 # The suffix of source filenames.
 source_suffix = '.txt'
@@ -194,8 +197,6 @@ pygments_style = 'sphinx'
 
 todo_include_todos = True
 
-
-
 # -- Options for HTML output ---------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  Major themes that come with
@@ -203,11 +204,13 @@ todo_include_todos = True
 #html_theme = 'default'
 html_theme = 'dataone_sans'
 #html_theme = 'dataone'
+#html_theme = 'sphinx_rtd_theme'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 html_theme_options = {'collapsiblesidebar':'true'}
+#html_theme_options = {}
 
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []
