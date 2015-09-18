@@ -1,61 +1,45 @@
+.. _UC02:
+
 Use Case 02 - List PIDs By Search
 ----------------------------------
 
 .. index:: Use Case 02, List, Search, Query
 
-Revisions
-  View document revision history_.
+.. contents:: Contents
+   :local:
 
 Goal
-  Get list of PIDs from metadata search (anonymous and authenticated).
+~~~~
 
-Summary 
-  A user performs a search against the DataONE system and receives a list of
-  object identifiers (PIDs) that match the search criteria. The list of PIDs
-  is filtered such that only objects for which the user has read permission
-  will be returned.
+Get list of PIDs from metadata search (anonymous and authenticated).
 
-  Content discovery in DataONE is achieved primarily through the service
-  interfaces provided by the Coordinating Nodes. Other systems may index
-  content available in DataONE (:doc:`UC36<36_uc>`), though the
-  operation of those systems is out of scope for DataONE operations except 
-  that the exposed APIs enable such functionality.
+Summary
+~~~~~~~
+
+A user performs a search against the DataONE system and receives a list of
+object identifiers (PIDs) that match the search criteria. The list of PIDs
+is filtered such that only objects for which the user has read permission
+will be returned.
+
+Content discovery in DataONE is achieved primarily through the service
+interfaces provided by the Coordinating Nodes. Other systems may index
+content available in DataONE (:doc:`UC34<34_uc>`), though the
+operation of those systems is out of scope for DataONE operations except 
+that the exposed APIs enable such functionality.
 
 Actors
-  - Client performing search operation
-  - Coordinating Node
+~~~~~~
 
-Preconditions 
-  - Client has authenticated to at the desired level (e.g. client may not have
-    authenticated, so access might be anonymous).
+- Client performing search operation
+- Coordinating Node
 
-Triggers
-  - A search is performed against the DataONE system
- 
-Post Conditions
+.. uml::
 
-  - The client has a list of PIDs (:class:`Types.objectList`) for which they
-    have permission to read and match the supplied query or an error condition.
-
-  - The log is updated with information about the request
-
-.. image:: images/02_uc.png
-
-*Figure 1.* Use case 02.
-
-.. image:: images/02_seq.png
-
-*Figure 2.* Interaction diagram for Use Case 02. The process for determining
-READ access is for illustration purposes only. Actually implementation may
-vary (e.g. by augmenting the query used for searching).
-
-..
   @startuml images/02_uc.png
 
   actor User
   usecase "12. Authentication" as authen
 
-  package "DataONE"
    actor "Coordinating Node" as CN 
    usecase "13. Authorization" as author
    usecase "02. Search Metadata" as SEARCH
@@ -65,8 +49,35 @@ vary (e.g. by augmenting the query used for searching).
    SEARCH ..> authen: <<includes>>
   @enduml
 
+**Figure 1.** Actors and dependencies for Use Case 02.
 
-..
+
+Preconditions 
+~~~~~~~~~~~~~
+
+- Client has authenticated to at the desired level (e.g. client may not have
+  authenticated, so access might be anonymous).
+
+Triggers
+~~~~~~~~
+
+- A search is performed against the DataONE system
+
+
+Post Conditions
+~~~~~~~~~~~~~~~
+
+- The client has a list of PIDs (:class:`Types.objectList`) for which they
+  have permission to read and match the supplied query or an error condition.
+
+- The log is updated with information about the request
+
+
+Implementation
+~~~~~~~~~~~~~~
+
+.. uml::
+
   @startuml images/02_seq.png
 
    participant "Client" as app_client << Application >>
@@ -90,82 +101,268 @@ vary (e.g. by augmenting the query used for searching).
    deactivate c_query
   @enduml
 
+**Figure 2.** Interaction diagram for Use Case 02. The process for determining
+READ access is for illustration purposes only. Actually implementation may
+vary (e.g. by augmenting the query used for searching).
 
 
-**Notes**
+Examples
+~~~~~~~~
 
-- lots of stuff buried in query. What information/interface is needed for
-  resolution/expansion of the query? For example a particular user may be
-  identified with a particular community which uses a particular ontology.
-  Where are things like ontologies maintained and where are the interfaces
-  between these and searches maintained? Searches need to be able to respond
-  to the dynamic nature of domain ontologies. Does the ontology need to have
-  authorization tied to it? A use case would be an ontology which is under
-  development and not ready for general distribution. Another case might be
-  where the ontology contains representations of human subject information,
-  meaning that "cancer survivors" includes this list of people. Or where the
-  ontology provides geospatial information about restricted information
-  (locations of USFS FIA plots). Similar issues apply to T&E species
-  information.
+Search is implemented by the Coordinating Nodes and optionally by Member Nodes.
+Two discovery endpoints are provided by Coordinating Nodes: query and search.
+The search endpoint provides a response that is more constrained than the search
+endpoint, with only an ObjetList structure being returned. It is recommended
+that general searches be performed against the query endpoint.
 
-- Group structure representation: A user is a member of zero to many groups,
-  authorization may be carried with that group membership. This is down in the
-  verify API, which needs to take into account group membership and group
-  permission inheritance. Question: What is the resolution for conflicting
-  access permissions?
+The following examples assume a Coordinating Node base URL is set in the ${NODE}
+variable, for example:
 
-- Q. Can a query be done at a member node? The diagram implies that the query is
-  only done at a coordinating node. A member node may have a subset (or the
-  full set) of metadata and the user may wish to do the search only at a
-  member node, knowing that the subset is restricted to data relevant to a
-  community of practice.
-
-  A. First iteration will provide query service on CNs, though nothing to
-  prevent MNs implementing query as well.
-
-- Where is the filtering done for the results, in terms of when does the
-  result set get filtered to those which the user can see? 
-
-  Q. Does the model allow the query service to do two searches and union the
-  results? The first query might be against the set of records known to be
-  publicly readable, with a follow-on query against the set of records known
-  to have restricted access. Is this envisioning the query service generating
-  a set of results (against the restricted records) and passing that list to
-  the authorization API, or is this envisioning a one by one situation. Or
-  does the authorization API pass back to the query service the list of
-  records that the user is authorized to see, and that gets anded with the
-  result set.
-
-  A. The resultset is a list of PIDs that needs to be vetted for read access.
-  Hence query results can be merged (union) or joined as the output from such
-  operations is always a list of PIDs that will be vetted for read access.
-
-- How distributed is the database of users and their authorization records?
+.. code-block:: bash
   
-  Q. Does the coordinating node have to know all authorization records, with that
-  being replicated? Or is some amount of the authorization maintained by (for
-  example) the "owning" member node and the search system may need to contact
-  multiple authorization authorities for the records in a particular result
-  set? It also implies that if the authorization information is at the
-  coordinating node, that the authorization authority needs a means to
-  validate the replicated authorization information to ensure that the info at
-  the cn is up-to-date.
+   export NODE="https://cn.dataone.org/cn"
 
-  A. One scenario is that all authorization information is stored in the
-  system metadata with each object. Then authorization can be performed by MNs
-  or CNs.
+.. Note:: 
+   For more example queries and detailed description of the various fields, 
+   please visit :doc:`/design/SearchMetadata`
 
-- Q. Why does step 4 need to validate the token, given that the token was
-  generated in step 2? 
+.. Note::
 
-  A. This is normal security validation of all user inputs once those have
-  gone out of the control of the issuing service. Also applies to cases where
-  tokens have a specific lifetime, and the token may be valid, but expired.
-  Authorization token lifetimes are important for both interactive sessions
-  and for cases like workflows, where the session may run for days.
+   The actual response XML may be more compressed than the examples below show.
+   For easier viewing, pipe the response throug the xmlstarlet_ command line
+   tool using the format ("fo") option. For example:
 
-- What logging level is required for the operation? Should the search appear
-  as a hit against each object? Just log the query (and perhaps who did it)?
+   .. code-block:: bash
 
-.. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/02_uc.txt
+      curl ${NODE}/v1/query | xml fo
+
+
+
+Discover Available Query Engines
+................................
+
+To discover the query engines (search indexes) supported on the node:
+
+.. code-block:: xml
+
+   $ curl ${NODE}/v1/query
+
+   <?xml version="1.0" encoding="UTF-8"?>
+   <?xml-stylesheet type="text/xsl" href="/cn/xslt/dataone.types.v1.xsl"?>
+   <d1_v1.1:queryEngineList 
+    xmlns:d1="http://ns.dataone.org/service/types/v1" 
+    xmlns:d1_v1.1="http://ns.dataone.org/service/types/v1.1">
+     <queryEngine>solr</queryEngine>
+     <queryEngine>logsolr</queryEngine>
+   </d1_v1.1:queryEngineList>
+
+The response show two query engines available ``solr`` and ``logsolr``. The
+``solr`` query engine provides access to content (data, metadata, resource maps)
+that have been indexed by the Coordinating Nodes. The ``logsolr`` endpoint
+provides access to log records that have been aggregated by the Coordinating
+Nodes.
+
+
+List Search Fields Offered
+..........................
+
+To determine the search fields provided by a query engine, append the value of a
+``queryEngine`` element to the url:
+
+.. code-block:: xml
+
+   $ curl ${NODE}/v1/query/solr
+
+    <?xml version="1.0" encoding="UTF-8"?>
+    <?xml-stylesheet type="text/xsl" href="/cn/xslt/dataone.types.v1.xsl"?>
+    <d1_v1.1:queryEngineDescription 
+      xmlns:d1="http://ns.dataone.org/service/types/v1" 
+      xmlns:d1_v1.1="http://ns.dataone.org/service/types/v1.1">
+      <queryEngineVersion>3.4.0.2011.09.20.17.19.53</queryEngineVersion>
+      <querySchemaVersion>1.1</querySchemaVersion>
+      <name>solr</name>
+      <additionalInfo>https://releases.dataone.org/online/api-documentation-v1.2.0/
+      </additionalInfo>
+      <queryField>
+        <name>abstract</name>
+        <description>The full text of the abstract as provided in the science 
+        metadata document.</description>
+        <type>text</type>
+        <searchable>true</searchable>
+        <returnable>true</returnable>
+        <sortable>true</sortable>
+        <multivalued>false</multivalued>
+      </queryField>
+      <queryField>
+        <name>attribute</name>
+        <description>Multi-valued field containing the text from attributeName, 
+        attributeLabel, attributeDescription, attributeUnit fields into a single 
+        searchable text field.</description>
+        <type>text</type>
+        <searchable>true</searchable>
+        <returnable>true</returnable>
+        <sortable>true</sortable>
+        <multivalued>true</multivalued>
+      </queryField>
+      <queryField>
+        <name>attributeDescription</name>
+        <description>Multi-valued field containing the attribute descriptive 
+        text.</description>
+        <type>text</type>
+        <searchable>true</searchable>
+        <returnable>true</returnable>
+        <sortable>true</sortable>
+        <multivalued>true</multivalued>
+      </queryField>
+      <queryField>
+        <name>attributeLabel</name>
+        <description>Multi-valued field containing secondary attribute name 
+        information.</description>
+        <type>string</type>
+        <searchable>true</searchable>
+        <returnable>true</returnable>
+        <sortable>true</sortable>
+        <multivalued>true</multivalued>
+      </queryField>
+
+      ...
+
+    </d1_v1.1:queryEngineDescription>
+
+
+Full Text Search
+................
+
+The solr endpoint supports standard solr_ query syntax and construct. To search 
+all text for the string "water", the query "text:water" could be used. Expressed
+as a command line request:
+
+.. code-block:: xml
+
+  $ curl "${NODE}/v1/query/solr/?q=text:water"
+
+  <?xml version="1.0" encoding="UTF-8"?>
+  <response>
+    <lst name="responseHeader">
+      <int name="status">0</int>
+      <int name="QTime">5</int>
+      <lst name="params">
+        <str name="q">text:water</str>
+        <str name="rows">1</str>
+      </lst>
+    </lst>
+    <result name="response" numFound="139455" start="0">
+      <doc>
+      ...
+      </doc>
+    </result>
+  </response>
+
+which indicates there were 139455 matches. The response is the standard solr XML
+response (json may be returned by adding ``&wt=json`` to the url), with
+``<doc>`` elements holding the actual response records. 
+
+
+Limiting Returned Fields
+........................
+
+The default solr response returns all fields of the doc records which can be
+quite verbose. To limit the response, against the standard solr syntax is used
+with the ``fl`` parameter. For example, to return only the record identifier
+(PID) and the date the system metadata was last modified:
+
+.. code-block:: bash
+
+   $ curl "${NODE}/v1/query/solr/?q=text:water&fl=id,dateModified"
+
+.. code-block:: xml
+
+  <?xml version="1.0" encoding="UTF-8"?>
+  <response>
+    <lst name="responseHeader">
+      <int name="status">0</int>
+      <int name="QTime">4</int>
+      <lst name="params">
+        <str name="fl">id,dateModified</str>
+        <str name="q">text:water</str>
+        <str name="row">5</str>
+      </lst>
+    </lst>
+    <result name="response" numFound="139455" start="0">
+      <doc>
+        <date name="dateModified">2015-03-20T23:18:10.507Z</date>
+        <str name="id">https://pasta.lternet.edu/package/metadata/eml/knb-lter-gce/249/34</str>
+      </doc>
+      <doc>
+        <date name="dateModified">2012-06-26T13:50:33.75Z</date>
+        <str name="id">doi:10.6073/AA/knb-lter-gce.249.23</str>
+      </doc>
+      <doc>
+        <date name="dateModified">2012-06-26T13:51:00.556Z</date>
+        <str name="id">doi:10.6073/AA/knb-lter-gce.249.16</str>
+      </doc>
+      <doc>
+        <date name="dateModified">2012-06-26T13:50:21.131Z</date>
+        <str name="id">doi:10.6073/AA/knb-lter-gce.249.19</str>
+      </doc>
+      ...
+    </result>
+  </response>
+
+
+Paging Response Records
+.......................
+
+The solr ``rows`` parameter limits the number of records that are returned in a
+response, and the ``start`` parameter indicates the 0-based offset of the first
+records from the start of the set of matching results. For example the second
+page of records with five results per page would use ``start=5`` and 
+``count=5``:
+
+.. code-block:: bash
+
+   $ curl "${NODE}/v1/query/solr/?q=text:water&fl=id,dateModified&start=5&rows=5"
+
+.. code-block:: xml
+
+  <?xml version="1.0" encoding="UTF-8"?>
+  <response>
+    <lst name="responseHeader">
+      <int name="status">0</int>
+      <int name="QTime">3</int>
+      <lst name="params">
+        <str name="fl">id,dateModified</str>
+        <str name="start">5</str>
+        <str name="q">text:water</str>
+        <str name="rows">5</str>
+      </lst>
+    </lst>
+    <result name="response" numFound="139455" start="5">
+      <doc>
+        <date name="dateModified">2012-06-26T13:51:00.556Z</date>
+        <str name="id">doi:10.6073/AA/knb-lter-gce.249.16</str>
+      </doc>
+      <doc>
+        <date name="dateModified">2012-06-26T13:50:21.131Z</date>
+        <str name="id">doi:10.6073/AA/knb-lter-gce.249.19</str>
+      </doc>
+      <doc>
+        <date name="dateModified">2012-06-26T13:49:54.779Z</date>
+        <str name="id">doi:10.6073/AA/knb-lter-gce.249.21</str>
+      </doc>
+      <doc>
+        <date name="dateModified">2012-06-26T13:49:54.409Z</date>
+        <str name="id">doi:10.6073/AA/knb-lter-gce.249.22</str>
+      </doc>
+      <doc>
+        <date name="dateModified">2012-06-26T17:09:59.721Z</date>
+        <str name="id">doi:10.6073/AA/knb-lter-gce.249.17</str>
+      </doc>
+    </result>
+  </response>
+
+
+.. _xmlstarlet: http://xmlstar.sourceforge.net/
+.. _solr: https://lucene.apache.org/core/2_9_4/queryparsersyntax.html
+
 
