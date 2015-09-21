@@ -1,0 +1,98 @@
+.. _UC44:
+
+Use Case 44 - Deprecate a Member Node
+-------------------------------------
+
+.. index:: Use Case 44, deprecate Member Node, UC44
+
+Goal
+~~~~
+
+Remove a Member Node from production, retain access to content (optionally 
+archived).
+
+Summary 
+~~~~~~~
+
+This use case describes a situation where a Member Node is being taken off line
+and removed from production. A goal of DataONE is to ensure the content remains
+accessible, so it is necessary to ensure that the content is replicated before
+the Member Node is decomissioned and so no longer responsive.
+
+In an ideal situation, the Membe Node is fully functioning and so responsive to
+the commands necessary to manipulate the content. The alternative, of
+deprecating a Member Node that is no longer functional is possible, though it
+depends on whether the content is still accessible.
+
+
+Actors
+~~~~~~
+
+- Content Owner
+- Member Node
+- Replica Member Node
+- Coordinating Node
+- Coordinating Node administrator
+
+
+Preconditions 
+~~~~~~~~~~~~~
+
+- Member Node to be decommissioned is synchronized
+- Content originating on the Member Node is accessible
+- Replacement Member Node is known
+
+
+Triggers
+~~~~~~~~
+
+- An administrative decision is made to decommission a Member Node
+
+
+Post Conditions
+~~~~~~~~~~~~~~~
+
+- Content synchronized from the deprecated Member Node is accessible
+- Authoritative Member Node is changed
+- Optional: content is archived
+- Optional: content ownership is changed
+
+
+.. uml::
+
+  @startuml
+  autonumber "[0] "
+  actor Owner
+  participant "Member Node" as MN
+  participant "Coordinating Node" as CN
+  participant "Replication Node" as RMN
+  actor "CN Administrator" as admin
+
+  Owner -> MN: listObjects
+  loop for each PID
+    Owner -> CN: getSystemMetadata(PID)
+    activate CN
+    CN -> Owner: systemMetadata
+    deactivate CN
+    Owner -> Owner: edit\nreplication policy
+    Owner -> CN: Use Case 42\nupdate System Metadata
+    CN -> RMN: Use Case 09\nReplicate
+  end
+  admin -> CN: listObjects
+  loop for each PID from MN
+    admin -> CN: verify replication
+    admin -> CN: getSystemMetadata(PID)
+    activate CN
+    CN -> admin: systemMetadata
+    deactivate CN
+    admin -> admin: edit:\nreplica location\nauthoritative MN\n[archive]\n[owner]
+    admin -> CN: Use Case 42\nupdate System Metadata
+  end
+  admin -> CN: unregister MN
+  Owner -> MN: shutdown
+  @enduml
+
+**Figue 1.** Process for decomissioning a Member Node that is still functional. First, a content owner updates the replication policy for each object on the MN and ensures that the CN has the updated information (steps 1-5). Next, a CN administrator retrieves a list of objects that need to be managed. For each object, the administrator then ensures that the object has been replicated (8), retrieve the system metadata and edits it (9-11), ensuring that the system metadata properties reflect the new state of the system, then posts the updated system metadata to the CN (12). Once all the content has been updated, the old MN is un-regitered from the Coordinating Nodes. At this point, the Member Node operator can shut down the node.
+
+
+
