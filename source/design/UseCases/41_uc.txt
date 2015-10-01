@@ -21,6 +21,8 @@ remain valid.
 
 Transition to an archived state is not reversible.
 
+Functionally, archiving an object sets the :attr:`Types.SystemMetadata.archived` property of the associated System Metadata to *True*. The operation is performed by calling :func:`MNStorage.archive` or :func:`CNCore.archive`. Since this operation is an update to System Metadata, :doc:`42_uc` is invoked and the change is propogated through the system.
+
 Actors
 ~~~~~~
 
