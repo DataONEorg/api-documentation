@@ -21,7 +21,11 @@ remain valid.
 
 Transition to an archived state is not reversible.
 
-Functionally, archiving an object sets the :attr:`Types.SystemMetadata.archived` property of the associated System Metadata to *True*. The operation is performed by calling :func:`MNStorage.archive` or :func:`CNCore.archive`. Since this operation is an update to System Metadata, :doc:`42_uc` is invoked and the change is propogated through the system.
+Functionally, archiving an object sets the :attr:`Types.SystemMetadata.archived`
+property of the associated System Metadata to *True*. The operation is performed
+by calling :func:`MNStorage.archive` or :func:`CNCore.archive`. Since this
+operation is an update to System Metadata, :doc:`42_uc` is invoked and the
+change is propogated through the system.
 
 Actors
 ~~~~~~
@@ -80,7 +84,6 @@ Post Conditions
 - Search indices are updated to remove the object
 
 
-
 Process
 ~~~~~~~
 
@@ -135,13 +138,13 @@ sequence of operations associated with archiving an object.
 Example
 ~~~~~~~
 
-Using ``curl`` to archive an object. ``ANODE`` can be any Member of Coordinating
+Using ``curl`` to archive an object. ``ANODE`` can be any Member or Coordinating
 Node that has a copy of the object:
 
 .. code-block:: bash
 
    # The member node base URL
-   ANODE="https://my.mn.org/base/url"
+   NODE="https://my.mn.org/base/url"
 
    # A client certificate with a subject that has write permission on the object
    CERT="my_client_certificate.pem"
@@ -151,7 +154,7 @@ Node that has a copy of the object:
    PID="object.identifier"
 
    # Invoke the archive operation on the identifier
-   curl -E ${CERT} -X PUT "$ANODE/archive/${PID}"
+   curl -E ${CERT} -X PUT "$NODE/V1/archive/${PID}"
 
 
 
