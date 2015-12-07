@@ -659,9 +659,9 @@ A utility is included in the d1_portal project with example code below.
 	JWSVerifier verifier = new RSASSAVerifier(publicKey);
 	boolean verified = signedJWT.verify(verifier);
 	
-	// check payload for subject, ttl, expiration, etc...
-	String userId = signedJWT.getJWTClaimsSet().getClaim("userId").toString();
-	
+	// check payload for subject ("sub"), expiration ("exp"), etc...
+	String subject = signedJWT.getJWTClaimsSet().getSubject();
+	Date expDate = signedJWT.getJWTClaimsSet().getExpirationTime();
 
 Authenticating and Retrieving a Token
 --------------------------------------
