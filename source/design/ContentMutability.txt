@@ -4,31 +4,123 @@ Mutability of Content in DataONE
 .. index:: mutability
 
 
-:Document Status:
-  ======== ==================================================================
-  Status   Comment
-  ======== ==================================================================
-  DRAFT    (rnahf) Initial draft, based on discussions at Sep 2012 AHM in 
-           Albuquerque, the follow-up CCIT t.c. in Oct 2012, and the CCIT 
-           meeting in Feb 2013 in Santa Barbara
-           
-  PROPOSAL (leinfelder) Distillation of ongoing CCIT teleconferences about 
-  			seriesId as a means to support mutability.
-  ======== ==================================================================
-
 .. contents::
 
 Overview
 ------------
 
-Several institutions wanting to become member nodes in DataONE have existing 
-infrastructure employing a mutable content model - where changes to content 
-overwrite the existing content returned by an identifier. DataONE currently 
-follows an immutable content model, whereby member nodes are required to save 
-any changes to an object as a new object with a new identifier which formally 
-obsoletes the previous one.  The challenge is to find the optimal way to support 
-member nodes using a mutable content model, while preserving the reproducibility 
-assurances the current approach offers.
+With the release of version 2 APIs, DataONE introduces support for Member Nodes
+whose primary repositories implement a mutable content storage model.  Under such 
+a model, updates to content overwrite previous versions, instead of being persisted
+side-by-side with previous versions.  Form a retrieval point of view,
+this means that a new set of bytes is returned when called using its primary 
+identifier, or more importantly, there is no guarantee that the set of bytes 
+returned in the past is the same as what is returned in the future.
+
+DataONE accomplishes this with the addition of a secondary identifier called the 
+Series Identifier (SID) that has the semantics of retrieving the latest version 
+of the series through the DataONE Read APIs (MNRead and CNRead).  Member Nodes that 
+employ a mutable content storage model would assigned their repository's primary 
+identifier to this SID, and populate DataONEs primary identifier field 
+(systemMetadata.identifer) with a different unique value specific to that version.
+This identifier is forever associated with that specific persisted version, so is 
+also referred to as the Persistent Identifier (or PID).
+
+
+Referencing Content by Identifier
+----------------------------------
+
+The use of the PID or SID for either citation or analysis workflows is up to the 
+user and is context dependent. In general, DataONE anticipates DATA and RESOURCE_MAP 
+objects will be referenced by PID, to ensure reproducibility; and in general, 
+METADATA documents will be referenced by SID, to take advantage of any data 
+curation / correction efforts that would not otherwise affect scientific 
+reproducibility.  Additionally, clues for the content submitter's preference can 
+be found in the format of the identifiers themselves. For example, DOIs and EZIDs 
+take a recognizable format, and are often encouraged in scientific communities for 
+citations, so an end-user might take that into consideration when deciding which 
+identifier to choose.
+
+[TODO: guidance on RESOURCE_MAPS - initial thoughts:  depends on references to DATA objects, whether they be SIDs or PIDs]
+ 
+ 
+Assigning Identifiers
+-----------------------
+Depending on the Member Node used as the primary repository, content originators 
+may have some choice in assigning identifiers. For those that do, it is advised
+that they assign PIDs and SIDs according to the typical usage pattern described
+above.
+
+Some Member Nodes may not preserve past versions of content, in which case the PID 
+is likely to be automatically generated, and the submitter only has to determine 
+the SID, and may not need to know the difference between the SID and PID.  Other 
+Member Nodes may still be at v1 of the DataONE APIs and only allow assignment of 
+the PID.
+
+
+Limits on the Series
+---------------------
+The SID is used to conceptually represent an object that may vary modestly over 
+time, but remains conceptually the same. Content contributers should be careful 
+to apply reasonable limits on the scope of documents such that an entity does not
+deviate too much from the original item.  In such cases, a new / different series 
+should be initiated.
+
+
+Requirements on Member Node Implementations
+--------------------------------------------
+For Member Nodes that employ a mutable content storage model, the only additional
+DataONE requirement is that the Member Node generate a SystemMetadata document for
+the updated content, containing:
+
+  1. unique PID in systemMetadata.identifier field
+  2. new checksum 
+  3. the previous PID in the systemMetadata.obsoletes field
+
+Ideally, the SystemMetadata of now unavailable versions will be maintained, and
+the 'obsoletedBy' field is populated with the PID of the version that replaced it.
+
+Some Member Nodes may opt to preserve recent back-versions to aid the complete
+capture of versions by the DataONE network via synchronization.
+
+Reassignment of AuthoritativeMemberNode field for unhosted versions
+====================================================================
+to be determined
+
+Replication of unhosted back-versions
+=====================================
+DataONE will attempt to synchronize all versions it's made aware of through the
+synchronization process, but may miss short-lived versions that are in existence
+only between the Member Node's synchronization interval.    Please note, also, that
+the synchronization schedule is not guaranteed.  Periods of DataONE maintenance
+may suspend synchronization, or high CN load could prolong the synchronization interval.
+
+Member Nodes keen to make sure versions have the highest chance of synchronization
+can choose to issue a v2.CNCore.synchronize(pid) command that will put the item
+on the synchronization queue instead of waiting for the harvest interval.
+
+Conversely, if the Member Node expressly doesn't want DataONE to preserve 
+back-versions, they can set systemMetadata.replicationPolicy.numberReplicas field to 0.
+
+
+
+Sycnhronizing Content from Mutable Member Nodes
+-----------------------------------------------
+At its core, DataONE is in the business of preserving definite versions of content
+through centrally coordinated per-to-peer replication.  That is, DataONE Coordinating
+Nodes direct certain Member Nodes to replicate newly synchronized objects from 
+the originating Member Node to better preserve it.  New versions of objects appear
+as first class immutable objects with unique PIDs, even if originating
+from mutable Member Nodes.
+
+From the DataONE perspective the only difference between objects from mutable
+Member Nodes and immutable Member Nodes is the completeness of the series of
+versions it is able to synchronize and replicate.
+
+
+
+
+
 
 
 The Problem
