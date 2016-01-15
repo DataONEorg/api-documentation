@@ -1,0 +1,108 @@
+Immutability of Content in DataONE
+==================================
+
+.. index:: immutability
+
+
+.. contents::
+
+Overview
+------------
+To support the goals of preservation and scientific reproducibility, all registered 
+objects are considered immutable in DataONE, with each object representing a 
+published snapshot of data or metadata published at a specific time. Upon this 
+foundation, DataONE can guarantee that the exact object returned through the 
+DataONE Read APIs (MNRead and CNRead) is the one submitted.
+
+Any repository that provides unique identifiers to versions can participate as
+DataONE Member Nodes, irrespective of whether or not they retain those snapshots
+or not. The key is in the use of two identifiers, one representing the version,
+and the other representing the mutable entity. From these Member Nodes, DataONE
+will inevitably fail to synchronize some snapshots, but since the identifier
+for the version is never indexed or otherwise made available, the chance for 
+needing to retrieve that snapshot in the future is very small. 
+
+The two identifiers are known as ::
+
+Persistent Identifier (PID), defined in the systemMetadata.identifier field.  This
+identifier represents the snapshot or version DataONE replicates among the DataONE
+federation. 
+
+Series Identifier (SID), defined in the systemMetadata.seriesId field.  This
+identifier represents the mutable content, and resolves to the latest version
+when used in the DataONE Read APIs.
+
+DataONE relies on content originators to populate the identifier fields (series
+identifier is an optional field). Typically, they will have an identifier they
+intend to share externally, use for publications, etc.  With two identifiers fields 
+to choose from, they must decide which field will hold this externally facing,
+citable, identifier. With scientific reproducibility in mind, DataONE anticipates 
+end-users citing DATA objects with the persistent identifier, and citing METADATA
+with the series identifier, where changes would not impact results.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+DataONE manages the registration, indexing, and replication of these snapshots 
+throughout the DataONE network of Member Nodes, but does not maintain any internal
+unique identifier for these object.  Rather it relies on content submitters to 
+determine the globally unique identifier for their content.
+
+
+
+
+ Versions are considered different
+in the strictest sense - any difference in the byte array from the previous one
+constitutes a new version.
+
+ - all registered content is immutable in DataONE
+    - (definition of immutable)
+ - published snapshots (versions) of data and metadata 
+ - DataONE manages the registration, indexing, and replication of the versions.
+ - each version gets a unique identifier (the Persistent IDentifier or PID)
+ - updates to content result in a new item that DataONE tracks
+ 
+ - many organizations have repositories that are structured using a mutable 
+     content model - where the latest version is mapped to their identifier.
+ - as of V2 DataONE provides the Series IDentifier (SID) as support for potential 
+     MNs who only support mutable content.
+ - their identifier is mapped to DataONEs SID instead of PID.
+    - other minor requirements are providing unique PID, checksum, obsoletes and
+      obsoletedBy.
+ - not all versions are guaranteed to be synchronized or replicated
+    - is dependent on synchronization frequency, CN availability for sync
+ - missing versions, if synced but not replicated will appear as NotFound exceptions 
+     on forwarded resolve requests
+ - unsync'ed versions might appear in obsoletes/dBy fields of existing versions
+    - cn.listObjects(idFilter=sid)?? retrieves all synchronized versions 
+ - MNs should not return the latest version through DataONE APIs if presented with
+     PID of unhosted version.
+     
+ - somewhat large potential for the redirect URL in the resolve http header to 
+     point to a missing copy if the authoritativeMN remains the mutable member node.
+       - remedies: (private) field of mutability in LDAP node structure
+          - client sophistication to re-redirect
+          - memberNode redirect on MN.gets to the cn for METADATA documents  (partial solution) 
+          
+ - sid resolution to head
+     - in face of missing versions:
+         - latest by publish date with SeriesID
+ - troubleshooting seriesID assignment
+    - once SeriesID is set, it cannot be changed, because it breaks the trust that
+       the identifier always gets the user to a conceptually equivalent object.
+ 
+Identifiers 
+-----------
+Many organizations use 3rd party organizations for identifier generation. Users 
+of the primary systems  These may or may not have mutabiity restrictions
+
+External Identifiers
+
+
+SID Resolution
+--------------
+cn.resolve first finds the latest version, then returns an OLL based on the PID.
+ - confirm
+ - does the HTTP redirect url use the SID or PID?
+
