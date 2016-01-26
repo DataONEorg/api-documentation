@@ -13,42 +13,43 @@ objects in DataONE are considered immutable, with each object representing a
 published snapshot of data or metadata associated with a specific time. DataONE 
 manages the registration, indexing, and replication of these snapshots throughout 
 the DataONE network of Member Nodes.  Upon this foundation, DataONE can guarantee 
-that the exact object returned through the DataONE Read APIs (MNRead and CNRead) 
-is the one submitted.
+that the exact byte array returned through the DataONE Read APIs (MNRead and CNRead) 
+is the one submitted and registered.
 
-Any repository that provides unique identifiers to versions can participate as
-DataONE Member Nodes, irrespective of whether or not they retain those snapshots. 
-The key is in the use of two identifiers, one representing the version, and the 
-other representing the mutable entity. For those Member Nodes only managing the 
-mutable entity, as long as a new, unique, version-level identifier is generated upon each
-update to the entity, DataONE will not reject the update. A small percentage of 
-snapshots will inevitably fail to synchronize in situations of rapid bursts of
-updates, but since that version's unique identifier is never indexed or otherwise 
-made available, the chance for needing to retrieve that snapshot (and not finding it) 
-in the future is very small.
+Any repository that provides unique identifiers to snapshots (also referred to as versions) 
+can participate as 
+DataONE Member Nodes, irrespective of whether or not they retain past snapshots. 
+This is accomplished by the use of two identifiers, one representing the version, and the 
+other representing the changing (or mutable) entity. For those Member Nodes only managing the 
+mutable entity, as long as a unique, version-level identifier is generated upon each
+update to the entity, DataONE will not reject the update. In situations where the
+rate of change is faster than DataONE's Member Node synchronization,  it is possible
+that some snapshots will fail to be registered.  However, since that version's unique 
+identifier is never indexed or otherwise made available, the chance for needing to 
+retrieve that snapshot (and not finding it) in the future is very small.
 
 The two identifiers are known as ::
 
-The Persistent Identifier (PID), defined in the systemMetadata.identifier field. 
-This identifier represents the snapshot or version DataONE replicates among the 
-DataONE federation. 
+ - The Persistent Identifier (PID), defined in the systemMetadata.identifier field. 
+   This identifier represents the snapshot or version DataONE replicates among the 
+   DataONE federation. 
 
-The Series Identifier (SID), defined in the systemMetadata.seriesId field.  This
-identifier represents the mutable content, and resolves to the latest version among
-all registered versions when used in the DataONE Read APIs.
+ - The Series Identifier (SID), defined in the systemMetadata.seriesId field.  This
+   identifier represents the mutable content, and resolves to the latest version among
+   all registered versions when used in the DataONE Read APIs.
 
-DataONE relies on content originators to populate the identifier fields (series
-identifier being optional) for content being registered, and determining which
-field will hold the "citable" identifier.
+DataONE relies on content originators to generate the identifiers they use for 
+each snapshot (with the series identifier being optional) being registered, and 
+determining which field will hold the "citable" identifier.
 
 
 
 Changes constituting a new snapshot
 ------------------------------------
-DataONE considers any change that results in the byte array of the content to be
-different as constituting a new snapshot, and thus a new object to be registered. 
-Subtle changes, such as whitespace differences, although potentially meaningless,
-would therefore constitute a new object. If not properly identified with a new PID, 
+DataONE considers any change that results in a different byte array of content 
+to be a new snapshot, and thus a new object to be registered. Subtle changes, 
+such as whitespace differences, although potentially meaningless, do
+therefore constitute a new object. If not properly identified with a new PID, 
 the content held on that Member Node is invalid. Member Nodes that periodically 
 regenerate their stored content or manipulate it upon retrieval will need to take 
 extra care to validate checksums after regeneration or manipulation and resolve 
@@ -60,17 +61,19 @@ Changes constituting a new series
 The SID is provided expressly to group the snapshots of a single entity that is 
 stable over time.  It was not intended to represent highly volatile entities, or
 those that significantly "drift" over time.  Member Nodes are encouraged to instead 
-use registered services for endpoints that return variable information.
+use registered services for volatile content, and create new entities when 
+significant change in the scope of an entity occurs.
 
-It is not clear that individual contributers will always have the resources to 
-register a service, and, as it were, may have entities organized for input, such 
-as "year-to-date" observation logs. If items such as these are registered as an 
-object, the rightsHolders should apply reasonable temporal bounds.
+It is not clear that individual contributers will always have the means to 
+register a service, and so may have entities organized for input, such 
+as a file that accumulates observations. If items such as these are registered as an 
+object, the rightsHolders should be mindful to apply reasonable temporal bounds.
 
 When the scope of an item has changed significantly, it is permissible to supply
-a new seriesId to the next snapshot, while still relating the two items by 
-obsoletes and obsoletedBy.  It is not necessary, however, and maybe more straightforward
-to simply save the new entity without maintaining the relationship.
+a new seriesId to the next snapshot while still relating the two items by 
+obsoletes and obsoletedBy. However, it is not necessary, and may be more straightforward
+to simply save the new entity without relating the snapshots through 
+system metadata, but through provenance mechanisms instead.
 
 
 Usage Conventions
@@ -157,7 +160,7 @@ preserve past snapshots.  M.get(P1) should return a NotFound, and the client wil
 move on to R1, and be able to retrieve P1 with R1.get(P1).
 
 The CN, when v2.cn.resolve(S) was called, determined the head of the series by first
-finding all of the snapshots where the seriesId iss S, and obsoletedBy is null or
+finding all of the snapshots where the seriesId is S, and obsoletedBy is null or
 the obsoletedBy object has a different seriesId. In this case, since the P1 
 systemMetadata is never updated to fill in the obsoletedBy field, the algorithm 
 will get both P1 and P2.  It will then notice that P2 has the later date of D2, 
@@ -167,7 +170,15 @@ Suppose now that A spawns two more snapshots in quick succession, and DataONE
 synchronizes afterwards.  It missed P3(S) but picks up P4(S).
 
 
-
+Summary
+-------
+  - PID represents the snapshot, and snapshots are immutable
+  - SID represents the entity, and can be applied to several connected snapshots
+     can only use a SID if (a) new to DataONE, (b) are rightsHolder on the SID and
+     obsoletes PID has same SID
+  - rule: cannot put SID in obsoletes and obsoletedBy fields
+  - SID resolution is "latest upload among series chain ends, where chain 
+  
   - not all versions are guaranteed to be synchronized or replicated
     - is dependent on synchronization frequency, CN availability for sync
  - missing versions, if synced but not replicated will appear as NotFound exceptions 
