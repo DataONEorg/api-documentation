@@ -28,20 +28,21 @@ that some snapshots will fail to be registered.  However, since that version's u
 identifier is never indexed or otherwise made available, the chance for needing to 
 retrieve that snapshot (and not finding it) in the future is very small.
 
-The two identifiers are known as::
 
-- The **Persistent Identifier (PID)**, defined in the *systemMetadata.identifier* field. 
-  This identifier represents the snapshot or version DataONE replicates among the 
-   DataONE federation. 
+The two identifiers are known as:
 
-- The **Series Identifier (SID)**, defined in the *systemMetadata.seriesId* field.  This
-  identifier represents the mutable content, and resolves to the latest version among
-  all registered versions when used in the DataONE Read APIs.
+**Persistent Identifier (PID)** 
+  declared in the ``systemMetadata.identifier`` field. This identifier represents 
+  the snapshot or version DataONE replicates among the DataONE federation. 
+
+**Series Identifier (SID)**
+  declared in the ``systemMetadata.seriesId`` field.  This identifier represents 
+  the mutable content, and resolves to the latest version among all registered versions 
+  when used in the DataONE Read APIs.
 
 DataONE relies on content originators to generate the identifiers they use for 
 each snapshot (with the series identifier being optional) being registered, and 
 determining which field will hold the "citable" identifier.
-
 
 
 Changes constituting a new snapshot
