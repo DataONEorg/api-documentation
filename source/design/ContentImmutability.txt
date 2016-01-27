@@ -90,7 +90,7 @@ to anticipated data consumer preference.
 Aggregating Download Statistics
 -------------------------------
 To aid in aggregating download statistics for data providers, DataONE provides the
-``logsolr`` query endpoint. Both PID and SID field are included in the index records 
+``cn/v2/query/logsolr`` query endpoint. Both PID and SID field are included in the index records 
 to allow straightforward retrieval of download statistics by either field.
 
 
@@ -104,7 +104,7 @@ request by SID to that node should give a previous snapshot.  For all nodes, eve
 the authoritative Member Node, a request by PID for a snapshot that it doesn't host 
 must return a NotFound exception.
 
-End users should therefore rely on v2.cn.resolve for object retrieval. If the
+End users should therefore rely on ``v2.cn.resolve`` for object retrieval. If the
 Identifier used for the resolve is a SID, this method will return an ObjectLocationList 
 for the latest known snapshot.
 
@@ -136,64 +136,74 @@ would it be in conflict with the behavior of deleted items (and would it matter?
 
 Mutable Member Node example
 ---------------------------
-To illustrate by way of example, author 'A' uploads an item to Member Node 'M',
-with an identifier 'S' not using the DataONE API, but with M's primary API.  M 
-builds a systemMetadata document for S, generating a PID, 'P1', to uniquely identify
-the initial snapshot, and assigns an upload date of D1, and uses the identifier 'S'
+To illustrate by way of example, author **A** uploads an item to Member Node **M**,
+with an identifier **S** not using the DataONE API, but with **M**'s primary API.  **M** 
+builds a systemMetadata document for **S**, generating a PID, **P1**, to uniquely identify
+the initial snapshot, and assigns an upload date of **D1**, and uses the identifier **S**
 for the seriesId.  DataONE synchronizes the object, and replicates the snapshot
-P1 to one other Member Node 'R1'. The author, A, then saves changes to the item, 
-whereupon M generates another PID, 'P2', to uniquely identifier this newer
-snapshot, uses S in the seriesId field, puts P1 in the obsoletes field, and D2
+**P1** to one other Member Node **R1**. The author, **A**, then saves changes to the item, 
+whereupon **M** generates another PID, **P2**, to uniquely identifier this newer
+snapshot, uses **S** in the seriesId field, puts **P1** in the obsoletes field, and **D2**
 in the dateUploaded field.  (size and checksum are also calculated for the new
-snapshot.)  This is synchronized and replicated to a different Member Node, 'R2'.
+snapshot.)  This is synchronized and replicated to a different Member Node, **R2**.
 
-When v2.cn.resolve(S) is called, an ObjectLocationList for P2 is returned, listing
-Member Nodes M and R2 as locations for retrieval.  A call to M.get(P2) or R2.get(P2) 
-will return the latest snapshot, as will the same call using S as the identifier
-instead.  However, a call to R1.get(P2) will return NotFound, because it was not
-a replication target for that snapshot, and a call to R1.get(S) will return the 
-initial snapshot, because it has snapshot P1 with the associated seriesId S.
+When ``v2.cn.resolve(S`)`` is called, an ObjectLocationList for **P2** is returned, listing
+Member Nodes **M** and **R2** as locations for retrieval.  A call to ``M.get(P2)`` or 
+``R2.get(P2)`` will return the latest snapshot, as will the same call using **S** as the identifier
+instead.  However, a call to ``R1.get(P2)`` will return NotFound, because it was not
+a replication target for that snapshot, and a call to ``R1.get(S)`` will return the 
+initial snapshot, because it has snapshot **P1** with the associated seriesId **S**.
 
-Notice, too, that v2.cn.resolve(P1) will return an ObjectLocationList containing
-both M and R1, although retrieval from M is no longer possible, since M doesn't 
-preserve past snapshots.  M.get(P1) should return a NotFound, and the client will 
-move on to R1, and be able to retrieve P1 with R1.get(P1).
+Notice, too, that ``v2.cn.resolve(P1)`` will return an ObjectLocationList containing
+both **M** and **R1**, although retrieval from **M** is no longer possible, since **M** doesn't 
+preserve past snapshots.  ``M.get(P1)`` should return a NotFound, and the client will 
+move on to **R1**, and be able to retrieve **P1** with ``R1.get(P1)``.
 
-The CN, when v2.cn.resolve(S) was called, determined the head of the series by first
-finding all of the snapshots where the seriesId is S, and obsoletedBy is null or
-the obsoletedBy object has a different seriesId. In this case, since the P1 
+The CN, when ``v2.cn.resolve(S)`` was called, determined the head of the series by first
+finding all of the snapshots where the seriesId is **S**, and obsoletedBy is null or
+the obsoletedBy object has a different seriesId. In this case, since the **P1** 
 systemMetadata is never updated to fill in the obsoletedBy field, the algorithm 
-will get both P1 and P2.  It will then notice that P2 has the later date of D2, 
-so will choose P2 as the head of the series.
+will get both **P1** and **P2**.  It will then notice that **P2** has the later date of **D2**, 
+so will choose **P2** as the head of the series.
 
-Suppose now that A spawns two more snapshots in quick succession, and DataONE 
-synchronizes afterwards.  It missed P3(S) but picks up P4(S).  Cn.resolve(S) will
-return an ObjectLocationList for the P4 snapshot, since it is the latest of all 
+Suppose now that **A** spawns two more snapshots in quick succession, and DataONE 
+synchronizes afterwards.  It missed **P3(S)** but picks up **P4(S)**.  ``Cn.resolve(S)`` will
+return an ObjectLocationList for the **P4** snapshot, since it is the latest of all 
 non-obsoleted snapshots.
+
+Later, **A** makes some changes and realizes that the content is significantly different
+from previous versions, so renames it **S2**.  The system treats it as related, so 
+links to the **P4** snapshot with the obsoletes field.  **P5(S2)** is now hosted on **M**, but
+**P4(S)** is gone.  ``cn.resolve(S)`` will return an ObjectLocationList for **P4**, but ``M.get(P4)``
+will return NotFound, and the client will have to retrieve from a replica Member Node, 
+if possible.  ``Cn.resolve(S2)`` will return an OLL for **P5**.  Note also that ``M.get(S)``
+will not be able to resolve the SID to any PID, since it doesn't host any of the
+snapshots of **S**.
 
 
 Summary
--------
+=======
+- the PID represents the snapshot, and snapshots are immutable
+- the SID represents the entity, and can be applied to several connected snapshots.
+- A particular SID cannot be used if it is either reserved by or in use by someone else.
 
-- PID represents the snapshot, and snapshots are immutable
-- SID represents the entity, and can be applied to several connected snapshots
-  can only use a SID if (a) new to DataONE, (b) are rightsHolder on the SID and
-  obsoletes PID has same SID
-- rule: cannot put SID in obsoletes and obsoletedBy fields
-- SID resolution is "latest upload among series-chain ends, where chain ends are
-  defined as snapshots where their obsoletedBy field is empty, or its value's
-  seriesId is different.
-- not all versions are guaranteed to be synchronized or replicated
-  - is dependent on synchronization frequency, CN availability for sync
-- missing versions, if synced but not replicated will appear as NotFound exceptions 
-  on forwarded resolve requests
-- unsync'ed versions might appear in obsoletes/dBy fields of existing versions
-- cn.listObjects(idFilter=sid)?? retrieves all synchronized versions 
-- MNs should not return the latest version through DataONE APIs if presented with
-  PID of unhosted version.
-     
+  * Specifically, the CN checks that the submitter has CHANGE_PERMISSION on 
+    the current head of the series
+  * if not in use, checks submitter against ``cn.hasReservation(SID)``
+  * 
  
-- troubleshooting seriesID assignment
-  - once SeriesID is set, it cannot be changed, because it breaks the trust that
-    the identifier always gets the user to a conceptually equivalent object.
+- cannot put SID in obsoletes and obsoletedBy fields
+- SID resolution is "latest upload" among set of snapshots not obsoleted by 
+  another member of the series. 
 
+- not all versions are guaranteed to be synchronized or replicated
+
+  * is dependent on synchronization frequency, CN availability for sync
+  * missing versions, if synced but not replicated will appear as NotFound
+    exceptions on forwarded resolve requests
+  *
+- unsynchronized versions might appear in obsoletes/dBy fields of existing versions
+- cn.listObjects(idFilter=sid)?? retrieves all synchronized versions 
+
+- once SeriesID is set, it cannot be changed, because it breaks the trust that
+  the identifier always gets the user to a conceptually equivalent object.
