@@ -50,6 +50,9 @@ help:
 clean:
 	-rm -rf "$(BUILDDIR)"
 
+livehtml:
+	sphinx-autobuild -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
+
 all: generate plantuml html
 
 generate: generate_types generate_methods

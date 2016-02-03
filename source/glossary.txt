@@ -40,6 +40,12 @@ Glossary
      Member Node has all the rights of the :term:`rightsHolder` to maintain
      and curate the object, including making any changes necessary.
 
+   charset
+
+     An element in system metadata that aligns with the `IANA Character
+     Sets<IANA_CHARS>`_ specification. See :doc:`design/what_is_it` for more
+     information.
+
    checksum
 
      A string representing the computed hash of an object using an algorithm
@@ -107,6 +113,19 @@ Glossary
      exception to help identify the location in the code where the exception
      originated. See also :mod:`Exceptions`.
 
+   extension
+
+     In the context of a :term:`filename` or within
+     :class:`v2_0.Types.ObjectFormat`. refers to the suffix of a filename
+     appearing after the final period (.) in the file name.
+
+   filename
+   fileName
+
+     The name of a file when save to file system media. See
+     :doc:`design/what_is_it` for more information the use of fileName in
+     DataONE.
+
    formatId
 
      An element in :term:`System Metadata` that is used to indicate the type
@@ -125,6 +144,7 @@ Glossary
    identifier
    pid
    PID
+   primary identifier
 
      Persistent Unique Identifier. A string of printable Unicode characters
      that uniquely identifies an object within the DataONE infrastructure. See
@@ -143,6 +163,15 @@ Glossary
      Member Node and/or by enabling search and retrieval of content from the
      DataONE infrastructure.
 
+   mediaType
+   media type
+   media-type
+
+     Formerly :term:MIME-type, an entry in the `IANA Media Type<IANA_MEDIA>`_
+     registry. Passed in the HTTP *Content-Type* header for HTTP GET and HEAD
+     responses to provide information about the resource for the consumer. See
+     :doc:`design/what_is_it` for more information on it's use in DataONE.
+
    MN
    Member Node
    Member Nodes
@@ -156,6 +185,12 @@ Glossary
 
      Data describing data. There are currently two distinct forms of metadata
      managed by DataONE, :term:`science metadata` and :term:`system metadata`.
+
+   MIME
+   MIME-Type
+
+     Multipurpose Internet Mail Extensions Type. The preferred name is now
+     "media-type".
 
    node event log
 
@@ -229,6 +264,16 @@ Glossary
 
      The :term:`Subject` that has full control over the access control rules
      for an object.
+
+   SID
+   seriesId
+   series identifier
+   Series Identifier
+
+     An identifier that may refer to multiple versions of an object. A Series
+     Identifier resolves to the latest revision of an object as indicated by the
+     obsolescence chain or other revision information. See the document
+     :doc:`design/PIDs` for more detail.
 
    session
 
@@ -315,3 +360,8 @@ Glossary
 
 
 .. _DataNet RFP: http://www.nsf.gov/publications/pub_summ.jsp?WT.z_pims_id=503141&ods_key=nsf07601
+
+.. _IANA_CHARS: http://www.iana.org/assignments/character-sets/character-sets.xhtml
+
+.. _IANA_MEDIA: http://www.iana.org/assignments/media-types/media-types.xhtml
+
