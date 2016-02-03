@@ -62,7 +62,7 @@ try:
                 'sphinx.ext.todo',
                 'sphinx.ext.inheritance_diagram',
                 'sphinx.ext.extlinks',
-                # 'sphinxcontrib.httpdomain',
+#                'sphinxcontrib.httpdomain',
                 'sphinxcontrib.plantuml',
                 ]
 except:
@@ -149,15 +149,6 @@ today_fmt = '%Y-%m-%d'
 unused_docs = [
                'design/UseCases/uc_template',
                'design/usecasesoverview',
-               'apis/REST_object',
-               'apis/REST_meta',
-               'apis/REST_resolve',
-               'apis/REST_reserve',
-               'apis/REST_log',
-               'apis/REST_account',
-               'apis/REST_nodes',
-               'apis/REST_monitor',
-               'apis/REST_replicate',
                'apis/types_auth',
                'apis/types_errors',
                'apis/Types_include.txt']
@@ -176,7 +167,6 @@ exclude_patterns = [
                     ]
 exclude_patterns = ['**/.svn',
                     'apis/generated/generated*',
-                    'apis/REST*',
                     'apis/examples/*',
                     'apis/Types_crontabentry.txt',
                     'apis/Types_SAML.txt',
