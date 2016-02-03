@@ -19,10 +19,10 @@ Coordinating Node). If the object exists on the node and the user has READ
 permission on the object, then the bytes of that object are returned,
 otherwise an error condition occurs.
 
-The low level operation assumes that the client knows that the desired object is
-available on the target node. The normal process for retrieving an object given
-only the identifier is to first resolve the object, then retrieve the object
-from one of the identified nodes. Resolution is described in 
+This low level operation assumes that the client knows that the desired object 
+is available on the target node. The normal process for retrieving an object 
+given only the identifier is to first resolve the object, then retrieve the 
+object from one of the identified nodes. Resolution is described in 
 :doc:`UC36 </design/UseCases/36_uc>`.
 
 Actors

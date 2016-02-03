@@ -149,12 +149,14 @@ Node that has a copy of the object:
    # A client certificate with a subject that has write permission on the object
    CERT="my_client_certificate.pem"
 
-   # The identifier of the object to be archived. Note that the PID will need
-   # to be URL path encoded in this example.
+   # The identifier of the object to be archived. 
    PID="object.identifier"
 
+   # The provided identifier must be properly URL path encoded
+   EPID=URL_Encode(PID)   
+
    # Invoke the archive operation on the identifier
-   curl -E ${CERT} -X PUT "$NODE/V1/archive/${PID}"
+   curl -E ${CERT} -X PUT "$NODE/V1/archive/${EPID}"
 
 
 
