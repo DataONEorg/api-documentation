@@ -3,41 +3,48 @@
 
 
 .. list-table:: Functions defined in :mod:`CNAuthorization`
-   :widths: 3 10 10 30
+   :widths: 3 3 10 10 30
    :header-rows: 1
 
    * - Tier
+     - Version
      - REST
      - Function
      - Parameters
    * - Tier 2
-     - ``PUT /owner/{pid}``
+     - 1.0, 2.0
+     - ``PUT /owner/{id}``
      - :func:`setRightsHolder`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`userId<Types.Subject>`, ``serialVersion``) ``->`` :class:`Types.Identifier`
+     - (:class:`session<Types.Session>`, :class:`id<Types.Identifier>`, :class:`userId<Types.Subject>`, ``serialVersion``) ``->`` :class:`Types.Identifier`
    * - Tier 2
-     - ``GET /isAuthorized/{pid}?action={action}``
+     - 1.0, 2.0
+     - ``GET /isAuthorized/{id}?action={action}``
      - :func:`isAuthorized`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`action<Types.Permission>`) ``->`` boolean
+     - (:class:`session<Types.Session>`, :class:`id<Types.Identifier>`, :class:`action<Types.Permission>`) ``->`` boolean
    * - Tier 2
-     - ``PUT /accessRules/{pid}``
+     - 1.0, 2.0
+     - ``PUT /accessRules/{id}``
      - :func:`setAccessPolicy`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`accessPolicy<Types.AccessPolicy>`, ``serialVersion``) ``->`` boolean
+     - (:class:`session<Types.Session>`, :class:`id<Types.Identifier>`, :class:`accessPolicy<Types.AccessPolicy>`, ``serialVersion``) ``->`` boolean
 
 
 
 
-.. function:: setRightsHolder(session,pid,userId,serialVersion) -> Identifier
+.. function:: setRightsHolder(session,id,userId,serialVersion) -> Identifier
 
    Changes ownership (RightsHolder) of the specified object to the :term:`subject` specified by `userId`
 
+   v2.0: The supplied identifier may be a :term:`PID` or a :term:`SID`.
+
+   :Version: 1.0, 2.0
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`
-   :REST URL: ``PUT /owner/{pid}``
+   :REST URL: ``PUT /owner/{id}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param pid: Identifier of the object to be modified. Transmitted as part of the URL path and must be escaped accordingly.
-   :type pid: :class:`Types.Identifier`
+   :param id: Identifier of the object to be modified. May be either a PID or a SID, the latter acting on the HEAD PID. Transmitted as part of the URL path and must be escaped accordingly.
+   :type id: :class:`Types.Identifier`
 
    :param userId: The subject that will be taking ownership of the specified object.  Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
    :type userId: :class:`Types.Subject`
@@ -71,7 +78,7 @@
 
 
 
-.. function:: isAuthorized(session,pid,action) -> boolean
+.. function:: isAuthorized(session,id,action) -> boolean
 
    Test if the user identified by the provided token has authorization for operation on the specified object.
 
@@ -83,18 +90,19 @@
 
    If the action is not authorized, then a :exc:`NotAuthorized` exception MUST be raised.
 
-   .. Note:: Should perhaps add convenience methods for "canRead()" and "canWrite()" to verify that a user is able to read / write an object.
+   v2.0: The supplied identifier may be a :term:`PID` or a :term:`SID`.
 
+   :Version: 1.0, 2.0
    :Use Cases:
      :doc:`UC01 </design/UseCases/01_uc>`, :doc:`UC02 </design/UseCases/02_uc>`, :doc:`UC36 </design/UseCases/36_uc>`, :doc:`UC37 </design/UseCases/37_uc>`
-   :REST URL: ``GET /isAuthorized/{pid}?action={action}``
+   :REST URL: ``GET /isAuthorized/{id}?action={action}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param pid: The identifer of the resource for which access is being checked. Transmitted as part of the URL path and must be escaped accordingly.
-   :type pid: :class:`Types.Identifier`
+   :param id: The identifer of the resource for which access is being checked. May be either a PID or a SID, the latter returning results as if called with the HEAD PID. Transmitted as part of the URL path and must be escaped accordingly.
+   :type id: :class:`Types.Identifier`
 
-   :param action: The type of operation which is being requested for the given pid. Transmitted as a URL query parameter, and so must be escaped accordingly.
+   :param action: The type of operation which is being requested for the given identifier. Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type action: :class:`Types.Permission`
 
    :returns: True if the operation is allowed
@@ -117,9 +125,9 @@
 
 
 
-.. function:: setAccessPolicy(session,pid,accessPolicy,serialVersion) -> boolean
+.. function:: setAccessPolicy(session,id,accessPolicy,serialVersion) -> boolean
 
-   Sets the access permissions for an object identified by *pid*.
+   Sets the access permissions for an object identified by *id*.
 
    Triggers a change to the system metadata modified time stamp.
 
@@ -127,14 +135,17 @@
 
    Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception such as :exc:`NotAuthorized`.
 
+   v2.0: The supplied identifier may be a :term:`PID` or a :term:`SID`.
+
+   :Version: 1.0, 2.0
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`
-   :REST URL: ``PUT /accessRules/{pid}``
+   :REST URL: ``PUT /accessRules/{id}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param pid: The object for which access control is being updated. Transmitted as part of the URL path and must be escaped accordingly.
-   :type pid: :class:`Types.Identifier`
+   :param id: The object for which access control is being updated. May be either a PID or a SID, the latter acting on the HEAD PID only. Transmitted as part of the URL path and must be escaped accordingly.
+   :type id: :class:`Types.Identifier`
 
    :param accessPolicy: The desired privileges to be assigned to the object. Transmitted as an UTF-8 encoded XML structure for the respective type as defined in the DataONE types schema, as a *File part* of the MIME multipart/mixed message.
    :type accessPolicy: :class:`Types.AccessPolicy`

@@ -3,14 +3,16 @@
 
 
 .. list-table:: Functions defined in :mod:`MNReplication`
-   :widths: 3 10 10 30
+   :widths: 3 3 10 10 30
    :header-rows: 1
 
    * - Tier
+     - Version
      - REST
      - Function
      - Parameters
    * - Tier 4
+     - 1.0
      - ``POST /replicate``
      - :func:`replicate`
      - (:class:`session<Types.Session>`, :class:`sysmeta<Types.SystemMetadata>`, :class:`sourceNode<Types.NodeReference>`) ``->`` boolean
@@ -28,6 +30,7 @@
 
    Access control for this method MUST be configured to allow calling by Coordinating Nodes.
 
+   :Version: 1.0
    :Use Cases:
      :doc:`UC09 </design/UseCases/09_uc>`
    :REST URL: ``POST /replicate``

@@ -3,18 +3,26 @@
 
 
 .. list-table:: Functions defined in :mod:`CNRegister`
-   :widths: 3 10 10 30
+   :widths: 3 3 10 10 30
    :header-rows: 1
 
    * - Tier
+     - Version
      - REST
      - Function
      - Parameters
    * - Tier 2
+     - 1.0, 2.0
      - ``PUT /node/{nodeid}``
      - :func:`updateNodeCapabilities`
      - (:class:`session<Types.Session>`, :class:`nodeid<Types.NodeReference>`, :class:`node<Types.Node>`) ``->`` boolean
    * - Tier 2
+     - 1.0, 2.0
+     - ``GET /node/{nodeid}``
+     - :func:`getNodeCapabilities`
+     - (:class:`nodeid<Types.NodeReference>`) ``->`` :class:`Types.Node`
+   * - Tier 2
+     - 1.0, 2.0
      - ``POST /node``
      - :func:`register`
      - (:class:`session<Types.Session>`, :class:`node<Types.Node>`) ``->`` :class:`Types.NodeReference`
@@ -30,6 +38,9 @@
 
    Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception.
 
+   v2.0: The structure of :class:`v2_0.Types.Node` has changed.
+
+   :Version: 1.0, 2.0
    :REST URL: ``PUT /node/{nodeid}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
@@ -66,10 +77,44 @@
 
 
 
+.. function:: getNodeCapabilities(nodeid) -> Node
+
+   For retrieving the capabilities of the specified node if it is registered on the Coordinating Node being called.
+
+   v2.0: The structure of :class:`v2_0.Types.Node` has changed.
+
+   :Version: 1.0, 2.0
+   :REST URL: ``GET /node/{nodeid}``
+   :param nodeid: The identifier of the existing node entry being looked up. Transmitted as part of the URL path and must be escaped accordingly.
+   :type nodeid: :class:`Types.NodeReference`
+
+   :returns: An instance of :class`Types.Node` that contains the Node information.
+   :rtype: :class:`Types.Node`
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4826)``
+
+     The service is not implemented.
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4827)``
+
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4828)``
+
+     The request was malformed.
+
+   :raises Exceptions.NotFound: ``(errorCode=404, detailCode=4829)``
+
+     The requested nodeid is not available in the registry.
+
+
+
+
 .. function:: register(session,node) -> NodeReference
 
    Register a new node in the system. If the node already exists, then a :exc:`IdentifierNotUnique` exception MUST be returned.
 
+   v2.0: The structure of :class:`v2_0.Types.Node` has changed.
+
+   :Version: 1.0, 2.0
    :REST URL: ``POST /node``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`

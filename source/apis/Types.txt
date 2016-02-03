@@ -7,6 +7,12 @@ Data Types in CICore
 .. module:: Types
    :synopsis: Catalog of data types (structures) used by the DataONE cicore.
 
+**Versions**
+
+* :doc:`Version 1.0<Types>` 
+* :doc:`Version 1.1<Types11>` 
+* :doc:`Version 2.0<Types2>` 
+
 **Quick Reference**
 
 - :class:`Types.AccessPolicy`
@@ -1058,7 +1064,13 @@ Data Types in CICore
 ..                                    ######
 .. class:: Log
 
+    Extends :class:`Types.Slice`
+
     Represents a collection of :class:`Types.LogEntry` elements, used to transfer log information between DataONE components.
+
+    .. attribute:: logEntry
+
+      Type: :class:`Types.LogEntry`
 
     .. code-block:: xml
 
@@ -1109,14 +1121,14 @@ Data Types in CICore
 
     .. attribute:: ipAddress
 
-      Type: :class:`Types.xs.string`
+      Type: `xs.string`_
 
       The IP address, as reported by the service receiving the request, of the request origin.
 
 
     .. attribute:: userAgent
 
-      Type: :class:`Types.xs.string`
+      Type: `xs.string`_
 
       The user agent of the client making the request, as reported in the User-Agent HTTP header.
 
@@ -1137,7 +1149,7 @@ Data Types in CICore
 
     .. attribute:: dateLogged
 
-      Type: :class:`Types.xs.dateTime`
+      Type: `xs.dateTime`_
 
       A :class:`Types.DateTime` time stamp indicating when the event triggering the log message ocurred. Note that all time stamps in DataONE are in UTC.
 
@@ -1228,7 +1240,7 @@ Data Types in CICore
 
     .. attribute:: baseURL
 
-      Type: :class:`Types.xs.anyURI`
+      Type: `xs.anyURI`_
 
       The base URL of the node, indicating the protocol, fully qualified domain name, and path to the implementing service, excluding the version of the API. e.g. ``https://server.example.edu/app/d1/mn`` rather than ``https://server.example.edu/app/d1/mn/v1``
 
@@ -1277,14 +1289,14 @@ Data Types in CICore
 
     .. attribute:: replicate
 
-      Type: :class:`Types.xs.boolean`
+      Type: `xs.boolean`_
 
       Set to *true* if the node is willing to be a :term:`replication target`, otherwise *false*.
 
 
     .. attribute:: synchronize
 
-      Type: :class:`Types.xs.boolean`
+      Type: `xs.boolean`_
 
       Set to *true* if the node should be :term:`synchronized` by a Coordinating Node, otherwise *false*.
 
@@ -1383,14 +1395,14 @@ Data Types in CICore
 
     .. attribute:: maxObjectSize
 
-      Type: :class:`Types.xs.unsignedLong`
+      Type: `xs.unsignedLong`_
 
       An optional statement of the maximum size in octets (8-bit bytes) of objects this node is willing to accept for replication.
 
 
     .. attribute:: spaceAllocated
 
-      Type: :class:`Types.xs.unsignedLong`
+      Type: `xs.unsignedLong`_
 
       An optional statement of the total space in bytes allocated for replication object storage on this node.
 
@@ -1521,14 +1533,14 @@ Data Types in CICore
 
     .. attribute:: formatName
 
-      Type: :class:`Types.xs.string`
+      Type: `xs.string`_
 
       For objects that are typed using a Document Type Definition, this lists the well-known and accepted named version of the DTD. In other cases, an appropriately unambiguous descriptive name should be chosen.
 
 
     .. attribute:: formatType
 
-      Type: :class:`Types.xs.string`
+      Type: `xs.string`_
 
       A string field indicating whether or not this format is :term:`science data` (*DATA*), :term:`science metadata` (*METADATA*) or a :term:`resource map` (*RESOURCE*). If the format is a self-describing data format that includes science metadata, then the field should also be set to science metadata.
 
@@ -1567,7 +1579,13 @@ Data Types in CICore
 ..                                    ######
 .. class:: ObjectFormatList
 
+    Extends :class:`Types.Slice`
+
     An ObjectFormatList is the structure returned from the :func:`CNCore.listFormats()` method of the CN REST interface. It provides a list of named object formats defined in the DataONE system. Each :class:`Types.ObjectFormat` returned in the list describes the object format via its name, and future versions may contain additional structured content from common external typing systems.
+
+    .. attribute:: objectFormat
+
+      Type: :class:`Types.ObjectFormat`
 
     .. code-block:: xml
 
@@ -1616,11 +1634,11 @@ Data Types in CICore
 
     .. attribute:: dateSysMetadataModified
 
-      Type: :class:`Types.xs.dateTime`
+      Type: `xs.dateTime`_
 
     .. attribute:: size
 
-      Type: :class:`Types.xs.unsignedLong`
+      Type: `xs.unsignedLong`_
 
     .. code-block:: xml
 
@@ -1660,7 +1678,13 @@ Data Types in CICore
 ..                                    ######
 .. class:: ObjectList
 
+    Extends :class:`Types.Slice`
+
     A list of object locations (nodes) from which the object can be retrieved.
+
+    .. attribute:: objectInfo
+
+      Type: :class:`Types.ObjectInfo`
 
     .. code-block:: xml
 
@@ -1704,7 +1728,7 @@ Data Types in CICore
 
     .. attribute:: baseURL
 
-      Type: :class:`Types.xs.anyURI`
+      Type: `xs.anyURI`_
 
       The current base URL (the *baseURL* element from the :class:`Types.Node` record) for services implemented on the target node. Used with service version to construct a URL for service calls to this node. Note that complete information on services available on a Node is available from the :func:`CNCore.listNodes` service.
 
@@ -1718,7 +1742,7 @@ Data Types in CICore
 
     .. attribute:: url
 
-      Type: :class:`Types.xs.anyURI`
+      Type: `xs.anyURI`_
 
       The full (absolute) URL that can be used to retrieve the object using the get() method of the rest interface.
 
@@ -1728,7 +1752,7 @@ Data Types in CICore
 
     .. attribute:: preference
 
-      Type: :class:`Types.xs.int`
+      Type: `xs.int`_
 
       A weighting parameter that provides a hint to the caller for the relative preference for nodes from which the content should be retrieved. Higher values have higher preference.
 
@@ -1868,7 +1892,7 @@ Data Types in CICore
 
     .. attribute:: verified
 
-      Type: :class:`Types.xs.boolean`
+      Type: `xs.boolean`_
 
       *true* if the name and email address of the *Person* have been :term:`verified` to ensure that the *givenName* and *familyName* represent the real person's legal name, and that the email address is correct for that person and is in the control of the indicated individual. Verification occurs through an established procedure within DataONE as part of the Identity Management system. A Person can not change their own *verified* field, but rather must be verified and changed through this DataONE established process.
 
@@ -1924,14 +1948,14 @@ Data Types in CICore
 
     .. attribute:: success
 
-      Type: :class:`Types.xs.boolean`
+      Type: `xs.boolean`_
 
       A boolean flag indicating *true* if the node was reached by the last :func:`MNCore.ping` or :func:`CNCore.ping` call, otherwise *false*.
 
 
     .. attribute:: lastSuccess
 
-      Type: :class:`Types.xs.dateTime`
+      Type: `xs.dateTime`_
 
       The date time value (UTC) of the last time a successful ping was performed.
 
@@ -1983,7 +2007,7 @@ Data Types in CICore
 
     .. attribute:: replicaVerified
 
-      Type: :class:`Types.xs.dateTime`
+      Type: `xs.dateTime`_
 
       The last date and time on which the integrity of a replica was verified by the coordinating node. Verification occurs by checking that the checksum of the stored object matches the checksum recorded for the object in the system metadata.
 
@@ -2041,14 +2065,14 @@ Data Types in CICore
 
     .. attribute:: replicationAllowed
 
-      Type: :class:`Types.xs.boolean`
+      Type: `xs.boolean`_
 
       A boolean flag indicating if the object should be replicated (*true*, default) or not (*false*).
 
 
     .. attribute:: numberReplicas
 
-      Type: :class:`Types.xs.int`
+      Type: `xs.int`_
 
       An integer indicating the number of replicas targeted for this object. Defaults to 3.
 
@@ -2116,7 +2140,7 @@ Data Types in CICore
 
     .. attribute:: available
 
-      Type: :class:`Types.xs.boolean`
+      Type: `xs.boolean`_
 
       A boolean flag indicating if the service is available (*true*, default) or otherwise (*false*).
 
@@ -2159,6 +2183,8 @@ Data Types in CICore
 
 ..                                    ######
 .. class:: ServiceMethodRestriction
+
+    Extends :class:`Types.SubjectList`
 
     Describes an optional restriction policy for a given method. If this element exists for a service method, its use is restricted, and only :term:`Subjects` listed in the list are allowed to invoke the method named in the *methodName* attribute.
 
@@ -2334,21 +2360,21 @@ Data Types in CICore
 
     .. attribute:: count
 
-      Type: :class:`Types.xs.int`
+      Type: `xs.int`_
 
       The number of entries in the slice.
 
 
     .. attribute:: start
 
-      Type: :class:`Types.xs.int`
+      Type: `xs.int`_
 
       The zero-based index of the first element in the slice.
 
 
     .. attribute:: total
 
-      Type: :class:`Types.xs.int`
+      Type: `xs.int`_
 
       The total number of entries in the source list from which the slice was extracted.
 
@@ -2395,14 +2421,14 @@ Data Types in CICore
 
     .. attribute:: lastHarvested
 
-      Type: :class:`Types.xs.dateTime`
+      Type: `xs.dateTime`_
 
       The most recent modification date (UTC) of objects checked during the last harvest of the node.
 
 
     .. attribute:: lastCompleteHarvest
 
-      Type: :class:`Types.xs.dateTime`
+      Type: `xs.dateTime`_
 
       The last time (UTC) all the data from a node was pulled from a member node during a complete synchronization process.
 
@@ -2554,7 +2580,7 @@ Data Types in CICore
 
     .. attribute:: serialVersion
 
-      Type: :class:`Types.xs.unsignedLong`
+      Type: `xs.unsignedLong`_
 
       A serial number maintained by the coordinating node to indicate when changes have occurred to *SystemMetadata* to avoid update conflicts. Clients should ensure that they have the most recent version of a *SystemMetadata* document before attempting to update, otherwise an error will be thrown to prevent conflicts. The Coordinating Node must set this optional field when it receives the system metadata document.
 
@@ -2587,7 +2613,7 @@ Data Types in CICore
 
     .. attribute:: size
 
-      Type: :class:`Types.xs.unsignedLong`
+      Type: `xs.unsignedLong`_
 
       The size of the object in octets (8-bit bytes).
 
@@ -2643,21 +2669,21 @@ Data Types in CICore
 
     .. attribute:: archived
 
-      Type: :class:`Types.xs.boolean`
+      Type: `xs.boolean`_
 
       A boolean flag, set to *true* if the object has been classified as archived. An archived object does not show up in search indexes in DataONE, but is still accessible via the CNRead and MNRead services if associated access polices allow. The field is optional, and if absent, then objects are implied to not be archived, which is the same as setting archived to *false*.
 
 
     .. attribute:: dateUploaded
 
-      Type: :class:`Types.xs.dateTime`
+      Type: `xs.dateTime`_
 
       Date and time (UTC) that the object was uploaded into the DataONE system, which is typically the time that the object is first created on a Member Node using the :func:`MNStorage.create` operation. Note this is independent of the publication or release date of the object. The Member Node must set this optional field when it receives the system metadata document from a client.
 
 
     .. attribute:: dateSysMetadataModified
 
-      Type: :class:`Types.xs.dateTime`
+      Type: `xs.dateTime`_
 
       Date and time (UTC) that this system metadata record was last modified in the DataONE system. This is the same timestamp as *dateUploaded* until the system metadata is further modified. The Member Node must set this optional field when it receives the system metadata document from a client.
 
@@ -2765,3 +2791,12 @@ Data Types in CICore
       @enduml
 
 
+..    ####
+
+.. _xs.string: http://www.w3.org/TR/xmlschema-2/#string
+.. _xs.boolean: http://www.w3.org/TR/xmlschema-2/#boolean
+.. _xs.dateTime: http://www.w3.org/TR/xmlschema-2/#dateTime
+.. _xs.unsignedLong: http://www.w3.org/TR/xmlschema-2/#unsignedLong
+.. _xs.token: http://www.w3.org/TR/xmlschema-2/#token
+.. _xs.int: http://www.w3.org/TR/xmlschema-2/#int
+.. _xs.anyURI: http://www.w3.org/TR/xmlschema-2/#anyURI

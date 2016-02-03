@@ -7,6 +7,12 @@ Data Types in CICore
 .. module:: v1_1.Types
    :synopsis: Catalog of data types (structures) used by the DataONE cicore.
 
+**Versions**
+
+* :doc:`Version 1.0<Types>` 
+* :doc:`Version 1.1<Types11>` 
+* :doc:`Version 2.0<Types2>` 
+
 **Quick Reference**
 
 - :class:`v1_1.Types.QueryEngineDescription`
@@ -60,28 +66,28 @@ Data Types in CICore
 
     .. attribute:: queryEngineVersion
 
-      Type: :class:`xs.string`
+      Type: `xs.string`_
 
       The version of the underlying query engine. Used by clients to determine possible compatibility concerns or features available.
 
 
     .. attribute:: querySchemaVersion
 
-      Type: :class:`xs.string`
+      Type: `xs.string`_
 
       Version of the schema in use by the query engine, e.g. "1.0.1"
 
 
     .. attribute:: name
 
-      Type: :class:`xs.string`
+      Type: `xs.string`_
 
       The full, human readable name of the query engine. For example: "Apache SOLR"
 
 
     .. attribute:: additionalInfo
 
-      Type: :class:`NonEmptyString`
+      Type: :class:`Types.NonEmptyString`
 
       An optional human readable description of the query engine. This can be used to describe any special capabilities or intended uses for the query engine. For example, a query engine may be tuned to suit a particular audience or domain as opposed to providing a general purpose discovery mechanism.
 
@@ -141,7 +147,7 @@ Data Types in CICore
 
     .. attribute:: queryEngine
 
-      Type: :class:`NonEmptyString`
+      Type: :class:`Types.NonEmptyString`
 
       The name of a queryEngine. This value will be used as a path element in REST API calls and so should not contain characters that will need to be escaped.
 
@@ -177,49 +183,49 @@ Data Types in CICore
 
     .. attribute:: name
 
-      Type: :class:`NonEmptyString`
+      Type: :class:`Types.NonEmptyString`
 
       The name of the field as used programmatically when constructing queries or other rferences to the field.
 
 
     .. attribute:: description
 
-      Type: :class:`xs.string`
+      Type: `xs.string`_
 
       An optional, repeatable, brief description of the field that can be used to help guide developers or end users in appropriate use of the field. May for example, contain a links to additional documentation.
 
 
     .. attribute:: type
 
-      Type: :class:`NonEmptyString`
+      Type: :class:`Types.NonEmptyString`
 
       The type of the field, expressed in the language peculiar to the query engine being described.
 
 
     .. attribute:: searchable
 
-      Type: :class:`xs.boolean`
+      Type: `xs.boolean`_
 
       Indicates if the field may be used in constructing queries (as opposed to only appearing in results)
 
 
     .. attribute:: returnable
 
-      Type: :class:`xs.boolean`
+      Type: `xs.boolean`_
 
       Indicates if the field values may be returned in search results.
 
 
     .. attribute:: sortable
 
-      Type: :class:`xs.boolean`
+      Type: `xs.boolean`_
 
       Indicates if the field can be used for sorting results.
 
 
     .. attribute:: multivalued
 
-      Type: :class:`xs.boolean`
+      Type: `xs.boolean`_
 
       Indicates if the field may contain multiple values. Some query engines such as SOLR support this capability.
 
@@ -267,3 +273,13 @@ Data Types in CICore
 
       @enduml
 
+
+..    ####
+
+.. _xs.string: http://www.w3.org/TR/xmlschema-2/#string
+.. _xs.boolean: http://www.w3.org/TR/xmlschema-2/#boolean
+.. _xs.dateTime: http://www.w3.org/TR/xmlschema-2/#dateTime
+.. _xs.unsignedLong: http://www.w3.org/TR/xmlschema-2/#unsignedLong
+.. _xs.token: http://www.w3.org/TR/xmlschema-2/#token
+.. _xs.int: http://www.w3.org/TR/xmlschema-2/#int
+.. _xs.anyURI: http://www.w3.org/TR/xmlschema-2/#anyURI

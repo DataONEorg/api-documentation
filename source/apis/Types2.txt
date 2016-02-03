@@ -7,18 +7,24 @@ Data Types in CICore
 .. module:: v2_0.Types
    :synopsis: Catalog of data types (structures) used by the DataONE cicore.
 
+**Versions**
+
+* :doc:`Version 1.0<Types>` 
+* :doc:`Version 1.1<Types11>` 
+* :doc:`Version 2.0<Types2>` 
+
 **Quick Reference**
 
-- :class:`v2_0.Types.FormatList`
 - :class:`v2_0.Types.Log`
 - :class:`v2_0.Types.LogEntry`
+- :class:`v2_0.Types.MediaType`
+- :class:`v2_0.Types.MediaTypeProperty`
 - :class:`v2_0.Types.Node`
 - :class:`v2_0.Types.NodeList`
 - :class:`v2_0.Types.ObjectFormat`
 - :class:`v2_0.Types.ObjectFormatList`
 - :class:`v2_0.Types.OptionList`
 - :class:`v2_0.Types.Property`
-- :class:`v2_0.Types.ServiceExtension`
 - :class:`v2_0.Types.SystemMetadata`
 
 
@@ -28,10 +34,27 @@ Data Types in CICore
 
 ..
   @startuml images/v2_0.classes_combined.png
+  class v2_0.MediaTypeProperty {
+    + name : xs.string
+  }
+  v2_0.MediaTypeProperty .. xs.string
+  v2_0.MediaTypeProperty --|> xs.string
+
+  class v2_0.MediaType {
+    + property : v2_0.MediaTypeProperty[0..*]
+    + name : xs.string[1.. 1]
+  }
+  v2_0.MediaType .. v2_0.MediaTypeProperty
+  v2_0.MediaType .. xs.string
+
   class v2_0.SystemMetadata {
     + seriesId : Identifier[0..1]
+    + mediaType : v2_0.MediaType[0..1]
+    + fileName : xs.string[0..1]
   }
   v2_0.SystemMetadata .. Identifier
+  v2_0.SystemMetadata .. v2_0.MediaType
+  v2_0.SystemMetadata .. xs.string
   v2_0.SystemMetadata --|> SystemMetadata
 
   class v2_0.NodeList {
@@ -40,28 +63,10 @@ Data Types in CICore
   v2_0.NodeList .. v2_0.Node
 
   class v2_0.Node {
-    + serviceExtensions : v2_0.ServiceExtension[0..1]
     + property : v2_0.Property[0..*]
   }
-  v2_0.Node .. v2_0.ServiceExtension
   v2_0.Node .. v2_0.Property
   v2_0.Node --|> Node
-
-  class v2_0.ServiceExtension {
-    + name : xs.string[1..1]
-    + type : xs.string[0..1]
-    + description : xs.string[0..1]
-    + connection : xs.anyURI[0..1]
-    + formats : v2_0.FormatList[0..1]
-  }
-  v2_0.ServiceExtension .. xs.string
-  v2_0.ServiceExtension .. xs.anyURI
-  v2_0.ServiceExtension .. v2_0.FormatList
-
-  class v2_0.FormatList {
-    + formatType : ObjectFormatIdentifier[1..*]
-  }
-  v2_0.FormatList .. ObjectFormatIdentifier
 
   class v2_0.Property {
     + key : xs.string
@@ -72,9 +77,10 @@ Data Types in CICore
   v2_0.Property --|> xs.string
 
   class v2_0.ObjectFormat {
-    + mimeType : xs.string[0..1]
+    + mediaType : v2_0.MediaType[0..1]
     + extension : xs.string[0..1]
   }
+  v2_0.ObjectFormat .. v2_0.MediaType
   v2_0.ObjectFormat .. xs.string
   v2_0.ObjectFormat --|> ObjectFormat
 
@@ -120,23 +126,136 @@ Data Types in CICore
 
 
 ..                                    ######
+.. class:: MediaTypeProperty
+
+    Additional optional properties for MediaType as described by IANA.
+
+    .. code-block:: xml
+
+
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="MediaTypeProperty">
+         <xs:simpleContent>
+            <xs:extension base="xs:string">
+               <xs:attribute name="name" type="xs:string" use="required">
+               </xs:attribute>
+            </xs:extension>
+         </xs:simpleContent>
+      </xs:complexType>
+
+
+    .. image:: images/class_v2_0.MediaTypeProperty.png
+
+    ..
+      @startuml images/class_v2_0.MediaTypeProperty.png
+
+      class v2_0.MediaTypeProperty {
+        + name : xs.string
+      }
+      v2_0.MediaTypeProperty .. xs.string
+      v2_0.MediaTypeProperty --|> xs.string
+
+      @enduml
+
+
+..                                    ######
+.. class:: MediaType
+
+    Value drawn from the value space of IANA Media Types ( http://www.iana.org/assignments/media-types/media-types.xhtml ). When specified, indicates the IANA Media Type (aka MIME-Type) of the object. The name attribute MUST include the media type and subtype (e.g. text/csv). The media type value is not case sensitive.
+
+    Any required media type parameters must be provided, and optional parameters may be specified. There are no explicit constraints on the name of media-type properties or their values, however they SHOULD conform to media type optional and required parameters as specified in the respective media type RFC.
+
+    .. attribute:: property
+
+      Type: :class:`v2_0.Types.MediaTypeProperty`
+
+      Media-type parameter(s) as specified by the respective RFC for the media-type.
+
+
+    .. attribute:: name
+
+      Type: `xs.string`_
+
+      The value of the media-type specified as a required 'name' attribute of the mediaType element.
+
+
+    .. code-block:: xml
+
+
+      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="MediaType">
+         <xs:sequence>
+            <xs:element name="property" type="d1_v2.0:MediaTypeProperty" minOccurs="0" maxOccurs="unbounded">
+            </xs:element>
+         </xs:sequence>
+         <xs:attribute name="name" type="xs:string" use="required">
+         </xs:attribute>
+      </xs:complexType>
+
+
+    .. image:: images/class_v2_0.MediaType.png
+
+    ..
+      @startuml images/class_v2_0.MediaType.png
+
+      class v2_0.MediaType {
+        + property : v2_0.MediaTypeProperty[0..*]
+        + name : xs.string[1.. 1]
+      }
+      v2_0.MediaType .. v2_0.MediaTypeProperty
+      v2_0.MediaType .. xs.string
+
+      @enduml
+
+
+..                                    ######
 .. class:: SystemMetadata
 
-    Extends :class:`SystemMetadata`
+    Extends :class:`Types.SystemMetadata`
 
-    System metadata (often referred to as :term:`sysmeta`) is the information used by DataONE to track and manage objects across the distributed Coordinating and Member Nodes of the network. System metadata documents contain low level information (e.g. size, type, owner, access control rules) about managed objects such as science data, science metadata, and resource map objects and the relationships between objects (e.g. *obsoletes* and *obsoletedBy*).
-
-    The information is maintained dynamically by Coordinating Nodes and is mutable in that it reflects the current state of an object in the system. Initial properties of system metadata are generated by clients and Member Nodes. After object synchronization, the Coordinating Nodes hold authoritative copies of system metadata. Mirror copies of system metadata are maintained at each of the Coordinating nodes.
-
-    System metadata are considered operational information needed to run DataONE, and can be read by all Coordinating Nodes and Member Nodes in the course of service provision. In order to reduce issues with third-party tracking of data status information, users can read system metadata for an object if they have the access rights to read the corresponding object which a system metadata record describes.
-
-    System Metadata elements are partitioned into two classes: metadata elements that must be provided by client software to the DataONE system, and elements that are generated by DataONE itself in the course of managing objects.
+    System metadata in DataONE APIs version 2.0 extends the :class:`types.SystemMetadata` definition of version 1.x by adding :term:`seriesId`, :term:`mediaType`, and :term:`fileName` elements. Each of these are optional, so Version 1.x System Metadata is compatible with Version 2.x, though not vice-versa.
 
     .. attribute:: seriesId
 
-      Type: :class:`Identifier`
+      Type: :class:`Types.Identifier`
 
-      The :term:`seriesId` is a unique Unicode string that can be used to identify an object revision chain in DataONE. When included, the seriesId can be used to reference the latest version of and object in the revision chain. API methods that rely on byte fixity (e.g. for content replication) will not accept seriesId in place of discrete identifiers. The values used for seriesId must be unique within DataONE and cannot be the same as the primary identifier of an object. The same encoding rules used for identifier values apply to seriesId values.
+      The :term:`seriesId` is an optional, unique Unicode string that identifies an object revision chain. A seriesId will resolve to the latest version of an object. A seriesId can not appear in any other revision chain.
+
+
+      The values used for seriesId must be unique within DataONE and cannot be the same as the :term:`primary identifier` of an object.
+
+
+      The same encoding rules used for identifier values apply to seriesId values.
+
+
+    .. attribute:: mediaType
+
+      Type: :class:`v2_0.Types.MediaType`
+
+      When specified, indicates the IANA Media Type (aka MIME-Type) of the object. When specified, this value overrides the default value specified in the version 2.0 ObjectFormat structure. The value should include the media type and subtype (e.g. text/csv). The mediaType value is not case sensitive.
+
+
+      The purpose of this value is to provide more detailed information about the specific media type of the associated object than may be available through the associated ObjectFormat.
+
+
+      When specified, the mediaType value here overrides the value recorded in the referenced :class:`ObjectFormat`.
+
+
+      This value SHOULD be set by the content creator. It MAY be set by any receiving agent if the value is not already set, the value in the ObjectFormat is less specific, and a correct value is specified elsewhere such as by a HTTP Content-Type parameter.
+
+
+      This value MAY be changed to correct an erroneous entry.
+
+
+    .. attribute:: fileName
+
+      Type: `xs.string`_
+
+      Optional though recommended value providing a suggested file name for the object. Values should conform to cross platform file naming conventions.
+
+
+      This value SHOULD be set by the content creator.
+
+
+      This value MAY be set by any receiving agent Changing the value is discouraged once set, unless by the authoritative Member Node of content owner.
 
 
     .. code-block:: xml
@@ -147,6 +266,10 @@ Data Types in CICore
             <xs:extension base="d1:SystemMetadata">
                <xs:sequence>
                   <xs:element name="seriesId" type="d1:Identifier" minOccurs="0">
+                  </xs:element>
+                  <xs:element name="mediaType" type="d1_v2.0:MediaType" minOccurs="0">
+                  </xs:element>
+                  <xs:element name="fileName" type="xs:string" minOccurs="0">
                   </xs:element>
                </xs:sequence>
             </xs:extension>
@@ -161,8 +284,12 @@ Data Types in CICore
 
       class v2_0.SystemMetadata {
         + seriesId : Identifier[0..1]
+        + mediaType : v2_0.MediaType[0..1]
+        + fileName : xs.string[0..1]
       }
       v2_0.SystemMetadata .. Identifier
+      v2_0.SystemMetadata .. v2_0.MediaType
+      v2_0.SystemMetadata .. xs.string
       v2_0.SystemMetadata --|> SystemMetadata
 
       @enduml
@@ -171,7 +298,7 @@ Data Types in CICore
 ..                                    ######
 .. class:: NodeList
 
-    A list of :class:`Types.Node` entries returned by :func:`CNCore.listNodes()`.
+    A list of :class:`v2_0.Types.Node` entries returned by :func:`CNCore.listNodes()`.
 
     NodeList is described in :mod:`NodeList`.
 
@@ -184,7 +311,7 @@ Data Types in CICore
 
       <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="NodeList">
          <xs:sequence>
-            <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" xmlns:d1_v1.1="http://ns.dataone.org/service/types/v1.1" xmlns:d1_v2.0="http://ns.dataone.org/service/types/v2.0" maxOccurs="unbounded" name="node" type="d1_v2.0:Node" minOccurs="1"/>
+            <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" xmlns:d1_v1.1="http://ns.dataone.org/service/types/v1.1" xmlns:d1_v2.0="http://ns.dataone.org/service/types/v2.0" name="node" type="d1_v2.0:Node" maxOccurs="unbounded" minOccurs="1"/>
          </xs:sequence>
       </xs:complexType>
 
@@ -205,22 +332,15 @@ Data Types in CICore
 ..                                    ######
 .. class:: Node
 
-    Extends :class:`Node`
+    Extends :class:`Types.Node`
 
-    A set of values that describe a member or coordinating node, its Internet location, and the services it supports. Several nodes may exist on a single physical device or hostname.
-
-    .. attribute:: serviceExtensions
-
-      Type: :class:`v2_0.Types.ServiceExtension`
-
-      TODO: define the content of this?
-
+    Extends the Version 1.x :class:`Types.Node` by adding an optional unbounded parameter entry providing additional simple metadata relevant to a Node.
 
     .. attribute:: property
 
       Type: :class:`v2_0.Types.Property`
 
-      Allows additional attributes be added to the Node document as needed
+      Allows additional attributes be added to the Node document as needed.
 
 
     .. code-block:: xml
@@ -230,8 +350,6 @@ Data Types in CICore
          <xs:complexContent>
             <xs:extension base="d1:Node">
                <xs:sequence>
-                  <xs:element name="serviceExtensions" type="d1_v2.0:ServiceExtension" minOccurs="0">
-                  </xs:element>
                   <xs:element name="property" type="d1_v2.0:Property" minOccurs="0" maxOccurs="unbounded">
                   </xs:element>
                </xs:sequence>
@@ -246,10 +364,8 @@ Data Types in CICore
       @startuml images/class_v2_0.Node.png
 
       class v2_0.Node {
-        + serviceExtensions : v2_0.ServiceExtension[0..1]
         + property : v2_0.Property[0..*]
       }
-      v2_0.Node .. v2_0.ServiceExtension
       v2_0.Node .. v2_0.Property
       v2_0.Node --|> Node
 
@@ -257,119 +373,9 @@ Data Types in CICore
 
 
 ..                                    ######
-.. class:: ServiceExtension
-
-    The goal of Member Node Service Registration (MNSR) is to assist clients in discovery of services exposed by Member Nodes that may be applicable to a particular type of object
-
-    .. attribute:: name
-
-      Type: :class:`xs.string`
-
-      Descriptive human-readable name of the service.
-
-
-    .. attribute:: type
-
-      Type: :class:`xs.string`
-
-      Unique Service Type identifier.
-
-
-    .. attribute:: description
-
-      Type: :class:`xs.string`
-
-      Brief human readable description of service to be presented in user interfaces.
-
-
-    .. attribute:: connection
-
-      Type: :class:`xs.anyURI`
-
-      Endpoint where the service is available
-
-
-    .. attribute:: formats
-
-      Type: :class:`v2_0.Types.FormatList`
-
-      A list of formats supported by the service.
-
-
-    .. code-block:: xml
-
-
-      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="ServiceExtension">
-         <xs:sequence>
-            <xs:element name="name" type="xs:string">
-            </xs:element>
-            <xs:element name="type" type="xs:string" minOccurs="0">
-            </xs:element>
-            <xs:element name="description" type="xs:string" minOccurs="0">
-            </xs:element>
-            <xs:element name="connection" type="xs:anyURI" minOccurs="0">
-            </xs:element>
-            <xs:element name="formats" type="d1_v2.0:FormatList" minOccurs="0" maxOccurs="1">
-            </xs:element>
-         </xs:sequence>
-      </xs:complexType>
-
-
-    .. image:: images/class_v2_0.ServiceExtension.png
-
-    ..
-      @startuml images/class_v2_0.ServiceExtension.png
-
-      class v2_0.ServiceExtension {
-        + name : xs.string[1..1]
-        + type : xs.string[0..1]
-        + description : xs.string[0..1]
-        + connection : xs.anyURI[0..1]
-        + formats : v2_0.FormatList[0..1]
-      }
-      v2_0.ServiceExtension .. xs.string
-      v2_0.ServiceExtension .. xs.anyURI
-      v2_0.ServiceExtension .. v2_0.FormatList
-
-      @enduml
-
-
-..                                    ######
-.. class:: FormatList
-
-    A list of ObjectFormatId elements
-
-    .. attribute:: formatType
-
-      Type: :class:`ObjectFormatIdentifier`
-
-    .. code-block:: xml
-
-
-      <xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="FormatList">
-         <xs:sequence>
-            <xs:element xmlns:d1="http://ns.dataone.org/service/types/v1" xmlns:d1_v1.1="http://ns.dataone.org/service/types/v1.1" xmlns:d1_v2.0="http://ns.dataone.org/service/types/v2.0" name="formatType" type="d1:ObjectFormatIdentifier" minOccurs="1" maxOccurs="unbounded"/>
-         </xs:sequence>
-      </xs:complexType>
-
-
-    .. image:: images/class_v2_0.FormatList.png
-
-    ..
-      @startuml images/class_v2_0.FormatList.png
-
-      class v2_0.FormatList {
-        + formatType : ObjectFormatIdentifier[1..*]
-      }
-      v2_0.FormatList .. ObjectFormatIdentifier
-
-      @enduml
-
-
-..                                    ######
 .. class:: Property
 
-    Additional Property elements can be included to describe the Node in more detail. Some properties will come from controlled vocabularies, indicated by the type attribute, while others will be free-form key value pairs.
+    Additional Property elements can be included to describe the Node in more detail. Some properties will come from controlled vocabularies indicated by the type attribute, while others will be free-form key value pairs.
 
     .. code-block:: xml
 
@@ -405,24 +411,22 @@ Data Types in CICore
 ..                                    ######
 .. class:: ObjectFormat
 
-    Extends :class:`ObjectFormat`
+    Extends :class:`Types.ObjectFormat`
 
-    One value from the DataONE Object Format Vocabulary which is returned by :func:`CNCore.getFormat()`.
+    Extends Version 1.x :class:`Types.ObjectFormat` by adding :term:`mediaType` and :term:`extension` elements.
 
-    An *ObjectFormat* is the structure returned from the :func:`CNCore.getFormat()` method of the CN REST interface. It provides the unique identifier and the name associated with the object format. Future versions may contain additional structured content from external common typing systems.
+    .. attribute:: mediaType
 
-    .. attribute:: mimeType
+      Type: :class:`v2_0.Types.MediaType`
 
-      Type: :class:`xs.string`
-
-      The MIME type for this object format.
+      The IANA Media Type for this object format.
 
 
     .. attribute:: extension
 
-      Type: :class:`xs.string`
+      Type: `xs.string`_
 
-      The extension to be used when serializing the object to a file.
+      Suggested file name extension to be used when serializing this type of object to a file. The value should not include the period (.).
 
 
     .. code-block:: xml
@@ -432,9 +436,9 @@ Data Types in CICore
          <xs:complexContent>
             <xs:extension base="d1:ObjectFormat">
                <xs:sequence>
-                  <xs:element name="mimeType" type="xs:string" minOccurs="0">
+                  <xs:element name="mediaType" type="d1_v2.0:MediaType" minOccurs="0" maxOccurs="1">
                   </xs:element>
-                  <xs:element name="extension" type="xs:string" minOccurs="0">
+                  <xs:element name="extension" type="xs:string" minOccurs="0" maxOccurs="1">
                   </xs:element>
                </xs:sequence>
             </xs:extension>
@@ -448,9 +452,10 @@ Data Types in CICore
       @startuml images/class_v2_0.ObjectFormat.png
 
       class v2_0.ObjectFormat {
-        + mimeType : xs.string[0..1]
+        + mediaType : v2_0.MediaType[0..1]
         + extension : xs.string[0..1]
       }
+      v2_0.ObjectFormat .. v2_0.MediaType
       v2_0.ObjectFormat .. xs.string
       v2_0.ObjectFormat --|> ObjectFormat
 
@@ -460,9 +465,9 @@ Data Types in CICore
 ..                                    ######
 .. class:: ObjectFormatList
 
-    Extends :class:`Slice`
+    Extends :class:`Types.Slice`
 
-    An ObjectFormatList is the structure returned from the :func:`CNCore.listFormats()` method of the CN REST interface. It provides a list of named object formats defined in the DataONE system. Each :class:`Types.ObjectFormat` returned in the list describes the object format via its name, and future versions may contain additional structured content from common external typing systems.
+    Extends :class:`Types.ObjectFormatList` to provide a list of :class:`v2_0.Types.ObjectFormat`.
 
     .. attribute:: objectFormat
 
@@ -499,9 +504,9 @@ Data Types in CICore
 ..                                    ######
 .. class:: Log
 
-    Extends :class:`Slice`
+    Extends :class:`Types.Slice`
 
-    Represents a collection of :class:`Types.LogEntry` elements, used to transfer log information between DataONE components.
+    Extends :class:`Types.Log` to represent a collection of :class:`v2_0.Types.LogEntry` elements, used to transfer log information between DataONE components.
 
     .. attribute:: logEntry
 
@@ -538,60 +543,60 @@ Data Types in CICore
 ..                                    ######
 .. class:: LogEntry
 
-    A single log entry as reported by a Member Node or Coordinating Node through the :func:`MNCore.getLogRecords` or :func:`CNCore.getLogRecords` methods.
+    Extends :class:`Types.LogEntry` by relaxing the value space for the *event* element.
 
     .. attribute:: entryId
 
-      Type: :class:`NonEmptyString`
+      Type: :class:`Types.NonEmptyString`
 
-      A unique identifier for this log entry. The identifier should be unique for a particular node; This is not drawn from the same value space as other identifiers in DataONE, and so is not subjec to the same restrictions.
+      A unique identifier for this log entry. The identifier should be unique for a particular node; This is not drawn from the same value space as other identifiers in DataONE, and so is not subject to the same restrictions.
 
 
     .. attribute:: identifier
 
-      Type: :class:`Identifier`
+      Type: :class:`Types.Identifier`
 
       The :term:`identifier` of the object that was the target of the operation which generated this log entry.
 
 
     .. attribute:: ipAddress
 
-      Type: :class:`xs.string`
+      Type: `xs.string`_
 
       The IP address, as reported by the service receiving the request, of the request origin.
 
 
     .. attribute:: userAgent
 
-      Type: :class:`xs.string`
+      Type: `xs.string`_
 
       The user agent of the client making the request, as reported in the User-Agent HTTP header.
 
 
     .. attribute:: subject
 
-      Type: :class:`Subject`
+      Type: :class:`Types.Subject`
 
-      The :term:`Subject` used for making the request. This may be the DataONE :term:`public` user if the request is not authenticated, otherwise it will be the *Subject* of the certificate used for authenticating the request.
+      The :term:`Subject` used for making the request. This may be the DataONE :term:`public` user if the request is not authenticated, otherwise it will be the *subject* of the certificate used for authenticating the request.
 
 
     .. attribute:: event
 
-      Type: :class:`NonEmptyString`
+      Type: :class:`Types.NonEmptyString`
 
-      A non-empty string that indicates the type of even logged. A value from the :class:`Types.Event` enumeration is recommended but no longer required.
+      A non-empty string indicating the type of event logged. A value from the :class:`Types.Event` enumeration is recommended though no longer required for Version 2.x.
 
 
     .. attribute:: dateLogged
 
-      Type: :class:`xs.dateTime`
+      Type: `xs.dateTime`_
 
       A :class:`Types.DateTime` time stamp indicating when the event triggering the log message ocurred. Note that all time stamps in DataONE are in UTC.
 
 
     .. attribute:: nodeIdentifier
 
-      Type: :class:`NodeReference`
+      Type: :class:`Types.NodeReference`
 
       The unique identifier for the node where the log message was generated.
 
@@ -653,21 +658,21 @@ Data Types in CICore
 
     .. attribute:: option
 
-      Type: :class:`NonEmptyString`
+      Type: :class:`Types.NonEmptyString`
 
       The key to be used within an API call to a DataONE service, including a description of the key and its impact on the service. For example, a key 'default' can be provided as the theme for the MNView.view service. Keys must not contain characters that will need to be URL escaped.
 
 
     .. attribute:: key
 
-      Type: :class:`xs.string`
+      Type: `xs.string`_
 
       A value that can be used with a DataONE service. Key values must not contain any characters that need to be URL escaped, and should be short and informative.
 
 
     .. attribute:: description
 
-      Type: :class:`xs.string`
+      Type: `xs.string`_
 
       The description of an option, indicating its intended use and impact on a DataONE service invocation.
 
@@ -702,3 +707,13 @@ Data Types in CICore
 
       @enduml
 
+
+..    ####
+
+.. _xs.string: http://www.w3.org/TR/xmlschema-2/#string
+.. _xs.boolean: http://www.w3.org/TR/xmlschema-2/#boolean
+.. _xs.dateTime: http://www.w3.org/TR/xmlschema-2/#dateTime
+.. _xs.unsignedLong: http://www.w3.org/TR/xmlschema-2/#unsignedLong
+.. _xs.token: http://www.w3.org/TR/xmlschema-2/#token
+.. _xs.int: http://www.w3.org/TR/xmlschema-2/#int
+.. _xs.anyURI: http://www.w3.org/TR/xmlschema-2/#anyURI

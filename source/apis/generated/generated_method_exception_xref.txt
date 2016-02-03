@@ -192,11 +192,6 @@
      - 401
      - 1530
    * - :mod:`MNRead`
-     - :func:`listObjects <MNRead.listObjects>`
-     - NotImplemented
-     - 501
-     - 1521
-   * - :mod:`MNRead`
      - :func:`synchronizationFailed <MNRead.synchronizationFailed>`
      - NotImplemented
      - 501
@@ -216,6 +211,31 @@
      - InvalidToken
      - 401
      - 2164
+   * - :mod:`MNRead`
+     - :func:`systemMetadataChanged <MNRead.systemMetadataChanged>`
+     - NotImplemented
+     - 501
+     - 1330
+   * - :mod:`MNRead`
+     - :func:`systemMetadataChanged <MNRead.systemMetadataChanged>`
+     - NotAuthorized
+     - 401
+     - 1331
+   * - :mod:`MNRead`
+     - :func:`systemMetadataChanged <MNRead.systemMetadataChanged>`
+     - InvalidToken
+     - 401
+     - 1332
+   * - :mod:`MNRead`
+     - :func:`systemMetadataChanged <MNRead.systemMetadataChanged>`
+     - ServiceFailure
+     - 500
+     - 1333
+   * - :mod:`MNRead`
+     - :func:`systemMetadataChanged <MNRead.systemMetadataChanged>`
+     - InvalidRequest
+     - 400
+     - 1334
    * - :mod:`MNRead`
      - :func:`getReplica <MNRead.getReplica>`
      - NotImplemented
@@ -276,31 +296,6 @@
      - InvalidRequest
      - 400
      - 1761
-   * - :mod:`MNAuthorization`
-     - :func:`systemMetadataChanged <MNAuthorization.systemMetadataChanged>`
-     - NotImplemented
-     - 501
-     - 1330
-   * - :mod:`MNAuthorization`
-     - :func:`systemMetadataChanged <MNAuthorization.systemMetadataChanged>`
-     - NotAuthorized
-     - 401
-     - 1331
-   * - :mod:`MNAuthorization`
-     - :func:`systemMetadataChanged <MNAuthorization.systemMetadataChanged>`
-     - InvalidToken
-     - 401
-     - 1332
-   * - :mod:`MNAuthorization`
-     - :func:`systemMetadataChanged <MNAuthorization.systemMetadataChanged>`
-     - ServiceFailure
-     - 500
-     - 1333
-   * - :mod:`MNAuthorization`
-     - :func:`systemMetadataChanged <MNAuthorization.systemMetadataChanged>`
-     - InvalidRequest
-     - 400
-     - 1334
    * - :mod:`MNStorage`
      - :func:`create <MNStorage.create>`
      - NotAuthorized
@@ -471,6 +466,36 @@
      - NotImplemented
      - 501
      - 2914
+   * - :mod:`MNStorage`
+     - :func:`updateSystemMetadata <MNStorage.updateSystemMetadata>`
+     - NotImplemented
+     - 501
+     - 4866
+   * - :mod:`MNStorage`
+     - :func:`updateSystemMetadata <MNStorage.updateSystemMetadata>`
+     - NotAuthorized
+     - 401
+     - 4867
+   * - :mod:`MNStorage`
+     - :func:`updateSystemMetadata <MNStorage.updateSystemMetadata>`
+     - ServiceFailure
+     - 500
+     - 4868
+   * - :mod:`MNStorage`
+     - :func:`updateSystemMetadata <MNStorage.updateSystemMetadata>`
+     - InvalidRequest
+     - 400
+     - 4869
+   * - :mod:`MNStorage`
+     - :func:`updateSystemMetadata <MNStorage.updateSystemMetadata>`
+     - InvalidSystemMetadata
+     - 400
+     - 4956
+   * - :mod:`MNStorage`
+     - :func:`updateSystemMetadata <MNStorage.updateSystemMetadata>`
+     - InvalidToken
+     - 401
+     - 4957
    * - :mod:`MNReplication`
      - :func:`replicate <MNReplication.replicate>`
      - NotImplemented
@@ -942,6 +967,16 @@
      - 500
      - 4801
    * - :mod:`CNCore`
+     - :func:`getCapabilities <CNCore.getCapabilities>`
+     - NotImplemented
+     - 501
+     - 4802
+   * - :mod:`CNCore`
+     - :func:`getCapabilities <CNCore.getCapabilities>`
+     - ServiceFailure
+     - 500
+     - 4803
+   * - :mod:`CNCore`
      - :func:`registerSystemMetadata <CNCore.registerSystemMetadata>`
      - NotImplemented
      - 501
@@ -971,6 +1006,36 @@
      - InvalidToken
      - 401
      - 4865
+   * - :mod:`CNCore`
+     - :func:`updateSystemMetadata <CNCore.updateSystemMetadata>`
+     - NotImplemented
+     - 501
+     - 4866
+   * - :mod:`CNCore`
+     - :func:`updateSystemMetadata <CNCore.updateSystemMetadata>`
+     - NotAuthorized
+     - 401
+     - 4867
+   * - :mod:`CNCore`
+     - :func:`updateSystemMetadata <CNCore.updateSystemMetadata>`
+     - ServiceFailure
+     - 500
+     - 4868
+   * - :mod:`CNCore`
+     - :func:`updateSystemMetadata <CNCore.updateSystemMetadata>`
+     - InvalidRequest
+     - 400
+     - 4869
+   * - :mod:`CNCore`
+     - :func:`updateSystemMetadata <CNCore.updateSystemMetadata>`
+     - InvalidSystemMetadata
+     - 400
+     - 4956
+   * - :mod:`CNCore`
+     - :func:`updateSystemMetadata <CNCore.updateSystemMetadata>`
+     - InvalidToken
+     - 401
+     - 4957
    * - :mod:`CNCore`
      - :func:`hasReservation <CNCore.hasReservation>`
      - NotImplemented
@@ -1152,11 +1217,6 @@
      - 401
      - 1530
    * - :mod:`CNRead`
-     - :func:`listObjects <CNRead.listObjects>`
-     - NotImplemented
-     - 501
-     - 1521
-   * - :mod:`CNRead`
      - :func:`search <CNRead.search>`
      - InvalidToken
      - 401
@@ -1256,6 +1316,26 @@
      - NotAuthorized
      - 401
      - 4423
+   * - :mod:`CNRead`
+     - :func:`synchronize <CNRead.synchronize>`
+     - NotImplemented
+     - 501
+     - 4960
+   * - :mod:`CNRead`
+     - :func:`synchronize <CNRead.synchronize>`
+     - ServiceFailure
+     - 500
+     - 4961
+   * - :mod:`CNRead`
+     - :func:`synchronize <CNRead.synchronize>`
+     - NotAuthorized
+     - 401
+     - 4962
+   * - :mod:`CNRead`
+     - :func:`synchronize <CNRead.synchronize>`
+     - InvalidToken
+     - 401
+     - 4963
    * - :mod:`CNAuthorization`
      - :func:`setRightsHolder <CNAuthorization.setRightsHolder>`
      - ServiceFailure
@@ -1922,6 +2002,26 @@
      - 401
      - 4825
    * - :mod:`CNRegister`
+     - :func:`getNodeCapabilities <CNRegister.getNodeCapabilities>`
+     - NotImplemented
+     - 501
+     - 4826
+   * - :mod:`CNRegister`
+     - :func:`getNodeCapabilities <CNRegister.getNodeCapabilities>`
+     - ServiceFailure
+     - 500
+     - 4827
+   * - :mod:`CNRegister`
+     - :func:`getNodeCapabilities <CNRegister.getNodeCapabilities>`
+     - InvalidRequest
+     - 400
+     - 4828
+   * - :mod:`CNRegister`
+     - :func:`getNodeCapabilities <CNRegister.getNodeCapabilities>`
+     - NotFound
+     - 404
+     - 4829
+   * - :mod:`CNRegister`
      - :func:`register <CNRegister.register>`
      - NotImplemented
      - 501
@@ -2006,3 +2106,98 @@
      - NotImplemented
      - 501
      - 2864
+   * - :mod:`CNDiagnostic`
+     - :func:`echoCredentials <CNDiagnostic.echoCredentials>`
+     - NotImplemented
+     - 501
+     - 4965
+   * - :mod:`CNDiagnostic`
+     - :func:`echoCredentials <CNDiagnostic.echoCredentials>`
+     - ServiceFailure
+     - 500
+     - 4966
+   * - :mod:`CNDiagnostic`
+     - :func:`echoCredentials <CNDiagnostic.echoCredentials>`
+     - InvalidToken
+     - 401
+     - 4967
+   * - :mod:`CNDiagnostic`
+     - :func:`echoSystemMetadata <CNDiagnostic.echoSystemMetadata>`
+     - NotImplemented
+     - 501
+     - 4970
+   * - :mod:`CNDiagnostic`
+     - :func:`echoSystemMetadata <CNDiagnostic.echoSystemMetadata>`
+     - ServiceFailure
+     - 500
+     - 4971
+   * - :mod:`CNDiagnostic`
+     - :func:`echoSystemMetadata <CNDiagnostic.echoSystemMetadata>`
+     - NotAuthorized
+     - 401
+     - 4972
+   * - :mod:`CNDiagnostic`
+     - :func:`echoSystemMetadata <CNDiagnostic.echoSystemMetadata>`
+     - InvalidToken
+     - 401
+     - 4973
+   * - :mod:`CNDiagnostic`
+     - :func:`echoSystemMetadata <CNDiagnostic.echoSystemMetadata>`
+     - InvalidRequest
+     - 400
+     - 4974
+   * - :mod:`CNDiagnostic`
+     - :func:`echoSystemMetadata <CNDiagnostic.echoSystemMetadata>`
+     - IdentifierNotUnique
+     - 409
+     - 4975
+   * - :mod:`CNDiagnostic`
+     - :func:`echoSystemMetadata <CNDiagnostic.echoSystemMetadata>`
+     - InvalidSystemMetadata
+     - 400
+     - 4976
+   * - :mod:`CNDiagnostic`
+     - :func:`echoIndexedObject <CNDiagnostic.echoIndexedObject>`
+     - NotImplemented
+     - 501
+     - 4980
+   * - :mod:`CNDiagnostic`
+     - :func:`echoIndexedObject <CNDiagnostic.echoIndexedObject>`
+     - ServiceFailure
+     - 500
+     - 4981
+   * - :mod:`CNDiagnostic`
+     - :func:`echoIndexedObject <CNDiagnostic.echoIndexedObject>`
+     - NotAuthorized
+     - 401
+     - 4982
+   * - :mod:`CNDiagnostic`
+     - :func:`echoIndexedObject <CNDiagnostic.echoIndexedObject>`
+     - InvalidToken
+     - 401
+     - 4983
+   * - :mod:`CNDiagnostic`
+     - :func:`echoIndexedObject <CNDiagnostic.echoIndexedObject>`
+     - InvalidRequest
+     - 400
+     - 4984
+   * - :mod:`CNDiagnostic`
+     - :func:`echoIndexedObject <CNDiagnostic.echoIndexedObject>`
+     - InvalidSystemMetadata
+     - 400
+     - 4985
+   * - :mod:`CNDiagnostic`
+     - :func:`echoIndexedObject <CNDiagnostic.echoIndexedObject>`
+     - UnsupportedType
+     - 400
+     - 4986
+   * - :mod:`CNDiagnostic`
+     - :func:`echoIndexedObject <CNDiagnostic.echoIndexedObject>`
+     - UnsupportedMetadataType
+     - 400
+     - 4987
+   * - :mod:`CNDiagnostic`
+     - :func:`echoIndexedObject <CNDiagnostic.echoIndexedObject>`
+     - InsufficientResources
+     - 413
+     - 4988

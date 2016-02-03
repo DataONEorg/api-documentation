@@ -4,33 +4,35 @@
   Only the HTTP header information is considered by the requestor. A successful
   response MUST have a HTTP status code of 200. In case of an error condition,
   the appropriate HTTP status code MUST be set, and an exception or error
-  information MAY be returned in the response.
+  information MAY be returned in the response body.
 
   **Example**
 
-  Example of ping request and response for a Member Node. Lines prefixed with
-  “>” indicate outgoing information, lines prefixed with “<” show content
-  returned from the server. Lines associated with SSL connection initiation
-  and close are not shown here. Note that the actual response headers may
-  vary, the only required header fields are the first status line and a *Date*
-  entry. However, in order to fully support clients that may cache the
-  response, it is recommended that the *Expires*, and *Cache-Control* headers
-  are returned.
+  Example of ping request and response for a Member Node (Coordinating Nodes
+  implement the same functionality). Lines prefixed with ">" indicate outgoing
+  information, lines prefixed with "<" show content returned from the server.
+  Lines associated with SSL connection initiation and close are not shown here.
+  Note that the actual response headers may vary, the only required header
+  fields are the first status line and a ``Date`` entry. However, in order to
+  fully support clients that may cache the response, it is recommended that the
+  ``Expires``, and ``Cache-Control`` headers are returned.
 
-  ::
+  .. code-block:: bash
+     :emphasize-lines: 2,11
 
-    export NODE="https://demo2.test.dataone.org/knb/d1/mn"
-    curl -k -v "$NODE/v1/monitor/ping"
+     export NODE="https://demo2.test.dataone.org/knb/d1/mn"
+     curl -k -v "$NODE/v1/monitor/ping"
     
-    > GET /knb/d1/mn/v1/monitor/ping HTTP/1.1
-    > User-Agent: curl/7.21.6 (x86_64-pc-linux-gnu) libcurl/7.21.6 OpenSSL/1.0.0e zlib/1.2.3.4 libidn/1.22 librtmp/2.3
-    > Host: demo2.test.dataone.org
-    > Accept: */*
-    > 
-    < HTTP/1.1 200 OK
-    < Date: Tue, 06 Mar 2012 14:19:59 GMT
-    < Server: Apache/2.2.14 (Ubuntu)
-    < Content-Length: 0
-    < Content-Type: text/plain
-    < 
+     > GET /knb/d1/mn/v1/monitor/ping HTTP/1.1
+     > User-Agent: curl/7.21.6 (x86_64-pc-linux-gnu) libcurl/7.21.6 
+       OpenSSL/1.0.0e zlib/1.2.3.4 libidn/1.22 librtmp/2.3
+     > Host: demo2.test.dataone.org
+     > Accept: */*
+     > 
+     < HTTP/1.1 200 OK
+     < Date: Tue, 06 Mar 2012 14:19:59 GMT
+     < Server: Apache/2.2.14 (Ubuntu)
+     < Content-Length: 0
+     < Content-Type: text/plain
+     < 
 

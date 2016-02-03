@@ -3,30 +3,36 @@
 
 
 .. list-table:: Functions defined in :mod:`CNReplication`
-   :widths: 3 10 10 30
+   :widths: 3 3 10 10 30
    :header-rows: 1
 
    * - Tier
+     - Version
      - REST
      - Function
      - Parameters
    * - Tier 4
+     - 1.0, (2.0)
      - ``PUT /replicaNotifications/{pid}``
      - :func:`setReplicationStatus`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`nodeRef<Types.NodeReference>`, :class:`status<Types.ReplicationStatus>`, :class:`failure<Types.BaseException>`) ``->`` boolean
    * - Tier 4
+     - 1.0, (2.0)
      - ``PUT /replicaMetadata/{pid}``
      - :func:`updateReplicationMetadata`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`replicaMetadata<Types.Replica>`, ``serialVersion``) ``->`` boolean
    * - Tier 4
-     - ``PUT /replicaPolicies/{pid}``
+     - 1.0, 2.0
+     - ``PUT /replicaPolicies/{id}``
      - :func:`setReplicationPolicy`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`policy<Types.ReplicationPolicy>`, ``serialVersion``) ``->`` boolean
+     - (:class:`session<Types.Session>`, :class:`id<Types.Identifier>`, :class:`policy<Types.ReplicationPolicy>`, ``serialVersion``) ``->`` boolean
    * - Tier 4
+     - 1.0, (2.0)
      - ``GET /replicaAuthorizations/{pid}?targetNodeSubject={targetNodeSubject}``
      - :func:`isNodeAuthorized`
      - (:class:`session<Types.Session>`, :class:`targetNodeSubject<Types.Subject>`, :class:`pid<Types.Identifier>`) ``->`` boolean
    * - 
+     - 1.0, (2.0)
      - ``PUT /removeReplicaMetadata/{pid}``
      - :func:`deleteReplicationMetadata`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`nodeId<Types.NodeReference>`, ``serialVersion``) ``->`` boolean
@@ -44,6 +50,9 @@
 
    The nodeRef, status, and failure parameters are transmitted as part of the HTTP request body encoded as a MIME Multipart/form-data encoded payload.
 
+   This method can be only called by Coordinating Nodes and trusted Member Nodes.
+
+   :Version: 1.0, (2.0)
    :Use Cases:
      :doc:`UC09 </design/UseCases/09_uc>`
    :REST URL: ``PUT /replicaNotifications/{pid}``
@@ -88,6 +97,9 @@
 
    Failure of the operation MUST be indicated by returning an appropriate exception.
 
+   This method can be only called by Coordinating Nodes.
+
+   :Version: 1.0, (2.0)
    :REST URL: ``PUT /replicaMetadata/{pid}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.  Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
@@ -125,7 +137,7 @@
 
 
 
-.. function:: setReplicationPolicy(session,pid,policy,serialVersion) -> boolean
+.. function:: setReplicationPolicy(session,id,policy,serialVersion) -> boolean
 
    Updates the replication policy entry for an object by updating the system metadata.
 
@@ -133,12 +145,15 @@
 
    Failure of the operation MUST be indicated by returning an appropriate exception.
 
-   :REST URL: ``PUT /replicaPolicies/{pid}``
+   v2.0: The identifier may be a :term:`PID` or :term:`SID`.
+
+   :Version: 1.0, 2.0
+   :REST URL: ``PUT /replicaPolicies/{id}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param pid:  Transmitted as part of the URL path and must be escaped accordingly.
-   :type pid: :class:`Types.Identifier`
+   :param id: The identifier of the policy being updated. May be either a PID or a SID, the latter acting only on the HEAD PID. Transmitted as part of the URL path and must be escaped accordingly.
+   :type id: :class:`Types.Identifier`
 
    :param policy:  Transmitted as an UTF-8 encoded XML structure for the respective type as defined in the DataONE types schema, as a *File part* of the MIME multipart/mixed message.
    :type policy: :class:`Types.ReplicationPolicy`
@@ -176,6 +191,7 @@
 
    Failure of the operation MUST be indicated by returning an appropriate exception.
 
+   :Version: 1.0, (2.0)
    :REST URL: ``GET /replicaAuthorizations/{pid}?targetNodeSubject={targetNodeSubject}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
@@ -222,8 +238,9 @@
 
    Removal of replication metadata is necessary if the Member Node goes offline permanently or for an extended period, or when it is deeemed prudent to migrate an object from one node to another to address resource management issues.
 
-   This method is normally only called by Coordinating Nodes.
+   This method can be only called by Coordinating Nodes.
 
+   :Version: 1.0, (2.0)
    :REST URL: ``PUT /removeReplicaMetadata/{pid}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session MUST be a Coordinating Node. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`

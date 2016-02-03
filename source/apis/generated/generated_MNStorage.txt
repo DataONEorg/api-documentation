@@ -3,33 +3,44 @@
 
 
 .. list-table:: Functions defined in :mod:`MNStorage`
-   :widths: 3 10 10 30
+   :widths: 3 3 10 10 30
    :header-rows: 1
 
    * - Tier
+     - Version
      - REST
      - Function
      - Parameters
    * - Tier 3
+     - 1.0
      - ``POST /object``
      - :func:`create`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, ``object``, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
    * - Tier 3
+     - 1.0
      - ``PUT /object/{pid}``
      - :func:`update`
      - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, ``object``, :class:`newPid<Types.Identifier>`, :class:`sysmeta<Types.SystemMetadata>`) ``->`` :class:`Types.Identifier`
    * - Tier 3
+     - 1.0
      - ``POST /generate``
      - :func:`generateIdentifier`
      - (:class:`session<Types.Session>`, ``scheme``, ``[fragment]``) ``->`` :class:`Types.Identifier`
    * - Tier 3
-     - ``DELETE /object/{pid}``
+     - 1.0
+     - ``DELETE /object/{id}``
      - :func:`delete`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Identifier`
+     - (:class:`session<Types.Session>`, :class:`id<Types.Identifier>`) ``->`` :class:`Types.Identifier`
    * - Tier 3
-     - ``PUT /archive/{pid}``
+     - 1.0
+     - ``PUT /archive/{id}``
      - :func:`archive`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.Identifier`
+     - (:class:`session<Types.Session>`, :class:`id<Types.Identifier>`) ``->`` :class:`Types.Identifier`
+   * - Tier 1
+     - 2.0
+     - ``PUT /meta``
+     - :func:`updateSystemMetadata`
+     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`sysmeta<Types.SystemMetadata>`) ``->`` boolean
 
 
 
@@ -38,10 +49,11 @@
 
    Called by a client to adds a new object to the Member Node.
 
-   The *pid* must not exist in the DataONE system or should have been previously reserved using  :func:`CNCore.reserveIdentifier`.
+   The *pid* must not exist in the DataONE system or should have been previously reserved using  :func:`CNCore.reserveIdentifier`. A new, unique :attr:`Types.SystemMetadata.seriesId` may be included.
 
    The caller MUST have authorization to write or create content on the Member Node.
 
+   :Version: 1.0
    :Use Cases:
      :doc:`UC04 </design/UseCases/04_uc>`, :doc:`UC09 </design/UseCases/09_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
    :REST URL: ``POST /object``
@@ -104,6 +116,9 @@
 
    The update operation MUST fail with :exc:`Exceptions.InvalidRequest` on objects that have the :attr:`Types.SystemMetadata.archived` property set to true.
 
+   A new, unique :attr:`Types.SystemMetadata.seriesId` may be included when beginning a series, or a series may be extended if the newPid obsoletes the existing pid.
+
+   :Version: 1.0
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`
    :REST URL: ``PUT /object/{pid}``
@@ -162,10 +177,11 @@
 
 .. function:: generateIdentifier(session,scheme,[fragment]) -> Identifier
 
-   Given a scheme and optional fragment, generates an identifier with that scheme and fragment that is unique.
+   Given a scheme and optional fragment, generates an identifier with that scheme and fragment that is unique. Maybe be used for generating either PIDs or SIDs.
 
    The message body is encoded as MIME Multipart/form-data
 
+   :Version: 1.0
    :REST URL: ``POST /generate``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
@@ -200,7 +216,7 @@
 
 
 
-.. function:: delete(session,pid) -> Identifier
+.. function:: delete(session,id) -> Identifier
 
    Deletes an object managed by DataONE from the Member Node. Member Nodes MUST check that the caller (typically a Coordinating Node) is authorized to perform this function.
 
@@ -210,14 +226,15 @@
 
    If the object does not exist on the node servicing the request, then an :exc:`Exceptions.NotFound` exception is raised. The message body of the exception SHOULD contain a hint as to the location of the :func:`CNRead.resolve` method.
 
+   :Version: 1.0
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`
-   :REST URL: ``DELETE /object/{pid}``
+   :REST URL: ``DELETE /object/{id}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param pid: The identifier of the object to be deleted. Transmitted as part of the URL path and must be escaped accordingly.
-   :type pid: :class:`Types.Identifier`
+   :param id: The identifier of the object to be deleted. May be either a PID or a SID. Will delete the HEAD PID when called with a SID. Transmitted as part of the URL path and must be escaped accordingly.
+   :type id: :class:`Types.Identifier`
 
    :returns: The identifier of the object that was deleted.
    :rtype: :class:`Types.Identifier`
@@ -237,7 +254,7 @@
 
 
 
-.. function:: archive(session,pid) -> Identifier
+.. function:: archive(session,id) -> Identifier
 
    Hides an object managed by DataONE from search operations, effectively preventing its discovery during normal operations.
 
@@ -251,12 +268,13 @@
 
    If the object does not exist on the node servicing the request, then an :exc:`Exceptions.NotFound` exception is raised. The message body of the exception SHOULD contain a hint as to the location of the :func:`CNRead.resolve` method.
 
-   :REST URL: ``PUT /archive/{pid}``
+   :Version: 1.0
+   :REST URL: ``PUT /archive/{id}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param pid: The identifier of the object to be archived. Transmitted as part of the URL path and must be escaped accordingly.
-   :type pid: :class:`Types.Identifier`
+   :param id: The identifier of the object to be archived. May be either a PID or a SID. Will archive the HEAD PID when called with a SID. Transmitted as part of the URL path and must be escaped accordingly.
+   :type id: :class:`Types.Identifier`
 
    :returns: The identifier of the object that was archived.
    :rtype: :class:`Types.Identifier`
@@ -272,5 +290,40 @@
    :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=2913)``
 
    :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=2914)``
+
+
+
+
+.. function:: updateSystemMetadata(session,pid,sysmeta) -> boolean
+
+   Provides a mechanism for updating system metadata for any objects held on the Member Node where that Member Node is the authoritative Member Node. Coordinating Node can call this method on the non-authoritative Member Node. However, this is not a normal operation and is for the special case - the authoritative Member Node doesn't exist any more. Coordinating Node calling the method on the non-authoriative Memember Node in the normal operation can cause an unexpected consequence.
+
+   This method is typically used by Authoritative Member Node or rights holder[s] to ensure system metadata quality.
+
+   :Version: 2.0
+   :REST URL: ``PUT /meta``
+   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
+   :type session: :class:`Types.Session`
+
+   :param pid:  Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
+   :type pid: :class:`Types.Identifier`
+
+   :param sysmeta:  Transmitted as an UTF-8 encoded XML structure for the respective type as defined in the DataONE types schema, as a *File part* of the MIME multipart/mixed message.
+   :type sysmeta: :class:`Types.SystemMetadata`
+
+   :returns: True if the update was successful.
+   :rtype: boolean
+
+   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=4866)``
+
+   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=4867)``
+
+   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=4868)``
+
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4869)``
+
+   :raises Exceptions.InvalidSystemMetadata: ``(errorCode=400, detailCode=4956)``
+
+   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=4957)``
 
 

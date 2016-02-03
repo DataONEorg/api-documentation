@@ -3,26 +3,24 @@
 
 
 .. list-table:: Functions defined in :mod:`MNAuthorization`
-   :widths: 3 10 10 30
+   :widths: 3 3 10 10 30
    :header-rows: 1
 
    * - Tier
+     - Version
      - REST
      - Function
      - Parameters
    * - Tier 2
-     - ``GET /isAuthorized/{pid}?action={action}``
+     - 1.0
+     - ``GET /isAuthorized/{id}?action={action}``
      - :func:`isAuthorized`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, :class:`action<Types.Permission>`) ``->`` boolean
-   * - Tier 2
-     - ``POST /dirtySystemMetadata``
-     - :func:`systemMetadataChanged`
-     - (:class:`session<Types.Session>`, :class:`pid<Types.Identifier>`, ``serialVersion``, :class:`dateSysMetaLastModified<Types.DateTime>`) ``->`` boolean
+     - (:class:`session<Types.Session>`, :class:`id<Types.Identifier>`, :class:`action<Types.Permission>`) ``->`` boolean
 
 
 
 
-.. function:: isAuthorized(session,pid,action) -> boolean
+.. function:: isAuthorized(session,id,action) -> boolean
 
    Test if the user identified by the provided session has authorization for operation on the specified object.
 
@@ -36,14 +34,15 @@
 
    .. Note:: Should perhaps add convenience methods for "canRead()" and "canWrite()" to verify that a user is able to read / write an object.
 
+   :Version: 1.0
    :Use Cases:
      :doc:`UC01 </design/UseCases/01_uc>`, :doc:`UC37 </design/UseCases/37_uc>`
-   :REST URL: ``GET /isAuthorized/{pid}?action={action}``
+   :REST URL: ``GET /isAuthorized/{id}?action={action}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
 
-   :param pid: The identifer of the resource for which access is being checked. Transmitted as part of the URL path and must be escaped accordingly.
-   :type pid: :class:`Types.Identifier`
+   :param id: The identifer of the resource for which access is being checked. May be either a PID or a SID. Will use the HEAD PID when given a SID value. Transmitted as part of the URL path and must be escaped accordingly.
+   :type id: :class:`Types.Identifier`
 
    :param action: The type of operation which is being requested for the given pid. Transmitted as a URL query parameter, and so must be escaped accordingly.
    :type action: :class:`Types.Permission`
@@ -64,44 +63,5 @@
    :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=1840)``
 
    :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=1761)``
-
-
-
-
-.. function:: systemMetadataChanged(session,pid,serialVersion,dateSysMetaLastModified) -> boolean
-
-   Notifies the Member Node that the authoritative copy of system metadata on the Coordinating Nodes has changed.
-
-   The Member Node SHOULD schedule an update to its information about the affected object by retrieving an authoritative copy from a Coordinating Node.
-
-   Note that date time precision is limited to one millisecond.
-
-   Access control for this method MUST be configured to allow calling by Coordinating Nodes.
-
-   :REST URL: ``POST /dirtySystemMetadata``
-   :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
-   :type session: :class:`Types.Session`
-
-   :param pid: Identifier of the object for which system metadata was changed.  Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
-   :type pid: :class:`Types.Identifier`
-
-   :param serialVersion: The serialVersion of the system metadata. Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
-   :type serialVersion: unsigned long
-
-   :param dateSysMetaLastModified: The time stamp for when the system metadata was changed. Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
-   :type dateSysMetaLastModified: :class:`Types.DateTime`
-
-   :returns: True if notification was received OK, otherwise an error is returned.
-   :rtype: boolean
-
-   :raises Exceptions.NotImplemented: ``(errorCode=501, detailCode=1330)``
-
-   :raises Exceptions.NotAuthorized: ``(errorCode=401, detailCode=1331)``
-
-   :raises Exceptions.InvalidToken: ``(errorCode=401, detailCode=1332)``
-
-   :raises Exceptions.ServiceFailure: ``(errorCode=500, detailCode=1333)``
-
-   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=1334)``
 
 

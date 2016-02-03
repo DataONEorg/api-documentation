@@ -16,26 +16,28 @@ The response body will be ignored by the caller except in the case of an error, 
        Appears in functional use cases: :doc:`UC10 </design/UseCases/10_uc>`
    * - \
      - :func:`MNCore.getLogRecords`
-     - Retrieve log information from the Member Node for the specified slice parameters.
+     - Retrieve log information from the Member Node for the specified slice parameters. Log entries will only return PIDs.
 This method is used primarily by the log aggregator to generate aggregate statistics for nodes, objects, and the methods of access.
 The response MUST contain only records for which the requestor has permission to read.
 Note that date time precision is limited to one millisecond. If no timezone information is provided UTC will be assumed.
-Access control for this method MUST be configured to allow calling by Coordinating Nodes and MAY be configured to allow more general access.
+Access control for this method MUST be configured to allow calling by Coordinating Nodes and MAY be configured to allow more general access. 
+v2.0: The event parameter has changed from :class:`v1_0.Types.Event` to a plain *string*
+v2.0: The structure of :class:`v2_0.Types.Log` has changed.
    * - \
      - :func:`MNCore.getCapabilities`
      - Returns a document describing the capabilities of the Member Node.
 The response at the Member Node base URL is for convenience only. Clients of Member Nodes SHOULD use the /node URL to retrieve the node capabilities document.
    * - :mod:`MNRead`
      - :func:`MNRead.get`
-     - Retrieve an object identified by *pid* from the node.
-The response MUST contain the bytes of the indicated object, and the checksum of the bytes retrieved SHOULD match the :attr:`SystemMetadata.checksum` recorded in the  :class:`Types.SystemMetadata`.
+     - Retrieve an object identified by *id* from the node. Supports both PIDs and SIDs. SID will return HEAD PID.
+The response MUST contain the bytes of the indicated object, and the checksum of the bytes retrieved SHOULD match the :attr:`SystemMetadata.checksum` recorded in the  :class:`Types.SystemMetadata` when calling with PID.
 If the object does not exist on the node servicing the request, then :exc:`Exceptions.NotFound` must be raised even if the object exists on another node in the DataONE system.
 Also implmented by Coordinating Nodes as :func:`CNRead.get`.
 
        Appears in functional use cases: :doc:`UC01 </design/UseCases/01_uc>`, :doc:`UC06 </design/UseCases/06_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
    * - \
      - :func:`MNRead.getSystemMetadata`
-     - Describes the object identified by *pid* by returning the associated system metadata object.
+     - Describes the object identified by *id* by returning the associated system metadata object.
 If the object does not exist on the node servicing the request, then :exc:`Exceptions.NotFound` MUST be raised even if the object exists on another node in the DataONE system.
 
        Appears in functional use cases: :doc:`UC06 </design/UseCases/06_uc>`, :doc:`UC37 </design/UseCases/37_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
@@ -56,7 +58,7 @@ Note that this method is likely to be called frequently and so efficiency should
   fromDate < SystemMetadata.dateSysMetadataModified
 but is expected to also support date range (by also specifying *toDate*), and should also support slicing of the matching set of records by indicating the starting *index* of the response (where 0 is the index of the first item) and the *count* of elements to be returned.
 Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed.
-Access control for this method MUST be configured to allow calling by Coordinating Nodes and MAY be configured to allow more general access.
+Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed.
 
        Appears in functional use cases: :doc:`UC06 </design/UseCases/06_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
    * - \
@@ -66,6 +68,12 @@ A successful response is indicated by a HTTP status of 200. An unsuccessful call
 Access control for this method MUST be configured to allow calling by Coordinating Nodes and MAY be configured to allow more general access.
 
        Appears in functional use cases: :doc:`UC06 </design/UseCases/06_uc>`
+   * - \
+     - :func:`MNRead.systemMetadataChanged`
+     - Notifies the Member Node that the authoritative copy of system metadata on the Coordinating Nodes has changed.
+The Member Node SHOULD schedule an update to its information about the affected object by retrieving an authoritative copy from a Coordinating Node.
+Note that date time precision is limited to one millisecond. 
+Access control for this method MUST be configured to allow calling by Coordinating Nodes.
    * - \
      - :func:`MNRead.getReplica`
      - Called by a target Member Node to fullfill the replication request originated by a Coordinating Node calling :func:`MNReplication.replicate`. This is a request to make a replica copy of the object, and differs from a call to GET /object in that it should be logged as a replication event rather than a read event on that object.
@@ -84,16 +92,10 @@ If the action is not authorized, then a :exc:`NotAuthorized` exception MUST be r
 .. Note:: Should perhaps add convenience methods for "canRead()" and "canWrite()" to verify that a user is able to read / write an object.
 
        Appears in functional use cases: :doc:`UC01 </design/UseCases/01_uc>`, :doc:`UC37 </design/UseCases/37_uc>`
-   * - \
-     - :func:`MNAuthorization.systemMetadataChanged`
-     - Notifies the Member Node that the authoritative copy of system metadata on the Coordinating Nodes has changed.
-The Member Node SHOULD schedule an update to its information about the affected object by retrieving an authoritative copy from a Coordinating Node.
-Note that date time precision is limited to one millisecond. 
-Access control for this method MUST be configured to allow calling by Coordinating Nodes.
    * - :mod:`MNStorage`
      - :func:`MNStorage.create`
      - Called by a client to adds a new object to the Member Node.
-The *pid* must not exist in the DataONE system or should have been previously reserved using  :func:`CNCore.reserveIdentifier`.
+The *pid* must not exist in the DataONE system or should have been previously reserved using  :func:`CNCore.reserveIdentifier`. A new, unique :attr:`Types.SystemMetadata.seriesId` may be included.
 The caller MUST have authorization to write or create content on the Member Node.
 
        Appears in functional use cases: :doc:`UC04 </design/UseCases/04_uc>`, :doc:`UC09 </design/UseCases/09_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
@@ -103,11 +105,12 @@ The caller MUST have authorization to write or create content on the Member Node
 Updates an existing object by creating a new object identified by *newPid* on the Member Node which explicitly obsoletes the object identified by *pid* through appropriate changes to the SystemMetadata of *pid* and *newPid*.
 The Member Node sets :attr:`Types.SystemMetadata.obsoletedBy` on the object being obsoleted to the *pid* of the new object. It then updates :attr:`Types.SystemMetadata.dateSysMetadataModified` on both the new and old objects. The modified system metadata entries then become available in :func:`MNRead.listObjects`. This ensures that a Coordinating Node will pick up the changes when filtering on :attr:`Types.SystemMetadata.dateSysMetadataModified`.
 The update operation MUST fail with :exc:`Exceptions.InvalidRequest` on objects that have the :attr:`Types.SystemMetadata.archived` property set to true.
+A new, unique :attr:`Types.SystemMetadata.seriesId` may be included when beginning a series, or a series may be extended if the newPid obsoletes the existing pid.
 
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
    * - \
      - :func:`MNStorage.generateIdentifier`
-     - Given a scheme and optional fragment, generates an identifier with that scheme and fragment that is unique.
+     - Given a scheme and optional fragment, generates an identifier with that scheme and fragment that is unique. Maybe be used for generating either PIDs or SIDs.
 The message body is encoded as MIME Multipart/form-data
    * - \
      - :func:`MNStorage.delete`
@@ -125,6 +128,10 @@ Objects that are archived can not be updated through the :func:`MNStorage.update
 Archived objects can not be un-archived. This behavior may change in future versions of the DataONE API.
 Member Nodes MUST check that the caller is authorized to perform this function.
 If the object does not exist on the node servicing the request, then an :exc:`Exceptions.NotFound` exception is raised. The message body of the exception SHOULD contain a hint as to the location of the :func:`CNRead.resolve` method.
+   * - \
+     - :func:`MNStorage.updateSystemMetadata`
+     - Provides a mechanism for updating system metadata for any objects held on the Member Node where that Member Node is the authoritative Member Node. Coordinating Node can call this method on the non-authoritative Member Node. However, this is not a normal operation and is for the special case - the authoritative Member Node doesn't exist any more. Coordinating Node calling the method on the non-authoriative Memember Node in the normal operation can cause an unexpected consequence.
+This method is typically used by Authoritative Member Node or rights holder[s] to ensure system metadata quality.
    * - :mod:`MNReplication`
      - :func:`MNReplication.replicate`
      - Called by a Coordinating Node to request that the Member Node create a copy of the specified object by retrieving it from another Member Nodeode and storing it locally so that it can be made accessible to the DataONE system.  
@@ -161,7 +168,7 @@ This method is optional for Member Nodes, but if implemented,  MNView.view must 
    * - :mod:`MNPackage`
      - :func:`MNPackage.getPackage`
      - Provides all of the content of a DataONE data package as defined by an OAI-ORE document in DataONE, in one of several possible package serialization formats.  The serialized package will contain all of the data described in the ORE aggregation. The default implementation will include packages in the BagIt format.  The packageType formats must be specified using the associated ObjectFormat formatId for that package serialization format.
-The {pid} parameter can be the PID associated with an ORE package description, or it can be the PID of one of the science metadata documents or data files contained within the package.  The Member Node should locate the package associated with such a PID and return that, so calling applications should be aware that the PID of the returned package may differ from the PID that was requested.
+The {id} parameter must be the identifier of an ORE package object. If it is the identifier of one of the science metadata documents or data files contained within the package,  the Member Node should throw an InvalidRequest exception. Identifiers may be either PIDss or SIDs.
 This method is optional for Member Nodes.
    * - :mod:`CNCore`
      - :func:`CNCore.ping`
@@ -176,30 +183,36 @@ The response body will be ignored by the caller expect in the case of an error, 
      - :func:`CNCore.create`
      - Used internally within a Coordinating Node to add a new object to the object store.
 This method is not publicly exposed by a Coordinating Node.
+v2.0: The structure of :class:`v2_0.Types.SystemMetadata` has changed from Version 1.
 
        Appears in functional use cases: :doc:`UC04 </design/UseCases/04_uc>`, :doc:`UC09 </design/UseCases/09_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
    * - \
      - :func:`CNCore.listFormats`
      - Returns a list of all object formats registered in the DataONE Object Format Vocabulary.
+v2.0: The structure of :class:`v2_0.Types.ObjectFormat` has changed.
    * - \
      - :func:`CNCore.getFormat`
      - Returns the object format registered in the DataONE Object Format Vocabulary for the given format identifier.
+v2.0: The structure of :class:`v2_0.Types.ObjectFormat` has changed.
    * - \
      - :func:`CNCore.getLogRecords`
      - Retrieves consolidated log information for the specified date range (fromDate < timestamp <= toDate) for the entire DataONE infrastructure
 Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed.
 Note that full access to log records requires access through a priviledged account. A public user may be presented with an empty response.
+v2.0: The structure of :class:`v2_0.Types.Log` has changed.
+v2.0: The event parameter has changed from :class:`v1_0.Types.Event` to a plain *string*
 
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
    * - \
      - :func:`CNCore.reserveIdentifier`
      - Reserves the identifier that is unique and can not be used by any other sessions. Future calls to :func:`MNStorage.create` and :func:`MNStorage.update` that reference this ID must be made by the same :term:`principal` making the reservation, otherwise an error is raised on those methods.
-The requested identifier is transmitted in a MIME Multipart/form-data body with *pid* as key, and the identifier string as value.
+The requested identifier is transmitted in a MIME Multipart/form-data body with *id* as key, and the identifier string as value.
+v2.0: The identifier being reserved may be used as a :term:`PID` or :term:`SID`.
 
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
    * - \
      - :func:`CNCore.generateIdentifier`
-     - Given a scheme and optional fragment, generates an identifier with that scheme and fragment that is unique.
+     - Given a scheme and optional fragment, generates an identifier with that scheme and fragment that is unique. Returned identifier may be used as either a PID or a SID.
 The message body is encoded as MIME Multipart/form-data
 
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
@@ -209,9 +222,10 @@ The message body is encoded as MIME Multipart/form-data
    * - \
      - :func:`CNCore.setObsoletedBy`
      - Updates the :attr:`Types.SystemMetadata.obsoletedBy` property for an object, indicating that the object specified by *pid* has been obsoleted by the identifier in *obsoletedByPid*.
+v2.0: Method implementation has changed to ensure that the obsolescence chain is consistent with use of any SID assigned to the object.
    * - \
      - :func:`CNCore.delete`
-     - Deletes an object from the entire DataONE system, including all nodes known to hold a copy of the object. The PID of the object will continue to be shown as in use (preventing its reuse for other objects), however the object should not be resolvable (NotFound) or retrievable.
+     - Deletes an object from the entire DataONE system, including all nodes known to hold a copy of the object. The PID and/or SID of the object will continue to be shown as in use (preventing its reuse for other objects), however the object should not be resolvable (NotFound) or retrievable.
 The delete operation is used only by administrators in response to a request to remove an object from DataONE, perhaps because of legal requirements or the object has been identified as containing malicious content.
 
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
@@ -222,28 +236,44 @@ The operation does not delete the object bytes, but instead sets the :attr:`Type
 Objects that are archived can not be updated through the :func:`MNStorage.update` operation. 
 Archived objects can not be un-archived. This behavior may change in future versions of the DataONE API.
 The CN should ensure that all MNs holding a copy of the object are informed of the change so that they may update their information about the object.
+v2.0: The supplied identifier may be a :term:`PID` or a :term:`SID`.
    * - \
      - :func:`CNCore.listNodes`
      - Returns a list of nodes that have been registered with the DataONE infrastructure.
+v2.0: The structure of :class:`v2_0.Types.Node` has changed.
 
        Appears in functional use cases: :doc:`UC39 </design/UseCases/39_uc>`
+   * - \
+     - :func:`CNCore.getCapabilities`
+     - Returns a document describing the capabilities of the Coordinating Node.
+v2.0: The structure of :class:`v2_0.Types.Node` has changed.
    * - \
      - :func:`CNCore.registerSystemMetadata`
      - Provides a mechanism for adding system metadata independently of its associated object, such as when adding system metadata for data objects.
 This method is used internally by Coordinating Nodes.
+v2.0: The structure of :class:`v2_0.Types.SystemMetadata` has changed.
+   * - \
+     - :func:`CNCore.updateSystemMetadata`
+     - Provides a mechanism for updating system metadata for any objects held in the federation.
+Usage of this method SHOULD be restricted to CNs for updating the system metadata in the underlying CN storage sub-system.
+v2.0: The structure of :class:`v2_0.Types.SystemMetadata` has changed.
+Note: the serial version and the replica list in the new system metadata will be ignored.
    * - \
      - :func:`CNCore.hasReservation`
-     - Checks to determine if the supplied *subject* is the owner of the reservation of *pid*.
+     - Checks to determine if the supplied *subject* is the owner of the reservation of *id*.
 A positive response (that the *pid* is reserved and owned by *subject*) is indicated by a return of a HTTP status of 200.
 A negative response is indicated by an exception and the associated HTTP status code.
+v2.0: The identifier may be a :term:`PID` or :term:`SID`.
    * - :mod:`CNRead`
      - :func:`CNRead.get`
-     - Retrieves the object identified by *pid* from the node. If the object is not present on the node, then an :exc:`Exceptions.NotFound` error is raised, regardless of whether the object exists on another node in the DataONE system.
+     - Retrieves the object identified by *id* from the node. If the object is not present on the node, then an :exc:`Exceptions.NotFound` error is raised, regardless of whether the object exists on another node in the DataONE system.
+v2.0: The supplied identifier may be a :term:`PID` or a :term:`SID`.
 
        Appears in functional use cases: :doc:`UC01 </design/UseCases/01_uc>`, :doc:`UC16 </design/UseCases/16_uc>`, :doc:`UC09 </design/UseCases/09_uc>`
    * - \
      - :func:`CNRead.getSystemMetadata`
-     - Returns the :term:`system metadata` that contains DataONE specific information about the object identified by *pid*. Authoritative copies of system metadata are only available from the Coordinating Nodes.
+     - Returns the :term:`system metadata` that contains DataONE specific information about the object identified by *id*. Authoritative copies of system metadata are only available from the Coordinating Nodes.
+v2.0: The supplied identifier may be a :term:`PID` or a :term:`SID` and the returned :class:`v2_0.Types.SystemMetadata` structure has changed.
 
        Appears in functional use cases: :doc:`UC36 </design/UseCases/36_uc>`, :doc:`UC37 </design/UseCases/37_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
    * - \
@@ -252,13 +282,15 @@ A negative response is indicated by an exception and the associated HTTP status 
 The principal indicated by *token* must have read privileges on the object, otherwise :exc:`Exceptions.NotAuthorized` is raised.
 If the object does not exist on the node servicing the request, then :exc:`Exceptions.NotFound` must be raised even if the object exists on another node in the DataONE system.
 Note that this method is likely to be called frequently and so efficiency should be taken into consideration during implementation.
+v2.0: The supplied identifier may be a :term:`PID` or a :term:`SID`.
 
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
    * - \
      - :func:`CNRead.resolve`
-     - Returns a list of nodes (MNs or CNs) known to hold copies of the object identified by *pid*. The object resolution process is intended to provide a simple mechanism for a client to discover from which node(s) a particular object may be retrieved. Details about method interfaces (i.e. REST URLs) exposed by a particular node can be determined by examining the response from the *node* collection. For convenience, the :func:`MNRead.get` URL is included in the response as is the base URL of the node REST services.
+     - Returns a list of nodes (MNs or CNs) known to hold copies of the object identified by *id*. The object resolution process is intended to provide a simple mechanism for a client to discover from which node(s) a particular object may be retrieved. Details about method interfaces (i.e. REST URLs) exposed by a particular node can be determined by examining the response from the *node* collection. For convenience, the :func:`MNRead.get` URL is included in the response as is the base URL of the node REST services.
 Note also that the same functionality as *resolve()* can be implemented by retrieving a copy of the system metadata for the object and utilizing the node registry to discover the base URL from which the client can construct the *get()* URL. Resolve is provided for efficiency since the response size is much smaller.
 Resolve will return a HTTP status of 303 (see other) on success. The HTTP header "Location" MUST be set, and it's value SHOULD be the full get() URL for retrieving the object from the first location in the resolve response.
+v2.0: The supplied identifier may be a :term:`PID` or a :term:`SID`. If the identifier is a SID, then resolution is for the latest version of an object (i.e. the head of the obsolescence chain).
 
        Appears in functional use cases: :doc:`UC36 </design/UseCases/36_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
    * - \
@@ -273,6 +305,8 @@ Note that the signature of this method differs from :func:`MNRead.getChecksum` a
   fromDate < SystemMetadata.dateSysMetadataModified
 but is expected to also support date range (by also specifying *toDate*), and should also support slicing of the matching set of records by indicating the starting *index* of the response (where 0 is the index of the first item) and the *count* of elements to be returned.
 Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed.
+Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed.
+V2.0: Added filter on authoritativeMemberNode value.
 
        Appears in functional use cases: :doc:`UC06 </design/UseCases/06_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
    * - \
@@ -286,22 +320,29 @@ Currently supported search engines include: "solr"
      - :func:`CNRead.query`
      - Submit a query against the specified *queryEngine* and return the response as formatted by the queryEngine.
 The *query()* operation may be implemented by more than one type of search engine and the *queryEngine* parameter indicates which search engine is targeted. The value and form of *query* is determined by the specific query engine.
-For example, the SOLR search engine will accept many of the standard parameters of SOLR, including field restrictions and faceting.
-.. NOTE:: This method is in DRAFT status and is scheduled for version 1.1 of the APIs
+For example, the solr search engine will accept many of the standard parameters of solr, including field restrictions and faceting.
+v1.1: This method was added.
 
        Appears in functional use cases: :doc:`UC02 </design/UseCases/02_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
    * - \
      - :func:`CNRead.getQueryEngineDescription`
      - Provides metadata about the query service of the specified *queryEngine*. The metadata provides a brief description of the query engine, its version, its schema version, and an optional list of fields supported by the query engine.
-.. NOTE:: This method is in DRAFT status and is scheduled for version 1.1 of the APIs
+v1.1: This method was added.
    * - \
      - :func:`CNRead.listQueryEngines`
      - Returns a list of query engines, i.e. supported values for the *queryEngine* parameter of the *getQueryEngineDescription* and *query* operations.
 The list of search engines available may be influenced by the authentication status of the request.
-.. NOTE:: This method is in DRAFT status and is scheduled for version 1.1 of the APIs
+v1.1: This method was added.
+   * - \
+     - :func:`CNRead.synchronize`
+     - Indicates to the CN that a new or existing object identified by PID requires synchronization. Note that this operation is asynchronous, a successful return indicates that the synchronization task was successfully queued. 
+This method may be called by any Member Node for new content or the authoritative Member Node for updates to existing content.
+The CN will schedule the synchronization task which will then be processed in the same way as content changes identified through the listObjects polling mechanism.
+v2.0: This method was added to the Version 2.0 API.
    * - :mod:`CNAuthorization`
      - :func:`CNAuthorization.setRightsHolder`
      - Changes ownership (RightsHolder) of the specified object to the :term:`subject` specified by `userId`
+v2.0: The supplied identifier may be a :term:`PID` or a :term:`SID`.
 
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
    * - \
@@ -311,15 +352,16 @@ A successful operation is indicated by a return HTTP status of 200.
 Failure is indicated by an exception such as :exc:`NotAuthorized` being returned.
 A successful response is indicated by a response HTTP status of 200. The body of the response is arbitrary and SHOULD be ignored by the caller.
 If the action is not authorized, then a :exc:`NotAuthorized` exception MUST be raised.
-.. Note:: Should perhaps add convenience methods for "canRead()" and "canWrite()" to verify that a user is able to read / write an object.
+v2.0: The supplied identifier may be a :term:`PID` or a :term:`SID`.
 
        Appears in functional use cases: :doc:`UC01 </design/UseCases/01_uc>`, :doc:`UC02 </design/UseCases/02_uc>`, :doc:`UC36 </design/UseCases/36_uc>`, :doc:`UC37 </design/UseCases/37_uc>`
    * - \
      - :func:`CNAuthorization.setAccessPolicy`
-     - Sets the access permissions for an object identified by *pid*.
+     - Sets the access permissions for an object identified by *id*.
 Triggers a change to the system metadata modified time stamp.
 Successful completion of this operation is indicated by a HTTP response status code of 200.
 Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception such as :exc:`NotAuthorized`.
+v2.0: The supplied identifier may be a :term:`PID` or a :term:`SID`.
 
        Appears in functional use cases: :doc:`UC16 </design/UseCases/16_uc>`
    * - :mod:`CNIdentity`
@@ -398,6 +440,7 @@ Unsuccessful completion of this operation MUST be indicated by returning an appr
 Successful completion of this operation is indicated by a HTTP response status code of 200.
 Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception.
 The nodeRef, status, and failure parameters are transmitted as part of the HTTP request body encoded as a MIME Multipart/form-data encoded payload.
+This method can be only called by Coordinating Nodes and trusted Member Nodes.
 
        Appears in functional use cases: :doc:`UC09 </design/UseCases/09_uc>`
    * - \
@@ -405,11 +448,13 @@ The nodeRef, status, and failure parameters are transmitted as part of the HTTP 
      - Replaces the replica with matching nodeRef in the system metadata of the specified object.  Adds a new replica if the nodeRef of passed in Replica is not already present.  Changes the date sys meta modified.
 Successful completion of the operation is indicated by returning a HTTP status of 200.
 Failure of the operation MUST be indicated by returning an appropriate exception.
+This method can be only called by Coordinating Nodes.
    * - \
      - :func:`CNReplication.setReplicationPolicy`
      - Updates the replication policy entry for an object by updating the system metadata.
 Successful completion of the operation is indicated by returning a HTTP status of 200.
 Failure of the operation MUST be indicated by returning an appropriate exception.
+v2.0: The identifier may be a :term:`PID` or :term:`SID`.
    * - \
      - :func:`CNReplication.isNodeAuthorized`
      - Verifies that a replication event was initiated by a CN by comparing the target node's identifiying subject with a known list of scheduled replication tasks.
@@ -419,20 +464,43 @@ Failure of the operation MUST be indicated by returning an appropriate exception
      - :func:`CNReplication.deleteReplicationMetadata`
      - Removes the replication information for the specified node from the object system metadata identified by *pid*.
 Removal of replication metadata is necessary if the Member Node goes offline permanently or for an extended period, or when it is deeemed prudent to migrate an object from one node to another to address resource management issues.
-This method is normally only called by Coordinating Nodes.
+This method can be only called by Coordinating Nodes.
    * - :mod:`CNRegister`
      - :func:`CNRegister.updateNodeCapabilities`
      - For updating the capabilities of the specified node. Most information is replaced by information in the new node, however, the node identifier, nodeType, ping, syncrhonization.lastHarvested, and synchronization.lastCompleteHarvest are preserved from the existing entry.  Services in the old record not included in the new Node will be removed.
 Successful completion of this operation is indicated by a HTTP response status code of 200.
 Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception.
+v2.0: The structure of :class:`v2_0.Types.Node` has changed.
+   * - \
+     - :func:`CNRegister.getNodeCapabilities`
+     - For retrieving the capabilities of the specified node if it is registered on the Coordinating Node being called.
+v2.0: The structure of :class:`v2_0.Types.Node` has changed.
    * - \
      - :func:`CNRegister.register`
      - Register a new node in the system. If the node already exists, then a :exc:`IdentifierNotUnique` exception MUST be returned.
+v2.0: The structure of :class:`v2_0.Types.Node` has changed.
    * - :mod:`CNView`
      - :func:`CNView.view`
      - Provides a formatted view of an object (science metadata, data, resource, or other) using the given named theme.
 The service :func:`CNView.view` operation will implement at least one {theme} named 'default' to provide a standard (possibly minimalistic) view of the content in HTML format. In addition, a CN may redirect a client to the view service of the authoritative Member Node for a PID if that node has implemented the :func:`MNView.view` service and implements a compatible theme.
 If the {theme} parameter is not recognized, the service must render the object using the default theme rather than throwing an error.  Note that the return type of Types.OctetStream requires that the consuming client has a priori knowledge of the theme being returned (like HTML). Response headers must include the correct mime-type of the view being returned.
+v2.0: This method was added to the Version 2.0 API.
    * - \
      - :func:`CNView.listViews`
      - Provides a list of usable themes for rendering content in a view, including a required 'default' theme. The list of themes is provided as an OptionList, where the option key should be used as the theme name in calls to MNView.view, and the description provides a human readable description of what will be returned fo rthat theme.
+v2.0: This method was added to the Version 2.0 API.
+   * - :mod:`CNDiagnostic`
+     - :func:`CNDiagnostic.echoCredentials`
+     - Echo the credentials used to make the call. This method can be used to verify the client certificate is valid and contains the expected information.
+v2.0: This method was added to the Version 2.0 API.
+   * - \
+     - :func:`CNDiagnostic.echoSystemMetadata`
+     - Parse and echo the provided system metadata
+On successful parsing, a copy of the system metadata is returned, otherwise an exception is returned indicating an error condition.
+v2.0: This operation is new to version 2.0.
+   * - \
+     - :func:`CNDiagnostic.echoIndexedObject`
+     - Parse and echo the provided science metadata or resource map document. The response is governed by the type of object provided in the request, and on success is one or more documents that are the result of parsing for indexing.
+Since DataONE supports multiple types of query engine, the query engine to be used for parsing is specified in the request.
+The servce may terminate the POST operation if the size of the object is beyond a reasonable size.
+v2.0: This operation is new to version 2.0.

@@ -3,62 +3,76 @@
 
 
 .. list-table:: Functions defined in :mod:`CNIdentity`
-   :widths: 3 10 10 30
+   :widths: 3 3 10 10 30
    :header-rows: 1
 
    * - Tier
+     - Version
      - REST
      - Function
      - Parameters
    * - Tier 2
+     - 1.0, (2.0)
      - ``POST /accounts``
      - :func:`registerAccount`
      - (:class:`session<Types.Session>`, :class:`person<Types.Person>`) ``->`` :class:`Types.Subject`
    * - Tier 2
+     - 1.0, (2.0)
      - ``PUT /accounts/{subject}``
      - :func:`updateAccount`
      - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`, :class:`person<Types.Person>`) ``->`` :class:`Types.Subject`
    * - Tier 2
+     - 1.0, (2.0)
      - ``PUT /accounts/verification/{subject}``
      - :func:`verifyAccount`
      - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
    * - Tier 2
+     - 1.0, (2.0)
      - ``GET /accounts/{subject}``
      - :func:`getSubjectInfo`
      - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` :class:`Types.SubjectInfo`
    * - Tier 2
+     - 1.0, (2.0)
      - ``GET /accounts?query={query}[&status={status}&start={start}&count={count}]``
      - :func:`listSubjects`
      - (:class:`session<Types.Session>`, ``query``, ``status``, ``start``, ``count``) ``->`` :class:`Types.SubjectInfo`
    * - Tier 2
+     - 1.0, (2.0)
      - ``POST /accounts/map``
      - :func:`mapIdentity`
      - (:class:`session<Types.Session>`, :class:`primarySubject<Types.Subject>`, :class:`secondarySubject<Types.Subject>`) ``->`` boolean
    * - Tier 2
+     - 1.0, (2.0)
      - ``DELETE /accounts/map/{subject}``
      - :func:`removeMapIdentity`
      - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
    * - Tier 2
+     - 1.0, (2.0)
      - ``POST /accounts/pendingmap``
      - :func:`requestMapIdentity`
      - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
    * - Tier 2
+     - 1.0, (2.0)
      - ``PUT /accounts/pendingmap/{subject}``
      - :func:`confirmMapIdentity`
      - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
    * - Tier 2
+     - 1.0, (2.0)
      - ``GET /accounts/pendingmap/{subject}``
      - :func:`getPendingMapIdentity`
      - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` :class:`Types.SubjectInfo`
    * - Tier 2
+     - 1.0, (2.0)
      - ``DELETE /accounts/pendingmap/{subject}``
      - :func:`denyMapIdentity`
      - (:class:`session<Types.Session>`, :class:`subject<Types.Subject>`) ``->`` boolean
    * - Tier 2
+     - 1.0, (2.0)
      - ``POST /groups``
      - :func:`createGroup`
      - (:class:`session<Types.Session>`, :class:`group<Types.Group>`) ``->`` :class:`Types.Subject`
    * - Tier 2
+     - 1.0, (2.0)
      - ``PUT /groups``
      - :func:`updateGroup`
      - (:class:`session<Types.Session>`, :class:`group<Types.Group>`) ``->`` boolean
@@ -72,6 +86,7 @@
 
    Note that there should probably be a lot more metadata captured about the new user, and there should be a mechanism for specifying the default access control rules for the new account.
 
+   :Version: 1.0, (2.0)
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`
    :REST URL: ``POST /accounts``
@@ -115,6 +130,7 @@
 
    Note that there should be a policy for verifying the details that change via this method.
 
+   :Version: 1.0, (2.0)
    :Use Cases:
      :doc:`UC16 </design/UseCases/16_uc>`
    :REST URL: ``PUT /accounts/{subject}``
@@ -163,6 +179,7 @@
 
    An exeption MUST be returned if the account verification is not successful.
 
+   :Version: 1.0, (2.0)
    :REST URL: ``PUT /accounts/verification/{subject}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
@@ -192,6 +209,7 @@
 
    Get the information about a Person (their equivalent identities, and the Groups to which they belong) or the Group (including members).
 
+   :Version: 1.0, (2.0)
    :Use Cases:
      :doc:`UC12 </design/UseCases/12_uc>`
    :REST URL: ``GET /accounts/{subject}``
@@ -225,6 +243,7 @@
 
    The list can be restricted to subjects whose identifier matches certain substrings, and the size of the resultset can be paged through.
 
+   :Version: 1.0, (2.0)
    :REST URL: ``GET /accounts?query={query}[&status={status}&start={start}&count={count}]``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
@@ -267,6 +286,7 @@
 
    A failed request MUST be indicated by returning an appropriate exception and setting the response HTTP status accordingly.
 
+   :Version: 1.0, (2.0)
    :REST URL: ``POST /accounts/map``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.  Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
@@ -311,6 +331,7 @@
 
    A failed request MUST be indicated by returning an appropriate exception and setting the response HTTP status accordingly.
 
+   :Version: 1.0, (2.0)
    :REST URL: ``DELETE /accounts/map/{subject}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.  Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
@@ -348,6 +369,7 @@
 
    A failed request MUST be indicated by returning an appropriate exception and setting the response HTTP status accordingly.
 
+   :Version: 1.0, (2.0)
    :REST URL: ``POST /accounts/pendingmap``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.  Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
@@ -389,6 +411,7 @@
 
    A failed request MUST be indicated by returning an appropriate exception and setting the response HTTP status accordingly.
 
+   :Version: 1.0, (2.0)
    :REST URL: ``PUT /accounts/pendingmap/{subject}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.  Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
@@ -424,6 +447,7 @@
 
    A failed request MUST be indicated by returning an appropriate exception and setting the response HTTP status accordingly.
 
+   :Version: 1.0, (2.0)
    :REST URL: ``GET /accounts/pendingmap/{subject}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.  Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
@@ -459,6 +483,7 @@
 
    A failed request MUST be indicated by returning an appropriate exception and setting the response HTTP status accordingly.
 
+   :Version: 1.0, (2.0)
    :REST URL: ``DELETE /accounts/pendingmap/{subject}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service.  Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
@@ -492,6 +517,7 @@
 
    Groups are lists of subjects that allow all members of the group to be referenced by listing solely the subject name of the group.  Group names must be unique within the DataONE system. Groups can only be modified by Subjects listed as rightsHolders.
 
+   :Version: 1.0, (2.0)
    :REST URL: ``POST /groups``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
@@ -529,6 +555,7 @@
 
    Unsuccessful completion of this operation MUST be indicated by returning an appropriate exception.
 
+   :Version: 1.0, (2.0)
    :REST URL: ``PUT /groups``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session is used to determine  if the request is being made by the creator of the group. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`

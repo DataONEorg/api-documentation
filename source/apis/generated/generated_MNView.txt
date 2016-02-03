@@ -3,18 +3,21 @@
 
 
 .. list-table:: Functions defined in :mod:`MNView`
-   :widths: 3 10 10 30
+   :widths: 3 3 10 10 30
    :header-rows: 1
 
    * - Tier
+     - Version
      - REST
      - Function
      - Parameters
    * - Tier 1
+     - 1.2
      - ``GET /views/{theme}/{pid}``
      - :func:`view`
-     - (:class:`session<Types.Session>`, ``theme``, :class:`pid<Types.Identifier>`) ``->`` :class:`Types.OctetStream`
+     - (:class:`session<Types.Session>`, ``theme``, :class:`id<Types.Identifier>`) ``->`` :class:`Types.OctetStream`
    * - Tier 1
+     - 1.2
      - ``GET /views``
      - :func:`listViews`
      - (:class:`session<Types.Session>`) ``->`` :class:`Types.OptionList`
@@ -22,7 +25,7 @@
 
 
 
-.. function:: view(session,theme,pid) -> OctetStream
+.. function:: view(session,theme,id) -> OctetStream
 
    Provides a formatted view of an object (science metadata, data, resource, or other) using the given named theme.
 
@@ -32,6 +35,7 @@
 
    This method is optional for Member Nodes, but if implemented,  MNView.listViews must also be implemented.
 
+   :Version: 1.2
    :REST URL: ``GET /views/{theme}/{pid}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
@@ -39,8 +43,8 @@
    :param theme: Indicates which themed view will be used to handle the query. All implementations must support a 'default' HTML theme, but are free to implement additional themes that return both HTML and non-HTML responses. Transmitted as part of the URL path and must be escaped accordingly.
    :type theme: string
 
-   :param pid: The identifier of the object to render in a view. Transmitted as part of the URL path and must be escaped accordingly.
-   :type pid: :class:`Types.Identifier`
+   :param id: The identifier of the object to render in a view. May be either a PID or a SID. Transmitted as part of the URL path and must be escaped accordingly.
+   :type id: :class:`Types.Identifier`
 
    :returns: Any return type is allowed, including application/octet-stream, but the format of the response should be specialized by the requested theme.
    :rtype: :class:`Types.OctetStream`
@@ -68,6 +72,7 @@
 
    This method is optional for Member Nodes, but if implemented,  MNView.view must also be implemented.
 
+   :Version: 1.2
    :REST URL: ``GET /views``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate which must be traceable to the CILogon service. The subject of the session defaults to the :term:`public user` if the certificate was not provided with the request. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
