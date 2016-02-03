@@ -110,7 +110,7 @@ whereas a misconfigured server may be setting an incorrect value).
 2. The ``mimeType`` element of the Draft v2.0 API should be renamed "mediaType" 
    and used to specify the default media type for an object should that 
    information not be explicitly provided through the Content-Type header 
-   provided by the producer. 
+   provided by the producer (Issue #) 
 
 3. The media type as provided by the producer of the object should be specified
    and should be preserved as part of the system metadata so that the media type
@@ -137,6 +137,40 @@ whereas a misconfigured server may be setting an incorrect value).
    separately from the object, and so such an override will optional for 
    consumers.
 
+
+Setting Content-Type and Content-Disposition Headers
+----------------------------------------------------
+
+The purpose of the HTTP ``Content-Type`` header is to inform the receiver of a
+byte stream what the payload actually is. Parameters may be included with the
+``Content-Type`` to provide additional information for the consumer (e.g. the
+``charset`` parameter for text sub-types).
+
+Version 1.x Content-Type
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Media type tracking in Version 1.x is largely delegated to the ObjectFormat
+referenced in the SystemMetadata associated with an object. A content producer
+may provide a Content-Type header, but this information is not preserved as part
+of the DataONE infrastructure. Hence, consumers that intend to re-expose the
+object should endeavor to record the provided Content-Type and provide tha
+header when re-transmitting the object. Such an action is however, undefined
+within the Version 1.x DataONE service interfaces.
+
+Lacking an explicltly set Content-Type, a Node may infer the Content-Type from the ObjectFormat
+
+Version 2.0 Content-Type
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+a. ``mediaType`` value is specified in SystemMetadata
+
+   The SystemMetdata.mediaType value is used to set the Content-Type header 
+   value. The SystemMetadata.mediaType overrides a value that may be set in the
+   referenced ObjectFormat.
+
+b. ``mediaType`` value not specified in SystemMetadata, available in ObjectFormat
+
+c. ``mediaType`` value not specified in SystemMetadata or ObjectFormat
 
 
 Rules for Various Content Types
