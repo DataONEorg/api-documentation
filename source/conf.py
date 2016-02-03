@@ -174,6 +174,16 @@ exclude_patterns = [
 #                    'design/Logging*',
 #                    'design/NodeList*',
                     ]
+exclude_patterns = ['**/.svn',
+                    'apis/generated/generated*',
+                    'apis/REST*',
+                    'apis/examples/*',
+                    'apis/Types_crontabentry.txt',
+                    'apis/Types_SAML.txt',
+                    'apis/Types_include.txt',
+                    'apis/types_errors.txt',
+                    'design/morpho/*'
+                     ]
 
 # The reST default role (used for this markup: `text`) to use for all documents.
 #default_role = None

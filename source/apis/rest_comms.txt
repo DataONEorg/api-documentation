@@ -1,0 +1,267 @@
+REST Interface Overview
+-----------------------
+
+This document describes how the Member (:doc:`MN_APIs`) and Coordinating
+(:doc:`CN_APIs`) Node APIs are implemented using a Representational State
+Transfer (REST) approach over HTTP.
+
+Key points on REST interactions in DataONE:
+
+1. Content is generally modeled as collections, with :class:`PIDs
+   <Types.Identifier>` identifying individual items of a collection.
+
+2. The HTTP verbs HEAD, GET, POST, PUT, DELETE are used for retrieving
+   information about content, retrieving content, creating content, updating
+   content, and deleting content respectively.
+
+3. State information, if required, is passed in the HTTP headers.
+
+4. Identity transfer is performed using SSL, with the client certificate
+   accessible through implementation specific mechanisms supported by the
+   respective server environment.
+
+5. The identity information described in (4) is indicated as a *Session* in the
+   method signatures and their descriptions.
+
+6. Hints to support efficient caching (e.g. content time stamps) should be
+   respected. Caching is an important mechanism for assisting with service 
+   scalability.
+
+7. Names of parameters passed in URLs or message bodies are case sensitive
+   unless explicitly indicated otherwise. If the case of the parameters names
+   does not match the method signature, the request MAY be rejected with an
+   :exc:`Exceptions.InvalidRequest` exception.
+
+8. GET, HEAD, DELETE requests only pass parameters as part of the URL. The
+   parameter values are converted to UTF-8 Strings and appropriately escaped for
+   incorporating into the URL.
+
+9. Message bodies (e.g. for POST and PUT requests) are encoded using MIME
+   Multipart, mixed (RFC2046_).
+
+10. PUT requests are for updating an existing resource. An identifier of some
+    sort will typically appear in the URL (e.g. a PID or a Subject), which should
+    be a UTF-8 string and appropriately URL path encoded. The message body will
+    be MIME multipart/mixed and may contain values expressed as parameter and /
+    or file parts as described in (12) below.
+
+11. POST requests are for creating resources. All information for creating the
+    new object or resource is transmitted in the message body, which is encoded
+    as a MIME multipart/mixed message.
+
+12. We use two types of content in MIME multipart/mixed messages: parameters and
+    files. Parameters are to be used for all simple types (13, below). Files are
+    to be used for all complex types (14, below) and for octet streams.
+
+13. Simple types are structures that contain a single value. When creating the
+    parameter entry, the value is converted to a UTF-8 String using formatting
+    equivalent to what is used when expressing the same value as part of an XML
+    document (e.g. when serializing using PyxB or JibX). The expression of a
+    simple type as a String in a MIME multipart/mixed parameter should be
+    equivalent to expressing the same value as part of a URL (before escaping).
+
+14. Complex types are any structures that contain more than a single value. A
+    simple example of a complex type is the :class:`Types.Checksum` type. It is
+    a String (the checksum) with an attribute (the algorithm). Complex types are
+    serialized to UTF-8 encoded XML structures that are defined by the DataONE
+    Types Schema.
+
+15. File parts of MIME multipart/mixed have three properties: the name of the
+    entry, the file name of the content, and the content. The name of the entry
+    must match the parameter name as described in the signature of the method
+    being called. The content of the entry is XML encoded structure as described
+    in (14) above (or an octet stream). The file name property is not used, and
+    can be set to whatever the client considers appropriate. The file name MAY
+    be ignored by the service receiving the request.
+
+
+
+Collections exposed by :term:`Member Node`\s and :term:`Coordinating Node`\s
+include:
+
+:``/object``:
+  The set of objects available for retrieval from the node.
+
+:``/meta``:
+  Metadata about objects available for retrieval from the node.
+  
+:``/formats``:
+  Object formats registered on the node.
+
+:``/log``:
+  Log records held on the node.
+
+:``/reserve``:
+  Identifiers that have been reserved for future use.
+
+:``/accounts``:
+  Principal and ownership related functionality.
+
+:``/sessions``:
+  Authenticated session management functions.
+
+:``/node``:
+  Service and status information for all nodes on the system.
+
+:``/monitor``: 
+  Node health monitoring
+
+:``/replicate``:
+  Member node to member node replication functionality
+
+
+
+Message Serialization
+~~~~~~~~~~~~~~~~~~~~~
+
+The format of the response (except for responses from :func:`MNRead.get` or
+:func:`CNRead.get`) is determined by the *Accept:* header provided in the
+request. 
+
+Version 1.0 of the DataONE services only support XML serialization, and this
+format MUST be supported by all services and clients interacting with the
+DataONE system.
+
+All request and response documents MUST be encoded using the UTF-8 character
+set.
+
+If the service is not able to provide a response in the specified format, then
+the node should return an error code of :exc:`Exceptions.NotImplemented`, with
+the HTTP error code set to 406.
+
+
+
+Parameters in Requests
+~~~~~~~~~~~~~~~~~~~~~~
+
+Many of the URL patterns described here accept parameters in the URL and as
+components of a MIME multipart-mixed message body.
+
+Unless otherwise indicated, all parameter names and values should be considered
+case sensitive. 
+
+
+.. Note:: 
+
+   The default configuration of web servers such as Apache introduces some
+   ambiguity in the interpretation of URLs that include slashes and other
+   reserved characters that are used as path separators for example. The
+   document :doc:`/notes/ApacheConfiguration` describes appropriate
+   configuration details for the Apache web server.
+
+
+Session Information
+...................
+
+Session information (formerly referred to as a *token*) is obtained from the
+client side authentication certificate held by the SSL processing library of the
+HTTPS service handling the request. Hence, even though a *session* parameter may
+be present in the method signature, the session information itself is
+transported as part of the HTTPS handshaking process and is not present in the
+body or header section of the HTTP request.
+
+
+URL Path Parameters
+...................
+
+Some parameters are passed as part of the REST service URL path (e.g.
+/get/{pid}). Such values MUST be encoded according to the rules of RFC3986_ with
+the additional restriction that the space character MUST be encoded as "%20"
+rather than "+". Examples of DataONE REST URLs for retrieving an object (i.e.
+the get() operation)::
+
+  PID: 10.1000/182
+  URL: https://mn.example.com/mn/v1/object/10.1000%2F182
+
+  PID: http://example.com/data/mydata?row=24
+  URL: https://mn.example.com/mn/v1/object/http:%2F%2Fexample.com%2Fdata%2Fmydata%3Frow=24
+
+  PID: Is_féidir_liom_ithe_gloine
+  URL: https://mn.example.com/mn/v1/object/Is_f%C3%A9idir_liom_ithe_gloine
+
+
+URL Query Parameters
+....................
+
+Parameters passed as key, values parameters in the URL query string MUST be
+appropriately encoded for transmission as part of the URL according to RFC3986_
+rules for the URL query component. In addition, the space character MUST be
+encoded as "%20" rather than the alternative "+" character.
+
+
+Boolean URL Query Parameters
+............................
+
+Where a boolean parameter value is being specified as the value portion of a
+key-value pair appearing in a URL, the strings "true" and "false" MUST be used
+to indicate logical true and logical false respectively.
+
+
+Date Parameters in URLs
+.......................
+
+Date values in URLs should be formatted as::
+  
+  yyyy-MM-dd[Thh:mm:ss.S[+ZZ:zz]]
+  
+Where::
+    
+  yyyy = Four digit year
+  MM   = Two digit month, 01 = January
+  dd   = Two digit day of month, 01 = first day
+  hh   = Hour of day, 00 - 23
+  mm   = Minute of hour, 00 - 59
+  ss   = Second of minute, 00 - 59
+  S    = Milliseconds
+  ZZ   = Hours of timezone offset
+  zz   = Minutes of timezone offset
+
+If the timezone values are not present then the date time is interpreted to be
+in GMT.
+
+If the time portion of the date time is not present, then the time is assumed to
+be 00:00:00.0, i.e. the first millisecond of the specified date.
+
+
+Message Body in PUT or POST
+...........................
+
+Requests sent using the HTTP POST or PUT verbs MUST use MIME multipart-mixed
+encoding of the message body as described in RFC2046_. In most cases and unless
+otherwise indicated, all parameters for PUT and POST requests except the
+authorization session will be sent in the message body (as opposed to URL
+parameters). 
+
+Example of a HTTP POST request to the MN create() method using *curl*::
+
+  curl -X POST \
+       --cert /tmp/x509up_u502 \
+       -H "Charset: utf-8" \
+       -H "Content-Type: multipart/mixed; boundary=----------6B3C785C-6290-11DF-A355-A6ECDED72085_$" \
+       -H "Accept: text/xml" \
+       -H "User-Agent: pyd1/1.0 +http://dataone.org/" \
+       -F pid=10Dappend1.txt \
+       -F object=@content.bin \
+       -F sysmeta=@systemmetadata.abc \
+       "https://demo1.test.dataone.org/knb/d1/mn/v1/object"
+
+Example serialized body of a HTTP POST request to the MN create() method
+(excluding session information)::
+
+
+  TODO
+
+
+Message Body in DELETE
+......................
+
+RFC2046_ does not explicitly prevent the presence of a message body in a HTTP
+DELETE request, however support for transmission of the request payload may vary
+by technology. DELETE requests requiring a request payload MUST have
+accompanying integration tests that exercise the technologies involved.
+
+
+.. _RFC2046: http://tools.ietf.org/html/rfc2046#section-5.1.3
+
+.. _RFC3986: http://tools.ietf.org/html/rfc3986
+
