@@ -436,9 +436,9 @@ Data Types in CICore
          <xs:complexContent>
             <xs:extension base="d1:ObjectFormat">
                <xs:sequence>
-                  <xs:element name="mediaType" type="d1_v2.0:MediaType" minOccurs="0" maxOccurs="1">
+                  <xs:element name="mediaType" type="d1_v2.0:MediaType" minOccurs="0">
                   </xs:element>
-                  <xs:element name="extension" type="xs:string" minOccurs="0" maxOccurs="1">
+                  <xs:element name="extension" type="xs:string" minOccurs="0">
                   </xs:element>
                </xs:sequence>
             </xs:extension>

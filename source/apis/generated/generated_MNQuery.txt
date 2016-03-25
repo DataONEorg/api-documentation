@@ -3,22 +3,26 @@
 
 
 .. list-table:: Functions defined in :mod:`MNQuery`
-   :widths: 3 10 10 30
+   :widths: 3 3 10 10 30
    :header-rows: 1
 
    * - Tier
+     - Version
      - REST
      - Function
      - Parameters
    * - Tier 1
+     - 1.1
      - ``GET /query/{queryEngine}/{query}``
      - :func:`query`
      - (:class:`session<Types.Session>`, ``queryEngine``, ``query``) ``->`` :class:`Types.OctetStream`
    * - Tier 1
+     - 1.1
      - ``GET /query/{queryType}``
      - :func:`getQueryEngineDescription`
      - (:class:`session<Types.Session>`, ``queryEngine``) ``->`` :class:`Types.QueryEngineDescription`
    * - Tier 1
+     - 1.1
      - ``GET /query``
      - :func:`listQueryEngines`
      - (:class:`session<Types.Session>`) ``->`` :class:`Types.QueryEngineList`
@@ -36,6 +40,7 @@
 
    This method is optional for Member Nodes, but if implemented, both getQueryEngineDescription and listQueryEngines must also be implemented.
 
+   :Version: 1.1
    :Use Cases:
      :doc:`UC02 </design/UseCases/02_uc>`, :doc:`UC16 </design/UseCases/16_uc>`
    :REST URL: ``GET /query/{queryEngine}/{query}``
@@ -72,6 +77,7 @@
 
    Provides metadata about the query service of the specified *queryEngine*. The metadata provides a brief description of the query engine, its version, its schema version, and an optional list of fields supported by the query engine.
 
+   :Version: 1.1
    :REST URL: ``GET /query/{queryType}``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate provided with the request. The certificate must be traceable to an authority recognized by DataONE, currently CILogon. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
@@ -103,6 +109,7 @@
 
    The list of search engines available may be influenced by the authentication status of the request.
 
+   :Version: 1.1
    :REST URL: ``GET /query``
    :param session: Session information that contains the identity of the calling user as retrieved from the X.509 certificate provided with the request. The certificate must be traceable to an authority recognized by DataONE, currently CILogon. Transmitted as part of the SSL handshake process.
    :type session: :class:`Types.Session`
