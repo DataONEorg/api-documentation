@@ -595,8 +595,12 @@ class FunctionLoader(docLoader):
     for param in func['params']:
       xmittype = param['xmit'].lower()
       #res.append("   :param %s: %s\n" % (self._cleanParamName(param['name']), param['descr']))
-      res.append(self.formatBlock(":param %s: %s %s\n" % (self._cleanParamName(param['name']), \
-                                  param['descr'], ppart[xmittype]), "   ", "     "))
+      if param['name'] == "object":
+        res.append(self.formatBlock(":param %s: %s\n" % (self._cleanParamName(param['name']), \
+                                    param['descr']), "   ", "     "))
+      else:        
+        res.append(self.formatBlock(":param %s: %s %s\n" % (self._cleanParamName(param['name']), \
+                                    param['descr'], ppart[xmittype]), "   ", "     "))
       res.append("   :type %s: %s\n" % (self._cleanParamName(param['name']), self._toTypeString(param['type'])))
     res.append(self.formatBlock(":returns: %s\n" % func['rdescr'], "   ","     "))
     res.append("   :rtype: %s\n" % self._toTypeString(func['rtype']))
