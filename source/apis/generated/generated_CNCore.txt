@@ -146,7 +146,7 @@
    :param pid: The identifier that should be used in DataONE to identify and access the object. This is an Unicode string that follows the constraints on identifiers described in :doc:`/design/PIDs`. Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
    :type pid: :class:`Types.Identifier`
 
-   :param object: The object (i.e. Science Metadata) bytes. Transmitted as an UTF-8 encoded XML structure for the respective type as defined in the DataONE types schema, as a *File part* of the MIME multipart/mixed message.
+   :param object: The object (e.g. Science Metadata) bytes.
    :type object: bytes
 
    :param sysmeta: The complete system metadata document describing the object. Transmitted as an UTF-8 encoded XML structure for the respective type as defined in the DataONE types schema, as a *File part* of the MIME multipart/mixed message.

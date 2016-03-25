@@ -116,7 +116,7 @@
    :param sysmeta: A SystemMetadata object that passes the echoSystemMetadata diagnostic. Transmitted as an UTF-8 encoded XML structure for the respective type as defined in the DataONE types schema, as a *File part* of the MIME multipart/mixed message.
    :type sysmeta: :class:`Types.SystemMetadata`
 
-   :param object: A document (e.g. science metadata or resource map) that is to be evalauted for indexing.  Transmitted as an UTF-8 encoded XML structure for the respective type as defined in the DataONE types schema, as a *File part* of the MIME multipart/mixed message.
+   :param object: A document (e.g. science metadata or resource map) that is to be evalauted for indexing.
    :type object: bytes
 
    :returns: A document representing the parsed object as it would be prior to being added to a search index. For the solr query engine for example, this would be the equivalent of a *<add><doc> .. </doc> .. </add>* structure with possibly multiple documents.

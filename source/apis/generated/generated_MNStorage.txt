@@ -63,7 +63,7 @@
    :param pid: The identifier that should be used in DataONE to identify and access the object. This is an Unicode string that follows the constraints on identifiers described in :doc:`/design/PIDs`. If the identifier is already in use, :exc:`Exceptions.IdentifierNotUnique` will be raised and the client SHOULD try again with a different, unique identifier.  Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
    :type pid: :class:`Types.Identifier`
 
-   :param object: The data bytes that are to be added to the Member Node.  Transmitted as an UTF-8 encoded XML structure for the respective type as defined in the DataONE types schema, as a *File part* of the MIME multipart/mixed message.
+   :param object: The data bytes that are to be added to the Member Node.
    :type object: bytes
 
    :param sysmeta: The system metadata document that provides basic information about the object, including a reference to its identifier, access control information, etc. Attributes of the sysmeta that are the responsibility of the client MUST be set. Note that the obsoletes and obsoletedBy elements MUST not be set. It is the role of the update() method to ensure these are properly updated to ensure object lineage is as expected. Transmitted as an UTF-8 encoded XML structure for the respective type as defined in the DataONE types schema, as a *File part* of the MIME multipart/mixed message.
@@ -128,7 +128,7 @@
    :param pid: The identifier of the object that is being updated. If this identifier does not exist in the system, an error is raised and the operation does not cause any changes to the objects or their metadata.  Transmitted as part of the URL path and must be escaped accordingly.
    :type pid: :class:`Types.Identifier`
 
-   :param object: The bytes of the data or science metadata object that will be deprecating the exsting object.  Transmitted as an UTF-8 encoded XML structure for the respective type as defined in the DataONE types schema, as a *File part* of the MIME multipart/mixed message.
+   :param object: The bytes of the data or science metadata object that will be deprecating the exsting object.
    :type object: bytes
 
    :param newPid: The identifier that will become the replacement identifier for the existing object after the update. This identifier must have been previously reserved.  Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
