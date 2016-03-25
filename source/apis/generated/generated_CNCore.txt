@@ -691,4 +691,8 @@
 
      The PID is reserved but the owner is not the :term:`principal` identified by the *subjectInfo* OR the provide *session* does not have authority to access this service.
 
+   :raises Exceptions.InvalidRequest: ``(errorCode=400, detailCode=4925)``
+
+     The request was malformed and could not be processed
+
 
