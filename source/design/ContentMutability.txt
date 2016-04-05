@@ -184,15 +184,11 @@ series identifier that can also be returned in the results.
 Semantics of "Current"
 ~~~~~~~~~~~~~~~~~~~~~~
 A SID chain closes with two types of ends:
-    Type 1: An object in the SID chain doesn't have the "obsoletedBy" field.  Example: P1(S1) <-> P2(S1)
+    Type 1: An object in the SID chain doesn't have the "obsoletedBy" field.  Example: P1(S1) <-> P2(S1). P2 is a type 1 end.
 
-    Type 2: An object in the SID chain does have the "obsoletedBy" field, but the PID in the "obsoletedBy" field has a different SID (including no SID value).  Examples: P1(S1) <-> P2(S2), P1(S1) <-> P2().
+    Type 2: An object in the SID chain does have the "obsoletedBy" field, but the PID in the "obsoletedBy" field has a different SID (including no SID value).  Examples: P1(S1) <-> P2(S2), P1(S1) <-> P2(). P1 is a type 1 end on both chains.
 
-Ideally, if there is one and only one end in a SID chain, this end will be the HEAD (current) version. This kind of chains is called ideal chain.
-
-If there are more than one end in a SID chain because of the incompleteness of the system metadata, we can't decide which one is the real end. This kind of chain is not a ideal chain and we have to choose the one with latest dateUploaded in the chain as the HEAD version.
-
-It is tricky to determine type 2 end if the object in the "obsoletedBy" field is missing.  For example, P1(S1) <-> P2(S1) -> ??. 
+It is tricky to determine a type 2 end if the object in the "obsoletedBy" field is missing. For example, P1(S1) <-> P2(S1) -> ??. 
 We don't have the knowledge of the series id of the object "??". So we generally consider it a type 2 end except we are sure it 
 is not an end - there is another object in the chain (has the same series id) that obsoletes the missing object. 
 
@@ -200,46 +196,59 @@ In previous example [P1(S1) <-> P2(S1) -> ??], P2 is a type 2 end (case 12).
 
 However,  P1(S1) <-> P2(S1) ->  ??  <- P4(S1), P2 is not an end (case 8) since "??" is in the obsoletes field of P4 that has the same series id - S1 (We are sure that the "??" has the series id S1 as well, so P2 is not an end).  
 
-In P1(S1) <-> P2(S1) ->  ??  <- P4(S2), P2 is an type 2 end even though "??" is in the  obsoletes field of P4. But P4 has a different series id - S2 (so we are not sure "??" has S1 or S2).
+In P1(S1) <-> P2(S1) ->  ??  <- P4(S2), P2 is a type 2 end even though "??" is in the  obsoletes field of P4. But P4 has a different series id - S2 (so we are not sure "??" has the S1 or S2).
+
+Ideally, if there is one and only one end on a SID chain, this end will be the HEAD (current) version. This kind of chains are called ideal chains.
+
+If there are more than one end on a SID chain because of the incompleteness of the system metadata, It is hard to determine which one is the real end. This kind of chain is not a ideal chain and we have to use this mechanism to determine the HEAD version:
+    1. Choose the end with latest dateUploaded in the chain as the temporary HEAD version. This rule works if the uploaded time stamps of objects aren't messed up.
+    2. If the time stamps are messed up, we need to test if any object obsoletes the temporary HEAD on the obsolete chain with the SAME SID. If nothing obsoletes the temporary HEAD, the temporary HEAD is the final HEAD; otherwise, the end of obsolete chain is the final HEAD.
+    
+Take this example P1(S1, t1) <-P2(S1, t2) <-P3(S1, t3) (case 19) (The t1, t2 and t3 are time stamps and t1 > t2 > t3. This means the time stamps are messing up - the newest version P3 was uploaded the earliest while the oldest version p1 was uploaded the latest)
+    1. This chain has three type 1 ends - P1, P2 and P3. It is not an ideal chain.
+    2. Choose P1 which has the latest date of uploaded as the temporary HEAD.
+    3. P2 obsoletes P1 and also P3 obsoletes P2 on the obsolete chain P1 <- P2 <- P3. So we choose the end of the whole chain - P3 as the final HEAD.
 
     
-Use cases ( "->" means "obsoletedBy", "<-" means "obsoletes"):
+Use cases ( "->" means "obsoletedBy", "<-" means "obsoletes". The t1, t2 and t3 are the time stamps. ??: object was not synchronized):
       
-      case 1. P1(S1) <-> P2(S1),  S1 = P2 (Type 1)
+      case 1. P1(S1, t1) <-> P2(S1, t2),  t1<t2. S1 = P2 (Type 1, an ideal chain)
 
-      case 2. P1(S1) ? P2(S1), S1 = P2, Error condition, P2 not allowed (should not exist) (P1 and P2 are type 1 ends, not an ideal chain)
+      case 2. P1(S1, t1) ? P2(S1, t2), t1<t2. S1 = P2, Error condition, P2 not allowed (should not exist) (P1 and P2 are type 1 ends, not an ideal chain. Choose P2 as the temporary HEAD. Nothing obsoletes P2 and P2 is the HEAD)
 
-      case 3. P1(S1) <- P2(S1), S1 = P2, Discouraged, but not error condition, S1 = P2 (P1 and P2 are type 1 ends, not an ideal chain )
+      case 3. P1(S1, t1) <- P2(S1, t2), t1<t2. S1 = P2, Discouraged, but not error condition, S1 = P2 (P1 and P2 are type 1 ends, not an ideal chain. Choose P2 as the temporary HEAD. Nothing obsoletes P2 on the chain and P2 is the HEAD)
 
-      case 4. P1(S1) <-> P2(S1) <-> P3(S2), S1 = P2 (Type 2), S2 = P3 (Type 1)
+      case 4. P1(S1, t1) <-> P2(S1, t2) <-> P3(S2, t3), t1<t2<t3. S1 = P2 (Type 2), S2 = P3 (Type 1, an ideal chain)
 
-      case 5. P1(S1) <- P2(S1) <- P3(S2), S1 = P2 (P1 and P2 are type 1 ends, not an ideal chain), S2 = P3  (Type 1)
+      case 5. P1(S1, t1) <- P2(S1, t2) <- P3(S2, t3), t1<t2<t3. S1 = P2 (P1 and P2 are type 1 ends, not an ideal chain. Choose P2 as temporary head. Nothing with the same sid obsoletes P2 and P2 is the HEAD). S2 = P3  (Type 1 end, an ideal chain)
 
-      case 6. P1(S1) <-> P2(S1) <-> P3(), S1 = P2 (Type 2)
+      case 6. P1(S1, t1) <-> P2(S1, t2) <-> P3(, t3) t1<t2<t3. S1 = P2 (Type 2, an ideal chain)
 
-      case 7. P1(S1) <-> P2(S1) <-> P3() <-> P4(S2), S1 = P2 (Type 2), S2 = P4 (Type 1)
+      case 7. P1(S1, t1) <-> P2(S1, t2) <-> P3(,t3) <-> P4(S2, t4), t1<t2<t3<t4. S1 = P2 (Type 2 end, an ideal chain), S2 = P4 (Type 1, an ideal chain)
 
-      case 8. P1(S1) <-> P2(S1) ->  ??  <- P4(S1), S1 = P4, (Type 1) (Error, but will happen)
+      case 8. P1(S1, t1) <-> P2(S1, t2) ->  ??  <- P4(S1, t4), t1<t2<t4. S1 = P4, (Type 1, an ideal chain) (Error, but will happen)
 
-      case 9. P1(S1) <-> P2(S1)  ??  <- P4(S1), S1 = P4 (P2 and P4 are type 1 ends, not an ideal chain) (??: object was not synchronized)
+      case 9. P1(S1, t1) <-> P2(S1, t2)  ??  <- P4(S1, t4), t1<t2<t4. S1 = P4 (P2 and P4 are type 1 ends, not an ideal chain. Choose P4 as the temporary HEAD. Nothing obsoletes P4 on the chain and P4 is the HEAD) 
 
-      case 10: P1(S1) <-> P2(S1) ->  XX  <- P4(S1), S1 = P4, (Type 1) (XX: object P3 was deleted)
+      case 10: P1(S1, t1) <-> P2(S1, t2) ->  XX  <- P4(S1, t4), t1<t2<t4. S1 = P4, (Type 1 end, an ideal chain) (XX: object P3 was deleted)
 
-      case 11: P1(S1) <-> P2(S1) <-> [archived:P3(S1)], S1 = P3, (Type 1) 
+      case 11: P1(S1, t1) <-> P2(S1, t2) <-> [archived:P3(S1, t3)], t1<t2<t3. S1 = P3, (Type 1 end, an ideal chain) 
 
-      case 12. P1(S1) <-> P2(S1) -> ??, S1 = P2, (Type 2) (Error, but will happen)
+      case 12. P1(S1, t1) <-> P2(S1, t2) -> ??, t1<t2. S1 = P2, (Type 2 end, an ideal chain) (Error, but will happen)
 
-      case 13. P1(S1) <- P2(S1) -> ??, S1 = P2 (P1 is a type 1 end and P2 is a type 2 end, not an ideal chain)
+      case 13. P1(S1, t1) <- P2(S1, t2) -> ??, t1<t2. S1 = P2 (P1 is a type 1 end and P2 is a type 2 end, not an ideal chain. Choose P2 as the temporary HEAD. Nothing obsoletes P2 on the chain and P2 is the HEAD)
 
-      case 14. P1(S1) <- P2(S1) -> P3(S2), S1 = P2 (P1 is a type one end and P2 is a type 2 end, not an ideal chain) 
+      case 14. P1(S1, t1) <- P2(S1, t2) -> P3(S2, t3), t1<t2<t3. S1 = P2 (P1 is a type one end and P2 is a type 2 end, not an ideal chain. Choose P2 as the temporary HEAD. Nothing obsoletes P2 on the chain and P2 is the HEAD) 
 
-      case 15. P1(S1) <-> P2(S1)  ?? <- P4(S1) <-> P5(S2), S1 = P4 (P2 is a type 1 end and P4 is a type 2 end, not an ideal chain)
+      case 15. P1(S1, t1) <-> P2(S1, t2)  ?? <- P4(S1, t4) <-> P5(S2, t5), t1<t2<t4<t5. S1 = P4 (P2 is a type 1 end and P4 is a type 2 end, not an ideal chain. Choose P4 as the temporary HEAD. Nothing obsoletes P4 with the same sid on the chain and P4 is the HEAD)
 
-      case 16. P1(S1) <- P2(S1) -> ?? <-P4(S2) S1 = P2 (P1 is a type 1 end and P2 is a type 2 ends, not an ideal chain), S2=P4 (rule1)
+      case 16. P1(S1, t1) <- P2(S1, t2) -> ?? <-P4(S2, t4), t1<t2<t4. S1 = P2 (P1 is a type 1 end and P2 is a type 2 ends, not an ideal chain.Choose P2 as the temporary HEAD. Nothing obsoletes P2 on the chain and P2 is the HEAD), S2=P4 (type 1 end, ideal chain)
 
-      case 17. P1(S1) <- P2(S1) -> ?? <-P4(S1) S1 = P4 (P1 and P4  are type 1 ends, not an ideal chain)
+      case 17. P1(S1, t1) <- P2(S1, t2) -> ?? <-P4(S1, t4), t1<t2<t4. S1 = P4 (P1 and P4  are type 1 ends, not an ideal chain. Choose P4 as the temporary HEAD. Nothing obsoletes P4 on the chain and P4 is the HEAD)
 
-      case 18. P1(S1) <->P2(S1) -> ??  ???<-P5(S1) S1 = P5 (P2 is a type 2 end and P5  is a type 1 end, not an ideal chain)
+      case 18. P1(S1, t1) <->P2(S1, t2) -> ??  ???<-P5(S1, t5), t1<t2<t4. S1 = P5 (P2 is a type 2 end and P5  is a type 1 end, not an ideal chain. Choose P5 as the temporary HEAD. Nothing obsoletes P5 on the chain and P5 is the HEAD)
+      
+      case 19. P1(S1,t1) <-P2(S1,t2) <-P3(S1, t3), t1 >t2 > t3. S1 = P3 (The time stamps don't agree the obsolete chain. P1, P2 and P3 are a type 1 end, not an ideal chain. Choose P1 as the temporary HEAD since t1 is the latest date of uploaded. However, P2 obsoletes P1 and P3 obsoletes P2. P3 is the HEAD)
 
 
 Version Storage
