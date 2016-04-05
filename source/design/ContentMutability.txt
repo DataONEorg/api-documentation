@@ -184,9 +184,9 @@ series identifier that can also be returned in the results.
 Semantics of "Current"
 ~~~~~~~~~~~~~~~~~~~~~~
 A SID chain closes with two types of ends:
-    Type 1: An object in the SID chain doesn't have the "obsoletedBy" field.  Example: P1(S1) <-> P2(S1). P2 is a type 1 end.
+    Type 1: An object on the SID chain doesn't have the "obsoletedBy" field.  Example: P1(S1) <-> P2(S1). P2 is a type 1 end.
 
-    Type 2: An object in the SID chain does have the "obsoletedBy" field, but the PID in the "obsoletedBy" field has a different SID (including no SID value).  Examples: P1(S1) <-> P2(S2), P1(S1) <-> P2(). P1 is a type 1 end on both chains.
+    Type 2: An object on the SID chain does have the "obsoletedBy" field, but the PID in the "obsoletedBy" field has a different SID (including no SID value).  Examples: P1(S1) <-> P2(S2), P1(S1) <-> P2(). P1 is a type 2 end on both chains.
 
 It is tricky to determine a type 2 end if the object in the "obsoletedBy" field is missing. For example, P1(S1) <-> P2(S1) -> ??. 
 We don't have the knowledge of the series id of the object "??". So we generally consider it a type 2 end except we are sure it 
