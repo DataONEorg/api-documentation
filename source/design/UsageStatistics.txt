@@ -5,8 +5,9 @@ DataONE Usage Statistics
 Overview
 --------
 
-DataONE Member Nodes and Coordinating Nodes record access events that result from DataONE API calls. A 
-list of access events and the API calls that logged these events is shown in *Table 1*.
+DataONE Member Nodes and Coordinating Nodes record access events that result
+from DataONE API calls. A  list of access events and the API calls that logged
+these events is shown in *Table 1*.
 
 
 *Table 1* Access Events
@@ -23,126 +24,155 @@ list of access events and the API calls that logged these events is shown in *Ta
 
 The content of the access event log records are described here: `<LoggingSchema.html>`_.
 
-The access event log records are harvested from each MN in the network and aggregated
-into a common search index by the Log Aggregation Facility which is described here: `<LogAggregator.html>`_. The
-Event Log Index is implemented as an Apache Solr instance and can be queried
-using standard Solr queries using the DataONE service endpoint \https://cn.dataone.org/cn/v1/query/logsolr.
+The access event log records are harvested from each MN in the network and
+aggregated into a common search index by the Log Aggregation Facility which is
+described here: `<LogAggregator.html>`_. The Event Log Index is implemented as
+an Apache Solr instance and can be queried using standard Solr queries using the
+DataONE service endpoint \https://cn.dataone.org/cn/v1/query/logsolr.
 
-The Solr search platform provides query capabilities such as field faceting, range filtering,
-numeric field statistics and more that provide usage information based on the access events,
-harvest from the MN, thereby providing network wide statistics from one search index.
+The Solr search platform provides query capabilities such as field faceting,
+range filtering, numeric field statistics and more that provide usage
+information based on the access events, harvest from the MN, thereby providing
+network wide statistics from one search index.
 
-The section *Example Queries* gives several examples of usage information that can be
-obtained from the Event Log Index.
+The section *Example Queries* gives several examples of usage information that
+can be obtained from the Event Log Index.
 
 Event Log Index
-_______________
+---------------
 
 *Table 2.* Solr index schema
 
 .. include:: EventLogIndexSchema.txt
 
 
-Access to Event Log index
-_________________________
-Access to the Event Log Index adheres to the DataONE identity and authentication protocols described here: `<Authentication.html>`_.
-The level of access allowed
-when querying the index is determined by your DataONE Authentication Session Identity
+Access to Event Log Index
+-------------------------
+
+Access to the Event Log Index adheres to the DataONE identity and authentication
+protocols described here: `<Authentication.html>`_. The level of access allowed
+when querying the index is determined by your DataONE Authentication Session
+Identity
 
 *CN Administrators*
 
-CN Administrators have full access to the index and can therefor select index entries based on any field and can
-view the entire contents of the index entries.
+CN Administrators have full access to the index and can therefor select index
+entries based on any field and can view the entire contents of the index
+entries.
 
 *Authenticated session access*
 
-Clients (i.e. web browsers) that have established an authenticated session using a DataONE identity have
-access to information for any pids for which they are the rightsholder, or pids for which they have an access
-policy granting write access. For example, if the authenticated subject is 'uid=smith,o=NCEAS,dc=ecoinformatics,dc=org'
-then the client can query index entries for pids that have access policies allowing write access to the
-authenticated subject. This level of access allows 
-summary information to be viewed, so the full content of index entries cannot be viewed.
+Clients (i.e. web browsers) that have established an authenticated session using
+a DataONE identity have access to information for any pids for which they are
+the rightsholder, or pids for which they have an access policy granting write
+access. For example, if the authenticated subject is
+``'uid=smith,o=NCEAS,dc=ecoinformatics,dc=org'`` then the client can query index
+entries for pids that have access policies allowing write access to the
+authenticated subject. This level of access allows  summary information to be
+viewed, so the full content of index entries cannot be viewed.
 
 *Public Access* 
 
-All other access is considered non-privileged public access in which case only index entries associated with
-pids that have an access policy granting public read can be queried. This level of access only allows
-summary information to be viewed, so the full content of index entries cannot be viewed.
+All other access is considered non-privileged public access in which case only
+index entries associated with pids that have an access policy granting public
+read can be queried. This level of access only allows summary information to be
+viewed, so the full content of index entries cannot be viewed.
 
-In addition to these access rules, certain fields are considered sensitive such that they cannot be included
-in Solr field queries (i.e. &fq=<field name>) or included in Solr facet queries (i.e. &facet.field=<field name>).
-The fields from the Event Log Index that are considered sensitive are *rightsHolder*, *ipAddress*, *subject*
-and *readPermission*.
+In addition to these access rules, certain fields are considered sensitive such
+that they cannot be included in Solr field queries (i.e. ``&fq=<field name>``)
+or included in Solr facet queries (i.e. ``&facet.field=<field name>``). The
+fields from the Event Log Index that are considered sensitive are
+*rightsHolder*, *ipAddress*, *subject* and *readPermission*.
 
 .. _COUNTER_Compliance:
 
 COUNTER Compliance
 ------------------
-While unfiltered log records are useful for some system monitoring and related activities, scientifically-meaningful 
-analysis of log records requires that we correct log records for common events that would otherwise artificially inflate
-the statistics, such as access by web-indexing robots and multiple accesses from the same individual.  Within the
-publishing community, the `COUNTER`_ standard has been used to provide a consistent set of guidelines as to how resource access
-statistics should be reported.  To be COUNTER-compliant, DataONE provides three filters on log files:
+
+While unfiltered log records are useful for some system monitoring and related
+activities, scientifically-meaningful  analysis of log records requires that we
+correct log records for common events that would otherwise artificially inflate
+the statistics, such as access by web-indexing robots and multiple accesses from
+the same individual.  Within the publishing community, the `COUNTER`_ standard
+has been used to provide a consistent set of guidelines as to how resource
+access statistics should be reported.  To be COUNTER-compliant, DataONE provides
+three filters on log files:
 
 1. Only allow status 200 and 304 on READ requests
 
-    - This ensures that redirect requests (302) are only counted once, and that unsuccessful requests are ignored.
+   This ensures that redirect requests (302) are only counted once, and that
+   unsuccessful requests are ignored.
 
 2. Exclude robots
 
-    - This ensures that the myriad web-robots that constantly index web-accessible content do not artificially inflate results.
+   This ensures that the myriad web-robots that constantly index web-accessible
+   content do not artificially inflate results.
 
 3. Exclude repeat visits within certain time window
 
-    - This ensures that accidental double-clicks on a link or repeated requests from a client tool in a short time period are only counted once.
+   This ensures that accidental double-clicks on a link or repeated requests
+   from a client tool in a short time period are only counted once.
 
-Compliance with these three `COUNTER`_ requirements is implemented as two boolean index field ('isRepeatVisit' and 'inFullRobotList') which, 
-for each record, determines if a given record adheres to the `COUNTER`_ standards outlined above.  Client queries 
-which wish to only report COUNTER-compliant results just add a filter expression to their query ('isRepeatVisit=false', 'inFullRobotList=false'), 
-and all non-compliant records will be removed from the usage statistics reports.
+Compliance with these three `COUNTER`_ requirements is implemented as two
+boolean index field (``isRepeatVisit`` and ``inFullRobotList``) which,  for each
+record, determines if a given record adheres to the `COUNTER`_ standards
+outlined above.  Client queries  which wish to only report COUNTER-compliant
+results just add a filter expression to their query (``isRepeatVisit=false``,
+``inFullRobotList=false``),  and all non-compliant records will be removed from
+the usage statistics reports.
 
-The field 'inFullRobotList' indicates whether or not
-the logged event originated from a request issued by a user agent found in the full list of web robots, with the value 'true' 
-indicating that the user agent is a web robot, and thus the event record is not `COUNTER`_ compliant.
+The field ``inFullRobotList`` indicates whether or not the logged event
+originated from a request issued by a user agent found in the full list of web
+robots, with the value ``true``  indicating that the user agent is a web robot,
+and thus the event record is not `COUNTER`_ compliant.
 
-DataONE will maintain a list on known Internet robots to
-be used for filtering addresses, and this list will be updated periodically as new robots become known, at least annually.
+DataONE will maintain a list on known Internet robots to be used for filtering
+addresses, and this list will be updated periodically as new robots become
+known, at least annually.
 
-The field 'isRepeatVisit'
-indicates whether or not a duplicate request has occurred for the same IP address and pid within a certain time window
-(currently 30 seconds), with a value of 'true' indicating that an entry is a repeat request.
+The field ``isRepeatVisit`` indicates whether or not a duplicate request has
+occurred for the same IP address and pid within a certain time window (currently
+30 seconds), with a value of ``true`` indicating that an entry is a repeat
+request.
 
 The following query will return the count of all read events that have passed the COUNTER compliance tests:
 
 ::
 
-    https://cn.dataone.org/cn/v1/query/logsolr/select?q=event:read&fq=inFullRobotList:false&fq=isRepeatVisit:false
+    https://cn.dataone.org/cn/v2/query/logsolr/?q=event:read&fq=inFullRobotList:false&fq=isRepeatVisit:false
 
-The event index is updated once a day with event entries from all active member nodes, with the most current information being from the previous day.
+The event index is updated once a day with event entries from all active member
+nodes, with the most current information being from the previous day.
 
-In addition to the 'COUNTER_' related fields, the field
-'inPartialRobotList' indicates whether or not the user agent was found in a list that contains a subset of the full robots list, 
-and represents a less strict interpretation of which user agents are considered web robots, and does not include user agents such
-as 'java', 'libwww', 'Wget'. A value of 'true' indicates that
-a match was found in the less strict web robots list. This field is not used in `COUNTER`_ compliance filtering.
+In addition to the 'COUNTER_' related fields, the field ``inPartialRobotList``
+indicates whether or not the user agent was found in a list that contains a
+subset of the full robots list,  and represents a less strict interpretation of
+which user agents are considered web robots, and does not include user agents
+such as 'java', 'libwww', 'Wget'. A value of ``true`` indicates that a match was
+found in the less strict web robots list. This field is not used in `COUNTER`_
+compliance filtering.
 
 .. _COUNTER: http://www.projectcounter.org/
 
 Statistics Service Usage
 ------------------------
 
-The following sections shows example queries that can be sent to the Event Log Solr index. Note: in order to make the examples easier to
-read, the output of some of the examples queries has been editied, with removed lines replaced with ellipses, i.e. '...'.
+The following sections shows example queries that can be sent to the Event Log
+Solr index. Note: in order to make the examples easier to read, the output of
+some of the examples queries has been editied, with removed lines replaced with
+ellipses, i.e. '...'.
 
 **Retrieve pids for a specified subject**
 
-The following example shows a query for download volume for pids created by subjects matching 'uid*smith*' with download size statistics aggregated by pid::
+The following example shows a query for download volume for pids created by
+subjects matching ``uid*smith*`` with download size statistics aggregated by
+pid::
 
-   https://cn.dataone.org/cn/v1/query/logsolr/select?q=*:*&fq=subject:uid*smith*&fq=event:read&stats=true&stats.field=size&rows=0&stats.facet=pid
+   https://cn.dataone.org/cn/v2/query/logsolr/?q=*:*&fq=subject:uid*smith*&fq=event:read&stats=true&stats.field=size&rows=0&stats.facet=pid
 
 The following result is returned:
 
-::
+.. code-block:: xml
 
   <?xml version="1.0"?>
   <response>
@@ -200,16 +230,23 @@ The following result is returned:
     </lst>
   </response>
    
-The previous query can be constrained to a specific time by adding a time range, i.e.::
+The previous query can be constrained to a specific time by adding a time range,
+i.e.::
 
-   &fq=dateLogged:[2013-01-01T23:59:59Z TO 2013-12-31T23:59:59Z]
+  &fq=dateLogged:[2013-01-01T23:59:59Z TO 2013-12-31T23:59:59Z]
+
+or using Solr date range key words::
+
+  &fq=dateLogged:[NOW-1MONTH TO NOW]
+
 
 **Data upload counts**
 
 The following query shows counts of data uploads by format type by a specified rightsHolder (PISCO)::
 
-   https://cn.dataone.org/cn/v1/query/logsolr/select?&q=*:*&facet=true&fq=rightsHolder:uid*PISCO*&fq=event:create&facet.field=formatId&facet.mincount=1
-::
+   https://cn.dataone.org/cn/v2/query/logsolr/?&q=*:*&facet=true&fq=rightsHolder:uid*PISCO*&fq=event:create&facet.field=formatId&facet.mincount=1
+
+.. code-block:: xml
 
   <?xml version="1.0"?>
   <response>
@@ -241,10 +278,12 @@ The following query shows counts of data uploads by format type by a specified r
 
 **Data download counts by month**
 
-The following query shows data download counts by a specific user for each month in 2013::
+The following query shows data download counts by a specific user for each month
+in 2013::
 
   https://cn.dataone.org/cn/v1/query/logsolr/select?q=*:*&fq=rightsHolder:uid*PISCO*&fq=event:read&facet=true&facet.range=dateLogged&facet.range.start=2013-01-01T01:01:01Z&facet.range.end=2013-12-31T24:59:59Z&facet.range.gap=%2B1MONTH
-::
+
+.. code-block:: xml
 
   <?xml version="1.0"?>
   <response>
@@ -279,12 +318,14 @@ The following query shows data download counts by a specific user for each month
   </respones>
 
 
-**Read counts for format type *EML***
+**Read counts for format type EML**
 
-The following query shows all EML metadata activity by a specific user for each month in 2013::
+The following query shows all EML metadata activity by a specific user for each
+month in 2013::
 
-  https://cn.dataone.org/cn/v1/query/logsolr/select?q=*:*&fq=rightsHolder:uid*PISCO*&fq=formatId:eml*&facet=true&facet.field=event&facet.range=dateLogged&facet.range.start=2013-01-01T01:01:01Z&facet.range.end=2013-12-31T24:59:59Z&facet.range.gap=%2B1MONTH    
-::
+  https://cn.dataone.org/cn/v2/query/logsolr/?q=*:*&fq=rightsHolder:uid*PISCO*&fq=formatId:eml*&facet=true&facet.field=event&facet.range=dateLogged&facet.range.start=2013-01-01T01:01:01Z&facet.range.end=2013-12-31T24:59:59Z&facet.range.gap=%2B1MONTH    
+
+.. code-block:: xml
 
   <?xml version="1.0"?>
   <response>
@@ -331,12 +372,12 @@ The following query shows all EML metadata activity by a specific user for each 
 
 **Download volume for pids** 
 
-  The following query shows all pids created by rightsHolder *PISCO* with upload size statistics aggregated by formatId:
-::
+The following query shows all pids created by rightsHolder *PISCO* with upload
+size statistics aggregated by formatId::
  
-  https://cn.dataone.org/cn/v1/query/logsolr/select?q=*:*&fq=rightsHolder:uid=*PISCO*&fq=event:create&stats=true&stats.field=size&rows=0&stats.facet=formatId
+  https://cn.dataone.org/cn/v2/query/logsolr/?q=*:*&fq=rightsHolder:uid=*PISCO*&fq=event:create&stats=true&stats.field=size&rows=0&stats.facet=formatId
   
-::
+.. code-block:: xml
 
   <result name="response" numFound="14721" start="0"/>
     ...
@@ -370,67 +411,81 @@ The following query shows all EML metadata activity by a specific user for each 
     </lst>
   </response>
  
-Note: The examples that follow do not include the result output to improve legibility. The reader is encouraged to cut/paste
-the sample queries into a web browser to view the resulting output.
+.. Note:: 
+
+   The examples that follow do not include the result output to improve
+   legibility. The reader is encouraged to cut/paste the sample queries into a 
+   web browser to view the resulting output.
 
 **Select events using time range based on date of access event**
+
 ::
 
-  https://cn.dataone.org/cn/v1/query/logsolr/select?q=dateLogged:[2014-03-01T00:00:01Z TO 2014-03-31T00:00:01Z]
+  https://cn.dataone.org/cn/v2/query/logsolr/?q=dateLogged:[2014-03-01T00:00:01Z TO 2014-03-31T00:00:01Z]
 
 **Counts of event types**
+
 ::
 
-  https://cn.dataone.org/cn/v1/query/logsolr/select?q=dateLogged:[* TO NOW]&facet=true&facet.field=event
+  https://cn.dataone.org/cn/v2/query/logsolr/?q=dateLogged:[* TO NOW]&facet=true&facet.field=event
 
 **Wildcard search for pids**
+
 ::
                                                                                                                                                                                                                                                   
-  https://cn.dataone.org/cn/v1/query/logsolr/select?q=pid:doi*&facet=true&facet.field=pid&facet.mincount=1
+  https://cn.dataone.org/cn/v2/query/logsolr/?q=pid:doi*&facet=true&facet.field=pid&facet.mincount=1
 
 **Spatial search for events within 10km of the latitude, longitude of Santa Barbara, CA**
+
 ::
 
-  https://cn.dataone.org/cn/v1/query/logsolr/select?q=*:*&fq={!geofilt sfield=location pt=34.4329,-119.837 d=10}
+  https://cn.dataone.org/cn/v2/query/logsolr/?q=*:*&fq={!geofilt sfield=location pt=34.4329,-119.837 d=10}
 
 **Search by city name for events occuring in Albuquerque**
+
 ::
 
-  https://cn.dataone.org/cn/v1/query/logsolr/select?q=*:*&fq=city:Albuquerque
+  https://cn.dataone.org/cn/v2/query/logsolr/?q=*:*&fq=city:Albuquerque
 
 **Events aggregated by location name**
+
 ::
 
-  https://cn.dataone.org/cn/v1/query/logsolr/select?q=event:create&facet=true&facet.field=city
+  https://cn.dataone.org/cn/v2/query/logsolr/?q=event:create&facet=true&facet.field=city
  
 **Download (read) counts by month for all data format types**
+
 ::
 
- https://cn.dataone.org/cn/v1/query/logsolr/select?q=*:*&fq=event:read&formatType=DATA&facet=true&facet.range=dateLogged&facet.range.start=2014-01-01T00:00:00.000Z&facet.range.end=2015-01-01T00:00:00.000Z&facet.range.gap=%2B1MONTH
+ https://cn.dataone.org/cn/v2/query/logsolr/?q=*:*&fq=event:read&formatType=DATA&facet=true&facet.range=dateLogged&facet.range.start=2014-01-01T00:00:00.000Z&facet.range.end=2015-01-01T00:00:00.000Z&facet.range.gap=%2B1MONTH
  
 **Download (read) counts by month for all format types, counter-compliant**
+
 ::
 
- https://cn.dataone.org/cn/v1/query/logsolr/select?q=*:*&fq=event:read&counterCompliant=true&facet=true&facet.range=dateLogged&facet.range.start=2014-01-01T00:00:00.000Z&facet.range.end=2015-01-01T00:00:00.000Z&facet.range.gap=%2B1MONTH
+ https://cn.dataone.org/cn/v2/query/logsolr/?q=*:*&fq=event:read&counterCompliant=true&facet=true&facet.range=dateLogged&facet.range.start=2014-01-01T00:00:00.000Z&facet.range.end=2015-01-01T00:00:00.000Z&facet.range.gap=%2B1MONTH
  
 **Metadata read counts by month for all metadata format types**
 
 ::
 
-  https://cn.dataone.org/cn/v1/query/logsolr/select?q=*:*&fq=event:read&formatType=METADATA&facet=true&facet.range=dateLogged&facet.range.start=2014-01-01T00:00:00.000Z&facet.range.end=2015-01-01T00:00:00.000Z&facet.range.gap=%2B1MONTH
+  https://cn.dataone.org/cn/v2/query/logsolr/?q=*:*&fq=event:read&formatType=METADATA&facet=true&facet.range=dateLogged&facet.range.start=2014-01-01T00:00:00.000Z&facet.range.end=2015-01-01T00:00:00.000Z&facet.range.gap=%2B1MONTH
 
 **Byte count for read events for May 2013**
+
 ::
 
-  https://cn.dataone.org/cn/v1/query/logsolr/select?q=event:read&fq=dateLogged:[2013-05-01T00:00:00.000Z TO 2013-05-31T23:59:59.999Z]&stats=true&stats.field=size&sort=size%20desc&rows=0
+  https://cn.dataone.org/cn/v2/query/logsolr/?q=event:read&fq=dateLogged:[2013-05-01T00:00:00.000Z TO 2013-05-31T23:59:59.999Z]&stats=true&stats.field=size&sort=size%20desc&rows=0
 
 
 **Bytes downloaded for subject=cjones aggregated by formatId**
+
 ::
 
-  https://cn.dataone.org/cn/v1/query/logsolr/select?q=*:*&fq=subject:uid=*cjones*&fq=event:read&stats=true&stats.field=size&rows=0&stats.facet=formatId
+  https://cn.dataone.org/cn/v2/query/logsolr/?q=*:*&fq=subject:uid=*cjones*&fq=event:read&stats=true&stats.field=size&rows=0&stats.facet=formatId
   
 **Download (read) counts for node KNB, excluding web crawler accesses and duplicate (repeat) visits (with a short time interval, i.e. 30 seconds)**
+
 ::
 
-https://cn.dataone.org/cn/v1/query/logsolr/select?q=event:read&fq=inFullRobotList:false&fq=isRepeatVisit:false&fq=nodeId:urn\:node\:KNB
+  https://cn.dataone.org/cn/v2/query/logsolr/?q=event:read&fq=inFullRobotList:false&fq=isRepeatVisit:false&fq=nodeId:urn\:node\:KNB
