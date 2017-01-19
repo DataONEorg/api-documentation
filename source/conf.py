@@ -114,7 +114,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'' #u'DataONE Architecture'
-copyright = u'2009-2015, DataONE'
+copyright = u'2009-2017, DataONE'
 #copyright = u'''- INTEROP: Creation of an International Virtual Data Center for the Biodiversity,
 #Ecological and Environmental Sciences (NSF Award 0753138);
 #
@@ -125,11 +125,11 @@ copyright = u'2009-2015, DataONE'
 # built documents.
 #
 
-previous_version = '1.2.0'
+previous_version = '2.0.0'
 # The short X.Y version.
-version = '2.0'
+version = '2.1'
 # The full version, including alpha/beta/rc tags.
-release = '2.0-beta'
+release = '2.1.0-beta'
 
 rst_epilog = ""
 
@@ -285,7 +285,7 @@ html_context = {
   'current_version': release,
   'is_development': True,
   'purl_path':"/docs/api/",
-  'current_version_URL':'https://releases.dataone.org/online/api-documentation-v1.2.0',
+  'current_version_URL':'https://purl.dataone.org/architecture',
 }
 
 # -- Options for PDF output  --------------------------------------------------
