@@ -1,0 +1,426 @@
+Referencing Content External to DataONE
+=======================================
+
+.. contents::
+
+Here "content external to DataONE" refers to data, metadata, or other
+information not accessible directly through the DataONE Member Node or
+Coordinating Node APIs.
+
+For example, a researcher may create a data package that contains the usual
+data and metadata objects, but would also like to provide a reference to
+additional data (the "external data") that can not be retrieved using the
+DataONE MNRead.get method.
+
+The external data is not synchronized by DataONE.
+
+There are two mechanisms for showing references to external content in the the
+DataONE Search UI, both rely on information stored in Science Metadata:
+
+1. During rendering of metadata by stylesheet transformation.
+
+   Some metadata formats have a mechanisms to reference arbitrary links to
+   information outsie of the data package. 
+
+2. By reference to a Service through the ``service*`` index fields
+
+   DataONE provides a mechanism where services related to a data package may be
+   described within a metadata document contained in the data package. A
+   reference to external content can be considered a simple type of service
+   (e.g. a HTTP GET).
+   
+The mechanisms for post processing allow for more control over the expression
+and reliability of such references through the service oriented metadata as
+opposed to a direct reference to an arbitrary location with poorly defined
+characteristics.
+   
+Content creators are thus encouraged to leverage the servie description
+mechanism when there is a need to reference content external to DataONE from a
+data package.
+
+
+Index Fields
+------------
+
+The solr index in DataONE acts as a common representation of metadata for
+synchronized content. Content of the various formats of Science Metadata is
+mapped to index fields using various parsing and processing rules.
+
+The index fields relevant to external content are:
+
+=================== ===================================================
+Field               Description
+=================== ===================================================
+isService           Set to true if document is a member node service 
+                    description document. Use to filter search results for to 
+                    exclude or include member node services. 
+serviceTitle        A brief, human readable descriptive title for the member 
+                    node service.
+serviceDescription  A human readable description of the member node service to
+                    assist discovery and to evaluate applicability.
+serviceType         The type of service being provided by the member node.
+serviceCoupling     One of 'tight', 'mixed', or 'loose'.  Tight coupled service 
+                    work only on the data described by this metadata document.  
+                    Loose coupling means service works on any data.  Mixed 
+                    coupling means service works on data described by this 
+                    metadata document but may work on other data.
+serviceEndpoint     A URL that indicates how to access the member node service.
+serviceInput        Aspect of the service that accepts a digital entity.  Either
+                    a list of DataONE formatId URLs or PID RESOLVE URLs that the 
+                    member node service operates on.  A pid RESOLVE URL 
+                    indicates a 'tight' coupled service - while a list of 
+                    formatIds indicates a loose coupled service.
+serviceOutput       Aspect of the service that provides a digital entity 
+                    resulting from operation of the service.  A listing of 
+                    DataONE formatId which this member node service produces.
+=================== ===================================================
+
+
+Use of Index Fields in Search UI
+--------------------------------
+
+The DataONE `Search UI`_ uses the search index to populate user interface
+elements such as the data package view, which is shown when viewing a specific
+data package. For example:
+
+  https://search.dataone.org/#view/{1BDC13BA-A8C2-4787-8B77-4EB04AE6B416}
+  
+Shows a table for "Alternate Data Access" which contains columns:
+
+============= =======================
+Column        Index Field
+============= =======================
+Name          serviceTitle
+Description   serviceDescription
+Access Type   serviceType
+URL           serviceEndpoint
+============= =======================
+
+The Alternate Data Access table is shown if the index field ``isService`` is
+true.
+
+
+.. Search UI: https://search.dataone.org/
+
+
+Appearance of External Content in the Search UI
+-----------------------------------------------
+
+.. TODO:: 
+
+
+
+Mapping ISO-TC211 to Index Fields for Services
+----------------------------------------------
+
+The mapping from ISO-TC211 to the index fields is described at the generated
+`index documentation`_. An excerpt is repeated here with additional comments.
+
+(See application-context-isotc211-base.xml in the d1_index_task_processor
+project)
+
+In ISO 19119, services may be tightly or loosely-coupled to data they operate
+on and sit under the srv:SV_ServiceIdentification element. Or they may be
+limited to tightly-coupled distribution info and sit under the
+gmd:distributionInfo element.
+	
+The solr fields may be populated either with one expression checking and/or
+concatenating both the srv:srv:SV_ServiceIdentification and
+gmd:distributionInfo locations (for example: isotc.isService or
+isotc.serviceCoupling)
+
+Or there may be 2 separate expressions for the different scenarios that affect
+the same field. (for example: sotc.serviceEndpoint and
+isotc.distribServiceEndpoint).
+
+Two expressions are only used for multivalue SolrFields; this way both results
+are added - both srv:SV_ServiceIdentification and gmd:distributionInfo
+subelements are indexed).
+
+
+
+.. index documentation: http://indexer-documentation.readthedocs.io/en/latest/generated/proc_isotc211NoaaSubprocessor.html
+
+isService
+~~~~~~~~~
+
+Checks for existence of either srv service description OR distribution
+"service" info.
+
+::
+
+  boolean(//srv:SV_ServiceIdentification or 
+          //gmd:distributionInfo/gmd:MD_Distribution)
+
+
+serviceCoupling
+~~~~~~~~~~~~~~~
+
+The srv location can explicitly set this and if set will override
+distributionInfo.
+
+The serviceCoupling will set:
+
+* 'loose' coupling if srv:SV_CouplingType is loose
+
+* 'tight' coupling if srv:SV_CouplingType is tight
+
+* 'tight' coupling if distribution service info exists and srv:SV_CouplingType
+  doesn't / is unspecified, empty if neither exists
+
+
+::
+
+  concat( 
+    substring (
+      'loose', 
+      1 div boolean( //srv:SV_ServiceIdentification
+                      /srv:couplingType
+                      /srv:SV_CouplingType
+                      /@codeListValue = 'loose' ) 
+    ),
+    substring ( 
+      'tight',
+      1 div boolean( //srv:SV_ServiceIdentification
+                      /srv:couplingType
+                      /srv:SV_CouplingType
+                      /@codeListValue = 'tight' ) 
+    ),     
+    substring(
+      'tight', 
+      1 div boolean( //gmd:distributionInfo
+                      /gmd:MD_Distribution 
+        and not( //srv:SV_ServiceIdentification
+                  /srv:couplingType
+                  /srv:SV_CouplingType
+                  /@codeListValue )
+      )
+    ), 
+    substring(
+      '',  
+      1 div boolean( 
+        not( //srv:SV_ServiceIdentification
+              /srv:couplingType
+              /srv:SV_CouplingType
+              /@codeListValue ) 
+        and not( //gmd:distributionInfo
+                  /gmd:MD_Distribution )
+      )
+    )
+  )
+
+
+serviceTitle
+~~~~~~~~~~~~
+
+This combines the srv service title with the distribution "service" info's
+titles.
+
+::
+
+  ( //srv:SV_ServiceIdentification
+     /gmd:citation
+     /gmd:CI_Citation
+     /gmd:title
+     /gco:CharacterString 
+    | 
+    //gmd:distributionInfo
+     /gmd:MD_Distribution
+     /gmd:distributor
+     /gmd:MD_Distributor
+     /gmd:distributorTransferOptions
+     /gmd:MD_DigitalTransferOptions
+     /gmd:onLine
+     /gmd:CI_OnlineResource
+     /gmd:name
+     /gco:CharacterString
+  )/text()
+
+
+serviceDescription
+~~~~~~~~~~~~~~~~~~
+
+::
+
+  ( //srv:SV_ServiceIdentification
+     /gmd:abstract
+     /gco:CharacterString 
+    | 
+    //gmd:distributionInfo
+     /gmd:MD_Distribution
+     /gmd:distributor
+     /gmd:MD_Distributor
+     /gmd:distributorTransferOptions
+     /gmd:MD_DigitalTransferOptions
+     /gmd:onLine
+     /gmd:CI_OnlineResource
+     /gmd:description
+     /gco:CharacterString
+  )/text()
+  
+
+serviceType
+~~~~~~~~~~~
+
+Both are evaluated / indexed, checking the srv and distributionInfo locations
+for a service type.
+
+::
+
+  //srv:SV_ServiceIdentification
+   /srv:serviceType
+   /gco:LocalName
+   /text()
+   
+  //gmd:distributionInfo
+   /gmd:MD_Distribution
+   /gmd:distributor
+   /gmd:MD_Distributor
+   /gmd:distributorTransferOptions
+   /gmd:MD_DigitalTransferOptions
+   /gmd:onLine
+   /gmd:CI_OnlineResource
+   /gmd:protocol
+   /gco:CharacterString
+   /text()
+
+
+serviceEndpoint
+~~~~~~~~~~~~~~~
+
+Both are evaluated / indexed, checking the srv and distributionInfo locations
+for service endpoints.
+
+::
+
+  //srv:SV_ServiceIdentification
+   /srv:containsOperations
+   /srv:SV_OperationMetadata
+   /srv:connectPoint
+   /gmd:CI_OnlineResource
+   /gmd:linkage
+   /gmd:URL
+   /text()
+   
+  //gmd:distributionInfo
+   /gmd:MD_Distribution
+   /gmd:distributor
+   /gmd:MD_Distributor
+   /gmd:distributorTransferOptions
+   /gmd:MD_DigitalTransferOptions
+   /gmd:onLine
+   /gmd:CI_OnlineResource
+   /gmd:linkage/gmd:URL/text() 
+  |
+  //gmd:distributionInfo
+   /gmd:MD_Distribution
+   /gmd:transferOptions
+   /gmd:MD_DigitalTransferOptions
+   /gmd:onLine
+   /gmd:CI_OnlineResource
+   /gmd:linkage
+   /gmd:URL
+   /text()
+   
+   
+serviceInput
+~~~~~~~~~~~~
+
+Both are evaluated / indexed, checking the srv and distributionInfo locations
+for service input.
+
+::
+
+  //srv:SV_ServiceIdentification
+   /srv:operatesOn
+   /@xlink:href
+   
+  //gmd:distributionInfo
+   /gmd:MD_Distribution
+   /gmd:distributor
+   /gmd:MD_Distributor
+   /gmd:distributorTransferOptions
+   /@xlink:href
+
+   
+serviceOutput
+~~~~~~~~~~~~~
+
+Both are evaluated / indexed, checking the srv and distributionInfo locations
+for service output.
+
+::
+
+  //srv:SV_ServiceIdentification
+   /gmd:resourceFormat
+   /@xlink:href
+
+  //gmd:distributionInfo
+   /gmd:MD_Distribution
+   /gmd:distributor
+   /gmd:MD_Distributor
+   /gmd:distributorFormat
+   /gmd:MD_Format
+   /gmd:version
+   /gco:CharacterString
+   /text()
+
+
+Mapping of EML to Index Fields for Services
+-------------------------------------------
+
+(See application-context-eml-base.xml)
+
+The EML spec is limited in what info it can hold about services.
+
+EML holds no elements that correspond to these fields::
+
+  ServiceType
+  SerivceInput
+  ServiceOutput
+  ServiceCoupling
+
+So info about these can't be indexed.			
+
+Supported fields are below:
+	
+
+isService
+~~~~~~~~~
+
+Checks for the presence of a distribution url.
+
+::
+
+  boolean(//software/implementation/distribution/online/url)
+          
+          										
+ServiceTitle
+~~~~~~~~~~~~
+
+Fetches the software title.
+
+::
+
+  //software/title//text()[normalize-space()]
+	
+										
+ServiceDescription
+~~~~~~~~~~~~~~~~~~
+
+Fetches the software abstract.
+
+::
+
+  //software/abstract//text()[normalize-space()]
+	
+										
+ServiceEndpoint
+~~~~~~~~~~~~~~~
+
+Fetches the distribution url.
+
+::
+
+  //software/implementation/distribution/online/url/text()
+
