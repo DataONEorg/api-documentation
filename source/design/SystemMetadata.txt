@@ -66,107 +66,159 @@ edited through *Edit Method*.
      - Initialized By
      - Controlled By
      - Edit Method
+
    * - :attr:`~Types.SystemMetadata.serialVersion`
      - Yes
      - MN
      - CN
-     - In response to an operation that alters System Metadata
+     - v1: Set by CNs in response to any operation that alters System Metadata.
+
+       v2: Used by CNs for management of replication process.
+
    * - :attr:`~Types.SystemMetadata.identifier`
      - No
      - Client
      - Client
      - The identifier is assigned during creation and can not be changed.
+
    * - :attr:`~v2_0.Types.SystemMetadata.seriesId` (v2)
      - No
      - Client
      - Client
-     - The seriesId can be set if it has no value, but can not be changed once set.
+     - The seriesId can be set if it has no value, but can not be changed once
+       set. Use :func:`MNStorage.updateSystemMetadata`
+
    * - :attr:`~Types.SystemMetadata.formatId`
      - Yes
      - Client
      - Client
      - Change is discouraged, though may be corrected by a client.
+
+       v1: :func:`CNCore.updateSystemMetadata`
+
+       v2: :func:`MNStorage.updateSystemMetadata`
+
    * - :attr:`~v2_0.Types.SystemMetadata.mediaType` (v2)
-     -
-     -
-     -
-     -
+     - Yes
+     - Client
+     - Client
+     - As for ``formatId``.
+
    * - :attr:`~v2_0.Types.SystemMetadata.fileName` (v2)
-     -
-     -
-     -
-     -
+     - Yes
+     - Client
+     - Client
+     - As for ``formatId``.
+
    * - :attr:`~Types.SystemMetadata.size`
      - No
      - Client
      - MN
      - The object size is set during creation and can not be changed.
+
    * - :attr:`~Types.SystemMetadata.checksum`
      - No
      - Client
      - MN
      - The object checksum is determined during creation and can not be changed.
+
    * - :attr:`~Types.SystemMetadata.submitter`
      - No
      - Client
      - MN
      - The object submitter is set during creation and can not be changed.
+
    * - :attr:`~Types.SystemMetadata.rightsHolder`
      - Yes
      - Client
      - Client
-     - Rights holder for an object may be altered through the :func:`MNAuthorization.setRightsHolder` method.
+     - Rights holder for an object may be altered.
+
+       v1: :func:`CNAuthorization.setRightsHolder`
+
+       v2: :func:`MNStorage.updateSystemMetadata`
+
    * - :attr:`~Types.SystemMetadata.accessPolicy`
      - Yes
      - Client
      - Client
-     - Tier 1: manual
-       :func:`MNAuthorization.setAccessPolicy`, :func:`MNStorage.update`. All must follow with a call :func:`CNCore.systemMetadataChanged`.
+     - Access policy for an object may be altered.
+
+       v1: :func:`CNAuthorization.setAccessPolicy`
+
+       v2: :func:`MNStorage.updateSystemMetadata`.
+
    * - :attr:`~Types.SystemMetadata.replicationPolicy`
      - Yes
      - Client
      - Client
-     - :func:`CNReplication.setReplicationPolicy`
+     - v1: :func:`CNReplication.setReplicationPolicy`
+
+       v2: :func:`MNStorage.updateSystemMetadata`
+
    * - :attr:`~Types.SystemMetadata.obsoletes`
      - Yes
      - Client
      - Client
-     - :func:`MNStorage.update`
+     - v1, v2: :func:`MNStorage.update`
+
+       v2: :func:`MNStorage.updateSystemMetadata`
+
    * - :attr:`~Types.SystemMetadata.obsoletedBy`
      - Yes
      - Client
      - Client
-     - :func:`MNCore.setObsoletedBy`, :func:`MNStorage.update`
+     - v1, v2: :func:`MNStorage.update`
+
+       v1: :func:`CNCore.setObsoletedBy`
+
+       v2: :func:`MNStorage.updateSystemMetadata`
+
    * - :attr:`~Types.SystemMetadata.archived`
      - Yes
      - MN
      - MN
-     - :func:`MNCore.archive`
+     - v1, v2: :func:`CNCore.archive`
+
+       v2: :func:`MNStorage.updateSystemMetadata`
+
    * - :attr:`~Types.SystemMetadata.dateUploaded`
      - No
      - MN
      - MN
      - Upload to a MN occurs once, and the MN MUST set this value.
+
    * - :attr:`~Types.SystemMetadata.dateSysMetadataModified`
      - Yes
      - MN
      - MN + CN
      - Updated any time a property value is changed.
+
    * - :attr:`~Types.SystemMetadata.originMemberNode`
      - No
      - MN
      - MN
      - Value is set once by the originMemberNode
+
    * - :attr:`~Types.SystemMetadata.authoritativeMemberNode`
      - Yes
      - MN
      - MN + CN
      - Manual update process.
+
    * - :attr:`~Types.SystemMetadata.replica`
      - Yes
      - CN
      - CN
      - :func:`CNReplication.updateReplicationMetadata`
+
+
+Changing System Metadata
+------------------------
+
+Table 1. lists the properties of System Metadata that may be altered by authorized users. This section describes how those changes are performed. In all cases it is assumed that the user is appropriately authenticated and is authorized to perform the operation.
+
+
 
 
 System Metadata Schema
