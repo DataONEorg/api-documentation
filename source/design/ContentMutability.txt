@@ -3,28 +3,655 @@ Mutability of Content in DataONE
 
 .. index:: mutability
 
-
 .. contents::
 
 Overview
 --------
 
-With the release of version 2 APIs, DataONE introduced support for Member Nodes
-whose primary repositories implement a mutable content storage model. Under
-such  a model, updates to content overwrite previous versions, instead of being
-persisted side-by-side with previous versions. From a retrieval point of view,
-this means that a new set of bytes is returned when called using its primary
-identifier, or more importantly, there is no guarantee that the set of bytes
-returned in the past is the same as what is returned in the future.
+All content synchronized by DataONE is immutable, and so resolution of a
+:term:`persistent identifier` (PID) will always result in a pointer (URI) to a set of
+bytes that are in all respects identical to the original. Version 2.0 of the
+DataONE APIs introduced the ability to associate an optional series identifier
+(SID) with an object. Unlike a PID, resolution of a SID will always result in a
+pointer (URI) to a set of bytes that represent the latest revision of an object.
 
-DataONE accomplishes this with the addition of a secondary identifier called the
-Series Identifier (SID) that has the semantics of retrieving the latest version
-of the series through the DataONE Read APIs (MNRead and CNRead).  Member Nodes
-that  employ a mutable content storage model would assigned their repository's
-primary  identifier to this SID, and populate DataONEs primary identifier field
-(systemMetadata.identifer) with a different unique value specific to that
-version. This identifier is forever associated with that specific persisted
-version, so is  also referred to as the Persistent Identifier (or PID).
+A revision or obsolescence chain is constructed by setting the obsoletes and
+obsoletedBy properties of the new and old objects respectively. For example,
+here PID_B represents the latest revision of object as it obsoletes PID_A
+(object PID_A has a value of "PID_B" in its system metadata
+:attr:`~Types.SystemMetadata.obsoletedBy` property, and object PID_B has a
+value of "PID_A" in its system metadata :attr:`~Types.SystemMetadata.obsoletes`
+property)::
+
+
+    +------------+                      +------------+
+    |            | ----- obsoletes ---> |            |
+    |   PID_B    |                      |   PID_A    |
+    |            | <--- obsoletedBy --- |            |
+    +------------+                      +------------+    
+
+                 resolve(PID_A) => PID_A
+                 resolve(PID_B) => PID_B
+
+
+In version 1.x of DataONE, it was necessary to manually follow the obsolescence
+chain in order to find the latest version of an object. This process is
+simplified in version 2.x and later through the use of series identifiers. The
+previous example can be augmented with series identifiers::
+
+
+    +------------+                      +------------+
+    |            | ----- obsoletes ---> |            |
+    |   PID_B    |                      |   PID_A    |
+    |   SID_1    |                      |   SID_1    |
+    |            | <--- obsoletedBy --- |            |
+    +------------+                      +------------+    
+
+                 resolve(PID_A) => PID_A
+                 resolve(PID_B) => PID_B
+                 resolve(SID_1) => PID_B
+
+
+Each object in the obsolescence chain has the same value for the series
+identifier ("SID_1"), and calling :func:`~CNRead.resolve` with the value "SID_1"
+will result in the URIs from which the object "PID_B" may be retrieved, since
+that object is the latest revision in the obsolescence chain.
+
+The availability of PIDs and SIDs means users may now refer to objects using
+either a PID when it is necessary or appropriate to refer to an exact set of
+bytes that represent an object or through a SID when referring to the latest
+version of an object. The former is important for repeatable analyses, since
+the same content may be reliably referenced and retrieved. The latter is
+important for referencing the most up to date revision of some object, and so
+may be useful for example to perform anaysis with the latest information
+available.
+
+Unless indicated otherwise, the DataONE version 2.x and later APIs will accept
+either a PID or a SID when an identifier is specified as a request parameter.
+
+
+Resolving Series Identifiers
+----------------------------
+
+In a perfect world, all obsolescence chains will have be complete,
+bi-directional links, and so determining the latest version of an object is
+determined simply by examining the set of all objects with the same SID, and
+selecting the object that is not ``obsoletedBy`` anything else. Obsolescence
+chains may be incomplete for various reasons and in such situations, resolution
+of series identifiers should still operate consistently.
+
+The following series of scenarios demonstrate the behavior of the DataONE
+system when resolving a seriesId to a specific object. The behavior of
+resolution is to rely primarily on the obsoletes and obsoletedBy entities,
+falling back to the date when an object is added to a Member Node
+(:attr:`~Types.SystemMetadata.dateUploaded`) to determine the newer version.
+
+The following notation is used herein:
+
+:|Pi|:               Refers to a Persistent Identifier (PID)
+
+:|Si|:               Refers to a Series Identifier (SID)
+
+:|ti|:               The value of :attr:`~Types.SystemMetadata.dateUploaded` for
+                     an object
+
+:|t1| < |t2|:        |t1| is older than |t2|
+
+:|PiSjtk|:          An object with
+                     :attr:`~Types.SystemMetadata.identifier` (PID) |Pi|, a
+                     :attr:`~v2_0.Types.SystemMetadata.seriesId` (SID)
+                     of |Sj|, and a :attr:`~Types.SystemMetadata.dateUploaded`
+                     of |tk|.
+
+:|Pi| |b| |Pj|:      |Pi| has an :attr:`~Types.SystemMetadata.obsoletedBy`
+                     entry that contains the value |Pj|
+
+:|Pi| |o| |Pj|:      |Pj| has an :attr:`~Types.SystemMetadata.obsoletes`
+                     entry that contains the value |Pi|
+
+:|Pi| |O| |Pj|:      |Pi| has an
+                     :attr:`~Types.SystemMetadata.obsoletedBy` entry that
+                     contains the value |Pj| and |Pj| has an
+                     :attr:`~Types.SystemMetadata.obsoletes` entry that
+                     contains the value |Pi|.
+
+:|Pi| |x| |Pj|:      Neither :attr:`~Types.SystemMetadata.obsoletedBy`
+                     nor :attr:`~Types.SystemMetadata.obsoletes` is set by
+                     |Pi|  or |Pj|.
+
+:``??``:             Object was not synchronized, and so unknown to DataONE
+
+:|rSi|: Resolving SID |Si| results in PID |Pj|
+
+
+.. |Pi| replace:: :math:`P_i`
+.. |Pj| replace:: :math:`P_j`
+.. |P1| replace:: :math:`P_1`
+.. |P2| replace:: :math:`P_2`
+.. |P3| replace:: :math:`P_3`
+.. |P4| replace:: :math:`P_4`
+.. |Si| replace:: :math:`S_i`
+.. |Sj| replace:: :math:`S_j`
+.. |S1| replace:: :math:`S_1`
+.. |S2| replace:: :math:`S_2`
+.. |ti| replace:: :math:`t_i`
+.. |tk| replace:: :math:`t_k`
+.. |t1| replace:: :math:`t_1`
+.. |t2| replace:: :math:`t_2`
+.. |t3| replace:: :math:`t_3`
+.. |_| unicode:: 0xA0
+   :trim:
+.. |PiSjtk| replace:: :math:`P_i \binom{S_j}{t_k}`
+.. |rSi| replace:: :math:`resolve(S_i) \Rrightarrow P_j`
+.. |o| replace:: :math:`\leftarrow`
+.. |b| replace:: :math:`\rightarrow`
+.. |O| replace:: :math:`\leftrightarrows`
+.. |x| replace:: :math:`\square`
+
+
+
+Case 1
+~~~~~~
+
+
+.. math::
+   :label: c1
+
+   P_1\binom{S_1}{t_1} & \leftrightarrows P_2\binom{S_1}{t_2} \\
+   t_1 & < t_2 \\
+   resolve(S_1) & \Rrightarrow P_2
+
+A set of objects :math:`O = \lbrace P_1, P_2 \rbrace` have the same series 
+identifier, |S1|.
+
+All objects in :math:`O` are participants in an obsolescence chain since |P2|
+:attr:`~Types.SystemMetadata.obsoletes` |P1| and |P1| is
+:attr:`~Types.SystemMetadata.obsoletedBy` |P2|.
+
+All elements of the obsolescence chain :math:`P_1 \leftrightarrows P_2` have the 
+same series identifier, |S1|.
+
+The :attr:`~Types.SystemMetadata.dateUploaded` of |P1| is older than that of
+|P2|.
+
+This is a perfect obsolescence chain and resolving |S1| will result in the
+object identified by |P2|.
+
+
+Case 2
+~~~~~~
+
+.. math::
+   :label: c2
+
+   P_1\binom{S_1}{t_1}\; & \square \; P_2\binom{S_1}{t_2} \\
+   t_1 & < t_2 \\
+   resolve(S_1) & \Rrightarrow P_2
+
+A set of objects :math:`O = \lbrace P_1, P_2 \rbrace` have the same series 
+identifier, |S1|.
+
+No obsolescence information associates objects in :math:`O`.
+
+The :attr:`~Types.SystemMetadata.dateUploaded` of |P1| is older than that of
+|P2|.
+
+No obsolescence assertions are made, so resolution is inferred by the most
+recent value of :attr:`~Types.SystemMetadata.dateUploaded`.
+
+
+Case 3
+~~~~~~
+
+.. math::
+   :label: c3
+
+   P_1\binom{S_1}{t_1}\; & \leftarrow \; P_2\binom{S_1}{t_2} \\
+   t_1 & < t_2 \\
+   resolve(S_1) & \Rrightarrow P_2
+
+A set of objects :math:`O = \lbrace P_1, P_2 \rbrace` have the same series 
+identifier, |S1|.
+
+All objects in :math:`O` are participants in an obsolescence chain since |P2|
+:attr:`~Types.SystemMetadata.obsoletes` |P1| even though |P1| does not assert
+it is :attr:`~Types.SystemMetadata.obsoletedBy` |P2|.
+
+All elements of the obsolescence chain :math:`P_1 \leftarrow P_2` have the 
+same series identifier, |S1|.
+
+The :attr:`~Types.SystemMetadata.dateUploaded` of |P1| is older than that of
+|P2|.
+
+This is a damaged, but consistent obsolescence chain and resolving |S1| will
+result in the object identified by |P2|.
+
+
+Case 4
+~~~~~~
+
+.. math::
+   :label: c4
+
+   P_1\binom{S_1}{t_1} \leftrightarrows 
+   P_2\binom{S_1}{t_2}& \leftrightarrows 
+   P_3\binom{S_2}{t_3}\\ 
+   t_1 < t_2 & < t_3 \\
+   resolve(S_1) &\Rrightarrow P_2 \\
+   resolve(S_2) &\Rrightarrow P_3 \\
+
+A set of objects :math:`O_{S_1} = \lbrace P_1, P_2 \rbrace` have the same series 
+identifier, |S1|.
+
+A set of objects :math:`O_{S_2} = \lbrace P_3 \rbrace` has the series 
+identifier, |S2|.
+
+Objects :math:`O = O_{S_1} \cup O_{S_2}` all participate in a full,
+bi-directional obsolescence chain.
+
+In this case resolving |S1| will result in |P2| which is not the most recent
+object in the obsolescence chain, however it is the newest version in the
+obsolescence chain identified by |S1|. 
+
+Resolving |S2| will result in |P3|.
+
+
+Case 5
+~~~~~~
+
+.. math::
+   :label: c5
+
+   P_1\binom{S_1}{t_1} \leftarrow 
+   P_2\binom{S_1}{t_2}& \leftarrow 
+   P_3\binom{S_2}{t_3}\\ 
+   t_1 < t_2 & < t_3 \\
+   resolve(S_1) &\Rrightarrow P_2 \\
+   resolve(S_2) &\Rrightarrow P_3 \\
+
+A set of objects :math:`O_{S_1} = \lbrace P_1, P_2 \rbrace` have the same series 
+identifier, |S1|.
+
+A set of objects :math:`O_{S_2} = \lbrace P_3 \rbrace` has the series 
+identifier, |S2|.
+
+Objects :math:`O = O_{S_1} \cup O_{S_2}` all participate in a damaged, though
+consistent obsolescence chain.
+
+In this case resolving |S1| will result in |P2| which is not the most recent
+object in the obsolescence chain, however it is the newest version in the
+obsolescence chain identified by |S1|. 
+
+Resolving |S2| will result in |P3|.
+
+
+Case 6
+~~~~~~
+
+.. math::
+   :label: c6
+
+   P_1\binom{S_1}{t_1} \leftrightarrows 
+   P_2\binom{S_1}{t_2}& \leftrightarrows 
+   P_3\binom{}{t_3}\\ 
+   t_1 < t_2 & < t_3 \\
+   resolve(S_1) &\Rrightarrow P_2 \\
+
+A set of objects :math:`O_{S_1} = \lbrace P_1, P_2 \rbrace` have the same series 
+identifier, |S1|.
+
+Objects :math:`O = O_{S_1} \cup P_3` all participate in an obsolescence chain.
+
+In this case resolving |S1| will result in |P2| which is not the most recent
+object in the obsolescence chain, however it is the newest version in the
+obsolescence chain identified by |S1|. 
+
+
+Case 7
+~~~~~~
+
+.. math::
+   :label: c7
+
+   P_1\binom{S_1}{t_1} \leftrightarrows 
+   P_2\binom{S_1}{t_2}& \leftrightarrows 
+   P_3\binom{}{t_3} \leftrightarrows 
+   P_4\binom{S_2}{t_4} \\
+   t_1 < t_2 & < t_3 < t_4\\
+   resolve(S_1) &\Rrightarrow P_2 \\
+   resolve(S_2) &\Rrightarrow P_4
+
+A set of objects :math:`O_{S_1} = \lbrace P_1, P_2 \rbrace` have the same series 
+identifier, |S1|.
+
+A set of objects :math:`O_{S_2} = \lbrace P_4 \rbrace` has the series 
+identifier, |S2|.
+
+Objects :math:`O = O_{S_1} \cup P_3 \cup O_{S_2}` all participate in an
+obsolescence chain.
+
+In this case resolving |S1| will result in |P2| which is not the most recent
+object in the obsolescence chain, however it is the newest version in the
+obsolescence chain identified by |S1|. 
+
+Resolving |S2| will result in |P4|
+
+
+Case 8
+~~~~~~
+
+.. math::
+   :label: c8
+
+   P_1\binom{S_1}{t_1} \leftrightarrows 
+   P_2\binom{S_1}{t_2}& \rightarrow
+   ?? \leftarrow 
+   P_4\binom{S_1}{t_4} \\
+   t_1 < t_2 & < t_4\\
+   resolve(S_1) &\Rrightarrow P_4 \\
+
+A set of objects :math:`O_{S_1} = \lbrace P_1, P_2, P_4 \rbrace` have the same series 
+identifier, |S1|.
+
+Objects :math:`O_{S_1}` all participate in an obsolescence chain, however the
+chain is broken with no way to traverse between |P2| and |P4| because the
+object that |P2| indicates it is ``obsoletedBy``, and the object that |P4|
+indicates it ``obsoletes`` is not recorded by the DataONE Coordinating Nodes 
+(does not resolve).
+
+In this case resolving |S1| will result in |P4| since that is the most recent
+object in the set of objects :math:`O_{S_1}`. 
+
+
+Case 9
+~~~~~~
+
+.. math::
+   :label: c9
+
+   P_1\binom{S_1}{t_1} \leftrightarrows 
+   P_2\binom{S_1}{t_2}& \;\square\;
+   ?? \leftarrow 
+   P_4\binom{S_1}{t_4} \\
+   t_1 < t_2 & < t_4\\
+   resolve(S_1) &\Rrightarrow P_4 \\
+
+A set of objects :math:`O_{S_1} = \lbrace P_1, P_2, P_4 \rbrace` have the same series 
+identifier, |S1|.
+
+Objects :math:`O_{S_1}` all participate in an obsolescence chain, however the
+chain is broken with no way to traverse between |P2| and |P4| because the the
+object that |P4| indicates it ``obsoletes`` is not recorded by the DataONE
+Coordinating Nodes (does not resolve).
+
+In this case resolving |S1| will result in |P4| since that is the most recent
+object in the set of objects :math:`O_{S_1}`. 
+
+
+Case 10
+~~~~~~~
+
+.. math::
+   :label: c10
+
+   P_1\binom{S_1}{t_1} \leftrightarrows 
+   P_2\binom{S_1}{t_2}& \rightarrow
+   P_{del}\binom{}{} \leftarrow 
+   P_4\binom{S_1}{t_4} \\
+   t_1 < t_2 & < t_4\\
+   resolve(S_1) &\Rrightarrow P_4 \\
+
+A set of objects :math:`O_{S_1} = \lbrace P_1, P_2, P_4 \rbrace` have the same series 
+identifier, |S1|. 
+
+The object :math:`P_{del}` was deleted from the system, so the identifier is
+known, but the object and associated system metadata are no longer available.
+
+Objects :math:`O_{S_1}` all participate in an obsolescence chain, however the
+chain is broken with no way to traverse between |P2| and |P4| because the
+object that |P2| indicates it is ``obsoletedBy``, and the object that |P4|
+indicates it ``obsoletes`` is not recorded by the DataONE Coordinating Nodes 
+(does not resolve).
+
+In this case resolving |S1| will result in |P4| since that is the most recent
+object in the set of objects :math:`O_{S_1}`. 
+
+
+Case 11
+~~~~~~~
+
+.. math::
+   :label: c11
+
+   P_1\binom{S_1}{t_1} \leftrightarrows 
+   P_2\binom{S_1}{t_2}& \leftrightarrows 
+   archived\biggl[P_3\binom{S_1}{t_3}\biggr] \\ 
+   t_1 < t_2 & < t_3 \\
+   resolve(S_1) &\Rrightarrow P_3 \\
+
+A set of objects :math:`O_{S_1} = \lbrace P_1, P_2, P_3 \rbrace` have the same series 
+identifier, |S1|.
+
+Objects :math:`O_{S_1}` all participate in an obsolescence chain.
+
+Object |P3| has been archived, and so is not discoverable.
+
+In this case resolving |S1| will result in |P3| which is the most recent
+object in the obsolescence chain even though it is archived. 
+
+
+Case 12
+~~~~~~~
+
+.. math::
+   :label: c12
+
+   P_1\binom{S_1}{t_1} & \leftrightarrows 
+   P_2\binom{S_1}{t_2} \rightarrow
+   ?? \\ 
+   t_1 & < t_2 \\
+   resolve(S_1) &\Rrightarrow P_2 \\
+
+A set of objects :math:`O_{S_1} = \lbrace P_1, P_2 \rbrace` have the same series 
+identifier, |S1|.
+
+Objects :math:`O_{S_1}` participate in an obsolescence chain which is damaged
+by |P2| indicating it is ``obsoletedBy`` some object that is not resolvable.
+
+In this case resolving |S1| will result in |P2| which is the most recent
+resolvable object in the obsolescence chain.
+
+
+Case 13
+~~~~~~~
+
+.. math::
+   :label: c13
+
+   P_1\binom{S_1}{t_1} & \leftarrow 
+   P_2\binom{S_1}{t_2} \rightarrow
+   ?? \\ 
+   t_1 & < t_2 \\
+   resolve(S_1) &\Rrightarrow P_2 \\
+
+A set of objects :math:`O_{S_1} = \lbrace P_1, P_2 \rbrace` have the same series 
+identifier, |S1|.
+
+Objects :math:`O_{S_1}` participate in a damaged obsolescence chain since |P2|
+indicates it is ``obsoletedBy`` some object that is not resolvable, and |P1|
+does not assert it is ``obsoletedBy`` |P2|.
+
+In this case resolving |S1| will result in |P2| which is the most recent
+resolvable object in the obsolescence chain.
+
+
+Case 14
+~~~~~~~
+
+.. math::
+   :label: c14
+
+   P_1\binom{S_1}{t_1} \leftarrow 
+   P_2\binom{S_1}{t_2}& \rightarrow 
+   P_3\binom{S_2}{t_3}\\ 
+   t_1 < t_2 & < t_3 \\
+   resolve(S_1) &\Rrightarrow P_2 \\
+   resolve(S_2) &\Rrightarrow P_3
+
+A set of objects :math:`O_{S_1} = \lbrace P_1, P_2 \rbrace` have the same series 
+identifier, |S1|.
+
+A set of objects :math:`O_{S_2} = \lbrace P_3 \rbrace` has the series 
+identifier, |S2|.
+
+Objects :math:`O = O_{S_1} \cup O_{S_2}` all participate in a damaged
+obsolescence chain, with |P1| not indicating it is obsoleted by |P2|, and |P3|
+not indicating that it obsoletes |P2|.
+
+In this case resolving |S1| will result in |P2| which is not the most recent
+object in the obsolescence chain, however it is the newest version in the
+obsolescence chain identified by |S1|. 
+
+|S2| will resolve to |P3|.
+
+
+Case 15
+~~~~~~~
+
+.. math::
+   :label: c15
+
+   P_1\binom{S_1}{t_1} \leftrightarrows 
+   P_2\binom{S_1}{t_2} \; & \square \;
+   ?? \leftarrow 
+   P_4\binom{S_1}{t_4} \leftrightarrows
+   P_5\binom{S_2}{t_5}\\
+   t_1 < t_2 & < t_4 < t_5\\
+   resolve(S_1) &\Rrightarrow P_4 \\
+   resolve(S_2) &\Rrightarrow P_5
+
+A set of objects :math:`O_{S_1} = \lbrace P_1, P_2, P_4 \rbrace` have the same series 
+identifier, |S1|.
+
+A set of objects :math:`O_{S_2} = \lbrace P_5 \rbrace` has the series 
+identifier, |S2|.
+
+Objects :math:`O = O_{S_1} \cup P_3 \cup O_{S_2}` all participate in a damaged
+obsolescence chain with no assertion of the relationship between |P2| and |P4|.
+
+In this case resolving |S1| will result in |P4| which is not the most recent
+object in the obsolescence chain, however it is the newest version in the
+obsolescence chain identified by |S1|. 
+
+Resolving |S2| will result in :math:`P_5`.
+
+
+Case 16
+~~~~~~~
+
+.. math::
+   :label: c16
+
+   P_1\binom{S_1}{t_1} \leftarrow 
+   P_2\binom{S_1}{t_2} & \rightarrow 
+   ?? \leftarrow 
+   P_4\binom{S_2}{t_4} \\
+   t_1 < t_2 & < t_4\\
+   resolve(S_1) &\Rrightarrow P_2 \\
+   resolve(S_2) &\Rrightarrow P_4
+
+A set of objects :math:`O_{S_1} = \lbrace P_1, P_2 \rbrace` have the same series 
+identifier, |S1|.
+
+A set of objects :math:`O_{S_2} = \lbrace P_4 \rbrace` has the series 
+identifier, |S2|.
+
+Objects :math:`O_{S_1}` and :math:`O_{S_2}` are both damaged obsolescence
+chains though the Coordinating Nodes may infer association between
+:math:`O_{S_1}` and :math:`O_{S_2}` since even though the object that |P2| is
+``obsoletedBy`` and the object that |P4| ``obsoletes`` can not be resolved,
+:math:`P_2.obsoletedBy` and :math:`P_4.obsoletes` are be the same value.
+
+In this case resolving |S1| will result in |P2| which is the most recent
+resolvable object in the obsolescence chain. 
+
+Resolving |S2| will result in :math:`P_4`.
+
+
+Case 17
+~~~~~~~
+
+.. math::
+   :label: c17
+
+   P_1\binom{S_1}{t_1} \leftarrow 
+   P_2\binom{S_1}{t_2} & \rightarrow 
+   ?? \leftarrow 
+   P_4\binom{S_1}{t_4} \\
+   t_1 < t_2 & < t_4\\
+   resolve(S_1) &\Rrightarrow P_4
+
+A set of objects :math:`O_{S_1} = \lbrace P_1, P_2, P_4 \rbrace` have the same
+series identifier, |S1|.
+
+Objects :math:`O_{S_1}` form a damaged obsolescence chain though it can be
+inferred that |P2| is ``obsoletedBy`` and |P4| ``obsoletes`` the same object
+even though it can not be resolved, :math:`P_2.obsoletedBy` and
+:math:`P_4.obsoletes` are be the same value.
+
+In this case resolving |S1| will result in |P4|.
+
+
+Case 18
+~~~~~~~
+
+.. math::
+   :label: c16
+
+   P_1\binom{S_1}{t_1} \leftrightarrows 
+   P_2\binom{S_1}{t_2} & \rightarrow 
+   ?? \; \square \; ?? \leftarrow
+   P_5\binom{S_1}{t_5} \\
+   t_1 < t_2 & < t_5\\
+   resolve(S_1) &\Rrightarrow P_5
+
+
+A set of objects :math:`O_{S_1} = \lbrace P_1, P_2, P_5 \rbrace` have the same
+series identifier, |S1|.
+
+The obsolescence chain :math:`O_{S_1}` is broken, with no way to traverse from
+|P2| to :math:`P_5`.
+
+The :attr:`~Types.SystemMetadata.dateUploaded` places :math:`P_5` as the newest
+object with the series Id of |S1|.
+
+Resolving |S1| results in :math:`P_5`.
+
+
+Case 19
+~~~~~~~
+
+.. math::
+   :label: c17
+
+   P_1\binom{S_1}{t_1} \leftarrow 
+   P_2\binom{S_1}{t_2} & \leftarrow 
+   P_3\binom{S_1}{t_3} \\
+   t_1 > t_2 & > t_3\\
+   resolve(S_1) &\Rrightarrow P_3
+
+A set of objects :math:`O_{S_1} = \lbrace P_1, P_2, P_3 \rbrace` have the same
+series identifier, |S1|.
+
+Objects :math:`O_{S_1}` form a damaged obsolescence chain since only
+``obsoletes`` values are specified.
+
+The :attr:`~Types.SystemMetadata.dateUploaded` of |P1| is newer than |P2|,
+which in turn is newer than |P3|.
+
+In this case resolving |S1| will result in |P3| even though |P1| is the most
+recent object since the obsolescence chain overrides the times.
+
 
 
 Referencing Content by Identifier
@@ -43,7 +670,8 @@ take that into consideration when deciding which  identifier to choose.
 
 .. TODO::
 
-    guidance on RESOURCE_MAPS - initial thoughts:  depends on references to DATA objects, whether they be SIDs or PIDs
+    guidance on RESOURCE_MAPS - initial thoughts: depends on references to DATA
+    objects, whether they be SIDs or PIDs
 
 
 Assigning Identifiers
@@ -248,317 +876,6 @@ Take this example P1[S1, t1] ⟸P2[S1, t2] ⟸P3(S1, t3) (case 19) (The t1, t2 a
     3. P2 obsoletes P1 and also P3 obsoletes P2 on the obsolete chain P1 ⟸ P2 ⟸ P3. So we choose the end of the whole chain - P3 as the final HEAD.
 
 
-Use Cases
----------
-
-Herein:
-
-:Pi:               A Persistent Identifier (PID)
-
-:|Si|:               A Series Identifier (SID)
-
-:|ti|:               Value of :attr:`~Types.SystemMetadata.dateUploaded` for
-                     an object
-
-:|t1| < |t2|:        Means |t1| is older than |t2|
-
-:|Pi|\ [|Sj|,\ |_|\ |tk|]:  is an object with PID |Pi| that has a SID value of |Sj|,
-                     and a :attr:`~Types.SystemMetadata.dateUploaded` of |tk|.
-
-:|Pi| ⟹ |Pj|:       means |Pi| has an :attr:`~Types.SystemMetadata.obsoletedBy`
-                     entry that contains the value |Pj|
-
-:|Pi| ⟸ |Pj|:       means |Pj| has an :attr:`~Types.SystemMetadata.obsoletes`
-                     entry that contains the value |Pi|
-
-:|Pi| ⟺ |Pj|:       means |Pi| has an
-                     :attr:`~Types.SystemMetadata.obsoletedBy` entry that
-                     contains the value |Pj| and |Pj| has an
-                     :attr:`~Types.SystemMetadata.obsoletes` entry that
-                     contains the value |Pi|.
-
-:|Pi| ∅ |Pj|:        means neither :attr:`~Types.SystemMetadata.obsoletedBy`
-                     nor :attr:`~Types.SystemMetadata.obsoletes` is set by
-                     |Pi|  or |Pj|.
-
-:``??``:             means object was not synchronized
-
-:resolve(|Si|) = |Pj|: Resolving SID |Si| results in PID |Pj|
-
-
-.. |Pi| replace:: ``Pi``
-.. |Pj| replace:: ``Pj``
-.. |Si| replace:: ``Si``
-.. |Sj| replace:: ``Sj``
-.. |ti| replace:: ``ti``
-.. |tk| replace:: ``tk``
-.. |t1| replace:: ``t1``
-.. |t2| replace:: ``t2``
-.. |t3| replace:: ``t3``
-.. |_| unicode:: 0xA0
-   :trim:
-
-Case 1
-~~~~~~
-
-Type 1, ideal obsolescence chain::
-
-  P1[S1, t1] ⟺ P2[S1, t2]
-  t1 < t2
-
-  resolve(S1) = P2
-
-``P2`` :attr:`~Types.SystemMetadata.obsoletes` ``P1``, ``P1`` is
-:attr:`~Types.SystemMetadata.obsoletedBy` ``P2``. Both ``P1`` and ``P2`` have
-the same series identifier. The :attr:`~Types.SystemMetadata.dateUploaded` of
-``P2`` is older than that of ``P1``. This is an ideal obsolescence chain and resolving ``S1`` will result in the object identified by ``P2``.
-
-
-Case 2
-~~~~~~
-
-::
-
-  P1[S1, t1) ∅ P2[S1, t2]
-  t1 < t2
-
-  resolve(S1) = P2
-
-This is an error condition. :func:`MNStorage.create` of ``P2`` with ``SID = S1`` or :func:`MNStorage.updateSystemMetadata` of ``P2`` setting ``SID = S1`` is not allowed unless ``P2`` obsoletes ``P1`` and / or ``P1`` is obsoletedBy ``P2``. ``P1`` and ``P2`` are Type 1 ends, not an ideal chain. The system will resolve ``S1`` to ``P2`` since that is the most recent entry that uses ``S1``.
-
-
-Case 3
-~~~~~~
-
-::
-
-  P1[S1, t1] ⟸ P2[S1, t2]
-  t1 < t2
-
-  resolve(S1) = P2
-
-P1 and P2 are type 1 ends, not an ideal chain since ``P1`` does not have an obsoletedBy entry of ``P2``. Discouraged, but not error
-condition.
-
-
-Case 4
-~~~~~~
-
-::
-
-  P1[S1, t1] ⟺ P2[S1, t2] ⟺ P3[S1, t3]
-  t1 < t2 < t3
-
-  resolve(S1) = P2                         [1]
-  resolve(S2) = P3                         [2]
-
-[1] Results in a Type 2 situation. S1 may never be reused.
-
-[2] Results in a Type 1 situation, an ideal chain.
-
-
-Case 5
-~~~~~~
-
-::
-
-  P1[S1, t1] ⟸ P2[S1, t2] ⟸ P3[S1, t3]
-  t1 < t2 < t3
-
-  resolve(S1) = P2                        [1]
-  resolve(S2) = P3                        [2]
-
-[1] P1 and P2 are type 1 ends, not an ideal chain. Choose P2 as temporary head.
-Nothing with the same SID obsoletes P2 and P2 is the HEAD.
-
-[2] Type 1 end, an ideal chain
-
-
-Case 6
-~~~~~~
-
-::
-
-  P1[S1, t1] ⟺ P2[S1, t2] ⟺ P3[_, t3]
-  t1 < t2 < t3
-
-  resolve(S1) = P2
-
-Type 2, an ideal chain
-
-
-Case 7
-~~~~~~
-
-::
-
-  P1[S1, t1] ⟺ P2[S1, t2] ⟺ P3[_, t3] ⟺ P4[S2, t4]
-  t1 < t2 < t3 < t4
-
-  resolve(S1) = P2                        [1]
-  resolve(S2) = P4                        [2]
-
-[1] Type 2 end, an ideal chain
-
-[2] Type 1, an ideal chain
-
-
-Case 8
-~~~~~~
-
-::
-
-  P1[S1, t1] ⟺ P2[S1, t2] ⟹  ??  ⟸ P4[S1, t4]
-  t1 < t2 < t4
-
-  resolve(S1) = P4
-
-(Type 1, an ideal chain) (Error, but will happen)
-
-
-Case 9
-~~~~~~
-
-::
-
-  P1[S1, t1] ⟺ P2[S1, t2]  ??  ⟸ P4[S1, t4]
-  t1 < t2 < t4
-
-  resolve(S1) = P4
-
-(P2 and P4 are type 1 ends, not an ideal chain. Choose P4 as the temporary HEAD. Nothing obsoletes P4 on the chain and P4 is the HEAD)
-
-
-Case 10
-~~~~~~~
-
-::
-
-  P1[S1, t1] ⟺ P2[S1, t2] ⟹  PX  ⟸ P4[S1, t4]
-  t1 < t2 < t4
-
-  resolve(S1) = P4
-
-(Type 1 end, an ideal chain) (PX: object P3 was deleted)
-
-
-Case 11
-~~~~~~~
-
-::
-
-  P1[S1, t1] ⟺ P2[S1, t2] ⟺ archived( P3[S1, t3] )
-  t1 < t2 < t3
-
-  resolve(S1) = P3
-
-Type 1 end, an ideal chain
-
-
-Case 12
-~~~~~~~
-
-::
-
-  P1[S1, t1] ⟺ P2[S1, t2] ⟹ ??
-  t1 < t2
-
-  resolve(S1) = P2
-
-Type 2 end, an ideal chain. Error, but will happen.
-
-
-Case 13
-~~~~~~~
-
-::
-
-  P1[S1, t1] ⟸ P2[S1, t2] ⟹ ??
-  t1 < t2
-
-  resolve(S1) = P2
-
-P1 is a type 1 end and P2 is a type 2 end, not an ideal chain. Choose P2 as the temporary HEAD. Nothing obsoletes P2 on the chain and P2 is the HEAD.
-
-
-Case 14
-~~~~~~~
-
-::
-
-  P1[S1, t1] ⟸ P2[S1, t2] ⟹ P3[S1, t3]
-  t1 < t2 < t3
-
-  resolve(S1) = P2                        [1]
-  resolve(S2) = P3                        [2]
-
-P1 is a type one end and P2 is a type 2 end, not an ideal chain. Choose P2 as the temporary HEAD. Nothing obsoletes P2 on the chain and P2 is the HEAD.
-
-
-Case 15
-~~~~~~~
-
-::
-
-  P1[S1, t1] ⟺ P2[S1, t2]  ?? ⟸ P4[S1, t4] ⟺ P5[S2, t5]
-  t1 < t2 < t4 < t5
-
-  resolve(S1) = P4                        [1]
-  resolve(S2) = P5                        [2]
-
-P2 is a type 1 end and P4 is a type 2 end, not an ideal chain. Choose P4 as the temporary HEAD. Nothing obsoletes P4 with the same SID on the chain and P4 is the HEAD.
-
-
-Case 16
-~~~~~~~
-
-::
-
-  P1[S1, t1] ⟸ P2[S1, t2] ⟹ ?? ⟸ P4[S2, t4]
-  t1 < t2 < t4
-
-  resolve(S1) = P2                        [1]
-  resolve(S2) = P4                        [2]
-
-P1 is a type 1 end and P2 is a type 2 ends, not an ideal chain.Choose P2 as the temporary HEAD. Nothing obsoletes P2 on the chain and P2 is the HEAD), S2=P4 (type 1 end, ideal chain).
-
-
-Case 17
-~~~~~~~
-
-::
-
-  P1[S1, t1] ⟸ P2[S1, t2] ⟹ ?? ⟸ P4[S1, t4]
-  t1 < t2 < t4
-
-  resolve(S1) = P4
-
-P1 and P4  are type 1 ends, not an ideal chain. Choose P4 as the temporary HEAD. Nothing obsoletes P4 on the chain and P4 is the HEAD.
-
-
-Case 18
-~~~~~~~
-
-::
-
-  P1[S1, t1] ⟺ P2[S1, t2] ⟹ ?? ∅ ?? ⟸ P5[S1, t5]
-  t1 < t2 < t4
-
-  resolve(S1) = P5
-
-P2 is a type 2 end and P5  is a type 1 end, not an ideal chain. Choose P5 as the temporary HEAD. Nothing obsoletes P5 on the chain and P5 is the HEAD.
-
-Case 19
-~~~~~~~
-
-::
-
-  P1[S1, t1] ⟸ P2[S1, t2] ⟸ P3[S1, t3]
-  t1 > t2 > t3
-
-  resolve(S1) = P3
-
-The time stamps don't agree the obsolete chain. P1, P2 and P3 are a type 1 end, not an ideal chain. Choose P1 as the temporary HEAD since t1 is the latest date of uploaded. However, P2 obsoletes P1 and P3 obsoletes P2. P3 is the HEAD.
 
 
 Version Storage
