@@ -204,12 +204,12 @@ todo_include_todos = True
 # The theme to use for HTML and HTML Help pages.  Major themes that come with
 # Sphinx are currently 'default' and 'sphinxdoc'.
 #html_theme = 'default'
-#html_theme = 'dataone_sans'
+html_theme = 'dataone_sans'
 #html_theme = 'dataone'
 
-import sphinx_rtd_theme
-html_theme = 'sphinx_rtd_theme'
-html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+#import sphinx_rtd_theme
+#html_theme = 'sphinx_rtd_theme'
+#html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -219,7 +219,7 @@ html_theme_options = {}
 
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []
-#html_theme_path = ['../tools/docutils/sphinx_themes', ]
+html_theme_path = ['../tools/docutils/sphinx_themes', ]
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
