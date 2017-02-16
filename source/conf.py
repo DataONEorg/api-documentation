@@ -183,6 +183,10 @@ exclude_patterns = ['**/.svn',
 # If true, '()' will be appended to :func: etc. cross-reference text.
 add_function_parentheses = True
 
+mathjax_path = '//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML'
+# TeX-AMS-MML_HTMLorMML
+
+
 # If true, the current module name will be prepended to all description
 # unit titles (such as .. function::).
 #add_module_names = True
