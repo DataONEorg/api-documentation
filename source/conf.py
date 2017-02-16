@@ -60,7 +60,7 @@ try:
                 'sphinx.ext.graphviz',
                 #'rst2pdf.pdfbuilder',
                 'sphinx.ext.todo',
-                'sphinx.ext.inheritance_diagram',
+                #'sphinx.ext.inheritance_diagram',
                 'sphinx.ext.extlinks',
                 #'sphinxcontrib.httpdomain',
                 'sphinxcontrib.plantuml',
@@ -74,7 +74,7 @@ except:
                 'sphinx.ext.graphviz',
                 #'rst2pdf.pdfbuilder',
                 'sphinx.ext.todo',
-                'sphinx.ext.inheritance_diagram',
+                #'sphinx.ext.inheritance_diagram',
                 'sphinx.ext.extlinks',
                 # 'sphinxcontrib.httpdomain',
                 #'plantuml',
@@ -151,7 +151,9 @@ unused_docs = [
                'design/usecasesoverview',
                'apis/types_auth',
                'apis/types_errors',
-               'apis/Types_include.txt']
+               'apis/Types_include.txt',
+               'design/SearchMetadata'
+               ]
 
 # List of directories, relative to source directory, that shouldn't be searched
 # for source files.
@@ -217,7 +219,7 @@ html_theme_options = {}
 
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []
-html_theme_path = ['../tools/docutils/sphinx_themes', ]
+#html_theme_path = ['../tools/docutils/sphinx_themes', ]
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
