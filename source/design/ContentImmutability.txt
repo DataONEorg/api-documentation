@@ -16,15 +16,15 @@ the DataONE network of Member Nodes.  Upon this foundation, DataONE can guarante
 that the exact byte array returned through the DataONE Read APIs (MNRead and CNRead) 
 is the one submitted and registered.
 
-Any repository that provides unique identifiers to snapshots (also referred to as versions) 
+Any repository that provides unique identifiers to snapshots (or revisions) 
 can participate as 
 DataONE Member Nodes, irrespective of whether or not they retain past snapshots. 
-This is accomplished by the use of two identifiers, one representing the version, and the 
+This is accomplished by the use of two identifiers, one representing the revision, and the 
 other representing the changing (or mutable) entity. For those Member Nodes only managing the 
-mutable entity, as long as a unique version-level identifier is generated upon each
+mutable entity, as long as a unique revision-level identifier is generated upon each
 update to the entity, DataONE will not reject the update. In situations where the
 rate of change is faster than DataONE's Member Node synchronization,  it is possible
-that some snapshots will fail to be registered.  However, since that version's unique 
+that some snapshots will fail to be registered.  However, since that revision's unique 
 identifier is never indexed or otherwise made available, the chance for needing to 
 retrieve that snapshot (and not finding it) in the future is very small.
 
@@ -33,11 +33,11 @@ The two identifiers are known as:
 
 **Persistent Identifier (PID)** 
   declared in the ``systemMetadata.identifier`` field. This identifier represents 
-  the snapshot or version DataONE replicates among the DataONE federation. 
+  the snapshot or revision DataONE replicates among the DataONE federation. 
 
 **Series Identifier (SID)**
   declared in the ``systemMetadata.seriesId`` field.  This identifier represents 
-  the mutable content, and resolves to the latest version among all registered versions 
+  the mutable content, and resolves to the latest revision among all registered revisions 
   when used in the DataONE Read APIs.
 
 DataONE relies on content originators to generate the identifiers they use for 
@@ -109,7 +109,7 @@ Identifier used for the resolve is a SID, this method will return an ObjectLocat
 for the latest known snapshot.
 
 
-Series Identifier resolution to the head version
+Series Identifier resolution to the head revision
 -------------------------------------------------
 The primary way for determining the head of a series is via the ``obsoletedBy`` field 
 in the system metadata that links to the next snapshot in the chain. With all of 
@@ -172,7 +172,7 @@ return an ObjectLocationList for the **P4** snapshot, since it is the latest of 
 non-obsoleted snapshots.
 
 Later, **A** makes some changes and realizes that the content is significantly different
-from previous versions, so renames it **S2**.  The system treats it as related, so 
+from previous revisions, so renames it **S2**.  The system treats it as related, so 
 links to the **P4** snapshot with the obsoletes field.  **P5(S2)** is now hosted on **M**, but
 **P4(S)** is gone.  ``cn.resolve(S)`` will return an ObjectLocationList for **P4**, but ``M.get(P4)``
 will return NotFound, and the client will have to retrieve from a replica Member Node, 
@@ -193,17 +193,17 @@ Summary
   * 
  
 - cannot put SID in obsoletes and obsoletedBy fields
-- SID resolution is "latest upload" among set of snapshots not obsoleted by 
+- SID resolution is "latest upload" among the set of snapshots not obsoleted by 
   another member of the series. 
 
-- not all versions are guaranteed to be synchronized or replicated
+- not all revisions are guaranteed to be synchronized or replicated
 
   * is dependent on synchronization frequency, CN availability for sync
-  * missing versions, if synced but not replicated will appear as NotFound
+  * missing revisions, if synced but not replicated will appear as NotFound
     exceptions on forwarded resolve requests
   *
-- unsynchronized versions might appear in obsoletes/dBy fields of existing versions
-- cn.listObjects(idFilter=sid)?? retrieves all synchronized versions 
+- unsynchronized revisions might appear in obsoletes/dBy fields of existing revisions
+- cn.listObjects(idFilter=sid)?? retrieves all synchronized revisions 
 
 - once SeriesID is set, it cannot be changed, because it breaks the trust that
   the identifier always gets the user to a conceptually equivalent object.
