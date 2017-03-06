@@ -281,7 +281,7 @@ The following query shows counts of data uploads by format type by a specified r
 The following query shows data download counts by a specific user for each month
 in 2013::
 
-  https://cn.dataone.org/cn/v1/query/logsolr/select?q=*:*&fq=rightsHolder:uid*PISCO*&fq=event:read&facet=true&facet.range=dateLogged&facet.range.start=2013-01-01T01:01:01Z&facet.range.end=2013-12-31T24:59:59Z&facet.range.gap=%2B1MONTH
+  https://cn.dataone.org/cn/v1/query/logsolr/?q=*:*&fq=rightsHolder:uid*PISCO*&fq=event:read&facet=true&facet.range=dateLogged&facet.range.start=2013-01-01T01:01:01Z&facet.range.end=2013-12-31T24:59:59Z&facet.range.gap=%2B1MONTH
 
 .. code-block:: xml
 
