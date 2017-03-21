@@ -1,24 +1,28 @@
 
 Spatial Search and Plotting Using Geohashes
--------------------------------------------
+===========================================
 
 Introduction
 ------------
 
-A geohash is an encoded character string that is computed from geographic coordinates. For example
-the approximate latitude and longitude of
-The National Center For Ecological Analysis and Synthesis is 34.419279, -119.698472 from which the geohash of *9q4gu1y4z* can be derived.
-The geohash algorithm is bidirectional, so
-geographic coordinates can be encoded into geohashes and geohashes can be decoded to obtain coordinates.
+A geohash is an encoded character string that is computed from geographic
+coordinates. For example the approximate latitude and longitude of The National
+Center For Ecological Analysis and Synthesis is 34.419279, -119.698472 from
+which the geohash of *9q4gu1y4z* can be derived. The geohash algorithm is
+bidirectional, so geographic coordinates can be encoded into geohashes and
+geohashes can be decoded to obtain coordinates.
  
-Geohashes have the property that characters can be incrementally removed from the right side of the geohash to represent
-a geographic location less precisely. A geohash is an approximation of a point, where each length of the geohash 
-corresponds to a rectangle (a geohash tile) that is an approximation of the original encoded geographic coordinate.
+Geohashes have the property that characters can be incrementally removed from
+the right side of the geohash to represent a geographic location less
+precisely. A geohash is an approximation of a point, where each length of the
+geohash corresponds to a rectangle (a geohash tile) that is an approximation of
+the original encoded geographic coordinate.
 
-This feature of geohashes can be useful for searching and plotting at different resolutions.
+This feature of geohashes can be useful for searching and plotting at different
+resolutions.
 
-Table 1 shows the relationship between geohash length and the size of the rectangle 
-represented by that geohash at the equator.
+Table 1 shows the relationship between geohash length and the size of the
+rectangle represented by that geohash at the equator.
 
 .. table:: **Table 1** Geohash Tile Sizes   
 
@@ -40,9 +44,11 @@ represented by that geohash at the equator.
    ======= =====================
 
 
-Table 2 shows the relationship between a geohash and the resulting latitude and longitude decoded from the different
-length geohashes. As characters are removed from the original geohash '9q4gu1y4z' the bounding rectangle and the accuracy
-of the decoded geohash becomes less precise. The decoded geohash corresponds to the centroid of the bounding rectangle.
+Table 2 shows the relationship between a geohash and the resulting latitude and
+longitude decoded from the different length geohashes. As characters are
+removed from the original geohash '9q4gu1y4z' the bounding rectangle and the
+accuracy of the decoded geohash becomes less precise. The decoded geohash
+corresponds to the centroid of the bounding rectangle.
 
 .. table:: **Table 2.** Geohash length vs Accuracy
 
@@ -60,53 +66,76 @@ of the decoded geohash becomes less precise. The decoded geohash corresponds to 
   9q4gu1y4z  34.41928, -119.69846        34.41926, -119.69849, 34.41930, -119.69844
   ========== =========================== =============================================
     
-Geohashes comprise a nested spatial indexing system with each level of geohashes tile containing 32 tiles of the next
-smaller tile size. The level one
-geohashes (length=1) divide the earth into 32 tiles. Each of these 32 tiles is then subdivided into 32 level 2 tiles
-and so on.
+Geohashes comprise a nested spatial indexing system with each level of
+geohashes tile containing 32 tiles of the next smaller tile size. The level one
+geohashes (length=1) divide the earth into 32 tiles. Each of these 32 tiles is
+then subdivided into 32 level 2 tiles and so on.
 
-Geohashes also have the property that all smaller tiles within the enclosing geohash tile begin with the same leading
-characters, therefor for the level 1 tile '9', all level 2 sub-tiles begin with '9': '90', '91', '93',..., '9z'.
+Geohashes also have the property that all smaller tiles within the enclosing
+geohash tile begin with the same leading characters, therefor for the level 1
+tile '9', all level 2 sub-tiles begin with '9': '90', '91', '93',..., '9z'.
 
-For example the level 3 geohash tile that encloses much of Santa Barbara County is '9q4'. Also
-contained in this bounding rectangle is the city center of Santa Maria (geohash 9q4qg7j2hmdz), Goleta (geohash 9q4gckb5jxu7)
-and Santa Barbara (geohash 9q4gu4n7y5b7) all of which begin with the characters '9q4' and fall within the
-'9q4' geohash rectangle. This property is very useful for searching and sorting datastores that contain geohashes.
+For example the level 3 geohash tile that encloses much of Santa Barbara County
+is '9q4'. Also contained in this bounding rectangle is the city center of Santa
+Maria (geohash 9q4qg7j2hmdz), Goleta (geohash 9q4gckb5jxu7) and Santa Barbara
+(geohash 9q4gu4n7y5b7) all of which begin with the characters '9q4' and fall
+within the '9q4' geohash rectangle. This property is very useful for searching
+and sorting datastores that contain geohashes.
+
 
 DataONE Search Index and Geohashes
 ----------------------------------
 
-The DataONE search index contains geohashes that have been computed for each geographic coverage associated with a PID containing
-geographic coverage information, which currently includes metadata objects in EML and FGDC formats. The search index
-is described here: `<SearchMetadata.html>`_. Each PID in the search index has a geohash computed at nine different resolutions,
-corresponding to the geohash lengths shown *Table 3*. The field names are appended with the geohash length, so for example the
-field *geohash_1* has a string length of one and corresponds to the largest tile size in *Table 1*. 
-Geohashes are added to the search index at different lengths to allow for searching and plotting at different resolutions.
+The DataONE search index contains geohashes that have been computed for each
+geographic coverage associated with a PID containing geographic coverage
+information, which currently includes metadata objects in EML and FGDC formats.
+The search index is described here: `<SearchMetadata.html>`_. Each PID in the
+search index has a geohash computed at nine different resolutions,
+corresponding to the geohash lengths shown *Table 3*. The field names are
+appended with the geohash length, so for example the field *geohash_1* has a
+string length of one and corresponds to the largest tile size in *Table 1*.
+Geohashes are added to the search index at different lengths to allow for
+searching and plotting at different resolutions.
 
-For EML documents, the geohashes are computed by determining the centroid of the XML elements *northBoundingCoordinate, southBoundingCoordinatem, 
-eastBoundingCoordinate, westBoundingCoordinate* which are child element of *//dataset/coverage/geographicCoverage/boundingCoordinates*. 
-Because any number
-of coverages may be defined with the EML format, the geohashes for these coverages are stored in a Solr multi-valued field. EML allows for
-the four bounding coordinates to specify a single coordinate (i.e. westBoudingCoordinate=eastBoundingCoordinate and 
-northBoundingCoordinate=southBoundingCoordinate), in which case this location is used to compute a geohash.
+For EML documents, the geohashes are computed by determining the centroid of
+the XML elements *northBoundingCoordinate, southBoundingCoordinatem,
+eastBoundingCoordinate, westBoundingCoordinate* which are child element of
+*//dataset/coverage/geographicCoverage/boundingCoordinates*. Because any number
+of coverages may be defined with the EML format, the geohashes for these
+coverages are stored in a Solr multi-valued field. EML allows for the four
+bounding coordinates to specify a single coordinate (i.e.
+westBoudingCoordinate=eastBoundingCoordinate and
+northBoundingCoordinate=southBoundingCoordinate), in which case this location
+is used to compute a geohash.
 
-For FGDC documents, the XML elements *northBoundingCoordinate, southBoundingCoordinate, eastBoundingCoordinate, westBoundingCoordinate*
-(parent element //metadata/idinfo/spdom/bounding) are used to compute the geohash using the same method as for EML.
+For FGDC documents, the XML elements *northBoundingCoordinate,
+southBoundingCoordinate, eastBoundingCoordinate, westBoundingCoordinate*
+(parent element //metadata/idinfo/spdom/bounding) are used to compute the
+geohash using the same method as for EML.
+
 
 Using Geohashes for plotting
 ----------------------------
-Geohashes can be used to efficiently plot the location of the geographic coverages. The following examples show different
-search and plotting strategies that are possible using geohashes. Several public domain Javascript libraries are available for assisting
-in developing web clients that could use geohashes. For example, the Javascript library *node-geohash* (available at https://github.com/sunng87/node-geohash)
-contains routines to encode and decode geohashs in addition to other spatial operators using geohashes. This library will be used for the examples that follow.
+
+Geohashes can be used to efficiently plot the location of the geographic
+coverages. The following examples show different search and plotting strategies
+that are possible using geohashes. Several public domain Javascript libraries
+are available for assisting in developing web clients that could use geohashes.
+For example, the Javascript library *node-geohash* (available at
+https://github.com/sunng87/node-geohash) contains routines to encode and decode
+geohashs in addition to other spatial operators using geohashes. This library
+will be used for the examples that follow.
 
 **Example: Retrieve geohashes as facets in Solr search**
 
-In this example the Solr search index is queried for a particular field of interest, with the associated geohash counts being returned as
-a field facet. Used in this way, the facet field of geohashes becomes a spatial bin, with the size of the geographic area and the spatial
-resolution of the binning selected by the geohash level. 
+In this example the Solr search index is queried for a particular field of
+interest, with the associated geohash counts being returned as a field facet.
+Used in this way, the facet field of geohashes becomes a spatial bin, with the
+size of the geographic area and the spatial resolution of the binning selected
+by the geohash level.
 
-For example, if we are interested in plotting the location of PIDs that have some associated with kelp, we could query the search index with the Solr query:
+For example, if we are interested in plotting the location of PIDs that have
+some associated with kelp, we could query the search index with the Solr query:
 
 ..
 
@@ -137,9 +166,9 @@ The portion of the response that we are interested in are the facet counts:
     <lst name="facet_ranges"/>
   </lst>
   
-To display these search results each geohash can be decoded to obtain the latitude, longitude of the geohash. 
-For example, 
-we can obtain the coordinates of the first geohash returned from the search as shown in the following code
+To display these search results each geohash can be decoded to obtain the
+latitude, longitude of the geohash. For example, we can obtain the coordinates
+of the first geohash returned from the search as shown in the following code
 fragment:
 
 ::
@@ -150,25 +179,32 @@ fragment:
   // Return [minlat, minlon, maxlat, maxlon] of geohash tile
   var coords = geohashLib.decode("9q4qx");
 
-The variable *coords* now contains the latitude, longitude (coords.latitude, coords.logitude) of the decoded geohash, which is center point of the geohash tile,
-in this case for level 5 geohash tiles. We could then place a marker with counts at these coordinates to indicate how many hits occured in this 
-geohash tile.
+The variable *coords* now contains the latitude, longitude (coords.latitude,
+coords.logitude) of the decoded geohash, which is center point of the geohash
+tile, in this case for level 5 geohash tiles. We could then place a marker with
+counts at these coordinates to indicate how many hits occured in this geohash
+tile.
 
-Care must be taken in selecting the right geohash tile level for the Solr query, with the consideration of smaller geohash tiles
-providing more accurate spatial results, but returning a greater number of facet results as each greater resolution tile
-covers a smaller geographic area.
+Care must be taken in selecting the right geohash tile level for the Solr
+query, with the consideration of smaller geohash tiles providing more accurate
+spatial results, but returning a greater number of facet results as each
+greater resolution tile covers a smaller geographic area.
+
 
 Using Geohashes for searching
 -----------------------------
 
-Geohashes in the search index are multi-valued, so that geohashes have been computed for each geographic coverage for a PID. Since
-the geohashes are indexed at different resolutions, you can search all coverages at different spatial resolutions.
+Geohashes in the search index are multi-valued, so that geohashes have been
+computed for each geographic coverage for a PID. Since the geohashes are
+indexed at different resolutions, you can search all coverages at different
+spatial resolutions.
 
 **Example: Search using a bounding box**
 
-One appraach to using geohashes for search is to retrieve all PIDs with geohashes that overlap a search box. 
-First determine which geohashes overlap a bounding rectangle, in this case the bounding rectangle that encompasses
-Santa Cruz Island in the Santa Barbara Channel:
+One appraach to using geohashes for search is to retrieve all PIDs with
+geohashes that overlap a search box. First determine which geohashes overlap a
+bounding rectangle, in this case the bounding rectangle that encompasses Santa
+Cruz Island in the Santa Barbara Channel:
 
 ::
 
@@ -192,26 +228,32 @@ Santa Cruz Island in the Santa Barbara Channel:
   // Find all geohashes that overlap the specified bounding box.
   var geohashes = geohashLib.bboxes (minlat, minlon, maxlat, maxlon, precision=4);
 
-The geohashes that overlap the search bounding box are returned. These geohashes can then be used
-to find PIDs that have a coverage that is within these geohash tiles:
+
+The geohashes that overlap the search bounding box are returned. These
+geohashes can then be used to find PIDs that have a coverage that is within
+these geohash tiles:
 
 ::
 
   https://cn.dataone.org/cn/v1/query/solr?q=*:*&q.op=OR&fq=geohash_4:(9q4c 9q49 9q51)&fl=id
   
-This Solr filter query will find all entries for which one of the level 4 geohashes matches any of the specified
-geohashes. Because the geohash_* fields are indexed as Solr multivalued fields, all coverages for a PID are
-compared to see if they match.
+This Solr filter query will find all entries for which one of the level 4
+geohashes matches any of the specified geohashes. Because the geohash_* fields
+are indexed as Solr multivalued fields, all coverages for a PID are compared to
+see if they match.
+
 
 Geohash algorithm
 -----------------
 
-A description of the geohash algorith is outside the scope of this document, but an excellent description of the
-can be found at http://en.wikipedia.org/wiki/Geohash.
+A description of the geohash algorith is outside the scope of this document,
+but an excellent description of the can be found at
+http://en.wikipedia.org/wiki/Geohash.
  
-One caveat of the geohash algorith that may be of interest to end users however, is that because of the tile
-ordering ("Z" ordering) where tile geohashes are incremented in a "Z" pattern and not strictly by
-row, column, it is not gauranteed that adjancent tiles have similar geohashes, for example, the level 1
-geohashes at the equator, starting from the International Date Line, are named "8", "9", "d", "e", "s", "t"
-and so on.
+One caveat of the geohash algorith that may be of interest to end users
+however, is that because of the tile ordering ("Z" ordering) where tile
+geohashes are incremented in a "Z" pattern and not strictly by row, column, it
+is not gauranteed that adjancent tiles have similar geohashes, for example, the
+level 1 geohashes at the equator, starting from the International Date Line,
+are named "8", "9", "d", "e", "s", "t" and so on.
 

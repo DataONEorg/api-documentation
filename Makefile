@@ -71,7 +71,7 @@ plantuml_source:
 	GRAPHVIZ_DOT=$(GRAPHVIZ) $(PLANTUML) "$(CURDIR)/source" "$(CURDIR)/source/design"
 
 plantuml_usecase:
-	GRAPHVIZ_DOT=$(GRAPHVIZ) $(PLANTUML) "$(CURDIR)/source/design/UseCases"
+	GRAPHVIZ_DOT=$(GRAPHVIZ) $(PLANTUML) "$(CURDIR)/source/design/UseCases/uml/*.uml"
 
 plantuml_types:
 	GRAPHVIZ_DOT=$(GRAPHVIZ) $(PLANTUML) "$(CURDIR)/source/apis"
