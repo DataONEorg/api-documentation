@@ -1,0 +1,53 @@
+@startuml ../images/05_seq.png
+title 
+MNStorage.update() Operation
+Obsoletes an existing object "A" with new object "B"
+end title
+
+actor User
+participant MN
+participant CN
+
+User -> MN: update(A, B)
+activate MN
+MN -> MN: update sysmeta for A
+deactivate MN
+... Next synchronization interval ...
+CN -> MN: listObjects(tstart)
+activate CN
+activate MN
+MN -> CN: object list
+deactivate MN
+CN -> CN: process object list
+deactivate CN
+
+== Alternative ==
+
+User -> MN: update(A, B)
+activate MN
+MN -> CN: setObsoletedBy(A, B)
+activate CN
+note right
+  Alternative mechanism for a 
+  V1 MN to update the obsoletedBy 
+  property of system metadata
+end note
+CN -> MN:
+deactivate CN
+MN -> CN: getSystemMetadata(A)
+deactivate MN
+
+== Alternative V2 ==
+
+User -> MN: update(A, B)
+activate MN
+MN -> MN: update sysmeta for A
+MN -> CN: synchronize(A)
+MN -> CN: synchronize(B)
+deactivate MN
+... Potential delay depending on CN sync backlog ...
+CN -> MN: getSystemMetadata(A)
+CN -> MN: getSystemMetadata(B)
+
+@enduml
+
