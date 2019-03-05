@@ -4,7 +4,7 @@
 Data Types in CICore
 --------------------
 
-.. module:: v1_1.Types
+.. module:: Types
    :synopsis: Catalog of data types (structures) used by the DataONE cicore.
 
 **Versions**
@@ -15,34 +15,34 @@ Data Types in CICore
 
 **Quick Reference**
 
-- :class:`v1_1.Types.QueryEngineDescription`
-- :class:`v1_1.Types.QueryEngineList`
-- :class:`v1_1.Types.QueryField`
+- :class:`Types.QueryEngineDescription`
+- :class:`Types.QueryEngineList`
+- :class:`Types.QueryField`
 
 
 
-.. image:: images/v1_1.classes_combined.png
+.. image:: images/classes_combined.png
 
 
 ..
-  @startuml images/v1_1.classes_combined.png
-  class v1_1.QueryEngineDescription {
+  @startuml images/classes_combined.png
+  class QueryEngineDescription {
     + queryEngineVersion : xs.string[1..1]
     + querySchemaVersion : xs.string[0..1]
     + name : xs.string[1..1]
     + additionalInfo : NonEmptyString[0..*]
     + queryField : v1_1.QueryField[0..*]
   }
-  v1_1.QueryEngineDescription .. xs.string
-  v1_1.QueryEngineDescription .. NonEmptyString
-  v1_1.QueryEngineDescription .. v1_1.QueryField
+  QueryEngineDescription .. xs.string
+  QueryEngineDescription .. NonEmptyString
+  QueryEngineDescription .. v1_1.QueryField
 
-  class v1_1.QueryEngineList {
+  class QueryEngineList {
     + queryEngine : NonEmptyString[0..*]
   }
-  v1_1.QueryEngineList .. NonEmptyString
+  QueryEngineList .. NonEmptyString
 
-  class v1_1.QueryField {
+  class QueryField {
     + name : NonEmptyString[1..1]
     + description : xs.string[0..*]
     + type : NonEmptyString[1..1]
@@ -51,12 +51,15 @@ Data Types in CICore
     + sortable : xs.boolean[1..1]
     + multivalued : xs.boolean[0..1]
   }
-  v1_1.QueryField .. NonEmptyString
-  v1_1.QueryField .. xs.string
-  v1_1.QueryField .. xs.boolean
+  QueryField .. NonEmptyString
+  QueryField .. xs.string
+  QueryField .. xs.boolean
 
   @enduml
 
+
+
+.. include:: Types_include.txt
 
 
 ..                                    ######
@@ -121,21 +124,21 @@ Data Types in CICore
       </xs:complexType>
 
 
-    .. image:: images/class_v1_1.QueryEngineDescription.png
+    .. image:: images/class_QueryEngineDescription.png
 
     ..
-      @startuml images/class_v1_1.QueryEngineDescription.png
+      @startuml images/class_QueryEngineDescription.png
 
-      class v1_1.QueryEngineDescription {
+      class QueryEngineDescription {
         + queryEngineVersion : xs.string[1..1]
         + querySchemaVersion : xs.string[0..1]
         + name : xs.string[1..1]
         + additionalInfo : NonEmptyString[0..*]
         + queryField : v1_1.QueryField[0..*]
       }
-      v1_1.QueryEngineDescription .. xs.string
-      v1_1.QueryEngineDescription .. NonEmptyString
-      v1_1.QueryEngineDescription .. v1_1.QueryField
+      QueryEngineDescription .. xs.string
+      QueryEngineDescription .. NonEmptyString
+      QueryEngineDescription .. v1_1.QueryField
 
       @enduml
 
@@ -163,15 +166,15 @@ Data Types in CICore
       </xs:complexType>
 
 
-    .. image:: images/class_v1_1.QueryEngineList.png
+    .. image:: images/class_QueryEngineList.png
 
     ..
-      @startuml images/class_v1_1.QueryEngineList.png
+      @startuml images/class_QueryEngineList.png
 
-      class v1_1.QueryEngineList {
+      class QueryEngineList {
         + queryEngine : NonEmptyString[0..*]
       }
-      v1_1.QueryEngineList .. NonEmptyString
+      QueryEngineList .. NonEmptyString
 
       @enduml
 
@@ -253,12 +256,12 @@ Data Types in CICore
       </xs:complexType>
 
 
-    .. image:: images/class_v1_1.QueryField.png
+    .. image:: images/class_QueryField.png
 
     ..
-      @startuml images/class_v1_1.QueryField.png
+      @startuml images/class_QueryField.png
 
-      class v1_1.QueryField {
+      class QueryField {
         + name : NonEmptyString[1..1]
         + description : xs.string[0..*]
         + type : NonEmptyString[1..1]
@@ -267,9 +270,9 @@ Data Types in CICore
         + sortable : xs.boolean[1..1]
         + multivalued : xs.boolean[0..1]
       }
-      v1_1.QueryField .. NonEmptyString
-      v1_1.QueryField .. xs.string
-      v1_1.QueryField .. xs.boolean
+      QueryField .. NonEmptyString
+      QueryField .. xs.string
+      QueryField .. xs.boolean
 
       @enduml
 

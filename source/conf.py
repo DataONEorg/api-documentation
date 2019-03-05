@@ -37,7 +37,7 @@ import sys, os
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 
-sys.path.append(os.path.abspath("../tools/rst_directives"))
+#sys.path.append(os.path.abspath("../tools/rst_directives"))
 
 # from docutils.parsers.rst import directives
 # import plantuml
@@ -45,7 +45,6 @@ sys.path.append(os.path.abspath("../tools/rst_directives"))
 
 from sqltable import SQLTable
 from docutils.parsers.rst import directives
-
 directives.register_directive("sqltable", SQLTable)
 
 # -- General configuration -----------------------------------------------------
