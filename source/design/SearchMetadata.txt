@@ -99,7 +99,7 @@ document (PID) indexed.
    :header: Attribute,Type,Multi?,Content Origin
    :widths: 3 2 1 10
    :driver: xlsx
-   :source: source/design/data/SearchFields.xlsx
+   :source: design/data/SearchFields.xlsx
    :sql: SELECT ':attr:`~SearchMetadata.'||SOLR||'`', FieldType, Multi, Reference FROM SystemMetadata;
 
 
