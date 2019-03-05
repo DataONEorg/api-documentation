@@ -64,7 +64,7 @@ try:
         #'sphinx.ext.inheritance_diagram',
         "sphinx.ext.extlinks",
         #'sphinxcontrib.httpdomain',
-        "sphinxcontrib.plantuml",
+        #"sphinxcontrib.plantuml",
     ]
 except:
     extensions = [
