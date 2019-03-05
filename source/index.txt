@@ -2,31 +2,27 @@ DataONE Architecture
 ====================
 
 The Data Observation Network for Earth (DataONE_) is an `NSF funded project`_
-in the DataNet program charged with implementing and deploying core services
-and infrastructure to improve the long term accessibility and re-use of data
-collected through NSF funded and other research projects.
+originaly with the DataNet program charged with implementing and deploying core services and infrastructure to improve the long term accessibility and re-use of data collected through NSF funded and other research projects.
 
 These documents provide the reference for implementation of services and tools
 that together form the DataONE cyberinfrastructure.
 
-.. Note:: 
+API Reference
+-------------
 
-   These documents refer to the current development (trunk) version of the API
-   documentation. Specific versions of the documentation are available on
-   releases.dataone.org_.
+.. toctree::
+   :maxdepth: 3
 
-   Please see `Version 1.2`_ for documentation of the currently deployed
-   infrastructure.
+   apis/index
 
-.. _releases.dataone.org: http://releases.dataone.org/online/
-.. _Version 1.2: http://releases.dataone.org/online/api-documentation-v1.2.0
 
-The source for these documents is located in the `subversion repository`_. For
-hints on editing, please review :doc:`about`. The HTML version of the document
-is generated from the current version of the source documents and is available
-from:
+Implementation Notes
+--------------------
 
-  https://purl.dataone.org/architecture-dev
+.. toctree::
+   :maxdepth: 2
+   
+   implementation/index
 
 
 Design Documents
@@ -36,9 +32,16 @@ Design Documents
    :maxdepth: 1
 
    overview
-   Design Documents <design/index>
    design/userscenarios
    design/usecases
+
+
+**Rearrange these:**
+
+.. toctree::
+   :maxdepth: 1
+
+   Design Documents <design/index>
    design/NodeIdentity
    design/WhatIsData
    design/DataPackage
@@ -67,22 +70,6 @@ Design Documents
    design/what_is_it
    
 
-API Reference
--------------
-
-.. toctree::
-   :maxdepth: 3
-
-   apis/index
-
-
-Implementation Notes
---------------------
-
-.. toctree::
-   :maxdepth: 2
-   
-   implementation/index
 
 
 Notes and Miscellanea

@@ -23,6 +23,7 @@ import re
 import xlrd
 import xlwt
 import textwrap
+from functools import reduce
 
 def generateTemplate(templateName):
   logging.info('Generating template %s' % templateName)
@@ -52,8 +53,8 @@ class docLoader(object):
     '''
     logging.debug('Loading column indexes')
     rowvals = sheet.row_values(self.labelrow)
-    ckeys = self.colnames.keys()
-    for col in xrange(0,len(rowvals)):
+    ckeys = list(self.colnames.keys())
+    for col in range(0,len(rowvals)):
       label = rowvals[col]
       if label in ckeys:
         self.colnames[label] = col
@@ -124,7 +125,7 @@ class docLoader(object):
     td = txt.split("\n\n")
     res = []
     for t in td:
-      res.append(u"%s%s" % (indent, t.rstrip()))
+      res.append("%s%s" % (indent, t.rstrip()))
     return "\n\n".join(res)
  
     td = txt.split("\n\n")
@@ -206,17 +207,17 @@ class docLoader(object):
       try:
         data = sorted(table['data'], key=lambda r: r[sortby] )
         table['data'] = data
-      except Exception, e:
+      except Exception as e:
         logging.exception(e)
     sindent = " "*indent
     if withHeader:
       sstart = ".. list-table::"
-      if table.has_key('title'):
+      if 'title' in table:
         sstart = ".. list-table:: %s" % table['title']
       res = [self.formatBlock(sstart, 
                               sindent, " "*(indent+5), False),
                               ]
-      if table.has_key('widths'):
+      if 'widths' in table:
         res.append("%s   :widths: %s" %  (sindent, table['widths']))
       res.append("%s   :header-rows: 1" % sindent)
       res.append('')
@@ -226,7 +227,7 @@ class docLoader(object):
     istr = "%s     - " % sindent
     if withHeader:
       res.append("%s%s" % (estr, self.formatBlock(table['heading'][0], "", " "*len(estr),False)))
-      for i in xrange(1, len(table['heading'])):
+      for i in range(1, len(table['heading'])):
         head = table['heading'][i]
         res.append("%s%s" % (istr, self.formatBlock(head, "", " "*len(istr), False)))
         
@@ -234,7 +235,7 @@ class docLoader(object):
       txt = row[table['heading'][0]]
       rstr = "%s" % (self.formatBlock(txt, " "*len(estr), " "*len(estr), False))
       res.append("%s%s" % (estr, rstr[len(estr):]))
-      for i in xrange(1, len(table['heading'])):
+      for i in range(1, len(table['heading'])):
         head = table['heading'][i]
         rstr = "%s" % (self.formatBlock(row[head], " "*len(istr)," "*len(istr), False))
         res.append("%s%s" % (istr, rstr[len(istr):]))
@@ -273,7 +274,7 @@ class ExceptionLoader(docLoader):
                      'TODO': 7}
   
   def getNames(self):
-    return map(lambda x: x['name'], self.data['exceptions'])
+    return [x['name'] for x in self.data['exceptions']]
 
 
   def getException(self, name):
@@ -311,7 +312,7 @@ class ExceptionLoader(docLoader):
     super(ExceptionLoader,self).loadContent(sheet)
     self.data = {'exceptions':[]}
     cexception = None
-    for rowidx in xrange(self.startrow, self.endrow):
+    for rowidx in range(self.startrow, self.endrow):
       rowvals = sheet.row_values(rowidx)
       logging.debug(str(rowvals))
       v = rowvals[self.colnames['Name']]
@@ -476,7 +477,7 @@ class FunctionLoader(docLoader):
     f['tier'] = str(rvals[self.colnames['Tier']]) 
     f['rest'] = str(rvals[self.colnames['REST']])
     f['resteg'] = str(rvals[self.colnames['RESTDescr']])
-    f['description'] =  [unicode(rvals[self.colnames['Description']]), ]
+    f['description'] =  [str(rvals[self.colnames['Description']]), ]
     param = {'name': rvals[self.colnames['Params']],
              'type': rvals[self.colnames['ParamType']],
              'descr': rvals[self.colnames['ParamDescr']],
@@ -494,7 +495,7 @@ class FunctionLoader(docLoader):
       f['todo'].append(v)
     usecases = rvals[self.colnames['UseCases']]
     usecases = usecases.split(",")
-    f['usecases'] = map(lambda uc: uc.strip(), usecases)
+    f['usecases'] = [uc.strip() for uc in usecases]
     return f
   
   
@@ -531,7 +532,7 @@ class FunctionLoader(docLoader):
     self.data['modules'] = {}
     self.data['order'] = []
     #iterate from rows between START and END
-    for rowidx in xrange(self.startrow, self.endrow):
+    for rowidx in range(self.startrow, self.endrow):
       rowvals = sheet.row_values(rowidx)
       logging.debug("ROW[%d] = %s" % (rowidx, str(rowvals)))
       if rowvals[self.colnames['Module']] != '' and \
@@ -539,14 +540,14 @@ class FunctionLoader(docLoader):
         cmodule = rowvals[self.colnames['Module']]
         if cmodule not in self.data['order']:
           self.data['order'].append(cmodule)
-      if not self.data['modules'].has_key(cmodule):
+      if cmodule not in self.data['modules']:
         self.data['modules'][cmodule] = {'functions':{},
                                          'order': [] }
       if rowvals[self.colnames['Function']] != '' and \
          rowvals[self.colnames['Function']] != cfunction:
         cfunction = rowvals[self.colnames['Function']]
         self.data['modules'][cmodule]['order'].append(cfunction)
-      if not self.data['modules'][cmodule]['functions'].has_key(cfunction):
+      if cfunction not in self.data['modules'][cmodule]['functions']:
         self.data['modules'][cmodule]['functions'][cfunction] = self._addFunction(rowvals)
       else:
         cf = self.data['modules'][cmodule]['functions'][cfunction]
@@ -693,7 +694,7 @@ class FunctionLoader(docLoader):
              'data':[]}
     for module in self.data['order']:
       moddata = self.data['modules'][module]
-      for i in xrange(0, len(moddata['order'])):
+      for i in range(0, len(moddata['order'])):
         func = moddata['functions'][moddata['order'][i]]
         modval = ":mod:`%s`" % module
         methodname = ':func:`%s <%s.%s>`' % (moddata['order'][i], module, moddata['order'][i])
@@ -723,11 +724,11 @@ class FunctionLoader(docLoader):
              'data':[]}
     for module in self.data['order']:
       moddata = self.data['modules'][module]
-      for i in xrange(0, len(moddata['order'])):
+      for i in range(0, len(moddata['order'])):
         func = moddata['functions'][moddata['order'][i]]
         try:
           description = "\n".join(func['description'])
-        except Exception, e:
+        except Exception as e:
           logging.exception(e)
           logging.error(str(func['description']))
           sys.exit()
@@ -769,7 +770,7 @@ class FunctionLoader(docLoader):
       logger.info("Module: %s" % module)
       if module.startswith('CN'):
         moddata = self.data['modules'][module]
-        for i in xrange(0,len(moddata['order'])):
+        for i in range(0,len(moddata['order'])):
           logger.info("Function: %s" % moddata['order'][i])
           func = moddata['functions'][moddata['order'][i]]
           entry = {'Method':':func:`%s.%s`' % (module, moddata['order'][i]),
@@ -781,7 +782,7 @@ class FunctionLoader(docLoader):
             cntable['data'].append(entry)
       else:
         moddata = self.data['modules'][module]
-        for i in xrange(0,len(moddata['order'])):
+        for i in range(0,len(moddata['order'])):
           logger.info("Function: %s" % moddata['order'][i])
           func = moddata['functions'][moddata['order'][i]]
           entry = {'Method':':func:`%s.%s`' % (module, moddata['order'][i]),
@@ -824,7 +825,7 @@ class FunctionLoader(docLoader):
       #component,junk = module.split("_", 1)
       component = module[0:2]
       docname = "%s_function_table" % component
-      if res.has_key(docname):
+      if docname in res:
         functable = self.generateFunctionTable(module, 
                                                withHeader=False, 
                                                funcmodule=True)
@@ -835,7 +836,7 @@ class FunctionLoader(docLoader):
                                 title="Methods for %s component" % component,
                                 funcmodule=True)
       res[docname] += functable
-    for docname in res.keys():
+    for docname in list(res.keys()):
       res[docname].append('')
       res[docname].append('')
     return res
@@ -871,7 +872,7 @@ def sourceModified(source, dest):
 def generateDocs(fname, destpath):
   
   def _writeFile(filename, text):
-    fdest = file(filename, 'w')
+    fdest = open(filename, 'w')
     fdest.write("\n".join(text))
     fdest.close()
   
@@ -903,13 +904,13 @@ def generateDocs(fname, destpath):
   _writeFile(fname, functions.generateFunctionExceptionMatrix(exceptions))
   
   text = functions.generateText()
-  for k in text.keys():
+  for k in list(text.keys()):
     logging.info('Generating module %s' % k)
     fname = os.path.join(destpath, "generated_%s.txt" % k)
     _writeFile(fname, text[k])
   
   text = functions.generateComponentSummaryText()
-  for k in text.keys():
+  for k in list(text.keys()):
     logging.info('Module summary doc %s' % k)
     fname = os.path.join(destpath, "generated_%s.txt" % k)
     _writeFile(fname, text[k])

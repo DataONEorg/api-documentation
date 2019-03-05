@@ -37,99 +37,104 @@ import sys, os
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 
-sys.path.append( os.path.abspath('../tools/docutils/rst_directives') )
+sys.path.append(os.path.abspath("../tools/rst_directives"))
 
-#from docutils.parsers.rst import directives
-#import plantuml
-#directives.register_directive('uml', plantuml.UmlDirective)
+# from docutils.parsers.rst import directives
+# import plantuml
+# directives.register_directive('uml', plantuml.UmlDirective)
 
 from sqltable import SQLTable
 from docutils.parsers.rst import directives
-directives.register_directive('sqltable', SQLTable)
+
+directives.register_directive("sqltable", SQLTable)
 
 # -- General configuration -----------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 try:
-  extensions = ['sphinx.ext.autodoc',
-                'sphinx.ext.autosummary',
-                'sphinx.ext.todo',
-                'sphinx.ext.mathjax',
-                'sphinx.ext.ifconfig',
-                'sphinx.ext.graphviz',
-                #'rst2pdf.pdfbuilder',
-                'sphinx.ext.todo',
-                #'sphinx.ext.inheritance_diagram',
-                'sphinx.ext.extlinks',
-                #'sphinxcontrib.httpdomain',
-                'sphinxcontrib.plantuml',
-                ]
+    extensions = [
+        "sphinx.ext.autodoc",
+        "sphinx.ext.autosummary",
+        "sphinx.ext.todo",
+        "sphinx.ext.mathjax",
+        "sphinx.ext.ifconfig",
+        "sphinx.ext.graphviz",
+        #'rst2pdf.pdfbuilder',
+        "sphinx.ext.todo",
+        #'sphinx.ext.inheritance_diagram',
+        "sphinx.ext.extlinks",
+        #'sphinxcontrib.httpdomain',
+        "sphinxcontrib.plantuml",
+    ]
 except:
-  extensions = ['sphinx.ext.autodoc',
-                'sphinx.ext.autosummary',
-                'sphinx.ext.todo',
-                'sphinx.ext.mathjax',
-                'sphinx.ext.ifconfig',
-                'sphinx.ext.graphviz',
-                #'rst2pdf.pdfbuilder',
-                'sphinx.ext.todo',
-                #'sphinx.ext.inheritance_diagram',
-                'sphinx.ext.extlinks',
-                # 'sphinxcontrib.httpdomain',
-                #'plantuml',
-                ]
+    extensions = [
+        "sphinx.ext.autodoc",
+        "sphinx.ext.autosummary",
+        "sphinx.ext.todo",
+        "sphinx.ext.mathjax",
+        "sphinx.ext.ifconfig",
+        "sphinx.ext.graphviz",
+        #'rst2pdf.pdfbuilder',
+        "sphinx.ext.todo",
+        #'sphinx.ext.inheritance_diagram',
+        "sphinx.ext.extlinks",
+        # 'sphinxcontrib.httpdomain',
+        #'plantuml',
+    ]
 
-images_config = {
-  'override_image_directive':True,
-  'default_image_width':'auto',
+images_config = {"override_image_directive": True, "default_image_width": "auto"}
+
+#
+extlinks = {
+    "history": (
+        "https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/%s",
+        "history: ",
+    )
 }
 
-#
-extlinks = {'history': ('https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/%s', 'history: ')}
-
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
-plantuml = "java -jar \"" + os.path.abspath('../tools/docutils/plantuml.jar') + "\""
-#plantuml += " -config " + os.path.abspath('../tools/docutils/plantuml.conf')
+plantuml = 'java -jar "' + os.path.abspath("../tools/docutils/plantuml.jar") + '"'
+# plantuml += " -config " + os.path.abspath('../tools/docutils/plantuml.conf')
 
-#Full path to the plantuml jar file.
-#plantumljar = os.path.abspath('../tools/docutils/plantuml.jar')
+# Full path to the plantuml jar file.
+# plantumljar = os.path.abspath('../tools/docutils/plantuml.jar')
 
-#Full path to the plantuml configuration file
-#plantumlconf = os.path.abspath('../tools/docutils/plantuml.conf')
+# Full path to the plantuml configuration file
+# plantumlconf = os.path.abspath('../tools/docutils/plantuml.conf')
 
-#Full set of argument for executing plantuml expressed as a list. Note that java must be on your path
-#plantuml = ['java', '-jar', plantumljar, '-config', plantumlconf]
+# Full set of argument for executing plantuml expressed as a list. Note that java must be on your path
+# plantuml = ['java', '-jar', plantumljar, '-config', plantumlconf]
 
 # The suffix of source filenames.
-source_suffix = '.txt'
+source_suffix = ".txt"
 
 # The encoding of source files.
-#source_encoding = 'utf-8'
+# source_encoding = 'utf-8'
 
 # The master toctree document.
-master_doc = 'index'
+master_doc = "index"
 
 # General information about the project.
-project = u'' #u'DataONE Architecture'
-copyright = u'2009-2017, DataONE'
-#copyright = u'''- INTEROP: Creation of an International Virtual Data Center for the Biodiversity,
-#Ecological and Environmental Sciences (NSF Award 0753138);
+project = u""  # u'DataONE Architecture'
+copyright = u"2009-2019, DataONE"
+# copyright = u'''- INTEROP: Creation of an International Virtual Data Center for the Biodiversity,
+# Ecological and Environmental Sciences (NSF Award 0753138);
 #
-#- DataNet Full Proposal: DataNetONE (Observation Network for Earth) (NSF Award 0830944)'''
+# - DataNet Full Proposal: DataNetONE (Observation Network for Earth) (NSF Award 0830944)'''
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
 
-previous_version = '2.0.0'
+previous_version = "2.0.0"
 # The short X.Y version.
-version = '2.1'
+version = "2.1"
 # The full version, including alpha/beta/rc tags.
-release = '2.1.0-beta'
+release = "2.1.0-beta"
 
 rst_epilog = ""
 
@@ -137,69 +142,70 @@ rst_prolog = ""
 
 # The language for content autogenerated by Sphinx. Refer to documentation
 # for a list of supported languages.
-#language = None
+# language = None
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
-#today = '2010-April-04'
+# today = '2010-April-04'
 # Else, today_fmt is used as the format for a strftime call.
-today_fmt = '%Y-%m-%d'
+today_fmt = "%Y-%m-%d"
 
 # List of documents that shouldn't be included in the build.
 unused_docs = [
-               'design/UseCases/uc_template',
-               'design/usecasesoverview',
-               'apis/types_auth',
-               'apis/types_errors',
-               'apis/Types_include.txt',
-               'design/SearchMetadata'
-               ]
+    "design/UseCases/uc_template",
+    "design/usecasesoverview",
+    "apis/types_auth",
+    "apis/types_errors",
+    "apis/Types_include.txt",
+    "design/SearchMetadata",
+]
 
 # List of directories, relative to source directory, that shouldn't be searched
 # for source files.
-exclude_trees = ['apis/generated', 'apis/examples', ]
+exclude_trees = ["apis/generated", "apis/examples"]
 
 exclude_patterns = [
-#                    'design/userscenarios*',
-#                    'design/Auth*',
-#                    'design/Data*',
-#                    'design/logging*',
-#                    'design/Logging*',
-#                    'design/NodeList*',
-                    ]
-exclude_patterns = ['**/.svn',
-                    'apis/generated/generated*',
-                    'apis/examples/*',
-                    'apis/Types_crontabentry.txt',
-                    'apis/Types_SAML.txt',
-                    'apis/Types_include.txt',
-                    'apis/types_errors.txt',
-                    'design/morpho/*'
-                     ]
+    #                    'design/userscenarios*',
+    #                    'design/Auth*',
+    #                    'design/Data*',
+    #                    'design/logging*',
+    #                    'design/Logging*',
+    #                    'design/NodeList*',
+]
+exclude_patterns = [
+    "**/.svn",
+    "apis/generated/generated*",
+    "apis/examples/*",
+    "apis/Types_crontabentry.txt",
+    "apis/Types_SAML.txt",
+    "apis/Types_include.txt",
+    "apis/types_errors.txt",
+    "design/morpho/*",
+]
 
 # The reST default role (used for this markup: `text`) to use for all documents.
-#default_role = None
+# default_role = None
 
 # If true, '()' will be appended to :func: etc. cross-reference text.
 add_function_parentheses = True
 
-mathjax_path = '//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML'
+mathjax_path = "//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"
 # TeX-AMS-MML_HTMLorMML
 
 
 # If true, the current module name will be prepended to all description
 # unit titles (such as .. function::).
-#add_module_names = True
+# add_module_names = True
 
 # If true, sectionauthor and moduleauthor directives will be shown in the
 # output. They are ignored by default.
-#show_authors = False
+# show_authors = False
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+pygments_style = "sphinx"
 
 # A list of ignored prefixes for module index sorting.
-#modindex_common_prefix = []
+# modindex_common_prefix = []
 
 todo_include_todos = True
 
@@ -207,23 +213,23 @@ todo_include_todos = True
 
 # The theme to use for HTML and HTML Help pages.  Major themes that come with
 # Sphinx are currently 'default' and 'sphinxdoc'.
-#html_theme = 'default'
-html_theme = 'dataone_sans'
+# html_theme = 'default'
+html_theme = "dataone_sans"
 #html_theme = 'dataone'
 
-#import sphinx_rtd_theme
+# import sphinx_rtd_theme
 #html_theme = 'sphinx_rtd_theme'
-#html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+# html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-#html_theme_options = {'collapsiblesidebar':'true'}
+# html_theme_options = {'collapsiblesidebar':'true'}
 html_theme_options = {}
 
 # Add any paths that contain custom themes here, relative to this directory.
-#html_theme_path = []
-html_theme_path = ['../tools/docutils/sphinx_themes', ]
+# html_theme_path = []
+html_theme_path = ["themes"]
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
@@ -234,55 +240,55 @@ html_short_title = ""
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-html_logo = '_static/dataone_logo.png'
+html_logo = "_static/dataone_logo.png"
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large.
-#html_favicon = None
+# html_favicon = None
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = ["_static"]
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
-html_last_updated_fmt = '%Y-%b-%d'
+html_last_updated_fmt = "%Y-%b-%d"
 
 # If true, SmartyPants will be used to convert quotes and dashes to
 # typographically correct entities.
-#html_use_smartypants = True
+# html_use_smartypants = True
 
 # Custom sidebar templates, maps document names to template names.
-#html_sidebars = {}
+# html_sidebars = {}
 
 # Additional templates that should be rendered to pages, maps page names to
 # template names.
-#html_additional_pages = {}
+# html_additional_pages = {}
 
 # If false, no module index is generated.
-#html_use_modindex = True
+# html_use_modindex = True
 
 # If false, no index is generated.
-#html_use_index = True
+# html_use_index = True
 
 # If true, the index is split into individual pages for each letter.
-#html_split_index = False
+# html_split_index = False
 
 # If true, links to the reST sources are added to the pages.
-#html_show_sourcelink = True
+# html_show_sourcelink = True
 
 # If true, an OpenSearch description file will be output, and all pages will
 # contain a <link> tag referring to it.  The value of this option must be the
 # base URL from which the finished HTML is served.
-#html_use_opensearch = ''
+# html_use_opensearch = ''
 
 # If nonempty, this is the file name suffix for HTML files (e.g. ".xhtml").
-#html_file_suffix = ''
+# html_file_suffix = ''
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'DataONEArchitecturedoc'
+htmlhelp_basename = "DataONEArchitecturedoc"
 
 # previous_version points to the previous RELEASED version of the documents
 # current version providesthe current version tag of the documents
@@ -290,22 +296,20 @@ htmlhelp_basename = 'DataONEArchitecturedoc'
 # otherwise a link to the previous version is placed in the footer.
 # purl_path is path on purl.dataone.org that points to previous version docs parent folder
 html_context = {
-  'previous_version': previous_version,
-  'current_version': release,
-  'is_development': True,
-  'purl_path':"/docs/api/",
-  'current_version_URL':'https://purl.dataone.org/architecture',
+    "previous_version": previous_version,
+    "current_version": release,
+    "is_development": True,
+    "purl_path": "/docs/api/",
+    "current_version_URL": "https://purl.dataone.org/architecture",
 }
 
 # -- Options for PDF output  --------------------------------------------------
 
-pdf_documents = [
-  ('index', u'dataone_arch', u'', u'DataONE'),
-  ]
+pdf_documents = [("index", u"dataone_arch", u"", u"DataONE")]
 
 # A comma-separated list of custom stylesheets.
 # Example: pdf_stylesheets = ['sphinx','kerning','a4']
-pdf_stylesheets = ['murphy','serif','letter']
+pdf_stylesheets = ["murphy", "serif", "letter"]
 
 # Create a compressed PDF # Use True/False or 1/0
 # Example: compressed=True #pdf_compressed = False
@@ -326,14 +330,14 @@ pdf_fit_mode = "shrink"
 
 # When a section starts in a new page, force it to be 'even', 'odd',
 # or just use 'any'
-#pdf_breakside = 'any'
+# pdf_breakside = 'any'
 
 # Insert footnotes where they are defined instead of
 # at the end.
-#pdf_inline_footnotes = True
+# pdf_inline_footnotes = True
 
 # verbosity level. 0 1 or 2
-#pdf_verbosity = 0
+# pdf_verbosity = 0
 
 # If false, no index is generated.
 pdf_use_index = True
@@ -345,84 +349,84 @@ pdf_use_modindex = True
 pdf_use_coverpage = True
 
 # Name of the cover page template to use
-#pdf_cover_template = 'sphinxcover.tmpl'
+# pdf_cover_template = 'sphinxcover.tmpl'
 
 # Documents to append as an appendix to all manuals.
-#pdf_appendices = []
+# pdf_appendices = []
 
 # Enable experimental feature to split table cells. Use it
 # if you get "DelayedTable too big" errors
-#pdf_splittables = False
+# pdf_splittables = False
 
 # Set the default DPI for images
 pdf_default_dpi = 300
 
 # Enable rst2pdf extension modules (default is empty list)
 # you need vectorpdf for better sphinx's graphviz support
-#pdf_extensions = ['vectorpdf']
+# pdf_extensions = ['vectorpdf']
 
 # Page template name for "regular" pages
-pdf_page_template = 'cutePage'
+pdf_page_template = "cutePage"
 
-#pdf_documents = [
+# pdf_documents = [
 #  ('index', 'DataONEArchitecture_0_0_4', u'DataONE Architecture Documentation',
 #   u'VDC Project, DataONE CCIT', 'manual'),
 #  #('MN_APIs_v0_3', 'MN_APIs_v0_3', u'MN API 0.3',
 #  #u'VDC Project, DataONE CCIT', 'manual'),
-#]
-#pdf_default_dpi = 400
-#pdf_stylesheets = ['sphinx', ]
+# ]
+# pdf_default_dpi = 400
+# pdf_stylesheets = ['sphinx', ]
 
-#pdf_fit_mode = "shrink"
+# pdf_fit_mode = "shrink"
 
-#pdf_break_level = 1
+# pdf_break_level = 1
 
-#pdf_breakside = 'any'
+# pdf_breakside = 'any'
 
-#pdf_use_index = True
+# pdf_use_index = True
 
-#pdf_use_modindex = True
+# pdf_use_modindex = True
 
-#pdf_use_coverpage = False
+# pdf_use_coverpage = False
 
-#pdf_splittables = False
+# pdf_splittables = False
 
-#pdf_page_template = 'cutePage'
+# pdf_page_template = 'cutePage'
 
 
 # -- Options for LaTeX output --------------------------------------------------
 
 # The paper size ('letter' or 'a4').
-latex_paper_size = 'letter'
+latex_paper_size = "letter"
 
 # The font size ('10pt', '11pt' or '12pt').
-latex_font_size = '10pt'
+latex_font_size = "10pt"
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
-dv_latex_author = u'''Produced by:\\\\INTEROP: Creation of an International Virtual Data Center for the Biodiversity,
-Ecological and Environmental Sciences (NSF Award 0753138)\\\\and\\\\DataNet Full Proposal: DataNetONE (Observation Network for Earth) (NSF Award 0830944)'''
+dv_latex_author = u"""Produced by:\\\\INTEROP: Creation of an International Virtual Data Center for the Biodiversity,
+Ecological and Environmental Sciences (NSF Award 0753138)\\\\and\\\\DataNet Full Proposal: DataNetONE (Observation Network for Earth) (NSF Award 0830944)"""
 latex_documents = [
-  ('index', 'DataONEArchitecture.tex', project, dv_latex_author, 'manual'),
+    ("index", "DataONEArchitecture.tex", project, dv_latex_author, "manual")
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
 # the title page.
-#latex_logo = None
+# latex_logo = None
 
 # For "manual" documents, if this is true, then toplevel headings are parts,
 # not chapters.
-#latex_use_parts = True
+# latex_use_parts = True
 latex_use_parts = False
 
 # Additional stuff for the LaTeX preamble.
-latex_preamble = '\\usepackage{pdflscape}'
+latex_preamble = "\\usepackage{pdflscape}"
 
 # Documents to append as an appendix to all manuals.
-#latex_appendices = []
+# latex_appendices = []
 
 # If false, no module index is generated.
-#latex_use_modindex = True
+# latex_use_modindex = True
 
 
 # -- Options for Epub output ---------------------------------------------------
@@ -430,33 +434,33 @@ latex_preamble = '\\usepackage{pdflscape}'
 # Bibliographic Dublin Core info.
 epub_title = project
 epub_author = dv_latex_author
-epub_publisher = u'DataONE.org'
+epub_publisher = u"DataONE.org"
 epub_copyright = copyright
 
 # The language of the text. It defaults to the language option
 # or en if the language is not set.
-#epub_language = ''
+# epub_language = ''
 
 # The scheme of the identifier. Typical schemes are ISBN or URL.
-#epub_scheme = ''
+# epub_scheme = ''
 
 # The unique identifier of the text. This can be a ISBN number
 # or the project homepage.
-#epub_identifier = ''
+# epub_identifier = ''
 
 # A unique identification for the text.
-#epub_uid = ''
+# epub_uid = ''
 
 # HTML files that should be inserted before the pages created by sphinx.
 # The format is a list of tuples containing the path and title.
-#epub_pre_files = []
+# epub_pre_files = []
 
 # HTML files shat should be inserted after the pages created by sphinx.
 # The format is a list of tuples containing the path and title.
-#epub_post_files = []
+# epub_post_files = []
 
 # A list of files that should not be packed into the epub file.
-#epub_exclude_files = []
+# epub_exclude_files = []
 
 # The depth of the table of contents in toc.ncx.
-#epub_tocdepth = 3
+# epub_tocdepth = 3

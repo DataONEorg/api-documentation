@@ -1,0 +1,111 @@
+{%- extends "basic/layout.html" %}
+{% if theme_collapsiblesidebar|tobool %}
+{% set script_files = ['_static/mathjax_pre.js'] + script_files + ['_static/sidebar.js'] %}
+{% endif %}
+
+{%- block sidebarlogo %}
+  {%- if logo %}
+    <p class="logo"><a href="/">
+      <img class="logo" src="{{ pathto('_static/' + logo, 1) }}" alt="Logo"/>
+    </a></p>
+  {%- endif %}
+{%- endblock %}
+
+{%- block extrahead %}
+  {{ super() }}
+  {% if theme_touch_icon %}
+  <link rel="apple-touch-icon" href="{{ pathto('_static/' ~ theme_touch_icon, 1) }}" />
+  {% endif %}
+  <link media="only screen and (max-device-width: 480px)" href="{{
+    pathto('_static/small_dataone.css', 1) }}" type= "text/css" rel="stylesheet" />
+{% endblock %}
+
+{% macro epad_name(page) -%}
+{{ epad_prefix|default('d1') }}-{{ page|replace("/",".") }}
+{%- endmacro %}
+
+{% block header %}
+  {{ super() }}
+  {%- if is_development %}
+    <div class="version_notice">
+      <p>
+      <span class='bold'>Warning:</span> These documents are under active 
+      development and subject to change (version {{current_version}}).<br />
+      The latest release documents are at:
+      <a href="{{current_version_URL}}">{{current_version_URL}}</a>
+      </p>
+    </div>
+  {%- endif %}
+{% endblock %}
+
+
+{%- block content %}
+  {%- block sidebar1 %} {# possible location for sidebar #} {% endblock %}
+
+    <div class="document">
+  {%- block document %}
+      <div class="documentwrapper">
+      {%- if render_sidebar %}
+        <div class="bodywrapper">
+      {%- endif %}
+          <div class="body">
+            {% block body %} {% endblock %}
+          </div>
+          {%- if theme_render_epad_comments|tobool %}
+          <!-- Annotation block - just an iframe to an epad page with same name as this page -->
+          <div class='annotation'>
+            <iframe src='http://epad-2.dataone.org/{{ epad_name(pagename) }}?showLineNumbers=true&useMonospaceFont=true' width="100%" height="400"></iframe>
+            <p>Comments for this page are on the epad-2 page <code>
+              <a href='http://epad-2.dataone.org/p/{{ epad_name(pagename) }}'>{{ epad_name(pagename) }}</a>
+              </code></p>
+          </div>
+          {% endif %}
+      {%- if render_sidebar %}
+        </div>
+      {%- endif %}
+      </div>
+  {%- endblock %}
+
+  {%- block sidebar2 %}{{ sidebar() }}{% endblock %}
+      <div class="clearer"></div>
+    </div>
+{%- endblock %}
+
+
+{%- block relbar2 %}
+{% endblock %}
+{%- block sidebarsourcelink %}{% endblock %}
+{%- block footer %}
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">{{ copyright }}</a>.
+      {%- if show_source and has_source and sourcename %}
+        [ <a href="{{ pathto('_sources/' + sourcename, true)|e }}"
+               rel="nofollow">{{ _('Page Source') }}</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/{{ sourcename }}'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      {%- endif %}
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+{%- endblock %}
