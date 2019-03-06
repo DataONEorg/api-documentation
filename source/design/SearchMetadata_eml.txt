@@ -7,7 +7,7 @@ Search Metadata Elements Extracted from EML
    :header: Field,Path,Reference,Notes
    :widths: 3 10 10 10
    :driver: xlsx
-   :source: source/design/data/SearchFields.xlsx
+   :source: design/data/SearchFields.xlsx
    :sql: SELECT ':attr:`SearchMetadata.'||SOLR||'`', ElementPath, Reference, Comments FROM EML;
 
 

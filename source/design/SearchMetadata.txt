@@ -179,7 +179,7 @@ populated with more than a single value per document (PID) indexed.
    :header: Attribute,Type,Multi?,Content Origin
    :widths: 3 2 1 10
    :driver: xlsx
-   :source: source/design/data/SearchFields.xlsx
+   :source: design/data/SearchFields.xlsx
    :sql: SELECT ':attr:`SearchMetadata.'||SOLR||'`', FieldType, Multi, Reference FROM ResourceMap;
 
 
@@ -408,7 +408,7 @@ indexed.
    :header: Field,Type,Multi?,Description
    :widths: 2 1 1 10
    :driver: xlsx
-   :source: source/design/data/SearchFields.xlsx
+   :source: design/data/SearchFields.xlsx
    :sql: SELECT ':attr:`SearchMetadata.'||SOLR||'`', FieldType, Multi, Description FROM Fields WHERE Source='S';
 
 
@@ -521,7 +521,7 @@ the search index.
    :header: Index Field,Multi?,Source,Description
    :widths: 1 1 1 10
    :driver: xlsx
-   :source: source/design/data/SearchFields.xlsx
+   :source: design/data/SearchFields.xlsx
    :sql: SELECT '.. attribute:: '||SOLR, Multi, Source, Description FROM Fields ORDER BY LOWER(SOLR) ASC;
 
 ----
