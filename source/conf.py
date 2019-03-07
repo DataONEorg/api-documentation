@@ -51,36 +51,21 @@ directives.register_directive("sqltable", SQLTable)
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-try:
-    extensions = [
-        "sphinx.ext.autodoc",
-        "sphinx.ext.autosummary",
-        "sphinx.ext.todo",
-        "sphinx.ext.mathjax",
-        "sphinx.ext.ifconfig",
-        "sphinx.ext.graphviz",
-        #'rst2pdf.pdfbuilder',
-        "sphinx.ext.todo",
-        #'sphinx.ext.inheritance_diagram',
-        "sphinx.ext.extlinks",
-        #'sphinxcontrib.httpdomain',
-        #"sphinxcontrib.plantuml",
-    ]
-except:
-    extensions = [
-        "sphinx.ext.autodoc",
-        "sphinx.ext.autosummary",
-        "sphinx.ext.todo",
-        "sphinx.ext.mathjax",
-        "sphinx.ext.ifconfig",
-        "sphinx.ext.graphviz",
-        #'rst2pdf.pdfbuilder',
-        "sphinx.ext.todo",
-        #'sphinx.ext.inheritance_diagram',
-        "sphinx.ext.extlinks",
-        # 'sphinxcontrib.httpdomain',
-        #'plantuml',
-    ]
+extensions = [
+    "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
+    "sphinx.ext.todo",
+    "sphinx.ext.mathjax",
+    "sphinx.ext.ifconfig",
+    "sphinx.ext.graphviz",
+    #'rst2pdf.pdfbuilder',
+    "sphinx.ext.todo",
+    #'sphinx.ext.inheritance_diagram',
+    "sphinx.ext.extlinks",
+    #'sphinxcontrib.httpdomain',
+    #"sphinxcontrib.plantuml",
+    "plantweb.directive",
+]
 
 images_config = {"override_image_directive": True, "default_image_width": "auto"}
 
