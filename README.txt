@@ -1,8 +1,16 @@
 Architecture Docs README
 ========================
 
-The architecture docs are now built automatically from the source contained in
-subversion and can be viewed at:
+API and Architecture documentation for DataONE.
 
-http://purl.dataone.org/architecture
+These documents are in the process of being migrated from subversion to GitHub and hosting by ReadTheDocs.
+
+The current released version of the documentation is available at:
+
+  https://purl.dataone.org/architecture
+
+The draft version at ReadTheDocs is available at:
+
+  https://dataone-architecture-documentation.readthedocs.io/en/latest/
+
 
