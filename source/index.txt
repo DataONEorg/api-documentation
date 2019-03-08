@@ -1,20 +1,32 @@
 DataONE Architecture
 ====================
 
-The Data Observation Network for Earth (DataONE_) is an `NSF funded project`_
-originaly with the DataNet program charged with implementing and deploying core services and infrastructure to improve the long term accessibility and re-use of data collected through NSF funded and other research projects.
+The Data Observation Network for Earth (DataONE_) implements and deploys
+core services and infrastructure to support long term access and re-use of
+data collected through NSF funded and other research projects.
 
-These documents provide the reference for implementation of services and tools
-that together form the DataONE cyberinfrastructure.
+These documents provide the architecture and API reference for deployed
+DataONE cyberinfrastructure.
+
 
 API Reference
 -------------
 
+The Application Programming Interfaces (APIs) for DataONE are described here.
+APIs are exposed by the DataONE Coordinating Nodes (Coordinating Node APIs)
+and data repositories participating as Member Nodes (Member Node APIs).
+
+All API interactions occur over HTTPS with XML encoded messaged and a RESTful
+approach.
+
 .. toctree::
    :maxdepth: 3
 
-   apis/index
-
+   apis/MN_APIs
+   apis/CN_APIs
+   apis/Exceptions
+   apis/Types
+   apis/rest_comms
 
 Implementation Notes
 --------------------
