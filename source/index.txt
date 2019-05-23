@@ -12,12 +12,9 @@ DataONE cyberinfrastructure.
 API Reference
 -------------
 
-The Application Programming Interfaces (APIs) for DataONE are described here.
-APIs are exposed by the DataONE Coordinating Nodes (Coordinating Node APIs)
-and data repositories participating as Member Nodes (Member Node APIs).
+Components of the DataONE infrastructure interact through the DataONE APIs. Participating data repositories expose the :doc:`apis/MN_APIs` and Coordinating Nodes expose the :doc:`apis/CN_APIs`.
 
-All API interactions occur over HTTPS with XML encoded messaged and a RESTful
-approach.
+API service endpoints use a restful pattern. All API interactions occur over HTTPS with XML encoded messages. The XML messages are defined by the :doc:`DataONE Types XML Schema<apis/Types>`. :doc:`apis/Exceptions` are cast to applicable HTTP error codes, with the response body containing an XML representation of the error. The RESTful implementation is more fully described in the :doc:`apis/rest_comms`.
 
 .. toctree::
    :maxdepth: 3
@@ -27,18 +24,11 @@ approach.
    apis/Exceptions
    apis/Types
    apis/rest_comms
-
-Implementation Notes
---------------------
-
-.. toctree::
-   :maxdepth: 2
    
-   implementation/index
-
-
 Design Documents
 ----------------
+
+The design documents describe the intended functionality of the DataONE infrastructure. :doc:`design/userscenarios` provide a functional overview from a user perspective. :doc:`design/usecases` provides a more detailed view of how the APIs are used to support specific component interactions.
 
 .. toctree::
    :maxdepth: 1
@@ -53,7 +43,6 @@ Design Documents
 .. toctree::
    :maxdepth: 1
 
-   Design Documents <design/index>
    design/NodeIdentity
    design/WhatIsData
    design/DataPackage
@@ -96,6 +85,16 @@ Notes and Miscellanea
    about
    glossary
    changelog
+
+
+Implementation Notes
+--------------------
+
+.. toctree::
+   :maxdepth: 2
+   
+   implementation/index
+
 
 
 Indices, Tables, and Change Log
