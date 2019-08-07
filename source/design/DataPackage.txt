@@ -213,6 +213,27 @@ increasing size.  Results are summarized below:
 .. TODO:  provide statistics for deserialization times for various size resource maps
 
 
+Describing filesystem hierarchies
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The original on-disk location of an object that was uploaded to DataONE can be preserved in the resource map with
+``schema:contentUrl``. This allows for reconstruction of the uploader's package structure when
+downloading the package to disk.
+
+``schema:contentUrl`` expects a URL formatted string, which led to the decision of prepending the path with ``file://``.
+The path is relative to the ``data/`` directory in a bag archive, and can be thought of as being at the top level of a data package.
+
+For example, a file ``yearly_temps_2010.csv`` that resides in ``global_warming_metrics/data``
+can be described as::
+
+  <rdf:Description rdf:about="https://cn.dataone.org/cn/v1/resolve/pid">
+    <cito:isDocumentedBy rdf:resource="https://cn.dataone.org/cn/v2/resolve/"/>
+    <schema:contentUrl>./global_warming_metrics/data/yearly_temps_2010.csv</schema:contentUrl>
+    ...
+  </rdf:Description>
+
+When exported to a bag archive, its location would be ``./data/global_warming_metrics/data/``.
+
+
 Resource map validation
 -----------------------
 
@@ -674,6 +695,8 @@ structure of a bag is::
       ├── data-file-2.csv
       ├── data-file-3.hdf
       └── metadata-file-1.xml
+      └── analyses
+          └── script.R
 
 
 The first addition is the presence of an OAI-ORE document ``oai-ore.txt`` within
@@ -694,6 +717,7 @@ typical pid-mapping.txt file might contain::
   doi://10.xxxx/AA/TG43 data/data-file-1.csv
   doi://10.xxxx/AA/7AW3 data/data-file-2.csv
   doi://10.xxxx/AA/790I data/data-file-3.csv
+  doi://10.xxxx/AA/790I data/analyses/script.R
   doi://10.xxxx/AA/76AV data/metadata-file-1.xml
 
 The bag can be serialized as a single file for transport following the BagIt
