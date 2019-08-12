@@ -215,15 +215,17 @@ increasing size.  Results are summarized below:
 
 Describing filesystem hierarchies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-The original on-disk location of an object that was uploaded to DataONE can be preserved in the resource map with
-``schema:contentUrl``. This allows for reconstruction of the uploader's package structure when
-downloading the package to disk.
+In some cases, data packages have scripts that depend on particular filesystem structures. For example, an ``analyze.R`` script may depend on 
+a file ``data/yearly_temps_2010.csv``. When packages are downloaded, the content is usually placed flat in the ``data/`` directory and the
+original path of the data is lost. This requires a researcher to manually reconstruct the folder structure of a bagged package.
+To remedy this, the original location of files that are uploaded to DataONE can be preserved in the resource map with
+``schema:contentUrl``. This allows for reconstruction of the uploader's package structure when exporting the package to a bag.
 
 ``schema:contentUrl`` expects a URL formatted string, which led to the decision of prepending the path with ``file://``.
 The path is relative to the ``data/`` directory in a bag archive, and can be thought of as being at the top level of a data package.
 
-For example, a file ``yearly_temps_2010.csv`` that resides in ``global_warming_metrics/data``
-can be described as::
+For example, a file ``yearly_temps_2010.csv`` that resides in a folder on a researchers' local machine at ``global_warming_metrics/data``
+can be described in DataONE as::
 
   <rdf:Description rdf:about="https://cn.dataone.org/cn/v1/resolve/pid">
     <cito:isDocumentedBy rdf:resource="https://cn.dataone.org/cn/v2/resolve/"/>
@@ -231,7 +233,19 @@ can be described as::
     ...
   </rdf:Description>
 
-When exported to a bag archive, its location would be ``./data/global_warming_metrics/data/``.
+When exported to a bag archive, a directory ``global_warming_metrics/data`` is created under the root ``data/`` directory. ``yearly_temps_2010.csv`` is placed
+under the newly created directories, shown below::
+
+  <base directory>/
+  ├── bagit.txt
+  ├── bag-info.txt
+  ├── manifest-<algorithm>.txt
+  ├── oai-ore.txt
+  ├── pid-mapping.txt
+  └── data
+      └── global_warming_metrics
+          └── data
+              └──yearly_temps_2010.csv
 
 
 Resource map validation
