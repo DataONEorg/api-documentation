@@ -219,17 +219,17 @@ In some cases, data packages have scripts that depend on particular filesystem s
 a file ``data/yearly_temps_2010.csv``. When packages are downloaded, the content is usually placed flat in the ``data/`` directory and the
 original path of the data is lost. This requires a researcher to manually reconstruct the folder structure of a bagged package.
 To remedy this, the original location of files that are uploaded to DataONE can be preserved in the resource map with
-``schema:contentUrl``. This allows for reconstruction of the uploader's package structure when exporting the package to a bag.
+``prov:atLocation``. This allows for reconstruction of the uploader's package structure when exporting the package to a bag.
 
-``schema:contentUrl`` expects a URL formatted string, which led to the decision of prepending the path with ``file://``.
-The path is relative to the ``data/`` directory in a bag archive, and can be thought of as being at the top level of a data package.
+``prov:atLocation`` has loose restrictions on the range of values that it can take. In DataONE's case, the value
+will be the path of the file relative to the package root.
 
 For example, a file ``yearly_temps_2010.csv`` that resides in a folder on a researchers' local machine at ``global_warming_metrics/data``
-can be described in DataONE as::
+is described in DataONE as::
 
   <rdf:Description rdf:about="https://cn.dataone.org/cn/v1/resolve/pid">
     <cito:isDocumentedBy rdf:resource="https://cn.dataone.org/cn/v2/resolve/"/>
-    <schema:contentUrl>./global_warming_metrics/data/yearly_temps_2010.csv</schema:contentUrl>
+    <prov:atLocation>global_warming_metrics/data/yearly_temps_2010.csv</prov:atLocation>
     ...
   </rdf:Description>
 
