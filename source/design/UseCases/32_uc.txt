@@ -13,30 +13,31 @@ Goal
   access for orphaned records), or the existing owner of an object would
   like to transfer ownership to another principal.
 
-Summary 
+Summary
   Ownership transfer needs to be supported so that all there is always someone
   that has the ability to manage the object. There are many circumstances w
-  where such changes are required, and the DataONE infrastructure should 
+  where such changes are required, and the DataONE infrastructure should
   support this operation both technically and operationally.
 
 Actors
   - Current and new data owner
   - Data managers
 
-Preconditions 
+Preconditions
   - Content exists in the DataONE system
   - Owner wants to transfer ownership role
-  - Organization needs to take control of objects (owner no longer filling 
+  - Organization needs to take control of objects (owner no longer filling
     that role)
-  
+
 Triggers
   - Current owner no longer able to fill that role
- 
+
 Post Conditions
   - Object ownership has been changed
   - Updated to roles updated through the federation
 
-.. 
+.. uml::
+
    @startuml images/32_seq.png
    actor "User (User or Organization)" as user
    participant "Client" as app_client << Application >>
@@ -54,8 +55,6 @@ Post Conditions
    end note
    @enduml
 
-.. image::  images/32_seq.png
-
 *Figure 1.* Interactions for use case 32. User or organization takes over
 'ownership' of a set of objects\n(write access for orphaned records).
 
@@ -66,4 +65,3 @@ Post Conditions
   :attr:`SystemMetadata.rightsHolder`.
 
 .. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/32_uc.txt
-

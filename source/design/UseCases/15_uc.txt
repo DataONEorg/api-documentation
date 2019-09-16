@@ -14,7 +14,7 @@ Goal
   User Account Management - Create new user account on Identity Provider (also
   edit, delete, ...).
 
-Summary 
+Summary
   Perform basic account management operations. This process can be quite
   complex depending on the identity provider in use and the security policies
   that need to be addressed.
@@ -37,7 +37,7 @@ Actors
   - Coordinating Node
 
 
-Preconditions 
+Preconditions
   - System is operational and policy is in place to accept new users.
 
 Triggers
@@ -50,7 +50,8 @@ Post Conditions
 
   - Account information is replicated across CNs
 
-.. 
+.. uml::
+
    @startuml images/15_seq.png
    actor User
    participant "Client" as app_client << Application >>
@@ -60,8 +61,6 @@ Post Conditions
    app_client <-- c_authenticate: token or failure
    User <-- c_authenticate: email confirmation
    @enduml
-
-.. image:: images/15_seq.png
 
 *Figure 1.* Interactions for use case 15.
 

@@ -23,9 +23,9 @@ Actors
 
   - Member Node
 
-Preconditions 
+Preconditions
   - Large amount of metadata data is required to be uploaded to the CN
-  
+
 Triggers
   - Indication of a large amount of content to retrieves from a MN
 
@@ -33,7 +33,8 @@ Post Conditions
   - The upload is completed, CN synchronization is completed, MN replication
     is scheduled.
 
-.. 
+.. uml::
+
   @startuml images/07_uc.png
 
    title Interactions: 07 - Coordinating Node requests metadata, data list from new Member Node\nand then performs a batch upload.interaction
@@ -50,7 +51,6 @@ Post Conditions
    c_sync -> c_crud: batchWrite (objectsList)
   @enduml
 
-.. image:: images/07_uc.png
 
 *Figure 1.* Interactions for use case 07.
 

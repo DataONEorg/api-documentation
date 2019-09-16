@@ -43,7 +43,7 @@ Actors
 - Coordinating Node
 
 .. uml::
-   
+
    @startuml images/06_uc.png
    actor "Coordinating Node" as CN
    actor "Member Node" as MN
@@ -61,7 +61,7 @@ Actors
 involved in this use case.
 
 
-Preconditions 
+Preconditions
 ~~~~~~~~~~~~~
 
 - CN and MN operational
@@ -78,7 +78,7 @@ Triggers
 Post Conditions
 ~~~~~~~~~~~~~~~
 
-- All System Metadata, science metadata, and resoruce map documents from a MN 
+- All System Metadata, science metadata, and resoruce map documents from a MN
   are also present on the CN
 
 - Update to the search index is triggered (Use Case 43)
@@ -93,7 +93,7 @@ Implementation Overview
   autonumber "[0] "
   participant MN <<Member Node>>
   participant CN <<Coordinating Node>>
-  
+
   CN -> MN: listObjects( timePeriod )
   activate CN
   MN -> CN: objectList
@@ -134,8 +134,8 @@ Implementation Overview
   deactivate CN
   @enduml
 
-**Figure 2.** Overview of synchronization process using a polling process to 
-periodically request information about objects that have changed within a time 
+**Figure 2.** Overview of synchronization process using a polling process to
+periodically request information about objects that have changed within a time
 period.
 
 
@@ -145,7 +145,7 @@ period.
   autonumber "[0] "
   participant MN <<Member Node>>
   participant CN <<Coordinating Node>>
-  
+
   MN -> CN: synchronize(PID)
   activate CN
   CN -> CN: queue PID for synchronization
@@ -184,33 +184,21 @@ period.
   deactivate CN
   @enduml
 
-**Figure 3.** Overview of synchronization process with an external request to 
-synchronize an object rather than relying on periodic polling. Note this is a 
-Version 2.x feature. 
+**Figure 3.** Overview of synchronization process with an external request to
+synchronize an object rather than relying on periodic polling. Note this is a
+Version 2.x feature.
 
 
 Implementation Details
 ~~~~~~~~~~~~~~~~~~~~~~
 
-.. TODO:: 2015-09-17 Review for currentness
 
-.. image:: images/06_seq.png
+.. uml::
 
-*Figure 4.* Sequence diagram for use case 06. Synchronize content between
-Member and Coordinating Node. Detail for the *processObject()* step provided
-in the activity diagram below.
-
-.. image:: images/06_act.png
-
-*Figure 5.* Activity diagram indicating the execution flow after attempting to
-retrieve the system metadata for the object from the CN.
-
-
-.. 
     @startuml images/06_seq.png
     skinparam notebordercolor #AAAAAA
     skinparam notefontcolor #222222
-    
+
     participant "Repl Task Queue" as cn_repl << Cluster >>
     participant "Replication" as cn_replication << CN >>
     participant "Index Task Queue" as cn_index << Cluster >>
@@ -225,22 +213,22 @@ retrieve the system metadata for the object from the CN.
     'm_crud -> c_notify: notify(session, PID, OBJECT_CREATED)
     'c_notify -> cn_queue: addTask(SyncTask, node, PID)
     'note right
-    '  notification triggered by successful 
+    '  notification triggered by successful
     '  create operation on MN.
     'end note
 
     'm_rep -> c_notify: setReplicationStatus(token, PID, COMPLETE)
     'c_notify -> cn_queue: addTask(SyncTask, node, PID)
     'note right
-    '  notification triggered by completed 
+    '  notification triggered by completed
     '  replication operation on MN.
     'end note
-    
+
     group populateSynchronizationQueue
       cn_sync -> cn_nodes: lock(node_id)
       activate cn_sync #D74F57
       note right
-        Start of synchronization 
+        Start of synchronization
         process triggered by quartz
       end note
       activate cn_nodes #D74F57
@@ -248,13 +236,13 @@ retrieve the system metadata for the object from the CN.
       cn_sync -> cn_nodes: getLastUpdateTime(node_id)
       activate cn_nodes #D74F57
       note right
-        The Node Map is a hash of 
+        The Node Map is a hash of
         (node_id, Node), use Hazelcast query
         Map.values() passing in SqlPredicate
       end note
       cn_nodes --> cn_sync: startTime
       deactivate cn_nodes
-    
+
       cn_sync -> mn_read: listObjects(session, startTime, ...)
       activate mn_read #D74F57
       cn_sync <-- mn_read: ObjectList
@@ -264,20 +252,20 @@ retrieve the system metadata for the object from the CN.
       note right
         Each SyncTask implements Callable
         and will be submitted to the
-        ExecutorService to be executed 
+        ExecutorService to be executed
         on a CN
       end note
-        
+
         cn_sync -> cn_queue: offer(taskid, SyncTask)
         activate cn_queue #D74F57
         cn_queue --> cn_sync: OK
         deactivate cn_queue
       end
       note right
-        adding SyncTasks should fail if PID is already 
-        in the list and the PID is NOT locked. This enables 
-        very recent updates to a PID to occur and be 
-        correctly managed by the overall synchronization 
+        adding SyncTasks should fail if PID is already
+        in the list and the PID is NOT locked. This enables
+        very recent updates to a PID to occur and be
+        correctly managed by the overall synchronization
         process.
       end note
       cn_sync -> cn_nodes: setLastUpdateTime(node_id, startTime)
@@ -285,7 +273,7 @@ retrieve the system metadata for the object from the CN.
       cn_nodes --> cn_sync: OK
       deactivate cn_nodes
 
-      cn_sync -> cn_nodes: unlock(node_id)    
+      cn_sync -> cn_nodes: unlock(node_id)
       deactivate cn_sync
       deactivate cn_nodes
     end
@@ -296,11 +284,11 @@ retrieve the system metadata for the object from the CN.
         Synchronization implements EntryListener,
         monitors the Sync Queue for changes.
       end note
-      activate cn_sync #D74F57      
+      activate cn_sync #D74F57
       cn_sync -> cn_queue: poll(timeout)
       activate cn_queue #D74F57
       note right
-        Only one CN will win the poll and 
+        Only one CN will win the poll and
         process the SyncTask
       end note
       cn_queue --> cn_sync: SyncTask
@@ -315,7 +303,7 @@ retrieve the system metadata for the object from the CN.
         mn_read -> cn_sync: object
         cn_sync -> cn_sync: work
         note right
-          Check for new object, 
+          Check for new object,
           updates to properties
         end note
       end
@@ -325,14 +313,14 @@ retrieve the system metadata for the object from the CN.
       activate cn_indexer #D74F57
       note left
         Indexer implements EntryListener,
-        monitors the System Metadata Map 
+        monitors the System Metadata Map
         for inserts, updates, deletes.
       end note
       cn_indexer -> cn_indexer: createTask(PID)
       note left
         Each IndexTask implements Callable
         and will be submitted to the
-        ExecutorService to be executed 
+        ExecutorService to be executed
         on the local CN
       end note
       cn_indexer -> cn_index: offer(taskid, IndexTask)
@@ -346,14 +334,14 @@ retrieve the system metadata for the object from the CN.
       activate cn_replication #D74F57
       note left
         Indexer implements EntryListener,
-        monitors the System Metadata Map 
+        monitors the System Metadata Map
         for inserts, updates, deletes.
       end note
       cn_replication -> cn_replication: createTask(PID)
       note left
         Each ReplTask implements Callable
         and will be submitted to the
-        ExecutorService to be executed 
+        ExecutorService to be executed
         on the a CN
       end note
       cn_replication -> cn_repl: offer(taskid, ReplTask)
@@ -363,8 +351,12 @@ retrieve the system metadata for the object from the CN.
     deactivate cn_sync
     @enduml
 
+*Figure 4.* Sequence diagram for use case 06. Synchronize content between
+Member and Coordinating Node. Detail for the *processObject()* step provided
+in the activity diagram below.
 
-.. 
+.. uml::
+
    @startuml images/06_act.png
    (*) --> [processObject()] if "CNRead.getSystemMetadata(PID)" then
      if "Duplicate Object?" then
@@ -373,7 +365,7 @@ retrieve the system metadata for the object from the CN.
        --> "Store System Metadata"
        --> "Notify watchers\nIndex, Replication"
        --> (*)
-     else 
+     else
        -->[No] "Error: Duplicate Identifier"
        --> "Notify MN"
        --> (*)
@@ -398,14 +390,20 @@ retrieve the system metadata for the object from the CN.
    @enduml
 
 
+*Figure 5.* Activity diagram indicating the execution flow after attempting to
+retrieve the system metadata for the object from the CN.
+
+
+
+
 Implementation
 ~~~~~~~~~~~~~~
 
 The Member Node synchronization process will operate in an asynchronous
 manner, with a task queue on the CN service containing a list of objects that
-need to be added to the coordinating node populated through two mechanisms: 
+need to be added to the coordinating node populated through two mechanisms:
 
-1. scheduled calls to :func:`MNRead.listObjects` 
+1. scheduled calls to :func:`MNRead.listObjects`
 
 2. through a new notification API that is called by a Member Node after a
    successful create operation.
@@ -492,7 +490,7 @@ Populating the harvest task queue pseudo code::
       if (taskQueue.length < MIN_TASKS)
       {
         MemberNodeState = getNextMemberNode();
-        
+
         // This could be executed in a different thread, which would
         // enable multiple MNs to be polled at a tme if necessary
         int numNewEntries = loadMNTasks(taskQueue, mnState);

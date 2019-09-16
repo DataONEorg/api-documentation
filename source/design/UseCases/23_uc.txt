@@ -13,8 +13,8 @@ Goal
   User can find out where all copies of my data are in the system and can
   expunge them.
 
-Summary 
-  In some cases it may be desirable for a data owner to remove all their 
+Summary
+  In some cases it may be desirable for a data owner to remove all their
   content from the system, however this use case conflicts with the general
   premise of DataONE to preserve information. A useful compromise *may* be to
   expunge content that has no known references to it.
@@ -35,19 +35,20 @@ Actors
   - Coordinating Nodes
   - Notification system (referrers should be notified of removal)
 
-Preconditions 
+Preconditions
   - Content exists in the system that must be removed
   - A decision has been made to remove all / some content
-  
+
 Triggers
-  - All triggers for this should be through administrative / curatorial 
+  - All triggers for this should be through administrative / curatorial
     procedures.
- 
+
 Post Conditions
   - The targeted content is no longer present in the DataONE system
   - Subscribers are be notified of the change
 
-.. 
+.. uml::
+
   @startuml images/23_seq.png
 
    actor "User (Data Owner)" as user
@@ -74,9 +75,7 @@ Post Conditions
    or should this be handled by another
    API?
    end note
-   @enduml 
-
-.. image:: images/23_seq.png
+   @enduml
 
 *Figure 1.* Interactions for use case 23, User can find out where all copies
 of my data are in the system and\ncan expunge them

@@ -12,7 +12,7 @@ Goal
   General public can request aggregated download usage information for any
   object ID (with anonymous read access)
 
-Summary 
+Summary
   This operation provides an indication of the popularity for an object in
   DataONE, somewhat equivalent to a citation index for a publication.
 
@@ -21,9 +21,9 @@ Actors
 
   - Coordinating Node
 
-Preconditions 
+Preconditions
   Use statistics have been recorded for a given object
-  
+
 Triggers
   - Any user requests use logs for an object
 
@@ -32,7 +32,8 @@ Post Conditions
     authorized).
 
 
-.. 
+.. uml::
+
    @startuml images/19_seq.png
    actor User
    participant "Client" as app_client << Application >>
@@ -54,9 +55,6 @@ Post Conditions
    end note
    @enduml
 
-.. image::  images/19_seq.png
-
 *Figure 1.* Interactions for use case 19.
 
 .. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/19_uc.txt
-

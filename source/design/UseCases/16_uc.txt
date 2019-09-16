@@ -16,7 +16,7 @@ Goal
   and object owner.
 
 
-Summary 
+Summary
 
   Logging is important for monitoring performance and stability of the system
   as well as for ensuring appropriate attribution is given to contributors of
@@ -39,7 +39,7 @@ Actors
   - Node (Member or Coordinating)
 
 
-Preconditions 
+Preconditions
 
   - User has authenticated, and is authorized for requested operation
 
@@ -54,7 +54,8 @@ Post Conditions
   - The operation is recorded in the log for the node.
 
 
-.. 
+.. uml::
+
    @startuml images/16_seq.png
 
    participant "Client" as app_client << Application >>
@@ -69,8 +70,6 @@ Post Conditions
    m_crud --> app_client: response
    deactivate m_crud
    @enduml
-
-.. image:: images/16_seq.png
 
 *Figure 1.* Interactions for use case 16.
 

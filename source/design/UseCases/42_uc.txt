@@ -10,7 +10,7 @@ Goal
 
 Alter mutable properties of System Metadata.
 
-Summary 
+Summary
 ~~~~~~~
 
 System Metadata provides low level information about each object in DataONE and
@@ -21,7 +21,7 @@ This use case desribes the general pattern of updating System Metadata
 properties by agents with authority to do so.
 
 In version 1.x of the DataONE infrastructure, System Metadata may only be
-altered through Coordinating Nodes (after creation and synchronization). 
+altered through Coordinating Nodes (after creation and synchronization).
 
 In version 2.x of the DataONE infrastructure, properties of System Metadata are
 managed by the Authoritative Member Node with the exception of Replica
@@ -40,7 +40,7 @@ Actors
 - Replication target Member Node
 
 
-Preconditions 
+Preconditions
 ~~~~~~~~~~~~~
 
 - Object exists within the DataONE system
@@ -49,7 +49,7 @@ Preconditions
 Triggers
 ~~~~~~~~
 
-- A user or agent wishes to alter mutable properties of System Metadata for an 
+- A user or agent wishes to alter mutable properties of System Metadata for an
   object.
 
 
@@ -66,7 +66,6 @@ Process
 
 .. uml::
 
-  @startuml images/42_seq_a.png
   autonumber
   actor Bob
   participant "Authoritative" as MN <<Member Node>>
@@ -134,16 +133,16 @@ Process
   @enduml
 
 
-**Figure 2a.** Sequence diagram for Use Case 42 illustrating the high level 
+**Figure 2a.** Sequence diagram for Use Case 42 illustrating the high level
 sequence of operations associated with altering system metadata of an object for
-version 1.x infrastructure where Coordinating Nodes are the authoritative source 
-for System Metadata. In this scenario, user Bob updates properties of System 
-Metadata (e.g. Access Policy) for an object, and that change is propogated to 
+version 1.x infrastructure where Coordinating Nodes are the authoritative source
+for System Metadata. In this scenario, user Bob updates properties of System
+Metadata (e.g. Access Policy) for an object, and that change is propogated to
 copies throughout the federation.
 
 
 .. uml::
-  @startuml images/42_seq_b.png
+
   autonumber
   actor Bob
   participant "Authoritative" as MN <<Member Node>>
@@ -176,9 +175,9 @@ copies throughout the federation.
     System Metadata
     serialVersion = 10
     dateSysMetadataModified = t2
-    
-    Mutable properties other than Replica 
-    entries may be updated by a user 
+
+    Mutable properties other than Replica
+    entries may be updated by a user
     with appropriate permission.
   end note
   MN -> CN: synchronize
@@ -188,9 +187,9 @@ copies throughout the federation.
   deactivate CN
   MN -> Bob: ack
   deactivate MN
-  
+
   ... __Potentially long delay__ ...
-  
+
   CN -> MN : getSystemMetadata
   activate CN
   activate MN
@@ -221,9 +220,9 @@ copies throughout the federation.
    System Metadata
    serialVersion = 10
    dateSysMetadataModified = t2
-   
-   On replica MNs, all mutable System 
-   Metadata properties may be updated 
+
+   On replica MNs, all mutable System
+   Metadata properties may be updated
    by a CN
   end note
   MN_repl -> MN_repl: update properties
@@ -232,14 +231,10 @@ copies throughout the federation.
   @enduml
 
 
-**Figure 2b.** Sequence diagram for Use Case 42 illustrating the high level 
+**Figure 2b.** Sequence diagram for Use Case 42 illustrating the high level
 sequence of operations associated with altering system metadata of an object for
-version 2.x infrastructure where Member Nodes are the authoritative source 
-for System Metadata except for replication information (for which Coordinating 
-Nodes are authoritative). In this scenario, user Bob updates properties of 
-System Metadata (e.g. Access Policy) for an object, and that change is 
+version 2.x infrastructure where Member Nodes are the authoritative source
+for System Metadata except for replication information (for which Coordinating
+Nodes are authoritative). In this scenario, user Bob updates properties of
+System Metadata (e.g. Access Policy) for an object, and that change is
 propogated to copies throughout the federation.
-
-
-
-

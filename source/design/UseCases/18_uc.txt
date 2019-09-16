@@ -12,7 +12,7 @@ Goal
   Member nodes can request aggregated CRUD log for {time period/object
   id/userid} for all of 'their' objects.
 
-Summary 
+Summary
   A Member Node should be able to request use information for any objects for
   which that Member Node is the origin (or defacto origin in the case where
   the original MN was decommissioned).
@@ -23,7 +23,7 @@ Actors
 
   - Member Node
 
-Preconditions 
+Preconditions
   - Aggregate logs are accumulated by CNs
 
 Triggers
@@ -35,7 +35,8 @@ Post Conditions
   - Aggregate log information is available to the Member Node
 
 
-.. 
+.. uml::
+
    @startuml images/18_seq.png
    participant "CRUD API" as m_crud << Member Node >>
    participant "Query API" as c_query << Coordinating Node >>
@@ -53,7 +54,6 @@ Post Conditions
    end note
    @enduml
 
-.. image::  images/18_seq.png
 
 *Figure 1.* Interactions for use case 18.
 

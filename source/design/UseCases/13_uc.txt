@@ -12,7 +12,7 @@ Goal
   Determine if a user is authorized to perform some action on an object (e.g.
   get, put, query, delete, ...).
 
-Summary 
+Summary
 
   User authorization is the process followed to determine if the authenticated
   user is permitted to perform some operation. The result will always be True
@@ -29,7 +29,7 @@ Actors
 
   - Coordinating Node
 
-Preconditions 
+Preconditions
   - User is at some level of authentication (may be anonymous or logged in)
 
 Triggers
@@ -43,7 +43,8 @@ Post Conditions
     unauthorized exception.
 
 
-.. 
+.. uml::
+
    @startuml images/13_seq.png
    actor User
    participant "Client" as app_client << Application >>
@@ -58,8 +59,6 @@ Post Conditions
    c_crud <-- c_authorize: T or F
    app_client <-- c_crud: resultset or raise NotAuthorized
    @enduml
-
-.. image:: images/13_seq.png
 
 *Figure 1.* Interactions for use case 13.
 

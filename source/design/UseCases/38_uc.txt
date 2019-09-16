@@ -8,11 +8,11 @@ Use Case 38 - Reserve an Identifier
 Revisions
   View document revision history_.
 
-Goal 
+Goal
   Reserve an identifier to ensure it is available at some reasonable time in
   the future.
 
-Summary 
+Summary
   As new content is added to the DataONE system, it is desirable to reserve an
   identifier in advance of creating the content as it is necessary for the
   client to generate relationships between content that may not exist in the
@@ -21,9 +21,9 @@ Summary
 Actors
   ITK, Coordinating Node
 
-Preconditions 
+Preconditions
   - CN and MN operational
-  
+
 Triggers
   - A client needs to reserve an identifier so that associations can be
     created in the system metadata
@@ -32,8 +32,8 @@ Post Conditions
   - An identifier is reserved and guaranteed to be unique for some finite
     period of time.
 
-.. 
-   @startuml images/38_uc.png
+.. uml::
+
    usecase "12. Authentication" as authen
    package "DataONE"
      actor "Coordinating Node" as CN
@@ -44,25 +44,21 @@ Post Conditions
      ITK -- RES
      RES ..> author: <<includes>>
      RES ..> authen: <<includes>>
-   @enduml
-
-.. image::  images/38_uc.png
 
 *Figure 1.* Use case 38. Note that id a Member Node needs to reserve an
 identifier then it would use the functioanlity of the Investigator Toolkit
 Library - that is, the reserveIdentifier operation is not required for Member
 Node functionality.
 
+.. uml::
 
-.. 
-   @startuml images/38_seq.png
    participant "Client" as itk <<Investigator Toolkit>>
    participant "CRUD API" as c_crud << Coordinating Node >>
    itk -> c_crud: reserveIdentifier(token, pid, scope, format)
    c_crud -> c_crud: createDummyEntry
    note right
      A dummy entry is created in the object store as a place holder.
-     This entry should not be retrievable through search or other 
+     This entry should not be retrievable through search or other
      discovery mechanisms.
    end note
    alt Not Authorized
@@ -72,9 +68,6 @@ Node functionality.
    else ok
      c_crud -> itk: identifier
    end
-   @enduml
-
-.. image::  images/38_seq.png
 
 *Figure 2.* Sequence diagram for use case 38. The Coordinating Node needs to
 keep track of identifiers that have been reserved, and this information needs

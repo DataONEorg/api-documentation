@@ -11,25 +11,25 @@ Revisions
 Goal
   Update or delete science metadata record on a Member Node.
 
-Summary 
+Summary
   Science metadata is immutable in DataONE. As such, modification involves
   generating a new science metadata record and indicating that the new record
   supersedes an existing record, and deletion involves deprecation so that the
   old metadata record is no longer visible during normal discovery and access.
 
-  .. figure:: images/sketch_uc05_update.png
 
-  *Figure 1.* Sketch of interactions involved in updating a science metadata
-  object. An authenticated user calls the :func:`MN_crud.update` operation on
-  a Member Node (A) with a new science metadata document and the identifier of
-  the document being replaced. The update method sets the
-  :attr:`SystemMetadata.obsoletedBy` property of the original document system
-  metadata with the identifier of the new science metadata document (B), and
-  the :attr:`SystemMetadata.obsoletes` property of the system metadata
-  associated with the new science metadata is set to the identifier of the
-  science metadata document being replaced (C). The Coordinating Nodes pick up
-  the changes on the next Member Node synchronization (D). Changes are
-  subsequently propagated to the replica locations.
+.. Comment 
+   *Figure 1.* Sketch of interactions involved in updating a science metadata
+   object. An authenticated user calls the :func:`MN_crud.update` operation on
+   a Member Node (A) with a new science metadata document and the identifier of
+   the document being replaced. The update method sets the
+   :attr:`SystemMetadata.obsoletedBy` property of the original document system
+   metadata with the identifier of the new science metadata document (B), and
+   the :attr:`SystemMetadata.obsoletes` property of the system metadata
+   associated with the new science metadata is set to the identifier of the
+   science metadata document being replaced (C). The Coordinating Nodes pick up
+   the changes on the next Member Node synchronization (D). Changes are
+   subsequently propagated to the replica locations.
 
 
 Actors
@@ -40,7 +40,7 @@ Preconditions
 
   - MN is registered and is monitored
 
-  - Science metadata being deleted / updated document exists  
+  - Science metadata being deleted / updated document exists
 
 Triggers
   - User calls :func:`MN_crud.update`
@@ -59,17 +59,9 @@ Post Conditions
   - Watchers notified of change
 
 
-.. image:: images/05_uc.png
 
-*Figure 2.* Use case 04.
+.. uml::
 
-.. image:: images/05_seq.png
-
-*Figure 3.* Create, update, delete, search metadata or data object in Member
-Node.
-
-
-.. 
    @startuml images/05_uc.png
    actor "User" as client
    usecase "12. Authentication" as authen
@@ -88,7 +80,10 @@ Node.
      update ..> mn_sync: <<includes>>
    @enduml
 
-.. 
+*Figure 2.* Use case 04.
+
+.. uml::
+
    @startuml images/05_seq.png
    Actor User
    participant "Client" as app_client << Application >>
@@ -106,6 +101,9 @@ Node.
    m_crud -> app_client: OK
    deactivate m_crud
    @enduml
+
+*Figure 3.* Create, update, delete, search metadata or data object in Member
+Node.
 
 **Notes**
 

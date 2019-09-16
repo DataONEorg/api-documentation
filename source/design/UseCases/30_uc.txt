@@ -13,15 +13,15 @@ Goal
   want to act on that knowledge to maintain seamless operation.
 
 Summary
-  It is likely that Member Nodes will need to be taken offline from time to 
-  time for maintenance or other planned outages. There should be a mechanism 
+  It is likely that Member Nodes will need to be taken offline from time to
+  time for maintenance or other planned outages. There should be a mechanism
   for Member Nodes to notify Coordinating Nodes of the impending outage so that
   the Coordinating Nodes can adjust replication of content to ensure ongoing
   availability. The migration of content should be tempered with the duration
   of the outage and the number of existing copies of content available on
   other node. For short durations outages, the expense of moving the content
   around may not be justified. However, for lengthy outages, it would be
-  preferable to replicate as much content as practical to ensure ongoing 
+  preferable to replicate as much content as practical to ensure ongoing
   access.
 
 Actors
@@ -30,22 +30,23 @@ Actors
   - Coordinating Nodes
   - Coordinating Node administrators
 
-Preconditions 
+Preconditions
   - Member Node is participating in the DataONE federation
   - Content stored on the Member Node needs to be available while offline
-  
+
 Triggers
   - A Member Node needs to be taken offline
- 
+
 Post Conditions
-  - A decision has been made on which content to replicate from the Member 
+  - A decision has been made on which content to replicate from the Member
     Node
   - Content is replicated from the Member Node
   - Notification to the Member Node operator of replication completion is
     provided
 
 
-.. 
+.. uml::
+
    @startuml images/30_seq.png
    participant "State of Health API" as c_health << Coordinating Node >>
    participant "State of Health API" as m_health << Member Node >>
@@ -53,8 +54,6 @@ Post Conditions
    m_health <-- c_health: ack
    c_health -> c_health: actOnPendingEvent (event)
    @enduml
-
-.. image:: images/30_seq.png
 
 *Figure 1.* Interactions for use case 30. MN can notify CN about pending
 outages, severity and duration, and CNs may want to act on that knowledge to

@@ -11,19 +11,19 @@ Revisions
 Goal
   Replicate data from Member Node to Member Node.
 
-Summary 
+Summary
   Replication of content between Member Nodes (MN) is done to improve
   persistence of information (avoid data loss with loss of MN) and to improve
   accessibility (more choices for content retrieval can lower bandwidth
   requirements for any particular MN). The process of replication is controlled
-  by a Coordinating Node (CN). 
+  by a Coordinating Node (CN).
 
   A full copy of science data and metadata is made during the replication
   process, so the original science metadata and data is copied to the
   recipient MN.
 
   Data is copied across as an exact copy. Science metadata may be transformed
-  into another format if the original can not be supported. 
+  into another format if the original can not be supported.
 
   It is important that the original metadata is preserved on the CNs, as
   it is always possible that the original MN where the content was published
@@ -33,7 +33,7 @@ Summary
 Actors
   Two Member Nodes, one or more Coordinating Nodes
 
-Preconditions 
+Preconditions
   - Content is present on a Member Node
 
   - The content has been registered with the DataONE system (i.e. Member Node
@@ -62,7 +62,8 @@ Post Conditions
   - Member Node and Coordinating Node logs are updated
 
 
-.. 
+.. uml::
+
    @startuml images/09_uc.png
    usecase "12. Authentication" as authen
    package "DataONE"
@@ -89,12 +90,11 @@ Post Conditions
      CREATE ..> subscribe: <<includes>>
     @enduml
 
-.. image:: images/09_uc.png
-
 *Figure 1.* Use case diagram indicating the actors involved in the process of
 Member Node replication.
 
-..
+.. uml::
+
   @startuml images/09_seq.png
   skinparam notebordercolor #AAAAAA
   skinparam notefontcolor #222222
@@ -103,36 +103,36 @@ Member Node replication.
   participant "mnB : MNode" as mnB <<MNode>>
   participant "cnXReplService : ReplicationService" as cnXrepl <<CNode>>
   participant "cnZReplService : ReplicationService" as cnZ <<CNode>>
-  
+
   == Replication Event  ==
   [-> cnXrepl : hzSystemMetadata.put(pid, sysmeta)
   activate cnXrepl #D74F57
-  
+
   note right
-    Synchronization services adds entry to 
+    Synchronization services adds entry to
     SystemMetadata map managed by Hazelcast,
     EntryEvent is fired
   end note
-  
+
   cnXrepl -> cnXrepl : entryAdded(EntryEvent<pid, sysmeta>)
   cnXrepl -> cnXrepl : queueEvent(pid)
   cnXrepl -> cnXrepl : itemAdded(pid)
   note right
     hzReplicationEvents.offer(pid) is called to keep track of
-    frequent hzSystemMetadata change events. When popped 
-    off of the queue, identifiers are placed into the 
+    frequent hzSystemMetadata change events. When popped
+    off of the queue, identifiers are placed into the
     hzHandledReplicationEvents set until the evaluation
     to create a task or not is complete. This prevents
     multiple task creation across CNs for the same event
   end note
-  
+
   cnXrepl -> cnXrepl : createAndQueueTasks(pid)
-  
+
   loop for each ReplicationTask
   cnXrepl -> cnXrepl : taskid = idGenerator.newId()
     note right
     Hazelcast.getIdGenerator("task-ids") has been
-    called in ReplicationService constructor 
+    called in ReplicationService constructor
   end note
   cnXrepl -> cnXrepl : hzReplicationTaskQueue.put(taskid, task)
   note right
@@ -149,15 +149,15 @@ Member Node replication.
    activate cnXrepl #D74F57
 
    note right
-     Query the Metacat database to receive a short list of 
-     tasks which have not had their checksums verified in 
+     Query the Metacat database to receive a short list of
+     tasks which have not had their checksums verified in
      greater than 2 months
    end note
    cnXrepl ->] : getAuditShortList()
    cnXrepl <--] : shortList
 
    note over cnXrepl
-   Bin the tasks by NodeReference for 
+   Bin the tasks by NodeReference for
    bulk processing my MNAuditTask
    end note
    loop for each Identifier in shortList
@@ -183,8 +183,8 @@ Member Node replication.
    end note
    deactivate cnXrepl
 
-  == Process Replication Tasks ==  
-          
+  == Process Replication Tasks ==
+
   cnZ -> cnZ: itemAdded(task)
   activate cnZ #D74F57
   cnZ -> cnZ: hzReplicationTaskQueue.poll()
@@ -193,7 +193,7 @@ Member Node replication.
     queue when events are fired. The first to get the lock
     handles the task.  The others will also get the lock,
     but during evaluation, will not create a task because
-    of the new state of the replica in the system metadata 
+    of the new state of the replica in the system metadata
   end note
 
   cnZ -> cnZ: ExecutorService.submit(task)
@@ -202,16 +202,16 @@ Member Node replication.
   cnZ -> mnB: replicate(cnZSession, mnASession, pid)
   activate mnB #D74F57
   mnB --> cnZ: replicateResponse
-  deactivate cnZ 
+  deactivate cnZ
   cnZ -> cnZ: setReplicationStatus(session, pid,\n    nodeRef, ReplicationStatus.REQUESTED)
-  
+
   note left
    Object's system metadata get's updated
   end note
-  
+
   cnZ -> cnZ: updateSystemMetadata(pid)
   cnZ --> cnZ: statusResponse
-  
+
   mnB -> mnA: getReplica(mnBSession, pid)
   deactivate mnB
   activate mnA #D74F57
@@ -220,57 +220,63 @@ Member Node replication.
   mnA --> mnB: replicaBytes
   deactivate mnA
   activate mnB #D74F57
-  
+
   mnB -> cnZ: setReplicationStatus(session, pid,\n    nodeRef, ReplicationStatus.COMPLETE)
   deactivate mnB
   cnZ -> mnA: mnA.getChecksum(pid)
   activate mnA #D74F57
   mnA --> cnZ : checksum
-  
+
   note right
   Object's system metadata get's updated
   end note
-  
+
   deactivate mnA
   cnZ -> cnZ: updateSystemMetadata(pid)
   cnZ --> cnZ: statusResponse
   deactivate cnZ
 
- 
+
   deactivate cnZ
   deactivate cnZ
 
   @enduml
 
+**Figure 2.** Interactions for use case 09. The diagram describes transfer of a
+single object from MN_A to MN_B as directed by a CN. It is assumed that the
+object does not exist on MN_A and the object has been identified as requiring
+replication by the CN checking its status in the system metadata. The end
+state of a replicate operation is that content is available on the MN, the
+MN has notified the CN of such, and the CN will schedule a synchronize
+operation that will verify the copy as legitimate.
 
-.. image:: images/09_seq.png
 
+.. uml::
 
-..
   @startuml images/09_seq_audit_1.png
   skinparam notebordercolor #AAAAAA
   skinparam notefontcolor #222222
   title Audit replicas on Member Nodes.\n\n
-  participant "ReplicaAuditQuartzJob" as cnQuartz <<CN-1>> 
+  participant "ReplicaAuditQuartzJob" as cnQuartz <<CN-1>>
   participant "ReplicaAuditService" as cnAudit <<CN-1>>
   participant "ReplicaAuditDao" as auditDao <<CN-1>>
   participant "DistributedExecutorService" as cnZ <<CN-Z>>
 
  == Replication Audit ==
-   
+
    note left of cnQuartz
-    Quartz scheduled execution 
+    Quartz scheduled execution
     of replica audit processing.
    end note
-   
+
      cnQuartz -> cnAudit : auditReplicas()
    activate cnAudit #D74F57
 
      cnAudit -> cnAudit : aquireReplicaAuditingLock();
 
    note over auditDao
-     Query the Metacat replica system metadata replica status 
-     table for pids of replica records which have not been audited 
+     Query the Metacat replica system metadata replica status
+     table for pids of replica records which have not been audited
      for the audit period length of time.  May be a paged result.
    end note
    cnAudit -> auditDao : getReplicasByDate()
@@ -278,7 +284,7 @@ Member Node replication.
 
    loop for each Identifier pid in pidsToAudit
      note over cnAudit
-       Create ReplicaAuditTasks if not already being handled.  
+       Create ReplicaAuditTasks if not already being handled.
        Tasks can be configured to batch several Identifiers
        into tasks or to create a task for each Identifier.
      end note
@@ -289,14 +295,14 @@ Member Node replication.
          note over cnAudit
              accumulatedTaskFuture List holds futures generated on this iteration.
              futuresToHandle holds futures generated on last iteration.
-             Assumption is futures provided to distributed execution service on 
+             Assumption is futures provided to distributed execution service on
              previous iteration should have executed asynch already.
          end note
          cnAudit -> cnAudit : futuresToHandle = accumulatedTaskFutures;  // futures from last batch
          cnAudit -> cnAudit : accumulatedTaskFutures.clear();
          loop for each ReplicaAuditTask auditTask in replicaAuditTasks
            note over cnZ
-             Hazelcast distributed executor service used to 
+             Hazelcast distributed executor service used to
              distribute audit tasks among CN nodes.
            end note
            cnAudit -> cnZ : submit(auditTask);
@@ -321,13 +327,7 @@ Member Node replication.
   @enduml
 
 
-*Figure 2.* Interactions for use case 09. The diagram describes transfer of a
-single object from MN_A to MN_B as directed by a CN. It is assumed that the
-object does not exist on MN_A and the object has been identified as requiring
-replication by the CN checking its status in the system metadata. The end 
-state of a replicate operation is that content is available on the MN, the 
-MN has notified the CN of such, and the CN will schedule a synchronize 
-operation that will verify the copy as legitimate.
+*Figure 3.*
 
 Implementation Details
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -340,9 +340,9 @@ tasks to be processed by all of the CNs.
 
 Replication can be initiated in three ways:
 
- 1) CN synchronization: harvesting of system and science metadata 
- 2) CN timed replication: periodic sweep of all system objects 
- 3) MN event-based replication: MN sends replication request to a 
+ 1) CN synchronization: harvesting of system and science metadata
+ 2) CN timed replication: periodic sweep of all system objects
+ 3) MN event-based replication: MN sends replication request to a
     CN (not implemented)
 
 Replication Events
@@ -358,7 +358,7 @@ gain a lock on the given object identifier in the map. The hzSystemMetadata map
 is set to be persisted (backed-up) on 3 CNs.
 
 As the CN Synchronization Service becomes aware of create, update, and delete
-events for MN objects through harvesting, it updates the hzSystemMetadata map. 
+events for MN objects through harvesting, it updates the hzSystemMetadata map.
 The Replication service monitors this map for entry changes, and builds a list
 of ReplicationTask objects for each changed identifier in the map. This is done by
 calling ReplicationService.createReplicationTaskList(pid). The Replication
@@ -374,7 +374,7 @@ ReplicationTask.
 .. Note::
     TODO: Describe the CN time-based population of the replication task queue
     that periodically does a full sweep of the object store.
-    
+
 .. Note::
     TODO: Describe the MN-based replication via a CNReplication API request
     (not implemented)
@@ -420,8 +420,8 @@ from MN_A to MN_B so that it can use that credential to successfully get the
 document. This is only the case if the document on MN_A is read protected. If
 it is public, not token is needed.
 
-Note that the call setReplicationStatus with a value of *COMPLETE* is 
-functionally equivalent to the *notify(objectCreated, identifier)* call 
+Note that the call setReplicationStatus with a value of *COMPLETE* is
+functionally equivalent to the *notify(objectCreated, identifier)* call
 indicated in use case 06.
 
 
@@ -429,10 +429,8 @@ Replication Auditing
 ~~~~~~~~~~~~~~~~~~~~
 
 
+.. uml::
 
-.. image:: images/09_seq_audit_1.png
-
-..
   @startuml images/09_seq_audit_2.png
     skinparam notebordercolor #AAAAAA
     skinparam notefontcolor #222222
@@ -449,7 +447,7 @@ Replication Auditing
     cnZ -> cnZ: execute(replicaAuditTask);
     cnZ -> auditTask : call()
     activate auditTask #D74F57
-  
+
   loop for each Identifier pid in auditTask.pids
       auditTask -> cNodeClient : getSystemMetadata(pid);
       cNodeClient --> auditTask : sysMetadata;
@@ -471,22 +469,23 @@ Replication Auditing
         auditTask -> repManager : createAndQueueTasks(pid);
       end
     end loop
-  
+
   auditTask --> cnZ : String audit result
   deactivate auditTask
-  
+
   cnZ --> cnAudit : Future - audit results including exceptions
 
   @enduml
-.. image:: images/09_seq_audit_2.png
+
+**Figure 4.**
 
 
+.. uml::
 
-.. 
    @startuml images/09_uc_audit_components.png
 
   title CN Replication Auditing Components
-    
+
   node "CN Audit Process(D1 Processing)" {
     frame "CN Replication Auditor" {
       frame "CN Common" {
@@ -494,29 +493,29 @@ Replication Auditing
         }
         frame "CN Replication" {
           [Replication Service]
-      }      
+      }
         [CNAuditLogClient] --> [cn-audit-index] : add/remove log entries
       }
   }
-  
+
   database "psql" {
     frame "metacat" {
       [smreplicationstatus] --> [ReplicationDao] : select audit candidates
     }
   }
-  
+
   node "CN Service" {
     [REST Service] <-- [Replication Service] : update replica status/verified date
   }
-  
+
   cloud "hazelcast" {
     frame "d1-processing" {
       [Replication Event Queue] <-- [Replication Service] : submit pids to replication
     }
   }
-  
+
   cloud "CN Audit Log Cloud" as auditCloud {
-  
+
     node "Zookeeper" {
       [index config] --> [cn-audit-index] : aquire cloud config
       [leader election] --> [cn-audit-index] : coordinate leader
@@ -529,16 +528,13 @@ Replication Auditing
       }
     }
   }
-  
-  
-  
+
   note "Each CN will be running its own instance of the zookeeper and jetty/solr.\n This forms the cloud cluster." as N1
-  
+
   @enduml
-   
-   
-   
-.. image:: images/09_uc_audit_components.png
-   
+
+**Figure 5.**
+
+
 
 .. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/09_uc.txt

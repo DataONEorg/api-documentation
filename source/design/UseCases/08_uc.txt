@@ -12,7 +12,7 @@ Goal
   Communication of replication policy metadata between Member Nodes and
   Coordinating Nodes.
 
-Summary 
+Summary
   The replication policy of Member Nodes (MN) indicates factors such as the
   amount of storage space available, bandwidth constraints, the types of data
   and metadata that can be managed, and perhaps access control restrictions.
@@ -31,10 +31,10 @@ Summary
 Actors
   Member Node, Coordinating Node
 
-Preconditions 
+Preconditions
   - Member Node is registered with a Coordinating Node
   - Member Node is operational
-  
+
 Triggers
   - A Member Node changes available capacity, bandwidth or some other
     operating characteristic
@@ -52,10 +52,11 @@ Post Conditions
 
   - Operation is logged
 
-  - Watchers are notified in change in DataONE system property  
+  - Watchers are notified in change in DataONE system property
 
 
-..
+.. uml::
+
    @startuml images/08_uc.png
    package "DataONE"
      actor "Coordinating Node" as CN
@@ -71,11 +72,10 @@ Post Conditions
      policy ..> CNSYNC: <<includes>>
    @enduml
 
-.. image:: images/08_uc.png
-
 *Figure 1.* Use case 08.
 
-..
+.. uml::
+
    @startuml images/08_seq.png
    participant "Replication API" as c_rep << Coordinating Node >>
    participant "Replication API" as m_rep << Member Node >>
@@ -94,8 +94,6 @@ Post Conditions
    end note
    @enduml
 
-.. image:: images/08_seq.png
-
 *Figure 2.* Communication of Replication Policy Metadata
 
 
@@ -110,4 +108,3 @@ Post Conditions
   again).
 
 .. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/08_uc.txt
-

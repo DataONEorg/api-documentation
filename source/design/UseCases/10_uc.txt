@@ -8,11 +8,11 @@ Use Case 10 - MN Status Reports
 Revisions
   View document revision history_.
 
-Goal 
+Goal
   Coordinating Node checks "liveness" of all Member Nodes - checks ping,
   service x, load, space, bandwidth, transaction rate, ...
 
-Summary 
+Summary
   As part of the infrastructure monitoring process, a CN checks on the
   "liveness" of all Member Nodes. This operation will be performed with moderate
   frequency (perhaps in the order of once every few minutes). The "lite" version
@@ -28,7 +28,7 @@ Summary
 Actors
   CN, MN
 
-Preconditions 
+Preconditions
   - CNs are operational
 
   - MN is registered
@@ -42,7 +42,8 @@ Post Conditions
   - Status metadata is updated at CNs
 
 
-.. 
+.. uml::
+
    @startuml images/10_seq.png
    actor Admin
    participant "Admin" as app_admin << Application >>
@@ -60,14 +61,12 @@ Post Conditions
      end
    end
    note right of c_health
-     internal process, 
+     internal process,
      not in the CN API
    end note
-   c_health -> c_health: processStatusReports() 
+   c_health -> c_health: processStatusReports()
    c_health --> app_admin: statusReport
    @enduml
-
-.. image:: images/10_seq.png
 
 *Figure 1.* Interactions for use case 10. These interactions describe a
 synchronous process for generating a report. Most likely, a better mechanism

@@ -8,10 +8,10 @@ Use Case 44 - Deprecate a Member Node
 Goal
 ~~~~
 
-Remove a Member Node from production, retain access to content (optionally 
+Remove a Member Node from production, retain access to content (optionally
 archived).
 
-Summary 
+Summary
 ~~~~~~~
 
 This use case describes a situation where a Member Node is being taken off line
@@ -35,7 +35,7 @@ Actors
 - Coordinating Node administrator
 
 
-Preconditions 
+Preconditions
 ~~~~~~~~~~~~~
 
 - Member Node to be decommissioned is synchronized
@@ -93,6 +93,3 @@ Post Conditions
   @enduml
 
 **Figue 1.** Process for decomissioning a Member Node that is still functional. First, a content owner updates the replication policy for each object on the MN and ensures that the CN has the updated information (steps 1-5). Next, a CN administrator retrieves a list of objects that need to be managed. For each object, the administrator then ensures that the object has been replicated (8), retrieve the system metadata and edits it (9-11), ensuring that the system metadata properties reflect the new state of the system, then posts the updated system metadata to the CN (12). Once all the content has been updated, the old MN is un-regitered from the Coordinating Nodes. At this point, the Member Node operator can shut down the node.
-
-
-

@@ -13,7 +13,7 @@ Goal
   all complete successfully or get rolled back (e.g., upload both data and
   metadata records).
 
-Summary 
+Summary
   Transactions help ensure stability of the system, so that the chance of
   partial change to content is minimized.
 
@@ -25,7 +25,7 @@ Actors
   - Coordinating Nodes
   - Investigator toolkit
 
-Preconditions 
+Preconditions
   - DataONE operational
 
   - Some data / metadata transfer operation is due.
@@ -37,12 +37,13 @@ Post Conditions
   - The transfer changes should be rolled back to the state before the operation.
 
 
-.. 
+.. uml::
+
    @startuml images/24_seq.png
    participant "CRUD API" as c_crud << Coordinating Node >>
    participant "Object Store" as c_ostore << Coordinating Node >>
    participant "CRUD API" as m_crud << Member Node >>
-   c_crud -> c_ostore: beginTransaction() 
+   c_crud -> c_ostore: beginTransaction()
    c_ostore --> c_crud: transactionHandle
    c_crud -> m_crud: get(token, PID)
    alt Success
@@ -52,10 +53,8 @@ Post Conditions
    else Transfer failure
     c_crud -> c_ostore: rollbackTransaction(transactionHandle)
     c_ostore --> c_crud: ACK
-   end  
+   end
    @enduml
-
-.. image::  images/24_seq.png
 
 *Figure 1.* Interactions for use case 24, Transfer Rollback due to Failure.
 Simple transaction control around a get operation by a CN against and MN.

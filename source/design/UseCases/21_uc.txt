@@ -12,7 +12,7 @@ Goal
   Data owners can subscribe to notification service for object management
   (create, read, update, delete, replicate) operations for objects they own.
 
-Summary 
+Summary
   The system should support a mechanism for notifying a content owner of use
   of content they own. One approach may be to support a feed (e.g. RSS or
   Atom) whose entries indicate events related to an object or family of
@@ -25,18 +25,19 @@ Actors
   - Subscriber
   - Coordinating Node
 
-Preconditions 
+Preconditions
   - Content has been added to system
   - Subscriber has access to content
 
 Triggers
   - A new subscriber joins the system by creating a feed definition
- 
+
 Post Conditions
   - A new subscriber is recorded
   - A new feed is generated
 
-.. 
+.. uml::
+
    @startuml images/21_seq.png
    actor "User (Data Owner)" as user
    participant "Client" as app_client << Application >>
@@ -49,8 +50,6 @@ Post Conditions
    app_client -> c_reg: registerForNotification (token, dataOwnerID)
    app_client <-- c_reg: ack or fail
    @enduml
-
-.. image::  images/21_seq.png
 
 *Figure 1.* Interactions for use case 21.
 

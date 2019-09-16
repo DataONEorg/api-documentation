@@ -11,7 +11,7 @@ Revisions
 Goal
   Retrieve the :term:`system metadata` for an object identified by some :term:`identifier`.
 
-Summary 
+Summary
   A client has an identifier for some object within the DataONE system and is
   attempting to retrieve system metadata describing the object. If the object
   exists on the node and the user has READ permission on the object, then the
@@ -26,7 +26,7 @@ Actors
   - Coordinating Node
   - Member Node
 
-Preconditions 
+Preconditions
   - Client has authenticated to the desired level (e.g. client may not have
     authenticated, so access might be anonymous).
 
@@ -38,20 +38,19 @@ Post Conditions
     in the case of failure)
 
 
-.. 
-   @startuml images/36_uc.png
+.. uml::
+
    actor "User" as client
    usecase "12. Authentication" as authen
    note top of authen
-   Authentication may be provided 
+   Authentication may be provided
    by an external service
    end note
 
-   package "DataONE"
      actor "Coordinating Node" as CN
      actor "Member Node" as MN
      usecase "13. Authorization" as author
-     usecase "01. Get System Metadata" as GET
+     usecase "37. Get System Metadata" as GET
      client -- GET
      CN -- GET
      MN -- GET
@@ -59,13 +58,10 @@ Post Conditions
      GET ..> authen: <<includes>>
    @enduml
 
-.. image::  images/36_uc.png
-
 *Figure 1.* Use case 37 diagram showing actors and components involved in this action.
 
+.. uml::
 
-.. 
-   @startuml images/36_seq.png
    participant "Client" as app_client << Application >>
    participant "CRUD API" as n_crud << Node >>
    participant "Authorization API" as n_authorize <<  Node >>
@@ -88,8 +84,6 @@ Post Conditions
    end
    deactivate app_client
    @enduml
-
-.. image::  images/36_seq.png
 
 *Figure 2.* Sequence diagram for Use Case 37 illustrating the sequence for
 retrieving the system metadata for an object identified by PID from a

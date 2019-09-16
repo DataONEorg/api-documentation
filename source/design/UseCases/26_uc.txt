@@ -11,13 +11,13 @@ Revisions
 Goal
   System performs data quality checks on data.
 
-Summary 
+Summary
 
   This use case is similar to :doc:`Use Case 25<25_uc>` except extends further
   to evaluate additional attributes of data quality.
 
   Note - if the intent of this use case is to help ensure that quality data
-  (sensu quality for research use) exists in the DataONE system, then it 
+  (sensu quality for research use) exists in the DataONE system, then it
   may be more appropriate to evaluate the quality of content as it is
   being added to the system.
 
@@ -26,17 +26,18 @@ Summary
 Actors
   - TBD
 
-Preconditions 
+Preconditions
   - TBD
-  
+
 Triggers
   - TBD
- 
+
 Post Conditions
   - TBD
 
 
-.. 
+.. uml::
+
    @startuml images/26_seq.png
    participant "CRUD API" as m_crud_a << Member Node A >>
    participant "Synchronization API" as c_sync << Coordinating Node >>
@@ -46,8 +47,6 @@ Post Conditions
    c_sync -> m_crud_b: checkDataQuality (PID)
    c_sync <-- m_crud_b: result
    @enduml
-
-.. image:: images/26_seq.png
 
 *Figure 1.* Interactions for use case 26. System performs quality checks on
 data

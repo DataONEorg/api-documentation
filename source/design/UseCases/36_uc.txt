@@ -11,7 +11,7 @@ Revisions
 Goal
   Communicate the locations where a DataONE object can be found
 
-Summary 
+Summary
   Within DataONE, a registered object may be held on one or more Member Nodes
   (depending on replication policy) and in the case of science metadata, on
   Coordinating Nodes. Clients must be able to ask a Coordinating Node for
@@ -28,7 +28,7 @@ Actors
   - Coordinating Node
   - Client requesting info
 
-Preconditions 
+Preconditions
   - Coordinating Nodes are operational
   - Client has an identifier for an object
   - Object exists in the DataONE system and has been recorded by the
@@ -41,7 +41,8 @@ Post Conditions
   - Client has more information about the location of the object.
 
 
-.. 
+.. uml::
+
    @startuml images/36_uc.png
 
    actor "User" as client
@@ -57,12 +58,11 @@ Post Conditions
      resolve ..> authen: <<includes>>
    @enduml
 
-.. image::  images/36_uc.png
-
 *Figure 1.* Use case diagram for Use Case 36.
 
 
-.. 
+.. uml::
+
    @startuml images/36_seq.png
    participant "Client" as itk <<Investigator Toolkit>>
    participant "CRUD API" as c_crud << Coordinating Node >>
@@ -84,8 +84,6 @@ Post Conditions
    end
    deactivate c_crud
    @enduml
-
-.. image::  images/36_seq.png
 
 *Figure 2.* Sequence diagram for implementation of use case 36.
 

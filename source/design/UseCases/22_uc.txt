@@ -9,15 +9,15 @@ Revisions
   View document revision history_.
 
 Goal
-  User can get report of links and citations to objects they own (also can 
+  User can get report of links and citations to objects they own (also can
   view this as a referrer log).
 
-Summary 
+Summary
 
-  A data owner would benefit from having a report that indicated the 
+  A data owner would benefit from having a report that indicated the
   connections to objects they own. Within DataONE, this could be handled by
-  examining the object associations contained in the system metadata. For 
-  external references to content, DataONE could provide summaries generated 
+  examining the object associations contained in the system metadata. For
+  external references to content, DataONE could provide summaries generated
   from log reports, though with much greater uncertainty.
 
 Actors
@@ -26,19 +26,20 @@ Actors
   - Member Nodes
   - Coordinating Node
 
-Preconditions 
+Preconditions
   - Owner has content in DataONE
   - References to content appear directly in system metadata or in access logs
-  
+
 Triggers
   - Owner requests report for content citations and references
   - Scheduled report generated for data owner
- 
+
 Post Conditions
   - Owner has a report on citations and references to their data
   - System state is updated to enable reporting for the next time period
 
-.. 
+.. uml::
+
    @startuml images/22_seq.png
    actor "User (Data Owner)" as user
    participant "Client" as app_client << Application >>
@@ -62,8 +63,6 @@ Post Conditions
    (e.g. "Report API"?)
    end note
    @enduml
-
-.. image::  images/22_seq.png
 
 *Figure 1.* Interactions for use case 22, User can get report of links, cites
 my data (also can view this as a referrer log)

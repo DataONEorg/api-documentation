@@ -14,7 +14,7 @@ Goal
   replication). In this example, a Member Node authenticates to enable
   transfer of content from MN A to MN B.
 
-Summary 
+Summary
   System operations are required for many operations including the management
   of content across Member Nodes and replication between Coordinating Nodes.
   This use case describes the system level interactions required to perform a
@@ -25,7 +25,7 @@ Actors
 
   - Member Node(s)
 
-Preconditions 
+Preconditions
   - Operational system
 
 
@@ -39,11 +39,12 @@ Post Conditions
   - The authentication token is optionally disposed
 
 
-.. 
+.. uml::
+
    @startuml images/14_uc.png
-   actor "Coordinating Node" as CN 
-   actor "Member Node A" as MN_A 
-   actor "Member Node B" as MN_B 
+   actor "Coordinating Node" as CN
+   actor "Member Node A" as MN_A
+   actor "Member Node B" as MN_B
    usecase "13. User Authorization" as author
    usecase "14. System Operation" as SYSOP
    usecase "9. Replicate MN to MN" as repl
@@ -55,12 +56,11 @@ Post Conditions
    SYSOP ..> repl: <<includes>
    @enduml
 
-.. image:: images/14_uc.png
-
 *Figure 1.* Use case 14, system authentication
 
 
-.. 
+.. uml::
+
    @startuml images/14_seq.png
    participant "Replication API" as m_rep_a << Member Node A >>
    participant "Replication API" as m_rep_b << Member Node B >>
@@ -68,7 +68,7 @@ Post Conditions
    participant "Verify API" as c_ver << Coordinating Node >>
    m_rep_a -> c_authenticate: login(user, pw)
    note right
-     The user in this case is the DataONE 
+     The user in this case is the DataONE
      identity given to MN A.
    end note
    m_rep_a <-- c_authenticate: token or failure
@@ -77,14 +77,12 @@ Post Conditions
    m_rep_b <-- c_ver: True or False
    m_rep_a <-- m_rep_b: content or Fail
    note right
-     Member Node A is now in a modified 
+     Member Node A is now in a modified
      state and should signal this during
      next status request from a CN
    end note
    m_rep_a --> c_authenticate: logout(token)
    @enduml
-
-.. image:: images/14_seq.png
 
 *Figure 2.* Interactions for use case 14.
 
