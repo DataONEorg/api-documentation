@@ -10,7 +10,7 @@ Goal
 
 Retrieve an object identified by PID.
 
-Summary 
+Summary
 ~~~~~~~
 
 A client has an identifier for some object within the DataONE system and is
@@ -19,10 +19,10 @@ Coordinating Node). If the object exists on the node and the user has READ
 permission on the object, then the bytes of that object are returned,
 otherwise an error condition occurs.
 
-This low level operation assumes that the client knows that the desired object 
-is available on the target node. The normal process for retrieving an object 
-given only the identifier is to first resolve the object, then retrieve the 
-object from one of the identified nodes. Resolution is described in 
+This low level operation assumes that the client knows that the desired object
+is available on the target node. The normal process for retrieving an object
+given only the identifier is to first resolve the object, then retrieve the
+object from one of the identified nodes. Resolution is described in
 :doc:`UC36 </design/UseCases/36_uc>`.
 
 Actors
@@ -55,12 +55,13 @@ Post Conditions
 
 
 .. uml::
+   :alt: Use case 01 diagram.
 
    @startuml images/01_uc.png
    actor "User" as client
    usecase "12. Authentication" as authen
    note top of authen
-   Authentication may be provided 
+   Authentication may be provided
    by an external service
    end note
 
@@ -85,9 +86,6 @@ Post Conditions
 
 **Figure 1.** Use case 01 diagram showing actors and components involved in this
 action.
-
-
-.. image:: images/01_seq.png
 
 
 .. uml::
@@ -117,7 +115,6 @@ action.
 retrieving an object identified by a PID from the DataONE system. No
 distinction is made between Member Node and Coordinating Node implementation
 as they are identical at this level of detail.
-
 
 
 **Notes**

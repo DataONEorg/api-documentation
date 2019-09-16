@@ -11,7 +11,7 @@ Revisions
 Goal
   Register a new Member Node.
 
-Summary 
+Summary
   This use case describes the technical process for addition of a new member
   node (MN) to to the DataONE infrastructure. It is assumed that the
   appropriate social contracts have been formed and the MN is operational,
@@ -40,14 +40,14 @@ Triggers
   - A new Member Node is ready to be brought online and a DataONE
     administrator initiates the process.
 
-Post Conditions 
+Post Conditions
   - The new MN operates as part of the DataONE infrastructure
 
   - DataONE infrastructure resources are incremented by the amount available
     at the new MN
 
   - The operation outcomes are logged
-  
+
   - Synchronization of the MN commences as per scheduled operation
 
   - Synchronize capabilities metadata across CNs
@@ -56,68 +56,35 @@ Post Conditions
 
   - The new MN is added to CN list of targets for replication
 
-**Notes**
 
-- Specify default replication policies
 
-- Also check for version updates
+.. uml::
 
-- Should new nodes be registered with specified trust levels?
+   @startuml images/03_uc.png
 
-- Are there different levels of trust for member nodes? 
+   actor "User" as client
+   usecase "12. Authentication" as authen
 
-- Data providers that use acceptable services can still be discovered and
-  accessed without registering in the DataONE registry (Conflicting, as
-  someone has to register it). 
+   actor "Administrator" as admin
+   admin ..|> client
+   actor "Coordinating Node" as CN
+   actor "Member Node" as MN
+   usecase "13. Authorization" as author
+   usecase "03. Register MN" as register
+   admin -- register
+   CN -- register
+   MN -- register
+   register ..> author: <<includes>>
+   register ..> authen: <<includes>>
 
-  However, a MN that has not registered but does expose DataONE services is
-  not part of the DataONE infrastructure and so does not participate in
-  replication or other DataONE services.
-
-- Allow service providers to register their services, (such as data extraction
-  services) (ala GEOSS), but include mapping to higher semantic model
-
-- For well known services, registration system must be able to describe
-  constraints (e.g., allowable inputs, outputs, algorithms that can be
-  specified)
-
-- Services can be parameterized
-
-- Member node should be able to request the coordinating node to re-validate
-  its capabilities list.
-
-.. image:: images/03_uc.png
+   @enduml
 
 *Figure 1.* Use Case 03.
 
 
-.. image:: images/03_seq.png
 
-*Figure 2.* Interactions for use case 03.
+.. uml::
 
-
-..
-   @startuml images/03_uc.png
-   
-   actor "User" as client
-   usecase "12. Authentication" as authen
-
-   package "DataONE"
-     actor "Administrator" as admin
-     admin ..|> client
-     actor "Coordinating Node" as CN
-     actor "Member Node" as MN
-     usecase "13. Authorization" as author
-     usecase "03. Register MN" as register
-     admin -- register
-     CN -- register
-     MN -- register
-     register ..> author: <<includes>>
-     register ..> authen: <<includes>>
-   @enduml
-
-
-.. 
    @startuml images/03_seq.png
    actor Admin
    participant "Admin" as app_admin << Application >>
@@ -140,11 +107,44 @@ Post Conditions
    c_reg -> c_sync: scheduleSynch ()
    note right
     Harvest process occurs asynchronously.
-    Separate use case. 
+    Separate use case.
    end note
    app_admin <-- c_reg: ack or fail
    deactivate c_reg
    @enduml
+
+*Figure 2.* Sequence diagram for use case 03.
+
+
+**Notes**
+
+- Specify default replication policies
+
+- Also check for version updates
+
+- Should new nodes be registered with specified trust levels?
+
+- Are there different levels of trust for member nodes?
+
+- Data providers that use acceptable services can still be discovered and
+  accessed without registering in the DataONE registry (Conflicting, as
+  someone has to register it).
+
+  However, a MN that has not registered but does expose DataONE services is
+  not part of the DataONE infrastructure and so does not participate in
+  replication or other DataONE services.
+
+- Allow service providers to register their services, (such as data extraction
+  services) (ala GEOSS), but include mapping to higher semantic model
+
+- For well known services, registration system must be able to describe
+  constraints (e.g., allowable inputs, outputs, algorithms that can be
+  specified)
+
+- Services can be parameterized
+
+- Member node should be able to request the coordinating node to re-validate
+  its capabilities list.
 
 
 .. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/03_uc.txt

@@ -33,85 +33,62 @@ Summary
 
 Actors
   Member Node, additional Member Nodes, Coordinating Nodes
-  
-  
+
+
 Preconditions
   - Use is authenticated and so client application has an auth_token for the process.
 
   - DataONE system operational
-  
+
   - MN is registered and is monitored
-  
-  
+
+
 Triggers
   - New data package is present on Member Node
-  
+
   - An existing data package is modified on a Member Node
-  
+
   - A data package is deleted from a Member Node
- 
- 
+
+
 Post Conditions
   - New data package is replicated across MNs
-  
+
   - Search metadata is updated
-  
+
   - Operation recorded in logs
 
   - CN update of search metadata
 
-  - CN replication of metadata 
+  - CN replication of metadata
 
   - Watchers notified of change
 
 
-**Notes**
 
-- Are IDs are pegged to versions? If so, update might differ more radically
-  from create.
+.. uml::
 
-- If delete is a metadata operation only, then will be very similar to update.
-  But if it is a physical operation, it becomes more complex. Will there be an
-  archival copy? Will member nodes that hold replicas be "forced" to destroy
-  the replicas?
-
-- Is submit from a member node a push or pull?
-
-- Should queuing of a submission within a member node be required for success?
-  (We assume yes, to guarantee replication of submissions).
-
-- Can data packages be deleted or modified?
-
-.. image:: images/04_uc.png
-
-*Figure 1.* Use case 04.
-
-.. image:: images/04_seq.png
-
-*Figure 2.* Create, update, delete, science metadata or data object in Member 
-Node.
-
-.. 
    @startuml images/04_uc.png
    actor "User" as client
    usecase "12. Authentication" as authen
 
-   package "DataONE"
-     actor "Coordinating Node" as CN
-     actor "Member Node" as MN
-     usecase "13. Authorization" as author
-     usecase "04. Create Object" as create
-     usecase "06. MN Synchronize" as mn_sync
-     client -- create
-     CN -- create
-     MN -- create
-     create ..> author: <<includes>>
-     create ..> authen: <<includes>>
-     create ..> mn_sync: <<includes>>
-   @enduml        
+   actor "Coordinating Node" as CN
+   actor "Member Node" as MN
+   usecase "13. Authorization" as author
+   usecase "04. Create Object" as create
+   usecase "06. MN Synchronize" as mn_sync
+   client -- create
+   CN -- create
+   MN -- create
+   create ..> author: <<includes>>
+   create ..> authen: <<includes>>
+   create ..> mn_sync: <<includes>>
+   @enduml
 
+*Figure 1.* Use case 04.
 
-.. 
+.. uml::
+
    @startuml images/04_seq.png
    Actor User
    participant "Client" as app_client << Application >>
@@ -135,5 +112,28 @@ Node.
    deactivate c_health
    @enduml
 
-.. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/04_uc.txt
 
+*Figure 2.* Create, update, delete, science metadata or data object in Member
+Node.
+
+
+**Notes**
+
+- Are IDs are pegged to versions? If so, update might differ more radically
+  from create.
+
+- If delete is a metadata operation only, then will be very similar to update.
+  But if it is a physical operation, it becomes more complex. Will there be an
+  archival copy? Will member nodes that hold replicas be "forced" to destroy
+  the replicas?
+
+- Is submit from a member node a push or pull?
+
+- Should queuing of a submission within a member node be required for success?
+  (We assume yes, to guarantee replication of submissions).
+
+- Can data packages be deleted or modified?
+
+
+
+.. _history: https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/04_uc.txt
