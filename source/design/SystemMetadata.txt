@@ -72,8 +72,8 @@ edited through the specified edit method.
      - Immutable
      - Client + MN
      - MN + CN
-     - The identifier is assigned during creation and can not be changed. The 
-       CNs will not allow reuse of an identifier, so content created with an 
+     - The identifier is assigned during creation and can not be changed. The
+       CNs will not allow reuse of an identifier, so content created with an
        identifier that is not unique will be rejected by CNs.
 
    * - :attr:`~Types.SystemMetadata.size`
@@ -98,8 +98,8 @@ edited through the specified edit method.
      - Immutable
      - MN
      - MN
-     - Upload to a MN occurs once, and the MN MUST set this value to indicate 
-       when the content was added to the repository (may be before the 
+     - Upload to a MN occurs once, and the MN MUST set this value to indicate
+       when the content was added to the repository (may be before the
        repository started operating as a MN).
 
    * - :attr:`~Types.SystemMetadata.originMemberNode`
@@ -122,7 +122,7 @@ edited through the specified edit method.
      - v1, v2: :func:`MNStorage.update`
 
        v2: :func:`MNStorage.updateSystemMetadata`
-       
+
        The ``obsoletes`` property may be set once, to indicate that the current
        object obsoletes or supercedes the PID that is the value of this field.
        Care must be taken when setting this value to ensure that no branching
@@ -141,7 +141,7 @@ edited through the specified edit method.
        The ``obsoletedBy`` property may be set once, to indicate that the current
        object is obsoleted superceded by the PID that is the value of this field.
        Care must be taken when setting this value to ensure that no branching
-       or circular lists are created. 
+       or circular lists are created.
 
    * - :attr:`~Types.SystemMetadata.archived`
      - Set Once
@@ -163,7 +163,7 @@ edited through the specified edit method.
      - Mutable
      - Client
      - MN + CN
-     - Change is discouraged, values limited to the formats available from 
+     - Change is discouraged, values limited to the formats available from
        :func:`CNCore.listFormats`.
 
        v1: :func:`CNCore.updateSystemMetadata`
@@ -226,7 +226,7 @@ edited through the specified edit method.
      - Mutable
      - CN
      - CN
-     - :func:`CNReplication.updateReplicationMetadata` (internal to 
+     - :func:`CNReplication.updateReplicationMetadata` (internal to
        Coordinating Nodes)
 
 
@@ -349,7 +349,7 @@ Example sequence diagrams show the differnce follows:
 
 .. image:: images/sysmeta_cn_control.png
 
-------------------------
+---
 
 ..
    @startuml images/sysmeta_mn_control.png
@@ -417,7 +417,7 @@ Text changes are highlighted here_.
 .. _here: https://redmine.dataone.org/projects/d1/repository/diff/documents/Projects/cicore/architecture/api-documentation/source/design/SystemMetadata.txt?rev=11619&rev_to=6100
 
 2. Evaluate DataONE Types Schema
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The `Types Schema`_ could be changed in two ways:
 

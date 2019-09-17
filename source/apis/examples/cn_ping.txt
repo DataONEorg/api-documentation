@@ -1,3 +1,45 @@
-.. include:: /apis/examples/ping.txt
+**Response**
 
+The response should be a valid HTTP response with a blank or arbitrary body.
+Only the HTTP header information is considered by the requestor. A successful
+response MUST have a HTTP status code of 200. In case of an error condition,
+the appropriate HTTP status code MUST be set, and an exception or error
+information MAY be returned in the response body.
+
+**Example**
+
+Example of ping request and response for a Member Node (Coordinating Nodes
+implement the same functionality). Lines prefixed with ">" and "<" indicate
+outgoing and returned information respectively. Lines associated with SSL
+connection initiation and close are not shown here. Note that the actual response
+headers may vary, the only required header fields are the first status line and a
+``Date`` entry. However in order to fully support clients that may cache the response,
+it is recommended that ``Expires``, and ``Cache-Control`` headers are returned.
+
+
+.. code-block:: bash
+    :linenos:
+    :emphasize-lines: 1,9
+
+    curl -v "https://cn.dataone.org/cn/v2/monitor/ping/"
+
+    > GET /cn/v2/monitor/ping HTTP/1.1
+    > Host: cn.dataone.org
+    > User-Agent: curl/7.65.3
+    > Accept: */*
+    >
+    < HTTP/1.1 200 200
+    < Date: Tue, 17 Sep 2019 13:13:04 GMT
+    < Server: Apache/2.4.41 (Ubuntu)
+    < Vary: User-Agent
+    < Expires: -1
+    < Cache-Control: private, max-age=0
+    < Content-Length: 0
+    < Access-Control-Allow-Origin:
+    < Access-Control-Allow-Credentials: true
+    < Access-Control-Allow-Headers: Authorization, Content-Type, Location, Content-Length, x-annotator-auth-token
+    < Access-Control-Expose-Headers: Content-Length, Content-Type, Location
+    < Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE
+    < Content-Type: text/xml;charset=UTF-8
+    <
 

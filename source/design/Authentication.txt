@@ -7,14 +7,14 @@ coordinating nodes, member nodes, data collections and other infrastructure
 components. As such, DataONE is inherently a virtual organization (VO).
 DataONE, as an entity, spans many physical organizations and administrative
 domains. The approach that DataONE follows for cybersecurity is one in which all
-sensitive operations and or data/metadata resources within the DataONE VO 
+sensitive operations and or data/metadata resources within the DataONE VO
 require users requesting access to the operation/resource to register and
 authenticate with the DataONE system before an evaluation of rights to the
 operation/resource can/will be performed. DataONE supports authentication
 through CILogon, inlcuding both its InCommon partners such as Universities and OAuth
 providers such as Google.  Thus, any given user may have multiple identities which are
 verified through the authentication mechanisms from multiple providers, and these identities
-can then be mapped to one another to manage changes as users change institutions and roles. 
+can then be mapped to one another to manage changes as users change institutions and roles.
 Once a user is authenticated and mapped to their DataONE identity, they can establish a session
 to pass credentials to DataONE services by either 1) passing a CILogon or DataONE-issed X.509
 certificate to the service provider as part of SSL negotiation, or 2) by providing an
@@ -40,7 +40,7 @@ identification, thus support for anonymous access to certain services/resources
 is possible using a Public identity).  DataONE provides services for users to
 register their identity with DataONE in a user account so as to create a unique
 DataONE identifier, along with other attributes about that user. This account
-information may be used for authorization and logging DataONE transactions. 
+information may be used for authorization and logging DataONE transactions.
 
 Users may have multiple identities as a result of distributed research endeavors
 at different participating organizations and or changes in organizational
@@ -84,11 +84,11 @@ Identifying Principals (aka Subjects)
 
 Principals are users, groups of users, and system services within the DataONE
 system.  They need to be represented in access policies, authentication
-sessions, and other places within the system.  
+sessions, and other places within the system.
 
-The values for identifiers representing principals are unique, persistent, 
+The values for identifiers representing principals are unique, persistent,
 non-reassignable strings.  Within those constraints, it is useful to use a
-common convention for representing and scoping these principal names.  In DataONE, 
+common convention for representing and scoping these principal names.  In DataONE,
 Principals are currently represented in one of several forms, although future forms
 may add to these as needed:
 
@@ -100,13 +100,13 @@ may add to these as needed:
       UID=mbjones,O=NCEAS,DC=ecoinformatics,DC=org
 
 * ORCID Identifiers
-  
-  Identifiers from ORCID are compatible with ISNI and take either a bare form or 
+
+  Identifiers from ORCID are compatible with ISNI and take either a bare form or
   are embedded in an orcid.org URL::
-  
+
       0000-0003-0077-4738
       http://orcid.org/0000-0003-0077-4738
-      
+
 Within DataONE, values of :class:`Types.Subject` can be represented as the string
 form of a Distinguished Name (DN) as defined in RFC4514_. Distinguished
 Names are composed of a sequence of Relative Distinguished Names (RDNs), each of
@@ -116,7 +116,7 @@ preserved for all values. RDNs are separated by commas, and ordering is
 preserved. Values must be converted to strings following the encoding rules in
 section 2.4 of RFC4514_. In summary, Subjects in DataONE are often represented as
 Distinguished Names with the additional constraint that attribute types are in
-upper case.  
+upper case.
 
 This approach enables simple string comparison to provide accurate results
 within the DataONE infrastructure and services and is fully compatible with
@@ -129,7 +129,7 @@ existing services that utilize Distinguished Names as defined in RFC4510_.
 
 .. _FOAF: http://xmlns.com/foaf/spec/#term_Person
 
-.. _RC4510: http://tools.ietf.org/html/rfc4510
+.. _RFC4510: http://tools.ietf.org/html/rfc4510
 
 .. _RFC4514: http://tools.ietf.org/html/rfc4514
 
@@ -143,7 +143,7 @@ system.  The reserved symbolic principals are:
 
 * Verified authenticated users
 
-    * A user who has a valid authentication token and an 'isVerified' flag. 
+    * A user who has a valid authentication token and an 'isVerified' flag.
 
       This designation is be used to ensure that users are in fact who they
       claim to be. These accounts have originated from trusted affiliate
@@ -185,7 +185,7 @@ their profile.  This process creates a new identifier value for the user that
 uniquely identifies them in DataONE from other DataONE users.  This
 identifier is critical because it associates the user with an authenticated
 session for use when requesting services and or data/metadata resources from
-the DataONE nodes.  
+the DataONE nodes.
 
 The general application flow for a user to use DataONE services is to first log
 into CILogon or ORCID with an identity of their choice, then to register that identity
@@ -224,8 +224,8 @@ can be used by services to make authorization decisions.
 
   Confirm an equivalence mapping between the identities listed for the users
   authenticated and represented by session1 and session2.
-  
-* :func:`CN_auth.getSubjectInfo` 
+
+* :func:`CN_auth.getSubjectInfo`
 
   Get the information about a Person, their equivalent identities, and the
   Groups to which they belong.
@@ -250,15 +250,8 @@ can be used by services to make authorization decisions.
   user represented in token originally created the group or is an equivalent
   identity of the user who created the group.
 
-.. figure:: images/ident_01.png
+.. uml::
 
-**Figure 1.** Identity Service is used to register an existing identity with
-DataONE. In this example, the same user has two distinct pre-existing
-identities. We register the primary identity with DataONE. We then request that
-a secondary identity is mapped to the same Types.Subject. The user must then
-confirm this equivalence between the two identities.
-
-.. 
   @startuml images/ident_01.png
   title Register two existing accounts as equivalent identities
   participant "CILogon" as cilogon
@@ -266,9 +259,9 @@ confirm this equivalence between the two identities.
     note right of client
       Client controlled by User
       who has two identities
-    end note  
+    end note
   participant "IdentityService" as ident << CNode >>
-  
+
   group username@NCEAS
     'authenticate as primary id
     client -> cilogon:authenticate with primary identity
@@ -310,20 +303,19 @@ confirm this equivalence between the two identities.
     end note
     client -> client:logout (dispose X.509)
   end
-  
+
    @enduml
 
 
-.. figure:: images/ident_02.png
+**Figure 1.** Identity Service is used to register an existing identity with
+DataONE. In this example, the same user has two distinct pre-existing
+identities. We register the primary identity with DataONE. We then request that
+a secondary identity is mapped to the same Types.Subject. The user must then
+confirm this equivalence between the two identities.
 
-**Figure 2.** Identity Service is used to register an existing identity with
-DataONE. In this example, the user has an identity affiliation that is not
-initially trusted. We register the identity with DataONE as unverified. An
-administrator needs to verify the Person details before the identity is
-considered fully verified. Some DataONE actions will be restricted until
-verification is completed.
 
-.. 
+.. uml::
+
   @startuml images/ident_02.png
   title Register untrusted account and verify it
   participant "CILogon" as cilogon
@@ -331,9 +323,9 @@ verification is completed.
     note right of client
       Client controlled by User
       and by Admin
-    end note  
+    end note
   participant "IdentityService" as ident << CNode >>
-  
+
   group username@google
     'authenticate as primary id
     client -> cilogon:authenticate with untrusted identity
@@ -351,34 +343,38 @@ verification is completed.
     client -> ident:getSubjectInfo(Types.Session, Types.Subject)
     ident --> client:Types.Person
     note left
-      Administrator must 
-      verify Person details 
+      Administrator must
+      verify Person details
     end note
     'request to map identity with existing Subject
     client -> ident: verifyIdentity(Types.Session, Types.Subject)
     ident --> client: boolean
     client -> client:logout (dispose X.509)
   end
-  
+
    @enduml
 
-.. figure:: images/ident_03.png
+**Figure 2.** Identity Service is used to register an existing identity with
+DataONE. In this example, the user has an identity affiliation that is not
+initially trusted. We register the identity with DataONE as unverified. An
+administrator needs to verify the Person details before the identity is
+considered fully verified. Some DataONE actions will be restricted until
+verification is completed.
 
-**Figure 3.** Identity Service is used to manage groups. The group creator is
-initially the only user able to add and remove group members. List editing
-permissions must be granted for other group members to edit the group.
 
-.. 
+
+.. uml::
+
   @startuml images/ident_03.png
   title Group management
   participant "CILogon" as cilogon
   participant "Client" as client << Application >>
     note right of client
-      Client controlled by 
+      Client controlled by
       group administrator
-    end note  
+    end note
   participant "IdentityService" as ident << CNode >>
-  
+
   group admin@UCSB
     'authenticate as admin id
     client -> cilogon:authenticate admin identity
@@ -390,7 +386,7 @@ permissions must be granted for other group members to edit the group.
     client -> ident: addGroupMembers(Types.Session, Types.Subject, Types.SubjectList)
     ident --> client: Types.Identifier
     note left
-      Administrator can 
+      Administrator can
       edit group
     end note
     'remove members
@@ -398,8 +394,13 @@ permissions must be granted for other group members to edit the group.
     ident --> client: Types.Identifier
     client -> client:logout (dispose X.509)
   end
-  
-   @enduml    
+
+   @enduml
+
+**Figure 3.** Identity Service is used to manage groups. The group creator is
+initially the only user able to add and remove group members. List editing
+permissions must be granted for other group members to edit the group.
+
 
 Authentication Service
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -420,10 +421,10 @@ another identity to manage.
 
 The DataONE Authentication Service provides a set of services for validating the
 identity of users and services and then establishing limited duration sessions
-that are represented by an X.509 cryptographically-signed certificate or an 
-an authentication API key. A single session is always associated with a single 
-user. The Authentication Service uses various methods 
-to validate the identity of a user in the system, and then produces SubjectInfo and 
+that are represented by an X.509 cryptographically-signed certificate or an
+an authentication API key. A single session is always associated with a single
+user. The Authentication Service uses various methods
+to validate the identity of a user in the system, and then produces SubjectInfo and
 potentially a session certificate in the form of a X.509
 certificate that contains the relevant properties for that session.
 
@@ -443,7 +444,7 @@ redirected to their institutional provider, which in turn will certify that the
 user successfully authenticated to CILogon. CILogon then will contact the
 DataONE Identity service to gather biographical attributes and additional
 identity attributes such as group memberships and equivalent identities, and
-produce an X.509 certificate containing these attributes and with a limited duration. 
+produce an X.509 certificate containing these attributes and with a limited duration.
 This certificate represents a “valid session” via the digitally signed “authentication token” (see below) that
 is generated by DataONE upon authenticating the user by one of the above
 mechanisms. The certificate is then returned to the user for subsequent
@@ -467,16 +468,8 @@ through the CILogon InCommon identity services as outlined in Figure 4.
 
    A proposal for mapping existing KNB accounts is included at the bottom of Figure 4.
 
-.. image:: images/auth_03.png
+.. uml::
 
-**Figure 4.** Detailed sequence of events for authentication through CILogon -
-Client authentication through the CILogon service; CILogon, using Shibboleth,
-requests a SAML authentication through a registered *Identity Provider* (IdP);
-the IdP confirms identity and returns SAML response to CILogon; client continues
-process, the portal delegate requests Certificate from CILogon; 
-CILogon generates X509 certificate and returns it to portal for use with DataONE.
-
-..
     @startuml images/auth_03.png
     title Detailed CILogon Authentication Sequence
     participant "IdentityService" as IS << CNode >>
@@ -506,11 +499,11 @@ CILogon generates X509 certificate and returns it to portal for use with DataONE
     IS-->CI: PrincipalList
     CI->CI: Generate and Sign X.509
     CI-->Portal: X.509
-    
+
     group For existing KNB identities
       participant "Metacat API" as Metacat
       create Metacat
-      
+
       D1->Metacat: authenticate with KNB identity/credentials
       D1<--Metacat: session
       D1->Portal: get token
@@ -520,11 +513,18 @@ CILogon generates X509 certificate and returns it to portal for use with DataONE
       Portal-->Metacat: valid token
       Metacat->IS: mapIdentity(MN, CILogon, KNB)
       note right
-        using trusted MN certificate   
+        using trusted MN certificate
       end note
     end
-    
+
     @enduml
+
+**Figure 4.** Detailed sequence of events for authentication through CILogon -
+Client authentication through the CILogon service; CILogon, using Shibboleth,
+requests a SAML authentication through a registered *Identity Provider* (IdP);
+the IdP confirms identity and returns SAML response to CILogon; client continues
+process, the portal delegate requests Certificate from CILogon;
+CILogon generates X509 certificate and returns it to portal for use with DataONE.
 
 The CILogon X.509 certificate provides a portable credential that binds a user’s
 public key to their distinguished name or another significant identifier (e.g.,
@@ -551,17 +551,17 @@ Using Access Tokens
 Some clients have difficulty handling X.509 certificates, and so the DataONE V2 API
 also supports the use of **access tokens** as a mechanism for clients to identifiy themselves
 for API calls.  In this scenario, the user authenticates with the DataONE Portal, and then
-obtains an access token directly from the DataONE Portal. 
+obtains an access token directly from the DataONE Portal.
 The client then uses this information to pass access tokens to
-service providers using an HTTP "Authorization" header.  
-The service provider (e.g., MN), must then validate the access token to ensure that the 
+service providers using an HTTP "Authorization" header.
+The service provider (e.g., MN), must then validate the access token to ensure that the
 request is coming from a host with a valid token and that the request is not being repeated via session hijacking.
 
 DataONE considered different scenarios for the structure and meaning of these access
 tokens, largely following the OAuth1.0_ and OAuth2.0_ specifications.
 These two specification propose related but different mechanisms for generating and utilizing
 access tokens.  Decision making fell along two axes: 1) what does an acces token represent,
-and 2) how does a service provider validate an access token.  The main choices were, in order of 
+and 2) how does a service provider validate an access token.  The main choices were, in order of
 both increasing security and increasing complexity, are:
 
 
@@ -574,15 +574,16 @@ We ultimately decided to use the simpler Bearer Token approach outlined below:
 * Bearer tokens
     * `Bearer tokens`_ are unique string values issued by an authentication server that show
       that a client is authorized for access; anyone holding the bearer token can use it to gain
-      access to a service. Service providers validate the token via either a call to the central authorization 
-      service or cryptographically using the public key that corresponds to the private key with which 
+      access to a service. Service providers validate the token via either a call to the central authorization
+      service or cryptographically using the public key that corresponds to the private key with which
       the authentication service signed the token.
-      These tokens must be used with TLS, and care must be taken to not leak the tokens via e.g. logs, 
+      These tokens must be used with TLS, and care must be taken to not leak the tokens via e.g. logs,
       client storage locations, or via MITM attacks.
+
         * Pros: simple to implement on client, passed directly in Authorization header
-        * Cons: Passed with every request, simple to capture, can use to steal session via replay attacks, 
+        * Cons: Passed with every request, simple to capture, can use to steal session via replay attacks,
           may require centralized validation of tokens, requires TLS.
-        
+
 
 .. _OAuth1.0: http://tools.ietf.org/html/rfc5849
 
@@ -594,15 +595,8 @@ We ultimately decided to use the simpler Bearer Token approach outlined below:
 
 .. _RSA-SHA1: http://tools.ietf.org/html/rfc5849#section-3.4.3
 
-.. image:: images/auth_04.png
+.. uml::
 
-**Figure 6.** Scenarios for using OAuth access tokens in HTTP Authorization headers as
-a mechanism to establish client identity and authorization.  
-The user authenticates with the DataONE Portal to establish their identity, and the portal
-issues a client-specific token. For Bearer Tokens, the Portal issues
-a signed, reusable access token that is sent to service providers and verified using an asymmetric public key.
-
-..
     @startuml images/auth_04.png
     title Detailed Access Token Authentication Scenarios
     participant "KNB" as MN << MNode >>
@@ -617,7 +611,7 @@ a signed, reusable access token that is sent to service providers and verified u
     Web->IP: Identity Verification
     IP-->Web: CILogon Redirect
     Web -> Portal: follow redirect to profile page
-    
+
     group Bearer Token Scenario
         Portal->R: copy access_token
         R->MN: get(access_token, pid)
@@ -626,23 +620,29 @@ a signed, reusable access token that is sent to service providers and verified u
         MN->MN: validateToken(access_token, public_key)
         R<-MN: data or NotAuthorized
     end
-    
+
     @enduml
-    
+
+**Figure 6.** Scenarios for using OAuth access tokens in HTTP Authorization headers as
+a mechanism to establish client identity and authorization.
+The user authenticates with the DataONE Portal to establish their identity, and the portal
+issues a client-specific token. For Bearer Tokens, the Portal issues
+a signed, reusable access token that is sent to service providers and verified using an asymmetric public key.
+
 Encoding Session information in HTTP headers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-When clients wish to use an authentication token, they will include the 
+When clients wish to use an authentication token, they will include the
 token value in the Authorization request header::
 
   Authorization: Bearer <token_value>
-  
-This is consistent with the OAuth 2 specification that states how Bearer tokens_ 
-should be  transmitted to the service. 
-Service providers should inspect the request for 
+
+This is consistent with the OAuth 2 specification that states how Bearer tokens
+should be transmitted to the service.
+Service providers should inspect the request for
 this token and use it when a client x509 certificate is not present.
 
-When services wish to verify the JSON Web Token (JWT) , they should use the public 
+When services wish to verify the JSON Web Token (JWT) , they should use the public
 certificate of the token issuing service (i.e., the CN's public server certificate).
 A utility is included in the d1_portal project with example code below.
 
@@ -651,14 +651,14 @@ A utility is included in the d1_portal project with example code below.
 	// get the token
 	String token = request.getHeader("Authorization");
 	token = token.split(" ")[1];
-	
+
 	// parse the JWT
 	SignedJWT signedJWT = SignedJWT.parse(token);
-	
+
 	// verify the token using server's public key
 	JWSVerifier verifier = new RSASSAVerifier(publicKey);
 	boolean verified = signedJWT.verify(verifier);
-	
+
 	// check payload for subject ("sub"), expiration ("exp"), etc...
 	String subject = signedJWT.getJWTClaimsSet().getSubject();
 	Date expDate = signedJWT.getJWTClaimsSet().getExpirationTime();
@@ -671,39 +671,39 @@ inherently utilize different methods for having users prove their identity.
 Initially, DataONE will target these avenues for authentication:
 
 * CILogon - Users can continue to authenticate using CILogon identities much like they do today.
-The portal keeps track of their successful authnetication from whichever IdP they choose, and will 
-issue an authentication token for that user.
-To begin the CILogon authorization process in the CN portal, users can navigate to::
+  The portal keeps track of their successful authnetication from whichever IdP they choose, and will
+  issue an authentication token for that user
 
-	https://<cn-host>/portal/startRequest[?target=<some_final_uri>
+  To begin the CILogon authorization process in the CN portal, users can navigate to::
 
+	  https://<cn-host>/portal/startRequest[?target=<some_final_uri>
 
-* ORCID - Using a similar workflow as with CILogon, users can opt to authenticate using their ORCID 
-accounts using OAuth 2.0. After successfully authenticating with the ORCID identity provider, an 
-authentication token can be retrieved from the portal.
-To begin the ORCID authorization process in the CN portal, users can navigate to::
+* ORCID - Using a similar workflow as with CILogon, users can opt to authenticate using their ORCID
+  accounts using OAuth 2.0. After successfully authenticating with the ORCID identity provider, an
+  authentication token can be retrieved from the portal.
+  To begin the ORCID authorization process in the CN portal, users can navigate to::
 
-	https://<cn-host>/portal/oauth?action=start
+  	https://<cn-host>/portal/oauth?action=start
 
-* LDAP - Existing Ecoinformatics account holders can opt to continue using those identites to authenticate 
-with the DataONE portal. This is a more direct method of authentication and is meant to bridge the gap between 
-our legacy account system and newer SSO options available above.
-To authenticate using LDAP, users can post to::
+* LDAP - Existing Ecoinformatics account holders can opt to continue using those identites to authenticate
+  with the DataONE portal. This is a more direct method of authentication and is meant to bridge the gap between
+  our legacy account system and newer SSO options available above.
+  To authenticate using LDAP, users can post to::
 
-	https://<cn-host>/portal/ldap
-	
+	  https://<cn-host>/portal/ldap
+
 The following parameters are requred (*) or supported::
 
 	username* - the full LDAP DN
 	password* - the user's LDAP password
 	target - any URI to be redirected to upon successful authentiction
 
-In all cases, users will retrieve an authentication token from the CN Portal after they have successfully authenticated with 
+In all cases, users will retrieve an authentication token from the CN Portal after they have successfully authenticated with
 their IdP of choice and been redirected back to the CN Portal. The auth token endpoint is::
 
 	https://<cn-host>/portal/token
-	
-Note that the same browser session used to authenticate should be used to retrieve the authentication token.	
+
+Note that the same browser session used to authenticate should be used to retrieve the authentication token.
 
 
 
@@ -750,7 +750,8 @@ Portal Delegation
 For web clients, we can use the CILogon portal delegation approach. Note that
 the CN and portal are assumed to be on the same server.
 
-.. 
+.. uml::
+
    @startuml images/portal_01.png
    participant "Browser" as browser
    participant "CN" as cn
@@ -772,13 +773,11 @@ the CN and portal are assumed to be on the same server.
    cn -> metacat: get(certificate)
    note right
       different server
-   end note    
+   end note
    cn <- metacat: object
    browser <- cn: object
    end
    @enduml
-   
-.. image:: images/portal_01.png
 
 **Figure 7.** Authenticated "read" going through CN. The browser is the client
 with no certificate. The portal keeps the user's client certificate. The CN
@@ -870,18 +869,12 @@ of an authenticated session represented by a SAML Assertion. Note that these
 SAML Assertion messages are returned when Member Nodes and Coordinating Nodes
 make calls to :func:`CN_auth.getAuthSession`.
 
-.. figure:: images/auth_02.png
-
-**Figure 8.** Authentication and session management assuming that the CN runs a
-seperate SessionService that creates and tracks sessions. This is an alternative
-scenario based on the idea that CILogon may not be able to make calls to the
-Identity Service, in which case the separate Session Service would need to be
-created.
 
 .. literalinclude:: ./saml-2-assertion-example.xml
    :language: xml
 
-.. 
+.. uml::
+
    @startuml images/auth_01.png
    participant "MN" as mn << MNode >>
    participant "Client" as app_client << Application >>
@@ -897,7 +890,15 @@ created.
    app_client <- mn: object
    @enduml
 
-.. 
+**Figure 8.** Authentication and session management assuming that the CN runs a
+seperate SessionService that creates and tracks sessions. This is an alternative
+scenario based on the idea that CILogon may not be able to make calls to the
+Identity Service, in which case the separate Session Service would need to be
+created.
+
+
+.. uml::
+
    @startuml images/auth_02.png
    participant "CILogon" as cilogon << CNode >>
    participant "Client" as app_client << Application >>
@@ -918,5 +919,3 @@ created.
    mn -> mn: isAuthorized()
    app_client <- mn: object
    @enduml
-
-

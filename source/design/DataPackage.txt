@@ -23,12 +23,8 @@ Note this is a name space string. The actual ORE terms can be found in the
 .. _OAI-ORE: https://www.openarchives.org/ore/
 .. _ORE Vocabulary Document: http://www.openarchives.org/ore/1.0/vocabulary
 
-.. image:: images/datapackage_class.png
+.. uml::
 
-Overview class diagram for content model in DataONE. Class attributes refer to
-the equivalent SOLR index entry
-
-..
   @startuml images/datapackage_class.png
   left to right direction
 
@@ -77,6 +73,9 @@ the equivalent SOLR index entry
   ResourceMap o-- Relation
 
   @enduml
+
+**Figure 1.** Overview class diagram for content model in DataONE. Class attributes refer to
+the equivalent SOLR index entry
 
 
 Generating Resource Maps
@@ -375,7 +374,7 @@ Questions
 
 .. figure:: http://www.openarchives.org/ore/1.0/datamodel-images/ore_uml.png
 
-   **Figure 1.** General model for an OAI-ORE document.
+   **Figure 2.** General model for an OAI-ORE document.
 
 .. figure:: images/package_eg_1.png
 

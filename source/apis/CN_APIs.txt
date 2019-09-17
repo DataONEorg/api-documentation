@@ -1,18 +1,31 @@
+.. include:: api_substitutions.txt
+
 Coordinating Node APIs
 ----------------------
+
+.. contents::
+   :local:
+   :depth: 1
+
 
 The service interfaces described here are exposed through the Coordinating
 Node REST interface to support interactions with Member Nodes and DataONE
 clients.
 
+**CNDiagnostic Methods**
+
+.. autofuncsummary:: CNDiagnostic
+   :functions:
+
+
 The following table provides a list of API methods exposed by Coordinating
 Nodes.
 
-:Tier: 
+:Tier:
 
   The tier in which a method is grouped.
 
-:Version: 
+:Version:
 
   Version of API method is available. The lowest version number indicates when
   the method was added. A version number in parentheses indicates the method is
@@ -24,7 +37,7 @@ Nodes.
 :REST:
 
   The HTTP method and path relative to the Base URL. Parameters specified in the
-  URL are indicatd by braces. Note that parameters included in a path MUST be
+  URL are indicated by braces. Note that parameters included in a path MUST be
   properly path encoded, and parameters included as key, value pairs MUST also
   be properly encoded.
 
@@ -44,82 +57,114 @@ Nodes.
 Diagnostic API
 ~~~~~~~~~~~~~~
 
-.. module:: CNDiagnostic
-   :synopsis: Operations to assist with diagnosing authentication and content 
-     formatting.
+|CN| operations to assist clients with diagnosing authentication and content formatting.
 
-.. include:: generated/generated_CNDiagnostic.txt
+.. autofuncsummary:: CNDiagnostic
+   :functions:
+
+.. automodule:: CNDiagnostic
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 
 
 Core API
 ~~~~~~~~
 
-.. module:: CNCore
-   :synopsis: Core operations necessary for basic interaction with
-     Coordinating Nodes
+Core operations necessary for basic interaction with |CN|s.
 
-.. include:: generated/generated_CNCore.txt
+.. autofuncsummary:: CNCore
+   :functions:
+
+.. automodule:: CNCore
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 
 Read API
 ~~~~~~~~
 
-.. module:: CNRead
-   :synopsis: Data read operations for Coordinating Nodes
-
-The *CN_read* API implements methods that enable object retrieval operations
-on a :term:`Coordinating Node`. It includes searches of science metadata and
+The *CNRead* API implements methods that enable object retrieval operations
+on a |CN|. It includes searches of science metadata and
 system metadata and exposes log records held by CNs.
 
-.. include:: generated/generated_CNRead.txt
+.. autofuncsummary:: CNRead
+   :functions:
+
+.. automodule:: CNRead
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 View API
 ~~~~~~~~
 
-.. module:: CNView
-   :synopsis: View operations to see formatted versions of metadata and data for Coordinating Nodes
+View operations to see formatted versions of metadata and data for CNs.
 
-The *CNView* API implements methods that enable viewing content 
-on a :term:`Coordinating Node`. Like the MNView service, the CNView service provides a transformed view of a metadata file, data file, or package.  The CNView service provides a default view for all content, and may choose to redirect a review request to the authoritative Member Node for a given PID. 
+The *CNView* API implements methods that enable viewing content
+on a |CN|. Like the MNView service, the CNView service
+provides a transformed view of a metadata file, data file, or package.  The
+CNView service provides a default view for all content, and may choose to
+redirect a review request to the authoritative Member Node for a given PID.
 
-.. include:: generated/generated_CNView.txt
+.. autofuncsummary:: CNView
+   :functions:
+
+.. automodule:: CNView
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 
 Authorization API
 ~~~~~~~~~~~~~~~~~
 
-.. module:: CNAuthorization
-   :synopsis: Methods for authorization and access control
+Methods for authorization and access control.
 
-.. include:: generated/generated_CNAuthorization.txt
+.. autofuncsummary:: CNAuthorization
+   :functions:
 
+.. automodule:: CNAuthorization
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 Identity API
 ~~~~~~~~~~~~
 
-.. module:: CNIdentity
-   :synopsis: Methods for account management and identity mapping.
+Methods for account management and identity mapping.
 
-.. include:: generated/generated_CNIdentity.txt
+.. autofuncsummary:: CNIdentity
+   :functions:
+
+.. automodule:: CNIdentity
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 
 Replication API
 ~~~~~~~~~~~~~~~
 
-.. module:: CNReplication
-   :synopsis: 
-     Supports operations for replication of content between Member Nodes.
-
+Supports operations for replication of content between Member Nodes.
 
 The Data Replication API operates in conjunction with the
 :mod:`MNReplication` API to assist with the replication of data and
 science metadata content between Member Nodes to ensure that copies of data
 and metadata can be retrieved from more than one Member Node where possible.
 
-.. include:: generated/generated_CNReplication.txt
+.. autofuncsummary:: CNReplication
+   :functions:
+
+.. automodule:: CNReplication
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 ..
-  
+
   This old stuff is commented out but kept here for revisiting later
   .. function:: getDefaultReplicationPolicy (sess)
 
@@ -140,8 +185,7 @@ and metadata can be retrieved from more than one Member Node where possible.
 Register API
 ~~~~~~~~~~~~
 
-.. module:: CNRegister
-   :synopsis: Register nodes and their capabilities, retrieve node list
+Register nodes and their capabilities, retrieve node list.
 
 The register API methods are used to maintain a registry of nodes participating
 in the DataONE infrastructure.
@@ -154,8 +198,13 @@ implementing a parallel data store. In this case, the "science metadata" could
 be a DC description of the node, and the "data" might be the detailed
 registration information including node capabilities, scheduling and so forth.
 
+.. autofuncsummary:: CNRegister
+   :functions:
 
-.. include:: generated/generated_CNRegister.txt
+.. automodule:: CNRegister
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 
 ..
@@ -168,7 +217,7 @@ registration information including node capabilities, scheduling and so forth.
 
      :param nodeID: A PID that identifies the Member Node.
 
-     :param capabilities: 
+     :param capabilities:
        A capabilities document that describes the resources and supported
        services of the Member Node.
 
@@ -207,10 +256,9 @@ registration information including node capabilities, scheduling and so forth.
      interaction with the MN as various aspects are evaluated.
 
 
-  .. todo:: 
+  .. todo::
      The :func:`verifyCapabilities` will need to check functionality of the MN so
      need to define a few service hooks for checking these properties.
-
 
   State of Health API
   ~~~~~~~~~~~~~~~~~~~
@@ -221,7 +269,7 @@ registration information including node capabilities, scheduling and so forth.
   .. module:: CN_health
      :synopsis: Methods for reporting on the state of health of a CN and on the entire DataONE infrastructure
 
-  :: 
+  ::
 
     generateReport(token) -> statusReport
 
@@ -241,7 +289,7 @@ registration information including node capabilities, scheduling and so forth.
      informatio returned is used to give administrators information necessary to
      maintain the infrastructure.
 
-     .. note:: 
+     .. note::
         This method is used by Use Case 10 "MN Status Reports" for V0.3. However
         instead of a complete set of detailed status reports, the V0.3
         implementation of the use case will utilize the ``MN_health.heartbeat()``
@@ -249,7 +297,7 @@ registration information including node capabilities, scheduling and so forth.
         this method will use the richer ``MN_health.getStatus(token)`` method.
 
      :param token: Identity with authority to generate reports.
-   
+
      :rtype: Status report, ideally in XML + stylsheet or at least XHTML.
 
 

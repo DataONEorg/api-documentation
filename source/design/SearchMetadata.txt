@@ -40,11 +40,10 @@ then it is necessary to update the :attr:`~SearchMetadata.documents` and
 :attr:`~SearchMetadata.isDocumentedBy` properties of the Science Metadata and
 data objects that appear in the data package defined by the Resource Map.
 
-.. figure:: images/index_sequence.png
+.. uml::
 
-.. 
    @startuml images/index_sequence.png
-   
+
    (*) -right-> "System metadata updated"
    --> "Index Task"
    --> "Extract system metadata"
@@ -64,6 +63,7 @@ data objects that appear in the data package defined by the Resource Map.
 
    @enduml
 
+**Figure 1.**
 
 A full list of index fields is provided in Table 4 below.
 
@@ -212,15 +212,15 @@ Adding Package 1
 ................
 
   .. graphviz::
-                            
-         digraph RM1 {        
+
+         digraph RM1 {
          graph [rankdir="LR", label="Package 1"];
-         A [shape=folder];    
-         B [shape=note];      
-         C [shape=oval];      
-         A -> B;              
-         A -> C;              
-       }                      
+         A [shape=folder];
+         B [shape=note];
+         C [shape=oval];
+         A -> B;
+         A -> C;
+       }
 
 A simple data package with a Resource Map *A* indicating that the metadata
 document *B* and the data object *C* together form a data package, and that
@@ -231,13 +231,13 @@ Index entries after Package 1 is added.
   .. list-table::
      :header-rows: 1
      :widths: 3 3 3 3
-   
+
      * - PID
        - resourceMaps
        - documents
        - isDocumentedBy
      * - A
-       - 
+       -
        -
        -
      * - B
@@ -275,13 +275,13 @@ are indicated in **bold**.
   .. list-table::
      :header-rows: 1
      :widths: 3 3 3 3
-   
+
      * - PID
        - resourceMaps
        - documents
        - isDocumentedBy
      * - A
-       - 
+       -
        -
        -
      * - B
@@ -293,9 +293,9 @@ are indicated in **bold**.
        -
        - B
      * - D
-       - 
        -
-       - 
+       -
+       -
      * - E
        - **D**
        -
@@ -325,13 +325,13 @@ are indicated in **bold**.
   .. list-table::
      :header-rows: 1
      :widths: 3 3 3 3
-   
+
      * - PID
        - resourceMaps
        - documents
        - isDocumentedBy
      * - A
-       - 
+       -
        -
        -
      * - B
@@ -351,13 +351,13 @@ are indicated in **bold**.
        -
        - B
      * - F
-       - 
        -
-       - 
+       -
+       -
      * - G
        - **F**
        - **D**
-       - 
+       -
 
 
 Limitations of Multi-Valued Fields in SOLR
@@ -454,12 +454,12 @@ Examples of date values appearing in ISO-19115 *<gco:Date>*:
 ================================== ====================
 Value                              Interpreted Value
 ================================== ====================
-1999                               1999-01-01 00:00:00Z  
+1999                               1999-01-01 00:00:00Z
 2010-03-03                         2010-03-03 00:00:00Z
 ================================== ====================
 
 
-Examples of date values appearing in EML *<calendarDate>*: 
+Examples of date values appearing in EML *<calendarDate>*:
 
 ================================== ====================
 Value                              Interpreted Value
@@ -562,10 +562,10 @@ tools.
      - :attr:`title`
      - rft.title
    * - Version*
-     - 
+     -
      - 15 Version
      - See notes below.
-     - 
+     -
    * - Archive and/or Distributor*
      - idinfo > citation > citeinfo > "publish"
      - 4 Publisher*
@@ -580,14 +580,14 @@ tools.
      - not applicable
      - 8 Date
      - perhaps :attr:`dateUploaded`
-     - 
+     -
    * - Subset Used
      - not applicable
      - 12 RelatedIdentifier DataCite recommends obtaining an identifier for
        any subset that needs to be cited as well as an identifier for the
        larger whole.
      - perhaps a reference to the resource map?
-     - 
+     -
    * - Editor or Other Important Role
      - idinfo > citation > citeinfo > "origin"
      - 7 Contributor
@@ -597,39 +597,39 @@ tools.
      - idinfo > citation > citeinfo > "pubplace"
      - 17 Description
      - See notes below.
-     - 
+     -
    * - Distributor, Associate Archive, or other Institutional Role
      - idinfo > citation > citeinfo > "othercit"
      - 7 Contributor or possibly 4 Publisher
      - "http://dataone.org"
-     - 
+     -
    * - Data Within a Larger Work
      - idinfo > citation > citeinfo > "othercit" or "lworkcit"
      - 12 RelatedIdentifier
      - perhaps a reference to the resource map?
-     - 
-   * - 
-     - 
-     - 
+     -
+   * -
+     -
+     -
      - :attr:`keyWord`
      - rft.subject
-   * - 
-     - 
-     - 
+   * -
+     -
+     -
      - :attr:`abstract`
      - rft.description
-   * - 
-     - 
-     - 
+   * -
+     -
+     -
      - object format name, or "data" | "metadata" | "resource map"
      - rft.type
-   * - 
-     - 
-     - 
+   * -
+     -
+     -
      - object format type
      - rft.format
-   * - 
-     - 
+   * -
+     -
      -
      - constructed from bounding box
      - rft.coverage
@@ -748,7 +748,3 @@ tools.
   * Publication (A structured type, perhaps search by decomposing to elements)
 
   * ScientificName (A structured type, perhaps search by decomposing to elements)
-
-
-
-

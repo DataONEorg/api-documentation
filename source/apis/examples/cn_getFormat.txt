@@ -1,17 +1,16 @@
 **Example**
 
-Retrieve information about the ``http://www.openarchives.org/ore/terms`` 
+Retrieve information about the ``http://www.openarchives.org/ore/terms``
 formatId. Note that formatId has characters that should be escaped when added
-as a URL path element. This is done using the urlencode script.
+as a URL path element. This is done here using a urlencode script.
 
-.. Note:: The *xml* command is implemented by XMLStarlet_, and is used here to
-          format the output for easier reading. The *urlencode* command is a 
-          script available with the `d1_client_bash`_ itk tool 
-        
 .. code-block:: bash
+   :linenos:
 
-   formatid=$(echo "http://www.openarchives.org/ore/terms" | urlencode)
-   curl -s "http://cn-dev.dataone.org/cn/v1/formats/${formatid}" | xml fo
+   FORMATID=$(echo "http://www.openarchives.org/ore/terms" | urlencode)
+   #encoded formatid: http%3A%2F%2Fwww.openarchives.org%2Fore%2Fterms
+
+   curl -s "https://cn.dataone.org/cn/v2/formats/${FORMATID}" | xml fo
 
    <?xml version="1.0" encoding="UTF-8"?>
    <d1:objectFormat xmlns:d1="http://ns.dataone.org/service/types/v1">
@@ -19,9 +18,4 @@ as a URL path element. This is done using the urlencode script.
      <formatName>Object Reuse and Exchange Vocabulary</formatName>
      <formatType>RESOURCE</formatType>
    </d1:objectFormat>
-  
-
-.. _XMLStarlet: http://xmlstar.sourceforge.net/
-
-.. _d1_client_bash: https://repository.dataone.org/software/cicore/trunk/itk/d1_client_bash
 

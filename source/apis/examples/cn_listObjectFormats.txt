@@ -1,26 +1,34 @@
 **Example**
 
-.. code-block:: bash
+.. code-block:: xml
+  :linenos:
 
-  curl "http://cn.dataone.org/cn/v1/formats"
+  curl -s "http://cn.dataone.org/cn/v2/formats"
 
-  <?xml version="1.0" encoding="UTF-8"?>
-  <?xml-stylesheet type="text/xsl" href="/cn/xslt/dataone.types.v1.xsl"?>
-  <d1:objectFormatList xmlns:d1="http://ns.dataone.org/service/types/v1" count="67" start="0" total="67">
-    <objectFormat>
-      <formatId>-//ecoinformatics.org//eml-access-2.0.0beta4//EN</formatId>
-      <formatName>Ecological Metadata Language, Access module, version 2.0.0beta4</formatName>
-      <formatType>METADATA</formatType>
-    </objectFormat>
-    <objectFormat>
-      <formatId>-//ecoinformatics.org//eml-attribute-2.0.0beta4//EN</formatId>
-      <formatName>Ecological Metadata Language, Attribute module, version 2.0.0beta4</formatName>
-      <formatType>METADATA</formatType>
-    </objectFormat>
-    <objectFormat>
-      <formatId>-//ecoinformatics.org//eml-constraint-2.0.0beta4//EN</formatId>
-      <formatName>Ecological Metadata Language, Constraint module, version 2.0.0beta4</formatName>
-      <formatType>METADATA</formatType>
-    </objectFormat>
-    ...
-  </d1:objectFormatList>
+  <?xml version="1.0" encoding="UTF-8" standalone="yes"?><?xml-stylesheet type="text/xsl" href="/cn/xslt/dataone.types.v2.xsl" ?>
+  <ns3:objectFormatList xmlns:ns2="http://ns.dataone.org/service/types/v1"
+                        xmlns:ns3="http://ns.dataone.org/service/types/v2.0"
+                        count="132" start="0" total="132">
+      <objectFormat>
+          <formatId>eml://ecoinformatics.org/eml-2.0.0</formatId>
+          <formatName>Ecological Metadata Language, version 2.0.0</formatName>
+          <formatType>METADATA</formatType>
+          <mediaType name="text/xml"/>
+          <extension>xml</extension>
+      </objectFormat>
+      <objectFormat>
+          <formatId>eml://ecoinformatics.org/eml-2.0.1</formatId>
+          <formatName>Ecological Metadata Language, version 2.0.1</formatName>
+          <formatType>METADATA</formatType>
+          <mediaType name="text/xml"/>
+          <extension>xml</extension>
+      </objectFormat>
+      <objectFormat>
+          <formatId>eml://ecoinformatics.org/eml-2.1.0</formatId>
+          <formatName>Ecological Metadata Language, version 2.1.0</formatName>
+          <formatType>METADATA</formatType>
+          <mediaType name="text/xml"/>
+          <extension>xml</extension>
+      </objectFormat>
+      ...
+  </ns3:objectFormatList>

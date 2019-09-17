@@ -1,12 +1,14 @@
 DataONE APIs
 ============
 
+
+
 The DataONE infrastructure exposes application programming interfaces (APIs)
 that support interaction between :term:`Member Node` and :term:`Coordinating
 Node`, and to support development of applications that interact with the
 DataONE infrastructure (elements of the :term:`Investigator Toolkit`).
 
-.. figure:: images/componentMethods.png 
+.. figure:: images/componentMethods.png
    :figwidth: 100%
 
    *Figure 1.* Overview of the system components and the methods being called
@@ -14,7 +16,7 @@ DataONE infrastructure (elements of the :term:`Investigator Toolkit`).
    method on the target.
 
 All services in DataONE are implemented using a RESTful approach with HTTPS
-(or HTTP) as the transport protocol and XML for encoding messages. 
+(or HTTP) as the transport protocol and XML for encoding messages.
 
 Member Nodes can expose different levels of functionality that equate to four
 different tiers while participating in the DataONE network. The tiers and Member
@@ -25,7 +27,7 @@ functionality expressed for each tier.
 .. list-table::
    :widths: 1 5 5 5
    :header-rows: 1
-   
+
    * - Tier
      - Description
      - MN APIs
@@ -43,7 +45,7 @@ functionality expressed for each tier.
    * - 3
      - Write (create, update, delete), possibly limited support for data types
      - Tier 2 + :mod:`MNStorage`
-     - 
+     -
    * - 4
      - Replication target. The types of content supported by the node may be
        limited to a subset of object formats.
@@ -58,7 +60,7 @@ respective APIs.
 
 .. toctree::
    :maxdepth: 1
-   
+
    rest_comms
    MN_APIs
    CN_APIs
@@ -69,4 +71,3 @@ respective APIs.
    Exceptions
    monitoring
    CN_internal_APIs
-
