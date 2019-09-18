@@ -1,4 +1,19 @@
 **Example**
 
-.. TODO:: Example for CNCore.reserveIdentifier
+Reserve an identifier using bearer authentication:
 
+.. code-block:: bash
+
+   curl -H "Authorization: Bearer $token" \
+        -F "pid=urn:uuid:56daae54-a42a-4927-83f1-878ec25ac366" \
+        -X POST\
+        "https://cn.dataone.org/cn/v2/reserve"
+
+Result (new lines added for readability):
+
+.. code-block:: xml
+
+   <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+   <identifier xmlns="http://ns.dataone.org/service/types/v1">
+     urn:uuid:56daae54-a42a-4927-83f1-878ec25ac366
+   </identifier>
