@@ -51,7 +51,7 @@ def create(session,pid,object,sysmeta):
   :REST URL: ``POST /object``
 
   Parameters:
-    session (Types.Session): |session| 
+    session (Types.Session): |session|
     pid (Types.Identifier): The identifier that should be used in DataONE to identify and access the object. This is an Unicode string that follows the constraints on identifiers described in :doc:`/design/PIDs`. Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
     object (bytes): The object (e.g. Science Metadata) bytes.
     sysmeta (Types.SystemMetadata): The complete system metadata document describing the object. Transmitted as an UTF-8 encoded XML structure for the respective type as defined in the DataONE types schema, as a *File part* of the MIME multipart/mixed message.
@@ -148,7 +148,7 @@ def getLogRecords(session,fromDate=None,toDate=None,event=None,idFilter=None,sta
   :REST URL: ``GET /log?[fromDate={fromDate}][&toDate={toDate}][&event={event}][&idFilter={idFilter}][&start={start}][&count={count}]``
 
   Parameters:
-    session (Types.Session): |session| 
+    session (Types.Session): |session|
     fromDate (Types.DateTime): Starting time for records in response, entries with timestamp greater than or equal to (>=) this value will be returned. Defaults to include all records. Transmitted as a URL query parameter, and so must be escaped accordingly.
     toDate (Types.DateTime): End time for records in response, entries with timestamp less than (<) this value will be returned. If not specified, then defaults to now. Transmitted as a URL query parameter, and so must be escaped accordingly.
     event (Types.Event, string): Return only log records for the specified type of event.  Default is all. Transmitted as a URL query parameter, and so must be escaped accordingly.
@@ -157,7 +157,7 @@ def getLogRecords(session,fromDate=None,toDate=None,event=None,idFilter=None,sta
     count (integer): The maximum number of log records that should be returned in the response. The Member Node may return fewer and the caller should check the *total* in the response to determine if further pages may be retrieved. Transmitted as a URL query parameter, and so must be escaped accordingly.
 
   Returns:
-    Types.Log: 
+    Types.Log:
 
   Raises:
     Exceptions.InvalidToken:  (errorCode=401, detailCode=1470)
@@ -174,7 +174,7 @@ def getLogRecords(session,fromDate=None,toDate=None,event=None,idFilter=None,sta
 
 
 
-def reserveIdentifier(session,id):
+def reserveIdentifier(session,pid):
   """
   ``POST /reserve`` |br| Reserves the identifier that is unique and can not be used by any other sessions. Future calls to :func:`MNStorage.create` and :func:`MNStorage.update` that reference this ID must be made by the same :term:`principal` making the reservation, otherwise an error is raised on those methods.
 
@@ -189,8 +189,8 @@ def reserveIdentifier(session,id):
   :REST URL: ``POST /reserve``
 
   Parameters:
-    session (Types.Session): |session| 
-    id (Types.Identifier): The identifier that is to be reserved. May be a PID or a SID value. Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
+    session (Types.Session): |session|
+    pid (Types.Identifier): The identifier that is to be reserved. May be a PID or a SID value. Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
 
   Returns:
     Types.Identifier: The identifier that was reserved
@@ -214,6 +214,8 @@ def generateIdentifier(session,scheme,fragment=None):
   """
   ``POST /generate`` |br| Given a scheme and optional fragment, generates an identifier with that scheme and fragment that is unique. Returned identifier may be used as either a PID or a SID.
 
+  Note that the generated identifier is also reserved. *See:* :func:`CNCore.reserveIdentifier`.
+
   The message body is encoded as MIME Multipart/form-data
 
 
@@ -223,7 +225,7 @@ def generateIdentifier(session,scheme,fragment=None):
   :REST URL: ``POST /generate``
 
   Parameters:
-    session (Types.Session): |session| 
+    session (Types.Session): |session|
     scheme (string): The name of the identifier scheme to be used, drawn from a DataONE-specific vocabulary of identifier scheme names, including several common syntaxes such as DOI, ARK, LSID, UUID, and LSRN, among others. The first version of this method only supports the UUID scheme, and ignores the fragment parameter.  Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
     fragment (string): The optional fragment to include in the generated Identifier. This parameter is optional and may not be present in the message body. Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
 
@@ -253,7 +255,7 @@ def listChecksumAlgorithms():
   :REST URL: ``GET /checksum``
 
   Returns:
-    Types.ChecksumAlgorithmList: A list of supported checksum algorithms. 
+    Types.ChecksumAlgorithmList: A list of supported checksum algorithms.
 
   Raises:
     Exceptions.NotImplemented: The service is not implemented. (errorCode=501, detailCode=4880)
@@ -279,7 +281,7 @@ def setObsoletedBy(session,pid,obsoletedByPid,serialVersion):
   :REST URL: ``PUT /obsoletedBy/{pid}``
 
   Parameters:
-    session (Types.Session): |session| 
+    session (Types.Session): |session|
     pid (Types.Identifier): Identifier of the object system metadata being updated. Transmitted as part of the URL path and must be escaped accordingly.
     obsoletedByPid (Types.Identifier): Identifier of the object that obsoletes the object identified by *pid*.  Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
     serialVersion (unsigned long): The serial version of the system metadata being updated. If the specified *serialVersion* does not match the current version at the Coordinating Nodes, then a :exc:`Exceptions.VersionMismatch` error is raised and no changes are made. Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
@@ -318,7 +320,7 @@ def delete(session,id):
   :REST URL: ``DELETE /object/{id}``
 
   Parameters:
-    session (Types.Session): |session| 
+    session (Types.Session): |session|
     id (Types.Identifier): The identifier of the object to be deleted. May be either a PID or SID, the latter will operate on the HEAD PID. Transmitted as part of the URL path and must be escaped accordingly.
 
   Returns:
@@ -340,7 +342,7 @@ def delete(session,id):
 
 def archive(session,id):
   """
-  ``PUT /archive/{id}`` |br| Hides an object managed by DataONE from search operations, effectively preventing its discovery during normal operations. 
+  ``PUT /archive/{id}`` |br| Hides an object managed by DataONE from search operations, effectively preventing its discovery during normal operations.
 
   The operation does not delete the object bytes, but instead sets the :attr:`Types.SystemMetadata.archived` flag to True. This ensures that the object can still be resolved (and hence remain valid for existing citations and cross references), though will not appear in searches.
 
@@ -359,7 +361,7 @@ def archive(session,id):
   :REST URL: ``PUT /archive/{id}``
 
   Parameters:
-    session (Types.Session): |session| 
+    session (Types.Session): |session|
     id (Types.Identifier): The identifier of the object to be archived. May be either a PID or a SID, the latter will act on the HEAD PID. Transmitted as part of the URL path and must be escaped accordingly.
 
   Returns:
@@ -442,7 +444,7 @@ def registerSystemMetadata(session,pid,sysmeta):
   :REST URL: ``POST /meta``
 
   Parameters:
-    session (Types.Session): |session| 
+    session (Types.Session): |session|
     pid (Types.Identifier):  Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
     sysmeta (Types.SystemMetadata):  Transmitted as an UTF-8 encoded XML structure for the respective type as defined in the DataONE types schema, as a *File part* of the MIME multipart/mixed message.
 
@@ -479,7 +481,7 @@ def updateSystemMetadata(session,pid,sysmeta):
   :REST URL: ``PUT /meta``
 
   Parameters:
-    session (Types.Session): |session| 
+    session (Types.Session): |session|
     pid (Types.Identifier):  Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
     sysmeta (Types.SystemMetadata):  Transmitted as an UTF-8 encoded XML structure for the respective type as defined in the DataONE types schema, as a *File part* of the MIME multipart/mixed message.
 
@@ -516,7 +518,7 @@ def hasReservation(session,subject,id):
   :REST URL: ``GET /reserve/{id}?subject={subject}``
 
   Parameters:
-    session (Types.Session): |session| 
+    session (Types.Session): |session|
     subject (Types.Subject): The subject of the :term:`principal` (user) that made the reservation.  Transmitted as a URL query parameter, and so must be escaped accordingly.
     id (Types.Identifier): The identifier that is being checked for existing as a reserved identifier or is in use as an identifier for an existing object. May be either a PID or a SID. Transmitted as part of the URL path and must be escaped accordingly.
 
@@ -535,4 +537,3 @@ def hasReservation(session,subject,id):
 
   """
   return None
-
