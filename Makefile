@@ -53,31 +53,31 @@ clean:
 livehtml:
 	sphinx-autobuild -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 
-all: generate plantuml html
+all: html
 
-generate: generate_types generate_methods
+# generate: generate_types generate_methods
 
-generate_methods: $(METHODXLS)
-	$(DOCGENERATOR) -s "$(CURDIR)/$(METHODXLS)" -d "$(CURDIR)/source/apis/generated"
-
-generate_types: 
+# generate_methods: $(METHODXLS)
+#	$(DOCGENERATOR) -s "$(CURDIR)/$(METHODXLS)" -d "$(CURDIR)/source/apis/generated"
+#
+generate_types:
 	$(XSLTPROC) --path ".:$(SCHEMADIR):$(XSD2RST)" tools/dataoneTypes2rst.xsl $(SCHEMAFILE1) > "$(CURDIR)/source/apis/Types.txt"
 	$(XSLTPROC) --path ".:$(SCHEMADIR):$(XSD2RST)" tools/dataoneTypes2rst.xsl $(SCHEMAFILE11) > "$(CURDIR)/source/apis/Types11.txt"
 	$(XSLTPROC) --path ".:$(SCHEMADIR):$(XSD2RST)" tools/dataoneTypes2rst.xsl $(SCHEMAFILE2) > "$(CURDIR)/source/apis/Types2.txt"
+#
+#plantuml: plantuml_source plantuml_usecase plantuml_types plantuml_morpho
+#
+#plantuml_source:
+#	GRAPHVIZ_DOT=$(GRAPHVIZ) $(PLANTUML) "$(CURDIR)/source" "$(CURDIR)/source/design"
 
-plantuml: plantuml_source plantuml_usecase plantuml_types plantuml_morpho
+#plantuml_usecase:
+#	GRAPHVIZ_DOT=$(GRAPHVIZ) $(PLANTUML) "$(CURDIR)/source/design/UseCases/uml/*.uml"
 
-plantuml_source:
-	GRAPHVIZ_DOT=$(GRAPHVIZ) $(PLANTUML) "$(CURDIR)/source" "$(CURDIR)/source/design"
+#plantuml_types:
+#	GRAPHVIZ_DOT=$(GRAPHVIZ) $(PLANTUML) "$(CURDIR)/source/apis"
 
-plantuml_usecase:
-	GRAPHVIZ_DOT=$(GRAPHVIZ) $(PLANTUML) "$(CURDIR)/source/design/UseCases/uml/*.uml"
-
-plantuml_types:
-	GRAPHVIZ_DOT=$(GRAPHVIZ) $(PLANTUML) "$(CURDIR)/source/apis"
-
-plantuml_morpho:
-	GRAPHVIZ_DOT=$(GRAPHVIZ) $(PLANTUML) "$(CURDIR)/source/design/morpho"
+#plantuml_morpho:
+#	GRAPHVIZ_DOT=$(GRAPHVIZ) $(PLANTUML) "$(CURDIR)/source/design/morpho"
 	
 html: 
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) "$(BUILDDIR)/html"
