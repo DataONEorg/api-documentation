@@ -1,15 +1,15 @@
-Getting a Handle on Systems Metadata for the Long Haul 
+Getting a Handle on Systems Metadata for the Long Haul
 ======================================================
 
-:Revisions: 
-  ======== ============================================================ 
-  Date     Comment 
-  ======== ============================================================ 
+:Revisions:
+  ======== ============================================================
+  Date     Comment
+  ======== ============================================================
   20100416 (Sandusky) Additional text; discussions of PREMIS, BagIt, ORE
   20100402 (Allen, Sandusky) Additional text
-  20100326 (Allen) Added more text and structure 
-  20100312 (Allen) First draft 
-  ======== ============================================================ 
+  20100326 (Allen) Added more text and structure
+  20100312 (Allen) First draft
+  ======== ============================================================
 
 Introduction
 ------------
@@ -109,7 +109,7 @@ consulted and their relevance to the requirement is also discussed in the text.
 Optionally, use cases relevant to the requirement are described, using science
 data specified in EML, Dryad, ORNL DAAC, and/or NBII formats as examples. The
 section on each requirement ends with a general discussion of the overall
-analysis. 
+analysis.
 
 System Metadata Requirements
 ----------------------------
@@ -121,9 +121,9 @@ consulted and their relevance to the requirement is also discussed in the text.
 Optionally, use cases relevant to the requirement are described, using science
 data specified in EML, Dryad, ORNL DAAC, and/or NBII formats as examples. The
 section on each requirement ends with a general discussion of the overall
-analysis. 
+analysis.
 
-Requirement 1: Perform replication on digital objects 
+Requirement 1: Perform replication on digital objects
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Description
@@ -133,7 +133,7 @@ To increase accessibility and help ensure long-term preservation, the
 Coordinating Nodes will perform replications on digital objects. Systems
 metadata will be replicated at each of the three Coordinating Nodes, while
 datasets and their associated descriptive metadata will be replicated at a
-minimum of two Member Nodes. 
+minimum of two Member Nodes.
 
 What PREMIS suggests
 ....................
@@ -146,7 +146,7 @@ replication of an object is defined as one type of a derivation relationship;
 see p.13], and information on the event that created the replicate such as the
 unique identifier of the event (2.1), type = replication (2.2), time (2.3), who
 performed the replication (2.6), and a link between the replicated object and
-the event (2.7). 
+the event (2.7).
 
 What BagIt and OAI-ORE provide
 ..............................
@@ -176,7 +176,7 @@ Description
 Migration is one kind of preservation strategy that Coordinating Nodes may
 choose to use when a particular format of an object is in danger of
 obsolescence. Also, through time, the physical media the digital objects are
-stored on will degrade and an object will need to be migrated to a new media. 
+stored on will degrade and an object will need to be migrated to a new media.
 
 What PREMIS suggests
 ....................
@@ -199,7 +199,7 @@ the event that created the newly migrated object such as unique identifier
 and a link between the migrated object and the event (2.7).
 
 When migration for physical media obsolescence occurs, the system should record
-where the object is now located (1.7.1 contentLocation). 
+where the object is now located (1.7.1 contentLocation).
 
 What BagIt and OAI-ORE provide
 ..............................
@@ -217,7 +217,7 @@ Discussion
 ..........
 
 
-Requirement 3: Record specific types of relationships between objects 
+Requirement 3: Record specific types of relationships between objects
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Description
@@ -242,7 +242,7 @@ Dependency relationships exist "when one object requires another to support its
 functino,m delivery, or coherence of content". Examples include a data type
 definition needed to render another file or modules needed by a software program
 that is required to render an object. These relationships are characterized in
-1.8.4 "dependency" and 1.8.5.5 "swDependency" respectively. 
+1.8.4 "dependency" and 1.8.5.5 "swDependency" respectively.
 
 What BagIt and OAI-ORE provide
 ..............................
@@ -264,7 +264,7 @@ Discussion
 ..........
 
 
-Requirement 4: Support digital object discovery 
+Requirement 4: Support digital object discovery
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Description
@@ -277,14 +277,14 @@ DataONE design refers to this metadata as "science metadata" (DataONE, 2010a).
 Other digital object scenarios should also be considered. For example, when
 managing digital objects for long-term curation and stewardship, DataONE
 personnel and processes may use the system metadata (DataONE, 2010b) as the
-means for digital object discovery. 
+means for digital object discovery.
 
 What PREMIS suggests
 ....................
 
 PREMIS defines descriptive metadata as "...metadata ... used to describe
 Intellectual Entities" (p.23), and assumes that which in DataONE maps to the
-science metadata submitted to the system. 
+science metadata submitted to the system.
 
 What BagIt and OAI-ORE provide
 ..............................
@@ -292,8 +292,7 @@ What BagIt and OAI-ORE provide
 DataONE use cases and requirements
 ..................................
 
-DataONE Use Case 33 - Search for Data
-(http://mule1.dataone.org/ArchitectureDocs/UseCases/33_uc.html)
+DataONE (:doc:`/design/UseCases/33_uc`)
 
 (Requirement) Enable efficient mechanisms for users to discover content
 https://trac.dataone.org/ticket/384
@@ -302,15 +301,15 @@ Discussion
 ..........
 
 
-Requirement 5: Support digital object re-use 
+Requirement 5: Support digital object re-use
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Description
 ...........
 
 Relationships , entities , citation, life science identifiers [exchange of
-digital objects between repositories? METS?] 
- 
+digital objects between repositories? METS?]
+
 
 What PREMIS suggests
 ....................
@@ -335,13 +334,13 @@ https://trac.dataone.org/ticket/384
 Discussion
 ----------
 
-Requirement 6: Record software and hardware specifications for future object rendering 
+Requirement 6: Record software and hardware specifications for future object rendering
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Description
 ...........
 
-Emulation is a core preservation strategy for digital objects. 
+Emulation is a core preservation strategy for digital objects.
 
 What PREMIS suggests
 ....................
@@ -353,7 +352,7 @@ objects. To emulate a digital object whose format is obsolete, the DataONE
 system must record information that characterizes both the software (1.8.5) and
 hardware (1.8.6) environent for each object. PREMIS requires software/hardware
 name and type to be recorded, while software version (1.8.5.2), software
-components needed by the software (1.8.5.5), and other information are optional. 
+components needed by the software (1.8.5.5), and other information are optional.
 
 What BagIt and OAI-ORE provide
 ..............................
@@ -371,7 +370,7 @@ Discussion
 ..........
 
 
-Requirement 7: Record provenance information (e.g., prinicpal, timestamp, event, rights) 
+Requirement 7: Record provenance information (e.g., prinicpal, timestamp, event, rights)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
@@ -402,8 +401,8 @@ to create a unique identifier for each event (2.1), describe the event type
 taken from a controlled vocabulary, (e.g. migration and ingestion)(2.1), and
 record when the event occurred (2.3). Optionally, ir could store details about
 the event, which are non-machine readable (2.4), and any information on the
-success of the event (2.5). 
-  
+success of the event (2.5).
+
 What BagIt and OAI-ORE provide
 ..............................
 
@@ -424,7 +423,7 @@ https://trac.dataone.org/ticket/412
 Discussion
 ..........
 
-Requirement 8: Record information to ensure viability of preserved objects 
+Requirement 8: Record information to ensure viability of preserved objects
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
@@ -439,7 +438,7 @@ PREMIS defines viability as the "property of being readable from media". The
 PREMIS working group intentionally avoided defining detailed semanitc units for
 viability with the exception of 1.7.2, storage media, where the medium for
 storing an object is defined. More detailed information on media would likely be
-desirable so that repository managers would know when to refresh the medium. 
+desirable so that repository managers would know when to refresh the medium.
 
 What BagIt and OAI-ORE provide
 ..............................
@@ -457,14 +456,14 @@ Discussion
 ..........
 
 
-Requirement 9: Record information to ensure authenticity of preserved objects 
+Requirement 9: Record information to ensure authenticity of preserved objects
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Description
 ...........
 
 Authenticity is the "quality of being what it purports to be". This includes the
-conepts of fixity, integrity, and the use of digital signatures. 
+conepts of fixity, integrity, and the use of digital signatures.
 
 
 What PREMIS suggests
@@ -495,7 +494,7 @@ demonstrating that the object characteristics are in fact valid occurs through
 events. For example, performing regular fixity checks is captured through the
 units event identifier (2.1), event type such as "fixity check" (2.2), and event
 date (2.3). Digital signature validation and format validation are also types of
-events that need to be recorded to show authenticity (2.3). 
+events that need to be recorded to show authenticity (2.3).
 
 What BagIt and OAI-ORE provide
 ..............................
@@ -518,7 +517,7 @@ Requirement 10: Ensure that principals are authenticated
 Description
 ...........
 
-Software, organization. public key, 
+Software, organization. public key,
 
 What PREMIS suggests
 ....................
@@ -532,7 +531,7 @@ person (3.3). The PREMIS Data Dictionary suggests that systems use digital
 signatures for authenticating submitters to and distributors from the system;
 however, because validation takes place right after signing, there is no need
 for the respository to preserve the signature itself through time. The system
-can record the act of validation as an Event if desired. 
+can record the act of validation as an Event if desired.
 
 What BagIt and OAI-ORE provide
 ..............................
@@ -551,7 +550,7 @@ Discussion
 
 
 Conclusion
----------- 
+----------
 
 
 References
@@ -561,16 +560,16 @@ Packaging Format (V0.96). Retrieved April 2, 2010, from
 http://www.ietf.org/Internet-drafts/draft-kunze-bagit-04.txt
 
 DataONE. (2010a). Metadata Attributes for Discovery. Retrieved April 2, 2010,
-from http://mule1.dataone.org/ArchitectureDocs/SearchMetadata.html.
+from :doc:`/design/SearchMetadata`.
 
 DataONE. (2010b). System Metadata. Retrieved April 2, 2010, from
-http://mule1.dataone.org/ArchitectureDocs/SystemMetadata.html.
+:doc:`/design/SystemMetadata`.
 
 Lagoze, C., Van de Sompel, H., Johnston, P., Nelson, M., Sanderson, R., Warner,
 S. (2008). Open Archives Initiative Object Reuse and Exchange: ORE User Guide -
 Primer. Retrieved April 2, 2010, from
 http://www.openarchives.org/ore/1.0/primer.
 
-PREMIS Editorial Committee. (2008). Data Dictionary for Preservation 
-Metadata: PREMIS version 2.0. S.l. Retrieved April 2, 2010, from 
-http://www.loc.gov/standards/premis/v2/premis-2-0.pdf. 
+PREMIS Editorial Committee. (2008). Data Dictionary for Preservation
+Metadata: PREMIS version 2.0. S.l. Retrieved April 2, 2010, from
+http://www.loc.gov/standards/premis/v2/premis-2-0.pdf.

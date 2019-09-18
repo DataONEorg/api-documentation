@@ -9,9 +9,9 @@ Data Types in CICore
 
 **Versions**
 
-* :doc:`Version 1.0<Types>` 
-* :doc:`Version 1.1<Types11>` 
-* :doc:`Version 2.0<Types2>` 
+* :doc:`Version 1.0<Types>`
+* :doc:`Version 1.1<Types11>`
+* :doc:`Version 2.0<Types2>`
 
 **Quick Reference**
 
@@ -1033,11 +1033,9 @@ Data Types in CICore
 
     An :term:`identifier` (:term:`PID`) in the DataONE system that is used to uniquely and globally identify an object. Identifiers can not be reused once assigned. Identifiers can not be deleted from the DataONE system.Identifiers are represented by a Unicode string of printable characters, excluding :term:`whitespace`. All representations of identifiers must be encoded in 7-bit ASCII or UTF-8.
 
-    Identifiers have a maximum length of 800 characters, and a variety of other properties designed for preservation and longevity. Some discussion on this is described in the `PID documentation`_ and in decision `ticket 577`_.
+    Identifiers have a maximum length of 800 characters, and a variety of other properties designed for preservation and longevity. Some discussion on this is described in the :doc:`PID documentation </design/PIDs>` and in decision `ticket 577`_.
 
     .. _ticket 577: https://redmine.dataone.org/issues/577
-
-    .. _PID documentation: http://mule1.dataone.org/ArchitectureDocs-current/design/PIDs.html
 
     .. code-block:: xml
 

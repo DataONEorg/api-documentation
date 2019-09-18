@@ -1,12 +1,12 @@
 Implementation Priority
 =======================
 
-:Submitted by: 
+:Submitted by:
   DataONE Core Cyberinfrastructure Team / Virtual Data Center Technical
   Working Group
 
 
-:Revisions: 
+:Revisions:
 
   - October 7, 2009; revised October 10, 2009; revised October 13, 2009
 
@@ -37,7 +37,7 @@ the Service Interface Prioritization diagram, the DataONE – VDC June 2009
 Technical Working Group Meeting Report, and the DataNetONE Implementation Plan
 (primarily Objective 4) – see References, below. The use cases are defined in
 the DataONE Architecture document available at
-https://mule1.dataone.org/ArchitectureDocs. Goals and milestones expressed in
+https://purl.dataone.org/ArchitectureDocs. Goals and milestones expressed in
 the CI Preliminary Task List were foundational for developing the proposed
 prioritization (see Table 1).
 
@@ -75,7 +75,7 @@ DataONE User Interface                         X      X      X
 DataONE Investigator Toolkit                   X      X      X
 Replication of data and metadata               X      X
 Heartbeat / health monitor (basic to robust)*  X      X      X
-Logging (basic to robust)*                     X      X   
+Logging (basic to robust)*                     X      X
 Member Node registry                           X      X
 Additional Member Nodes                               X      X
 Data / metadata deposit, update, delete               X
@@ -84,12 +84,12 @@ Authorization                                         X
 Notification of DataONE events*                       X      X
 Data usage policy support                             X
 Web-based batch data uploads                          X
-Launch robust public prototype                        X      
-Support scientific use cases                          X      
-Client discovery services                             X      
-Batch ingest for data / metadata                      X      
-Stress and load testing                               X      
-Coordinating Node failover / load balancing*          X      
+Launch robust public prototype                        X
+Support scientific use cases                          X
+Client discovery services                             X
+Batch ingest for data / metadata                      X
+Stress and load testing                               X
+Coordinating Node failover / load balancing*          X
 Data and metadata validation                                 X
 Data and metadata migration                                  X
 Workflow support                                             X
@@ -298,7 +298,7 @@ The version 1.x goals and milestones for DataONE include:
 
 - Logging infrastructure
 
-- Member Node registry services 
+- Member Node registry services
 
 - Launching a robust public prototype
 
@@ -314,7 +314,7 @@ The version 1.x goals and milestones for DataONE include:
 
 - Implementing Coordination Node failover and load balancing
 
-- Support notifications based upon DataONE events 
+- Support notifications based upon DataONE events
 
 It is anticipated that additional use cases and milestones will be identified
 during the previous phases of development and as outputs from the various
@@ -433,7 +433,7 @@ Support Notifications Based Upon DataONE Events
   :doc:`Use Case 28</design/UseCases/28_uc>` - Derived Product Original Change
   Notification: Relationships/Versioning - Derived products should be linked
   to source objects so that notifications can be made to users of derived
-  products when source products change. 
+  products when source products change.
 
 
 Batch Ingest
@@ -443,7 +443,7 @@ Batch Ingest
   batch upload (disable indexing for example to improve insert performance).
 
 
-Coordination Node Failover and Load Balancing 
+Coordination Node Failover and Load Balancing
 
   :doc:`Use Case 29</design/UseCases/29_uc>` - CN Load Balancing: Load Balancing -
   Requests to Coordinating Nodes are load balanced. Implementation of this use
