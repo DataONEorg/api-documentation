@@ -97,7 +97,6 @@ napoleon_use_rtype = True
 
 # prolog, inserted at start of every file.
 rst_prolog = """
-.. |CN| replace:: :term:`Coordinating Node`
 """
 
 #plantuml = 'java -jar "' + os.path.abspath("../tools/docutils/plantuml.jar") + '"'
@@ -175,7 +174,7 @@ exclude_patterns = [
 exclude_patterns = [
     "**/.svn",
     "apis/generated/generated*",
-    "apis/examples/*",
+    #"apis/examples/*",
     "apis/Types_crontabentry.txt",
     "apis/Types_SAML.txt",
     "apis/Types_include.txt",
@@ -230,6 +229,10 @@ html_theme_options = {}
 # Add any paths that contain custom themes here, relative to this directory.
 # html_theme_path = []
 html_theme_path = ["themes"]
+
+html_css_files = [
+    'custom.css',
+]
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
@@ -465,6 +468,7 @@ epub_copyright = copyright
 # The depth of the table of contents in toc.ncx.
 # epub_tocdepth = 3
 
+autoclass_content = 'both'
 
 # try to exclude deprecated
 def skip_deprecated(app, what, name, obj, skip, options):
@@ -476,10 +480,17 @@ def skip_deprecated(app, what, name, obj, skip, options):
 def setup(app):
     app.connect('autodoc-skip-member', skip_deprecated)
     try:
+        from types import ModuleType
+        from typing import Any, Dict, List, Tuple
+
+        from docutils.statemachine import StringList
+        from sphinx.pycode import ModuleAnalyzer, PycodeError
+        import sphinx.ext.autosummary
         from sphinx.ext.autosummary import Autosummary
         from sphinx.ext.autosummary import get_documenter
         from docutils.parsers.rst import directives
         from sphinx.util.inspect import safe_getattr
+        from sphinx.ext.autodoc.mock import mock
         import re
 
         class AutoFuncSummary(Autosummary):
@@ -494,9 +505,11 @@ def setup(app):
             to generate a table of functions in a module.
             """
 
-            option_spec = {
-                'functions': directives.unchanged,
-            }
+            #option_spec = {
+            #    'functions': directives.unchanged,
+            #}
+            option_spec = Autosummary.option_spec
+            option_spec["functions"] = directives.unchanged
 
             required_arguments = 1
 
@@ -508,6 +521,7 @@ def setup(app):
                 for name in dir(obj):
                     try:
                         documenter = get_documenter(app, safe_getattr(obj, name), obj)
+                        #print(str(documenter))
                     except AttributeError:
                         continue
                     if documenter.objtype == typ:
@@ -524,6 +538,87 @@ def setup(app):
                         self.content = ["~%s.%s" % (module_name, method) for method in methods if not method.startswith('_')]
                 finally:
                     return super(AutoFuncSummary, self).run()
+
+
+            def get_items(self, names: List[str]) -> List[Tuple[str, str, str, str]]:
+                """Try to import the given names, and return a list of
+                ``[(name, signature, summary_string, real_name), ...]``.
+                """
+                prefixes = sphinx.ext.autosummary.get_import_prefixes_from_env(self.env)
+
+                items = []  # type: List[Tuple[str, str, str, str]]
+
+                max_item_chars = 50
+
+                for name in names:
+                    display_name = name
+                    if name.startswith('~'):
+                        name = name[1:]
+                        display_name = name.split('.')[-1]
+
+                    try:
+                        with mock(self.config.autosummary_mock_imports):
+                            real_name, obj, parent, modname = sphinx.ext.autosummary.import_by_name(name, prefixes=prefixes)
+                    except ImportError:
+                        sphinx.ext.autosummary.logger.warning(__('failed to import %s'), name)
+                        items.append((name, '', '', name))
+                        continue
+
+                    self.bridge.result = StringList()  # initialize for each documenter
+                    full_name = real_name
+                    if not isinstance(obj, ModuleType):
+                        # give explicitly separated module name, so that members
+                        # of inner classes can be documented
+                        full_name = modname + '::' + full_name[len(modname) + 1:]
+                    # NB. using full_name here is important, since Documenters
+                    #     handle module prefixes slightly differently
+                    doccls = get_documenter(self.env.app, obj, parent)
+                    documenter = doccls(self.bridge, full_name)
+                    if not documenter.parse_name():
+                        sphinx.ext.autosummary.logger.warning(__('failed to parse name %s'), real_name)
+                        items.append((display_name, '', '', real_name))
+                        continue
+                    if not documenter.import_object():
+                        sphinx.ext.autosummary.logger.warning(__('failed to import object %s'), real_name)
+                        items.append((display_name, '', '', real_name))
+                        continue
+                    if documenter.options.members and not documenter.check_module():
+                        continue
+
+                    # try to also get a source code analyzer for attribute docs
+                    try:
+                        documenter.analyzer = ModuleAnalyzer.for_module(
+                            documenter.get_real_modname())
+                        # parse right now, to get PycodeErrors on parsing (results will
+                        # be cached anyway)
+                        documenter.analyzer.find_attr_docs()
+                    except PycodeError as err:
+                        sphinx.ext.autosummary.logger.debug('[autodoc] module analyzer failed: %s', err)
+                        # no source file -- e.g. for builtin and C modules
+                        documenter.analyzer = None
+
+                    # -- Grab the signature
+
+                    try:
+                        sig = documenter.format_signature(show_annotation=False)
+                    except TypeError:
+                        # the documenter does not support ``show_annotation`` option
+                        sig = documenter.format_signature()
+
+                    if not sig:
+                        sig = ''
+                    else:
+                        max_chars = max(10, max_item_chars - len(display_name))
+                        sig = sphinx.ext.autosummary.mangle_signature(sig, max_chars=max_chars)
+
+                    # -- Grab the summary
+
+                    documenter.add_content(None)
+                    summary = sphinx.ext.autosummary.extract_summary(self.bridge.result.data[:], self.state.document)
+
+                    items.append((display_name, sig, summary, real_name))
+
+                return items
 
         app.add_directive('autofuncsummary', AutoFuncSummary)
     except BaseException as e:
