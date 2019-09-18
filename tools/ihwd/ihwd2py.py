@@ -576,9 +576,12 @@ class FunctionLoader(docLoader):
         #"""
         res.append('  """')
         #description
-        for row in func['description']:
-            res.append(self.formatBlock(row, "  "))
-            res.append("")
+        res.append(f"  ``{func['rest']}`` |br| {func['description'][0]}")
+        res.append("")
+        if len(func['description']) > 1:
+            for row in func['description'][1:]:
+                res.append(self.formatBlock(row, "  "))
+                res.append("")
         # Version
         res.append("")
         res.append(self.formatBlock(":Version: %s" % func['version'], "  "))
@@ -596,8 +599,7 @@ class FunctionLoader(docLoader):
         if len(func['rest']) > 0:
             nodetype = "MN"
             if mname.find('CN') == 0:
-                notetype = "CN"
-            # rtext = ":REST URL: %s :ref:`%s.%s`" % (nodetype, mname, fname, )
+                nodetype = ":REST URL: %s :ref:`%s.%s`" % (nodetype, mname, fname, )
             rtext = ":REST URL: ``%s``" % func['rest']
             res.append(self.formatBlock(rtext, "  "))
         else:
@@ -647,6 +649,13 @@ class FunctionLoader(docLoader):
             # Example file should include necessary headings etc.
             res.append(f"  .. include:: /apis/{func['resteg']}" )
         else:
+            egname = f"source/apis/examples/{mname.lower()}_{fname.lower()}.txt"
+            if not os.path.exists(egname):
+                with open(egname, "wt") as egfile:
+                    egfile.write("**Example**\n")
+                    egfile.write("\n")
+                    egfile.write(f".. TODO:: Example for {mname}.{fname}\n")
+                    egfile.write("\n")
             res.append(f"  .. include:: /apis/examples/{mname.lower()}_{fname.lower()}.txt" )
         res.append('')
         res.append('  """')
