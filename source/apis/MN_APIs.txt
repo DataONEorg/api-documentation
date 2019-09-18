@@ -1,3 +1,5 @@
+.. include:: api_substitutions.txt
+
 Member Node APIs
 ----------------
 
@@ -5,37 +7,42 @@ The service interfaces described here are exposed through the Member
 Node REST interface to support interactions with Coordinating Nodes and DataONE
 clients.
 
-The following table provides a list of API methods exposed by Member
-Nodes.
+.. contents::
+   :local:
+   :depth: 1
 
-:Tier: 
+..
+    The following table provides a list of API methods exposed by Member
+    Nodes.
 
-  The tier in which a method is grouped.
+    :Tier:
 
-:Version: 
+      The tier in which a method is grouped.
 
-  Version of API method is available. The lowest version number indicates when
-  the method was added. A version number in parentheses indicates the method is
-  available in that version and is unchanged from the previous version. If more
-  than one version number is present, then the method signature or functionality
-  has changed between API versions. e.g. "1.0, 2.0" indicates that the method
-  was first introduced in Version 1.0 and has been modified in Version 2.0.
+    :Version:
 
-:REST:
+      Version of API method is available. The lowest version number indicates when
+      the method was added. A version number in parentheses indicates the method is
+      available in that version and is unchanged from the previous version. If more
+      than one version number is present, then the method signature or functionality
+      has changed between API versions. e.g. "1.0, 2.0" indicates that the method
+      was first introduced in Version 1.0 and has been modified in Version 2.0.
 
-  The HTTP method and path relative to the Base URL. Parameters specified in the
-  URL are indicatd by braces. Note that parameters included in a path MUST be
-  properly path encoded, and parameters included as key, value pairs MUST also
-  be properly encoded.
+    :REST:
 
-:Function:
+      The HTTP method and path relative to the Base URL. Parameters specified in the
+      URL are indicatd by braces. Note that parameters included in a path MUST be
+      properly path encoded, and parameters included as key, value pairs MUST also
+      be properly encoded.
 
-  The function name, associated with an API grouping.
+    :Function:
 
-:Parameters:
+      The function name, associated with an API grouping.
 
-  Indicates the parameters used when calling the method (sent in the message
-  payload) and the return type.
+    :Parameters:
+
+      Indicates the parameters used when calling the method (sent in the message
+      payload) and the return type.
 
 
 .. 
@@ -72,15 +79,15 @@ Nodes.
   }
   @enduml
 
-.. include:: generated/generated_MN_function_table.txt
+    .. include:: generated/generated_MN_function_table.txt
 
 
+----
 
 Core API
 ~~~~~~~~
 
-.. module:: MNCore
-   :synopsis: Base operations for Member Nodes
+Base operations for Member Nodes
 
 The *MN_core* API provides mechanisms for a Member Node to report on the level
 of service compliance and to specify replication policies. The capabilities
@@ -92,79 +99,132 @@ to report on the current state of the DataONE infrastructure and for the
 Coordinating Nodes to track the current operating state of the Member Node.
 
 
+.. autofuncsummary:: MNCore
+   :functions:
+   :nosignatures:
 
-.. include:: generated/generated_MNCore.txt
+.. automodule:: MNCore
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
+
+
+----
 
 Read API
 ~~~~~~~~
 
-.. module:: MNRead
-   :synopsis: Provide tier 1 operations for sharing content from a Member Node.
+Provide tier 1 operations for sharing content from a Member Node.
 
 The *MNRead* API implements methods that enable object management
 operations on a :term:`Member Node`.  
 
-.. include:: generated/generated_MNRead.txt
+.. autofuncsummary:: MNRead
+   :functions:
+   :nosignatures:
 
+.. automodule:: MNRead
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+----
 
 Query API
 ~~~~~~~~~
 
-.. module:: MNQuery
-   :synopsis: An optional tier 1 API for Member Node support of local query.
+An optional tier 1 API for Member Node support of local query.
 
 The *MNQuery* API is an optional API that may be implemented by Member Nodes
 that intend to support querying the local repository. The actual form of the
 query is undefined, and t is expected that a small set of well known query
 engine types will be supported.
 
-.. include:: generated/generated_MNQuery.txt
+.. autofuncsummary:: MNQuery
+   :functions:
+   :nosignatures:
+
+.. automodule:: MNQuery
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+----
 
 View API
 ~~~~~~~~~
 
-.. module:: MNView
-   :synopsis: An optional tier 1 API for Member Node support of metadata and data views.
+An optional tier 1 API for Member Node support of metadata and data views.
 
 The *MNView* API is an optional API that may be implemented by Member Nodes
 that intend to support providing rendered views of content on their repository. Each repository can implement multipe themed views of their content, each accesed using the name of the theme and the identifier of the content to be viewed.  Unlike the MNRead service, which returns the exact bytes of content, the MNView service provides a rendered view of the content which can transform the content into different formats.  The most common use of the view service will likely be to provide a rendered HTML landing page at a well-known URL that can be used to provide a human-readable view of metadata and data.  Other potential uses include providing alternative formats for metadata and data.  Each Member Node that implements the MNView service must implement at least one theme named 'default' which provides the default view of all content.  Other themes can be provided for use by various clients.
 
-.. include:: generated/generated_MNView.txt
+.. autofuncsummary:: MNView
+   :functions:
+   :nosignatures:
+
+.. automodule:: MNView
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+----
 
 Package API
 ~~~~~~~~~~~
 
-.. module:: MNPackage
-   :synopsis: An optional tier 1 API for Member Node support of downloads of whole packages. 
+An optional tier 1 API for Member Node support of downloads of whole packages.
 
 The *MNPackage* API is an optional API that may be implemented by Member Nodes
 that intend to support downloading all of the contents of a data package in a single API call. Without this service, a client application must individually retrieve each of the metadata and data components of a package as they are listed in the ORE document that describes the package.  Using the MNPackage service, a caller can instead request a serialized form of all of the data in a package, which is returned in the format requested.  All implementations must support the BagIt format specification, but may also support additional well-defined packaging standards and specifications.
 
-.. include:: generated/generated_MNPackage.txt
+.. autofuncsummary:: MNPackage
+   :functions:
+   :nosignatures:
+
+.. automodule:: MNPackage
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+----
 
 Authorization API
 ~~~~~~~~~~~~~~~~~
 
-.. module:: MNAuthorization
-   :synopsis: Authorization and access control operations for Member Nodes
+Authorization and access control operations for Member Nodes.
 
 Provides mechanisms Member Nodes to verify access to resources for users
 (:term:`subject`). See the document :doc:`/design/Authentication` for more
 details on some authentication options.
 
-.. include:: generated/generated_MNAuthorization.txt
+.. autofuncsummary:: MNAuthorization
+   :functions:
+   :nosignatures:
 
+.. automodule:: MNAuthorization
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+----
 
 Storage API
 ~~~~~~~~~~~
 
-.. module:: MNStorage
-   :synopsis: Methods for manipulating (changing) content on a Member Node
+Methods for manipulating (changing) content on a Member Node.
 
-.. include:: generated/generated_MNStorage.txt
+.. autofuncsummary:: MNStorage
+   :functions:
+   :nosignatures:
 
+.. automodule:: MNStorage
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
+----
 
 Replication API
 ~~~~~~~~~~~~~~~
@@ -173,9 +233,12 @@ The Replication API provides methods to support CN-directed replication of
 content between MNs.
 
 
-.. module:: MNReplication
-   :synopsis: Handles CN directed replication of content between Member Nodes.
+.. autofuncsummary:: MNReplication
+   :functions:
+   :nosignatures:
 
-
-.. include:: generated/generated_MNReplication.txt
+.. automodule:: MNReplication
+   :members:
+   :undoc-members:
+   :show-inheritance:
 

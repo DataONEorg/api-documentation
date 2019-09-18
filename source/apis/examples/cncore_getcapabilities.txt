@@ -1,43 +1,4 @@
 **Example**
 
-Call :func:`CNCore.getCapabilities` for the primary Coordinating Node.
+.. TODO:: Example for CNCore.getCapabilities
 
-.. code-block:: xml
-    :linenos:
-
-    curl -s "https://cn.dataone.org/cn/v2"
-
-    <?xml version="1.0" encoding="UTF-8"?>
-    <?xml-stylesheet type="text/xsl" href="/cn/xslt/dataone.types.v2.xsl" ?>
-    <ns3:node xmlns:ns2="http://ns.dataone.org/service/types/v1" xmlns:ns3="http://ns.dataone.org/service/types/v2.0" replicate="false" synchronize="false" type="cn" state="up">
-      <identifier>urn:node:CNUCSB1</identifier>
-      <name>cn-ucsb-1</name>
-      <description>University of California Santa Barbara Coordinating Node</description>
-      <baseURL>https://cn-ucsb-1.dataone.org/cn</baseURL>
-      <services>
-        <service name="CNCore" version="v1" available="true"/>
-        <service name="CNRead" version="v1" available="true"/>
-        <service name="CNAuthorization" version="v1" available="true"/>
-        <service name="CNIdentity" version="v1" available="true">
-          <restriction methodName="mapIdentity">
-            <subject>CN=urn:node:KNB,DC=dataone,DC=org</subject>
-          </restriction>
-        </service>
-        <service name="CNReplication" version="v1" available="true"/>
-        <service name="CNRegister" version="v1" available="true"/>
-        <service name="CNCore" version="v2" available="true"/>
-        <service name="CNRead" version="v2" available="true"/>
-        <service name="CNAuthorization" version="v2" available="true"/>
-        <service name="CNIdentity" version="v2" available="true"/>
-        <service name="CNReplication" version="v2" available="true"/>
-        <service name="CNRegister" version="v2" available="true"/>
-        <service name="CNDiagnostic" version="v2" available="true"/>
-        <service name="CNView" version="v2" available="true"/>
-      </services>
-      <subject>CN=urn:node:CNUCSB1,DC=dataone,DC=org</subject>
-      <contactSubject>CN=Robert P Waltz A904,O=Google,C=US,DC=cilogon,DC=org</contactSubject>
-      <property key="CN_location_lonlat">-119.85,34.42</property>
-      <property key="CN_operational_status">operational</property>
-      <property key="CN_node_name">CN_UCSB</property>
-      <property key="CN_date_operational">2012-07-01T00:00:0.000Z</property>
-    </ns3:node>
