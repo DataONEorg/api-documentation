@@ -1,0 +1,21 @@
+
+/* for function name */
+dl.function > dt, dl.exception > dt {
+  margin-top: 1.5rem;
+  background-color: #E9F8FF;
+}
+
+dl.function > dt:target, dl.exception > dt:target {
+  background-color: #FAF1E5;
+}
+
+/* for REST URL after method description */
+dl.function > dd > p > code:first-of-type {
+  background-color: inherit;
+  display: block;
+  margin-top: 1rem;
+}
+
+/* the br in the first para of a function description */
+dl.function > dd > p > br:first-of-type {
+}
