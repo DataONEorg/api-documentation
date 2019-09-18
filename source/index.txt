@@ -5,16 +5,22 @@ The Data Observation Network for Earth (DataONE_) implements and deploys
 core services and infrastructure to support long term access and re-use of
 data collected through NSF funded and other research projects.
 
-These documents provide the architecture and API reference for deployed
+These documents describe the architecture and APIs for deployed
 DataONE cyberinfrastructure.
 
 
 API Reference
 -------------
 
-Components of the DataONE infrastructure interact through the DataONE APIs. Participating data repositories expose the :doc:`apis/MN_APIs` and Coordinating Nodes expose the :doc:`apis/CN_APIs`.
+Components of the DataONE infrastructure interact through the DataONE APIs.
+Participating data repositories expose the :doc:`apis/MN_APIs` and Coordinating Nodes
+expose the :doc:`apis/CN_APIs`.
 
-API service endpoints use a restful pattern. All API interactions occur over HTTPS with XML encoded messages. The XML messages are defined by the :doc:`DataONE Types XML Schema<apis/Types>`. :doc:`apis/Exceptions` are cast to applicable HTTP error codes, with the response body containing an XML representation of the error. The RESTful implementation is more fully described in the :doc:`apis/rest_comms`.
+API service endpoints use a restful pattern. All API interactions occur over HTTPS with
+XML encoded messages. The XML messages are defined by the :doc:`DataONE Types XML Schema<apis/Types>`.
+:doc:`apis/Exceptions` are cast to applicable HTTP error codes, with the response body
+containing an XML representation of the error. The RESTful implementation is more fully
+described in the :doc:`apis/rest_comms`.
 
 .. toctree::
    :maxdepth: 3
@@ -94,6 +100,7 @@ Implementation Notes
    :maxdepth: 2
 
    implementation/index
+   todo
 
 
 
@@ -103,6 +110,7 @@ Indices, Tables, and Change Log
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
 
 
 .. _NSF funded project: http://www.nsf.gov/awardsearch/showAward.do?AwardNumber=0830944

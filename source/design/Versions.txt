@@ -82,11 +82,8 @@ MN running v1 of the API (Tier 4)
 	* CN.v2.setAccessPolicy() --> MN.target2.v2.systemMetadataChanged()
 	
 	
-.. figure:: images/versions_01.png
+.. uml::
 
-**Figure 1.** Mixed MN API version interactions with replication
-
-.. 
   @startuml images/versions_01.png
   title Replicate content across mixed API versions (authMN.v1)
   participant "User" as client
@@ -139,6 +136,7 @@ MN running v1 of the API (Tier 4)
   
    @enduml
 	
+**Figure 1.** Mixed MN API version interactions with replication
 
 
 MN running v2 of the API (Tier 4)
@@ -159,12 +157,8 @@ MN running v2 of the API (Tier 4)
 	* MN.target.v2.getSystemMetadata() --> v2.SystemMetadata
 
 
-.. figure:: images/versions_02.png
+.. uml::
 
-**Figure 2.** Mixed MN API version interactions with replication
-The original MN is running v2 of the API
-
-.. 
   @startuml images/versions_02.png
   title Replicate content across mixed API versions (authMN.v2)
   participant "User" as client
@@ -216,3 +210,6 @@ The original MN is running v2 of the API
   end
   
    @enduml
+
+**Figure 2.** Mixed MN API version interactions with replication
+The original MN is running v2 of the API

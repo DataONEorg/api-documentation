@@ -3,11 +3,12 @@ Immutability of Content in DataONE
 
 .. index:: immutability
 
-
 .. contents::
 
+
 Overview
-------------
+--------
+
 To support the goals of `preservation and scientific reproducibility <PreservationStrategy.html>`_, all registered 
 objects in DataONE are considered immutable, with each object representing a 
 published snapshot of data or metadata associated with a specific time. DataONE 
@@ -46,8 +47,9 @@ determining which field will hold the "citable" identifier.
 
 
 Changes constituting a new snapshot
-------------------------------------
-DataONE considers any change that results in a different byte array of content 
+-----------------------------------
+
+DataONE considers any change that results in a different byte array of content
 to be a new snapshot, and thus a new object to be registered. Subtle changes, 
 such as whitespace differences, although potentially meaningless, do
 therefore constitute a new object. If not properly identified with a new PID, 
@@ -59,6 +61,7 @@ any discrepancies in content they may encounter.
 
 Changes constituting a new series
 ---------------------------------
+
 The SID is provided expressly to group the snapshots of a single entity that is 
 stable over time.  It was not intended to represent highly volatile entities, or
 those that significantly "drift" over time.  Member Nodes are encouraged to instead 
@@ -79,6 +82,7 @@ system metadata, but through provenance mechanisms instead.
 
 Usage Conventions
 -----------------
+
 DataONE anticipates data consumers using other contributors' data will prefer to cite 
 using the PID, for the certainty that provides, and will prefer using the SID when
 citing indirectly (when citing metadata).  Similarly, we anticipate content originators 
@@ -89,6 +93,7 @@ to anticipated data consumer preference.
 
 Aggregating Download Statistics
 -------------------------------
+
 To aid in aggregating download statistics for data providers, DataONE provides the
 ``cn/v2/query/logsolr`` query endpoint. Both PID and SID field are included in the index records 
 to allow straightforward retrieval of download statistics by either field.
@@ -96,6 +101,7 @@ to allow straightforward retrieval of download statistics by either field.
 
 Identifier resolution in DataONE APIs
 -------------------------------------
+
 All DataONE APIs accepting an Identifier must treat PIDs as requests for the exact 
 snapshot, and SIDs as a request for the latest snapshot that DataONE Node has 
 knowledge of.  Due to the distributed nature of snapshot replication, it is possible 
@@ -111,6 +117,7 @@ for the latest known snapshot.
 
 Series Identifier resolution to the head revision
 -------------------------------------------------
+
 The primary way for determining the head of a series is via the ``obsoletedBy`` field 
 in the system metadata that links to the next snapshot in the chain. With all of 
 the snapshots synchronized, there should only be one of the series that is not 
@@ -125,6 +132,7 @@ Member Node processes uploaded content.
 
 Importance of the obsolete fields
 ---------------------------------
+
 Member Nodes that manage by mutable entity (don't preserve prior snapshots) should
 populate the ``obsoletes`` and ``obsoletedBy`` fields, even if they do not plan to preserve 
 older snapshots. Replica nodes and the DataONE Coordinating Nodes can use these
@@ -136,6 +144,7 @@ would it be in conflict with the behavior of deleted items (and would it matter?
 
 Mutable Member Node example
 ---------------------------
+
 To illustrate by way of example, author **A** uploads an item to Member Node **M**,
 with an identifier **S** not using the DataONE API, but with **M**'s primary API.  **M** 
 builds a systemMetadata document for **S**, generating a PID, **P1**, to uniquely identify
@@ -182,7 +191,8 @@ snapshots of **S**.
 
 
 Summary
-=======
+-------
+
 - the PID represents the snapshot, and snapshots are immutable
 - the SID represents the entity, and can be applied to several connected snapshots.
 - A particular SID cannot be used if it is either reserved by or in use by someone else.
@@ -190,8 +200,7 @@ Summary
   * Specifically, the CN checks that the submitter has CHANGE_PERMISSION on 
     the current head of the series
   * if not in use, checks submitter against ``cn.hasReservation(SID)``
-  * 
- 
+
 - cannot put SID in obsoletes and obsoletedBy fields
 - SID resolution is "latest upload" among the set of snapshots not obsoleted by 
   another member of the series. 
@@ -201,9 +210,8 @@ Summary
   * is dependent on synchronization frequency, CN availability for sync
   * missing revisions, if synced but not replicated will appear as NotFound
     exceptions on forwarded resolve requests
-  *
+
 - unsynchronized revisions might appear in obsoletes/dBy fields of existing revisions
 - cn.listObjects(idFilter=sid)?? retrieves all synchronized revisions 
-
 - once SeriesID is set, it cannot be changed, because it breaks the trust that
   the identifier always gets the user to a conceptually equivalent object.
