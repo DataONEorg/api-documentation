@@ -5,7 +5,7 @@ import Types
 
 def view(session,theme,id):
   """
-  Provides a formatted view of an object (science metadata, data, resource, or other) using the given named theme.
+  ``GET /views/{theme}/{pid}`` |br| Provides a formatted view of an object (science metadata, data, resource, or other) using the given named theme.
 
   If this service is implemented, the :func:`MNView.view` operation must implement at least one {theme} named 'default' to provide a standard (possibly minimalistic) view of the content in HTML format.
 
@@ -42,7 +42,7 @@ def view(session,theme,id):
 
 def listViews(session):
   """
-  Provides a list of usable themes for rendering content in a view, including a required 'default' theme. The list of themes is provided as an OptionList, where the option key should be used as the theme name in calls to MNView.view, and the description provides a human readable description of what will be returned fo rthat theme.
+  ``GET /views`` |br| Provides a list of usable themes for rendering content in a view, including a required 'default' theme. The list of themes is provided as an OptionList, where the option key should be used as the theme name in calls to MNView.view, and the description provides a human readable description of what will be returned fo rthat theme.
 
   This method is optional for Member Nodes, but if implemented,  MNView.view must also be implemented.
 

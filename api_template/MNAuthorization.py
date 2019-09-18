@@ -5,7 +5,7 @@ import Types
 
 def isAuthorized(session,id,action):
   """
-  Test if the user identified by the provided session has authorization for operation on the specified object.
+  ``GET /isAuthorized/{id}?action={action}`` |br| Test if the user identified by the provided session has authorization for operation on the specified object.
 
   A successful operation is indicated by a return HTTP status of 200.
 

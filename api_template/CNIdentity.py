@@ -5,7 +5,7 @@ import Types
 
 def registerAccount(session,person):
   """
-  Create a new :term:`subject` in the DataONE system.
+  ``POST /accounts`` |br| Create a new :term:`subject` in the DataONE system. 
 
   Note that there should probably be a lot more metadata captured about the new user, and there should be a mechanism for specifying the default access control rules for the new account.
 
@@ -40,7 +40,7 @@ def registerAccount(session,person):
 
 def updateAccount(session,subject,person):
   """
-  Update an existing :term:`subject` in the DataONE system. The target subject is determined from subject provided in the URL.
+  ``PUT /accounts/{subject}`` |br| Update an existing :term:`subject` in the DataONE system. The target subject is determined from subject provided in the URL. 
 
   The use calling this method must have write access to the account details.
 
@@ -78,7 +78,7 @@ def updateAccount(session,subject,person):
 
 def verifyAccount(session,subject):
   """
-  Verify that the Person data associated with this Subject is a true representation of the real world person.
+  ``PUT /accounts/verification/{subject}`` |br| Verify that the Person data associated with this Subject is a true representation of the real world person.
 
   This service can only be called by users who have an administrative role for the domain of users in question.
 
@@ -113,7 +113,7 @@ def verifyAccount(session,subject):
 
 def getSubjectInfo(session,subject):
   """
-  Get the information about a Person (their equivalent identities, and the Groups to which they belong) or the Group (including members).
+  ``GET /accounts/{subject}`` |br| Get the information about a Person (their equivalent identities, and the Groups to which they belong) or the Group (including members).
 
 
   :Version: 1.0, (2.0)
@@ -144,7 +144,7 @@ def getSubjectInfo(session,subject):
 
 def listSubjects(session,query,status,start,count):
   """
-  List the subjects, including users, groups, and systems, that match search criteria.
+  ``GET /accounts?query={query}[&status={status}&start={start}&count={count}]`` |br| List the subjects, including users, groups, and systems, that match search criteria.
 
   The list can be restricted to subjects whose identifier matches certain substrings, and the size of the resultset can be paged through.
 
@@ -178,7 +178,7 @@ def listSubjects(session,query,status,start,count):
 
 def mapIdentity(session,primarySubject,secondarySubject):
   """
-  Create a new mapping between the two identities, asserting that they represent the same subject.
+  ``POST /accounts/map`` |br| Create a new mapping between the two identities, asserting that they represent the same subject.
 
   Mapping identities with this method requires explicit authorization for the user given in the Session object. The caller must have made sure that the primary and secondary identities represent one and the same individual.
 
@@ -216,7 +216,7 @@ def mapIdentity(session,primarySubject,secondarySubject):
 
 def removeMapIdentity(session,subject):
   """
-  Removes a previously asserted identity mapping from the Subject in the Session to the Subject given by the parameter. The reciprocol mapping entry is also removed.
+  ``DELETE /accounts/map/{subject}`` |br| Removes a previously asserted identity mapping from the Subject in the Session to the Subject given by the parameter. The reciprocol mapping entry is also removed.
 
   A successful request is indicated by returning a HTTP status of 200.
 
@@ -249,7 +249,7 @@ def removeMapIdentity(session,subject):
 
 def requestMapIdentity(session,subject):
   """
-  Request a new mapping between the authenticated identity in the session and the given identity, asserting that they represent the same subject.
+  ``POST /accounts/pendingmap`` |br| Request a new mapping between the authenticated identity in the session and the given identity, asserting that they represent the same subject.
 
   Mapping identities is a two-step process wherein a map request is made by a primary Subject and a subsequent (confirmation) map request is made by the secondary Subject. This ensures that mappings are performed only by those that have authority to do so.
 
@@ -286,7 +286,7 @@ def requestMapIdentity(session,subject):
 
 def confirmMapIdentity(session,subject):
   """
-  Confirms a previously initiated identity mapping. If subject A asserts that B is the same identity through :func:`CNIdentity.requestMapIdentity`, then this method is called by B to confirm that assertion.
+  ``PUT /accounts/pendingmap/{subject}`` |br| Confirms a previously initiated identity mapping. If subject A asserts that B is the same identity through :func:`CNIdentity.requestMapIdentity`, then this method is called by B to confirm that assertion.
 
   A successful request is indicated by returning a HTTP status of 200.
 
@@ -319,7 +319,7 @@ def confirmMapIdentity(session,subject):
 
 def getPendingMapIdentity(session,subject):
   """
-  Gets the SubjectInfo of a previously initiated identity mapping.
+  ``GET /accounts/pendingmap/{subject}`` |br| Gets the SubjectInfo of a previously initiated identity mapping.
 
   A successful request is indicated by returning a HTTP status of 200.
 
@@ -352,7 +352,7 @@ def getPendingMapIdentity(session,subject):
 
 def denyMapIdentity(session,subject):
   """
-  Denies a previously initiated identity mapping. If subject A asserts that B is the same identity through :func:`CNIdentity.requestMapIdentity`, then this method is called by B to deny that assertion.
+  ``DELETE /accounts/pendingmap/{subject}`` |br| Denies a previously initiated identity mapping. If subject A asserts that B is the same identity through :func:`CNIdentity.requestMapIdentity`, then this method is called by B to deny that assertion.
 
   A successful request is indicated by returning a HTTP status of 200.
 
@@ -385,7 +385,7 @@ def denyMapIdentity(session,subject):
 
 def createGroup(session,group):
   """
-  Create a group with the given name.
+  ``POST /groups`` |br| Create a group with the given name.
 
   Groups are lists of subjects that allow all members of the group to be referenced by listing solely the subject name of the group.  Group names must be unique within the DataONE system. Groups can only be modified by Subjects listed as rightsHolders.
 
@@ -416,7 +416,7 @@ def createGroup(session,group):
 
 def updateGroup(session,group):
   """
-  Add members to the named group.
+  ``PUT /groups`` |br| Add members to the named group.
 
   Group members can be modified only by the original creator of the group, otherwise a NotAuthorized exception is thrown.  Group members are provided as a list of subjects that replace the group membership.
 

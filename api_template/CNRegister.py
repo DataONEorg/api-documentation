@@ -5,7 +5,7 @@ import Types
 
 def updateNodeCapabilities(session,nodeid,node):
   """
-  For updating the capabilities of the specified node. Most information is replaced by information in the new node, however, the node identifier, nodeType, ping, syncrhonization.lastHarvested, and synchronization.lastCompleteHarvest are preserved from the existing entry.  Services in the old record not included in the new Node will be removed.
+  ``PUT /node/{nodeid}`` |br| For updating the capabilities of the specified node. Most information is replaced by information in the new node, however, the node identifier, nodeType, ping, syncrhonization.lastHarvested, and synchronization.lastCompleteHarvest are preserved from the existing entry.  Services in the old record not included in the new Node will be removed.
 
   Successful completion of this operation is indicated by a HTTP response status code of 200.
 
@@ -42,7 +42,7 @@ def updateNodeCapabilities(session,nodeid,node):
 
 def getNodeCapabilities(nodeid):
   """
-  For retrieving the capabilities of the specified node if it is registered on the Coordinating Node being called.
+  ``GET /node/{nodeid}`` |br| For retrieving the capabilities of the specified node if it is registered on the Coordinating Node being called.
 
   v2.0: The structure of :class:`v2_0.Types.Node` has changed.
 
@@ -71,7 +71,7 @@ def getNodeCapabilities(nodeid):
 
 def register(session,node):
   """
-  Register a new node in the system. If the node already exists, then a :exc:`IdentifierNotUnique` exception MUST be returned.
+  ``POST /node`` |br| Register a new node in the system. If the node already exists, then a :exc:`IdentifierNotUnique` exception MUST be returned.
 
   v2.0: The structure of :class:`v2_0.Types.Node` has changed.
 

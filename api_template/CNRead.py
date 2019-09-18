@@ -5,7 +5,7 @@ import Types
 
 def get(session,id):
   """
-  Retrieves the object identified by *id* from the node. If the object is not present on the node, then an :exc:`Exceptions.NotFound` error is raised, regardless of whether the object exists on another node in the DataONE system.
+  ``GET /object/{id}`` |br| Retrieves the object identified by *id* from the node. If the object is not present on the node, then an :exc:`Exceptions.NotFound` error is raised, regardless of whether the object exists on another node in the DataONE system.
 
   v2.0: The supplied identifier may be a :term:`PID` or a :term:`SID`.
 
@@ -38,7 +38,7 @@ def get(session,id):
 
 def getSystemMetadata(session,id):
   """
-  Returns the :term:`system metadata` that contains DataONE specific information about the object identified by *id*. Authoritative copies of system metadata are only available from the Coordinating Nodes.
+  ``GET /meta/{id}`` |br| Returns the :term:`system metadata` that contains DataONE specific information about the object identified by *id*. Authoritative copies of system metadata are only available from the Coordinating Nodes.
 
   v2.0: The supplied identifier may be a :term:`PID` or a :term:`SID` and the returned :class:`v2_0.Types.SystemMetadata` structure has changed.
 
@@ -71,7 +71,7 @@ def getSystemMetadata(session,id):
 
 def describe(session,id):
   """
-  This method provides a lighter weight mechanism than :func:`CNRead.getSystemMetadata` for a client to determine basic properties of the referenced object. The response should indicate properties that are typically returned in a HTTP HEAD request: the date late modified, the size of the object, the type of the object (the :attr:`SystemMetadata.formatId`).
+  ``HEAD /object/{id}`` |br| This method provides a lighter weight mechanism than :func:`CNRead.getSystemMetadata` for a client to determine basic properties of the referenced object. The response should indicate properties that are typically returned in a HTTP HEAD request: the date late modified, the size of the object, the type of the object (the :attr:`SystemMetadata.formatId`).
 
   The principal indicated by *token* must have read privileges on the object, otherwise :exc:`Exceptions.NotAuthorized` is raised.
 
@@ -110,7 +110,7 @@ def describe(session,id):
 
 def resolve(session,id):
   """
-  Returns a list of nodes (MNs or CNs) known to hold copies of the object identified by *id*. The object resolution process is intended to provide a simple mechanism for a client to discover from which node(s) a particular object may be retrieved. Details about method interfaces (i.e. REST URLs) exposed by a particular node can be determined by examining the response from the *node* collection. For convenience, the :func:`MNRead.get` URL is included in the response as is the base URL of the node REST services.
+  ``GET /resolve/{id}`` |br| Returns a list of nodes (MNs or CNs) known to hold copies of the object identified by *id*. The object resolution process is intended to provide a simple mechanism for a client to discover from which node(s) a particular object may be retrieved. Details about method interfaces (i.e. REST URLs) exposed by a particular node can be determined by examining the response from the *node* collection. For convenience, the :func:`MNRead.get` URL is included in the response as is the base URL of the node REST services.
 
   Note also that the same functionality as *resolve()* can be implemented by retrieving a copy of the system metadata for the object and utilizing the node registry to discover the base URL from which the client can construct the *get()* URL. Resolve is provided for efficiency since the response size is much smaller.
 
@@ -147,7 +147,7 @@ def resolve(session,id):
 
 def getChecksum(session,pid):
   """
-  Returns the checksum for the specified object as reported in the system metadata.
+  ``GET /checksum/{pid}`` |br| Returns the checksum for the specified object as reported in the system metadata.
 
   Note that the signature of this method differs from :func:`MNRead.getChecksum` as that method takes an optional algorithm parameter.
 
@@ -180,7 +180,7 @@ def getChecksum(session,pid):
 
 def listObjects(session,fromDate=None,toDate=None,formatId=None,identifier=None,start=0,count=1000,nodeId=None):
   """
-  Retrieve the list of objects present on the CN that match the calling parameters. At a minimum, this method should be able to return a list of objects that match::
+  ``GET /object[?fromDate={fromDate}&toDate={toDate}&identifier={identifier}&formatId={formatId}&nodeId={nodeId}&start={start}&count={count}]`` |br| Retrieve the list of objects present on the CN that match the calling parameters. At a minimum, this method should be able to return a list of objects that match::
 
     fromDate < SystemMetadata.dateSysMetadataModified
 
@@ -227,7 +227,7 @@ def listObjects(session,fromDate=None,toDate=None,formatId=None,identifier=None,
 
 def search(session,queryType,query):
   """
-  Search the metadata catalog and return identifiers of metadata records that match the criteria.
+  ``GET /search/{queryType}/{query}`` |br| Search the metadata catalog and return identifiers of metadata records that match the criteria.
 
   Search may be implemented by more than one type of search engine. The queryType parameter indicates which search engine should be targeted. The value and form of *query* is determined by the search engine.
 
@@ -263,7 +263,7 @@ def search(session,queryType,query):
 
 def query(session,queryEngine,query):
   """
-  Submit a query against the specified *queryEngine* and return the response as formatted by the queryEngine.
+  ``GET /query/{queryEngine}/{query}`` |br| Submit a query against the specified *queryEngine* and return the response as formatted by the queryEngine.
 
   The *query()* operation may be implemented by more than one type of search engine and the *queryEngine* parameter indicates which search engine is targeted. The value and form of *query* is determined by the specific query engine.
 
@@ -302,7 +302,7 @@ def query(session,queryEngine,query):
 
 def getQueryEngineDescription(session,queryEngine):
   """
-  Provides metadata about the query service of the specified *queryEngine*. The metadata provides a brief description of the query engine, its version, its schema version, and an optional list of fields supported by the query engine.
+  ``GET /query/{queryType}`` |br| Provides metadata about the query service of the specified *queryEngine*. The metadata provides a brief description of the query engine, its version, its schema version, and an optional list of fields supported by the query engine.
 
   v1.1: This method was added.
 
@@ -333,7 +333,7 @@ def getQueryEngineDescription(session,queryEngine):
 
 def listQueryEngines(session):
   """
-  Returns a list of query engines, i.e. supported values for the *queryEngine* parameter of the *getQueryEngineDescription* and *query* operations.
+  ``GET /query`` |br| Returns a list of query engines, i.e. supported values for the *queryEngine* parameter of the *getQueryEngineDescription* and *query* operations.
 
   The list of search engines available may be influenced by the authentication status of the request.
 
@@ -364,7 +364,7 @@ def listQueryEngines(session):
 
 def synchronize(session,pid):
   """
-  Indicates to the CN that a new or existing object identified by PID requires synchronization. Note that this operation is asynchronous, a successful return indicates that the synchronization task was successfully queued.
+  ``POST /synchronize`` |br| Indicates to the CN that a new or existing object identified by PID requires synchronization. Note that this operation is asynchronous, a successful return indicates that the synchronization task was successfully queued. 
 
   This method may be called by any Member Node for new content or the authoritative Member Node for updates to existing content.
 

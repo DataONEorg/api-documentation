@@ -5,7 +5,7 @@ import Types
 
 def query(session,queryEngine,query):
   """
-  Submit a query against the specified *queryEngine* and return the response as formatted by the queryEngine.
+  ``GET /query/{queryEngine}/{query}`` |br| Submit a query against the specified *queryEngine* and return the response as formatted by the queryEngine.
 
   The :func:`MNQuery.query` operation may be implemented by more than one type of search engine and the *queryEngine* parameter indicates which search engine is targeted. The value and form of *query* is determined by the specific query engine.
 
@@ -44,7 +44,7 @@ def query(session,queryEngine,query):
 
 def getQueryEngineDescription(session,queryEngine):
   """
-  Provides metadata about the query service of the specified *queryEngine*. The metadata provides a brief description of the query engine, its version, its schema version, and an optional list of fields supported by the query engine.
+  ``GET /query/{queryType}`` |br| Provides metadata about the query service of the specified *queryEngine*. The metadata provides a brief description of the query engine, its version, its schema version, and an optional list of fields supported by the query engine.
 
 
   :Version: 1.1
@@ -73,7 +73,7 @@ def getQueryEngineDescription(session,queryEngine):
 
 def listQueryEngines(session):
   """
-  Returns a list of query engines, i.e. supported values for the *queryEngine* parameter of the *getQueryEngineDescription* and *query* operations.
+  ``GET /query`` |br| Returns a list of query engines, i.e. supported values for the *queryEngine* parameter of the *getQueryEngineDescription* and *query* operations.
 
   The list of search engines available may be influenced by the authentication status of the request.
 

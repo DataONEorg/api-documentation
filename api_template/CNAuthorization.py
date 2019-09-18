@@ -5,7 +5,7 @@ import Types
 
 def setRightsHolder(session,id,userId,serialVersion):
   """
-  Changes ownership (RightsHolder) of the specified object to the :term:`subject` specified by `userId`
+  ``PUT /owner/{id}`` |br| Changes ownership (RightsHolder) of the specified object to the :term:`subject` specified by `userId`
 
   v2.0: The supplied identifier may be a :term:`PID` or a :term:`SID`.
 
@@ -42,7 +42,7 @@ def setRightsHolder(session,id,userId,serialVersion):
 
 def isAuthorized(session,id,action):
   """
-  Test if the user identified by the provided token has authorization for operation on the specified object.
+  ``GET /isAuthorized/{id}?action={action}`` |br| Test if the user identified by the provided token has authorization for operation on the specified object.
 
   A successful operation is indicated by a return HTTP status of 200.
 
@@ -85,7 +85,7 @@ def isAuthorized(session,id,action):
 
 def setAccessPolicy(session,id,accessPolicy,serialVersion):
   """
-  Sets the access permissions for an object identified by *id*.
+  ``PUT /accessRules/{id}`` |br| Sets the access permissions for an object identified by *id*.
 
   Triggers a change to the system metadata modified time stamp.
 

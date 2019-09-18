@@ -5,7 +5,7 @@ import Types
 
 def replicate(session,sysmeta,sourceNode):
   """
-  Called by a Coordinating Node to request that the Member Node create a copy of the specified object by retrieving it from another Member Nodeode and storing it locally so that it can be made accessible to the DataONE system.
+  ``POST /replicate`` |br| Called by a Coordinating Node to request that the Member Node create a copy of the specified object by retrieving it from another Member Nodeode and storing it locally so that it can be made accessible to the DataONE system.  
 
   A successful operation is indicated by a HTTP status of 200 on the response.
 

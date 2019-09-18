@@ -5,7 +5,7 @@ import Types
 
 def create(session,pid,object,sysmeta):
   """
-  Called by a client to adds a new object to the Member Node.
+  ``POST /object`` |br| Called by a client to adds a new object to the Member Node.
 
   The *pid* must not exist in the DataONE system or should have been previously reserved using  :func:`CNCore.reserveIdentifier`. A new, unique :attr:`Types.SystemMetadata.seriesId` may be included.
 
@@ -46,7 +46,7 @@ def create(session,pid,object,sysmeta):
 
 def update(session,pid,object,newPid,sysmeta):
   """
-  This method is called by clients to update objects on Member Nodes.
+  ``PUT /object/{pid}`` |br| This method is called by clients to update objects on Member Nodes.
 
   Updates an existing object by creating a new object identified by *newPid* on the Member Node which explicitly obsoletes the object identified by *pid* through appropriate changes to the SystemMetadata of *pid* and *newPid*.
 
@@ -93,7 +93,7 @@ def update(session,pid,object,newPid,sysmeta):
 
 def generateIdentifier(session,scheme,fragment=None):
   """
-  Given a scheme and optional fragment, generates an identifier with that scheme and fragment that is unique. Maybe be used for generating either PIDs or SIDs.
+  ``POST /generate`` |br| Given a scheme and optional fragment, generates an identifier with that scheme and fragment that is unique. Maybe be used for generating either PIDs or SIDs.
 
   The message body is encoded as MIME Multipart/form-data
 
@@ -125,7 +125,7 @@ def generateIdentifier(session,scheme,fragment=None):
 
 def delete(session,id):
   """
-  Deletes an object managed by DataONE from the Member Node. Member Nodes MUST check that the caller (typically a Coordinating Node) is authorized to perform this function.
+  ``DELETE /object/{id}`` |br| Deletes an object managed by DataONE from the Member Node. Member Nodes MUST check that the caller (typically a Coordinating Node) is authorized to perform this function.
 
   The delete operation will be used primarily by Coordinating Nodes to help manage the number of replicas of an object that are present in the entire system.
 
@@ -162,7 +162,7 @@ def delete(session,id):
 
 def archive(session,id):
   """
-  Hides an object managed by DataONE from search operations, effectively preventing its discovery during normal operations.
+  ``PUT /archive/{id}`` |br| Hides an object managed by DataONE from search operations, effectively preventing its discovery during normal operations. 
 
   The operation does not delete the object bytes, but instead sets the :attr:`Types.SystemMetadata.archived` flag to True. This ensures that the object can still be resolved (and hence remain valid for existing citations and cross references), though will not appear in searches.
 
@@ -201,7 +201,7 @@ def archive(session,id):
 
 def updateSystemMetadata(session,pid,sysmeta):
   """
-  Provides a mechanism for updating system metadata for any objects held on the Member Node where that Member Node is the authoritative Member Node. Coordinating Node can call this method on the non-authoritative Member Node. However, this is not a normal operation and is for the special case - the authoritative Member Node doesn't exist any more. Coordinating Node calling the method on the non-authoriative Memember Node in the normal operation can cause an unexpected consequence.
+  ``PUT /meta`` |br| Provides a mechanism for updating system metadata for any objects held on the Member Node where that Member Node is the authoritative Member Node. Coordinating Node can call this method on the non-authoritative Member Node. However, this is not a normal operation and is for the special case - the authoritative Member Node doesn't exist any more. Coordinating Node calling the method on the non-authoriative Memember Node in the normal operation can cause an unexpected consequence.
 
   This method is typically used by Authoritative Member Node or rights holder[s] to ensure system metadata quality.
 

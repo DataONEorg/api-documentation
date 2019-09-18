@@ -5,7 +5,7 @@ import Types
 
 def ping():
   """
-  Low level "are you alive" operation. A valid ping response is indicated by a HTTP status of 200. A timestmap indicating the current system time (UTC) on the node MUST be returned in the HTTP Date header.
+  ``GET /monitor/ping`` |br| Low level "are you alive" operation. A valid ping response is indicated by a HTTP status of 200. A timestmap indicating the current system time (UTC) on the node MUST be returned in the HTTP Date header.
 
   The Member Node should perform some minimal internal functionality testing before answering. However, ping checks will be frequent (every few minutes) so the internal functionality test should not be high impact.
 
@@ -38,7 +38,7 @@ def ping():
 
 def getLogRecords(session,fromDate=None,toDate=None,event=None,idFilter=None,start=0,count=1000):
   """
-  Retrieve log information from the Member Node for the specified slice parameters. Log entries will only return PIDs.
+  ``GET /log?[fromDate={fromDate}][&toDate={toDate}][&event={event}][&idFilter={idFilter}][&start={start}][&count={count}]`` |br| Retrieve log information from the Member Node for the specified slice parameters. Log entries will only return PIDs.
 
   This method is used primarily by the log aggregator to generate aggregate statistics for nodes, objects, and the methods of access.
 
@@ -84,7 +84,7 @@ def getLogRecords(session,fromDate=None,toDate=None,event=None,idFilter=None,sta
 
 def getCapabilities():
   """
-  Returns a document describing the capabilities of the Member Node.
+  ``GET /  and  GET /node`` |br| Returns a document describing the capabilities of the Member Node.
 
   The response at the Member Node base URL is for convenience only. Clients of Member Nodes SHOULD use the /node URL to retrieve the node capabilities document.
 

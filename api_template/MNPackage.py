@@ -5,7 +5,7 @@ import Types
 
 def getPackage(session,packageType,id):
   """
-  Provides all of the content of a DataONE data package as defined by an OAI-ORE document in DataONE, in one of several possible package serialization formats.  The serialized package will contain all of the data described in the ORE aggregation. The default implementation will include packages in the BagIt format.  The packageType formats must be specified using the associated ObjectFormat formatId for that package serialization format.
+  ``GET /packages/{packageType}/{pid}`` |br| Provides all of the content of a DataONE data package as defined by an OAI-ORE document in DataONE, in one of several possible package serialization formats.  The serialized package will contain all of the data described in the ORE aggregation. The default implementation will include packages in the BagIt format.  The packageType formats must be specified using the associated ObjectFormat formatId for that package serialization format.
 
   The {id} parameter must be the identifier of an ORE package object. If it is the identifier of one of the science metadata documents or data files contained within the package,  the Member Node should throw an InvalidRequest exception. Identifiers may be either PIDss or SIDs.
 

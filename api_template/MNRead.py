@@ -5,7 +5,7 @@ import Types
 
 def get(session,id):
   """
-  Retrieve an object identified by *id* from the node. Supports both PIDs and SIDs. SID will return HEAD PID.
+  ``GET /object/{id}`` |br| Retrieve an object identified by *id* from the node. Supports both PIDs and SIDs. SID will return HEAD PID.
 
   The response MUST contain the bytes of the indicated object, and the checksum of the bytes retrieved SHOULD match the :attr:`SystemMetadata.checksum` recorded in the  :class:`Types.SystemMetadata` when calling with PID.
 
@@ -43,7 +43,7 @@ def get(session,id):
 
 def getSystemMetadata(session,id):
   """
-  Describes the object identified by *id* by returning the associated system metadata object.
+  ``GET /meta/{id}`` |br| Describes the object identified by *id* by returning the associated system metadata object.
 
   If the object does not exist on the node servicing the request, then :exc:`Exceptions.NotFound` MUST be raised even if the object exists on another node in the DataONE system.
 
@@ -76,7 +76,7 @@ def getSystemMetadata(session,id):
 
 def describe(session,id):
   """
-  This method provides a lighter weight mechanism than :func:`MNRead.getSystemMetadata` for a client to determine basic properties of the referenced object. The response should indicate properties that are typically returned in a HTTP HEAD request: the date late modified, the size of the object, the type of the object (the :attr:`SystemMetadata.formatId`).
+  ``HEAD /object/{id}`` |br| This method provides a lighter weight mechanism than :func:`MNRead.getSystemMetadata` for a client to determine basic properties of the referenced object. The response should indicate properties that are typically returned in a HTTP HEAD request: the date late modified, the size of the object, the type of the object (the :attr:`SystemMetadata.formatId`).
 
   The principal indicated by *token* must have read privileges on the object, otherwise :exc:`Exceptions.NotAuthorized` is raised.
 
@@ -113,7 +113,7 @@ def describe(session,id):
 
 def getChecksum(session,pid,checksumAlgorithm=None):
   """
-  Returns a :class:`Types.Checksum` for the specified object using an accepted hashing algorithm. The result is used to determine if two instances referenced by a PID are identical, hence it is necessary that MNs can ensure that the returned checksum is valid for the referenced object either by computing it on the fly or by using a cached value that is certain to be correct.
+  ``GET /checksum/{pid}[?checksumAlgorithm={checksumAlgorithm}]`` |br| Returns a :class:`Types.Checksum` for the specified object using an accepted hashing algorithm. The result is used to determine if two instances referenced by a PID are identical, hence it is necessary that MNs can ensure that the returned checksum is valid for the referenced object either by computing it on the fly or by using a cached value that is certain to be correct.
 
 
   :Version: 1.0
@@ -144,7 +144,7 @@ def getChecksum(session,pid,checksumAlgorithm=None):
 
 def listObjects(session,fromDate=None,toDate=None,formatId=None,identifier=None,replicaStatus=None,start=0,count=1000):
   """
-  Retrieve the list of objects present on the MN that match the calling parameters. This method is required to support the process of :term:`Member Node synchronization`. At a minimum, this method MUST be able to return a list of objects that match::
+  ``GET /object[?fromDate={fromDate}&toDate={toDate}&identifier={identifier}&formatId={formatId}&replicaStatus={replicaStatus} &start={start}&count={count}]`` |br| Retrieve the list of objects present on the MN that match the calling parameters. This method is required to support the process of :term:`Member Node synchronization`. At a minimum, this method MUST be able to return a list of objects that match::
 
     fromDate < SystemMetadata.dateSysMetadataModified
 
@@ -189,7 +189,7 @@ def listObjects(session,fromDate=None,toDate=None,formatId=None,identifier=None,
 
 def synchronizationFailed(session,message):
   """
-  This is a callback method used by a CN to indicate to a MN that it cannot complete synchronization of the science metadata identified by *pid*. When called, the MN should take steps to record the problem description and notify an administrator or the data owner of the issue.
+  ``POST /error`` |br| This is a callback method used by a CN to indicate to a MN that it cannot complete synchronization of the science metadata identified by *pid*. When called, the MN should take steps to record the problem description and notify an administrator or the data owner of the issue.
 
   A successful response is indicated by a HTTP status of 200. An unsuccessful call is indicated by a returned exception and associated HTTP status code.
 
@@ -223,7 +223,7 @@ def synchronizationFailed(session,message):
 
 def systemMetadataChanged(session,id,serialVersion,dateSysMetaLastModified):
   """
-  Notifies the Member Node that the authoritative copy of system metadata on the Coordinating Nodes has changed.
+  ``POST /dirtySystemMetadata`` |br| Notifies the Member Node that the authoritative copy of system metadata on the Coordinating Nodes has changed.
 
   The Member Node SHOULD schedule an update to its information about the affected object by retrieving an authoritative copy from a Coordinating Node.
 
@@ -260,7 +260,7 @@ def systemMetadataChanged(session,id,serialVersion,dateSysMetaLastModified):
 
 def getReplica(session,pid):
   """
-  Called by a target Member Node to fullfill the replication request originated by a Coordinating Node calling :func:`MNReplication.replicate`. This is a request to make a replica copy of the object, and differs from a call to GET /object in that it should be logged as a replication event rather than a read event on that object.
+  ``GET /replica/{pid}`` |br| Called by a target Member Node to fullfill the replication request originated by a Coordinating Node calling :func:`MNReplication.replicate`. This is a request to make a replica copy of the object, and differs from a call to GET /object in that it should be logged as a replication event rather than a read event on that object.
 
   If the object being retrieved is restricted access, then a Tier 2 or higher Member Node MUST make a call to :func:`CNReplication.isNodeAuthorized` to verify that the Subject of the caller is authorized to retrieve the content.
 

@@ -5,7 +5,7 @@ import Types
 
 def echoCredentials(session):
   """
-  Echo the credentials used to make the call. This method can be used to verify the client certificate is valid and contains the expected information.
+  ``GET /diag/subject`` |br| Echo the credentials used to make the call. This method can be used to verify the client certificate is valid and contains the expected information.
 
   v2.0: This method was added to the Version 2.0 API.
 
@@ -33,7 +33,7 @@ def echoCredentials(session):
 
 def echoSystemMetadata(session,sysmeta):
   """
-  Parse and echo the provided system metadata
+  ``POST /diag/sysmeta`` |br| Parse and echo the provided system metadata
 
   On successful parsing, a copy of the system metadata is returned, otherwise an exception is returned indicating an error condition.
 
@@ -68,7 +68,7 @@ def echoSystemMetadata(session,sysmeta):
 
 def echoIndexedObject(session,queryEngine,sysmeta,object):
   """
-  Parse and echo the provided science metadata or resource map document. The response is governed by the type of object provided in the request, and on success is one or more documents that are the result of parsing for indexing.
+  ``POST /diag/object`` |br| Parse and echo the provided science metadata or resource map document. The response is governed by the type of object provided in the request, and on success is one or more documents that are the result of parsing for indexing.
 
   Since DataONE supports multiple types of query engine, the query engine to be used for parsing is specified in the request.
 

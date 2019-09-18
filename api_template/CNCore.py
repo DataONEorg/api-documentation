@@ -5,7 +5,7 @@ import Types
 
 def ping():
   """
-  Low level "are you alive" operation. A valid ping response is indicated by a HTTP status of 200. A timestmap indicating the current system time (UTC) on the node MUST be returned in the HTTP Date header.
+  ``GET /monitor/ping`` |br| Low level "are you alive" operation. A valid ping response is indicated by a HTTP status of 200. A timestmap indicating the current system time (UTC) on the node MUST be returned in the HTTP Date header.
 
   The Member Node should perform some minimal internal functionality testing before answering. However, ping checks will be frequent (every few minutes) so the internal functionality test should not be high impact.
 
@@ -38,7 +38,7 @@ def ping():
 
 def create(session,pid,object,sysmeta):
   """
-  Used internally within a Coordinating Node to add a new object to the object store.
+  ``POST /object`` |br| Used internally within a Coordinating Node to add a new object to the object store.
 
   |cnprivate|
 
@@ -79,7 +79,7 @@ def create(session,pid,object,sysmeta):
 
 def listFormats():
   """
-  Returns a list of all object formats registered in the DataONE Object Format Vocabulary.
+  ``GET /formats`` |br| Returns a list of all object formats registered in the DataONE Object Format Vocabulary.
 
   v2.0: The structure of :class:`v2_0.Types.ObjectFormat` has changed.
 
@@ -103,7 +103,7 @@ def listFormats():
 
 def getFormat(formatId):
   """
-  Returns the object format registered in the DataONE Object Format Vocabulary for the given format identifier.
+  ``GET /formats/{formatId}`` |br| Returns the object format registered in the DataONE Object Format Vocabulary for the given format identifier.
 
   v2.0: The structure of :class:`v2_0.Types.ObjectFormat` has changed.
 
@@ -131,7 +131,7 @@ def getFormat(formatId):
 
 def getLogRecords(session,fromDate=None,toDate=None,event=None,idFilter=None,start=0,count=None):
   """
-  Retrieves consolidated log information for the specified date range (fromDate < timestamp <= toDate) for the entire DataONE infrastructure
+  ``GET /log?[fromDate={fromDate}][&toDate={toDate}][&event={event}][&idFilter={idFilter}][&start={start}][&count={count}]`` |br| Retrieves consolidated log information for the specified date range (fromDate < timestamp <= toDate) for the entire DataONE infrastructure
 
   Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed.
 
@@ -176,7 +176,7 @@ def getLogRecords(session,fromDate=None,toDate=None,event=None,idFilter=None,sta
 
 def reserveIdentifier(session,id):
   """
-  Reserves the identifier that is unique and can not be used by any other sessions. Future calls to :func:`MNStorage.create` and :func:`MNStorage.update` that reference this ID must be made by the same :term:`principal` making the reservation, otherwise an error is raised on those methods.
+  ``POST /reserve`` |br| Reserves the identifier that is unique and can not be used by any other sessions. Future calls to :func:`MNStorage.create` and :func:`MNStorage.update` that reference this ID must be made by the same :term:`principal` making the reservation, otherwise an error is raised on those methods.
 
   The requested identifier is transmitted in a MIME Multipart/form-data body with *id* as key, and the identifier string as value.
 
@@ -212,7 +212,7 @@ def reserveIdentifier(session,id):
 
 def generateIdentifier(session,scheme,fragment=None):
   """
-  Given a scheme and optional fragment, generates an identifier with that scheme and fragment that is unique. Returned identifier may be used as either a PID or a SID.
+  ``POST /generate`` |br| Given a scheme and optional fragment, generates an identifier with that scheme and fragment that is unique. Returned identifier may be used as either a PID or a SID.
 
   The message body is encoded as MIME Multipart/form-data
 
@@ -246,7 +246,7 @@ def generateIdentifier(session,scheme,fragment=None):
 
 def listChecksumAlgorithms():
   """
-  Returns a list of checksum algorithms that are supported by DataONE.
+  ``GET /checksum`` |br| Returns a list of checksum algorithms that are supported by DataONE.
 
 
   :Version: 1.0, (2.0)
@@ -268,7 +268,7 @@ def listChecksumAlgorithms():
 
 def setObsoletedBy(session,pid,obsoletedByPid,serialVersion):
   """
-  Updates the :attr:`Types.SystemMetadata.obsoletedBy` property for an object, indicating that the object specified by *pid* has been obsoleted by the identifier in *obsoletedByPid*.
+  ``PUT /obsoletedBy/{pid}`` |br| Updates the :attr:`Types.SystemMetadata.obsoletedBy` property for an object, indicating that the object specified by *pid* has been obsoleted by the identifier in *obsoletedByPid*.
 
   v2.0: Method implementation has changed to ensure that the obsolescence chain is consistent with use of any SID assigned to the object.
 
@@ -305,7 +305,7 @@ def setObsoletedBy(session,pid,obsoletedByPid,serialVersion):
 
 def delete(session,id):
   """
-  Deletes an object from the entire DataONE system, including all nodes known to hold a copy of the object. The PID and/or SID of the object will continue to be shown as in use (preventing its reuse for other objects), however the object should not be resolvable (NotFound) or retrievable.
+  ``DELETE /object/{id}`` |br| Deletes an object from the entire DataONE system, including all nodes known to hold a copy of the object. The PID and/or SID of the object will continue to be shown as in use (preventing its reuse for other objects), however the object should not be resolvable (NotFound) or retrievable.
 
   The delete operation is used only by administrators in response to a request to remove an object from DataONE, perhaps because of legal requirements or the object has been identified as containing malicious content.
 
@@ -340,7 +340,7 @@ def delete(session,id):
 
 def archive(session,id):
   """
-  Hides an object managed by DataONE from search operations, effectively preventing its discovery during normal operations.
+  ``PUT /archive/{id}`` |br| Hides an object managed by DataONE from search operations, effectively preventing its discovery during normal operations. 
 
   The operation does not delete the object bytes, but instead sets the :attr:`Types.SystemMetadata.archived` flag to True. This ensures that the object can still be resolved (and hence remain valid for existing citations and cross references), though will not appear in searches.
 
@@ -381,7 +381,7 @@ def archive(session,id):
 
 def listNodes():
   """
-  Returns a list of nodes that have been registered with the DataONE infrastructure.
+  ``GET /node`` |br| Returns a list of nodes that have been registered with the DataONE infrastructure.
 
   v2.0: The structure of :class:`v2_0.Types.Node` has changed.
 
@@ -407,7 +407,7 @@ def listNodes():
 
 def getCapabilities():
   """
-  Returns a document describing the capabilities of the Coordinating Node.
+  ``GET /`` |br| Returns a document describing the capabilities of the Coordinating Node.
 
   v2.0: The structure of :class:`v2_0.Types.Node` has changed.
 
@@ -431,7 +431,7 @@ def getCapabilities():
 
 def registerSystemMetadata(session,pid,sysmeta):
   """
-  Provides a mechanism for adding system metadata independently of its associated object, such as when adding system metadata for data objects.
+  ``POST /meta`` |br| Provides a mechanism for adding system metadata independently of its associated object, such as when adding system metadata for data objects.
 
   This method is used internally by Coordinating Nodes.
 
@@ -466,7 +466,7 @@ def registerSystemMetadata(session,pid,sysmeta):
 
 def updateSystemMetadata(session,pid,sysmeta):
   """
-  Provides a mechanism for updating system metadata for any objects held in the federation.
+  ``PUT /meta`` |br| Provides a mechanism for updating system metadata for any objects held in the federation.
 
   Usage of this method SHOULD be restricted to CNs for updating the system metadata in the underlying CN storage sub-system.
 
@@ -503,7 +503,7 @@ def updateSystemMetadata(session,pid,sysmeta):
 
 def hasReservation(session,subject,id):
   """
-  Checks to determine if the supplied *subject* is the owner of the reservation of *id*.
+  ``GET /reserve/{id}?subject={subject}`` |br| Checks to determine if the supplied *subject* is the owner of the reservation of *id*.
 
   A positive response (that the *pid* is reserved and owned by *subject*) is indicated by a return of a HTTP status of 200.
 

@@ -5,7 +5,7 @@ import Types
 
 def setReplicationStatus(session,pid,nodeRef,status,failure):
   """
-  Update the replication status of the system metadata, ensuring that the change is appropriate for the given state of system metadata.  For example, a MN can not change the status to *COMPLETED* unless the CN previously requested replication of the object and the replications status of the object (as indicated in the system metadata) is set to *QUEUED*.
+  ``PUT /replicaNotifications/{pid}`` |br| Update the replication status of the system metadata, ensuring that the change is appropriate for the given state of system metadata.  For example, a MN can not change the status to *COMPLETED* unless the CN previously requested replication of the object and the replications status of the object (as indicated in the system metadata) is set to *QUEUED*.
 
   Successful completion of this operation is indicated by a HTTP response status code of 200.
 
@@ -48,7 +48,7 @@ def setReplicationStatus(session,pid,nodeRef,status,failure):
 
 def updateReplicationMetadata(session,pid,replicaMetadata,serialVersion):
   """
-  Replaces the replica with matching nodeRef in the system metadata of the specified object.  Adds a new replica if the nodeRef of passed in Replica is not already present.  Changes the date sys meta modified.
+  ``PUT /replicaMetadata/{pid}`` |br| Replaces the replica with matching nodeRef in the system metadata of the specified object.  Adds a new replica if the nodeRef of passed in Replica is not already present.  Changes the date sys meta modified.
 
   Successful completion of the operation is indicated by returning a HTTP status of 200.
 
@@ -87,7 +87,7 @@ def updateReplicationMetadata(session,pid,replicaMetadata,serialVersion):
 
 def setReplicationPolicy(session,id,policy,serialVersion):
   """
-  Updates the replication policy entry for an object by updating the system metadata.
+  ``PUT /replicaPolicies/{id}`` |br| Updates the replication policy entry for an object by updating the system metadata.
 
   Successful completion of the operation is indicated by returning a HTTP status of 200.
 
@@ -126,7 +126,7 @@ def setReplicationPolicy(session,id,policy,serialVersion):
 
 def isNodeAuthorized(session,targetNodeSubject,pid):
   """
-  Verifies that a replication event was initiated by a CN by comparing the target node's identifiying subject with a known list of scheduled replication tasks.
+  ``GET /replicaAuthorizations/{pid}?targetNodeSubject={targetNodeSubject}`` |br| Verifies that a replication event was initiated by a CN by comparing the target node's identifiying subject with a known list of scheduled replication tasks.
 
   Successful completion of the operation is indicated by returning a HTTP status of 200.
 
@@ -161,7 +161,7 @@ def isNodeAuthorized(session,targetNodeSubject,pid):
 
 def deleteReplicationMetadata(session,pid,nodeId,serialVersion):
   """
-  Removes the replication information for the specified node from the object system metadata identified by *pid*.
+  ``PUT /removeReplicaMetadata/{pid}`` |br| Removes the replication information for the specified node from the object system metadata identified by *pid*.
 
   Removal of replication metadata is necessary if the Member Node goes offline permanently or for an extended period, or when it is deeemed prudent to migrate an object from one node to another to address resource management issues.
 
