@@ -1,14 +1,15 @@
 **Example**
 
-Verify the subject ``http://orcid.org/0000-0002-6513-4996``. Note that the
-subject appears as a URL path element, and so must be escaped appropriately in
-the request.
+Verify the subject ``http://orcid.org/0000-0002-6513-4996``.
+
+Note that the subject appears as a URL path element, and so must be escaped
+appropriately in the request.
 
 Note also that the call must be made by a subject with administrative
 privileges. In this case, the client certificate of a Coordinating Node
-are used.
+is used.
 
-The response status code of "200" indicates the call was successful. An exception
+The response status code of ``200`` indicates the call was successful. An exception
 would be returned with a corresponding status code if the call failed.
 
 .. code-block:: bash

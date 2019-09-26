@@ -1,4 +1,26 @@
 **Example**
 
-.. TODO:: Example for CNIdentity.registerAccount
+Create an account in the DataONE staging environment.
 
+.. code-block:: bash
+
+  $ cat person.xml
+
+  <ns2:person xmlns:ns2="http://ns.dataone.org/service/types/v1">
+    <subject>http://orcid.org/0000-0002-6513-4996</subject>
+    <givenName>David</givenName>
+    <familyName>Vieglais</familyName>
+    <equivalentIdentity>CN=Dave Vieglais A335,O=Google,C=US,DC=cilogon,DC=org</equivalentIdentity>
+    <verified>true</verified>
+  </ns2:person>
+
+  $ curl -s \
+      -F person=@person.xml \
+      -X POST \
+      -w "Status: %{http_code}\n" \
+      "https://cn-stage.test.dataone.org/cn/v2/accounts"
+  Status: 200
+
+Verify that the account was created using the getSubjectInfo API.
+
+Legitimacy of the account must be verified with the verifyAccount API.
