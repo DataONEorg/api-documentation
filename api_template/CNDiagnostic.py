@@ -5,7 +5,9 @@ import Types
 
 def echoCredentials(session):
   """
-  ``GET /diag/subject`` |br| Echo the credentials used to make the call. This method can be used to verify the client certificate is valid and contains the expected information.
+  ``GET /diag/subject`` |br| Echo the credentials used to make the call.
+
+  This method can be used to verify the client certificate is valid and contains the expected information.
 
   v2.0: This method was added to the Version 2.0 API.
 
@@ -14,7 +16,7 @@ def echoCredentials(session):
   :REST URL: ``GET /diag/subject``
 
   Parameters:
-    session (Types.Session): |session| 
+    session (Types.Session): |session|
 
   Returns:
     Types.SubjectInfo: The subjects and groups parsed from the supplied session information.
@@ -33,9 +35,10 @@ def echoCredentials(session):
 
 def echoSystemMetadata(session,sysmeta):
   """
-  ``POST /diag/sysmeta`` |br| Parse and echo the provided system metadata
+  ``POST /diag/sysmeta`` |br| Parse and echo the provided system metadata.
 
-  On successful parsing, a copy of the system metadata is returned, otherwise an exception is returned indicating an error condition.
+  On successful parsing, a copy of the system metadata is returned, otherwise an
+  exception is returned indicating an error condition.
 
   v2.0: This operation is new to version 2.0.
 
@@ -44,7 +47,7 @@ def echoSystemMetadata(session,sysmeta):
   :REST URL: ``POST /diag/sysmeta``
 
   Parameters:
-    session (Types.Session): |session| 
+    session (Types.Session): |session|
     sysmeta (Types.SystemMetadata): A SystemMetadata object to be examined. The object is parsed and error conditions reported by an exception response. On successful parsing, the SystemMetadata object is echoed back with a HTTP 200 status. Transmitted as an UTF-8 encoded XML structure for the respective type as defined in the DataONE types schema, as a *File part* of the MIME multipart/mixed message.
 
   Returns:
@@ -68,11 +71,16 @@ def echoSystemMetadata(session,sysmeta):
 
 def echoIndexedObject(session,queryEngine,sysmeta,object):
   """
-  ``POST /diag/object`` |br| Parse and echo the provided science metadata or resource map document. The response is governed by the type of object provided in the request, and on success is one or more documents that are the result of parsing for indexing.
+  ``POST /diag/object`` |br| Parse and echo the provided science metadata or resource map document.
 
-  Since DataONE supports multiple types of query engine, the query engine to be used for parsing is specified in the request.
+  The response is governed by the type of object provided in the request, and on
+  success is one or more documents that are the result of parsing for indexing.
 
-  The servce may terminate the POST operation if the size of the object is beyond a reasonable size.
+  Since DataONE supports multiple types of query engine, the query engine to be
+  used for parsing is specified in the request.
+
+  The servce may terminate the POST operation if the size of the object is
+  beyond a reasonable size.
 
   v2.0: This operation is new to version 2.0.
 
@@ -81,10 +89,10 @@ def echoIndexedObject(session,queryEngine,sysmeta,object):
   :REST URL: ``POST /diag/object``
 
   Parameters:
-    session (Types.Session): |session| 
+    session (Types.Session): |session|
     queryEngine (string): A valid query engine name as reported by :func:`listQueryEngines` Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
     sysmeta (Types.SystemMetadata): A SystemMetadata object that passes the echoSystemMetadata diagnostic. Transmitted as an UTF-8 encoded XML structure for the respective type as defined in the DataONE types schema, as a *File part* of the MIME multipart/mixed message.
-    object (bytes): A document (e.g. science metadata or resource map) that is to be evalauted for indexing. 
+    object (bytes): A document (e.g. science metadata or resource map) that is to be evalauted for indexing.
 
   Returns:
     Types.OctetStream: A document representing the parsed object as it would be prior to being added to a search index. For the solr query engine for example, this would be the equivalent of a *<add><doc> .. </doc> .. </add>* structure with possibly multiple documents.
@@ -104,4 +112,3 @@ def echoIndexedObject(session,queryEngine,sysmeta,object):
 
   """
   return None
-

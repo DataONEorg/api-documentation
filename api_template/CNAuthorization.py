@@ -2,9 +2,8 @@ import Exceptions
 import Types
 
 
-
-def setRightsHolder(session,id,userId,serialVersion):
-  """
+def setRightsHolder(session, id, userId, serialVersion):
+    """
   ``PUT /owner/{id}`` |br| Changes ownership (RightsHolder) of the specified object to the :term:`subject` specified by `userId`
 
   v2.0: The supplied identifier may be a :term:`PID` or a :term:`SID`.
@@ -17,9 +16,10 @@ def setRightsHolder(session,id,userId,serialVersion):
 
   Parameters:
     session (Types.Session): |session| 
-    id (Types.Identifier): Identifier of the object to be modified. May be either a PID or a SID, the latter acting on the HEAD PID. Transmitted as part of the URL path and must be escaped accordingly.
-    userId (Types.Subject): The subject that will be taking ownership of the specified object.  Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
-    serialVersion (unsigned long): The serialVersion of the system metadata that is the intended target for the change. Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
+    id (Types.Identifier): Identifier of the object to be modified. May be either a PID or a SID, the latter acting on
+      the HEAD PID. Transmitted as part of the URL path and must be escaped accordingly.
+    userId (Types.Subject): The subject that will be taking ownership of the specified object. |stringparam|
+    serialVersion (unsigned long): The serialVersion of the system metadata that is the intended target for the change. |stringparam|
 
   Returns:
     Types.Identifier: Identifier of the object that was modified
@@ -36,19 +36,19 @@ def setRightsHolder(session,id,userId,serialVersion):
   .. include:: /apis/examples/cnauthorization_setrightsholder.txt
 
   """
-  return None
+    return None
 
 
-
-def isAuthorized(session,id,action):
-  """
+def isAuthorized(session, id, action):
+    """
   ``GET /isAuthorized/{id}?action={action}`` |br| Test if the user identified by the provided token has authorization for operation on the specified object.
 
   A successful operation is indicated by a return HTTP status of 200.
 
   Failure is indicated by an exception such as :exc:`NotAuthorized` being returned.
 
-  A successful response is indicated by a response HTTP status of 200. The body of the response is arbitrary and SHOULD be ignored by the caller.
+  A successful response is indicated by a response HTTP status of 200. The body of the response is arbitrary and SHOULD
+  be ignored by the caller.
 
   If the action is not authorized, then a :exc:`NotAuthorized` exception MUST be raised.
 
@@ -62,8 +62,9 @@ def isAuthorized(session,id,action):
 
   Parameters:
     session (Types.Session): |session| 
-    id (Types.Identifier): The identifer of the resource for which access is being checked. May be either a PID or a SID, the latter returning results as if called with the HEAD PID. Transmitted as part of the URL path and must be escaped accordingly.
-    action (Types.Permission): The type of operation which is being requested for the given identifier. Transmitted as a URL query parameter, and so must be escaped accordingly.
+    id (Types.Identifier): The identifer of the resource for which access is being checked. May be either a PID or a
+      SID, the latter returning results as if called with the HEAD PID. Transmitted as part of the URL path and must be escaped accordingly.
+    action (Types.Permission): The type of operation which is being requested for the given identifier. |urlparam|
 
   Returns:
     boolean: True if the operation is allowed
@@ -72,19 +73,19 @@ def isAuthorized(session,id,action):
     Exceptions.ServiceFailure:  (errorCode=500, detailCode=1760)
     Exceptions.InvalidToken:  (errorCode=401, detailCode=1840)
     Exceptions.NotFound:  (errorCode=404, detailCode=1800)
-    Exceptions.NotAuthorized: This error is raised if the request comes from a black listed source (e.g. a temporary block may be imposed on a source that calls this method too many times within some time interval) (errorCode=401, detailCode=1820)
+    Exceptions.NotAuthorized: This error is raised if the request comes from a black listed source (e.g. a temporary
+      block may be imposed on a source that calls this method too many times within some time interval) (errorCode=401, detailCode=1820)
     Exceptions.NotImplemented:  (errorCode=501, detailCode=1780)
     Exceptions.InvalidRequest:  (errorCode=400, detailCode=1761)
 
   .. include:: /apis/examples/cnauthorization_isauthorized.txt
 
   """
-  return None
+    return None
 
 
-
-def setAccessPolicy(session,id,accessPolicy,serialVersion):
-  """
+def setAccessPolicy(session, id, accessPolicy, serialVersion):
+    """
   ``PUT /accessRules/{id}`` |br| Sets the access permissions for an object identified by *id*.
 
   Triggers a change to the system metadata modified time stamp.
@@ -103,9 +104,10 @@ def setAccessPolicy(session,id,accessPolicy,serialVersion):
 
   Parameters:
     session (Types.Session): |session| 
-    id (Types.Identifier): The object for which access control is being updated. May be either a PID or a SID, the latter acting on the HEAD PID only. Transmitted as part of the URL path and must be escaped accordingly.
-    accessPolicy (Types.AccessPolicy): The desired privileges to be assigned to the object. Transmitted as an UTF-8 encoded XML structure for the respective type as defined in the DataONE types schema, as a *File part* of the MIME multipart/mixed message.
-    serialVersion (unsigned long): The serialVersion of the system metadata that is the intended target for the change. Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
+    id (Types.Identifier): The object for which access control is being updated. May be either a PID or a SID, the
+      latter acting on the HEAD PID only. |urlparam|
+    accessPolicy (Types.AccessPolicy): The desired privileges to be assigned to the object. |xmlparam|
+    serialVersion (unsigned long): The serialVersion of the system metadata that is the intended target for the change. |stringparam|
 
   Returns:
     boolean: True if the operation succeeds, otherwise false.
@@ -122,5 +124,4 @@ def setAccessPolicy(session,id,accessPolicy,serialVersion):
   .. include:: /apis/examples/cnauthorization_setaccesspolicy.txt
 
   """
-  return None
-
+    return None

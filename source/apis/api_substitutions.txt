@@ -18,3 +18,8 @@
 
 .. |extrace| replace:: Optional set of key-value pairs that can include the name of the method that raised the error plus other details such as parameters used in the call that can be helpful for debugging. Sensitive information such as passwords must **never** be logged or recorded in error messages.
 
+.. |stringparam| replace:: Transmitted as a UTF-8 String as a *Param part* of the MIME multipart/mixed message.
+
+.. |urlparam| replace:: Transmitted as a URL query parameter, and so must be escaped accordingly.
+
+.. |xmlparam| replace:: Transmitted as an UTF-8 encoded XML structure for the respective type as defined in the DataONE types schema, as a *File part* of the MIME multipart/mixed message.
