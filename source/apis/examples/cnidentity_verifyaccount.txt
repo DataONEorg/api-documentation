@@ -1,4 +1,36 @@
 **Example**
 
-.. TODO:: Example for CNIdentity.verifyAccount
+Verify the subject ``http://orcid.org/0000-0002-6513-4996``. Note that the
+subject appears as a URL path element, and so must be escaped appropriately in
+the request.
 
+Note also that the call must be made by a subject with administrative
+privileges. In this case, the client certificate of a Coordinating Node
+are used.
+
+The response status code of "200" indicates the call was successful. An exception
+would be returned with a corresponding status code if the call failed.
+
+.. code-block:: bash
+
+  $ sudo curl -s \
+      --cert private/urn_node_CNUCSB1.pem \
+      -X PUT \
+      -w "Status: %{http_code}\n" \
+      "https://cn.dataone.org/cn/v2/accounts/verification/http%3A%2F%2Forcid.org%2F0000-0002-6513-4996"
+    Status: 200
+
+Example of a failure (subject incorrect):
+
+.. code-block:: bash
+
+  $ sudo curl -s \
+      --cert private/urn_node_CNUCSB1.pem \
+      -X PUT \
+      -w "Status: %{http_code}\n" \
+      "https://cn.dataone.org/cn/v2/accounts/verification/http%3A%2F%2Forcid.org%2F0000-0002-6513"
+    <?xml version="1.0" encoding="UTF-8"?>
+    <error detailCode="4540" errorCode="500" name="ServiceFailure">
+       <description>Could not verify account: [LDAP: error code 32 - No Such Object]</description>
+    </error>
+    Status: 500
