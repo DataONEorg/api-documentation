@@ -1,0 +1,113 @@
+Semantic Search Design
+======================
+
+Overview
+--------
+
+Semantic search improves both search and display of metadata records over what was previously possible. For example, with traditional, free-text search, if a metadata record described a dataset on American green tree frogs (*Hyla cinerea*) but never included the term "amphibian" in the metadata record's text, a free-text search for "data on amphibians" may not return the record. With semantic search, we can index ahead of time that fact that American green tree frogs are amphibians using a suitable knowledge graph and the record would be returned.
+
+Note: At the moment, annotations are only supported on EML 2.2.0 records via the EML's semantics module, see `What's New in EML 2.2.0 <https://eml.ecoinformatics.org/whats-new-in-eml-2-2-0.html>`_. However, the design allows other metadata standards (e.g., schema.org) to make use of these features. Here, we'll focus on how semantic search applies to EML.
+
+Annotations are inlined into the EML record in various locations and take the following structure:
+
+.. code:: xml
+
+  <attribute id="myatt">
+    ...
+    <annotation>
+      <propertyURI label="of characteristic">
+        http://ecoinformatics.org/oboe/oboe.1.2/oboe-core.owl#ofCharacteristic
+      </propertyURI>
+      <valueURI label="Mass">
+        http://ecoinformatics.org/oboe/oboe.1.2/oboe-characteristics.owl#Mass
+      </valueURI>
+    </annotation>
+    ...
+  </attribute>
+
+The above annotation asserts that the attribute ``myatt`` is "of characteristic" "Mass". Both terms are defined in the OBOE ontology with specific definitions and logical relationships with other terms. This annotation is both searchable and displayed on the dataset's landing page.
+
+Indexing
+--------
+
+Harvesting of an EML record with one or more annotations triggers the normal ``SystemMetadataSubporcessor`` and the appropriate ``ScienceMetadataSubprocessor`` for the record but also triggers the ``EMLAnnotationSubprocessor`` which does two things:
+
+1. Executes the XPath ``//annotation/valueURI`` on the record
+2. Performs query expansion on the result of (1) to include all superclasses of each term
+3. Stores the expanded result in the ``sem_annotation`` field in the search index
+
+See below for a simplified architectural diagram:
+
+.. image:: images/semantics_architecture_simple.png
+
+OntologyModelService
+--------------------
+
+In the above diagram, the ``EMLAnnotationSubprocessor`` uses the ``OntologyModelService`` to perform query expansion.
+The ``OntologyModelService`` implements a simple Jena ``OntologyModel`` which loads a set of `Whitelisted Ontologies`_ at startup into a single Jena ``OntologyModel`` which can be queried by other index subprocessors at index time.
+
+Each term is turned into a `Property Path <https://www.w3.org/TR/sparql11-property-paths/>`_ query to find all superclasses of the term:
+
+.. code:: text
+
+  SELECT ?sem_annotation
+  WHERE {
+    <$CONCEPT_URI> rdfs:subClassOf* ?sem_annotation .
+  }
+
+The current architecture is flexible enough to allow other types of SPARQL queries to be run on annotations.
+
+Search Interface
+----------------
+
+Annotation Search Filter
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The search UI leverages BioPortal's API and their tree view widget to provide users with a way to find terms and search by them. At current, only terms from ECSO's MeasurementType tree are viewable and searchable.
+
+.. image:: images/semantics_searchfilter.png
+
+Annotation Popovers on Landing Pages
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The search UI provides popovers on landing pages for annotations and provides an enhanced tooltip if the term is present in BioPortal. When the popover is clicked, a request is made to BioPortal's class search API to find a defintion for the term and the popover is updated with the found defintion:
+
+.. image:: images/semantics_popover.gif
+
+If the term is not found in BioPortal, the popover is still shown and works mostly the same, minus the added definition.
+
+Whitelisted Ontologies
+----------------------
+
+For performance and security reasons, the ``OntologyModelService`` doesn't supporting loading arbitrary ontologies at query time. Instead, a set of whitelisted ontologies was established:
+
+- ECSO_: (The ECcoSystem Ontology)
+- ENVO_ (Environmental Ontology)
+- OBOE_ (The Extensible Observation Ontology)
+- ProvONE_ (The DataONE PROV Ontology)
+
+.. _ECSO: https://bioportal.bioontology.org/ontologies/ECSO
+.. _ENVO: http://www.obofoundry.org/ontology/envo.html
+.. _OBOE: https://github.com/NCEAS/oboe
+.. _ProvONE: https://github.com/NCEAS/oboe
+
+These are loaded into a Jena ``OntologyModelService`` at startup and are available for query expansion when new records are indexed.
+
+Adding New Ontologies
+---------------------
+
+When EML records are annotated with terms *not* from the set of `Whitelisted Ontologies`_, annotations, the search catalog will work slightly different than the case where annotations use terms from the whitelist.
+
+1. Users won't be able to search for those records by the term URI or label through the search interface because the Annotation search only supports searching for ``ECSO``  ``MeasurementType`` annotations at this time.
+2. Users will be presented with only a basic tooltip for the term on the record's landing page, see:
+
+.. image:: images/semantics_annotation_outofwhitelist.png
+
+Instead of the more helpful tooltip:
+
+.. image:: images/semantics_annotation_inwhitelist.png
+
+To add an ontology, you must:
+
+1.  Check in a copy of the ontology's OWL file or files to ``src/main/resources/ontologies`` in ``D1_CN_INDEX_PROCESSOR``.
+2. Add a reference to ``src/main/resources/application-context-ontology-model-service.xml`` ``D1_CN_INDEX_PROCESSOR`` in the ``ontologyList`` and ``altEntryList`` properties.
