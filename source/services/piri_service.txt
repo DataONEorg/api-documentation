@@ -33,7 +33,12 @@ Where `{type}` is one of:
 - `datasets`
 - `people` (not implemented)
 
-And `{id}` is an appropriate identifier for resource such as a PID or SID for the 'datasets' type.
+And `{id}` is an appropriate identifier for resource such as a PID or SID (Series Identifier) for the 'datasets' type.
+Note that all identifiers should be escaped according to RFC3986_.
+See `Identifiers in DataONE`_ for more information.
+
+.. _RFC3986: https://tools.ietf.org/html/rfc3986
+.. _Identifiers in DataONE: https://dataone-architecture-documentation.readthedocs.io/en/latest/design/PIDs.html
 
 Implementation
 --------------
