@@ -8,7 +8,9 @@ The DataONE PIRI (Persistent Internationalized Resource Identifier) Service prov
 The problem this solves is that DataONE resources can be resolved at a variety of URLs which contain application-, deployment-, and API (Application Programming Interface)-version-specific details.
 An IRI space that is agnostic to these details allows resources to be identified and resolved in a stable fashion.
 
-Take, for example, the following IRI, which can be used to resolve the location of the Object with the PID 'mydataset':
+Take, for example, the following IRI, which can be used to resolve the location of the Object with the PID_. (Persistent Identifier) 'mydataset':
+
+.. _PID: https://dataone-architecture-documentation.readthedocs.io/en/latest/design/PIDs.html
 
 `https://cn.dataone.org/cn/v2/resolve/mydataset`
 
