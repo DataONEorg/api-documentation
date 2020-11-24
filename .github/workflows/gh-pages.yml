@@ -3,7 +3,7 @@ name: Build Pages
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   docs:
@@ -48,7 +48,6 @@ jobs:
 
       - name: Build documentation
         run: |
-          cd docs
           poetry run sphinx-build -M html source build
 
       - name: Commit documentation changes
@@ -56,7 +55,7 @@ jobs:
           git clone https://github.com/DataONEorg/api-documentation.git --branch gh-pages --single-branch gh-pages
           cd gh-pages
           find . -not -path '*/\.*' -delete
-          cp -r ../docs/build/html/* .
+          cp -r ../build/html/* .
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add .
