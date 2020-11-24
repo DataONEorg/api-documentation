@@ -1186,10 +1186,11 @@ The use cases below organize the identified requirements related to mutable
 content, with the most relevant use cases listed first.
 
 Prioritized goals
-^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~
 
 1. Data preservation
-~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^
+
 Defined as activities that help ensure continued discoverability and usefulness
 and usually in reference to metadata, not data.
 
@@ -1199,7 +1200,8 @@ and usually in reference to metadata, not data.
   have the most current version of something, and easily and quickly get it.
 
 2. Mutable Content Member Node support
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 For institutions following a mutable content model:
 
 - Provide a path forward for integrating into DataONE network.
@@ -1210,17 +1212,19 @@ For institutions following a mutable content model:
 - Differentiating between incremental internal saves, vs. new revision.
 
 3. Citation support
-~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^
+
 - avoid unnecessary costs associated with obtaining resolvable (e.g., DOIs) for each version
 - coordinating citation by a common identifier for citation tracking
 - ensuring that the cited object is the same when accessed as when it was originally used
 - ability to cite a version as well as the conceptual object
 
 Optional
-^^^^^^^^
+~~~~~~~~
 
 4. Support for frequently changing / overwritten data
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 What is the best way to version mutable data that frequently changes but may or
 not be used.  For example a "current time" object, replaced every minute, or
 "current weather radar" that's replaced every 3 hours.
@@ -1231,7 +1235,7 @@ not be used.  For example a "current time" object, replaced every minute, or
 The underlying dynamic here is the the rate of mutation vs. the rate of synchronization
 
 5. Support for accumulating datasets
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 This means supporting data objects that add records over time, either:
 
 - within pre-defined bounds  e.g. "2013 year-to-date"  (the metadata could stay
@@ -1240,7 +1244,7 @@ This means supporting data objects that add records over time, either:
 
 
 6. Support for mixed metadata/data objects
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Some formats combine data with metadata, for example netCDF, so allowing the
 metadata to change without impacting the consistency assessment of the data itself.
 
@@ -1249,7 +1253,7 @@ metadata to change without impacting the consistency assessment of the data itse
 
 
 7. Supporting 'unrecorded' data streams
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Mutable content can theoretically include things that are live feeds from
 sensors, but are otherwise not captured.
 
