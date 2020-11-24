@@ -1,0 +1,200 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Use Case 03 - Register MN &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/mathjax_pre.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Use Case 10 - MN Status Reports" href="10_uc.html" />
+    <link rel="prev" title="Use Case 32 - Transfer Object Ownership" href="32_uc.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="10_uc.html" title="Use Case 10 - MN Status Reports"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="32_uc.html" title="Use Case 32 - Transfer Object Ownership"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html"></a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../usecases.html" accesskey="U">Use Cases</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Use Case 03 - Register MN</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="use-case-03-register-mn">
+<span id="uc03"></span><h1>Use Case 03 - Register MN<a class="headerlink" href="#use-case-03-register-mn" title="Permalink to this headline">¶</a></h1>
+<dl id="index-0">
+<dt>Revisions</dt><dd><p>View document revision <a class="reference external" href="https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/03_uc.txt">history</a>.</p>
+</dd>
+<dt>Goal</dt><dd><p>Register a new Member Node.</p>
+</dd>
+<dt>Summary</dt><dd><p>This use case describes the technical process for addition of a new member
+node (MN) to to the DataONE infrastructure. It is assumed that the
+appropriate social contracts have been formed and the MN is operational,
+ready to be connected.</p>
+<p>The MN is identified by a URL which is the service endpoint. A DataONE
+administrator adds the MN URL to the MN registry. A CN retrieves the
+registration request from the message queue and queries the MN for
+capabilities, then verifies those capabilities match what was advertised. If
+everything is OK, the MN is made a live member of DataONE and replication of
+content on the MN is scheduled. The new MN also becomes a receiver for
+content replicated from other MNs.</p>
+</dd>
+<dt>Actors</dt><dd><p>MN, CN, Administrator</p>
+</dd>
+<dt>Preconditions</dt><dd><ul class="simple">
+<li><p>The MN is operational</p></li>
+<li><p>There is an agreement between the DataONE operators and the MN operator
+that the MN is to be added to DataONE</p></li>
+<li><p>The CNs are ready for receiving MN registrations</p></li>
+</ul>
+</dd>
+<dt>Triggers</dt><dd><ul class="simple">
+<li><p>A new Member Node is ready to be brought online and a DataONE
+administrator initiates the process.</p></li>
+</ul>
+</dd>
+<dt>Post Conditions</dt><dd><ul class="simple">
+<li><p>The new MN operates as part of the DataONE infrastructure</p></li>
+<li><p>DataONE infrastructure resources are incremented by the amount available
+at the new MN</p></li>
+<li><p>The operation outcomes are logged</p></li>
+<li><p>Synchronization of the MN commences as per scheduled operation</p></li>
+<li><p>Synchronize capabilities metadata across CNs</p></li>
+<li><p>Notify MN administrators of operation status (email?)</p></li>
+<li><p>The new MN is added to CN list of targets for replication</p></li>
+</ul>
+</dd>
+</dl>
+<img alt="../../_images/eb48ffef7e33f7576023b0c6f41271f0328aa8c2de891506a3fe381e48d39bd3.svg" class="align-center" src="../../_images/eb48ffef7e33f7576023b0c6f41271f0328aa8c2de891506a3fe381e48d39bd3.svg" /><p><em>Figure 1.</em> Use Case 03.</p>
+<img alt="../../_images/579244a9d6e0b491a3b9701f77b02e3c03439f79b42c1ec565feeb70abc28515.svg" class="align-center" src="../../_images/579244a9d6e0b491a3b9701f77b02e3c03439f79b42c1ec565feeb70abc28515.svg" /><p><em>Figure 2.</em> Sequence diagram for use case 03.</p>
+<p><strong>Notes</strong></p>
+<ul>
+<li><p>Specify default replication policies</p></li>
+<li><p>Also check for version updates</p></li>
+<li><p>Should new nodes be registered with specified trust levels?</p></li>
+<li><p>Are there different levels of trust for member nodes?</p></li>
+<li><p>Data providers that use acceptable services can still be discovered and
+accessed without registering in the DataONE registry (Conflicting, as
+someone has to register it).</p>
+<p>However, a MN that has not registered but does expose DataONE services is
+not part of the DataONE infrastructure and so does not participate in
+replication or other DataONE services.</p>
+</li>
+<li><p>Allow service providers to register their services, (such as data extraction
+services) (ala GEOSS), but include mapping to higher semantic model</p></li>
+<li><p>For well known services, registration system must be able to describe
+constraints (e.g., allowable inputs, outputs, algorithms that can be
+specified)</p></li>
+<li><p>Services can be parameterized</p></li>
+<li><p>Member node should be able to request the coordinating node to re-validate
+its capabilities list.</p></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../../_static/dataone_logo.png" alt="Logo"/>
+    </a></p><h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation Overview</a><ul>
+  <li><a href="../usecases.html">Use Cases</a><ul>
+      <li>Previous: <a href="32_uc.html" title="previous chapter">Use Case 32 - Transfer Object Ownership</a></li>
+      <li>Next: <a href="10_uc.html" title="next chapter">Use Case 10 - MN Status Reports</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/design/UseCases/03_uc.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../../_sources/design/UseCases/03_uc.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/03_uc.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

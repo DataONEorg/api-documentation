@@ -1,0 +1,199 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Supporting Access Control in Search &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="System Metadata" href="SystemMetadata.html" />
+    <link rel="prev" title="Overview of Authorization Policy Languages" href="Authorization-technologies.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="SystemMetadata.html" title="System Metadata"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Authorization-technologies.html" title="Overview of Authorization Policy Languages"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Supporting Access Control in Search</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="supporting-access-control-in-search">
+<h1>Supporting Access Control in Search<a class="headerlink" href="#supporting-access-control-in-search" title="Permalink to this headline">¶</a></h1>
+<dl class="field-list simple">
+<dt class="field-odd">Status</dt>
+<dd class="field-odd"><p>DRAFT</p>
+</dd>
+</dl>
+<p>There is a requirement that search results contain only information for which the user has permission to read, which requires that access permissions for each item in the search results is examined. Search operations are high demand operations on Coordinating Nodes and will be targeted by a large number of clients. As such, efficiency of access control evaluation is critical.</p>
+<p>This document outlines an approach using the Lucene based SOLR index to provide such capability.</p>
+<div class="section" id="representing-access-rules">
+<h2>Representing Access Rules<a class="headerlink" href="#representing-access-rules" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">record</span> <span class="o">=</span> <span class="p">[</span><span class="n">PID</span><span class="p">,</span> <span class="n">isPublic</span><span class="p">,</span> <span class="n">readGroups</span><span class="p">,</span> <span class="n">readSubjects</span><span class="p">]</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">PID</dt>
+<dd class="field-odd"><p>identifier of object</p>
+</dd>
+<dt class="field-even">isPublic</dt>
+<dd class="field-even"><p>boolean set true if the object is accessible by the public user</p>
+</dd>
+<dt class="field-odd">readGroups</dt>
+<dd class="field-odd"><p>a multi-valued field that contains a list of groups that have read access on the object</p>
+</dd>
+<dt class="field-even">readSubjects</dt>
+<dd class="field-even"><p>a multi-valued field that contains a list of subjects that have read access on the object</p>
+</dd>
+</dl>
+<p>A python function that would generate a suitable query for retrieving a list of PIDs for which a user has <em>read</em> access may be (note that subject strings need to be properly escaped):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">canReadQuery</span><span class="p">(</span><span class="n">subject</span><span class="p">):</span>
+  <span class="c1">#return list of public objects</span>
+  <span class="k">if</span> <span class="n">CN</span><span class="o">.</span><span class="n">isPublic</span><span class="p">(</span><span class="n">subject</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s2">&quot;isPublic:true&quot;</span>
+
+  <span class="c1">#public OR readable by group</span>
+  <span class="k">if</span> <span class="n">CN</span><span class="o">.</span><span class="n">isGroup</span><span class="p">(</span><span class="n">subject</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s2">&quot;isPublic:true || readGroups: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">subject</span>
+
+  <span class="c1">#list of public objects, OR objects readable by groups subject belongs to</span>
+  <span class="c1"># OR explicitly readable by subject</span>
+  <span class="n">groups</span> <span class="o">=</span> <span class="n">CN</span><span class="o">.</span><span class="n">getSubjectGroups</span><span class="p">(</span><span class="n">subject</span><span class="p">)</span>
+  <span class="n">gq</span> <span class="o">=</span> <span class="s2">&quot;readGroups:(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">groups</span><span class="p">)</span>
+  <span class="k">return</span> <span class="s2">&quot;isPublic:true || readSubjects:</span><span class="si">%s</span><span class="s2"> || </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">gq</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Subjects are represented in DataONE as lengthy strings. There may be some performance improvements gained by mapping the subject strings to integers and using this representation internally within the Lucene index.</p>
+<p>Keeping this index in a separate shard would enable it’s maintenance and use independently of other indexes that may be used to support search against other properties of System Metadata or Science Metadata.</p>
+<p>Similar indexes can be generated for write, change, and execute permissions, though these are not needed for search operations.</p>
+<p>Draft SOLR schema fragment:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;field</span> <span class="na">name=</span><span class="s">&quot;pid&quot;</span> <span class="na">type=</span><span class="s">&quot;string&quot;</span> <span class="na">indexed=</span><span class="s">&quot;true&quot;</span> <span class="na">stored=</span><span class="s">&quot;true&quot;</span> <span class="na">required=</span><span class="s">&quot;true&quot;</span> <span class="na">multiValued=</span><span class="s">&quot;false&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;field</span> <span class="na">name=</span><span class="s">&quot;isPublic&quot;</span> <span class="na">type=</span><span class="s">&quot;boolean&quot;</span> <span class="na">indexed=</span><span class="s">&quot;true&quot;</span> <span class="na">stored=</span><span class="s">&quot;false&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;field</span> <span class="na">name=</span><span class="s">&quot;readGroups&quot;</span> <span class="na">type=</span><span class="s">&quot;string&quot;</span> <span class="na">indexed=</span><span class="s">&quot;true&quot;</span> <span class="na">stored=</span><span class="s">&quot;false&quot;</span> <span class="na">multiValued=</span><span class="s">&quot;true&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;field</span> <span class="na">name=</span><span class="s">&quot;readSubjects&quot;</span> <span class="na">type=</span><span class="s">&quot;string&quot;</span> <span class="na">indexed=</span><span class="s">&quot;true&quot;</span> <span class="na">stored=</span><span class="s">&quot;false&quot;</span> <span class="na">multiValued=</span><span class="s">&quot;true&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;uniqueKey&gt;</span>pid<span class="nt">&lt;/uniqueKey&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="observations">
+<h2>Observations<a class="headerlink" href="#observations" title="Permalink to this headline">¶</a></h2>
+<p>A subject may participate in a potentially large number of groups which would result in a lengthy query string. The alternative would be to decompose groups with read access into a list of subjects, and just have a single list of subjects for each PID. This list could become very large.</p>
+<p>An index may be replicated across multiple locations to ensure the access control index is sufficiently responsive. A load balancer such as HAProxy can then be used to direct requests to different replicas.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Supporting Access Control in Search</a><ul>
+<li><a class="reference internal" href="#representing-access-rules">Representing Access Rules</a></li>
+<li><a class="reference internal" href="#observations">Observations</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+      <li>Previous: <a href="Authorization-technologies.html" title="previous chapter">Overview of Authorization Policy Languages</a></li>
+      <li>Next: <a href="SystemMetadata.html" title="next chapter">System Metadata</a></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/design/search_auth.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/design/search_auth.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/search_auth.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

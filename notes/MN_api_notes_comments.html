@@ -1,0 +1,330 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notes for MN API &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Coordinating Node Requirements" href="cn_requirements.html" />
+    <link rel="prev" title="Replication Notes" href="Replication.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="cn_requirements.html" title="Coordinating Node Requirements"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Replication.html" title="Replication Notes"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">General Design and Implementation Notes</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Notes for MN API</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="notes-for-mn-api">
+<h1>Notes for MN API<a class="headerlink" href="#notes-for-mn-api" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="register">
+<code class="sig-name descname">register</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">token</span></em>, <em class="sig-param"><span class="n">ID</span></em>, <em class="sig-param"><span class="n">metadata</span></em><span class="sig-paren">)</span><a class="headerlink" href="#register" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>Describe this operation.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>token</strong> – The authentication token returned by <code class="xref py py-func docutils literal notranslate"><span class="pre">login()</span></code></p></li>
+<li><p><strong>ID</strong> – </p></li>
+<li><p><strong>metadata</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="py function">
+<dt id="batchGet">
+<code class="sig-name descname">batchGet</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">token</span></em>, <em class="sig-param"><span class="n">PIDs</span></em><span class="sig-paren">)</span> &#x2192; ?<a class="headerlink" href="#batchGet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Identical to get() except that a list of identifiers is requested.</p>
+<p>The issue here is how to serialize the results. There are some conceptual
+mechanisms for handling structured markup such as XML, but no consistent
+approaches for working with data blobs. Perhaps this method should apply
+only to system metadata, for which the serialization can be defined
+independently of all the other participating nodes?</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>token</strong> – (<code class="xref py py-class docutils literal notranslate"><span class="pre">Types.AuthToken</span></code>) The authentication token returned
+by <code class="docutils literal notranslate"><span class="pre">login()</span></code></p></li>
+<li><p><strong>PIDs</strong> – (pidList) The list of identifiers to retrieve.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Bytes of the specified objects. <strong>How are multiple objects serialized?</strong></p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="../apis/Exceptions.html#Exceptions.NotAuthorized" title="Exceptions.NotAuthorized"><strong>Exceptions.NotAuthorized</strong></a> – The supplied identity does not have READ
+permission on the object.</p></li>
+<li><p><a class="reference internal" href="../apis/Exceptions.html#Exceptions.NotFound" title="Exceptions.NotFound"><strong>Exceptions.NotFound</strong></a> – The object specified by PID does not exist.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition-todo admonition" id="id2">
+<p class="admonition-title">Todo</p>
+<p>batchGet specifies that multiple objects may be retrieved in a
+single call. How are these objects packaged in the response?</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="checkDataQuality">
+<code class="sig-name descname">checkDataQuality</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">PID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#checkDataQuality" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition-todo admonition" id="id3">
+<p class="admonition-title">Todo</p>
+<p>need details on what this operation is supposed to be doing.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>PID</strong> – object to check</p>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<p>From the authorization API:</p>
+<dl class="py function">
+<dt id="requestToken">
+<code class="sig-name descname">requestToken</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#requestToken" title="Permalink to this definition">¶</a></dt>
+<dd><p>This operation is used by CN applications to obtain a token for system
+level operations.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This could be a normal <code class="xref py py-func docutils literal notranslate"><span class="pre">login()</span></code> operation using a system user and
+secret that is stored in a secure location.</p>
+</div>
+</dd></dl>
+
+<hr class="docutils" />
+<p>From the replication API:</p>
+<dl class="py function">
+<dt id="synchronizationComplete">
+<code class="sig-name descname">synchronizationComplete</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">token</span></em>, <em class="sig-param"><span class="n">PID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#synchronizationComplete" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a callback method used by a CN to indicate to a MN that it has
+completed replication of the science metadata identified by PID. When
+called, the MN should somehow record that synchronization is complete for
+that object so that the next time it reponds to a <code class="docutils literal notranslate"><span class="pre">listObjects(token,</span>
+<span class="pre">query)</span></code> query the object will not be included as requiring
+synchronization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>token</strong> – authentication token; ignored for V0.3</p></li>
+<li><p><strong>PID</strong> – The PID of the science metadata object that is now synchronized with the
+CN.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A CN could use this method to provide the MN with an updated version of
+the system metadata for the object if this method accepted a system
+metadata object instead of a simple PID as a parameter.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A simple acknowledgement.</p>
+</dd>
+</dl>
+<div class="admonition-todo admonition" id="id4">
+<p class="admonition-title">Todo</p>
+<p>Define “a simple acknowledgement”</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="../apis/Exceptions.html#Exceptions.NotAuthorized" title="Exceptions.NotAuthorized"><strong>Exceptions.NotAuthorized</strong></a> – </p></li>
+<li><p><strong>Exceptions.InvalidIdentifier</strong> – The supplied PID does not identify a science metadata object owned by
+the MN.</p></li>
+<li><p><strong>Exceptions.InvalidOperation</strong> – The science metadata object identified by the PID is already marked as
+synchronized.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<p>This method is not necessary since the CNs keep track of when an object was
+last synchronized. There should not be a requirement for MNs to track if
+content has been retrieved by the CNs.</p>
+<hr class="docutils" />
+<p>More stuff from the replication APIs</p>
+<dl>
+<dt>::</dt><dd><p>cancelReplication (sess, transID)
+listAllObjects ()
+listRecords ()
+replicationSucceeds (transID)
+startReplica (ID, sessionID, transID, srcMN)
+sysOp (token)
+listChangedRecords(token) -&gt; PIDs</p>
+<p>## from v0.3 doc ##
+listObjects(token, query) -&gt; list of PIDs
+synchronizationComplete(token, PID)
+synchronizationFailed(token, PID, problemDescription)</p>
+</dd>
+</dl>
+<dl class="py function">
+<dt id="cancelReplication">
+<code class="sig-name descname">cancelReplication</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sess</span></em>, <em class="sig-param"><span class="n">transID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cancelReplication" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="listAllObjects">
+<code class="sig-name descname">listAllObjects</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#listAllObjects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="listRecords">
+<code class="sig-name descname">listRecords</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#listRecords" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="replicationSucceeds">
+<code class="sig-name descname">replicationSucceeds</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">transID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#replicationSucceeds" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="startReplica">
+<code class="sig-name descname">startReplica</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ID</span></em>, <em class="sig-param"><span class="n">sessionID</span></em>, <em class="sig-param"><span class="n">transID</span></em>, <em class="sig-param"><span class="n">srcMN</span></em><span class="sig-paren">)</span><a class="headerlink" href="#startReplica" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="sysOp">
+<code class="sig-name descname">sysOp</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">token</span></em><span class="sig-paren">)</span><a class="headerlink" href="#sysOp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="listChangedRecords">
+<code class="sig-name descname">listChangedRecords</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">token</span></em><span class="sig-paren">)</span> &#x2192; PidList<a class="headerlink" href="#listChangedRecords" title="Permalink to this definition">¶</a></dt>
+<dd><p>List the records that have changed since the last synchronization event.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>token</strong> – A token with authority to retrieve a list of changed records.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<p>From the capabilities API, this function is listed but has no definition:</p>
+<dl class="py function">
+<dt id="serviceRequest">
+<code class="sig-name descname">serviceRequest</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">token</span></em><span class="sig-paren">)</span><a class="headerlink" href="#serviceRequest" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p><h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+  <li><a href="index.html">General Design and Implementation Notes</a><ul>
+      <li>Previous: <a href="Replication.html" title="previous chapter">Replication Notes</a></li>
+      <li>Next: <a href="cn_requirements.html" title="next chapter">Coordinating Node Requirements</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/notes/MN_api_notes_comments.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/notes/MN_api_notes_comments.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/notes/MN_api_notes_comments.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

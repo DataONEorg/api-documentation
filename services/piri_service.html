@@ -1,0 +1,179 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DataONE PIRI Service &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="DataONE Overview" href="../overview.html" />
+    <link rel="prev" title="REST Interface Overview" href="../apis/rest_comms.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../overview.html" title="DataONE Overview"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../apis/rest_comms.html" title="REST Interface Overview"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">DataONE PIRI Service</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="dataone-piri-service">
+<h1>DataONE PIRI Service<a class="headerlink" href="#dataone-piri-service" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>The DataONE PIRI (Persistent Internationalized Resource Identifier) Service provides canonical and resolveable IRIs (Internationalalized Resource Identifier) for top-level DataONE resources (e.g., datasets, people) in both web and linked open data contexts.
+The problem this solves is that DataONE resources can be resolved at a variety of URLs which contain application-, deployment-, and API (Application Programming Interface)-version-specific details.
+An IRI space that is agnostic to these details allows resources to be identified and resolved in a stable fashion.</p>
+<p>Take, for example, the following IRI, which can be used to resolve the location of the Object with the <a class="reference internal" href="../design/PIDs.html"><span class="doc">PID</span></a> (Persistent Identifier) <code class="docutils literal notranslate"><span class="pre">'mydataset'</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">cn</span><span class="o">.</span><span class="n">dataone</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">cn</span><span class="o">/</span><span class="n">v2</span><span class="o">/</span><span class="n">resolve</span><span class="o">/</span><span class="n">mydataset</span>
+</pre></div>
+</div>
+<p>Under the PIRI Service, the above resource has the following PIRI:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">dataone</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">datasets</span><span class="o">/</span><span class="n">mydataset</span>
+</pre></div>
+</div>
+<p>This is an improvement because the first IRI leaks application-, deployment-, and API-version-specific information into the IRI.
+All of which may change as some point in the future.
+With the DataONE PIRI Service (and the IRI space it defines), applications become free to be addressed at different DNS (Domain Name Service) names and APIs are free to change and/or have their versions incremented.
+All while references to resources within the network remain resolveable.</p>
+</div>
+<div class="section" id="specification">
+<h2>Specification<a class="headerlink" href="#specification" title="Permalink to this headline">¶</a></h2>
+<p>The DataONE PIRI Service defines an IRI space with the following pattern:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">dataone</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="p">{</span><span class="nb">type</span><span class="p">}</span><span class="o">/</span><span class="p">{</span><span class="nb">id</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Where <code class="docutils literal notranslate"><span class="pre">{type}</span></code> is one of:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">datasets</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">people</span></code> (not implemented)</p></li>
+</ul>
+<p>And <code class="docutils literal notranslate"><span class="pre">{id}</span></code> is an appropriate identifier for resource such as a PID or SID (Series Identifier) for the ‘datasets’ type.
+Note that all identifiers should be escaped according to <a class="reference external" href="https://tools.ietf.org/html/rfc3986">RFC3986</a>.
+See <a class="reference internal" href="../design/PIDs.html"><span class="doc">Identifiers in DataONE</span></a> for more information.</p>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>Requests to URLs (Universal Resource Locator) within the PIRI service’s IRI space are redirected with an HTTP 302 status to a corresponding URL within the DataONE search portal.
+Future changes to this service may include providing content-negotation and returning information about resources or the resources themselves directly from the PIRI service.</p>
+<p>Only URLs under <code class="docutils literal notranslate"><span class="pre">https://dataone.org/datasets/</span></code> are supported and are redirected to <code class="docutils literal notranslate"><span class="pre">https://search.dataone.org/view/</span></code> by configuration on the web server running at <a class="reference external" href="https://dataone.org/">https://dataone.org/</a>.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">DataONE PIRI Service</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#specification">Specification</a></li>
+<li><a class="reference internal" href="#implementation">Implementation</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+      <li>Previous: <a href="../apis/rest_comms.html" title="previous chapter">REST Interface Overview</a></li>
+      <li>Next: <a href="../overview.html" title="next chapter">DataONE Overview</a></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/services/piri_service.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/services/piri_service.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/services/piri_service.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

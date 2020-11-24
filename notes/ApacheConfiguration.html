@@ -1,0 +1,523 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Apache Configuration for DataONE Services &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Mutability of Metadata" href="sysmeta_mutation_20110831.html" />
+    <link rel="prev" title="Coordinating Node Requirements" href="cn_requirements.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="sysmeta_mutation_20110831.html" title="Mutability of Metadata"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="cn_requirements.html" title="Coordinating Node Requirements"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">General Design and Implementation Notes</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Apache Configuration for DataONE Services</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="apache-configuration-for-dataone-services">
+<h1>Apache Configuration for DataONE Services<a class="headerlink" href="#apache-configuration-for-dataone-services" title="Permalink to this headline">¶</a></h1>
+<p>This document refers specifically to configuration directives that must be
+enabled to ensure Apache correctly processes the REST URLs used by the
+DataONE service interfaces.</p>
+<p>Parameters in question:</p>
+<dl class="field-list">
+<dt class="field-odd"><a class="reference external" href="http://httpd.apache.org/docs/2.0/mod/core.html#AllowEncodedSlashes">AllowEncodedSlashes</a></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">(Off)|On</span></code></p>
+<p>The AllowEncodedSlashes directive allows URLs which contain encoded path
+separators (%2F for / and additionally %5C for on according systems) to be
+used. Normally such URLs are refused with a 404 (Not found) error.</p>
+</dd>
+<dt class="field-even"><a class="reference external" href="http://httpd.apache.org/docs/2.0/mod/core.html#AcceptPathInfo">AcceptPathInfo</a></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">Off|On|(Default)</span></code></p>
+<p>This directive controls whether requests that contain trailing pathname
+information that follows an actual filename (or non-existent file in an
+existing directory) will be accepted or rejected.</p>
+</dd>
+</dl>
+<p>Both of these must be set to <em>On</em> for Member Node and Coordinating Node
+services to ensure that URLs containing identifiers as path element (e.g. for
+<code class="xref py py-func docutils literal notranslate"><span class="pre">MN_crud.get()</span></code>) are not rejected or mishandled by the Apache web server.</p>
+<p>These parameters <strong>must</strong> be in effect for the section of the web server
+configuration handling DataONE service requests.</p>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>The following examples provide an indication of Apache response for different
+configurations.</p>
+<p>The version of Apache being examined was:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Apache</span><span class="o">/</span><span class="mf">2.2</span><span class="o">.</span><span class="mi">14</span> <span class="p">(</span><span class="n">Unix</span><span class="p">)</span> <span class="n">DAV</span><span class="o">/</span><span class="mi">2</span> <span class="n">mod_ssl</span><span class="o">/</span><span class="mf">2.2</span><span class="o">.</span><span class="mi">14</span> <span class="n">OpenSSL</span><span class="o">/</span><span class="mf">0.9</span><span class="o">.</span><span class="mi">8</span><span class="n">l</span> <span class="n">PHP</span><span class="o">/</span><span class="mf">5.3</span><span class="o">.</span><span class="mi">1</span>
+<span class="n">mod_perl</span><span class="o">/</span><span class="mf">2.0</span><span class="o">.</span><span class="mi">4</span> <span class="n">Perl</span><span class="o">/</span><span class="n">v5</span><span class="o">.</span><span class="mf">10.1</span>
+</pre></div>
+</div>
+<p>A simple Perl CGI script was installed in the web server root content folder,
+which was ExecCGI enabled. The script:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat htdocs/test.cgi
+
+#!/usr/bin/perl
+print &quot;Content-type: text/html\n\n&quot;;
+foreach $key (keys %ENV) {
+print &quot;$key --&gt; $ENV{$key}\n&quot;;
+}
+</pre></div>
+</div>
+<p>Only relevant output from the script is provided in the examples below.</p>
+<hr class="docutils" />
+<dl class="field-list simple">
+<dt class="field-odd">AllowEncodedSlashes</dt>
+<dd class="field-odd"><p>Off</p>
+</dd>
+<dt class="field-even">AcceptPathInfo</dt>
+<dd class="field-even"><p>Off</p>
+</dd>
+<dt class="field-odd">Request</dt>
+<dd class="field-odd"><p><a class="reference external" href="http://localhost/test.cgi/bogus%2Fstuff">http://localhost/test.cgi/bogus%2Fstuff</a></p>
+</dd>
+<dt class="field-even">PID Equivalent</dt>
+<dd class="field-even"><p>“bogus/stuff”</p>
+</dd>
+<dt class="field-odd">Error Message</dt>
+<dd class="field-odd"><p>Mon Dec 13 15:45:00 2010] [info] [client ::1] found %2f (encoded ‘/’) in URI (decoded=’/test.cgi/bogus/stuff’), returning 404</p>
+</dd>
+<dt class="field-even">Response</dt>
+<dd class="field-even"><p>Default 404</p>
+</dd>
+</dl>
+<hr class="docutils" />
+<dl class="field-list simple">
+<dt class="field-odd">AllowEncodedSlashes</dt>
+<dd class="field-odd"><p>On</p>
+</dd>
+<dt class="field-even">AcceptPathInfo</dt>
+<dd class="field-even"><p>Off</p>
+</dd>
+<dt class="field-odd">Request</dt>
+<dd class="field-odd"><p><a class="reference external" href="http://localhost/test.cgi/bogus%2Fstuff">http://localhost/test.cgi/bogus%2Fstuff</a></p>
+</dd>
+<dt class="field-even">PID Equivalent</dt>
+<dd class="field-even"><p>“bogus/stuff”</p>
+</dd>
+<dt class="field-odd">Error Message</dt>
+<dd class="field-odd"><p>Mon Dec 13 15:46:08 2010] [error] [client ::1] AcceptPathInfo off disallows user’s path: /Applications/XAMPP/xamppfiles/htdocs/test.cgi</p>
+</dd>
+<dt class="field-even">Response</dt>
+<dd class="field-even"><p>Default 404</p>
+</dd>
+</dl>
+<hr class="docutils" />
+<dl class="field-list simple">
+<dt class="field-odd">AllowEncodedSlashes</dt>
+<dd class="field-odd"><p>Off</p>
+</dd>
+<dt class="field-even">AcceptPathInfo</dt>
+<dd class="field-even"><p>On</p>
+</dd>
+<dt class="field-odd">Request</dt>
+<dd class="field-odd"><p><a class="reference external" href="http://localhost/test.cgi/bogus%2Fstuff">http://localhost/test.cgi/bogus%2Fstuff</a></p>
+</dd>
+<dt class="field-even">PID Equivalent</dt>
+<dd class="field-even"><p>“bogus/stuff”</p>
+</dd>
+<dt class="field-odd">Error Message</dt>
+<dd class="field-odd"><p>Mon Dec 13 15:46:48 2010] [info] [client ::1] found %2f (encoded ‘/’) in URI (decoded=’/test.cgi/bogus/stuff’), returning 404</p>
+</dd>
+<dt class="field-even">Response</dt>
+<dd class="field-even"><p>Default 404</p>
+</dd>
+</dl>
+<hr class="docutils" />
+<dl class="field-list">
+<dt class="field-odd">AllowEncodedSlashes</dt>
+<dd class="field-odd"><p>On</p>
+</dd>
+<dt class="field-even">AcceptPathInfo</dt>
+<dd class="field-even"><p>On</p>
+</dd>
+<dt class="field-odd">PID Equivalent</dt>
+<dd class="field-odd"><p>“bogus/stuff”</p>
+</dd>
+<dt class="field-even">Request</dt>
+<dd class="field-even"><p><a class="reference external" href="http://localhost/test.cgi/bogus%2Fstuff">http://localhost/test.cgi/bogus%2Fstuff</a></p>
+</dd>
+<dt class="field-odd">Error Message</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Response</dt>
+<dd class="field-even"><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SCRIPT_NAME</span> <span class="o">--&gt;</span> <span class="o">/</span><span class="n">test</span><span class="o">.</span><span class="n">cgi</span>
+<span class="n">SERVER_NAME</span> <span class="o">--&gt;</span> <span class="n">localhost</span>
+<span class="n">SERVER_ADMIN</span> <span class="o">--&gt;</span> <span class="n">you</span><span class="nd">@example</span><span class="o">.</span><span class="n">com</span>
+<span class="n">PATH_INFO</span> <span class="o">--&gt;</span> <span class="o">/</span><span class="n">bogus</span><span class="o">/</span><span class="n">stuff</span>
+<span class="n">REQUEST_METHOD</span> <span class="o">--&gt;</span> <span class="n">GET</span>
+<span class="n">HTTP_ACCEPT</span> <span class="o">--&gt;</span> <span class="o">*/*</span>
+<span class="n">SCRIPT_FILENAME</span> <span class="o">--&gt;</span> <span class="o">/</span><span class="n">Applications</span><span class="o">/</span><span class="n">XAMPP</span><span class="o">/</span><span class="n">xamppfiles</span><span class="o">/</span><span class="n">htdocs</span><span class="o">/</span><span class="n">test</span><span class="o">.</span><span class="n">cgi</span>
+<span class="n">VERSIONER_PERL_PREFER_32_BIT</span> <span class="o">--&gt;</span> <span class="n">no</span>
+<span class="n">SERVER_SOFTWARE</span> <span class="o">--&gt;</span> <span class="n">Apache</span><span class="o">/</span><span class="mf">2.2</span><span class="o">.</span><span class="mi">14</span> <span class="p">(</span><span class="n">Unix</span><span class="p">)</span> <span class="n">DAV</span><span class="o">/</span><span class="mi">2</span> <span class="n">mod_ssl</span><span class="o">/</span><span class="mf">2.2</span><span class="o">.</span><span class="mi">14</span> <span class="n">OpenSSL</span><span class="o">/</span><span class="mf">0.9</span><span class="o">.</span><span class="mi">8</span><span class="n">l</span> <span class="n">PHP</span><span class="o">/</span><span class="mf">5.3</span><span class="o">.</span><span class="mi">1</span> <span class="n">mod_perl</span><span class="o">/</span><span class="mf">2.0</span><span class="o">.</span><span class="mi">4</span> <span class="n">Perl</span><span class="o">/</span><span class="n">v5</span><span class="o">.</span><span class="mf">10.1</span>
+<span class="n">QUERY_STRING</span> <span class="o">--&gt;</span>
+<span class="n">REMOTE_PORT</span> <span class="o">--&gt;</span> <span class="mi">50155</span>
+<span class="n">HTTP_USER_AGENT</span> <span class="o">--&gt;</span> <span class="n">curl</span><span class="o">/</span><span class="mf">7.19</span><span class="o">.</span><span class="mi">7</span> <span class="p">(</span><span class="n">universal</span><span class="o">-</span><span class="n">apple</span><span class="o">-</span><span class="n">darwin10</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span> <span class="n">libcurl</span><span class="o">/</span><span class="mf">7.19</span><span class="o">.</span><span class="mi">7</span> <span class="n">OpenSSL</span><span class="o">/</span><span class="mf">0.9</span><span class="o">.</span><span class="mi">8</span><span class="n">l</span> <span class="n">zlib</span><span class="o">/</span><span class="mf">1.2</span><span class="o">.</span><span class="mi">3</span>
+<span class="n">SERVER_SIGNATURE</span> <span class="o">--&gt;</span>
+<span class="n">SERVER_PORT</span> <span class="o">--&gt;</span> <span class="mi">80</span>
+<span class="n">REMOTE_ADDR</span> <span class="o">--&gt;</span> <span class="p">::</span><span class="mi">1</span>
+<span class="n">SERVER_PROTOCOL</span> <span class="o">--&gt;</span> <span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="n">PATH</span> <span class="o">--&gt;</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="p">:</span><span class="o">/</span><span class="nb">bin</span><span class="p">:</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="p">:</span><span class="o">/</span><span class="n">sbin</span><span class="p">:</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="nb">bin</span><span class="p">:</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">X11</span><span class="o">/</span><span class="nb">bin</span><span class="p">:</span><span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="nb">bin</span><span class="p">:</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">git</span><span class="o">/</span><span class="nb">bin</span>
+<span class="n">REQUEST_URI</span> <span class="o">--&gt;</span> <span class="o">/</span><span class="n">test</span><span class="o">.</span><span class="n">cgi</span><span class="o">/</span><span class="n">bogus</span><span class="o">%</span><span class="mi">2</span><span class="n">Fstuff</span>
+<span class="n">GATEWAY_INTERFACE</span> <span class="o">--&gt;</span> <span class="n">CGI</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="n">SERVER_ADDR</span> <span class="o">--&gt;</span> <span class="p">::</span><span class="mi">1</span>
+<span class="n">DOCUMENT_ROOT</span> <span class="o">--&gt;</span> <span class="o">/</span><span class="n">Applications</span><span class="o">/</span><span class="n">XAMPP</span><span class="o">/</span><span class="n">xamppfiles</span><span class="o">/</span><span class="n">htdocs</span>
+<span class="n">PATH_TRANSLATED</span> <span class="o">--&gt;</span> <span class="o">/</span><span class="n">Applications</span><span class="o">/</span><span class="n">XAMPP</span><span class="o">/</span><span class="n">xamppfiles</span><span class="o">/</span><span class="n">htdocs</span><span class="o">/</span><span class="n">bogus</span><span class="o">/</span><span class="n">stuff</span>
+<span class="n">HTTP_HOST</span> <span class="o">--&gt;</span> <span class="n">localhost</span>
+<span class="n">VERSIONER_PERL_VERSION</span> <span class="o">--&gt;</span> <span class="mf">5.10</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">UNIQUE_ID</span> <span class="o">--&gt;</span> <span class="n">TQaGaEprSyIAAFOcw20AAAAB</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<hr class="docutils" />
+<dl class="field-list">
+<dt class="field-odd">AllowEncodedSlashes</dt>
+<dd class="field-odd"><p>On</p>
+</dd>
+<dt class="field-even">AcceptPathInfo</dt>
+<dd class="field-even"><p>On</p>
+</dd>
+<dt class="field-odd">Request</dt>
+<dd class="field-odd"><p><a class="reference external" href="http://localhost/test.cgi/bogus%2Fstuff%3Fvar%3Dvalue">http://localhost/test.cgi/bogus%2Fstuff%3Fvar%3Dvalue</a></p>
+</dd>
+<dt class="field-even">PID Equivalent</dt>
+<dd class="field-even"><p>“bogus/stuff?var=value”</p>
+</dd>
+<dt class="field-odd">Error Message</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Response</dt>
+<dd class="field-even"><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>SCRIPT_NAME --&gt; /test.cgi
+SERVER_NAME --&gt; localhost
+SERVER_ADMIN --&gt; you@example.com
+PATH_INFO --&gt; /bogus/stuff?var=value
+REQUEST_METHOD --&gt; GET
+HTTP_ACCEPT --&gt; */*
+SCRIPT_FILENAME --&gt; /Applications/XAMPP/xamppfiles/htdocs/test.cgi
+VERSIONER_PERL_PREFER_32_BIT --&gt; no
+SERVER_SOFTWARE --&gt; Apache/2.2.14 (Unix) DAV/2 mod_ssl/2.2.14 OpenSSL/0.9.8l PHP/5.3.1 mod_perl/2.0.4 Perl/v5.10.1
+QUERY_STRING --&gt;
+REMOTE_PORT --&gt; 64650
+HTTP_USER_AGENT --&gt; curl/7.19.7 (universal-apple-darwin10.0) libcurl/7.19.7 OpenSSL/0.9.8l zlib/1.2.3
+SERVER_SIGNATURE --&gt;
+SERVER_PORT --&gt; 80
+REMOTE_ADDR --&gt; ::1
+SERVER_PROTOCOL --&gt; HTTP/1.1
+PATH --&gt; /usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin
+REQUEST_URI --&gt; /test.cgi/bogus%2Fstuff%3Fvar%3Dvalue
+GATEWAY_INTERFACE --&gt; CGI/1.1
+SERVER_ADDR --&gt; ::1
+DOCUMENT_ROOT --&gt; /Applications/XAMPP/xamppfiles/htdocs
+PATH_TRANSLATED --&gt; /Applications/XAMPP/xamppfiles/htdocs/bogus/stuff?var=value
+HTTP_HOST --&gt; localhost
+VERSIONER_PERL_VERSION --&gt; 5.10.0
+UNIQUE_ID --&gt; TQaK80prSyIAAFOexIUAAAAD
+</pre></div>
+</div>
+</dd>
+</dl>
+<hr class="docutils" />
+<dl class="field-list">
+<dt class="field-odd">AllowEncodedSlashes</dt>
+<dd class="field-odd"><p>On</p>
+</dd>
+<dt class="field-even">AcceptPathInfo</dt>
+<dd class="field-even"><p>On</p>
+</dd>
+<dt class="field-odd">Request</dt>
+<dd class="field-odd"><p><a class="reference external" href="http://localhost/test.cgi/bogus%2Fstuff%3Fvar%3Dvalue?var2=value2">http://localhost/test.cgi/bogus%2Fstuff%3Fvar%3Dvalue?var2=value2</a></p>
+</dd>
+<dt class="field-even">PID Equivalent</dt>
+<dd class="field-even"><p>“bogus/stuff?var=value” with query string at the end.</p>
+</dd>
+<dt class="field-odd">Error Message</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Response</dt>
+<dd class="field-even"><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>SCRIPT_NAME --&gt; /test.cgi
+SERVER_NAME --&gt; localhost
+SERVER_ADMIN --&gt; you@example.com
+PATH_INFO --&gt; /bogus/stuff?var=value
+REQUEST_METHOD --&gt; GET
+HTTP_ACCEPT --&gt; */*
+SCRIPT_FILENAME --&gt; /Applications/XAMPP/xamppfiles/htdocs/test.cgi
+VERSIONER_PERL_PREFER_32_BIT --&gt; no
+SERVER_SOFTWARE --&gt; Apache/2.2.14 (Unix) DAV/2 mod_ssl/2.2.14 OpenSSL/0.9.8l PHP/5.3.1 mod_perl/2.0.4 Perl/v5.10.1
+QUERY_STRING --&gt; var2=value2
+REMOTE_PORT --&gt; 49339
+HTTP_USER_AGENT --&gt; curl/7.19.7 (universal-apple-darwin10.0) libcurl/7.19.7 OpenSSL/0.9.8l zlib/1.2.3
+SERVER_SIGNATURE --&gt;
+SERVER_PORT --&gt; 80
+REMOTE_ADDR --&gt; ::1
+SERVER_PROTOCOL --&gt; HTTP/1.1
+PATH --&gt; /usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin
+REQUEST_URI --&gt; /test.cgi/bogus%2Fstuff%3Fvar%3Dvalue?var2=value2
+GATEWAY_INTERFACE --&gt; CGI/1.1
+SERVER_ADDR --&gt; ::1
+DOCUMENT_ROOT --&gt; /Applications/XAMPP/xamppfiles/htdocs
+PATH_TRANSLATED --&gt; /Applications/XAMPP/xamppfiles/htdocs/bogus/stuff?var=value
+HTTP_HOST --&gt; localhost
+VERSIONER_PERL_VERSION --&gt; 5.10.0
+UNIQUE_ID --&gt; TQaLPEprSyIAAFOdxIcAAAAC
+</pre></div>
+</div>
+</dd>
+</dl>
+<hr class="docutils" />
+<dl class="field-list">
+<dt class="field-odd">AllowEncodedSlashes</dt>
+<dd class="field-odd"><p>On</p>
+</dd>
+<dt class="field-even">AcceptPathInfo</dt>
+<dd class="field-even"><p>On</p>
+</dd>
+<dt class="field-odd">Request</dt>
+<dd class="field-odd"><p><a class="reference external" href="http://localhost/test.cgi/bogus%2Fstuff%3Fvar=value?var2=value2">http://localhost/test.cgi/bogus%2Fstuff%3Fvar=value?var2=value2</a></p>
+</dd>
+<dt class="field-even">PID Equivalent</dt>
+<dd class="field-even"><p>“bogus/stuff?var=value” with query string at the end</p>
+</dd>
+<dt class="field-odd">Error Message</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Response</dt>
+<dd class="field-even"><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>SCRIPT_NAME --&gt; /test.cgi
+SERVER_NAME --&gt; localhost
+SERVER_ADMIN --&gt; you@example.com
+PATH_INFO --&gt; /bogus/stuff?var=value
+REQUEST_METHOD --&gt; GET
+HTTP_ACCEPT --&gt; */*
+SCRIPT_FILENAME --&gt; /Applications/XAMPP/xamppfiles/htdocs/test.cgi
+VERSIONER_PERL_PREFER_32_BIT --&gt; no
+SERVER_SOFTWARE --&gt; Apache/2.2.14 (Unix) DAV/2 mod_ssl/2.2.14 OpenSSL/0.9.8l PHP/5.3.1 mod_perl/2.0.4 Perl/v5.10.1
+QUERY_STRING --&gt; var2=value2
+REMOTE_PORT --&gt; 59889
+HTTP_USER_AGENT --&gt; curl/7.19.7 (universal-apple-darwin10.0) libcurl/7.19.7 OpenSSL/0.9.8l zlib/1.2.3
+SERVER_SIGNATURE --&gt;
+SERVER_PORT --&gt; 80
+REMOTE_ADDR --&gt; ::1
+SERVER_PROTOCOL --&gt; HTTP/1.1
+PATH --&gt; /usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin
+REQUEST_URI --&gt; /test.cgi/bogus%2Fstuff%3Fvar=value?var2=value2
+GATEWAY_INTERFACE --&gt; CGI/1.1
+SERVER_ADDR --&gt; ::1
+DOCUMENT_ROOT --&gt; /Applications/XAMPP/xamppfiles/htdocs
+PATH_TRANSLATED --&gt; /Applications/XAMPP/xamppfiles/htdocs/bogus/stuff?var=value
+HTTP_HOST --&gt; localhost
+VERSIONER_PERL_VERSION --&gt; 5.10.0
+UNIQUE_ID --&gt; TQaNjkprSyIAAFOfxYgAAAAE
+</pre></div>
+</div>
+</dd>
+</dl>
+<hr class="docutils" />
+<dl class="field-list">
+<dt class="field-odd">AllowEncodedSlashes</dt>
+<dd class="field-odd"><p>On</p>
+</dd>
+<dt class="field-even">AcceptPathInfo</dt>
+<dd class="field-even"><p>On</p>
+</dd>
+<dt class="field-odd">Request</dt>
+<dd class="field-odd"><p><a class="reference external" href="http://localhost/test.cgi/bogus%2Fstuff/something/else">http://localhost/test.cgi/bogus%2Fstuff/something/else</a></p>
+</dd>
+<dt class="field-even">PID Equivalent</dt>
+<dd class="field-even"><p>“bogus/stuff” with additional path at the end</p>
+</dd>
+<dt class="field-odd">Error Message</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Response</dt>
+<dd class="field-even"><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SCRIPT_NAME</span> <span class="o">--&gt;</span> <span class="o">/</span><span class="n">test</span><span class="o">.</span><span class="n">cgi</span>
+<span class="n">SERVER_NAME</span> <span class="o">--&gt;</span> <span class="n">localhost</span>
+<span class="n">SERVER_ADMIN</span> <span class="o">--&gt;</span> <span class="n">you</span><span class="nd">@example</span><span class="o">.</span><span class="n">com</span>
+<span class="n">PATH_INFO</span> <span class="o">--&gt;</span> <span class="o">/</span><span class="n">bogus</span><span class="o">/</span><span class="n">stuff</span><span class="o">/</span><span class="n">something</span><span class="o">/</span><span class="k">else</span>
+<span class="n">REQUEST_METHOD</span> <span class="o">--&gt;</span> <span class="n">GET</span>
+<span class="n">HTTP_ACCEPT</span> <span class="o">--&gt;</span> <span class="o">*/*</span>
+<span class="n">SCRIPT_FILENAME</span> <span class="o">--&gt;</span> <span class="o">/</span><span class="n">Applications</span><span class="o">/</span><span class="n">XAMPP</span><span class="o">/</span><span class="n">xamppfiles</span><span class="o">/</span><span class="n">htdocs</span><span class="o">/</span><span class="n">test</span><span class="o">.</span><span class="n">cgi</span>
+<span class="n">VERSIONER_PERL_PREFER_32_BIT</span> <span class="o">--&gt;</span> <span class="n">no</span>
+<span class="n">SERVER_SOFTWARE</span> <span class="o">--&gt;</span> <span class="n">Apache</span><span class="o">/</span><span class="mf">2.2</span><span class="o">.</span><span class="mi">14</span> <span class="p">(</span><span class="n">Unix</span><span class="p">)</span> <span class="n">DAV</span><span class="o">/</span><span class="mi">2</span> <span class="n">mod_ssl</span><span class="o">/</span><span class="mf">2.2</span><span class="o">.</span><span class="mi">14</span> <span class="n">OpenSSL</span><span class="o">/</span><span class="mf">0.9</span><span class="o">.</span><span class="mi">8</span><span class="n">l</span> <span class="n">PHP</span><span class="o">/</span><span class="mf">5.3</span><span class="o">.</span><span class="mi">1</span> <span class="n">mod_perl</span><span class="o">/</span><span class="mf">2.0</span><span class="o">.</span><span class="mi">4</span> <span class="n">Perl</span><span class="o">/</span><span class="n">v5</span><span class="o">.</span><span class="mf">10.1</span>
+<span class="n">QUERY_STRING</span> <span class="o">--&gt;</span>
+<span class="n">REMOTE_PORT</span> <span class="o">--&gt;</span> <span class="mi">57774</span>
+<span class="n">HTTP_USER_AGENT</span> <span class="o">--&gt;</span> <span class="n">curl</span><span class="o">/</span><span class="mf">7.19</span><span class="o">.</span><span class="mi">7</span> <span class="p">(</span><span class="n">universal</span><span class="o">-</span><span class="n">apple</span><span class="o">-</span><span class="n">darwin10</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span> <span class="n">libcurl</span><span class="o">/</span><span class="mf">7.19</span><span class="o">.</span><span class="mi">7</span> <span class="n">OpenSSL</span><span class="o">/</span><span class="mf">0.9</span><span class="o">.</span><span class="mi">8</span><span class="n">l</span> <span class="n">zlib</span><span class="o">/</span><span class="mf">1.2</span><span class="o">.</span><span class="mi">3</span>
+<span class="n">SERVER_SIGNATURE</span> <span class="o">--&gt;</span>
+<span class="n">SERVER_PORT</span> <span class="o">--&gt;</span> <span class="mi">80</span>
+<span class="n">REMOTE_ADDR</span> <span class="o">--&gt;</span> <span class="p">::</span><span class="mi">1</span>
+<span class="n">SERVER_PROTOCOL</span> <span class="o">--&gt;</span> <span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="n">PATH</span> <span class="o">--&gt;</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="p">:</span><span class="o">/</span><span class="nb">bin</span><span class="p">:</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="p">:</span><span class="o">/</span><span class="n">sbin</span><span class="p">:</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="nb">bin</span><span class="p">:</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">X11</span><span class="o">/</span><span class="nb">bin</span><span class="p">:</span><span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="nb">bin</span><span class="p">:</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">git</span><span class="o">/</span><span class="nb">bin</span>
+<span class="n">REQUEST_URI</span> <span class="o">--&gt;</span> <span class="o">/</span><span class="n">test</span><span class="o">.</span><span class="n">cgi</span><span class="o">/</span><span class="n">bogus</span><span class="o">%</span><span class="mi">2</span><span class="n">Fstuff</span><span class="o">/</span><span class="n">something</span><span class="o">/</span><span class="k">else</span>
+<span class="n">GATEWAY_INTERFACE</span> <span class="o">--&gt;</span> <span class="n">CGI</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="n">SERVER_ADDR</span> <span class="o">--&gt;</span> <span class="p">::</span><span class="mi">1</span>
+<span class="n">DOCUMENT_ROOT</span> <span class="o">--&gt;</span> <span class="o">/</span><span class="n">Applications</span><span class="o">/</span><span class="n">XAMPP</span><span class="o">/</span><span class="n">xamppfiles</span><span class="o">/</span><span class="n">htdocs</span>
+<span class="n">PATH_TRANSLATED</span> <span class="o">--&gt;</span> <span class="o">/</span><span class="n">Applications</span><span class="o">/</span><span class="n">XAMPP</span><span class="o">/</span><span class="n">xamppfiles</span><span class="o">/</span><span class="n">htdocs</span><span class="o">/</span><span class="n">bogus</span><span class="o">/</span><span class="n">stuff</span><span class="o">/</span><span class="n">something</span><span class="o">/</span><span class="k">else</span>
+<span class="n">HTTP_HOST</span> <span class="o">--&gt;</span> <span class="n">localhost</span>
+<span class="n">VERSIONER_PERL_VERSION</span> <span class="o">--&gt;</span> <span class="mf">5.10</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">UNIQUE_ID</span> <span class="o">--&gt;</span> <span class="n">TQaQiEprSyIAAFOixfMAAAAF</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</div>
+<div class="section" id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<p>As of Apache 2.2.14, there are some bugs that affect the AllowEncodedSlashes
+setting.</p>
+<p><a class="reference external" href="https://issues.apache.org/bugzilla/show_bug.cgi?id=46830">Bug 46830</a>:</p>
+<blockquote>
+<div><p>If “AllowEncodedSlashes On” is set in the global context, it is not inherited
+by virtual hosts. You must explicitly set “AllowEncodedSlashes On” in every
+&lt;VirtalHost&gt; container.</p>
+<p>The documentation for how the different configuration sections are merged
+(<a class="reference external" href="http://httpd.apache.org/docs/2.2/sections.html">http://httpd.apache.org/docs/2.2/sections.html</a>) says “Sections inside
+&lt;VirtualHost&gt; sections are applied after the corresponding sections outside
+the virtual host definition. This allows virtual hosts to override the main
+server configuration.”</p>
+<p>Virtual hosts are used in many default Apache configurations. In Ubuntu, the
+default VirtualHost container is set up in
+/etc/apache2/sites-available/default.</p>
+</div></blockquote>
+<p><a class="reference external" href="https://issues.apache.org/bugzilla/show_bug.cgi?id=35256">Bug 35256</a>:</p>
+<blockquote>
+<div><p>%2F will be decoded in PATH_INFO (Documentation to AllowEncodedSlashes says no
+decoding will be done)</p>
+<p>The consequence of this bug is that only the last section in a URL can contain
+slashes.</p>
+</div></blockquote>
+</div>
+<div class="section" id="conclusions">
+<h2>Conclusions<a class="headerlink" href="#conclusions" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><p><em>AllowEncodedSlashes</em> and <em>AcceptPathInfo</em> must be set to <em>On</em></p></li>
+<li><p>We can successfully add query parameters to the end of the URL providing
+the identifier embedded in the path is properly encoded.</p></li>
+<li><p>Adding additional path elements beyond the encoded identifier segment will
+require additional processing, which entails custom parsing of the
+REQUEST_URI environment variable passed on by the web server.</p></li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Apache Configuration for DataONE Services</a><ul>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+<li><a class="reference internal" href="#configuration">Configuration</a></li>
+<li><a class="reference internal" href="#conclusions">Conclusions</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+  <li><a href="index.html">General Design and Implementation Notes</a><ul>
+      <li>Previous: <a href="cn_requirements.html" title="previous chapter">Coordinating Node Requirements</a></li>
+      <li>Next: <a href="sysmeta_mutation_20110831.html" title="next chapter">Mutability of Metadata</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/notes/ApacheConfiguration.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/notes/ApacheConfiguration.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/notes/ApacheConfiguration.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

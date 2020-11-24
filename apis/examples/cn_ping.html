@@ -1,0 +1,174 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>&lt;no title&gt; &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/mathjax_pre.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html"></a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">&lt;no title&gt;</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <p><strong>Response</strong></p>
+<p>The response should be a valid HTTP response with a blank or arbitrary body.
+Only the HTTP header information is considered by the requestor. A successful
+response MUST have a HTTP status code of 200. In case of an error condition,
+the appropriate HTTP status code MUST be set, and an exception or error
+information MAY be returned in the response body.</p>
+<p><strong>Example</strong></p>
+<p>Example of ping request and response for a Member Node (Coordinating Nodes
+implement the same functionality). Lines prefixed with “&gt;” and “&lt;” indicate
+outgoing and returned information respectively. Lines associated with SSL
+connection initiation and close are not shown here. Note that the actual response
+headers may vary, the only required header fields are the first status line and a
+<code class="docutils literal notranslate"><span class="pre">Date</span></code> entry. However in order to fully support clients that may cache the response,
+it is recommended that <code class="docutils literal notranslate"><span class="pre">Expires</span></code>, and <code class="docutils literal notranslate"><span class="pre">Cache-Control</span></code> headers are returned.</p>
+<div class="highlight-bash notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="hll">curl -v <span class="s2">&quot;https://cn.dataone.org/cn/v2/monitor/ping/&quot;</span>
+</span>
+&gt; GET /cn/v2/monitor/ping HTTP/1.1
+&gt; Host: cn.dataone.org
+&gt; User-Agent: curl/7.65.3
+&gt; Accept: */*
+&gt;
+&lt; HTTP/1.1 <span class="m">200</span> <span class="m">200</span>
+<span class="hll">&lt; Date: Tue, <span class="m">17</span> Sep <span class="m">2019</span> <span class="m">13</span>:13:04 GMT
+</span>&lt; Server: Apache/2.4.41 <span class="o">(</span>Ubuntu<span class="o">)</span>
+&lt; Vary: User-Agent
+&lt; Expires: -1
+&lt; Cache-Control: private, max-age<span class="o">=</span><span class="m">0</span>
+&lt; Content-Length: <span class="m">0</span>
+&lt; Access-Control-Allow-Origin:
+&lt; Access-Control-Allow-Credentials: <span class="nb">true</span>
+&lt; Access-Control-Allow-Headers: Authorization, Content-Type, Location, Content-Length, x-annotator-auth-token
+&lt; Access-Control-Expose-Headers: Content-Length, Content-Type, Location
+&lt; Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE
+&lt; Content-Type: text/xml<span class="p">;</span><span class="nv">charset</span><span class="o">=</span>UTF-8
+&lt;
+</pre></div>
+</td></tr></table></div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../../_static/dataone_logo.png" alt="Logo"/>
+    </a></p><h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation Overview</a><ul>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/apis/examples/cn_ping.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../../_sources/apis/examples/cn_ping.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/apis/examples/cn_ping.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

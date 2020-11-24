@@ -1,0 +1,224 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Use Case 41 - Archive an Object &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/mathjax_pre.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Use Case 06 - MN Synchronize" href="06_uc.html" />
+    <link rel="prev" title="Use Case 38 - Reserve an Identifier" href="38_uc.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="06_uc.html" title="Use Case 06 - MN Synchronize"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="38_uc.html" title="Use Case 38 - Reserve an Identifier"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html"></a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../usecases.html" accesskey="U">Use Cases</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Use Case 41 - Archive an Object</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="use-case-41-archive-an-object">
+<span id="uc41"></span><h1>Use Case 41 - Archive an Object<a class="headerlink" href="#use-case-41-archive-an-object" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<span id="index-0"></span><h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>Archive an object so that it is no longer discoverable, but remains accessible
+by those that already have a reference to it.</p>
+</div>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>A content owner or manager would like to prevent further discovery of an
+object though ensure that references to the object (using its identifier)
+remain valid.</p>
+<p>Transition to an archived state is not reversible.</p>
+<p>Functionally, archiving an object sets the <a class="reference internal" href="../../apis/Types.html#Types.SystemMetadata.archived" title="Types.SystemMetadata.archived"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Types.SystemMetadata.archived</span></code></a>
+property of the associated System Metadata to <em>True</em>. The operation is performed
+by calling <a class="reference internal" href="../../apis/MN_APIs.html#MNStorage.archive" title="MNStorage.archive"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNStorage.archive()</span></code></a> or <a class="reference internal" href="../../apis/CN_APIs.html#CNCore.archive" title="CNCore.archive"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNCore.archive()</span></code></a>. Since this
+operation is an update to System Metadata, <a class="reference internal" href="42_uc.html"><span class="doc">Use Case 42 - Update System Metadata Properties</span></a> is invoked and the
+change is propogated through the system.</p>
+</div>
+<div class="section" id="actors">
+<h2>Actors<a class="headerlink" href="#actors" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Client, a content manager or owner (must have <em>write</em> permission)</p></li>
+<li><p>Coordinating Node</p></li>
+<li><p>Member Node</p></li>
+</ul>
+<img alt="../../_images/60e1802913a74da4ee50472a5bc1aa8a313c745585d9dd0acfc1204e845aaa61.svg" class="align-center" src="../../_images/60e1802913a74da4ee50472a5bc1aa8a313c745585d9dd0acfc1204e845aaa61.svg" /><p><strong>Figure 1.</strong> Use case 41 diagram showing actors and components involved in this
+action.</p>
+</div>
+<div class="section" id="preconditions">
+<h2>Preconditions<a class="headerlink" href="#preconditions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Client has authenticated to the desired level</p></li>
+<li><p>Client has write permission on the object</p></li>
+<li><p>Object has been synchronized by the Coordinating Nodes</p></li>
+<li><p>The object may be replicated to other Member Nodes</p></li>
+</ul>
+</div>
+<div class="section" id="triggers">
+<h2>Triggers<a class="headerlink" href="#triggers" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>A user with write permission calls <a class="reference internal" href="../../apis/CN_APIs.html#CNCore.archive" title="CNCore.archive"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNCore.archive()</span></code></a></p></li>
+</ul>
+</div>
+<div class="section" id="post-conditions">
+<h2>Post Conditions<a class="headerlink" href="#post-conditions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>The <em>archive</em> property of <a class="reference internal" href="../../apis/Types.html#Types.SystemMetadata" title="Types.SystemMetadata"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.SystemMetadata</span></code></a> is set to “true”</p></li>
+<li><p>System metadata for all replicas of the object is updated</p></li>
+<li><p>Search indices are updated to remove the object</p></li>
+</ul>
+</div>
+<div class="section" id="process">
+<h2>Process<a class="headerlink" href="#process" title="Permalink to this headline">¶</a></h2>
+<img alt="../../_images/08071bb1814b03ded6e4f054577ab927d0251379ba2784ba421e97aa739a9091.svg" class="align-center" src="../../_images/08071bb1814b03ded6e4f054577ab927d0251379ba2784ba421e97aa739a9091.svg" /><p><em>Figure 2.</em> Sequence diagram for Use Case 41 illustrating the high level
+sequence of operations associated with archiving an object.</p>
+</div>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<p>Using <code class="docutils literal notranslate"><span class="pre">curl</span></code> to archive an object. <code class="docutils literal notranslate"><span class="pre">ANODE</span></code> can be any Member or Coordinating
+Node that has a copy of the object:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># The member node base URL</span>
+<span class="nv">NODE</span><span class="o">=</span><span class="s2">&quot;https://my.mn.org/base/url&quot;</span>
+
+<span class="c1"># A client certificate with a subject that has write permission on the object</span>
+<span class="nv">CERT</span><span class="o">=</span><span class="s2">&quot;my_client_certificate.pem&quot;</span>
+
+<span class="c1"># The identifier of the object to be archived.</span>
+<span class="nv">PID</span><span class="o">=</span><span class="s2">&quot;object.identifier&quot;</span>
+
+<span class="c1"># The provided identifier must be properly URL path encoded</span>
+<span class="nv">EPID</span><span class="o">=</span>URL_Encode<span class="o">(</span>PID<span class="o">)</span>
+
+<span class="c1"># Invoke the archive operation on the identifier</span>
+curl -E <span class="si">${</span><span class="nv">CERT</span><span class="si">}</span> -X PUT <span class="s2">&quot;</span><span class="nv">$NODE</span><span class="s2">/V1/archive/</span><span class="si">${</span><span class="nv">EPID</span><span class="si">}</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Use Case 41 - Archive an Object</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#summary">Summary</a></li>
+<li><a class="reference internal" href="#actors">Actors</a></li>
+<li><a class="reference internal" href="#preconditions">Preconditions</a></li>
+<li><a class="reference internal" href="#triggers">Triggers</a></li>
+<li><a class="reference internal" href="#post-conditions">Post Conditions</a></li>
+<li><a class="reference internal" href="#process">Process</a></li>
+<li><a class="reference internal" href="#example">Example</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation Overview</a><ul>
+  <li><a href="../usecases.html">Use Cases</a><ul>
+      <li>Previous: <a href="38_uc.html" title="previous chapter">Use Case 38 - Reserve an Identifier</a></li>
+      <li>Next: <a href="06_uc.html" title="next chapter">Use Case 06 - MN Synchronize</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/design/UseCases/41_uc.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../../_sources/design/UseCases/41_uc.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/41_uc.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

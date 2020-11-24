@@ -1,0 +1,182 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Replication Overview &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Mutability of Content in DataONE" href="ContentMutability.html" />
+    <link rel="prev" title="DataONE Preservation Strategy" href="PreservationStrategy.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ContentMutability.html" title="Mutability of Content in DataONE"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="PreservationStrategy.html" title="DataONE Preservation Strategy"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Replication Overview</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="replication-overview">
+<span id="replicationoverview"></span><h1>Replication Overview<a class="headerlink" href="#replication-overview" title="Permalink to this headline">¶</a></h1>
+<dl class="simple" id="index-0">
+<dt>Revision History</dt><dd><p>View document revision <a class="reference external" href="https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/ReplicationOverview.txt">history</a>.</p>
+</dd>
+</dl>
+<p>DataONE provides replication services to satisfy both data and metadata preservation needs and to provide the potential for fault-tolerance and load balancing services for data and metadata access. Tier 4 Member Nodes within the federation are set up to house replicas of content, and provide this service to other Member Nodes based on certain policy agreements.  Replication is handled on a per-object basis within DataONE, with the RightsHolder and/or Authoritative Member Node controlling the ReplicationPolicy for each object, which determines whether it will be replicated.  In addition, each Member Node decides whether it will accept replicas in general (by supporting the Tier 4 <a class="reference internal" href="../apis/CN_APIs.html#module-CNReplication" title="CNReplication"><code class="xref py py-class docutils literal notranslate"><span class="pre">CNReplication</span></code></a> API and setting <cite>replicate=true</cite>), and can decide whether it will accept any given request to replicate an object. Coordinating Nodes monitor the <a class="reference internal" href="../apis/Types.html#Types.ReplicationPolicy" title="Types.ReplicationPolicy"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.ReplicationPolicy</span></code></a> for each object in DataONE, and ensure that the appropriate <a class="reference internal" href="../glossary.html#term-replication-target"><span class="xref std std-term">replication target</span></a> nodes house an accurate replica of the object. Each replica of an object is recorded by the Coordinating Nodes, so when a consumer wishes to retrieve the object, they can use <a class="reference internal" href="../apis/CN_APIs.html#CNRead.resolve" title="CNRead.resolve"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNRead.resolve()</span></code></a> to list the replicas and <a class="reference internal" href="../apis/MN_APIs.html#MNRead.get" title="MNRead.get"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNRead.get()</span></code></a> to retrieve any of the replicas in the network.</p>
+<div class="section" id="summary-of-replication-process">
+<h2>Summary of Replication process<a class="headerlink" href="#summary-of-replication-process" title="Permalink to this headline">¶</a></h2>
+<p>To fulfill the <a class="reference internal" href="../apis/Types.html#Types.ReplicationPolicy" title="Types.ReplicationPolicy"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.ReplicationPolicy</span></code></a> for each object, the CN schedules each object to be replicated with one of the Tier 4 MNs that are willing to host replicas.  Replication is an asynchronous, multi-step process, in order to allow for non-blocking replication of objects that would take more than a few seconds to copy over the network.  The process originates with 1) the CN calling <a class="reference internal" href="../apis/MN_APIs.html#MNReplication.replicate" title="MNReplication.replicate"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNReplication.replicate()</span></code></a> on the target MN, which is a request for the MN to replicate a particular object.  The MN responds with a HTTP 200 if it is willing and able to attempt the replication and house the object, and the CN marks the replica request as REQUESTED. See <a class="reference internal" href="../apis/Types.html#Types.ReplicationStatus" title="Types.ReplicationStatus"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.ReplicationStatus</span></code></a> for the definition of the status values. Then, 2) the target MN calls the source <a class="reference internal" href="../apis/MN_APIs.html#MNRead.getReplica" title="MNRead.getReplica"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNRead.getReplica()</span></code></a> to request the bytes of the object, and if they are transferred correctly, then 3) calls <a class="reference internal" href="../apis/CN_APIs.html#CNReplication.setReplicationStatus" title="CNReplication.setReplicationStatus"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNReplication.setReplicationStatus()</span></code></a> to indicate that the request has been COMPLETED, or if it FAILED.  At this point the replication is finished.  If the replication fails, the CN then requests that it be replicated elsewhere.  If it succeeds, the CN will check in periodically with the MN to verify the checksum of the object held to confirm validity.</p>
+</div>
+<div class="section" id="object-replication-policy">
+<h2>Object Replication Policy<a class="headerlink" href="#object-replication-policy" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="../apis/Types.html#Types.ReplicationPolicy" title="Types.ReplicationPolicy"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.ReplicationPolicy</span></code></a> for an object defines if replication should be attempted for this object, and if so, how many replicas should be maintained. It also permits specification of preferred and blocked nodes as potential replication targets.</p>
+<p>If a ReplicationPolicy is provided in the <a class="reference internal" href="../glossary.html#term-System-Metadata"><span class="xref std std-term">System Metadata</span></a> for an object, then that policy is followed precisely by the Coordinating Nodes when managing replication.  In the absence of a defined ReplicationPolicy for an object, DataONE will by default attempt to maintain two replicas for the object, as long as the object’s size is below a threshold size that would allow transfer over networks in reasonable time periods. As network transfer capabilities improve among DataONE nodes, this threshold size will be increased.</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;replicationPolicy</span> <span class="na">replicationAllowed=</span><span class="s">&quot;true&quot;</span> <span class="na">numberReplicas=</span><span class="s">&quot;2&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;preferredMemberNode&gt;</span>urn:node:KNB<span class="nt">&lt;/preferredMemberNode&gt;</span>
+    <span class="nt">&lt;preferredMemberNode&gt;</span>urn:node:PISCO<span class="nt">&lt;/preferredMemberNode&gt;</span>
+    <span class="nt">&lt;blockedMemberNode&gt;</span>urn:node:SOMEBADNODE<span class="nt">&lt;/blockedMemberNode&gt;</span>
+<span class="nt">&lt;/replicationPolicy&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="node-replication-policy">
+<h2>Node Replication Policy<a class="headerlink" href="#node-replication-policy" title="Permalink to this headline">¶</a></h2>
+<p>Nodes that wish to serve as a replication target and thereby are available to store replicas of data from around the network set <a class="reference internal" href="../apis/Types.html#Types.Node.replicate" title="Types.Node.replicate"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Types.Node.replicate</span></code></a> to ‘true’ in their <a class="reference internal" href="../apis/Types.html#Types.Node" title="Types.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.Node</span></code></a> description when registering their node. In addition, these nodes must support the Tier 4 <a class="reference internal" href="../apis/CN_APIs.html#module-CNReplication" title="CNReplication"><code class="xref py py-class docutils literal notranslate"><span class="pre">CNReplication</span></code></a> API to allow Coordinating Nodes to perform all necessary operations.  Nodes can express constraints on object size, total replication space available, source nodes, and object format types that a node will replicate by providing a <a class="reference internal" href="../apis/Types.html#Types.NodeReplicationPolicy" title="Types.NodeReplicationPolicy"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.NodeReplicationPolicy</span></code></a> as part of a it’s <a class="reference internal" href="../apis/Types.html#Types.Node" title="Types.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.Node</span></code></a> description. A node may choose to restrict replication from only certain peer nodes, may have file size limits, total allocated size limits, or may want to focus on being a <a class="reference internal" href="../glossary.html#term-replication-target"><span class="xref std std-term">replication target</span></a> for domain-specific object formats.</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;nodeReplicationPolicy&gt;</span>
+    <span class="nt">&lt;maxObjectSize&gt;</span>524288000<span class="nt">&lt;/maxObjectSize&gt;</span>
+    <span class="nt">&lt;spaceAllocated&gt;</span>1099511627776<span class="nt">&lt;/spaceAllocated&gt;</span>
+    <span class="nt">&lt;allowedNode&gt;</span>urn:node:KNB<span class="nt">&lt;/allowedNode&gt;</span>
+    <span class="nt">&lt;allowedNode&gt;</span>urn:node:ESA<span class="nt">&lt;/allowedNode&gt;</span>
+    <span class="nt">&lt;allowedNode&gt;</span>urn:node:SANPARKS<span class="nt">&lt;/allowedNode&gt;</span>
+    <span class="nt">&lt;allowedObjectFormat&gt;</span>FGDC-STD-001.1-1999<span class="nt">&lt;/allowedObjectFormat&gt;</span>
+    <span class="nt">&lt;allowedObjectFormat&gt;</span>eml://ecoinformatics.org/eml-2.1.1<span class="nt">&lt;/allowedObjectFormat&gt;</span>
+    <span class="nt">&lt;allowedObjectFormat&gt;</span>text/csv<span class="nt">&lt;/allowedObjectFormat&gt;</span>
+<span class="nt">&lt;/nodeReplicationPolicy&gt;</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="../apis/Types.html#Types.NodeReplicationPolicy.maxObjectSize" title="Types.NodeReplicationPolicy.maxObjectSize"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Types.NodeReplicationPolicy.maxObjectSize</span></code></a> indicates the maximum allowable size of an object to be replicated in bytes.  The <a class="reference internal" href="../apis/Types.html#Types.NodeReplicationPolicy.spaceAllocated" title="Types.NodeReplicationPolicy.spaceAllocated"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Types.NodeReplicationPolicy.spaceAllocated</span></code></a> field sets an upper limit on space usage for replica storage on the given node.  Once the spaceAllocated has been reached for a node, the Coordinating Nodes will no longer request that additional replicas be stored on that node. <a class="reference internal" href="../apis/Types.html#Types.NodeReplicationPolicy.allowedNode" title="Types.NodeReplicationPolicy.allowedNode"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Types.NodeReplicationPolicy.allowedNode</span></code></a> is used to list all nodes that are allowed to replicate to the target.  If it is absent, then any node may replicate to the target. <a class="reference internal" href="../apis/Types.html#Types.NodeReplicationPolicy.allowedObjectFormat" title="Types.NodeReplicationPolicy.allowedObjectFormat"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Types.NodeReplicationPolicy.allowedObjectFormat</span></code></a> is used to list all object formats that may be replicated to the target.  If it is absent, then any object format may be replicated to the target.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="../apis/Types.html#Types.NodeReplicationPolicy" title="Types.NodeReplicationPolicy"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.NodeReplicationPolicy</span></code></a> is not currently implemented on the CN and so is ignored when making decisions as to which MN should be used for replication.  In a future release, the CN scheduler will utilize the <a class="reference internal" href="../apis/Types.html#Types.NodeReplicationPolicy" title="Types.NodeReplicationPolicy"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.NodeReplicationPolicy</span></code></a> to limit the types of objects that are scheduled to be replicated to a MN, but for now the information is not used at all.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Replication Overview</a><ul>
+<li><a class="reference internal" href="#summary-of-replication-process">Summary of Replication process</a></li>
+<li><a class="reference internal" href="#object-replication-policy">Object Replication Policy</a></li>
+<li><a class="reference internal" href="#node-replication-policy">Node Replication Policy</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+      <li>Previous: <a href="PreservationStrategy.html" title="previous chapter">DataONE Preservation Strategy</a></li>
+      <li>Next: <a href="ContentMutability.html" title="next chapter">Mutability of Content in DataONE</a></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/design/ReplicationOverview.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/design/ReplicationOverview.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/ReplicationOverview.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

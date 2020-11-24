@@ -1,0 +1,186 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Selectors for Data Package Components &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Time and Bandwidth Constraints" href="time_bandwidth_constraints.html" />
+    <link rel="prev" title="Mutability of Metadata" href="sysmeta_mutation_20110831.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="time_bandwidth_constraints.html" title="Time and Bandwidth Constraints"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="sysmeta_mutation_20110831.html" title="Mutability of Metadata"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">General Design and Implementation Notes</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Selectors for Data Package Components</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="selectors-for-data-package-components">
+<h1>Selectors for Data Package Components<a class="headerlink" href="#selectors-for-data-package-components" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>Develop a generalized selector API and standard that can be used to
+identify granules within a data resource (data set, data package, composite
+object) that is managed by DataONE. The “selector” can be appended to an
+identifier or included with an API call to retrieve an object and the response
+is the sub-element or component specified by the selector.</p>
+<p>Types of selector are likely to vary with the types of composite objects being
+managed by DataONE. For example, a selector may be defined to return a range
+by bytes from a BLOB, or perhaps a single file from within a zip archive of a
+set of files.</p>
+<p>Some examples:</p>
+<ul class="simple">
+<li><p>Byte range (first and last offset, or first offset and size)</p></li>
+<li><p>Index range (offset into a list)</p></li>
+<li><p>HTML fragment identifier</p></li>
+<li><p>Time offset or range</p></li>
+<li><p>Bounding box spatial range</p></li>
+<li><p>Database record selection from a key</p></li>
+</ul>
+</div>
+<div class="section" id="rationale">
+<h2>Rationale<a class="headerlink" href="#rationale" title="Permalink to this headline">¶</a></h2>
+<p>There are practical limits to the total number of objects that may
+be effectively managed at the level of detail supported by the DataONE
+infrastructure. By managing content at the collection or package level, the
+total number of managed identifiers can be constrained to a more manageable
+range (e.g. a single collection may have &gt;= 1e5 elements or records). Using
+selectors, this could be reduced to a single identifier for the collection
+plus support for the appropriate selector.</p>
+<p>So a “selector service” is implemented by a node as a mechanism for retrieving
+some object that exists as a sub-component of a larger object that is managed
+by the DataONE infrastructure.</p>
+</div>
+<div class="section" id="implications-for-implementation">
+<h2>Implications for Implementation<a class="headerlink" href="#implications-for-implementation" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Advertisement and discovery of selector services implemented by a node</p></li>
+<li><p>Implementation overhead (processing, etc) for a Member Node</p></li>
+<li><p>Representation formats for extracted information</p></li>
+<li><p>Access control policies (managed parent object controls everything?)</p></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Selectors for Data Package Components</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#rationale">Rationale</a></li>
+<li><a class="reference internal" href="#implications-for-implementation">Implications for Implementation</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+  <li><a href="index.html">General Design and Implementation Notes</a><ul>
+      <li>Previous: <a href="sysmeta_mutation_20110831.html" title="previous chapter">Mutability of Metadata</a></li>
+      <li>Next: <a href="time_bandwidth_constraints.html" title="next chapter">Time and Bandwidth Constraints</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/notes/selectors.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/notes/selectors.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/notes/selectors.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

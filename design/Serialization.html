@@ -1,0 +1,304 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Serialization of Types for Transfer Over HTTP &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="NodeList" href="NodeList.html" />
+    <link rel="prev" title="Natural History of System Metadata" href="SysmetaLifecycle.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="NodeList.html" title="NodeList"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="SysmetaLifecycle.html" title="Natural History of System Metadata"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Serialization of Types for Transfer Over HTTP</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="serialization-of-types-for-transfer-over-http">
+<h1>Serialization of Types for Transfer Over HTTP<a class="headerlink" href="#serialization-of-types-for-transfer-over-http" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="boolean">
+<h2>Boolean<a class="headerlink" href="#boolean" title="Permalink to this headline">¶</a></h2>
+<p>When the response is simply a boolean True or False, the response returned is in
+one of two forms:</p>
+<ol class="loweralpha simple">
+<li><p>For cases where false is a valid response: a single character “1” if <em>True</em>,
+or “0” if <em>False</em></p></li>
+<li><p>For cases where false coincides with a DataONE exception: an arbitrary body
+if <em>True</em> (ignored by caller), and an error-indicating HTTP status code and
+serialized error object if <em>False</em>.</p></li>
+</ol>
+</div>
+<div class="section" id="objectlist">
+<h2>ObjectList<a class="headerlink" href="#objectlist" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="json">
+<h3>JSON<a class="headerlink" href="#json" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s1">&#39;start&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">integer</span><span class="o">&gt;</span><span class="p">,</span>
+  <span class="s1">&#39;count&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">integer</span><span class="o">&gt;</span><span class="p">,</span>
+  <span class="s1">&#39;total&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">integer</span><span class="o">&gt;</span><span class="p">,</span>
+  <span class="s1">&#39;objectInfo&#39;</span><span class="p">:</span>
+  <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s1">&#39;identifier&#39;</span><span class="p">:</span><span class="o">&lt;</span><span class="n">IdentifierType</span><span class="o">&gt;</span><span class="p">,</span>
+      <span class="s1">&#39;objectFormat&#39;</span><span class="p">:</span><span class="o">&lt;</span><span class="n">ObjectFormatType</span><span class="o">&gt;</span><span class="p">,</span>
+      <span class="s1">&#39;checksum&#39;</span><span class="p">:</span>
+      <span class="p">{</span>
+        <span class="s1">&#39;algorithm&#39;</span><span class="p">:</span><span class="o">&lt;</span><span class="n">checkSum</span> <span class="n">Algorithm</span> <span class="n">Type</span><span class="o">&gt;</span><span class="p">,</span>
+        <span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="o">&lt;</span><span class="n">SHA1</span> <span class="nb">hash</span> <span class="n">of</span> <span class="nb">object</span><span class="o">&gt;</span>
+      <span class="p">},</span>
+      <span class="s1">&#39;dateSysMetadataModified&#39;</span><span class="p">:</span><span class="o">&lt;</span><span class="n">DateTime</span><span class="o">&gt;</span><span class="p">,</span>
+      <span class="s1">&#39;size&#39;</span><span class="p">:</span><span class="o">&lt;</span><span class="n">integer</span><span class="o">&gt;</span>
+    <span class="p">},</span>
+    <span class="o">...</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="csv">
+<h3>CSV<a class="headerlink" href="#csv" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#&lt;start&gt;,&lt;count&gt;,&lt;total&gt;</span>
+<span class="n">identifier</span><span class="p">,</span><span class="n">objectFormat</span><span class="p">,</span><span class="n">algorithm</span><span class="p">,</span><span class="n">checksum</span><span class="p">,</span><span class="n">dateSysMetadataModified</span><span class="p">,</span><span class="n">size</span>
+<span class="s2">&quot;&lt;identifier&gt;&quot;</span><span class="p">,</span><span class="s2">&quot;&lt;object class&gt;&quot;</span><span class="p">,</span><span class="s2">&quot;&lt;SHA-1 | SHA-224 | MD5 | ...&gt;&quot;</span><span class="p">,</span><span class="s2">&quot;&lt;SHA1 hash of object&gt;&quot;</span><span class="p">,</span><span class="s2">&quot;&lt;date time last modified&gt;&quot;</span><span class="p">,</span><span class="o">&lt;</span><span class="n">byte</span> <span class="n">size</span> <span class="n">of</span> <span class="nb">object</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="xml">
+<h3>XML<a class="headerlink" href="#xml" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">d1</span><span class="p">:</span><span class="n">listObjects</span> <span class="n">xmlns</span><span class="p">:</span><span class="n">d1</span><span class="o">=</span><span class="s2">&quot;http://dataone.org/service/types/ListObjects/0.1&quot;</span>
+  <span class="n">xmlns</span><span class="p">:</span><span class="n">common</span><span class="o">=</span><span class="s2">&quot;http://dataone.org/service/types/common/0.1&quot;</span>
+  <span class="n">xmlns</span><span class="p">:</span><span class="n">xsi</span><span class="o">=</span><span class="s2">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+  <span class="n">count</span><span class="o">=</span><span class="s2">&quot;_integer_&quot;</span>
+  <span class="n">start</span><span class="o">=</span><span class="s2">&quot;_integer_&quot;</span>
+  <span class="n">total</span><span class="o">=</span><span class="s2">&quot;_integer_&quot;</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">objectInfo</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">identifier</span><span class="o">&gt;</span><span class="n">_identifier_</span><span class="o">&lt;/</span><span class="n">identifier</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">objectFormat</span><span class="o">&gt;</span><span class="n">_object</span> <span class="n">class_</span><span class="o">&lt;/</span><span class="n">objectFormat</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">checksum</span> <span class="n">algorithm</span><span class="o">=</span><span class="s1">&#39;SHA-1 | SHA-224 | MD5 | ...&#39;</span><span class="o">&gt;</span><span class="n">_hash</span> <span class="n">of</span> <span class="n">object_</span><span class="o">&lt;/</span><span class="n">checksum</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">dateSysMetadataModified</span><span class="o">&gt;</span><span class="n">_date</span> <span class="n">time</span> <span class="n">last</span> <span class="n">modified_</span><span class="o">&lt;/</span><span class="n">dateSysMetadataModified</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">size</span><span class="o">&gt;</span><span class="n">_byte</span> <span class="n">size</span> <span class="n">of</span> <span class="n">object_</span><span class="o">&lt;/</span><span class="n">size</span><span class="o">&gt;</span>
+  <span class="o">&lt;/</span><span class="n">objectInfo</span><span class="o">&gt;</span>
+  <span class="o">...</span>
+<span class="o">&lt;/</span><span class="n">d1</span><span class="p">:</span><span class="n">listObjects</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="html">
+<h3>HTML<a class="headerlink" href="#html" title="Permalink to this headline">¶</a></h3>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>Define ObjectList rendering in HTML</p>
+</div>
+</div>
+</div>
+<div class="section" id="describeresponse">
+<h2>DescribeResponse<a class="headerlink" href="#describeresponse" title="Permalink to this headline">¶</a></h2>
+<p>Returned in response to <code class="xref py py-func docutils literal notranslate"><span class="pre">MN_crud.describe()</span></code> which is called using the
+HTTP HEAD verb. As such, the response is entirely in the HTTP headers (no body).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Content-Length</dt>
+<dd class="field-odd"><p><code class="xref py py-attr docutils literal notranslate"><span class="pre">SystemMetadata.size</span></code></p>
+</dd>
+<dt class="field-even">Last-Modified</dt>
+<dd class="field-even"><p>&lt;dateSysMetadataModified&gt;</p>
+</dd>
+<dt class="field-odd">DataONE-ObjectFormat</dt>
+<dd class="field-odd"><p>&lt;objectFormat&gt;</p>
+</dd>
+<dt class="field-even">DataONE-Checksum</dt>
+<dd class="field-even"><p>&lt;checksumAlgorithm&gt;,&lt;checksum&gt;</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="identifier">
+<h2>Identifier<a class="headerlink" href="#identifier" title="Permalink to this headline">¶</a></h2>
+<p>Returned as a simple string.</p>
+</div>
+<div class="section" id="systemmetadata">
+<h2>SystemMetadata<a class="headerlink" href="#systemmetadata" title="Permalink to this headline">¶</a></h2>
+<p>Currently returned only in the XML form.</p>
+</div>
+<div class="section" id="objectlocationlist">
+<h2>ObjectLocationList<a class="headerlink" href="#objectlocationlist" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id2">
+<h3>JSON<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+ <span class="s1">&#39;identifier&#39;</span><span class="p">:</span><span class="s1">&#39;1234&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;locations&#39;</span><span class="p">:</span> <span class="p">[</span>
+   <span class="p">[</span><span class="s1">&#39;mn1.dataone.org/mn&#39;</span><span class="p">,</span> <span class="s1">&#39;http://mn1.dataone.org/mn/object?id=1234&#39;</span><span class="p">],</span>
+   <span class="p">[</span><span class="s1">&#39;mn2.dataone.org/some_base/mn&#39;</span><span class="p">,</span> <span class="s1">&#39;http://mn2.dataone.org/some_base/mn/object?id=1234&#39;</span><span class="p">],</span>
+   <span class="p">[</span><span class="s1">&#39;cn.dataone.org/cn&#39;</span><span class="p">,</span> <span class="s1">&#39;http://cn.dataone.org/cn/object?id=1234&#39;</span><span class="p">]</span> <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id3">
+<h3>CSV<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#1234</span>
+<span class="n">node</span><span class="p">,</span><span class="n">url</span>
+<span class="s1">&#39;mn1.dataone.org/mn&#39;</span><span class="p">,</span><span class="s1">&#39;http://mn1.dataone.org/mn/object?id=1234&#39;</span>
+<span class="s1">&#39;mn2.dataone.org/some_base/mn&#39;</span><span class="p">,</span><span class="s1">&#39;http://mn2.dataone.org/some_base/mn/object?id=1234&#39;</span>
+<span class="s1">&#39;cn.dataone.org/cn&#39;</span><span class="p">,</span><span class="s1">&#39;http://cn.dataone.org/cn/object?id=1234&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id4">
+<h3>XML<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">locations</span> <span class="n">identifier</span><span class="o">=</span><span class="s1">&#39;1234&#39;</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">location</span> <span class="n">node</span><span class="o">=</span><span class="s1">&#39;mn1.dataone.org/mn&#39;</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;http://mn1.dataone.org/mn/object?id=1234&#39;</span> <span class="o">/&gt;</span>
+  <span class="o">&lt;</span><span class="n">location</span> <span class="n">node</span><span class="o">=</span><span class="s1">&#39;mn2.dataone.org/some_base/mn&#39;</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;http://mn1.dataone.org/some_base/mn/object?id=1234&#39;</span> <span class="o">/&gt;</span>
+  <span class="o">&lt;</span><span class="n">location</span> <span class="n">node</span><span class="o">=</span><span class="s1">&#39;cn.dataone.org/cn&#39;</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;http://cn.dataone.org/cn/object?id=1234&#39;</span> <span class="o">/&gt;</span>
+<span class="o">&lt;/</span><span class="n">locations</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id5">
+<h3>HTML<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+<span class="o">&lt;</span><span class="n">ol</span> <span class="n">identifier</span><span class="o">=</span><span class="s1">&#39;1234&#39;</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;http://mn1.dataone.org/mn/object?id=1234&#39;</span><span class="o">&gt;</span><span class="n">mn1</span><span class="o">.</span><span class="n">dataone</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">mn</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;http://mn2.dataone.org/some_base/mn/object?id=1234&#39;</span><span class="o">&gt;</span><span class="n">mn1</span><span class="o">.</span><span class="n">dataone</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">some_base</span><span class="o">/</span><span class="n">mn</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;http://cn.dataone.org/cn/object?id=1234&#39;</span><span class="o">&gt;</span><span class="n">cn</span><span class="o">.</span><span class="n">dataone</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">cn</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">ol</span><span class="o">&gt;</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Serialization of Types for Transfer Over HTTP</a><ul>
+<li><a class="reference internal" href="#boolean">Boolean</a></li>
+<li><a class="reference internal" href="#objectlist">ObjectList</a><ul>
+<li><a class="reference internal" href="#json">JSON</a></li>
+<li><a class="reference internal" href="#csv">CSV</a></li>
+<li><a class="reference internal" href="#xml">XML</a></li>
+<li><a class="reference internal" href="#html">HTML</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#describeresponse">DescribeResponse</a></li>
+<li><a class="reference internal" href="#identifier">Identifier</a></li>
+<li><a class="reference internal" href="#systemmetadata">SystemMetadata</a></li>
+<li><a class="reference internal" href="#objectlocationlist">ObjectLocationList</a><ul>
+<li><a class="reference internal" href="#id2">JSON</a></li>
+<li><a class="reference internal" href="#id3">CSV</a></li>
+<li><a class="reference internal" href="#id4">XML</a></li>
+<li><a class="reference internal" href="#id5">HTML</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+      <li>Previous: <a href="SysmetaLifecycle.html" title="previous chapter">Natural History of System Metadata</a></li>
+      <li>Next: <a href="NodeList.html" title="next chapter">NodeList</a></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/design/Serialization.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/design/Serialization.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/Serialization.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

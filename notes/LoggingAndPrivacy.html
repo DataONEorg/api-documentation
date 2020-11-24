@@ -1,0 +1,241 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Logging and Privacy concerns &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Cross Domain Indexing and Access for Data and Metadata" href="DataAndMetadata.html" />
+    <link rel="prev" title="General Design and Implementation Notes" href="index.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="DataAndMetadata.html" title="Cross Domain Indexing and Access for Data and Metadata"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="General Design and Implementation Notes"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">General Design and Implementation Notes</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Logging and Privacy concerns</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="logging-and-privacy-concerns">
+<h1>Logging and Privacy concerns<a class="headerlink" href="#logging-and-privacy-concerns" title="Permalink to this headline">¶</a></h1>
+<p>Design decisions for DataONE have until now been focused on comprehensive and
+universal logging for all operations performed on Member Nodes and Coordinating Nodes.
+One rationale for this is that data providers have traditionally been unwilling to
+replicate their data for distribution by other parties because they have been unable
+to get usage metrics for these data.  The current DataONE design for logging is based
+on 5 use cases that generally outline the need to provide log information to data
+providers (see <a class="reference internal" href="../design/logging.html#logging-use-case-synopsis"><span class="std std-ref">Use Cases to be Supported</span></a> for summary of Use Cases 16, 17, 18,
+19, and 20). Under the current <a class="reference internal" href="../design/LoggingSchema.html"><span class="doc">Logging Schema</span></a>, all operations are logged,
+recording the user’s IP address, browser agent, the date and time and type of the
+operation, and the user’s identity if they have authenticated to the system.</p>
+<div class="section" id="privacy-concerns">
+<h2>Privacy concerns<a class="headerlink" href="#privacy-concerns" title="Permalink to this headline">¶</a></h2>
+<p>Recently, discussions have pointed out that there are potential privacy concerns for
+data users associated with these logging policies, and that DataONE should consider
+cases where truly anonymous access to resources may be warranted.  A comparison has
+been made to libraries, whereby patron access to resources is not recorded in order to
+avoid having to expose these records to third parties. A similar situation may exist
+where a data user does not want a data provider or other third parties to know that
+they accessed data in DataONE.  Some example scenarios might include:</p>
+<ul class="simple">
+<li><p>A scientist wants to analyze climate change data, but not have the set be traceable
+by regulatory bodies until they publish</p></li>
+<li><p>A scientist wants to analyze a set of data, but not have the set be visible to
+possible colleagues</p></li>
+</ul>
+<p>There may be more compelling scenarios than these for privacy concerns.</p>
+</div>
+<div class="section" id="potential-designs">
+<h2>Potential designs<a class="headerlink" href="#potential-designs" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><dl class="simple">
+<dt>All Events Logged and users identified</dt><dd><ul>
+<li><p>All MNs must implement logging, must provide user
+identity in those logs if the user has been authenticated, and must provide
+those logs to the CN log aggregation service.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Data Providers can require user identity</dt><dd><ul>
+<li><p>Currently, DataONE access control directives (see
+<a class="reference internal" href="../design/Authorization.html"><span class="doc">Authorization in DataONE</span></a>) would allow a data provider to specify
+that objects are only accessible to ‘AuthenticatedUser’s, which means that their
+username, other identifying information, and their IP number are available.
+Currently we do not have a specification about what this identifying information
+would be, but a reasonable minimal set would be Name and Email.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Data Consumers can request anonymity</dt><dd><ul>
+<li><p>Under this scenario, data consumers would not authenticate against DataONE, and
+thus their identifying information would not be logged at MN or CN.  However,
+under the current specification, their IP number would still be recorded, which
+may be sufficient to identify the user.  The specification could be modified to
+eliminate the collection of IP numbers for the non-authenticated users, but this
+would significantly comprimise our ability to analyze anonymous download
+statistics (e.g., geographic breakdown, differentiating web-crawler accesses
+versus user accesses, etc.). An alternative would be to create a mechanism to
+differentiate typical non-authenticated access (where IP numbers are recorded)
+from ‘anonymous’ access (where IP numbers are not recorded).</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Both require identity and request anonymity</dt><dd><ul>
+<li><p>A combination of the last two scenarios, where data providers can demand
+identity through authentication, and consumers can insist upon anonymity.  In
+this case, any data objects that would otherwise be available to the user but
+require identity logging would be omitted from access by anonymous users.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="implications-and-issues">
+<h2>Implications and Issues<a class="headerlink" href="#implications-and-issues" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>The addition of truly anonymous access complicates the design and implementation of
+the APIs, and it makes implementation of the APIs considerably more burdensome for
+MNs. This may reduce the number of participating member nodes.</p></li>
+<li><p>The addition of anonymous access may deter MNs from joining DataONE if they can not
+get usage tracking statistics for their data.  Experience with the KNB has indicated
+that one of the main reasons that contributors only choose to share metadata and not
+data is that they want to be able to guarantee uage reporting data for their data</p></li>
+<li><p>We need to resolve whether our current concept of ‘Public’ access to data (see
+<a class="reference internal" href="../design/Authorization.html"><span class="doc">Authorization in DataONE</span></a>), which allows non-authenticated access, also implies that the
+IP number of the requesting client not be recorded.</p></li>
+<li><p>What level of user identification and logging will NSF require from DataONE and other DataNet
+partners?  For many data projects, there is often some level of requirement for identification
+of the kinds of users and where they come from (particularly to the limited extent that this
+can be inferred from data such as IP addresses).</p></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Logging and Privacy concerns</a><ul>
+<li><a class="reference internal" href="#privacy-concerns">Privacy concerns</a></li>
+<li><a class="reference internal" href="#potential-designs">Potential designs</a></li>
+<li><a class="reference internal" href="#implications-and-issues">Implications and Issues</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+  <li><a href="index.html">General Design and Implementation Notes</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">General Design and Implementation Notes</a></li>
+      <li>Next: <a href="DataAndMetadata.html" title="next chapter">Cross Domain Indexing and Access for Data and Metadata</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/notes/LoggingAndPrivacy.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/notes/LoggingAndPrivacy.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/notes/LoggingAndPrivacy.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

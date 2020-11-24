@@ -1,0 +1,275 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Implementation Roadmap &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Components of the DataONE Infrastructure" href="components.html" />
+    <link rel="prev" title="Implementation Notes" href="index.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="components.html" title="Components of the DataONE Infrastructure"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Implementation Notes"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Implementation Notes</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Implementation Roadmap</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="implementation-roadmap">
+<h1>Implementation Roadmap<a class="headerlink" href="#implementation-roadmap" title="Permalink to this headline">¶</a></h1>
+<p>The DataONE project has an initial lifetime of five years, starting August
+2009. Over this time development will occur in three major phases:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Prototyping</dt>
+<dd class="field-odd"><p>August 2009 - July 2010. Prototyping activity occurred during the first year
+of the project and was used to evaluate fundamental infrastructure design
+decisions. Although the prototype period has passed, some prototyping
+activity will continue as a mechanism for evaluating new functionality.</p>
+</dd>
+<dt class="field-even">First release</dt>
+<dd class="field-even"><p>Targeted for the end of 2011, the first public release of the infrastructure
+will be labelled “version 1.0” and will support the core DataONE
+functionality including replication, identifier resolution, search and
+discovery, and federated identity.</p>
+</dd>
+<dt class="field-odd">Second release</dt>
+<dd class="field-odd"><p>Subsequent to the first public release will be a series of minor releases
+that progressively add functionality to the core infrastructure. It is
+anticipated that a streamlining and refactoring process will lead to another
+major release (version 2.0) towards the end of 2013.</p>
+</dd>
+</dl>
+<div class="section" id="version-numbering">
+<h2>Version Numbering<a class="headerlink" href="#version-numbering" title="Permalink to this headline">¶</a></h2>
+<p>There are many discrete products that together form the DataONE
+cyberinfrastructure. Each of these products may follow their own version
+steps, however the version of the infrastructure being matched should be
+indicated using the DataONE cyberinfrastructure version identifier.</p>
+<p>Version numbers are expressed in three parts: Major.Minor.Revision to reflect
+official releases of the software, where:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Major</dt>
+<dd class="field-odd"><p>Is a significantly different release from the previous version number, may
+provide significant additional features and may implement functionality that
+is not backwards compatible with prior releases.</p>
+</dd>
+<dt class="field-even">Minor</dt>
+<dd class="field-even"><p>Adds additional features to an existing release and maintains compatibility
+within the current major version.</p>
+</dd>
+<dt class="field-odd">Revision</dt>
+<dd class="field-odd"><p>Indicates a minor change from the current version, typically used to provide
+bug fix releases. Will not usually add additional functionality.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="roadmap">
+<h2>Roadmap<a class="headerlink" href="#roadmap" title="Permalink to this headline">¶</a></h2>
+<img alt="../_images/general_schedule.png" src="../_images/general_schedule.png" />
+<p><em>Figure 1.</em> Generalized plan for cyberinfrastructure development activities
+over the first five years of DataONE, indicating a gradual shift from design
+and significant blocks of implementation activity to adding value through
+expansion of services (e.g., semantic mediation services) and addition of
+content (e.g., new Member Nodes) and features such as the integration of new
+tools in the Investigator Toolkit. Shaded bars indicate emphasis of activity;
+diamonds indicate milestones.</p>
+<div class="section" id="year-1">
+<h3>Year 1<a class="headerlink" href="#year-1" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Initial design and prototyping.</p></li>
+<li><p>Review of architecture and prototype</p></li>
+</ul>
+</div>
+<div class="section" id="year-2">
+<h3>Year 2<a class="headerlink" href="#year-2" title="Permalink to this headline">¶</a></h3>
+<p>Major activities scheduled for the remainder of year 2 include continued
+evaluation of the prototype and infrastructure re-engineering as necessary to
+produce a reliable core infrastructure suitable for public release
+(infrastructure version 1.x) in the fall of 2011. Specific actions include:</p>
+<ul class="simple">
+<li><p>Revision of prototype implementation</p></li>
+<li><p>Public release of DataONE cyberinfrastructure. Implementation of the revised
+infrastructure with particular emphasis on scalable, stable, and secure core
+functionality</p></li>
+<li><p>User documentation. Development of technical user educational materials and
+ITK examples</p></li>
+<li><p>Member Node addition. Selection of and deployment of three additional MNs,
+most likely to include the National Biological Information Infrastructure
+(NBII), the Consortium of Universities for the Advancement of Hydrologic
+Science Hydrologic Information System (CUAHSI-HIS), and the Merritt
+Repository Service</p></li>
+<li><p>First implementation phases of federated identity.</p></li>
+<li><p>Design specifications for specialized Member Node participation. Such nodes
+would be utilized to support experimenters requiring significant
+computational power, or specialized rendering or data processing
+capabilities.</p></li>
+<li><p>Further progress on key aspects of semantic search, semantic integration and
+workflow support through activities of the respective working groups.</p></li>
+</ul>
+</div>
+<div class="section" id="years-3-5">
+<h3>Years 3-5<a class="headerlink" href="#years-3-5" title="Permalink to this headline">¶</a></h3>
+<p>Development activities enter a phase of incremental enhancement
+(infrastructure version 2.x) following the full public release of
+infrastructure, with suggestions from the DataONE Users Group (DUG) and
+working groups such as the Usability and Assessment Working Group. Features
+will be being assessed, prioritized, and incorporated into the infrastructure
+as appropriate. This approach will ensure ongoing progression of value-added
+cyberinfrastructure features for the lifetime of the project, and will also
+guarantee that the implementation remains well aligned with the overall
+requirements and expectations of the community as represented by the various
+working groups and the DUG. Major activities expected for the version 2.x
+series of infrastructure implementation (starting approximately 24 months into
+the project) include:</p>
+<ul class="simple">
+<li><p>Evaluation, testing and refinement. Evaluation of the infrastructure from
+computational, stability, and usability perspectives; documentation and
+prioritization of changes that need to be made; enhancement and performance
+tuning of core functionality</p></li>
+<li><p>Investigator Toolkit enhancement. Additions of tools to ITK to match
+enhancements to core functionality and support data life cycle activities
+(i.e., data collection through preservation and analysis and visualization)</p></li>
+<li><p>Semantically facilitated search and discovery. Incorporation of outputs from
+semantics working groups, targeting improvement of search precision and
+accuracy</p></li>
+<li><p>Addition of specialized Member Nodes. Addition of support for specialize
+node types to support operations requiring node characteristics other than
+data storage. For example, computation nodes may be employed to enable
+significant data processing capabilities without retrieval to the client,
+therefore enabling processing close to data.</p></li>
+<li><p>New user services. Addition of data sub-setting, visualization, and
+integration services, to be closely aligned with deployment of specialized
+nodes</p></li>
+<li><p>Global deployment of Member Nodes and Coordinating Nodes. Ongoing global
+deployment of all node types, including additional CNs in Europe and Oceania</p></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Implementation Roadmap</a><ul>
+<li><a class="reference internal" href="#version-numbering">Version Numbering</a></li>
+<li><a class="reference internal" href="#roadmap">Roadmap</a><ul>
+<li><a class="reference internal" href="#year-1">Year 1</a></li>
+<li><a class="reference internal" href="#year-2">Year 2</a></li>
+<li><a class="reference internal" href="#years-3-5">Years 3-5</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+  <li><a href="index.html">Implementation Notes</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Implementation Notes</a></li>
+      <li>Next: <a href="components.html" title="next chapter">Components of the DataONE Infrastructure</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/implementation/roadmap.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/implementation/roadmap.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/implementation/roadmap.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

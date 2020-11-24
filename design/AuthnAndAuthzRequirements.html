@@ -1,0 +1,656 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Identity, Authentication, and Authorization Requirements &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Overview of Authorization Policy Languages" href="Authorization-technologies.html" />
+    <link rel="prev" title="Authorization in DataONE" href="Authorization.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Authorization-technologies.html" title="Overview of Authorization Policy Languages"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Authorization.html" title="Authorization in DataONE"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="Authorization.html" accesskey="U">Authorization in DataONE</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Identity, Authentication, and Authorization Requirements</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="identity-authentication-and-authorization-requirements">
+<h1>Identity, Authentication, and Authorization Requirements<a class="headerlink" href="#identity-authentication-and-authorization-requirements" title="Permalink to this headline">¶</a></h1>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 75%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Category</p></th>
+<th class="head"><p>Requirement ID</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>API</p></td>
+<td><div class="line-block">
+<div class="line">765: Tools can access an API for authn and authz</div>
+<div class="line">820: Common API for authentication and authorization operations</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Authentication</p></td>
+<td><div class="line-block">
+<div class="line">392: Identity and access control should be interoperable across datanets</div>
+<div class="line">764: Authentication and access control should be consistently available</div>
+<div class="line">765: Tools can access an API for authn and authz</div>
+<div class="line">820: Common API for authentication and authorization operations</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>Authorization</p></td>
+<td><div class="line-block">
+<div class="line">393: Access control rule evaluation must be highly scalable and responsive.</div>
+<div class="line">761: Users can specify authorization rules for data objects, science metadata objects, and process artifacts separately</div>
+<div class="line">764: Authentication and access control should be consistently available</div>
+<div class="line">765: Tools can access an API for authn and authz</div>
+<div class="line">766: Users should be able to easily assign proxy privileges to other users and to systems acting on their behalf for limited time durations</div>
+<div class="line">767: Users need to be able to express embargo rules for data</div>
+<div class="line">768: Need default authz policies that resolve problems associated with inaccessible principals</div>
+<div class="line">769: Authorization should support critical roles, such as curators and system administrators</div>
+<div class="line">770: Authorization system should be able to express the pseudo-principal concepts like ‘public’</div>
+<div class="line">772: Authentication services should be compatible with existing infrastructure and applications</div>
+<div class="line">777: Authorization rules should support common permission levels</div>
+<div class="line">795: System must support revocation of user permissions</div>
+<div class="line">820: Common API for authentication and authorization operations</div>
+<div class="line">xxx: Group Identifiers are equivalent to user identifiers in all ACL mechanisms</div>
+<div class="line">xxx: Local sites/data owners have ability to generate, populate, and modify groups</div>
+<div class="line">xxx: Group information can be replicated so that all MNs can see it and use it to</div>
+<div class="line-block">
+<div class="line">enforce ACLS</div>
+</div>
+<div class="line">xxx: Need clear use cases for administering groups</div>
+<div class="line">xxx: Need clear business logic for replicating access control lists</div>
+<div class="line">xxx: Can access rules for Data Packages that cross operational bounds like MNs</div>
+<div class="line">xxx: System should support (and require?) transport-layer security</div>
+<div class="line">xxx: Need ability/clear policies to transfer ownership of abandoned objects</div>
+<div class="line">xxx: Support ability to use encryption to ensure restricted access from untrusted MNs</div>
+<div class="line">xxx: Can people with ‘SetPermission’ revoke access from original owners</div>
+<div class="line-block">
+<div class="line">– also does revoking SetPermission priv also revoke the privs for their</div>
+<div class="line">grantees</div>
+</div>
+<div class="line">xxx: Need to establish the default set of permissions in absence of additional roles</div>
+<div class="line">xxx: Need to ensure that deleted accounts can not be replaced by new users (i.e.,</div>
+<div class="line-block">
+<div class="line">identities are globally unique over time)</div>
+</div>
+<div class="line">xxx: Curator at institutional level has ability to create accounts for their group</div>
+<div class="line">xxx: Sites have ability to create groups</div>
+<div class="line">xxx: Sensitive data that is encrypted is generally not replicated except possibly to</div>
+<div class="line-block">
+<div class="line">avoid risks of leaks of that information (confused)</div>
+</div>
+<div class="line">xxx: Need process for data consumer to request authorization for an object</div>
+<div class="line">xxx: Need process for data owner to receive and evaluate the requests</div>
+<div class="line">xxx: Need ability to create index of users so that clients can use that list to</div>
+<div class="line-block">
+<div class="line">assign access control rules, and ability to look up Identity for particular users</div>
+</div>
+<div class="line">xxx: Should be able to assert write without read (controversial)</div>
+<div class="line">xxx: Users should be able to revoke their own access to an object</div>
+<div class="line">xxx: Allow users to create organic, self-created groups (e.g., for a lab or team)</div>
+<div class="line">xxx: Should have a user profile page to review/revise a user’s own identity, group, and</div>
+<div class="line-block">
+<div class="line">other Identity information</div>
+</div>
+<div class="line">xxx: Nodes need to be able to assert minimum LOA re: who has write access</div>
+<div class="line">xxx: May have need for ‘Deny’ permissions on access for convenience (but probably</div>
+<div class="line-block">
+<div class="line">lower priority)</div>
+</div>
+<div class="line">xxx: People can modify access control rules</div>
+<div class="line">xxx: Should be able to deposit content with embargo, but should be able to grant</div>
+<div class="line-block">
+<div class="line">anonymous access tokens for access to the data without the owner knowing who it</div>
+<div class="line">was that had access (use case for anonymous peer review in Dryad)</div>
+</div>
+<div class="line">xxx: Need ability to query what I have access to</div>
+<div class="line">xxx: co-ownership model for permissions is needed for handling co-authorship</div>
+<div class="line">xxx: Should groups be able to own objects?</div>
+<div class="line">xxx: Need to restrict visibility to objects for which they don’t have access in all</div>
+<div class="line-block">
+<div class="line">services (e.g., search, listObjects, etc)</div>
+</div>
+<div class="line">xxx: Member nodes should be able to restrict data access by individuals on Dept of</div>
+<div class="line-block">
+<div class="line">Commerce Embargo lists at high LOAs – possibly determine that we won’t support</div>
+<div class="line">this, but rather that we state these types of objects must not be uploaded</div>
+</div>
+<div class="line">xxx: Anonymous access will be allowed for for publicly accessible objects</div>
+<div class="line">xxx: Can groups contain groups, and at what nesting depth?  Yes, one level.</div>
+<div class="line">xxx: ID and acces control should be easy to use and not present barriers to adoption</div>
+<div class="line-block">
+<div class="line">and use</div>
+</div>
+<div class="line">xxx: ID and access control should work in all geopolitical jurisdictions</div>
+<div class="line">xxx: ID and access control should comply with universal design standards</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Identity</p></td>
+<td><div class="line-block">
+<div class="line">392: Identity and access control should be interoperable across datanets</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>IdentityProvision</p></td>
+<td><div class="line-block">
+<div class="line">390: Consistent mechanism for identifying users</div>
+<div class="line">391: Enable different classes of users commensurate with their roles.</div>
+<div class="line">762: User identities can be derived from existing institutional directory services</div>
+<div class="line">771: User identities should have simple string serializations that express both the user identity and namespace from which it is drawn</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Interoperability</p></td>
+<td><div class="line-block">
+<div class="line">392: Identity and access control should be interoperable across datanets</div>
+<div class="line">765: Tools can access an API for authn and authz</div>
+<div class="line">820: Common API for authentication and authorization operations</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>Performance</p></td>
+<td><div class="line-block">
+<div class="line">393: Access control rule evaluation must be highly scalable and responsive.</div>
+<div class="line">763: Authentication and authorization services are geographically replicated</div>
+<div class="line">764: Authentication and access control should be consistently available</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="consistent-mechanism-for-identifying-users">
+<h2>390: Consistent mechanism for identifying users<a class="headerlink" href="#consistent-mechanism-for-identifying-users" title="Permalink to this headline">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">ID</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://trac.dataone.org/ticket/390">https://trac.dataone.org/ticket/390</a></p>
+</dd>
+</dl>
+<p>It is necessary to provide a mechanism for users to be identified in the DataONE system. There are several distinct roles that need to be supported for users.Rationale: Identity of users, contributors and other participants in DataONE is necessary to ensure appropriate policies for data sharing (read, write), attribution, and notification (e.g. subscription to types of data).</p>
+<p>Fit Criteria</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Users can identify themselves in the DataONE system</p></li>
+<li><p>Identity is consistent across all nodes (i.e. identity associated with an object is consistent regardless of where the object is retrieved from or acted on)</p></li>
+<li><p>Users can associate various accounts with a single identity</p></li>
+<li><p>Identity information is sufficient to ensure appropriate attribution to content</p></li>
+<li><p>Authentication and authorization mechanisms are recognized consistently by all participant nodes and services of the cicore.</p></li>
+<li><p>Existing user directories in use in environmental science community can directly contribute identities (not “yet another” identity system)</p></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="enable-different-classes-of-users-commensurate-with-their-roles">
+<h2>391: Enable different classes of users commensurate with their roles.<a class="headerlink" href="#enable-different-classes-of-users-commensurate-with-their-roles" title="Permalink to this headline">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">ID</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://trac.dataone.org/ticket/391">https://trac.dataone.org/ticket/391</a></p>
+</dd>
+</dl>
+<p>There are several types of users that will be interacting with the DataONE infrastructure, as such it is necessary to ensure that user roles can be supported by the identity management infrastructure. Closely related to <a class="reference external" href="https://trac.dataone.org/ticket/390">https://trac.dataone.org/ticket/390</a></p>
+<p>Rationale: Different user classes or groups provides an effective mechanismfor indicating the types of interaction that might be supported by the system. The alternative is to specifically assign privileges for each user - an
+approach that is inefficient and potentially insecure as it is easy to miss an
+individual when setting privileges for a large number of users.</p>
+<blockquote>
+<div><p>Fit  Criteria</p>
+<ul class="simple">
+<li><p>A well defined set of standard groups is identified and can be easily manage (e.g. administrators, data contributors, data readers)</p></li>
+<li><p>Users can be assigned to and removed from groups</p></li>
+<li><p>Additional groups can be created to support group functions as necessary</p></li>
+<li><p>Users can create their own groups for ad-hoc collaboration when needed and without approval of system administrators</p></li>
+<li><p>Access control rules can be associated with groups and operate as expected.</p></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="identity-and-access-control-should-be-interoperable-across-datanets">
+<h2>392: Identity and access control should be interoperable across datanets<a class="headerlink" href="#identity-and-access-control-should-be-interoperable-across-datanets" title="Permalink to this headline">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">ID</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://trac.dataone.org/ticket/392">https://trac.dataone.org/ticket/392</a></p>
+</dd>
+</dl>
+<p>There is a general requirement / suggestion by NSF that there should be interoperability between the various DataNet projects.  Rationale: It seems like identity and access control is a good place where considerable value can be demonstrated to the user community if credentials and access control rules worked across the data net projects.</p>
+<dl class="simple">
+<dt>Fit Criteria</dt><dd><ul class="simple">
+<li><p>Users can sign into DataONE and DC with the same credentials</p></li>
+<li><p>Once signed in to DataONE, access to DC services is seamless (no additional authentication required)</p></li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="access-control-rule-evaluation-must-be-highly-scalable-and-responsive">
+<h2>393: Access control rule evaluation must be highly scalable and responsive.<a class="headerlink" href="#access-control-rule-evaluation-must-be-highly-scalable-and-responsive" title="Permalink to this headline">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">ID</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://trac.dataone.org/ticket/393">https://trac.dataone.org/ticket/393</a></p>
+</dd>
+</dl>
+<p>Access control for objects is evaluated for every object access in the DataONE infrastructure.  As such, the mechanisms used to determine if a particular token (i.e. handle to an authenticated principle) must be very efficient and should not offer a barrier to the desired levels of access control in the system.</p>
+<p>Rationale</p>
+<p>Access control should not be an impediment to effective use of the content available through DataONE.</p>
+<p>Fit Criteria</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Access control rules can be evaluted for any token in an average of xxx milliseconds</p></li>
+<li><p>Access control rules must not take longer than xxx milliseconds to evaluate</p></li>
+<li><p>Access control must not block critical operations (e.g replications, synchronization)</p></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="users-can-specify-authorization-rules-for-data-objects-science-metadata-objects-and-process-artifacts-separately">
+<h2>761: Users can specify authorization rules for data objects, science metadata objects, and process artifacts separately<a class="headerlink" href="#users-can-specify-authorization-rules-for-data-objects-science-metadata-objects-and-process-artifacts-separately" title="Permalink to this headline">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">ID</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://trac.dataone.org/ticket/761">https://trac.dataone.org/ticket/761</a></p>
+</dd>
+</dl>
+<p>Users might be able to upload data and science metadata as an atomic operation, but each should be identified separately and access control rules should apply to the objects separately.  For example, a user could grant public read access to a metadata object but only grant read access to certain colleagues for associated data objects.</p>
+<p>Rationale:
+Enabling access control at the same level of granularity of objects in the system ensures that complete control over object conglomerations (packages, etc) is available.</p>
+<dl class="simple">
+<dt>Fit Criteria</dt><dd><ul class="simple">
+<li><p>All objects in the system have access control rules</p></li>
+<li><p>Separate rules can be associated with the elements of a package during operations at the package level (e.g. <code class="docutils literal notranslate"><span class="pre">create</span></code>)</p></li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="user-identities-can-be-derived-from-existing-institutional-directory-services">
+<h2>762: User identities can be derived from existing institutional directory services<a class="headerlink" href="#user-identities-can-be-derived-from-existing-institutional-directory-services" title="Permalink to this headline">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">ID</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://trac.dataone.org/ticket/762">https://trac.dataone.org/ticket/762</a></p>
+</dd>
+</dl>
+<p>Many existing directory services are in use in the environmental sciences, and participating member nodes should be able to expose their directories through a standardized mechanism to allow users to make use of existing identities.  For example, the KNB LDAP server is a federation of multiple LDAP systems from around the world, and these identities have been used in access rules for many existing objects.Rationale: Re-use of existing infrastructure reduces cost of participation and minimizes confusion over which accounts to use and which rules are associated with what account.</p>
+<p>Fit Criteria</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>The system provides a mechanism for exsiting directory services to join * The system provides a namespacing mechanism to differentiate users with the same id in different original directories (e.g., <a class="reference external" href="mailto:mjones&#37;&#52;&#48;LTER">mjones<span>&#64;</span>LTER</a>, <a class="reference external" href="mailto:mjones&#37;&#52;&#48;UCNRS">mjones<span>&#64;</span>UCNRS</a>)</p></li>
+<li><p>The same email address can be associated with multiple identities</p></li>
+<li><p>The same person or system can possess multiple identities</p></li>
+<li><p>If a user has multiple identities, the user can express equivalence rules that indicate that they are linked, equivalent identities for the purposes of authentication and authorization</p></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="authentication-and-authorization-services-are-geographically-replicated">
+<h2>763: Authentication and authorization services are geographically replicated<a class="headerlink" href="#authentication-and-authorization-services-are-geographically-replicated" title="Permalink to this headline">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">ID</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://trac.dataone.org/ticket/763">https://trac.dataone.org/ticket/763</a></p>
+</dd>
+</dl>
+<p>Authentication and authorization are critical services that can not afford geographic delays, especially across continents, in order to allow adequate responsiveness. Users and developers of services should not have to know which authentication service is used (i.e. a load balancing and failover solution from a centralized address (probably the coordinating node address) should be able to access any of the replicated services.  Replicas should be located at multiple trusted sites (probably coordinating nodes) that are geographically distributed (incl. across continents)</p>
+<p>Fit Criteria</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Authentication operations should be less than xxx milliseconds from any point in the network</p></li>
+<li><p>Replicas of authentication and authorization services are geographically replicated</p></li>
+<li><p>Failover across replicated services is automatic without client-side intervention</p></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="authentication-and-access-control-should-be-consistently-available">
+<h2>764: Authentication and access control should be consistently available<a class="headerlink" href="#authentication-and-access-control-should-be-consistently-available" title="Permalink to this headline">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">ID</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://trac.dataone.org/ticket/764">https://trac.dataone.org/ticket/764</a></p>
+</dd>
+</dl>
+<p>Authentication and authorization are a critical infrastructure bottleneck, and should be consistently available, likely through load balancing and failover solutions.</p>
+<p>Fit Criteria</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Authn and Authz should be available xx.xxxxx% (To be determined)</p></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="tools-can-access-an-api-for-authn-and-authz">
+<h2>765: Tools can access an API for authn and authz<a class="headerlink" href="#tools-can-access-an-api-for-authn-and-authz" title="Permalink to this headline">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">ID</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://trac.dataone.org/ticket/765">https://trac.dataone.org/ticket/765</a></p>
+</dd>
+</dl>
+<p>A standardized API allows us to build interoperable tools, and adapt existing tools to interoperate with the DataNets. All infrastructure components should be able to use these services, including CNs, MNs, and client tools and libraries.</p>
+<p>Fit Criteria</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Demonstrated interoperability of the API across 3 client and member node systems</p></li>
+<li></li>
+<li></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="users-should-be-able-to-easily-assign-proxy-privileges-to-other-users-and-to-systems-acting-on-their-behalf-for-limited-time-durations">
+<h2>766: Users should be able to easily assign proxy privileges to other users and to systems acting on their behalf for limited time durations<a class="headerlink" href="#users-should-be-able-to-easily-assign-proxy-privileges-to-other-users-and-to-systems-acting-on-their-behalf-for-limited-time-durations" title="Permalink to this headline">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">ID</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://trac.dataone.org/ticket/766">https://trac.dataone.org/ticket/766</a></p>
+</dd>
+</dl>
+<p>When users need to execute processes asynchronously, they need to be able to grant proxy privileges (e.g., to a workflow or grid system) to operate on their behalf in particular contexts.  In addition, at times some users want others to be able to run and access data and operate on behalf of another, such as in a faculty student situation where the student acts as a proxy for the faculty member.</p>
+<p>Fit Criteria</p>
+<blockquote>
+<div><ul class="simple">
+<li></li>
+<li></li>
+<li></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="users-need-to-be-able-to-express-embargo-rules-for-data">
+<h2>767: Users need to be able to express embargo rules for data<a class="headerlink" href="#users-need-to-be-able-to-express-embargo-rules-for-data" title="Permalink to this headline">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">ID</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://trac.dataone.org/ticket/767">https://trac.dataone.org/ticket/767</a></p>
+</dd>
+</dl>
+<p>These embargo rules allow data to be published in the system, but not released until a particular date.  By operating this way, users can use the system in their daily management of their data without worry of losing track of publication of the data at a later date.  It encourages people to start using the system even long before they want to publicly release the data.</p>
+<p>Fit Criteria</p>
+<blockquote>
+<div><ul class="simple">
+<li></li>
+<li></li>
+<li></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="need-default-authz-policies-that-resolve-problems-associated-with-inaccessible-principals">
+<h2>768: Need default authz policies that resolve problems associated with inaccessible principals<a class="headerlink" href="#need-default-authz-policies-that-resolve-problems-associated-with-inaccessible-principals" title="Permalink to this headline">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">ID</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://trac.dataone.org/ticket/768">https://trac.dataone.org/ticket/768</a></p>
+</dd>
+</dl>
+<p>When principals die, retire, change careers, or lose interest in a research area, they may leave in the system data objects that would be otherwise useful to science but are restricted access.  The authorization system should have carefully crafted default policies that encourage the public release and sharing of data, the expiration of embargo periods, and the movement of data into the public domain when it is legal and ethical to do so.  Principals should be able to override these defaults to create more restrictive policies (e.g., for human subjects data) that will be respected indefinitely, but the defaults should encourage openness and sharing.</p>
+<p>Fit Criteria</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Defaults encourage openness and sharing, without alienating principals through unexpected release of their data, etc.</p></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="authorization-should-support-critical-roles-such-as-curators-and-system-administrators">
+<h2>769: Authorization should support critical roles, such as curators and system administrators<a class="headerlink" href="#authorization-should-support-critical-roles-such-as-curators-and-system-administrators" title="Permalink to this headline">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">ID</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://trac.dataone.org/ticket/769">https://trac.dataone.org/ticket/769</a></p>
+</dd>
+</dl>
+<p>While the principals contributing data should be able to specify access, they frequently struggle with the software systems intended to do so, and at times make mistakes.  The system should support certain roles with elevated privielges for groups of objects to allow, e.g, a system administrator or data curator to change objects for which they are not otherwise granted access.  For example, all objects that are associated with a particular field station might be managed by the information manager at that field station, and the person filling that role through time might change.  Individual principals should be able to determine who has access to objects, both through explicit grants of access and through indirect roles that may be only implicitly defined.</p>
+<p>Fit Criteria</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Its possible for access by some roles to be assigned implicitly through certain membership criteria (e.g., a data object is part of an LTER site)</p></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="authorization-system-should-be-able-to-express-the-pseudo-principal-concepts-like-public">
+<h2>770: Authorization system should be able to express the pseudo-principal concepts like ‘public’<a class="headerlink" href="#authorization-system-should-be-able-to-express-the-pseudo-principal-concepts-like-public" title="Permalink to this headline">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">ID</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://trac.dataone.org/ticket/770">https://trac.dataone.org/ticket/770</a></p>
+</dd>
+</dl>
+<p>There should be well-known mechanisms in the authorization system to allow access rules that explicitly grant access to pseudo-principals, including:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>public: anonymous, non-authenticated users</p></li>
+<li><p>valid-user: authenticated user</p></li>
+<li><p>registered-user: authenticated user with explicit minimal contact information</p></li>
+<li><p>verified-user: authenticated user with explicit minimal contact information that has been verified as belonging to a real account holder</p></li>
+</ul>
+</div></blockquote>
+<p>Fit Criteria</p>
+<blockquote>
+<div><ul class="simple">
+<li></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="user-identities-should-have-simple-string-serializations-that-express-both-the-user-identity-and-namespace-from-which-it-is-drawn">
+<h2>771: User identities should have simple string serializations that express both the user identity and namespace from which it is drawn<a class="headerlink" href="#user-identities-should-have-simple-string-serializations-that-express-both-the-user-identity-and-namespace-from-which-it-is-drawn" title="Permalink to this headline">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">ID</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://trac.dataone.org/ticket/771">https://trac.dataone.org/ticket/771</a></p>
+</dd>
+</dl>
+<p>When user identities can be drawn from multiple providers, we need to be able to serialize both the id and the provider namespace, for example by encapsulating both in a single distinguished name (DN).  Ideally this serialization would be relatively short, persistent, and human understandable, and ideally it should not contain spaces or other characters that make it difficult to utilize in a variety of contexts (such as command line applications).</p>
+<p>An example DN that has worked for the KNB network is:</p>
+<blockquote>
+<div><p>uid=jones,o=NCEAS,dc=ecoinformatics,dc=org</p>
+</div></blockquote>
+<p>Fit Criteria</p>
+<blockquote>
+<div><ul class="simple">
+<li></li>
+<li></li>
+<li></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="authentication-services-should-be-compatible-with-existing-infrastructure-and-applications">
+<h2>772: Authentication services should be compatible with existing infrastructure and applications<a class="headerlink" href="#authentication-services-should-be-compatible-with-existing-infrastructure-and-applications" title="Permalink to this headline">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">ID</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://trac.dataone.org/ticket/772">https://trac.dataone.org/ticket/772</a></p>
+</dd>
+</dl>
+<p>Many applications will need to be adapted to work with the authentication and authorization services provided.  Ideally, the services chosen will be compatible with existing systems and support those systems through standard protocols.  Applications will need to commonly connect to, for example, web applications using HTTP Basic Authentication for Apache and JAAS for servlets like Tomcat.  In addition, some applications may want to connect via PAM and similar security mechanisms.  Some identity services, such as LDAP, are commonly supported in these scenarios.</p>
+<dl class="simple">
+<dt>Fit Criteria</dt><dd><ul class="simple">
+<li><p>Software in common use at Member Nodes and as clients should be able to easily utilize the authentication and authorization services with minimal configuration</p></li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="authorization-rules-should-support-common-permission-levels">
+<h2>777: Authorization rules should support common permission levels<a class="headerlink" href="#authorization-rules-should-support-common-permission-levels" title="Permalink to this headline">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">ID</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://trac.dataone.org/ticket/777">https://trac.dataone.org/ticket/777</a></p>
+</dd>
+</dl>
+<p>Several types of access directives are in common use in data packages in the environmental sciences, and the authorization system should support these.  The most common authorization levels would include:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>read: the ability to display or download an object</p></li>
+<li><p>write: the ability to change the content of an object through an update operation (which does not mean it actually changes the object – it may just create a new version that obsoletes the old)</p></li>
+<li><p>changePermission: the ability to change access control rules on the object</p></li>
+</ul>
+</div></blockquote>
+<p>Often, the permission levels are nested, in that higher privilege levels encompass the lower levels as well (e.g., write access to an object implies read access).</p>
+<p>See the EML access control module for a detailed explanation of these levels (eml-access module).</p>
+<p>In addition to specifying levels of permissions on the individual data objects, the authorization system should allow node administrators to specify what services principals can utilize on their nodes, and any resource constraints that may apply.  For example, a Member Node operator may want to specify for their node several rules, such as:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>user joe can insert or update objects on node 32</p></li>
+<li><p>user jack can not update objects on node 21</p></li>
+<li><p>user joe has an aggregate storage limit of 1TB (may want to consider soft and hard resource limits)</p></li>
+<li><p>user joe has a network bandwidth transfer limit of 10mb/s</p></li>
+</ul>
+</div></blockquote>
+<p>Note that these types of node-level resource limitations may not be implemented currently on most member nodes, but the authorization system should be expressive enough to allow node operators to build in these restrictions.</p>
+</div>
+<div class="section" id="system-must-support-revocation-of-user-permissions">
+<h2>795: System must support revocation of user permissions<a class="headerlink" href="#system-must-support-revocation-of-user-permissions" title="Permalink to this headline">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">ID</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://trac.dataone.org/ticket/795">https://trac.dataone.org/ticket/795</a></p>
+</dd>
+</dl>
+<p>The system should be able to revoke any user’s permissions and, ultimately, their direct access to the system, if the user is misbehaving within the system.</p>
+<p>Although it is unclear as to who assigns permissions, I believe that the final responsibility and authority for access control is the DataONE administrator.  As such, permissions and simple access to any part of the DataONE infrastructure, and perhaps member node infrastructure that is accessed through DataONE, should be revokable.</p>
+<p>Fit Criteria</p>
+<ul class="simple">
+<li><p>Administrator can change permissions for a user for any object</p></li>
+<li><p>Permission changes are propagated through the system within XXX seconds</p></li>
+<li><p>Read, write access rules can be altered for a user for all content in the system</p></li>
+</ul>
+</div>
+<div class="section" id="common-api-for-authentication-and-authorization-operations">
+<h2>820: Common API for authentication and authorization operations<a class="headerlink" href="#common-api-for-authentication-and-authorization-operations" title="Permalink to this headline">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">ID</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://trac.dataone.org/ticket/820">https://trac.dataone.org/ticket/820</a></p>
+</dd>
+</dl>
+<p>There should be a common API utilized by the major software components of the infrastructure for DataONE (for all DataNet?) for authentication and authorization operations.</p>
+<p>Rationale</p>
+<p>A common API will help minimize inconsistencies that arise from functional and semantic mis-match when interacting across multiple systems.</p>
+<p>Fit Criteria</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>CN, MN, and ITK libraries share a common API for authn and authz</p></li>
+<li><p>Differing component implementations pass integration testing</p></li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Identity, Authentication, and Authorization Requirements</a><ul>
+<li><a class="reference internal" href="#consistent-mechanism-for-identifying-users">390: Consistent mechanism for identifying users</a></li>
+<li><a class="reference internal" href="#enable-different-classes-of-users-commensurate-with-their-roles">391: Enable different classes of users commensurate with their roles.</a></li>
+<li><a class="reference internal" href="#identity-and-access-control-should-be-interoperable-across-datanets">392: Identity and access control should be interoperable across datanets</a></li>
+<li><a class="reference internal" href="#access-control-rule-evaluation-must-be-highly-scalable-and-responsive">393: Access control rule evaluation must be highly scalable and responsive.</a></li>
+<li><a class="reference internal" href="#users-can-specify-authorization-rules-for-data-objects-science-metadata-objects-and-process-artifacts-separately">761: Users can specify authorization rules for data objects, science metadata objects, and process artifacts separately</a></li>
+<li><a class="reference internal" href="#user-identities-can-be-derived-from-existing-institutional-directory-services">762: User identities can be derived from existing institutional directory services</a></li>
+<li><a class="reference internal" href="#authentication-and-authorization-services-are-geographically-replicated">763: Authentication and authorization services are geographically replicated</a></li>
+<li><a class="reference internal" href="#authentication-and-access-control-should-be-consistently-available">764: Authentication and access control should be consistently available</a></li>
+<li><a class="reference internal" href="#tools-can-access-an-api-for-authn-and-authz">765: Tools can access an API for authn and authz</a></li>
+<li><a class="reference internal" href="#users-should-be-able-to-easily-assign-proxy-privileges-to-other-users-and-to-systems-acting-on-their-behalf-for-limited-time-durations">766: Users should be able to easily assign proxy privileges to other users and to systems acting on their behalf for limited time durations</a></li>
+<li><a class="reference internal" href="#users-need-to-be-able-to-express-embargo-rules-for-data">767: Users need to be able to express embargo rules for data</a></li>
+<li><a class="reference internal" href="#need-default-authz-policies-that-resolve-problems-associated-with-inaccessible-principals">768: Need default authz policies that resolve problems associated with inaccessible principals</a></li>
+<li><a class="reference internal" href="#authorization-should-support-critical-roles-such-as-curators-and-system-administrators">769: Authorization should support critical roles, such as curators and system administrators</a></li>
+<li><a class="reference internal" href="#authorization-system-should-be-able-to-express-the-pseudo-principal-concepts-like-public">770: Authorization system should be able to express the pseudo-principal concepts like ‘public’</a></li>
+<li><a class="reference internal" href="#user-identities-should-have-simple-string-serializations-that-express-both-the-user-identity-and-namespace-from-which-it-is-drawn">771: User identities should have simple string serializations that express both the user identity and namespace from which it is drawn</a></li>
+<li><a class="reference internal" href="#authentication-services-should-be-compatible-with-existing-infrastructure-and-applications">772: Authentication services should be compatible with existing infrastructure and applications</a></li>
+<li><a class="reference internal" href="#authorization-rules-should-support-common-permission-levels">777: Authorization rules should support common permission levels</a></li>
+<li><a class="reference internal" href="#system-must-support-revocation-of-user-permissions">795: System must support revocation of user permissions</a></li>
+<li><a class="reference internal" href="#common-api-for-authentication-and-authorization-operations">820: Common API for authentication and authorization operations</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+  <li><a href="Authorization.html">Authorization in DataONE</a><ul>
+      <li>Previous: <a href="Authorization.html" title="previous chapter">Authorization in DataONE</a></li>
+      <li>Next: <a href="Authorization-technologies.html" title="next chapter">Overview of Authorization Policy Languages</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/design/AuthnAndAuthzRequirements.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/design/AuthnAndAuthzRequirements.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/AuthnAndAuthzRequirements.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

@@ -1,0 +1,471 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Integration Testing &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Infrastructure Versions" href="versions.html" />
+    <link rel="prev" title="Implementation Priority" href="prioritization.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="versions.html" title="Infrastructure Versions"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="prioritization.html" title="Implementation Priority"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Implementation Notes</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Integration Testing</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="integration-testing">
+<h1>Integration Testing<a class="headerlink" href="#integration-testing" title="Permalink to this headline">¶</a></h1>
+<p>While each of the individual components of the DataONE system are designed and
+tested independently, we also need to design effective tests of the full
+system functionality. To fulfill many of the use cases, many of the components
+in the DataONE infrastructure need to interact in a sequenced manner with
+particular inputs and outputs. The integration tests are designed to allow
+individual components to be exercised in these particular use case scenarios
+with known inputs in order to verify that the correct output is produced, and
+that adequate performance, reliability, and scalability metrics can be met.</p>
+<div class="section" id="test-framework">
+<h2>Test framework<a class="headerlink" href="#test-framework" title="Permalink to this headline">¶</a></h2>
+<p>In order to run these tests effectively, we need a testing framework that can be
+used to encode and execute the tests in an orderly fashion and to capture the
+results of the tests over time. This will allow us to trace changes in the test
+results over time. It would be useful to provide a synopsis view of all of the
+tests, showing which are passing and which are failing. This testing framework
+must be able to execute processes across several different languages, allow a
+multitude of clients to be configured to load test Member Nodes, and allow a
+multitude of Member Nodes to be configured to load test Coordinating Nodes.</p>
+</div>
+<div class="section" id="list-of-integration-tests">
+<h2>List of integration tests<a class="headerlink" href="#list-of-integration-tests" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This list needs to be segmented to show what tests need to be passed
+by July 31st, versus what tests can be deferred to later.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The metrics need to be parts of the tests. Are there things in the
+metrics that we’re not testing?</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Codes: Integration tests were ranked as High (H) or Low (L) priority,
+where each person had 10 high and 10 low votes to assign. Unranked
+tests were considered Medium (M) priority.</p>
+</div>
+<table class="colwidths-given docutils align-default" id="id1">
+<caption><span class="caption-text">High-level integration tests with prioritized votes</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 3%" />
+<col style="width: 3%" />
+<col style="width: 3%" />
+<col style="width: 3%" />
+<col style="width: 88%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>#</p></th>
+<th class="head"><p>High</p></th>
+<th class="head"><p>Due July 31?</p></th>
+<th class="head"><p>Low</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>8</p></td>
+<td><p>July 31</p></td>
+<td><p></p></td>
+<td><p>Use case 36 (resolve)</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>8</p></td>
+<td><p>July 31</p></td>
+<td><p></p></td>
+<td><p>Use case 2  (query)</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>8</p></td>
+<td><p>July 31</p></td>
+<td><p></p></td>
+<td><p>Completing the loop: publish data set, be sure it is retrievable exactly as submitted</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>6</p></td>
+<td><p>July 31</p></td>
+<td><p></p></td>
+<td><p>Use case 1 (get). Note: need to test for non-existant ID’s, test access control, test for malicious content</p></td>
+</tr>
+<tr class="row-even"><td><p>5</p></td>
+<td><p>6</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>Can a downed CN be revived/repopulated?</p></td>
+</tr>
+<tr class="row-odd"><td><p>6</p></td>
+<td><p>6</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>Testing for invalid input and known problems such as XSS and SQL Injection</p></td>
+</tr>
+<tr class="row-even"><td><p>7</p></td>
+<td><p>5</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>Use case 6 (synchronize). Note: what is needed for reschronize and recovery from outage.</p></td>
+</tr>
+<tr class="row-odd"><td><p>8</p></td>
+<td><p>5</p></td>
+<td><p>July 31</p></td>
+<td><p>1</p></td>
+<td><p>Do the Java Stacks and Python stacks return the same thing for the same object</p></td>
+</tr>
+<tr class="row-even"><td><p>9</p></td>
+<td><p>4</p></td>
+<td><p>July 31</p></td>
+<td><p></p></td>
+<td><p>Does CN metadata replication work</p></td>
+</tr>
+<tr class="row-odd"><td><p>10</p></td>
+<td><p>3</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>Broadly, test node failures, including CN and MN. Mostly concerned with read access at this point. MN1 submits data, gets replicated to MN2, MN1 goes down, test access to data even in the absence of the owning Member Node.</p></td>
+</tr>
+<tr class="row-even"><td><p>11</p></td>
+<td><p>2</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>Use case 16 (log CRUD operations)</p></td>
+</tr>
+<tr class="row-odd"><td><p>12</p></td>
+<td><p>2</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>Test that invalid documents are properly logged on harvest and that logs are machine parseable</p></td>
+</tr>
+<tr class="row-even"><td><p>13</p></td>
+<td><p>2</p></td>
+<td><p>July 31</p></td>
+<td><p></p></td>
+<td><p>Consistency Check on CN’s ( Test that the checksums at CN’s match)</p></td>
+</tr>
+<tr class="row-odd"><td><p>14</p></td>
+<td><p>2</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>Use case 9 (MN-MN replication): includes testing replication policies</p></td>
+</tr>
+<tr class="row-even"><td><p>15</p></td>
+<td><p>2</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>Load testing to determime the break points  (how far can we scale).</p>
+<p>Relates to risk register issue that CN’s don’t scale to handle the load.</p>
+<p>What is the target that we should be able to handle. Suggestion is that
+we want to be able to handle 100 Member Node traffic. This may not be a
+big issue until we get to handling high frequency updates (e.g. sensor
+data). Thought: look at the milestone 3 metrics and test at 5x that
+number.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p>16</p></td>
+<td><p>1</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>Does an insertion via a MN replication request work?</p></td>
+</tr>
+<tr class="row-even"><td><p>17</p></td>
+<td><p>1</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>Serve up data from a replicated MN when home MN is inavailable</p></td>
+</tr>
+<tr class="row-odd"><td><p>18</p></td>
+<td><p>1</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>Data and Metadata re-synchronization when MN and CN come back from outage</p></td>
+</tr>
+<tr class="row-even"><td><p>19</p></td>
+<td><p>1</p></td>
+<td><p>July 31</p></td>
+<td><p></p></td>
+<td><p>Testing authentication and access control. Includes testing actions that should be rejected.</p></td>
+</tr>
+<tr class="row-odd"><td><p>20</p></td>
+<td><p>1</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>Testing that system metadata is properly validated. Resilience against a “loco” node with malformed metadata (both operator error and malicious users)</p></td>
+</tr>
+<tr class="row-even"><td><p>21</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>Use case 12 (User Authentication)</p></td>
+</tr>
+<tr class="row-odd"><td><p>22</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>Use case 13 (User authorization)</p></td>
+</tr>
+<tr class="row-even"><td><p>23</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>Use case 14 (system authenication and authorization)</p></td>
+</tr>
+<tr class="row-odd"><td><p>24</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>Integration tests across multiple Member Nodes and Coordinating Nodes. For example, inserting documents at the same time but in different places to ensure it works and we don’t have deadlocks showing up.</p></td>
+</tr>
+<tr class="row-even"><td><p>25</p></td>
+<td><p>1</p></td>
+<td><p></p></td>
+<td><p>1</p></td>
+<td><p>Threshold tests for heartbeats and other status testing.</p></td>
+</tr>
+<tr class="row-odd"><td><p>26</p></td>
+<td><p>1</p></td>
+<td><p></p></td>
+<td><p>1</p></td>
+<td><p>General penetration testing (WebInspect as a specific example)</p></td>
+</tr>
+<tr class="row-even"><td><p>27</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>1</p></td>
+<td><p>Use case 17 (CRUD logs aggregated at CN) Not impmemented yet</p></td>
+</tr>
+<tr class="row-odd"><td><p>28</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>1</p></td>
+<td><p>Use case 24 (MN and CN’s support transactions)</p></td>
+</tr>
+<tr class="row-even"><td><p>29</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>1</p></td>
+<td><p>Does a MN data/metadata insertion prevent a race condition, even if insertion deviuosly tries to trigger a race condition</p></td>
+</tr>
+<tr class="row-odd"><td><p>30</p></td>
+<td><p>2</p></td>
+<td><p></p></td>
+<td><p>2</p></td>
+<td><p>Test that the ITK libraries work properly on all supported (advertised)  OS platforms, hardware, and software combinations</p></td>
+</tr>
+<tr class="row-even"><td><p>31</p></td>
+<td><p>1</p></td>
+<td><p></p></td>
+<td><p>2</p></td>
+<td><p>Race condition:  What happens if two MN’s submit the same thing?</p></td>
+</tr>
+<tr class="row-odd"><td><p>32</p></td>
+<td><p>1</p></td>
+<td><p></p></td>
+<td><p>3</p></td>
+<td><p>Testing the logging and auditing functions. Ditto on the reporting functions. There should be unit tests for this within the software stacks, but this needs to verify that, for example, a Member Node action is logged at the MN and at the CN.</p></td>
+</tr>
+<tr class="row-even"><td><p>33</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>3</p></td>
+<td><p>Performance testing (particularly as a function of load)</p></td>
+</tr>
+<tr class="row-odd"><td><p>34</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>3</p></td>
+<td><p>Accessibility – 508 compliance as a floor, but going beyond this to appropriate level of accessibility.</p></td>
+</tr>
+<tr class="row-even"><td><p>35</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>3</p></td>
+<td><p>Test replication policies.  (duplicative test of above?) Side issue: unit testing to see if replication policy is inconsistent. More an issue for rule-based replication policies. Precedence of operations may fix this, but what happens when the replication policy resolves to zero replication nodes allowed (or replication nodes less than required number of replication nodes)?</p></td>
+</tr>
+<tr class="row-odd"><td><p>36</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>3</p></td>
+<td><p>Usability testing (generally) – push off to a different category from Integration testing.</p></td>
+</tr>
+<tr class="row-even"><td><p>37</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>4</p></td>
+<td><p>Response time test (both API and GUI). Relates back to performance testing.</p></td>
+</tr>
+<tr class="row-odd"><td><p>38</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>4</p></td>
+<td><p>Testing validity of science metadata (compliance with standards). See issue in parking lot.</p></td>
+</tr>
+<tr class="row-even"><td><p>39</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>4</p></td>
+<td><p>Use case 3 (register – manual operation)</p></td>
+</tr>
+<tr class="row-odd"><td><p>40</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>4</p></td>
+<td><p>Deployment testing – can we test that dependancies have been resolved, perhaps a particular issue for the ITK, but also for the various Member Node stacks.</p></td>
+</tr>
+<tr class="row-even"><td><p>41</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>5</p></td>
+<td><p>Test that the libraries can check for dependancies, so that when the library intializes it checks that the necessary dependancies have been installed. Some of this is handled with egg installations.  ??what happens if something changes after the installation? Library needs to manage these issues, and emit appropriate error codes.</p></td>
+</tr>
+<tr class="row-odd"><td><p>42</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>5</p></td>
+<td><p>Use case 10 (MN status reports)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>How many failure modes do we want to test? Need a Failure Mode Effect
+Analysis (FMEA) to prioritize the test cases to write against. Comment
+on FMEA: Assign, for a given failure mode a score of 1-10 for each of
+a) how likely is this to occur, b) what is the cost if this occurs, c)
+how early can the failure mode be detected, d) how much does it cost
+to mitigate the failure mode. Idea is that you multiply across the
+scores and prioritize accordingly. A failure mode that is very likely,
+is catastrophic, cannot be detected until it occurs, and is easy to
+mitigate prioritizes to the top of the list.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Integration Testing</a><ul>
+<li><a class="reference internal" href="#test-framework">Test framework</a></li>
+<li><a class="reference internal" href="#list-of-integration-tests">List of integration tests</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+  <li><a href="index.html">Implementation Notes</a><ul>
+      <li>Previous: <a href="prioritization.html" title="previous chapter">Implementation Priority</a></li>
+      <li>Next: <a href="versions.html" title="next chapter">Infrastructure Versions</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/implementation/integration-testing.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/implementation/integration-testing.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/implementation/integration-testing.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

@@ -1,0 +1,350 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DataONE Architecture &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/mathjax_pre.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Member Node APIs" href="apis/MN_APIs.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="apis/MN_APIs.html" title="Member Node APIs"
+             accesskey="N">next</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#"></a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">DataONE Architecture</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="dataone-architecture">
+<h1>DataONE Architecture<a class="headerlink" href="#dataone-architecture" title="Permalink to this headline">¶</a></h1>
+<p>The Data Observation Network for Earth (<a class="reference external" href="http://www.dataone.org/">DataONE</a>) implements and deploys
+core services and infrastructure to support long term access and re-use of
+data collected through NSF funded and other research projects.</p>
+<p>These documents describe the architecture and APIs for deployed
+DataONE cyberinfrastructure.</p>
+<div class="section" id="api-reference">
+<h2>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h2>
+<p>Components of the DataONE infrastructure interact through the DataONE APIs.
+Participating data repositories expose the <a class="reference internal" href="apis/MN_APIs.html"><span class="doc">Member Node APIs</span></a> and Coordinating Nodes
+expose the <a class="reference internal" href="apis/CN_APIs.html"><span class="doc">Coordinating Node APIs</span></a>.</p>
+<p>API service endpoints use a restful pattern. All API interactions occur over HTTPS with
+XML encoded messages. The XML messages are defined by the <a class="reference internal" href="apis/Types.html"><span class="doc">DataONE Types XML Schema</span></a>.
+<a class="reference internal" href="apis/Exceptions.html"><span class="doc">Exceptions Raised by MN and CN APIs</span></a> are cast to applicable HTTP error codes, with the response body
+containing an XML representation of the error. The RESTful implementation is more fully
+described in the <a class="reference internal" href="apis/rest_comms.html"><span class="doc">REST Interface Overview</span></a>.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="apis/MN_APIs.html">Member Node APIs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="apis/MN_APIs.html#core-api">Core API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apis/MN_APIs.html#read-api">Read API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apis/MN_APIs.html#query-api">Query API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apis/MN_APIs.html#view-api">View API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apis/MN_APIs.html#package-api">Package API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apis/MN_APIs.html#authorization-api">Authorization API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apis/MN_APIs.html#storage-api">Storage API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apis/MN_APIs.html#replication-api">Replication API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="apis/CN_APIs.html">Coordinating Node APIs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="apis/CN_APIs.html#diagnostic-api">Diagnostic API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apis/CN_APIs.html#core-api">Core API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apis/CN_APIs.html#read-api">Read API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apis/CN_APIs.html#view-api">View API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apis/CN_APIs.html#authorization-api">Authorization API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apis/CN_APIs.html#identity-api">Identity API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apis/CN_APIs.html#replication-api">Replication API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apis/CN_APIs.html#register-api">Register API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="apis/Exceptions.html">Exceptions Raised by MN and CN APIs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="apis/Exceptions.html#general">General</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apis/Exceptions.html#http-exception-handling-codes">HTTP Exception Handling Codes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apis/Exceptions.html#serializing-exceptions">Serializing Exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apis/Exceptions.html#the-exceptions">The Exceptions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="apis/Types.html">Data Types in CICore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="apis/rest_comms.html">REST Interface Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="apis/rest_comms.html#message-serialization">Message Serialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apis/rest_comms.html#parameters-in-requests">Parameters in Requests</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="apis/rest_comms.html#session-information">Session Information</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apis/rest_comms.html#url-path-parameters">URL Path Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apis/rest_comms.html#url-query-parameters">URL Query Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apis/rest_comms.html#boolean-url-query-parameters">Boolean URL Query Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apis/rest_comms.html#date-parameters-in-urls">Date Parameters in URLs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apis/rest_comms.html#message-body-in-put-or-post">Message Body in PUT or POST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apis/rest_comms.html#message-body-in-delete">Message Body in DELETE</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="services">
+<h2>Services<a class="headerlink" href="#services" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="services/piri_service.html">DataONE PIRI Service</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="design-documents">
+<h2>Design Documents<a class="headerlink" href="#design-documents" title="Permalink to this headline">¶</a></h2>
+<p>The design documents describe the intended functionality of the DataONE infrastructure. <a class="reference internal" href="design/userscenarios.html"><span class="doc">User Scenarios</span></a> provide a functional overview from a user perspective. <a class="reference internal" href="design/usecases.html"><span class="doc">Use Cases</span></a> provides a more detailed view of how the APIs are used to support specific component interactions.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">DataONE Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design/userscenarios.html">User Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design/usecases.html">Use Cases</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="design/NodeIdentity.html">Node Identity and Registration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design/WhatIsData.html">What is Data (DataONE Perspective)?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design/DataPackage.html">Data Packaging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design/PreservationStrategy.html">DataONE Preservation Strategy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design/ReplicationOverview.html">Replication Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design/ContentMutability.html">Mutability of Content in DataONE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design/PIDs.html">Identifiers in DataONE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design/SearchMetadata.html">Content Discovery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design/querying_content.html">Querying DataONE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design/CitationManagerSupport.html">Supporting Online Citation Managers through COinS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design/security-plan.html">DataONE Cybersecurity Plan</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design/Authentication.html">Identity Management and Authenticated Session Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design/Authorization.html">Authorization in DataONE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design/search_auth.html">Supporting Access Control in Search</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design/SystemMetadata.html">System Metadata</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design/SystemMetadataAnalysis.html">Getting a Handle on Systems Metadata for the Long Haul</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design/SysmetaLifecycle.html">Natural History of System Metadata</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design/Serialization.html">Serialization of Types for Transfer Over HTTP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design/NodeList.html">NodeList</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design/CoordinatingNodeInternals.html">Coordinating Node Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design/logging.html">Event Logging and Reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design/LogAggregator.html">Log Aggregation Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design/LogAggregator.html#event-log-index-schema">Event Log Index Schema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design/UsageStatistics.html">DataONE Usage Statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design/UsageStatistics.html#event-log-index-schema">Event Log Index Schema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design/itk-analysis.html">Analysis and Modeling Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design/itk-overview.html">Investigator Toolkit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design/what_is_it.html">What is This Thing?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design/semantics.html">Semantic Search Design</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="notes-and-miscellanea">
+<h2>Notes and Miscellanea<a class="headerlink" href="#notes-and-miscellanea" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="notes/index.html">General Design and Implementation Notes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notes/LoggingAndPrivacy.html">Logging and Privacy concerns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notes/DataAndMetadata.html">Cross Domain Indexing and Access for Data and Metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notes/Replication.html">Replication Notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notes/MN_api_notes_comments.html">Notes for MN API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notes/cn_requirements.html">Coordinating Node Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notes/ApacheConfiguration.html">Apache Configuration for DataONE Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notes/sysmeta_mutation_20110831.html">Mutability of Metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notes/selectors.html">Selectors for Data Package Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notes/time_bandwidth_constraints.html">Time and Bandwidth Constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notes/api_refactoring.html">Proposal for API Refactoring</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="license_and_copyright_policy.html">License and Copyright Policy</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="license_and_copyright_policy.html#open-source-licensing">Open source licensing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="license_and_copyright_policy.html#copyright">Copyright</a></li>
+<li class="toctree-l2"><a class="reference internal" href="license_and_copyright_policy.html#copyright-and-license-notification">Copyright and license notification</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Acknowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About These Documents</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="about.html#editing-content">Editing Content</a></li>
+<li class="toctree-l2"><a class="reference internal" href="about.html#building-the-documentation">Building the Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-2-clarification-edits">2014-02-12: Version 1.2. Clarification edits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-2-minor-edits">2013-10-17: Version 1.2. Minor edits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-1-clarifying-count-parameter-for-slicing">2012-10-09: Version 1.1. Clarifying <em>count</em> parameter for slicing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-1-adding-mnquery-api">2012-09-28: Version 1.1. Adding MNQuery API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-1-revising-proposed-query-api">2012-09-25: Version 1.1. Revising proposed Query API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-1-augmenting-search-api">2012-08-20: Version 1.1. Augmenting Search API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-0-correction-to-uris-in-resource-maps">2012-05-31: Version 1.0, Correction to URIs in Resource Maps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-0-methodcrossreference-xls">2012-05-02: Version 1.0, MethodCrossReference.xls</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">2012-05-01: Version 1.0, MethodCrossReference.xls</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id2">2012-03-26: Version 1.0, MethodCrossReference.xls</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id3">2012-03-26: Version 1.0, MethodCrossReference.xls</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id4">2012-03-25: Version 1.0, MethodCrossReference.xls</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id5">2012-02-27: Version 1.0, MethodCrossReference.xls</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#dataonetypes-xsd">2012-02-24 : dataoneTypes.xsd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id6">2012-02-17 : Version 1.0, MethodCrossReference.xls</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id7">2012-02-15 : Version 1.0, MethodCrossReference.xls</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id8">2012-02-02 : Version 1.0, MethodCrossReference.xls</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id9">2012-02-01 : Version 1.0, MethodCrossReference.xls</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id10">2012-01-20 : Version 1.0, MethodCrossReference.xls</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id11">2012-01-19 : Version 1.0, MethodCrossReference.xls</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id12">2012-01-12 : Version 1.0, MethodCrossReference.xls</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id13">2012-01-10 : Version 1.0, MethodCrossReference.xls</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id14">2012-01-03 : Version 1.0, MethodCrossReference.xls</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-0-dataonetypes-xsd">2011-12-19 : Version 1.0, dataoneTypes.xsd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-0">2011-12-13 : Version 1.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id15">2011-12-12 : Version 1.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id16">2011-12-08 : Version 1.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-1-0-0-branch">2011-12-06 Version 1.0.0 Branch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id18">2011-12-05 Version 1.0.0 Branch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id20">2011-11-08 Version 1.0.0 Branch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id21">2011-11-03 Version 1.0.0 Branch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id22">2011-11-02 Version 1.0.0 Branch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id24">2011-11-01 Version 1.0.0 Branch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id27">2011-10-26 Version 1.0.0 Branch</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="implementation-notes">
+<h2>Implementation Notes<a class="headerlink" href="#implementation-notes" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="implementation/index.html">Implementation Notes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="implementation/roadmap.html">Implementation Roadmap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="implementation/components.html">Components of the DataONE Infrastructure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="implementation/prioritization.html">Implementation Priority</a></li>
+<li class="toctree-l2"><a class="reference internal" href="implementation/integration-testing.html">Integration Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="implementation/versions.html">Infrastructure Versions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="todo.html">TO DO List</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="indices-tables-and-change-log">
+<h2>Indices, Tables, and Change Log<a class="headerlink" href="#indices-tables-and-change-log" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="#">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">DataONE Architecture</a><ul>
+<li><a class="reference internal" href="#api-reference">API Reference</a></li>
+<li><a class="reference internal" href="#services">Services</a></li>
+<li><a class="reference internal" href="#design-documents">Design Documents</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#notes-and-miscellanea">Notes and Miscellanea</a></li>
+<li><a class="reference internal" href="#implementation-notes">Implementation Notes</a></li>
+<li><a class="reference internal" href="#indices-tables-and-change-log">Indices, Tables, and Change Log</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation Overview</a><ul>
+      <li>Next: <a href="apis/MN_APIs.html" title="next chapter">Member Node APIs</a></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="_sources/index.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/index.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

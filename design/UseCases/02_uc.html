@@ -1,0 +1,459 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Use Case 02 - List PIDs By Search &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/mathjax_pre.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Use Case 04 - Create New Object" href="04_uc.html" />
+    <link rel="prev" title="Use Case 01 - Get Object Identified by PID" href="01_uc.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="04_uc.html" title="Use Case 04 - Create New Object"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="01_uc.html" title="Use Case 01 - Get Object Identified by PID"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html"></a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../usecases.html" accesskey="U">Use Cases</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Use Case 02 - List PIDs By Search</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="use-case-02-list-pids-by-search">
+<span id="uc02"></span><h1>Use Case 02 - List PIDs By Search<a class="headerlink" href="#use-case-02-list-pids-by-search" title="Permalink to this headline">¶</a></h1>
+<div class="contents local topic" id="contents">
+<span id="index-0"></span><p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#goal" id="id1">Goal</a></p></li>
+<li><p><a class="reference internal" href="#summary" id="id2">Summary</a></p></li>
+<li><p><a class="reference internal" href="#actors" id="id3">Actors</a></p></li>
+<li><p><a class="reference internal" href="#preconditions" id="id4">Preconditions</a></p></li>
+<li><p><a class="reference internal" href="#triggers" id="id5">Triggers</a></p></li>
+<li><p><a class="reference internal" href="#post-conditions" id="id6">Post Conditions</a></p></li>
+<li><p><a class="reference internal" href="#implementation" id="id7">Implementation</a></p></li>
+<li><p><a class="reference internal" href="#examples" id="id8">Examples</a></p>
+<ul>
+<li><p><a class="reference internal" href="#discover-available-query-engines" id="id9">Discover Available Query Engines</a></p></li>
+<li><p><a class="reference internal" href="#list-search-fields-offered" id="id10">List Search Fields Offered</a></p></li>
+<li><p><a class="reference internal" href="#full-text-search" id="id11">Full Text Search</a></p></li>
+<li><p><a class="reference internal" href="#limiting-returned-fields" id="id12">Limiting Returned Fields</a></p></li>
+<li><p><a class="reference internal" href="#paging-response-records" id="id13">Paging Response Records</a></p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="goal">
+<h2><a class="toc-backref" href="#id1">Goal</a><a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>Get list of PIDs from metadata search (anonymous and authenticated).</p>
+</div>
+<div class="section" id="summary">
+<h2><a class="toc-backref" href="#id2">Summary</a><a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>A user performs a search against the DataONE system and receives a list of
+object identifiers (PIDs) that match the search criteria. The list of PIDs
+is filtered such that only objects for which the user has read permission
+will be returned.</p>
+<p>Content discovery in DataONE is achieved primarily through the service
+interfaces provided by the Coordinating Nodes. Other systems may index
+content available in DataONE (<a class="reference internal" href="34_uc.html"><span class="doc">UC34</span></a>), though the
+operation of those systems is out of scope for DataONE operations except
+that the exposed APIs enable such functionality.</p>
+</div>
+<div class="section" id="actors">
+<h2><a class="toc-backref" href="#id3">Actors</a><a class="headerlink" href="#actors" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Client performing search operation</p></li>
+<li><p>Coordinating Node</p></li>
+</ul>
+<img alt="../../_images/f861a99c2056c63336fa10b23956c62c3273affc288aeded3c22da724c9f81fd.svg" class="align-center" src="../../_images/f861a99c2056c63336fa10b23956c62c3273affc288aeded3c22da724c9f81fd.svg" /><p><strong>Figure 1.</strong> Actors and dependencies for Use Case 02.</p>
+</div>
+<div class="section" id="preconditions">
+<h2><a class="toc-backref" href="#id4">Preconditions</a><a class="headerlink" href="#preconditions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Client has authenticated to at the desired level (e.g. client may not have
+authenticated, so access might be anonymous).</p></li>
+</ul>
+</div>
+<div class="section" id="triggers">
+<h2><a class="toc-backref" href="#id5">Triggers</a><a class="headerlink" href="#triggers" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>A search is performed against the DataONE system</p></li>
+</ul>
+</div>
+<div class="section" id="post-conditions">
+<h2><a class="toc-backref" href="#id6">Post Conditions</a><a class="headerlink" href="#post-conditions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>The client has a list of PIDs (<code class="xref py py-class docutils literal notranslate"><span class="pre">Types.objectList</span></code>) for which they
+have permission to read and match the supplied query or an error condition.</p></li>
+<li><p>The log is updated with information about the request</p></li>
+</ul>
+</div>
+<div class="section" id="implementation">
+<h2><a class="toc-backref" href="#id7">Implementation</a><a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<img alt="../../_images/2121838f7c760a1f85c8883e74d544be516f25de5e16cc8d5d16ebc83ec63b0d.svg" class="align-center" src="../../_images/2121838f7c760a1f85c8883e74d544be516f25de5e16cc8d5d16ebc83ec63b0d.svg" /><p><strong>Figure 2.</strong> Interaction diagram for Use Case 02. The process for determining
+READ access is for illustration purposes only. Actually implementation may
+vary (e.g. by augmenting the query used for searching).</p>
+</div>
+<div class="section" id="examples">
+<h2><a class="toc-backref" href="#id8">Examples</a><a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>Search is implemented by the Coordinating Nodes and optionally by Member Nodes.
+Two discovery endpoints are provided by Coordinating Nodes: query and search.
+The search endpoint provides a response that is more constrained than the search
+endpoint, with only an ObjetList structure being returned. It is recommended
+that general searches be performed against the query endpoint.</p>
+<p>The following examples assume a Coordinating Node base URL is set in the ${NODE}
+variable, for example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">NODE</span><span class="o">=</span><span class="s2">&quot;https://cn.dataone.org/cn&quot;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For more example queries and detailed description of the various fields,
+please visit <a class="reference internal" href="../SearchMetadata.html"><span class="doc">Content Discovery</span></a></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The actual response XML may be more compressed than the examples below show.
+For easier viewing, pipe the response throug the <a class="reference external" href="http://xmlstar.sourceforge.net/">xmlstarlet</a> command line
+tool using the format (“fo”) option. For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl <span class="si">${</span><span class="nv">NODE</span><span class="si">}</span>/v1/query <span class="p">|</span> xml fo
+</pre></div>
+</div>
+</div>
+<div class="section" id="discover-available-query-engines">
+<h3><a class="toc-backref" href="#id9">Discover Available Query Engines</a><a class="headerlink" href="#discover-available-query-engines" title="Permalink to this headline">¶</a></h3>
+<p>To discover the query engines (search indexes) supported on the node:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span>$ curl ${NODE}/v1/query
+
+<span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="cp">&lt;?xml-stylesheet type=&quot;text/xsl&quot; href=&quot;/cn/xslt/dataone.types.v1.xsl&quot;?&gt;</span>
+<span class="nt">&lt;d1_v1.1:queryEngineList</span>
+ <span class="na">xmlns:d1=</span><span class="s">&quot;http://ns.dataone.org/service/types/v1&quot;</span>
+ <span class="na">xmlns:d1_v1.1=</span><span class="s">&quot;http://ns.dataone.org/service/types/v1.1&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;queryEngine&gt;</span>solr<span class="nt">&lt;/queryEngine&gt;</span>
+  <span class="nt">&lt;queryEngine&gt;</span>logsolr<span class="nt">&lt;/queryEngine&gt;</span>
+<span class="nt">&lt;/d1_v1.1:queryEngineList&gt;</span>
+</pre></div>
+</div>
+<p>The response show two query engines available <code class="docutils literal notranslate"><span class="pre">solr</span></code> and <code class="docutils literal notranslate"><span class="pre">logsolr</span></code>. The
+<code class="docutils literal notranslate"><span class="pre">solr</span></code> query engine provides access to content (data, metadata, resource maps)
+that have been indexed by the Coordinating Nodes. The <code class="docutils literal notranslate"><span class="pre">logsolr</span></code> endpoint
+provides access to log records that have been aggregated by the Coordinating
+Nodes.</p>
+</div>
+<div class="section" id="list-search-fields-offered">
+<h3><a class="toc-backref" href="#id10">List Search Fields Offered</a><a class="headerlink" href="#list-search-fields-offered" title="Permalink to this headline">¶</a></h3>
+<p>To determine the search fields provided by a query engine, append the value of a
+<code class="docutils literal notranslate"><span class="pre">queryEngine</span></code> element to the url:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span>$ curl ${NODE}/v1/query/solr
+
+ <span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+ <span class="cp">&lt;?xml-stylesheet type=&quot;text/xsl&quot; href=&quot;/cn/xslt/dataone.types.v1.xsl&quot;?&gt;</span>
+ <span class="nt">&lt;d1_v1.1:queryEngineDescription</span>
+   <span class="na">xmlns:d1=</span><span class="s">&quot;http://ns.dataone.org/service/types/v1&quot;</span>
+   <span class="na">xmlns:d1_v1.1=</span><span class="s">&quot;http://ns.dataone.org/service/types/v1.1&quot;</span><span class="nt">&gt;</span>
+   <span class="nt">&lt;queryEngineVersion&gt;</span>3.4.0.2011.09.20.17.19.53<span class="nt">&lt;/queryEngineVersion&gt;</span>
+   <span class="nt">&lt;querySchemaVersion&gt;</span>1.1<span class="nt">&lt;/querySchemaVersion&gt;</span>
+   <span class="nt">&lt;name&gt;</span>solr<span class="nt">&lt;/name&gt;</span>
+   <span class="nt">&lt;additionalInfo&gt;</span>https://releases.dataone.org/online/api-documentation-v1.2.0/
+   <span class="nt">&lt;/additionalInfo&gt;</span>
+   <span class="nt">&lt;queryField&gt;</span>
+     <span class="nt">&lt;name&gt;</span>abstract<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;description&gt;</span>The full text of the abstract as provided in the science
+     metadata document.<span class="nt">&lt;/description&gt;</span>
+     <span class="nt">&lt;type&gt;</span>text<span class="nt">&lt;/type&gt;</span>
+     <span class="nt">&lt;searchable&gt;</span>true<span class="nt">&lt;/searchable&gt;</span>
+     <span class="nt">&lt;returnable&gt;</span>true<span class="nt">&lt;/returnable&gt;</span>
+     <span class="nt">&lt;sortable&gt;</span>true<span class="nt">&lt;/sortable&gt;</span>
+     <span class="nt">&lt;multivalued&gt;</span>false<span class="nt">&lt;/multivalued&gt;</span>
+   <span class="nt">&lt;/queryField&gt;</span>
+   <span class="nt">&lt;queryField&gt;</span>
+     <span class="nt">&lt;name&gt;</span>attribute<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;description&gt;</span>Multi-valued field containing the text from attributeName,
+     attributeLabel, attributeDescription, attributeUnit fields into a single
+     searchable text field.<span class="nt">&lt;/description&gt;</span>
+     <span class="nt">&lt;type&gt;</span>text<span class="nt">&lt;/type&gt;</span>
+     <span class="nt">&lt;searchable&gt;</span>true<span class="nt">&lt;/searchable&gt;</span>
+     <span class="nt">&lt;returnable&gt;</span>true<span class="nt">&lt;/returnable&gt;</span>
+     <span class="nt">&lt;sortable&gt;</span>true<span class="nt">&lt;/sortable&gt;</span>
+     <span class="nt">&lt;multivalued&gt;</span>true<span class="nt">&lt;/multivalued&gt;</span>
+   <span class="nt">&lt;/queryField&gt;</span>
+   <span class="nt">&lt;queryField&gt;</span>
+     <span class="nt">&lt;name&gt;</span>attributeDescription<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;description&gt;</span>Multi-valued field containing the attribute descriptive
+     text.<span class="nt">&lt;/description&gt;</span>
+     <span class="nt">&lt;type&gt;</span>text<span class="nt">&lt;/type&gt;</span>
+     <span class="nt">&lt;searchable&gt;</span>true<span class="nt">&lt;/searchable&gt;</span>
+     <span class="nt">&lt;returnable&gt;</span>true<span class="nt">&lt;/returnable&gt;</span>
+     <span class="nt">&lt;sortable&gt;</span>true<span class="nt">&lt;/sortable&gt;</span>
+     <span class="nt">&lt;multivalued&gt;</span>true<span class="nt">&lt;/multivalued&gt;</span>
+   <span class="nt">&lt;/queryField&gt;</span>
+   <span class="nt">&lt;queryField&gt;</span>
+     <span class="nt">&lt;name&gt;</span>attributeLabel<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;description&gt;</span>Multi-valued field containing secondary attribute name
+     information.<span class="nt">&lt;/description&gt;</span>
+     <span class="nt">&lt;type&gt;</span>string<span class="nt">&lt;/type&gt;</span>
+     <span class="nt">&lt;searchable&gt;</span>true<span class="nt">&lt;/searchable&gt;</span>
+     <span class="nt">&lt;returnable&gt;</span>true<span class="nt">&lt;/returnable&gt;</span>
+     <span class="nt">&lt;sortable&gt;</span>true<span class="nt">&lt;/sortable&gt;</span>
+     <span class="nt">&lt;multivalued&gt;</span>true<span class="nt">&lt;/multivalued&gt;</span>
+   <span class="nt">&lt;/queryField&gt;</span>
+
+   ...
+
+ <span class="nt">&lt;/d1_v1.1:queryEngineDescription&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="full-text-search">
+<h3><a class="toc-backref" href="#id11">Full Text Search</a><a class="headerlink" href="#full-text-search" title="Permalink to this headline">¶</a></h3>
+<p>The solr endpoint supports standard <a class="reference external" href="https://lucene.apache.org/core/2_9_4/queryparsersyntax.html">solr</a> query syntax and construct. To search
+all text for the string “water”, the query “text:water” could be used. Expressed
+as a command line request:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span>$ curl &quot;${NODE}/v1/query/solr/?q=text:water&quot;
+
+<span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="nt">&lt;response&gt;</span>
+  <span class="nt">&lt;lst</span> <span class="na">name=</span><span class="s">&quot;responseHeader&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;int</span> <span class="na">name=</span><span class="s">&quot;status&quot;</span><span class="nt">&gt;</span>0<span class="nt">&lt;/int&gt;</span>
+    <span class="nt">&lt;int</span> <span class="na">name=</span><span class="s">&quot;QTime&quot;</span><span class="nt">&gt;</span>5<span class="nt">&lt;/int&gt;</span>
+    <span class="nt">&lt;lst</span> <span class="na">name=</span><span class="s">&quot;params&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;str</span> <span class="na">name=</span><span class="s">&quot;q&quot;</span><span class="nt">&gt;</span>text:water<span class="nt">&lt;/str&gt;</span>
+      <span class="nt">&lt;str</span> <span class="na">name=</span><span class="s">&quot;rows&quot;</span><span class="nt">&gt;</span>1<span class="nt">&lt;/str&gt;</span>
+    <span class="nt">&lt;/lst&gt;</span>
+  <span class="nt">&lt;/lst&gt;</span>
+  <span class="nt">&lt;result</span> <span class="na">name=</span><span class="s">&quot;response&quot;</span> <span class="na">numFound=</span><span class="s">&quot;139455&quot;</span> <span class="na">start=</span><span class="s">&quot;0&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;doc&gt;</span>
+    ...
+    <span class="nt">&lt;/doc&gt;</span>
+  <span class="nt">&lt;/result&gt;</span>
+<span class="nt">&lt;/response&gt;</span>
+</pre></div>
+</div>
+<p>which indicates there were 139455 matches. The response is the standard solr XML
+response (json may be returned by adding <code class="docutils literal notranslate"><span class="pre">&amp;wt=json</span></code> to the url), with
+<code class="docutils literal notranslate"><span class="pre">&lt;doc&gt;</span></code> elements holding the actual response records.</p>
+</div>
+<div class="section" id="limiting-returned-fields">
+<h3><a class="toc-backref" href="#id12">Limiting Returned Fields</a><a class="headerlink" href="#limiting-returned-fields" title="Permalink to this headline">¶</a></h3>
+<p>The default solr response returns all fields of the doc records which can be
+quite verbose. To limit the response, against the standard solr syntax is used
+with the <code class="docutils literal notranslate"><span class="pre">fl</span></code> parameter. For example, to return only the record identifier
+(PID) and the date the system metadata was last modified:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ curl <span class="s2">&quot;</span><span class="si">${</span><span class="nv">NODE</span><span class="si">}</span><span class="s2">/v1/query/solr/?q=text:water&amp;fl=id,dateModified&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="nt">&lt;response&gt;</span>
+  <span class="nt">&lt;lst</span> <span class="na">name=</span><span class="s">&quot;responseHeader&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;int</span> <span class="na">name=</span><span class="s">&quot;status&quot;</span><span class="nt">&gt;</span>0<span class="nt">&lt;/int&gt;</span>
+    <span class="nt">&lt;int</span> <span class="na">name=</span><span class="s">&quot;QTime&quot;</span><span class="nt">&gt;</span>4<span class="nt">&lt;/int&gt;</span>
+    <span class="nt">&lt;lst</span> <span class="na">name=</span><span class="s">&quot;params&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;str</span> <span class="na">name=</span><span class="s">&quot;fl&quot;</span><span class="nt">&gt;</span>id,dateModified<span class="nt">&lt;/str&gt;</span>
+      <span class="nt">&lt;str</span> <span class="na">name=</span><span class="s">&quot;q&quot;</span><span class="nt">&gt;</span>text:water<span class="nt">&lt;/str&gt;</span>
+      <span class="nt">&lt;str</span> <span class="na">name=</span><span class="s">&quot;row&quot;</span><span class="nt">&gt;</span>5<span class="nt">&lt;/str&gt;</span>
+    <span class="nt">&lt;/lst&gt;</span>
+  <span class="nt">&lt;/lst&gt;</span>
+  <span class="nt">&lt;result</span> <span class="na">name=</span><span class="s">&quot;response&quot;</span> <span class="na">numFound=</span><span class="s">&quot;139455&quot;</span> <span class="na">start=</span><span class="s">&quot;0&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;doc&gt;</span>
+      <span class="nt">&lt;date</span> <span class="na">name=</span><span class="s">&quot;dateModified&quot;</span><span class="nt">&gt;</span>2015-03-20T23:18:10.507Z<span class="nt">&lt;/date&gt;</span>
+      <span class="nt">&lt;str</span> <span class="na">name=</span><span class="s">&quot;id&quot;</span><span class="nt">&gt;</span>https://pasta.lternet.edu/package/metadata/eml/knb-lter-gce/249/34<span class="nt">&lt;/str&gt;</span>
+    <span class="nt">&lt;/doc&gt;</span>
+    <span class="nt">&lt;doc&gt;</span>
+      <span class="nt">&lt;date</span> <span class="na">name=</span><span class="s">&quot;dateModified&quot;</span><span class="nt">&gt;</span>2012-06-26T13:50:33.75Z<span class="nt">&lt;/date&gt;</span>
+      <span class="nt">&lt;str</span> <span class="na">name=</span><span class="s">&quot;id&quot;</span><span class="nt">&gt;</span>doi:10.6073/AA/knb-lter-gce.249.23<span class="nt">&lt;/str&gt;</span>
+    <span class="nt">&lt;/doc&gt;</span>
+    <span class="nt">&lt;doc&gt;</span>
+      <span class="nt">&lt;date</span> <span class="na">name=</span><span class="s">&quot;dateModified&quot;</span><span class="nt">&gt;</span>2012-06-26T13:51:00.556Z<span class="nt">&lt;/date&gt;</span>
+      <span class="nt">&lt;str</span> <span class="na">name=</span><span class="s">&quot;id&quot;</span><span class="nt">&gt;</span>doi:10.6073/AA/knb-lter-gce.249.16<span class="nt">&lt;/str&gt;</span>
+    <span class="nt">&lt;/doc&gt;</span>
+    <span class="nt">&lt;doc&gt;</span>
+      <span class="nt">&lt;date</span> <span class="na">name=</span><span class="s">&quot;dateModified&quot;</span><span class="nt">&gt;</span>2012-06-26T13:50:21.131Z<span class="nt">&lt;/date&gt;</span>
+      <span class="nt">&lt;str</span> <span class="na">name=</span><span class="s">&quot;id&quot;</span><span class="nt">&gt;</span>doi:10.6073/AA/knb-lter-gce.249.19<span class="nt">&lt;/str&gt;</span>
+    <span class="nt">&lt;/doc&gt;</span>
+    ...
+  <span class="nt">&lt;/result&gt;</span>
+<span class="nt">&lt;/response&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="paging-response-records">
+<h3><a class="toc-backref" href="#id13">Paging Response Records</a><a class="headerlink" href="#paging-response-records" title="Permalink to this headline">¶</a></h3>
+<p>The solr <code class="docutils literal notranslate"><span class="pre">rows</span></code> parameter limits the number of records that are returned in a
+response, and the <code class="docutils literal notranslate"><span class="pre">start</span></code> parameter indicates the 0-based offset of the first
+records from the start of the set of matching results. For example the second
+page of records with five results per page would use <code class="docutils literal notranslate"><span class="pre">start=5</span></code> and
+<code class="docutils literal notranslate"><span class="pre">count=5</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ curl <span class="s2">&quot;</span><span class="si">${</span><span class="nv">NODE</span><span class="si">}</span><span class="s2">/v1/query/solr/?q=text:water&amp;fl=id,dateModified&amp;start=5&amp;rows=5&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="nt">&lt;response&gt;</span>
+  <span class="nt">&lt;lst</span> <span class="na">name=</span><span class="s">&quot;responseHeader&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;int</span> <span class="na">name=</span><span class="s">&quot;status&quot;</span><span class="nt">&gt;</span>0<span class="nt">&lt;/int&gt;</span>
+    <span class="nt">&lt;int</span> <span class="na">name=</span><span class="s">&quot;QTime&quot;</span><span class="nt">&gt;</span>3<span class="nt">&lt;/int&gt;</span>
+    <span class="nt">&lt;lst</span> <span class="na">name=</span><span class="s">&quot;params&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;str</span> <span class="na">name=</span><span class="s">&quot;fl&quot;</span><span class="nt">&gt;</span>id,dateModified<span class="nt">&lt;/str&gt;</span>
+      <span class="nt">&lt;str</span> <span class="na">name=</span><span class="s">&quot;start&quot;</span><span class="nt">&gt;</span>5<span class="nt">&lt;/str&gt;</span>
+      <span class="nt">&lt;str</span> <span class="na">name=</span><span class="s">&quot;q&quot;</span><span class="nt">&gt;</span>text:water<span class="nt">&lt;/str&gt;</span>
+      <span class="nt">&lt;str</span> <span class="na">name=</span><span class="s">&quot;rows&quot;</span><span class="nt">&gt;</span>5<span class="nt">&lt;/str&gt;</span>
+    <span class="nt">&lt;/lst&gt;</span>
+  <span class="nt">&lt;/lst&gt;</span>
+  <span class="nt">&lt;result</span> <span class="na">name=</span><span class="s">&quot;response&quot;</span> <span class="na">numFound=</span><span class="s">&quot;139455&quot;</span> <span class="na">start=</span><span class="s">&quot;5&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;doc&gt;</span>
+      <span class="nt">&lt;date</span> <span class="na">name=</span><span class="s">&quot;dateModified&quot;</span><span class="nt">&gt;</span>2012-06-26T13:51:00.556Z<span class="nt">&lt;/date&gt;</span>
+      <span class="nt">&lt;str</span> <span class="na">name=</span><span class="s">&quot;id&quot;</span><span class="nt">&gt;</span>doi:10.6073/AA/knb-lter-gce.249.16<span class="nt">&lt;/str&gt;</span>
+    <span class="nt">&lt;/doc&gt;</span>
+    <span class="nt">&lt;doc&gt;</span>
+      <span class="nt">&lt;date</span> <span class="na">name=</span><span class="s">&quot;dateModified&quot;</span><span class="nt">&gt;</span>2012-06-26T13:50:21.131Z<span class="nt">&lt;/date&gt;</span>
+      <span class="nt">&lt;str</span> <span class="na">name=</span><span class="s">&quot;id&quot;</span><span class="nt">&gt;</span>doi:10.6073/AA/knb-lter-gce.249.19<span class="nt">&lt;/str&gt;</span>
+    <span class="nt">&lt;/doc&gt;</span>
+    <span class="nt">&lt;doc&gt;</span>
+      <span class="nt">&lt;date</span> <span class="na">name=</span><span class="s">&quot;dateModified&quot;</span><span class="nt">&gt;</span>2012-06-26T13:49:54.779Z<span class="nt">&lt;/date&gt;</span>
+      <span class="nt">&lt;str</span> <span class="na">name=</span><span class="s">&quot;id&quot;</span><span class="nt">&gt;</span>doi:10.6073/AA/knb-lter-gce.249.21<span class="nt">&lt;/str&gt;</span>
+    <span class="nt">&lt;/doc&gt;</span>
+    <span class="nt">&lt;doc&gt;</span>
+      <span class="nt">&lt;date</span> <span class="na">name=</span><span class="s">&quot;dateModified&quot;</span><span class="nt">&gt;</span>2012-06-26T13:49:54.409Z<span class="nt">&lt;/date&gt;</span>
+      <span class="nt">&lt;str</span> <span class="na">name=</span><span class="s">&quot;id&quot;</span><span class="nt">&gt;</span>doi:10.6073/AA/knb-lter-gce.249.22<span class="nt">&lt;/str&gt;</span>
+    <span class="nt">&lt;/doc&gt;</span>
+    <span class="nt">&lt;doc&gt;</span>
+      <span class="nt">&lt;date</span> <span class="na">name=</span><span class="s">&quot;dateModified&quot;</span><span class="nt">&gt;</span>2012-06-26T17:09:59.721Z<span class="nt">&lt;/date&gt;</span>
+      <span class="nt">&lt;str</span> <span class="na">name=</span><span class="s">&quot;id&quot;</span><span class="nt">&gt;</span>doi:10.6073/AA/knb-lter-gce.249.17<span class="nt">&lt;/str&gt;</span>
+    <span class="nt">&lt;/doc&gt;</span>
+  <span class="nt">&lt;/result&gt;</span>
+<span class="nt">&lt;/response&gt;</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Use Case 02 - List PIDs By Search</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#summary">Summary</a></li>
+<li><a class="reference internal" href="#actors">Actors</a></li>
+<li><a class="reference internal" href="#preconditions">Preconditions</a></li>
+<li><a class="reference internal" href="#triggers">Triggers</a></li>
+<li><a class="reference internal" href="#post-conditions">Post Conditions</a></li>
+<li><a class="reference internal" href="#implementation">Implementation</a></li>
+<li><a class="reference internal" href="#examples">Examples</a><ul>
+<li><a class="reference internal" href="#discover-available-query-engines">Discover Available Query Engines</a></li>
+<li><a class="reference internal" href="#list-search-fields-offered">List Search Fields Offered</a></li>
+<li><a class="reference internal" href="#full-text-search">Full Text Search</a></li>
+<li><a class="reference internal" href="#limiting-returned-fields">Limiting Returned Fields</a></li>
+<li><a class="reference internal" href="#paging-response-records">Paging Response Records</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation Overview</a><ul>
+  <li><a href="../usecases.html">Use Cases</a><ul>
+      <li>Previous: <a href="01_uc.html" title="previous chapter">Use Case 01 - Get Object Identified by PID</a></li>
+      <li>Next: <a href="04_uc.html" title="next chapter">Use Case 04 - Create New Object</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/design/UseCases/02_uc.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../../_sources/design/UseCases/02_uc.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/02_uc.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

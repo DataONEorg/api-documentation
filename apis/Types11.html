@@ -1,0 +1,421 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data Types in CICore &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Data Types in CICore</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-Types">
+<span id="data-types-in-cicore"></span><h1>Data Types in CICore<a class="headerlink" href="#module-Types" title="Permalink to this headline">¶</a></h1>
+<p><strong>Versions</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="Types.html"><span class="doc">Version 1.0</span></a></p></li>
+<li><p><a class="reference internal" href="#"><span class="doc">Version 1.1</span></a></p></li>
+<li><p><a class="reference internal" href="Types2.html"><span class="doc">Version 2.0</span></a></p></li>
+</ul>
+<p><strong>Quick Reference</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#Types.QueryEngineDescription" title="Types.QueryEngineDescription"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.QueryEngineDescription</span></code></a></p></li>
+<li><p><a class="reference internal" href="#Types.QueryEngineList" title="Types.QueryEngineList"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.QueryEngineList</span></code></a></p></li>
+<li><p><a class="reference internal" href="#Types.QueryField" title="Types.QueryField"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.QueryField</span></code></a></p></li>
+</ul>
+<img alt="../_images/classes_combined.png" src="../_images/classes_combined.png" />
+<dl class="py class">
+<dt id="Types.OctetStream">
+<em class="property">class </em><code class="sig-prename descclassname">Types.</code><code class="sig-name descname">OctetStream</code><a class="headerlink" href="#Types.OctetStream" title="Permalink to this definition">¶</a></dt>
+<dd><p>A series of 8-bit bytes which combined together form a digital object.
+<em>OctetStream</em> is used to transfer object bytes such as the response to
+<a class="reference internal" href="MN_APIs.html#MNRead.get" title="MNRead.get"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNRead.get()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="Types.Integer">
+<em class="property">class </em><code class="sig-prename descclassname">Types.</code><code class="sig-name descname">Integer</code><a class="headerlink" href="#Types.Integer" title="Permalink to this definition">¶</a></dt>
+<dd><p>A simple integer. The range of expected values should be described with the
+accompanying API call.</p>
+<p>The Integer type is serialized over XML using the predefined XMLSchema
+<a class="reference external" href="http://www.w3.org/TR/xmlschema-2/#integer">integer</a> type, the value space of which is the infinite series
+{…,-2,-1,0,1,2,…}.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="Types.Boolean">
+<em class="property">class </em><code class="sig-prename descclassname">Types.</code><code class="sig-name descname">Boolean</code><a class="headerlink" href="#Types.Boolean" title="Permalink to this definition">¶</a></dt>
+<dd><p>A boolean response is commonly used in the DataONE service APIs to indicate
+success or otherwise of an operation. For operations that are called
+through the service interfaces, a positive boolean response (i.e. True) is
+indicated by returning a HTTP response with a status code of “200”. The
+body of the message may contain additional content, but this should be
+ignored by the receiver.</p>
+<p>A False or failure response must return an appropriate Error message and
+must set the appropriate HTTP status code on the response to indicate a
+failure.</p>
+<p>The Boolean type is serialized over XML using the predefined XMLSchema
+<a class="reference external" href="http://www.w3.org/TR/xmlschema-2/#boolean">boolean</a> type, an instance of which can have the following legal literals
+{true, false, 1, 0}.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="Types.DateTime">
+<em class="property">class </em><code class="sig-prename descclassname">Types.</code><code class="sig-name descname">DateTime</code><a class="headerlink" href="#Types.DateTime" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string that completely identifies a specific date and time. When <em>DateTime</em>
+values are used within fields in request and response messages, and as
+URL-encoded values for parameters, all <em>DateTime</em> values will be typed using
+the XML Schema Datatypes definition (see <a class="reference external" href="http://www.w3.org/TR/xmlschema-2/#dateTime">XMLSchema dateTime</a>) for the
+datetime serialization syntax (<em>xs:dateTime</em>). This syntax represents a
+subset of the ISO 8601 standard notation, and so standard ISO 8601 parsing
+libraries can be used to parse the values (see libraries used below). In
+addition, within DataONE, these values MUST be expressed with a timezone
+designation in UTC/GMT time only; local times are not permitted.</p>
+<ul class="simple">
+<li><p>Must include date and time</p></li>
+<li><p>The time zone must be 0, i.e. GMT</p></li>
+</ul>
+<p>Valid representations include:</p>
+<ul class="simple">
+<li><p><cite>YYYY-MM-DDTHH:MM:SS.mmm</cite></p></li>
+<li><p><cite>YYYY-MM-DDTHH:MM:SS.mmm+00:00</cite></p></li>
+</ul>
+<p>The milliseconds may be left off if that precision is not available.</p>
+<p>In addition, in any methods that use date time values in HTTP headers, the
+serialization will follow the <a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.3.1">HTTP Full Date</a> standard (RFC 1123), e.g:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Sun</span><span class="p">,</span> <span class="mi">06</span> <span class="n">Nov</span> <span class="mi">1994</span> <span class="mi">08</span><span class="p">:</span><span class="mi">49</span><span class="p">:</span><span class="mi">37</span> <span class="n">GMT</span>
+</pre></div>
+</div>
+<p>In Java, code against <a class="reference external" href="http://download.oracle.com/javase/6/docs/api/java/util/Date.html">java.util.Date</a>, though serialization and
+deserialization will be performed with <a class="reference external" href="http://joda-time.sourceforge.net/">org.joda.DateTime</a> to ensure
+millisecond precision is correct.</p>
+<p>In Python, we use <a class="reference external" href="http://docs.python.org/library/datetime.html">datetime.datetime</a> to represent datetimes internally and
+a library called iso8601 to serialize and deserialize to Types.DateTime and
+<a class="reference external" href="http://pyxb.sourceforge.net/api/pyxb.binding.datatypes.dateTime-class.html">Pyxb</a> for the XML representation.</p>
+<p>See also the <a class="reference external" href="http://www.w3.org/TR/xmlschema-2/#dateTime">XMLSchema dateTime</a> type which is used for serializing DateTime
+values in XML transmitted between DataONE components.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="Types.DescribeResponse">
+<em class="property">class </em><code class="sig-prename descclassname">Types.</code><code class="sig-name descname">DescribeResponse</code><a class="headerlink" href="#Types.DescribeResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <a class="reference internal" href="MN_APIs.html#MNRead.describe" title="MNRead.describe"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNRead.describe()</span></code></a> method provides a low cost hint about the type,
+size and state of an object.</p>
+<p>The <em>DescribeResponse</em> is returned from the server in a HTTP HEAD response,
+and hence the values must be represented in the HTTP response headers. There
+is no XML serialization of a <em>DescribeResponse</em>.</p>
+<img alt="../_images/class_describeresponse.png" src="../_images/class_describeresponse.png" />
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">DataONE-formatId</code></dt>
+<dd><p>The value of the <a class="reference internal" href="Types.html#Types.SystemMetadata.formatId" title="Types.SystemMetadata.formatId"><code class="xref py py-attr docutils literal notranslate"><span class="pre">SystemMetadata.formatId</span></code></a> entry available in the
+<a class="reference internal" href="../design/SystemMetadata.html#module-SystemMetadata" title="SystemMetadata"><code class="xref py py-class docutils literal notranslate"><span class="pre">SystemMetadata</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">Content-Length</code></dt>
+<dd><p>Size of the object in bytes, the value of <a class="reference internal" href="Types.html#Types.SystemMetadata.size" title="Types.SystemMetadata.size"><code class="xref py py-attr docutils literal notranslate"><span class="pre">SystemMetadata.size</span></code></a>
+from <a class="reference internal" href="../design/SystemMetadata.html#module-SystemMetadata" title="SystemMetadata"><code class="xref py py-class docutils literal notranslate"><span class="pre">SystemMetadata</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">Last-Modified</code></dt>
+<dd><p>A <a class="reference internal" href="#Types.DateTime" title="Types.DateTime"><code class="xref py py-class docutils literal notranslate"><span class="pre">DateTime</span></code></a> value that indicates when the <a class="reference internal" href="../glossary.html#term-system-metadata"><span class="xref std std-term">system metadata</span></a>
+associated with the object was last modified, i.e. the value of
+<a class="reference internal" href="Types.html#Types.SystemMetadata.dateSysMetadataModified" title="Types.SystemMetadata.dateSysMetadataModified"><code class="xref py py-attr docutils literal notranslate"><span class="pre">SystemMetadata.dateSysMetadataModified</span></code></a> for the object.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">DataONE-Checksum</code></dt>
+<dd><p>The <em>checksumAlgorithm</em> and <em>checksum</em> value of the object being
+examined. The algorithm and checksum values are separated by a single
+comma with the algorithm first.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">DataONE-SerialVersion</code></dt>
+<dd><p>The <em>serialVersion</em> value of the <a class="reference internal" href="../glossary.html#term-system-metadata"><span class="xref std std-term">system metadata</span></a> for the object
+as reported by the Node responding to the describe request.</p>
+</dd></dl>
+
+<p>Example of a HEAD response on object “ABC123”:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">curl</span> <span class="o">-</span><span class="n">I</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">mn1</span><span class="o">.</span><span class="n">dataone</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">mn</span><span class="o">/</span><span class="n">v1</span><span class="o">/</span><span class="nb">object</span><span class="o">/</span><span class="n">ABC123</span>
+
+<span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span> <span class="mi">200</span> <span class="n">OK</span>
+<span class="n">Last</span><span class="o">-</span><span class="n">Modified</span><span class="p">:</span> <span class="n">Wed</span><span class="p">,</span> <span class="mi">16</span> <span class="n">Dec</span> <span class="mi">2009</span> <span class="mi">13</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mi">34</span> <span class="n">GMT</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Length</span><span class="p">:</span> <span class="mi">10400</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Type</span><span class="p">:</span> <span class="n">application</span><span class="o">/</span><span class="n">octet</span><span class="o">-</span><span class="n">stream</span>
+<span class="n">DataONE</span><span class="o">-</span><span class="n">formatId</span><span class="p">:</span> <span class="n">eml</span><span class="p">:</span><span class="o">//</span><span class="n">ecoinformatics</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">eml</span><span class="o">-</span><span class="mf">2.0</span><span class="o">.</span><span class="mi">1</span>
+<span class="n">DataONE</span><span class="o">-</span><span class="n">Checksum</span><span class="p">:</span> <span class="n">SHA</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mf">2e01</span><span class="n">e17467891f7c933dbaa00e1459d23db3fe4f</span>
+<span class="n">DataONE</span><span class="o">-</span><span class="n">SerialVersion</span><span class="p">:</span> <span class="mi">1234</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py class">
+<dt id="Types.QueryEngineDescription">
+<em class="property">class </em><code class="sig-prename descclassname">Types.</code><code class="sig-name descname">QueryEngineDescription</code><a class="headerlink" href="#Types.QueryEngineDescription" title="Permalink to this definition">¶</a></dt>
+<dd><p>Describes a query engine that can be used to search content on the node. Query engines may be general purpose or specialized for particular communities or domains.</p>
+<dl class="py attribute">
+<dt id="Types.QueryEngineDescription.queryEngineVersion">
+<code class="sig-name descname">queryEngineVersion</code><a class="headerlink" href="#Types.QueryEngineDescription.queryEngineVersion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <a class="reference external" href="http://www.w3.org/TR/xmlschema-2/#string">xs.string</a></p>
+<p>The version of the underlying query engine. Used by clients to determine possible compatibility concerns or features available.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Types.QueryEngineDescription.querySchemaVersion">
+<code class="sig-name descname">querySchemaVersion</code><a class="headerlink" href="#Types.QueryEngineDescription.querySchemaVersion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <a class="reference external" href="http://www.w3.org/TR/xmlschema-2/#string">xs.string</a></p>
+<p>Version of the schema in use by the query engine, e.g. “1.0.1”</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Types.QueryEngineDescription.name">
+<code class="sig-name descname">name</code><a class="headerlink" href="#Types.QueryEngineDescription.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <a class="reference external" href="http://www.w3.org/TR/xmlschema-2/#string">xs.string</a></p>
+<p>The full, human readable name of the query engine. For example: “Apache SOLR”</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Types.QueryEngineDescription.additionalInfo">
+<code class="sig-name descname">additionalInfo</code><a class="headerlink" href="#Types.QueryEngineDescription.additionalInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <a class="reference internal" href="Types.html#Types.NonEmptyString" title="Types.NonEmptyString"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.NonEmptyString</span></code></a></p>
+<p>An optional human readable description of the query engine. This can be used to describe any special capabilities or intended uses for the query engine. For example, a query engine may be tuned to suit a particular audience or domain as opposed to providing a general purpose discovery mechanism.</p>
+<p>This field may also contain links to additional information about the query engine, such as documentation for the search syntax provided by the query engine implemntors.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Types.QueryEngineDescription.queryField">
+<code class="sig-name descname">queryField</code><a class="headerlink" href="#Types.QueryEngineDescription.queryField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <code class="xref py py-class docutils literal notranslate"><span class="pre">v1_1.Types.QueryField</span></code></p>
+<p>A list of query fields supported by the query engine.</p>
+</dd></dl>
+
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;xs:complexType</span> <span class="na">xmlns:xs=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">name=</span><span class="s">&quot;QueryEngineDescription&quot;</span><span class="nt">&gt;</span>
+   <span class="nt">&lt;xs:sequence&gt;</span>
+      <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;queryEngineVersion&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;1&quot;</span> <span class="na">maxOccurs=</span><span class="s">&quot;1&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;/xs:element&gt;</span>
+      <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;querySchemaVersion&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">maxOccurs=</span><span class="s">&quot;1&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;/xs:element&gt;</span>
+      <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;name&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;1&quot;</span> <span class="na">maxOccurs=</span><span class="s">&quot;1&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;/xs:element&gt;</span>
+      <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;additionalInfo&quot;</span> <span class="na">type=</span><span class="s">&quot;d1:NonEmptyString&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;/xs:element&gt;</span>
+      <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;queryField&quot;</span> <span class="na">type=</span><span class="s">&quot;d1_v1.1:QueryField&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;/xs:element&gt;</span>
+   <span class="nt">&lt;/xs:sequence&gt;</span>
+<span class="nt">&lt;/xs:complexType&gt;</span>
+</pre></div>
+</div>
+<img alt="../_images/class_QueryEngineDescription.png" src="../_images/class_QueryEngineDescription.png" />
+</dd></dl>
+
+<dl class="py class">
+<dt id="Types.QueryEngineList">
+<em class="property">class </em><code class="sig-prename descclassname">Types.</code><code class="sig-name descname">QueryEngineList</code><a class="headerlink" href="#Types.QueryEngineList" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of query engine names that indicate the possible values for CNRead.getQueryEngineDescription and CNRead.query REST API endpoints.</p>
+<dl class="py attribute">
+<dt id="Types.QueryEngineList.queryEngine">
+<code class="sig-name descname">queryEngine</code><a class="headerlink" href="#Types.QueryEngineList.queryEngine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <a class="reference internal" href="Types.html#Types.NonEmptyString" title="Types.NonEmptyString"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.NonEmptyString</span></code></a></p>
+<p>The name of a queryEngine. This value will be used as a path element in REST API calls and so should not contain characters that will need to be escaped.</p>
+</dd></dl>
+
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;xs:complexType</span> <span class="na">xmlns:xs=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">name=</span><span class="s">&quot;QueryEngineList&quot;</span><span class="nt">&gt;</span>
+   <span class="nt">&lt;xs:sequence&gt;</span>
+      <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;queryEngine&quot;</span> <span class="na">type=</span><span class="s">&quot;d1:NonEmptyString&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;/xs:element&gt;</span>
+   <span class="nt">&lt;/xs:sequence&gt;</span>
+<span class="nt">&lt;/xs:complexType&gt;</span>
+</pre></div>
+</div>
+<img alt="../_images/class_QueryEngineList.png" src="../_images/class_QueryEngineList.png" />
+</dd></dl>
+
+<dl class="py class">
+<dt id="Types.QueryField">
+<em class="property">class </em><code class="sig-prename descclassname">Types.</code><code class="sig-name descname">QueryField</code><a class="headerlink" href="#Types.QueryField" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py attribute">
+<dt id="Types.QueryField.name">
+<code class="sig-name descname">name</code><a class="headerlink" href="#Types.QueryField.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <a class="reference internal" href="Types.html#Types.NonEmptyString" title="Types.NonEmptyString"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.NonEmptyString</span></code></a></p>
+<p>The name of the field as used programmatically when constructing queries or other rferences to the field.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Types.QueryField.description">
+<code class="sig-name descname">description</code><a class="headerlink" href="#Types.QueryField.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <a class="reference external" href="http://www.w3.org/TR/xmlschema-2/#string">xs.string</a></p>
+<p>An optional, repeatable, brief description of the field that can be used to help guide developers or end users in appropriate use of the field. May for example, contain a links to additional documentation.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Types.QueryField.type">
+<code class="sig-name descname">type</code><a class="headerlink" href="#Types.QueryField.type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <a class="reference internal" href="Types.html#Types.NonEmptyString" title="Types.NonEmptyString"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.NonEmptyString</span></code></a></p>
+<p>The type of the field, expressed in the language peculiar to the query engine being described.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Types.QueryField.searchable">
+<code class="sig-name descname">searchable</code><a class="headerlink" href="#Types.QueryField.searchable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <a class="reference external" href="http://www.w3.org/TR/xmlschema-2/#boolean">xs.boolean</a></p>
+<p>Indicates if the field may be used in constructing queries (as opposed to only appearing in results)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Types.QueryField.returnable">
+<code class="sig-name descname">returnable</code><a class="headerlink" href="#Types.QueryField.returnable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <a class="reference external" href="http://www.w3.org/TR/xmlschema-2/#boolean">xs.boolean</a></p>
+<p>Indicates if the field values may be returned in search results.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Types.QueryField.sortable">
+<code class="sig-name descname">sortable</code><a class="headerlink" href="#Types.QueryField.sortable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <a class="reference external" href="http://www.w3.org/TR/xmlschema-2/#boolean">xs.boolean</a></p>
+<p>Indicates if the field can be used for sorting results.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Types.QueryField.multivalued">
+<code class="sig-name descname">multivalued</code><a class="headerlink" href="#Types.QueryField.multivalued" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type: <a class="reference external" href="http://www.w3.org/TR/xmlschema-2/#boolean">xs.boolean</a></p>
+<p>Indicates if the field may contain multiple values. Some query engines such as SOLR support this capability.</p>
+</dd></dl>
+
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;xs:complexType</span> <span class="na">xmlns:xs=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">name=</span><span class="s">&quot;QueryField&quot;</span><span class="nt">&gt;</span>
+   <span class="nt">&lt;xs:sequence&gt;</span>
+      <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;name&quot;</span> <span class="na">type=</span><span class="s">&quot;d1:NonEmptyString&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;1&quot;</span> <span class="na">maxOccurs=</span><span class="s">&quot;1&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;/xs:element&gt;</span>
+      <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;description&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:string&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">maxOccurs=</span><span class="s">&quot;unbounded&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;/xs:element&gt;</span>
+      <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;type&quot;</span> <span class="na">type=</span><span class="s">&quot;d1:NonEmptyString&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;1&quot;</span> <span class="na">maxOccurs=</span><span class="s">&quot;1&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;/xs:element&gt;</span>
+      <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;searchable&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:boolean&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;1&quot;</span> <span class="na">maxOccurs=</span><span class="s">&quot;1&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;/xs:element&gt;</span>
+      <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;returnable&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:boolean&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;1&quot;</span> <span class="na">maxOccurs=</span><span class="s">&quot;1&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;/xs:element&gt;</span>
+      <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;sortable&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:boolean&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;1&quot;</span> <span class="na">maxOccurs=</span><span class="s">&quot;1&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;/xs:element&gt;</span>
+      <span class="nt">&lt;xs:element</span> <span class="na">name=</span><span class="s">&quot;multivalued&quot;</span> <span class="na">type=</span><span class="s">&quot;xs:boolean&quot;</span> <span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span> <span class="na">maxOccurs=</span><span class="s">&quot;1&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;/xs:element&gt;</span>
+   <span class="nt">&lt;/xs:sequence&gt;</span>
+<span class="nt">&lt;/xs:complexType&gt;</span>
+</pre></div>
+</div>
+<img alt="../_images/class_QueryField.png" src="../_images/class_QueryField.png" />
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p><h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/apis/Types11.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/apis/Types11.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/apis/Types11.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

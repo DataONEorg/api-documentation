@@ -1,0 +1,167 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Coordinating Node Requirements &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Apache Configuration for DataONE Services" href="ApacheConfiguration.html" />
+    <link rel="prev" title="Notes for MN API" href="MN_api_notes_comments.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ApacheConfiguration.html" title="Apache Configuration for DataONE Services"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="MN_api_notes_comments.html" title="Notes for MN API"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">General Design and Implementation Notes</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Coordinating Node Requirements</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="coordinating-node-requirements">
+<h1>Coordinating Node Requirements<a class="headerlink" href="#coordinating-node-requirements" title="Permalink to this headline">¶</a></h1>
+<p>This list of requirements for Coordinating Node functionality was developed
+during a brainstorming session at the 20090602 ABQ VDC-TWG meeting.</p>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>Estimate some times for the unknowns here.</p>
+</div>
+<ul class="simple">
+<li><p>IDs not discoverable until all CNs have confirmed copy</p></li>
+<li><p>Metadata searches return in max xxx secs</p></li>
+<li><p>CN can store and search &gt; xxx metadata records</p></li>
+<li><p>CN can store and search multiple metadata standards
+- specifically (list Metadata_formats_of_interest.txt)</p></li>
+<li><p>CN can load-balance to maximize performance</p></li>
+<li><p>Any xxx CNs can be offline without affecting D1 services</p></li>
+<li><p>xxx concurrent transactions can be supported
+- different for different types of transaction e.g. delete vs. insert</p></li>
+<li><p>Each CN should be available xxx% time</p></li>
+<li><p>CN should expose MD in search within xxx secs of insert by MN</p></li>
+<li><p>CN services should be designed to be independently scalable</p></li>
+<li><p>CN services should be geographically replicated</p></li>
+<li><p>CN have complete metadata copies from all MNs</p></li>
+<li><p>D1 should be TRAC and/or DRAMBORA trusted repositories</p></li>
+<li><p>CN should respect replication policies of MNs</p></li>
+<li><p>CN should ensure that any given data set is available at any time (subject
+to policy restrictions) even when xxx% of MNs are offline</p></li>
+<li><p>CNs must validate that:
+- data are available at all replicas
+- replicas are valid</p></li>
+<li><p>CNs ensure that data are available in current formats (data format upgrade?)</p></li>
+<li><p>CNs should be economical to run and maintain</p></li>
+<li><p>CNs should be able to be remotely administered</p></li>
+<li><p>CNs should be secure and deflect malicious intent</p></li>
+<li><p>CNs should provide services to detect rogue data (viruses, copyright, )</p></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p><h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+  <li><a href="index.html">General Design and Implementation Notes</a><ul>
+      <li>Previous: <a href="MN_api_notes_comments.html" title="previous chapter">Notes for MN API</a></li>
+      <li>Next: <a href="ApacheConfiguration.html" title="next chapter">Apache Configuration for DataONE Services</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/notes/cn_requirements.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/notes/cn_requirements.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/notes/cn_requirements.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

@@ -1,0 +1,647 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Very Large Data Packages &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Very Large Data Packages</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="very-large-data-packages">
+<h1><a class="toc-backref" href="#id1">Very Large Data Packages</a><a class="headerlink" href="#very-large-data-packages" title="Permalink to this headline">¶</a></h1>
+<dl class="field-list">
+<dt class="field-odd">Document Status</dt>
+<dd class="field-odd"><table class="docutils align-default">
+<colgroup>
+<col style="width: 11%" />
+<col style="width: 89%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Status</p></th>
+<th class="head"><p>Comment</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>DRAFT</p></td>
+<td><p>(rnahf) committed minor modifications shortly (1hr) after email
+to <a class="reference external" href="mailto:developers&#37;&#52;&#48;dataone&#46;org">developers<span>&#64;</span>dataone<span>&#46;</span>org</a></p></td>
+</tr>
+</tbody>
+</table>
+</dd>
+</dl>
+<div class="contents topic" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#very-large-data-packages" id="id1">Very Large Data Packages</a></p>
+<ul>
+<li><p><a class="reference internal" href="#synopsis" id="id2">Synopsis</a></p></li>
+<li><p><a class="reference internal" href="#identified-issues" id="id3">Identified Issues</a></p>
+<ul>
+<li><p><a class="reference internal" href="#resource-map-creation" id="id4">Resource map creation</a></p></li>
+<li><p><a class="reference internal" href="#rdf-deserialization" id="id5">RDF Deserialization</a></p></li>
+<li><p><a class="reference internal" href="#indexing" id="id6">Indexing</a></p></li>
+<li><p><a class="reference internal" href="#whole-package-download" id="id7">Whole-Package Download</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#mitigations" id="id8">Mitigations</a></p>
+<ul>
+<li><p><a class="reference internal" href="#determining-member-count" id="id9">Determining Member Count</a></p></li>
+<li><p><a class="reference internal" href="#determining-total-package-size-for-download" id="id10">Determining total package size for download</a></p></li>
+<li><p><a class="reference internal" href="#determining-memory-requirements-for-deserialization" id="id11">Determining Memory Requirements for deserialization</a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="synopsis">
+<h2><a class="toc-backref" href="#id2">Synopsis</a><a class="headerlink" href="#synopsis" title="Permalink to this headline">¶</a></h2>
+<p>While many data packages are of modest size (&lt;100 objects), some large studies
+generate upwards of 100,000 datasets that form a data package.   These very large
+data packages challenge performance limits in the DataONE data ingest cycle and
+can present usability issues in user interfaces not prepared for them.  Both memory
+and processor time increase dramatically with increased number of data objects
+and relationships expressed.</p>
+<p>Potential submitters of packages containing large numbers of data objects must be
+mindful that packages of such an large number of objects is likely to be unusable
+for the majority of interested parties, and should consider consolidating and
+compressing the individual objects into fewer objects to allow easier discovery/
+inspection and download. This should be especially considered if the objects in
+the package would not be usefully retrieved individually.</p>
+<p>Creation of large resource maps is potentially the most time consuming activity,
+depending on the tool used.  Deserialization is comparatively quick, but the memory
+requirements are high, depending on the type of model used during parsing.  At the
+stage of indexing, at issue is the time needed to process index record updates, as
+well as the resulting number items in certain fields in the solr records.  Last,
+high-level client methods would like to safely be able to do whole-package downloads,
+but need to be able to detect large data packages which could overwhelm their
+ability to handle such as large package.</p>
+<p>Below are discussions and test results of the known issues related to very large
+resource maps, presented in order of when encountered in the object lifecycle.</p>
+</div>
+<div class="section" id="identified-issues">
+<h2><a class="toc-backref" href="#id3">Identified Issues</a><a class="headerlink" href="#identified-issues" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="resource-map-creation">
+<h3><a class="toc-backref" href="#id4">Resource map creation</a><a class="headerlink" href="#resource-map-creation" title="Permalink to this headline">¶</a></h3>
+<p>Use of the foresite library for building resource maps includes many checks to make
+sure that the map validates.  First the identifiers of the data and metadata are
+added to a graph held in memory, then the graph is serialized to RDF/XML format.
+For small packages the overhead for building the graph and performing consistency
+checks is minimal, but both memory and time to build seem to scale geometrically
+with the number of objects in the package.</p>
+<p>Test results on different size resource maps are summarized below.  In all cases
+there is one metadata object that documents all of the objects.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 31%" />
+<col style="width: 21%" />
+<col style="width: 21%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p># of objects</p></th>
+<th class="head"><p>time to build</p></th>
+<th class="head"><p>memory</p></th>
+<th class="head"><p>file size</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>10</p></td>
+<td></td>
+<td></td>
+<td><p>7 K</p></td>
+</tr>
+<tr class="row-odd"><td><p>33</p></td>
+<td></td>
+<td></td>
+<td><p>20 K</p></td>
+</tr>
+<tr class="row-even"><td><p>100</p></td>
+<td><p>2  seconds</p></td>
+<td><p>45 MB</p></td>
+<td><p>60 K</p></td>
+</tr>
+<tr class="row-odd"><td><p>330</p></td>
+<td></td>
+<td></td>
+<td><p>192 K</p></td>
+</tr>
+<tr class="row-even"><td><p>1000</p></td>
+<td><p>6  seconds</p></td>
+<td><p>20 MB</p></td>
+<td><p>600 K</p></td>
+</tr>
+<tr class="row-odd"><td><p>3300</p></td>
+<td><p>24  seconds</p></td>
+<td><p>23 MB</p></td>
+<td><p>2 Mb</p></td>
+</tr>
+<tr class="row-even"><td><p>10000</p></td>
+<td><p>4.5  minutes</p></td>
+<td><p>30 MB</p></td>
+<td><p>6 Mb</p></td>
+</tr>
+<tr class="row-odd"><td><p>33000</p></td>
+<td><p>66  minutes</p></td>
+<td><p>142 MB</p></td>
+<td><p>20 Mb</p></td>
+</tr>
+</tbody>
+</table>
+<p>For creating very large resource maps, generation time using the java foresite
+toolkit is an issue.  Directly creating a serialized resource map is much faster.
+For example, using an existing resource map as a template, and a short perl script,
+a 100000 member resource map was created in approximately 10 seconds with the only
+memory cost that of holding an identifier array in memory and any output buffering.</p>
+</div>
+<div class="section" id="rdf-deserialization">
+<h3><a class="toc-backref" href="#id5">RDF Deserialization</a><a class="headerlink" href="#rdf-deserialization" title="Permalink to this headline">¶</a></h3>
+<p>Deserialization happens both on the client side when downloading resource maps,
+and on coordinating nodes, both when validating the resource map, and also when
+indexing the relationships into the solr index.  Performance metrics obtained
+from JUnit tests monitored with Java Visual VM are summarized below.  Fully
+expressed resource maps were deserialized using both the default simple model,
+and again using an OWL model loaded with the ORE schema to be able to do semantic
+reasoning.  The reasoning model adds an additional 268 triples from the ORE schema.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 13%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 13%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head" colspan="3"><p>Default model</p></th>
+<th class="head" colspan="3"><p>Reasoning model</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p># objects</p></th>
+<th class="head"><p>triples</p></th>
+<th class="head"><p>time</p></th>
+<th class="head"><p>memory</p></th>
+<th class="head"><p>triples</p></th>
+<th class="head"><p>time</p></th>
+<th class="head"><p>memory</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td><p>10</p></td>
+<td><p>61</p></td>
+<td><p>1 sec.</p></td>
+<td><p>9 Mb</p></td>
+<td><p>329</p></td>
+<td><p>2 sec.</p></td>
+<td><p>13 Mb</p></td>
+</tr>
+<tr class="row-even"><td><p>33</p></td>
+<td><p>176</p></td>
+<td><p>1 sec.</p></td>
+<td><p>10 Mb</p></td>
+<td><p>444</p></td>
+<td><p>2 sec.</p></td>
+<td><p>13 Mb</p></td>
+</tr>
+<tr class="row-odd"><td><p>100</p></td>
+<td><p>511</p></td>
+<td><p>2 sec.</p></td>
+<td><p>15 Mb</p></td>
+<td><p>779</p></td>
+<td><p>2 sec.</p></td>
+<td><p>17 Mb</p></td>
+</tr>
+<tr class="row-even"><td><p>330</p></td>
+<td><p>1661</p></td>
+<td><p>2 sec.</p></td>
+<td><p>20 Mb</p></td>
+<td><p>1929</p></td>
+<td><p>3 sec.</p></td>
+<td><p>17 Mb</p></td>
+</tr>
+<tr class="row-odd"><td><p>1000</p></td>
+<td><p>5011</p></td>
+<td><p>2 sec.</p></td>
+<td><p>17 Mb</p></td>
+<td><p>5279</p></td>
+<td><p>3 sec.</p></td>
+<td><p>24 Mb</p></td>
+</tr>
+<tr class="row-even"><td><p>3300</p></td>
+<td><p>16511</p></td>
+<td><p>3 sec.</p></td>
+<td><p>20 Mb</p></td>
+<td><p>16779</p></td>
+<td><p>4 sec.</p></td>
+<td><p>40 Mb</p></td>
+</tr>
+<tr class="row-odd"><td><p>10000</p></td>
+<td><p>50011</p></td>
+<td><p>6 sec.</p></td>
+<td><p>30 Mb</p></td>
+<td><p>50279</p></td>
+<td><p>8 sec.</p></td>
+<td><p>90 Mb</p></td>
+</tr>
+<tr class="row-even"><td><p>33000</p></td>
+<td><p>165011</p></td>
+<td><p>7 sec.</p></td>
+<td><p>51 Mb</p></td>
+<td><p>165279</p></td>
+<td><p>10 sec.</p></td>
+<td><p>264 Mb</p></td>
+</tr>
+<tr class="row-odd"><td><p>100000</p></td>
+<td><p>500011</p></td>
+<td><p>15 sec.</p></td>
+<td><p>138 Mb</p></td>
+<td><p>500279</p></td>
+<td><p>26 sec.</p></td>
+<td><p>792 Mb</p></td>
+</tr>
+</tbody>
+</table>
+<p>The same information listed by model size shows that for small models, one can
+see that memory requirements are not a simple function of number of triples, but
+also a function of the model type.  The reasoning model uses more memory per
+triple than the simple model.  Especially noticeable is that at very large sizes,
+in terms of number of triples, the reasoning model uses significantly more memory.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 21%" />
+<col style="width: 24%" />
+<col style="width: 30%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>triples</p></th>
+<th class="head"><p>time</p></th>
+<th class="head"><p>memory</p></th>
+<th class="head"><p>model type</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>61</p></td>
+<td><p>1 sec.</p></td>
+<td><p>9 Mb</p></td>
+<td><p>simple</p></td>
+</tr>
+<tr class="row-odd"><td><p>176</p></td>
+<td><p>1 sec.</p></td>
+<td><p>10 Mb</p></td>
+<td><p>simple</p></td>
+</tr>
+<tr class="row-even"><td><p>329</p></td>
+<td><p>2 sec.</p></td>
+<td><p>13 Mb</p></td>
+<td><p>reasoning</p></td>
+</tr>
+<tr class="row-odd"><td><p>444</p></td>
+<td><p>2 sec.</p></td>
+<td><p>13 Mb</p></td>
+<td><p>reasoning</p></td>
+</tr>
+<tr class="row-even"><td><p>511</p></td>
+<td><p>2 sec.</p></td>
+<td><p>15 Mb</p></td>
+<td><p>simple</p></td>
+</tr>
+<tr class="row-odd"><td><p>779</p></td>
+<td><p>2 sec.</p></td>
+<td><p>17 Mb</p></td>
+<td><p>reasoning</p></td>
+</tr>
+<tr class="row-even"><td><p>1661</p></td>
+<td><p>2 sec.</p></td>
+<td><p>20 Mb</p></td>
+<td><p>simple</p></td>
+</tr>
+<tr class="row-odd"><td><p>1929</p></td>
+<td><p>3 sec.</p></td>
+<td><p>17 Mb</p></td>
+<td><p>reasoning</p></td>
+</tr>
+<tr class="row-even"><td><p>5011</p></td>
+<td><p>2 sec.</p></td>
+<td><p>17 Mb</p></td>
+<td><p>simple</p></td>
+</tr>
+<tr class="row-odd"><td><p>5279</p></td>
+<td><p>3 sec.</p></td>
+<td><p>24 Mb</p></td>
+<td><p>reasoning</p></td>
+</tr>
+<tr class="row-even"><td><p>16511</p></td>
+<td><p>3 sec.</p></td>
+<td><p>20 Mb</p></td>
+<td><p>simple</p></td>
+</tr>
+<tr class="row-odd"><td><p>16779</p></td>
+<td><p>4 sec.</p></td>
+<td><p>40 Mb</p></td>
+<td><p>reasoning</p></td>
+</tr>
+<tr class="row-even"><td><p>50011</p></td>
+<td><p>6 sec.</p></td>
+<td><p>30 Mb</p></td>
+<td><p>simple</p></td>
+</tr>
+<tr class="row-odd"><td><p>50279</p></td>
+<td><p>8 sec.</p></td>
+<td><p>90 Mb</p></td>
+<td><p>reasoning</p></td>
+</tr>
+<tr class="row-even"><td><p>165011</p></td>
+<td><p>7 sec.</p></td>
+<td><p>51 Mb</p></td>
+<td><p>simple</p></td>
+</tr>
+<tr class="row-odd"><td><p>165279</p></td>
+<td><p>10 sec.</p></td>
+<td><p>264 Mb</p></td>
+<td><p>reasoning</p></td>
+</tr>
+<tr class="row-even"><td><p>500011</p></td>
+<td><p>15 sec.</p></td>
+<td><p>138 Mb</p></td>
+<td><p>simple</p></td>
+</tr>
+<tr class="row-odd"><td><p>500279</p></td>
+<td><p>26 sec.</p></td>
+<td><p>792 Mb</p></td>
+<td><p>reasoning</p></td>
+</tr>
+</tbody>
+</table>
+<p>The impact of this is that especially automated applications that deserialize RDF
+files (such as the index processor) will need to be able to detect when they are
+dealing with a resource map that could exceed available system resources.</p>
+<p>It also seems wise, given that memory issues weigh larger than RDF file size,
+to specify that resource maps with more than 50,000 triples need to fully express
+relationships, instead of relying on reasoning models to infer semantically-defined
+inverse relationships. This implies that if DataONE allows resource maps to sparsely
+populate their relationships, that there also be tools to tell whether an RDF
+is fully expressing relationships, or will be relying on semantic reasoning.</p>
+</div>
+<div class="section" id="indexing">
+<h3><a class="toc-backref" href="#id6">Indexing</a><a class="headerlink" href="#indexing" title="Permalink to this headline">¶</a></h3>
+<p>When resource maps are synchronized, the map is read and - once all of the package
+members are indexed - the relationships in the map are added to the index records
+of the data members.  A 10000 member package will trigger the update of 10000
+index records, adding the metadata object pid to the ‘isDocumentedBy’ field.
+Additionally, both the ‘contains’ field in the resource map and the ‘documents’
+field in the metadata records will be updated with the pids of the 10000 members.
+Such many-membered fields are difficult to impossible to display, and are time-
+consuming to search when queried.</p>
+<p>Indexing is by necessity a single-threaded process, one that can update on the
+order of 100 records/minute.  Therefore a package containing 100,000 members will
+take about 1000 minutes, or about 17 hours.  During this time, no other updates
+will be processed.</p>
+<p>Workarounds for this issue requires a redesign of the index processor so that the
+large resource map does not delay other items in the indexing queue.  Ultimately,
+the solution would be to implement a different search engine for tracking package
+relationships, and implementing another search endpoint using SPARQL
+(<a class="reference external" href="http://en.wikipedia.org/wiki/SPARQL">http://en.wikipedia.org/wiki/SPARQL</a>), and probably hiding the search query details
+behind new DataONE API methods to spare the end user from having to learn another
+query language to interact with DataONE.</p>
+</div>
+<div class="section" id="whole-package-download">
+<h3><a class="toc-backref" href="#id7">Whole-Package Download</a><a class="headerlink" href="#whole-package-download" title="Permalink to this headline">¶</a></h3>
+<p>The high-level DataPackage.download(packageID) method in d1_libclient implementations
+by default downloads the entire collection of data package objects for local usage.
+For these very-large data packages, the total package size is likely to be gigabytes
+of information. In order to better support such convenience features, there needs
+to be ways for determining the number of members of a package prior to download.</p>
+<p>This would also help in situations where the number of package members is small,
+but the individual data objects are large.</p>
+</div>
+</div>
+<div class="section" id="mitigations">
+<h2><a class="toc-backref" href="#id8">Mitigations</a><a class="headerlink" href="#mitigations" title="Permalink to this headline">¶</a></h2>
+<p>It is useful for applications to know when a given data package is too large for
+it to work with, or will require special handling.  Ideally, this could be
+determined before deserializing the xml, and even for some clients, prior to
+download of the resource map itself.</p>
+<p>Indexing performance is a function of member count, while deserialization performance
+is a function of the number of triples. Download performance is a function of
+total file size.</p>
+<div class="section" id="determining-member-count">
+<h3><a class="toc-backref" href="#id9">Determining Member Count</a><a class="headerlink" href="#determining-member-count" title="Permalink to this headline">¶</a></h3>
+<p>For indexed resource maps, the easiest way to get the member count is with the
+query:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>cn/v1/query/solr/?q=resourceMap:{pid}&amp;rows=0
+</pre></div>
+</div>
+<p>For unindexed resource maps, the count of the number of occurences of the term
+“ore:isAggregatedBy” in the RDF file will suffice.</p>
+</div>
+<div class="section" id="determining-total-package-size-for-download">
+<h3><a class="toc-backref" href="#id10">Determining total package size for download</a><a class="headerlink" href="#determining-total-package-size-for-download" title="Permalink to this headline">¶</a></h3>
+<p>To get the total size of the package, the following solr queries can be used:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span># returns only sizes of package members
+cn/v1/query/solr/?q=resourceMap:{pid}&amp;fl=id,size
+
+# returns sizes for package members and the resource map itself
+cn/v1/query/solr/?q=resourceMap:{pid} OR id:{pid}&amp;fl=id,size
+</pre></div>
+</div>
+<p>from which the client could calculate the sum of the sizes returned.</p>
+<p>To get the size of the resource map itself (useful for estimating memory requirements):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span># returns size of only the resource map
+cn/v1/query/solr/?q=id:{pid}&amp;fl=id,size
+</pre></div>
+</div>
+</div>
+<div class="section" id="determining-memory-requirements-for-deserialization">
+<h3><a class="toc-backref" href="#id11">Determining Memory Requirements for deserialization</a><a class="headerlink" href="#determining-memory-requirements-for-deserialization" title="Permalink to this headline">¶</a></h3>
+<p>It is the number of triples and type of model used, moreso than the number of
+package members, that best determines the graph model’s memory requirement, and
+so any additional triples expressed for each member would multiply the model size.
+The use of ORE proxies, for example, or the inclusion of provenance information
+are situations where this would be the case.  DataONE <em>is</em> planning for the
+inclusion of provenance statements in the resource maps, so users and developers
+alike should take this into consideration.</p>
+<p>The number of triples in an RDF/XML file can be determined either by parsing the
+XML, or by estimating off the resource map byte count.  By parsing the XML, one
+would use an XML parser of choice to count all of the sub-elements of all of the
+“rdf:Description” elements.  In psuedo-code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tripleCount</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">descriptionList</span> <span class="o">=</span> <span class="n">getRDFDescriptionElements</span><span class="p">();</span>
+<span class="n">foreach</span> <span class="n">descriptionElement</span> <span class="ow">in</span> <span class="n">descriptionList</span> <span class="p">{</span>
+   <span class="n">tripleCount</span> <span class="o">+=</span> <span class="n">descriptionElement</span><span class="o">.</span><span class="n">getElementList</span><span class="p">()</span><span class="o">.</span><span class="n">size</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>To estimate from the file size, an upper limit of the number of triples can be deduced.
+RDF/XML organizes triples as predicate-object sub-elements under an rdf:Description
+element for each subject. If the ratio of subjects to triples is low, then the number
+of bytes per triple is determined by the length of the predicate-object sub-element.
+For a 30-character identifier, that sub-element is about 100 characters, and so:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">upper</span> <span class="n">limit</span> <span class="n">on</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">triples</span> <span class="o">=</span> <span class="n">file</span> <span class="n">size</span> <span class="p">(</span><span class="nb">bytes</span><span class="p">)</span> <span class="o">/</span> <span class="mi">100</span> <span class="nb">bytes</span><span class="o">-</span><span class="n">per</span><span class="o">-</span><span class="n">triple</span>
+</pre></div>
+</div>
+<p>So for example, a 5Mb resource map has at most 50K triples, assuming an average
+identifier size of 30 characters (URL encoded).</p>
+<p>For a point of reference, a resource map for 1 metadata object documenting 1000
+objects, expressing the ‘ore:aggregates’, ‘ore:isAggregatedBy’, ‘cito:documents’,
+‘cito:isDocumentedBy’, and ‘cito:identifier’ predicates creates 5005 triples using
+1003 subjects, and was tested to create 600K file.  Applying the upper limit
+approximation, (600K / 100 = 6K) gives 6000 triples, an over-estimate matching
+the number of subjects.</p>
+<p>Also note that long identifiers and identifiers predominated by non-ascii characters
+that would be percent encoded in the file (3bytes per character) can lead to
+an even higher upper limit than expected, and similarly, short identifiers in
+the resource map could lead to a less robust upper limit.</p>
+<p>Determining the memory requirement from the number of triples can be done either
+by interpolating from the tables above, or by equation.  Curve-fits of the
+deserialization performance tests using polynomial equations gave the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">simple</span> <span class="n">model</span> <span class="n">memory</span><span class="p">(</span><span class="n">Mb</span><span class="p">)</span> <span class="o">~</span>  <span class="mf">2.6E-15</span> <span class="o">*</span> <span class="n">triples</span><span class="o">^</span><span class="mi">3</span> <span class="o">-</span> <span class="mf">1.7E-09</span> <span class="o">*</span> <span class="n">triples</span><span class="o">^</span><span class="mi">2</span> <span class="o">+</span> <span class="mf">0.00044</span> <span class="o">*</span> <span class="n">triples</span> <span class="o">+</span> <span class="mf">12.7</span>
+<span class="p">(</span><span class="n">R2</span> <span class="o">=</span> <span class="mf">0.99466</span><span class="p">)</span>
+
+<span class="n">reasoning</span> <span class="n">model</span> <span class="n">memory</span><span class="p">(</span><span class="n">Mb</span><span class="p">)</span> <span class="o">~</span>   <span class="mf">1.25E-10</span> <span class="o">*</span> <span class="n">triples</span><span class="o">^</span><span class="mi">2</span> <span class="o">+</span> <span class="mf">0.0015</span> <span class="o">*</span> <span class="n">triples</span> <span class="o">+</span> <span class="mf">14.3</span>
+<span class="p">(</span><span class="n">R2</span> <span class="o">=</span> <span class="mf">0.99997</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that the simple model required (rightly or wrongly) a third-order equation
+to get a curve-fit with R2 &gt; 0.9, whereas the reasoning model data could be highly
+corelated with a binomial equation.</p>
+<p>Expressed as a function of file size (bytes):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">simple</span> <span class="n">model</span> <span class="n">memory</span><span class="p">(</span><span class="n">Mb</span><span class="p">)</span> <span class="o">~</span>  <span class="mf">2.6E-21</span> <span class="o">*</span> <span class="n">size</span><span class="o">^</span><span class="mi">3</span> <span class="o">-</span> <span class="mf">1.7E-13</span> <span class="o">*</span> <span class="n">size</span><span class="o">^</span><span class="mi">2</span> <span class="o">+</span> <span class="mf">4.4E-06</span> <span class="o">*</span> <span class="n">size</span> <span class="o">+</span> <span class="mf">12.7</span>
+
+<span class="n">reasoning</span> <span class="n">model</span> <span class="n">memory</span><span class="p">(</span><span class="n">Mb</span><span class="p">)</span> <span class="o">~</span>   <span class="mf">1.25E-14</span> <span class="o">*</span> <span class="n">size</span><span class="o">^</span><span class="mi">2</span> <span class="o">+</span> <span class="mf">1.5E-05</span> <span class="o">*</span> <span class="n">size</span> <span class="o">+</span> <span class="mf">14.3</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Very Large Data Packages</a><ul>
+<li><a class="reference internal" href="#synopsis">Synopsis</a></li>
+<li><a class="reference internal" href="#identified-issues">Identified Issues</a><ul>
+<li><a class="reference internal" href="#resource-map-creation">Resource map creation</a></li>
+<li><a class="reference internal" href="#rdf-deserialization">RDF Deserialization</a></li>
+<li><a class="reference internal" href="#indexing">Indexing</a></li>
+<li><a class="reference internal" href="#whole-package-download">Whole-Package Download</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#mitigations">Mitigations</a><ul>
+<li><a class="reference internal" href="#determining-member-count">Determining Member Count</a></li>
+<li><a class="reference internal" href="#determining-total-package-size-for-download">Determining total package size for download</a></li>
+<li><a class="reference internal" href="#determining-memory-requirements-for-deserialization">Determining Memory Requirements for deserialization</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/design/VeryLargeDataPackage.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/design/VeryLargeDataPackage.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/VeryLargeDataPackage.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

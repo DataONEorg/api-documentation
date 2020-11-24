@@ -1,0 +1,194 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Use Case 12 - User Authentication &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/mathjax_pre.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Use Case 13 - User Authorization" href="13_uc.html" />
+    <link rel="prev" title="Use Case 40 - Member Node Requests Synchronization" href="40_uc.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="13_uc.html" title="Use Case 13 - User Authorization"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="40_uc.html" title="Use Case 40 - Member Node Requests Synchronization"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html"></a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../usecases.html" accesskey="U">Use Cases</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Use Case 12 - User Authentication</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="use-case-12-user-authentication">
+<span id="uc12"></span><h1>Use Case 12 - User Authentication<a class="headerlink" href="#use-case-12-user-authentication" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<span id="index-0"></span><h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>User Authentication - A user or a service operating on behalf of a user
+authenticates against an identify provider to establish a certificate that can
+subsequently be used to identify the user.</p>
+</div>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>Many operations in the DataONE system require affirmation of user identity to
+ensure that appropriate access controls can be asserted and other services such
+as citation and notification operate as expected.</p>
+<p>The actual identity and authentication framework may exist outside of DataONE,
+and the first version of the infrastructure will be utilizing the certificate
+based services of the <a class="reference external" href="http://www.cilogon.org/service">CILogon service</a>.</p>
+<p>The user obtains a certificate from the CILogon service, then uses that
+certificate to make API calls against DataONE Services.</p>
+<p>Alternatively, a long lived certificate may be provided by DataONE for systems such as Member Nodes that need to authenticate with components of DataONE.</p>
+<p>In each case, the provided certificate contains the subject, alternate subjects, and group memberships of the user. This information is used by services to determine if the caller has access to the requested resource.</p>
+</div>
+<div class="section" id="actors">
+<h2>Actors<a class="headerlink" href="#actors" title="Permalink to this headline">¶</a></h2>
+<p>User, Member Node, Coordinating Node, Authentication System</p>
+</div>
+<div class="section" id="preconditions">
+<h2>Preconditions<a class="headerlink" href="#preconditions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>User is not authenticated in the system</p></li>
+</ul>
+</div>
+<div class="section" id="triggers">
+<h2>Triggers<a class="headerlink" href="#triggers" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>A user logs on to the DataONE system.</p></li>
+<li><p>A user needs to access a restricted operation.</p></li>
+</ul>
+</div>
+<div class="section" id="post-conditions">
+<h2>Post Conditions<a class="headerlink" href="#post-conditions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>A certificate is returned to the user that can be used by DataONE services
+to identify the user.</p></li>
+<li><p>In the event of authentication failure the certificate will not be available.</p></li>
+</ul>
+<img alt="../../_images/2e6259177ddd1c8be4ae87c5249352be1ae9022625b313a49bca115bd1e72d75.svg" class="align-center" src="../../_images/2e6259177ddd1c8be4ae87c5249352be1ae9022625b313a49bca115bd1e72d75.svg" /><p><strong>Figure 1.</strong> Obtaining a client side certificate from the CILogon service.</p>
+<img alt="../../_images/596b0ed325658d22ed962cbfd0d949abdecd94af313f46f50b612cc31f169ef7.svg" class="align-center" src="../../_images/596b0ed325658d22ed962cbfd0d949abdecd94af313f46f50b612cc31f169ef7.svg" /><p><strong>Figure 2.</strong> Obtaining a long-lived client side certificate from DataONE.</p>
+<img alt="../../_images/7c2f79a8ab8ff9f17a8cebcf684dd579ca37fcaec87551a554731e8efdafb3a6.svg" class="align-center" src="../../_images/7c2f79a8ab8ff9f17a8cebcf684dd579ca37fcaec87551a554731e8efdafb3a6.svg" /><p><strong>Figure 3.</strong> Authenticated interaction with service provided by a Member or
+Coordinating Node.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Use Case 12 - User Authentication</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#summary">Summary</a></li>
+<li><a class="reference internal" href="#actors">Actors</a></li>
+<li><a class="reference internal" href="#preconditions">Preconditions</a></li>
+<li><a class="reference internal" href="#triggers">Triggers</a></li>
+<li><a class="reference internal" href="#post-conditions">Post Conditions</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation Overview</a><ul>
+  <li><a href="../usecases.html">Use Cases</a><ul>
+      <li>Previous: <a href="40_uc.html" title="previous chapter">Use Case 40 - Member Node Requests Synchronization</a></li>
+      <li>Next: <a href="13_uc.html" title="next chapter">Use Case 13 - User Authorization</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/design/UseCases/12_uc.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../../_sources/design/UseCases/12_uc.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/12_uc.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

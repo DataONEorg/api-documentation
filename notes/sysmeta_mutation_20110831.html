@@ -1,0 +1,387 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mutability of Metadata &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Selectors for Data Package Components" href="selectors.html" />
+    <link rel="prev" title="Apache Configuration for DataONE Services" href="ApacheConfiguration.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="selectors.html" title="Selectors for Data Package Components"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="ApacheConfiguration.html" title="Apache Configuration for DataONE Services"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">General Design and Implementation Notes</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Mutability of Metadata</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mutability-of-metadata">
+<h1>Mutability of Metadata<a class="headerlink" href="#mutability-of-metadata" title="Permalink to this headline">¶</a></h1>
+<p>These notes were initiated by DV with responses by RW and MJ around 17
+December, 2010.</p>
+<p>Notes clarified and consolidated on 08/31/2011 by RW.</p>
+<p>SystemMetadata will be modified by CNs, MNs and clients. The CN modifies the
+SystemMetadata during certain operations, such as MN-CN Synchronization and
+MN-MN replication. A MN will modify SystemMetadata provenance as an object is
+updated. Clients and MNs will modify SystemMetadata to reflect new policies
+regarding replication, access and ownership, and will notify the CN when a MN-MN
+Replication event has completed.</p>
+<div class="section" id="systemmetadata-mutability">
+<h2>SystemMetadata Mutability<a class="headerlink" href="#systemmetadata-mutability" title="Permalink to this headline">¶</a></h2>
+<p>SystemMetadata has certain elements that, once created, will never change. The
+immutable set of elements are determined during the MN-CN Synchronization
+process and are static through the existence of the object. The mutable set of
+elements are modified due to certain interactions and restrictions placed on
+which actor in the system may perform the updates.</p>
+<p>The Immutable set:</p>
+<blockquote>
+<div><table class="docutils align-default">
+<colgroup>
+<col style="width: 38%" />
+<col style="width: 63%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Element</p></th>
+<th class="head"><p>Type</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>identifier</p></td>
+<td><p><a class="reference internal" href="../apis/Types.html#Types.Identifier" title="Types.Identifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.Identifier</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>formatId</p></td>
+<td><p><a class="reference internal" href="../apis/Types.html#Types.ObjectFormatIdentifier" title="Types.ObjectFormatIdentifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.ObjectFormatIdentifier</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p>size</p></td>
+<td><p>long</p></td>
+</tr>
+<tr class="row-odd"><td><p>checksum</p></td>
+<td><p><a class="reference internal" href="../apis/Types.html#Types.Checksum" title="Types.Checksum"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.Checksum</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p>submitter</p></td>
+<td><p><a class="reference internal" href="../apis/Types.html#Types.Subject" title="Types.Subject"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.Subject</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>dateUploaded</p></td>
+<td><p><a class="reference internal" href="../apis/Types11.html#Types.DateTime" title="Types.DateTime"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.DateTime</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p>originMemberNode</p></td>
+<td><p><a class="reference internal" href="../apis/Types.html#Types.NodeReference" title="Types.NodeReference"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.NodeReference</span></code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>The Mutable set:</p>
+<blockquote>
+<div><table class="docutils align-default">
+<colgroup>
+<col style="width: 39%" />
+<col style="width: 61%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Element</p></th>
+<th class="head"><p>Type</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>rightsHolder</p></td>
+<td><p><a class="reference internal" href="../apis/Types.html#Types.Subject" title="Types.Subject"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.Subject</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>accessPolicy</p></td>
+<td><p><a class="reference internal" href="../apis/Types.html#Types.AccessPolicy" title="Types.AccessPolicy"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.AccessPolicy</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p>replicationPolicy</p></td>
+<td><p><a class="reference internal" href="../apis/Types.html#Types.ReplicationPolicy" title="Types.ReplicationPolicy"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.ReplicationPolicy</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>obsoletes</p></td>
+<td><p><a class="reference internal" href="../apis/Types.html#Types.Identifier" title="Types.Identifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.Identifier</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p>obsoletedBy</p></td>
+<td><p><a class="reference internal" href="../apis/Types.html#Types.Identifier" title="Types.Identifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.Identifier</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>dateSysMetadataModified:</p></td>
+<td><p><a class="reference internal" href="../apis/Types11.html#Types.DateTime" title="Types.DateTime"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.DateTime</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p>authoritativeMemberNode:</p></td>
+<td><p><a class="reference internal" href="../apis/Types.html#Types.NodeReference" title="Types.NodeReference"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.NodeReference</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>replica</p></td>
+<td><p><a class="reference internal" href="../apis/Types.html#Types.Replica" title="Types.Replica"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.Replica</span></code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div>
+<div class="section" id="rest-api">
+<h2>REST API<a class="headerlink" href="#rest-api" title="Permalink to this headline">¶</a></h2>
+<table class="colwidths-given docutils align-default" id="id1">
+<caption><span class="caption-text">Methods affecting SystemMetadata</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 19%" />
+<col style="width: 19%" />
+<col style="width: 57%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Tier</p></th>
+<th class="head"><p>REST</p></th>
+<th class="head"><p>Function</p></th>
+<th class="head"><p>Parameters</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Tier 1</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PUT</span> <span class="pre">/meta/{pid}</span></code></p></td>
+<td><p><a class="reference internal" href="../apis/CN_APIs.html#CNCore.updateSystemMetadata" title="CNCore.updateSystemMetadata"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNCore.updateSystemMetadata()</span></code></a></p></td>
+<td><p>(<a class="reference internal" href="../apis/Types.html#Types.Session" title="Types.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">session</span></code></a>, <a class="reference internal" href="../apis/Types.html#Types.Identifier" title="Types.Identifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">pid</span></code></a>, <a class="reference internal" href="../apis/Types.html#Types.SystemMetadata" title="Types.SystemMetadata"><code class="xref py py-class docutils literal notranslate"><span class="pre">sysmeta</span></code></a>) <code class="docutils literal notranslate"><span class="pre">-&gt;</span></code> boolean</p></td>
+</tr>
+<tr class="row-odd"><td><p>Tier 2</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PUT</span> <span class="pre">/owner/{pid}</span></code></p></td>
+<td><p><code class="xref py py-func docutils literal notranslate"><span class="pre">CNAuthorization.setOwner()</span></code></p></td>
+<td><p>(<a class="reference internal" href="../apis/Types.html#Types.Session" title="Types.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">session</span></code></a>, <a class="reference internal" href="../apis/Types.html#Types.Identifier" title="Types.Identifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">pid</span></code></a>, <a class="reference internal" href="../apis/Types.html#Types.Subject" title="Types.Subject"><code class="xref py py-class docutils literal notranslate"><span class="pre">userId</span></code></a>) <code class="docutils literal notranslate"><span class="pre">-&gt;</span></code> <a class="reference internal" href="../apis/Types.html#Types.Identifier" title="Types.Identifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.Identifier</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p>Tier 2</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PUT</span> <span class="pre">/accessRules/{pid}</span></code></p></td>
+<td><p><a class="reference internal" href="../apis/CN_APIs.html#CNAuthorization.setAccessPolicy" title="CNAuthorization.setAccessPolicy"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNAuthorization.setAccessPolicy()</span></code></a></p></td>
+<td><p>(<a class="reference internal" href="../apis/Types.html#Types.Session" title="Types.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">session</span></code></a>, <a class="reference internal" href="../apis/Types.html#Types.Identifier" title="Types.Identifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">pid</span></code></a>, <a class="reference internal" href="../apis/Types.html#Types.AccessPolicy" title="Types.AccessPolicy"><code class="xref py py-class docutils literal notranslate"><span class="pre">accessPolicy</span></code></a>) <code class="docutils literal notranslate"><span class="pre">-&gt;</span></code> boolean</p></td>
+</tr>
+<tr class="row-odd"><td><p>Tier 2</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PUT</span> <span class="pre">/accessRules/{pid}</span></code></p></td>
+<td><p><code class="xref py py-func docutils literal notranslate"><span class="pre">MNAuthorization.setAccessPolicy()</span></code></p></td>
+<td><p>(<a class="reference internal" href="../apis/Types.html#Types.Session" title="Types.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">session</span></code></a>, <a class="reference internal" href="../apis/Types.html#Types.Identifier" title="Types.Identifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">pid</span></code></a>, <a class="reference internal" href="../apis/Types.html#Types.AccessPolicy" title="Types.AccessPolicy"><code class="xref py py-class docutils literal notranslate"><span class="pre">accessPolicy</span></code></a>) <code class="docutils literal notranslate"><span class="pre">-&gt;</span></code> boolean</p></td>
+</tr>
+<tr class="row-even"><td><p>Tier 3</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PUT</span> <span class="pre">/object/{pid}</span></code></p></td>
+<td><p><a class="reference internal" href="../apis/MN_APIs.html#MNStorage.update" title="MNStorage.update"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNStorage.update()</span></code></a></p></td>
+<td><p>(<a class="reference internal" href="../apis/Types.html#Types.Session" title="Types.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">session</span></code></a>, <a class="reference internal" href="../apis/Types.html#Types.Identifier" title="Types.Identifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">pid</span></code></a>, <code class="docutils literal notranslate"><span class="pre">object</span></code>, <a class="reference internal" href="../apis/Types.html#Types.Identifier" title="Types.Identifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">newPid</span></code></a>, <a class="reference internal" href="../apis/Types.html#Types.SystemMetadata" title="Types.SystemMetadata"><code class="xref py py-class docutils literal notranslate"><span class="pre">sysmeta</span></code></a>) <code class="docutils literal notranslate"><span class="pre">-&gt;</span></code> <a class="reference internal" href="../apis/Types.html#Types.Identifier" title="Types.Identifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.Identifier</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Tier 4</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/notify</span></code></p></td>
+<td><p><a class="reference internal" href="../apis/CN_APIs.html#CNReplication.setReplicationStatus" title="CNReplication.setReplicationStatus"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNReplication.setReplicationStatus()</span></code></a></p></td>
+<td><p>(<a class="reference internal" href="../apis/Types.html#Types.Session" title="Types.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">session</span></code></a>, <a class="reference internal" href="../apis/Types.html#Types.Identifier" title="Types.Identifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">pid</span></code></a>, <a class="reference internal" href="../apis/Types.html#Types.ReplicationStatus" title="Types.ReplicationStatus"><code class="xref py py-class docutils literal notranslate"><span class="pre">status</span></code></a>) <code class="docutils literal notranslate"><span class="pre">-&gt;</span></code> boolean</p></td>
+</tr>
+<tr class="row-even"><td><p>Tier 4</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PUT</span> <span class="pre">/meta/replication/{pid}</span></code></p></td>
+<td><p><a class="reference internal" href="../apis/CN_APIs.html#CNReplication.updateReplicationMetadata" title="CNReplication.updateReplicationMetadata"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNReplication.updateReplicationMetadata()</span></code></a></p></td>
+<td><p>(<a class="reference internal" href="../apis/Types.html#Types.Session" title="Types.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">session</span></code></a>, <a class="reference internal" href="../apis/Types.html#Types.Identifier" title="Types.Identifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">pid</span></code></a>, <a class="reference internal" href="../apis/Types.html#Types.Replica" title="Types.Replica"><code class="xref py py-class docutils literal notranslate"><span class="pre">replicaMetadata</span></code></a>) <code class="docutils literal notranslate"><span class="pre">-&gt;</span></code> boolean</p></td>
+</tr>
+<tr class="row-odd"><td><p>Tier 4</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PUT</span> <span class="pre">/meta/policy/{pid}</span></code></p></td>
+<td><p><a class="reference internal" href="../apis/CN_APIs.html#CNReplication.setReplicationPolicy" title="CNReplication.setReplicationPolicy"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNReplication.setReplicationPolicy()</span></code></a></p></td>
+<td><p>(<a class="reference internal" href="../apis/Types.html#Types.Session" title="Types.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">session</span></code></a>, <a class="reference internal" href="../apis/Types.html#Types.Identifier" title="Types.Identifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">pid</span></code></a>, <a class="reference internal" href="../apis/Types.html#Types.ReplicationPolicy" title="Types.ReplicationPolicy"><code class="xref py py-class docutils literal notranslate"><span class="pre">policy</span></code></a>) <code class="docutils literal notranslate"><span class="pre">-&gt;</span></code> boolean</p></td>
+</tr>
+</tbody>
+</table>
+<p>internal only:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../apis/CN_APIs.html#CNCore.updateSystemMetadata" title="CNCore.updateSystemMetadata"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNCore.updateSystemMetadata()</span></code></a></p></li>
+<li><p><a class="reference internal" href="../apis/CN_APIs.html#CNReplication.updateReplicationMetadata" title="CNReplication.updateReplicationMetadata"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNReplication.updateReplicationMetadata()</span></code></a></p></li>
+</ul>
+<p>externally available through REST API:</p>
+<ul class="simple">
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">CNAuthorization.setOwner()</span></code></p></li>
+<li><p><a class="reference internal" href="../apis/CN_APIs.html#CNAuthorization.setAccessPolicy" title="CNAuthorization.setAccessPolicy"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNAuthorization.setAccessPolicy()</span></code></a></p></li>
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">MNAuthorization.setAccessPolicy()</span></code></p></li>
+<li><p><a class="reference internal" href="../apis/MN_APIs.html#MNStorage.update" title="MNStorage.update"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNStorage.update()</span></code></a></p></li>
+<li><p><a class="reference internal" href="../apis/CN_APIs.html#CNReplication.setReplicationStatus" title="CNReplication.setReplicationStatus"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNReplication.setReplicationStatus()</span></code></a></p></li>
+<li><p><a class="reference internal" href="../apis/CN_APIs.html#CNReplication.setReplicationPolicy" title="CNReplication.setReplicationPolicy"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNReplication.setReplicationPolicy()</span></code></a></p></li>
+</ul>
+</div>
+<div class="section" id="interactions-affecting-systemmetadata">
+<h2>Interactions affecting SystemMetadata<a class="headerlink" href="#interactions-affecting-systemmetadata" title="Permalink to this headline">¶</a></h2>
+<p>The CN is the ultimate arbiter of SystemMetadata changes. There needs to be a
+clear delineation of responsibility with regard to which processes will interact
+with the CN store such that the SystemMetadata remains consistent.</p>
+<p>MN-CN Synchronization:</p>
+<p>The MN-CN Synchronization process will set all the immutable elements the
+first time an item is created. It will also add items to mutable elements
+that were provided by the MN:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>originMemberNode</strong> (<a class="reference internal" href="../apis/Types.html#Types.NodeReference" title="Types.NodeReference"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.NodeReference</span></code></a>)</p></li>
+<li><p><strong>authoritativeMemberNode</strong> (<a class="reference internal" href="../apis/Types.html#Types.NodeReference" title="Types.NodeReference"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.NodeReference</span></code></a>)</p></li>
+<li><p><strong>replica</strong> (<a class="reference internal" href="../apis/Types.html#Types.Replica" title="Types.Replica"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.Replica</span></code></a>)</p></li>
+</ul>
+</div></blockquote>
+<p>It will also reset  <strong>dateSysMetadataModified</strong> (<a class="reference internal" href="../apis/Types11.html#Types.DateTime" title="Types.DateTime"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.DateTime</span></code></a>) to the
+time the object was added.</p>
+<p>The MN-CN Synchronization process may also update SystemMetadata by calling the
+CNCore.updateSystemMetadata internally. It will update the <strong>authoritativeMemberNode</strong> (<a class="reference internal" href="../apis/Types.html#Types.NodeReference" title="Types.NodeReference"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.NodeReference</span></code></a>)
+or <strong>obsoletedBy</strong> (<a class="reference internal" href="../apis/Types.html#Types.Identifier" title="Types.Identifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.Identifier</span></code></a>)  on the CN when during synchronization
+of the node listed as the  authoritativeMemberNode, it finds those fields
+have changed been modified, and changes  <strong>dateSysMetadataModified</strong> (<a class="reference internal" href="../apis/Types11.html#Types.DateTime" title="Types.DateTime"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.DateTime</span></code></a>)
+to reflect the date on the SystemMetadata sent from the MN.</p>
+<p>MN-MN Replication:</p>
+<p>The MN-MN Replication process running on the CN will call
+CNReplication.updateReplicationMetadata to modify  <strong>replica</strong> (<a class="reference internal" href="../apis/Types.html#Types.Replica" title="Types.Replica"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.Replica</span></code></a>)
+on the SystemMetadata to reflect the replica copies available. A MN
+will call the CNReplication.setReplicationStatus that modifies the replica list <strong>replica</strong> (<a class="reference internal" href="../apis/Types.html#Types.Replica" title="Types.Replica"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.Replica</span></code></a>)
+to indicate when a replication from one MN to another has been completed. After
+each operation, <strong>dateSysMetadataModified</strong> (<a class="reference internal" href="../apis/Types11.html#Types.DateTime" title="Types.DateTime"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.DateTime</span></code></a>) will be
+modified to be the  date the operation was performed.</p>
+<p>Client-CN Interactions:</p>
+<p>Clients, either ITK or MNs, may call the following methods on the CN:</p>
+<ul class="simple">
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">CNAuthorization.setOwner()</span></code></p></li>
+<li><p><a class="reference internal" href="../apis/CN_APIs.html#CNAuthorization.setAccessPolicy" title="CNAuthorization.setAccessPolicy"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNAuthorization.setAccessPolicy()</span></code></a></p></li>
+<li><p><a class="reference internal" href="../apis/CN_APIs.html#CNReplication.setReplicationPolicy" title="CNReplication.setReplicationPolicy"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNReplication.setReplicationPolicy()</span></code></a></p></li>
+</ul>
+<p>The execution of these methods will alter various elements:</p>
+<ul class="simple">
+<li><p><strong>rightsHolder</strong> (<a class="reference internal" href="../apis/Types.html#Types.Subject" title="Types.Subject"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.Subject</span></code></a>)</p></li>
+<li><p><strong>accessPolicy</strong> (<a class="reference internal" href="../apis/Types.html#Types.AccessPolicy" title="Types.AccessPolicy"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.AccessPolicy</span></code></a>)</p></li>
+<li><p><strong>replicationPolicy</strong> (<a class="reference internal" href="../apis/Types.html#Types.ReplicationPolicy" title="Types.ReplicationPolicy"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.ReplicationPolicy</span></code></a>)</p></li>
+</ul>
+<dl class="simple">
+<dt>A side effect of each of these operations will be an update to</dt><dd><p><strong>dateSysMetadataModified</strong> (<a class="reference internal" href="../apis/Types11.html#Types.DateTime" title="Types.DateTime"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.DateTime</span></code></a>).</p>
+</dd>
+</dl>
+<p>Client-MN Interactions:</p>
+<p>A Client may call the following:</p>
+<ul class="simple">
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">MNAuthorization.setAccessPolicy()</span></code></p></li>
+<li><p><a class="reference internal" href="../apis/MN_APIs.html#MNStorage.update" title="MNStorage.update"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNStorage.update()</span></code></a></p></li>
+</ul>
+<p>This operation alone does not have an effect on the CN’s definitive store. A
+subsequent call to the CN will via func:<cite>CNAuthorization.setAccessPolicy</cite> will
+need to be made by the MN.</p>
+<p>An object may be updated on an MN. The update mechanism will create a new object
+that is the descendent of the object updated.  The descendant object will have
+the  <strong>obsoletes</strong> (<a class="reference internal" href="../apis/Types.html#Types.Identifier" title="Types.Identifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.Identifier</span></code></a>) field set while the ancestor object
+will need an  <strong>obsoletedBy</strong> (<a class="reference internal" href="../apis/Types.html#Types.Identifier" title="Types.Identifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.Identifier</span></code></a>) element added. The
+synchronization process will update the ancestor’s SystemMetadata with the new
+value.</p>
+<p>Robert’s Notes:</p>
+<p>From these interactions, there is no mechanism defined that updates
+authoritativeMemberNode on the Authoritative MN.</p>
+<p>I am uncertain why <code class="xref py py-func docutils literal notranslate"><span class="pre">MNAuthorization.setAccessPolicy()</span></code> is needed. It would
+appear to be a proxy of the <cite>CNAuthorization.setAccessPolicy</cite>. So why not
+eliminate the MN call and direct all client calls to the CN?</p>
+<p>To answer my question about Synchronization updating responsibility:
+Synchronization should only update the obsoletedBy and
+authoritativeMemberNode fields of the SystemMetadata from the Authoritative MN
+(and only the Authoritative MN).</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Mutability of Metadata</a><ul>
+<li><a class="reference internal" href="#systemmetadata-mutability">SystemMetadata Mutability</a></li>
+<li><a class="reference internal" href="#rest-api">REST API</a></li>
+<li><a class="reference internal" href="#interactions-affecting-systemmetadata">Interactions affecting SystemMetadata</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+  <li><a href="index.html">General Design and Implementation Notes</a><ul>
+      <li>Previous: <a href="ApacheConfiguration.html" title="previous chapter">Apache Configuration for DataONE Services</a></li>
+      <li>Next: <a href="selectors.html" title="next chapter">Selectors for Data Package Components</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/notes/sysmeta_mutation_20110831.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/notes/sysmeta_mutation_20110831.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/notes/sysmeta_mutation_20110831.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

@@ -1,0 +1,189 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>&lt;no title&gt; &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/mathjax_pre.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html"></a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">&lt;no title&gt;</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <p><strong>Examples</strong></p>
+<p>The outgoing request body <em>must</em> be encoded as <a href="#id1"><span class="problematic" id="id2">`MIME multipart/form-data`_</span></a> with
+the system metadata portion and the object as file attachments.</p>
+<p>(POST) Create a new object with a given identifier (<em>XYZ33256</em>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">curl</span> <span class="o">-</span><span class="n">E</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">x509up_u502</span> \
+     <span class="o">-</span><span class="n">F</span> <span class="s2">&quot;pid=XYZ33256&quot;</span> \
+     <span class="o">-</span><span class="n">F</span> <span class="s2">&quot;object=@sciencemetadata.xml&quot;</span> \
+     <span class="o">-</span><span class="n">F</span> <span class="s2">&quot;sysmeta=@sysmeta.xml&quot;</span> \
+     <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">m1</span><span class="o">.</span><span class="n">dataone</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">mn</span><span class="o">/</span><span class="n">v1</span><span class="o">/</span><span class="nb">object</span>
+
+<span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span> <span class="mi">200</span> <span class="n">Success</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Type</span><span class="p">:</span>
+<span class="n">Date</span><span class="p">:</span> <span class="n">Wed</span><span class="p">,</span> <span class="mi">16</span> <span class="n">Dec</span> <span class="mi">2009</span> <span class="mi">13</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mi">34</span> <span class="n">GMT</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Length</span><span class="p">:</span> <span class="mi">355</span>
+
+<span class="n">XYZ33256</span>
+</pre></div>
+</div>
+<p>The system metadata included with the create call must contain values for the
+elements required to be set by clients (see <a class="reference internal" href="../../design/SystemMetadata.html"><span class="doc">System Metadata</span></a>). The
+system metadata document can be crafted by hand or preferably with a tool such
+as <em>generate_sysmeta.py</em> which is available in the <a class="reference external" href="https://repository.dataone.org/software/cicore/trunk/d1_instance_generator">d1_instance_generator</a> Python
+package. See documentation included with that package for more information on
+its operation.</p>
+<p>For example, the system metadata document for the example above was generated
+using the sequence of commands:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&lt;&lt;log on to cilogon.org and download my certificate&gt;&gt;
+
+MYSUBJECT=`python my_subject.py /tmp/x509up_u502`
+echo $MYSUBJECT
+
+CN=Dave Vieglais T799,O=Google,C=US,DC=cilogon,DC=org
+
+python generate_sysmeta.py -f sciencemetadata.xml \
+                           -i &quot;XYZ33256&quot; \
+                           -s &quot;$MYSUBJECT&quot; \
+                           -t &quot;eml://ecoinformatics.org/eml-2.0.1&quot; \
+                            &gt; sysmeta.xml
+</pre></div>
+</div>
+<p>The generated system metadata document contains default information that indicates:</p>
+<ul class="simple">
+<li><p>The submitter is <code class="docutils literal notranslate"><span class="pre">CN=Dave</span> <span class="pre">Vieglais</span> <span class="pre">T799,O=Google,C=US,DC=cilogon,DC=org</span></code></p></li>
+<li><p>The rights holder is the same as the submitter</p></li>
+<li><p>The access policy indicates public read, and write by the submitter</p></li>
+<li><p>The replication policy indicates replication is allowed to any node</p></li>
+</ul>
+<p>The generated system metadata document is presented below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&lt;?xml version=&#39;1.0&#39; encoding=&#39;UTF-8&#39;?&gt;
+&lt;ns1:systemMetadata xmlns:ns1=&quot;http://ns.dataone.org/service/types/v1&quot;&gt;
+  &lt;identifier&gt;XYZ33256&lt;/identifier&gt;
+  &lt;formatId&gt;eml://ecoinformatics.org/eml-2.0.1&lt;/formatId&gt;
+  &lt;size&gt;22936&lt;/size&gt;
+  &lt;checksum algorithm=&quot;MD5&quot;&gt;2ec0084d1e11e0d5c9a46ba6a230aa85&lt;/checksum&gt;
+  &lt;submitter&gt;CN=Dave Vieglais T799,O=Google,C=US,DC=cilogon,DC=org&lt;/submitter&gt;
+  &lt;rightsHolder&gt;CN=Dave Vieglais T799,O=Google,C=US,DC=cilogon,DC=org&lt;/rightsHolder&gt;
+  &lt;accessPolicy&gt;
+    &lt;allow&gt;
+      &lt;subject&gt;public&lt;/subject&gt;
+      &lt;permission&gt;read&lt;/permission&gt;
+    &lt;/allow&gt;
+    &lt;allow&gt;
+      &lt;subject&gt;CN=Dave Vieglais T799,O=Google,C=US,DC=cilogon,DC=org&lt;/subject&gt;
+      &lt;permission&gt;changePermission&lt;/permission&gt;
+    &lt;/allow&gt;
+  &lt;/accessPolicy&gt;
+  &lt;replicationPolicy replicationAllowed=&quot;true&quot;/&gt;
+  &lt;dateUploaded&gt;2012-02-20T20:39:19.664495&lt;/dateUploaded&gt;
+  &lt;dateSysMetadataModified&gt;2012-02-20T20:39:19.70598&lt;/dateSysMetadataModified&gt;
+&lt;/ns1:systemMetadata&gt;
+</pre></div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../../_static/dataone_logo.png" alt="Logo"/>
+    </a></p><h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation Overview</a><ul>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/apis/examples/create.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../../_sources/apis/examples/create.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/apis/examples/create.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

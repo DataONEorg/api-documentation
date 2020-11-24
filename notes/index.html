@@ -1,0 +1,188 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>General Design and Implementation Notes &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Logging and Privacy concerns" href="LoggingAndPrivacy.html" />
+    <link rel="prev" title="Semantic Search Design" href="../design/semantics.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="LoggingAndPrivacy.html" title="Logging and Privacy concerns"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../design/semantics.html" title="Semantic Search Design"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">General Design and Implementation Notes</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="general-design-and-implementation-notes">
+<h1>General Design and Implementation Notes<a class="headerlink" href="#general-design-and-implementation-notes" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="LoggingAndPrivacy.html">Logging and Privacy concerns</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="LoggingAndPrivacy.html#privacy-concerns">Privacy concerns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="LoggingAndPrivacy.html#potential-designs">Potential designs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="LoggingAndPrivacy.html#implications-and-issues">Implications and Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="DataAndMetadata.html">Cross Domain Indexing and Access for Data and Metadata</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="DataAndMetadata.html#problem">Problem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DataAndMetadata.html#translation-approach">Translation Approach</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DataAndMetadata.html#indexing-approach">Indexing Approach</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DataAndMetadata.html#content-model-approach">Content Model Approach</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Replication.html">Replication Notes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Replication.html#general">General</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Replication.html#coordinating-nodes">Coordinating Nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Replication.html#member-nodes">Member Nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Replication.html#resources">Resources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Replication.html#coordinating-node-object-store">Coordinating Node Object Store</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Replication.html#metacat-as-replicating-object-manager">Metacat As Replicating Object Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Replication.html#using-a-distributed-lock-manager">Using a Distributed Lock Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Replication.html#distributed-execution-environment">Distributed Execution Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Replication.html#file-based-object-store-with-distributed-revision-control">File Based Object Store with Distributed Revision Control</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="MN_api_notes_comments.html">Notes for MN API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cn_requirements.html">Coordinating Node Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ApacheConfiguration.html">Apache Configuration for DataONE Services</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ApacheConfiguration.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ApacheConfiguration.html#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ApacheConfiguration.html#conclusions">Conclusions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sysmeta_mutation_20110831.html">Mutability of Metadata</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sysmeta_mutation_20110831.html#systemmetadata-mutability">SystemMetadata Mutability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sysmeta_mutation_20110831.html#rest-api">REST API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sysmeta_mutation_20110831.html#interactions-affecting-systemmetadata">Interactions affecting SystemMetadata</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="selectors.html">Selectors for Data Package Components</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="selectors.html#goal">Goal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="selectors.html#rationale">Rationale</a></li>
+<li class="toctree-l2"><a class="reference internal" href="selectors.html#implications-for-implementation">Implications for Implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="time_bandwidth_constraints.html">Time and Bandwidth Constraints</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="time_bandwidth_constraints.html#cn-cn-transfer-rates">CN - CN Transfer Rates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="time_bandwidth_constraints.html#transaction-rates">Transaction Rates</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api_refactoring.html">Proposal for API Refactoring</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api_refactoring.html#member-node-tiers">Member Node Tiers</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p><h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+      <li>Previous: <a href="../design/semantics.html" title="previous chapter">Semantic Search Design</a></li>
+      <li>Next: <a href="LoggingAndPrivacy.html" title="next chapter">Logging and Privacy concerns</a></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/notes/index.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/notes/index.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/notes/index.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

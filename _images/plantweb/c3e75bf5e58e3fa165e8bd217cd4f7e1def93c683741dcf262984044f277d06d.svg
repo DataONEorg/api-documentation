@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="318px" preserveAspectRatio="none" style="width:366px;height:318px;" version="1.1" viewBox="0 0 366 318" width="366px" zoomAndPan="magnify"><defs><filter height="300%" id="fbqcqz1r3iviu" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--MD5=[a7c3fe0f3374b913da9748d1ac0dbbf6]
+entity CN--><ellipse cx="103.5" cy="14" fill="#FEFECE" filter="url(#fbqcqz1r3iviu)" rx="8" ry="8" style="stroke:#A80036;stroke-width:1.5;"/><path d="M103.5,22 L103.5,49 M90.5,30 L116.5,30 M103.5,49 L90.5,64 M103.5,49 L116.5,64 " fill="none" filter="url(#fbqcqz1r3iviu)" style="stroke:#A80036;stroke-width:1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="134" x="36.5" y="82.4951">Coordinating Node</text><!--MD5=[9db44d1591da4edca772ec356c96774d]
+entity MN--><ellipse cx="256.5" cy="14" fill="#FEFECE" filter="url(#fbqcqz1r3iviu)" rx="8" ry="8" style="stroke:#A80036;stroke-width:1.5;"/><path d="M256.5,22 L256.5,49 M243.5,30 L269.5,30 M256.5,49 L243.5,64 M256.5,49 L269.5,64 " fill="none" filter="url(#fbqcqz1r3iviu)" style="stroke:#A80036;stroke-width:1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="101" x="206" y="82.4951">Member Node</text><ellipse cx="83.6068" cy="288.4214" fill="#FEFECE" filter="url(#fbqcqz1r3iviu)" rx="77.6068" ry="17.9214" style="stroke:#A80036;stroke-width:1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="125" x="21.1068" y="293.0698">13. Authorization</text><ellipse cx="179.4911" cy="169.8982" fill="#FEFECE" filter="url(#fbqcqz1r3iviu)" rx="104.9911" ry="23.3982" style="stroke:#A80036;stroke-width:1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="187" x="85.9911" y="174.5466">06. Synchronize Metadata</text><ellipse cx="275.3678" cy="288.6736" fill="#FEFECE" filter="url(#fbqcqz1r3iviu)" rx="78.8678" ry="18.1736" style="stroke:#A80036;stroke-width:1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="128" x="211.3678" y="293.322">43. Notify Indexer</text><!--MD5=[46fbc0d088117bc6b676dfbb90ccc36f]
+link CN to SYNC--><path d="M127.965,85.595 C140.462,105.821 155.206,129.682 165.715,146.69 " fill="none" id="CN-SYNC" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[b43846ab69e7b158961dec38b0286f40]
+link MN to SYNC--><path d="M231.713,85.595 C219.051,105.821 204.113,129.682 193.466,146.69 " fill="none" id="MN-SYNC" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[1d7ceb6ce57b3ca53cbcb365d9566fb5]
+link SYNC to author--><path d="M161.217,193.187 C143.775,214.3541 117.701,245.9957 100.6462,266.6924 " fill="none" id="SYNC-to-author" style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#A80036" points="97.3607,270.6795,106.1712,266.2778,100.5405,266.8209,99.9974,261.1902,97.3607,270.6795" style="stroke:#A80036;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="68" x="135.5" y="236.5669">«includes»</text><!--MD5=[fa625f075ac7f86ae8369e58d6d09c99]
+link SYNC to NOTIFY--><path d="M197.783,193.187 C215.225,214.3541 241.299,245.9957 258.354,266.6924 " fill="none" id="SYNC-to-NOTIFY" style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#A80036" points="261.639,270.6795,259.0021,261.1902,258.4591,266.8209,252.8284,266.278,261.639,270.6795" style="stroke:#A80036;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="68" x="237.5" y="236.5669">«includes»</text><!--MD5=[6941d41c36244ff58c013e2c06742cd5]
+@startuml
+actor "Coordinating Node" as CN
+actor "Member Node" as MN
+
+usecase "13. Authorization" as author
+usecase "06. Synchronize Metadata" as SYNC
+usecase "43. Notify Indexer" as NOTIFY
+CN - - SYNC
+MN - - SYNC
+SYNC ..> author: <<includes>>
+SYNC ..> NOTIFY: <<includes>>
+@enduml
+
+PlantUML version 1.2020.21beta3(Unknown compile time)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>

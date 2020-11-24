@@ -1,0 +1,183 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Use Case 05 - Update Science Metadata &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/mathjax_pre.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Use Case 11 - CRUD Workflow Objects" href="11_uc.html" />
+    <link rel="prev" title="Use Case 04 - Create New Object" href="04_uc.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="11_uc.html" title="Use Case 11 - CRUD Workflow Objects"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="04_uc.html" title="Use Case 04 - Create New Object"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html"></a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../usecases.html" accesskey="U">Use Cases</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Use Case 05 - Update Science Metadata</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="use-case-05-update-science-metadata">
+<span id="uc05"></span><h1>Use Case 05 - Update Science Metadata<a class="headerlink" href="#use-case-05-update-science-metadata" title="Permalink to this headline">¶</a></h1>
+<dl class="simple" id="index-0">
+<dt>Revisions</dt><dd><p>View document revision <a class="reference external" href="https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/05_uc.txt">history</a>.</p>
+</dd>
+<dt>Goal</dt><dd><p>Update or delete science metadata record on a Member Node.</p>
+</dd>
+<dt>Summary</dt><dd><p>Science metadata is immutable in DataONE. As such, modification involves
+generating a new science metadata record and indicating that the new record
+supersedes an existing record, and deletion involves deprecation so that the
+old metadata record is no longer visible during normal discovery and access.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Actors</dt><dd><p>Member Node, additional Member Nodes, Coordinating Nodes</p>
+</dd>
+<dt>Preconditions</dt><dd><ul class="simple">
+<li><p>User is authenticated</p></li>
+<li><p>MN is registered and is monitored</p></li>
+<li><p>Science metadata being deleted / updated document exists</p></li>
+</ul>
+</dd>
+<dt>Triggers</dt><dd><ul class="simple">
+<li><p>User calls <code class="xref py py-func docutils literal notranslate"><span class="pre">MN_crud.update()</span></code></p></li>
+<li><p>User calls <code class="xref py py-func docutils literal notranslate"><span class="pre">MN_crud.delete()</span></code></p></li>
+</ul>
+</dd>
+<dt>Post Conditions</dt><dd><ul class="simple">
+<li><p>System metadata for science metadata object(s) updated</p></li>
+<li><p>Replacement science metadata propagated through the system</p></li>
+<li><p>Search indexes updated</p></li>
+<li><p>Operation recorded in logs</p></li>
+<li><p>Watchers notified of change</p></li>
+</ul>
+</dd>
+</dl>
+<img alt="../../_images/a4d92dcfd2e61a03eda4d147d6432a10eb9b42480be834c82c4b0d85c60e6462.svg" class="align-center" src="../../_images/a4d92dcfd2e61a03eda4d147d6432a10eb9b42480be834c82c4b0d85c60e6462.svg" /><p><em>Figure 2.</em> Use case 04.</p>
+<img alt="../../_images/fad1fbed8160eadf41e426e5400fc6ab1f3802bd3304e2cec328c24faa2155a0.svg" class="align-center" src="../../_images/fad1fbed8160eadf41e426e5400fc6ab1f3802bd3304e2cec328c24faa2155a0.svg" /><p><em>Figure 3.</em> Create, update, delete, search metadata or data object in Member
+Node.</p>
+<p><strong>Notes</strong></p>
+<ul class="simple">
+<li><p>Q. Are IDs are pegged to versions? If so, update might differ more radically
+from create. A. Yes. Create involves creation of a new science metadata
+object, update involves deprecating an existing science metadata document
+with a replacement, delete involves setting system metadata properties.</p></li>
+<li><p>Q. Should queuing of a submission within a member node be required for
+success? (We assume yes, to guarantee replication of submissions). A. No.
+Successful update is handled by the Member Node, if the new science metadata
+can be created and the system metadata can be updated, then the change
+should be considered complete. The Member Node synchronization process will
+ensure that the changes are propagated to the wider system.</p></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../../_static/dataone_logo.png" alt="Logo"/>
+    </a></p><h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation Overview</a><ul>
+  <li><a href="../usecases.html">Use Cases</a><ul>
+      <li>Previous: <a href="04_uc.html" title="previous chapter">Use Case 04 - Create New Object</a></li>
+      <li>Next: <a href="11_uc.html" title="next chapter">Use Case 11 - CRUD Workflow Objects</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/design/UseCases/05_uc.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../../_sources/design/UseCases/05_uc.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/05_uc.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

@@ -1,0 +1,211 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Use Case 01 - Get Object Identified by PID &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/mathjax_pre.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Use Case 02 - List PIDs By Search" href="02_uc.html" />
+    <link rel="prev" title="Use Cases" href="../usecases.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="02_uc.html" title="Use Case 02 - List PIDs By Search"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../usecases.html" title="Use Cases"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html"></a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../usecases.html" accesskey="U">Use Cases</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Use Case 01 - Get Object Identified by PID</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="use-case-01-get-object-identified-by-pid">
+<span id="uc01"></span><h1>Use Case 01 - Get Object Identified by PID<a class="headerlink" href="#use-case-01-get-object-identified-by-pid" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<span id="index-0"></span><h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>Retrieve an object identified by PID.</p>
+</div>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>A client has an identifier for some object within the DataONE system and is
+attempting to retrieve the referenced object from a node (Member Node or
+Coordinating Node). If the object exists on the node and the user has READ
+permission on the object, then the bytes of that object are returned,
+otherwise an error condition occurs.</p>
+<p>This low level operation assumes that the client knows that the desired object
+is available on the target node. The normal process for retrieving an object
+given only the identifier is to first resolve the object, then retrieve the
+object from one of the identified nodes. Resolution is described in
+<a class="reference internal" href="36_uc.html"><span class="doc">UC36</span></a>.</p>
+</div>
+<div class="section" id="actors">
+<h2>Actors<a class="headerlink" href="#actors" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Client requesting object</p></li>
+<li><p>Coordinating Node</p></li>
+<li><p>Member Node</p></li>
+</ul>
+</div>
+<div class="section" id="preconditions">
+<h2>Preconditions<a class="headerlink" href="#preconditions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Client has authenticated to the desired level (e.g. client may not have
+authenticated, so access might be anonymous).</p></li>
+</ul>
+</div>
+<div class="section" id="triggers">
+<h2>Triggers<a class="headerlink" href="#triggers" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>An object is requested from the DataONE system.</p></li>
+</ul>
+</div>
+<div class="section" id="post-conditions">
+<h2>Post Conditions<a class="headerlink" href="#post-conditions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>The client has a copy of the object bytes (or an error message in the case
+of failure)</p></li>
+<li><p>The <a class="reference internal" href="../../glossary.html#term-node-event-log"><span class="xref std std-term">node event log</span></a> is updated with the results of the operation</p></li>
+<li><p>Watchers are notified of the event.</p></li>
+</ul>
+<img alt="Use case 01 diagram." class="align-center" src="../../_images/3998da9d418abfd22fcef293cb60c14144f178e136705382ee5d5399dd65fb54.svg" /><p><strong>Figure 1.</strong> Use case 01 diagram showing actors and components involved in this
+action.</p>
+<img alt="../../_images/0386b5b4a908660e323d91dd02aa11a9d9bf0556ac7c072c24350f0dfb47abf4.svg" class="align-center" src="../../_images/0386b5b4a908660e323d91dd02aa11a9d9bf0556ac7c072c24350f0dfb47abf4.svg" /><p><strong>Figure 2.</strong> Sequence diagram for Use Case 01 illustrating the sequence for
+retrieving an object identified by a PID from the DataONE system. No
+distinction is made between Member Node and Coordinating Node implementation
+as they are identical at this level of detail.</p>
+<p><strong>Notes</strong></p>
+<ol class="arabic simple">
+<li><p>For the GET operation, should isAuth() be performed only by CNs? Relying on
+the MN system metadata requires trusted implementation of the MN system and
+consistency of system metadata across all MNs (which will be the case,
+though with uncertain latency). Requiring all isAuth() operations to be
+performed by CNs will increase trust in the operation (assuming the
+operation is not spoofed by a MN) though will increase load on CNs. This
+should be specified in the Authorization use case.</p></li>
+<li><p>Data sent to watchers might include: timestamp, object identifier, user id,
+IP of client.</p></li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Use Case 01 - Get Object Identified by PID</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#summary">Summary</a></li>
+<li><a class="reference internal" href="#actors">Actors</a></li>
+<li><a class="reference internal" href="#preconditions">Preconditions</a></li>
+<li><a class="reference internal" href="#triggers">Triggers</a></li>
+<li><a class="reference internal" href="#post-conditions">Post Conditions</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation Overview</a><ul>
+  <li><a href="../usecases.html">Use Cases</a><ul>
+      <li>Previous: <a href="../usecases.html" title="previous chapter">Use Cases</a></li>
+      <li>Next: <a href="02_uc.html" title="next chapter">Use Case 02 - List PIDs By Search</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/design/UseCases/01_uc.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../../_sources/design/UseCases/01_uc.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/01_uc.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

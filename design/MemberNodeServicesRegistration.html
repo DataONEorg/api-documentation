@@ -1,0 +1,302 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>(Proposal) Member Node Service Registration &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">(Proposal) Member Node Service Registration</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="proposal-member-node-service-registration">
+<h1>(Proposal) Member Node Service Registration<a class="headerlink" href="#proposal-member-node-service-registration" title="Permalink to this headline">¶</a></h1>
+<dl class="field-list simple">
+<dt class="field-odd">Status</dt>
+<dd class="field-odd"><p>DRAFT for comment</p>
+</dd>
+</dl>
+<div class="section" id="definitions">
+<h2>Definitions<a class="headerlink" href="#definitions" title="Permalink to this headline">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">Service</dt>
+<dd class="field-odd"><p>A service in the context of this document is functionality accessible over the
+internet using a standard protocol that performs some operation on data that
+ideally is accessible through the DataONE application programing interfaces.</p>
+</dd>
+<dt class="field-even">Service Endpoint</dt>
+<dd class="field-even"><p>The service endpoint is the internet address at which the service can be
+accessed by clients.</p>
+</dd>
+<dt class="field-odd">Service Interface</dt>
+<dd class="field-odd"><p>The mechanism through which clients interact with a service in a manner
+compliant with the advertised service specifications.</p>
+</dd>
+<dt class="field-even">Service Specification</dt>
+<dd class="field-even"><p>Description of the specific mechanisms that a client may utilize for
+programmatic interaction with a service. The service specification should
+include the protocol being used to access the service as well as the structure
+of messages, protocol specific paths or endpoints, service behavior, and error
+condition notification.</p>
+</dd>
+<dt class="field-odd">Client</dt>
+<dd class="field-odd"><p>A client in the context of this document is any application that accesses a
+service through the service interface.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>Service Registration (SR) is a process whereby services offered by Member Nodes
+and other reliable resources can be registered with DataONE. Services so
+registered may be discovered through DataONE search mechanisms and utilized by
+DataONE Investigator Tools and other clients to perform actions on or provide
+access to data.</p>
+<p>A general goal of Service Registration (SR) is to assist clients in discovery of
+services exposed by Member Nodes that may be applicable to a particular type of
+object. There are several possible mechanisms for recording and exposing this information. One approach is through the Member Node
+getCapabilities method, with the node description response document modified to
+include additional basic information about the service(s) provided by the Member
+Node and the format types each supports. An alternative approach is to add a new
+MN API method that lists services available for different formats. Yet another
+approach is to describe services using a type of metadata document, and use the
+existing infrastructure to synchronize and index the service descriptions so
+that clients may discover and utilize the capabilities on offer.</p>
+<p>The third approach, that os using Service Registration Documents (SRD) to
+describe services is the chosen approach to registering and advertising
+services being offered.</p>
+<p>## Problem being addressed</p>
+<p>The fundamental issue being addressed is the discovery of services offered by
+Member Nodes. There is currently no consistent, convenient, universally
+available mechanism to discover services that are offered by data repositories
+to assist users with access to data. Services are available for data
+subsetting and slicing, merging, analysis, visualization, summarization, and
+so on. DataONE will enable any such services to be registered and discoverable
+through a search interface, and in some cases incorporated in the the
+functionality data search interfaces to offer online processing of the data by
+a registered service.</p>
+<p>## How it works</p>
+<p>Services are described with a service registration document (SRD), similar to
+how data objects are currently described with a metadata document. SRDs are
+treated like metadata documents in DataONE. They have unique identifiers, they
+are immutable, and they are indexed by the search engine.</p>
+<p>Given a service that a user would like to advertise, an SRD is created and
+added to a Member Node. The CNs synchronize the content and index the document
+and its associated metadata.</p>
+<p>A user can discover the service through the search interface, either by
+looking for the service specifically or by browsing data search results, and
+the UI suggesting services applicable for the different data result records.</p>
+<p>## Who it benefits</p>
+<p>## Use Cases</p>
+<hr class="docutils" />
+<p>The services will be identified by some identifier that is uniquely associated
+with that service type. Included with the entry will be connection information
+so that a client application of the service type is able to connect and
+perform the necessary operations.</p>
+<p>Connection to, and interaction with the advertised service is not defined by
+DataONE APIs. Only the availability of services that may be applicable to
+different object format types is advertised.</p>
+<p>Note that there may be many services that can operate on a particular data
+type, and any particular service may support multiple types of content.</p>
+<p>The association between service types and object format types will need to be
+maintained on a service by service basis, since particular service
+implementations may support different types of content. For example, one
+instance of OGC-WCS (Web Coverage Service) may support GeoTIFF imagery only,
+while another may support multiple raster formats.</p>
+<p>If all service information is returned in getCapabilites, then the entry for a
+service record in the services list may be structured as (cardinality
+indicated in parentheses):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span><span class="n">services</span><span class="o">&gt;</span>
+  <span class="p">(</span><span class="mf">0.</span><span class="o">.</span><span class="n">n</span><span class="p">)</span><span class="o">&lt;</span><span class="n">service</span><span class="o">&gt;</span>
+    <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span><span class="n">serviceType</span><span class="o">&gt;</span><span class="p">{</span><span class="n">Unique</span> <span class="n">Service</span> <span class="n">Type</span> <span class="n">identifier</span><span class="p">}</span><span class="o">&lt;/</span><span class="n">serviceType</span><span class="o">&gt;</span>
+    <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">Descriptve</span> <span class="n">human</span> <span class="n">readable</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="n">service</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+    <span class="p">(</span><span class="mf">0.</span><span class="o">.</span><span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span><span class="n">description</span><span class="o">&gt;</span><span class="n">Brief</span> <span class="n">human</span> <span class="n">readable</span> <span class="n">description</span> <span class="n">of</span> <span class="n">service</span> <span class="n">to</span> <span class="n">be</span>
+                        <span class="n">presented</span> <span class="ow">in</span> <span class="n">user</span> <span class="n">interfaces</span><span class="o">.&lt;/</span><span class="n">description</span><span class="o">&gt;</span>
+    <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span><span class="n">connection</span><span class="o">&gt;</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">some</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">endpoint</span><span class="o">/</span><span class="n">here</span><span class="o">&lt;/</span><span class="n">connection</span><span class="o">&gt;</span>
+    <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span><span class="n">formatTypes</span><span class="o">&gt;</span>
+      <span class="p">(</span><span class="mf">1.</span><span class="o">.</span><span class="n">n</span><span class="p">)</span> <span class="o">&lt;</span><span class="n">formatType</span><span class="o">&gt;</span><span class="p">{</span><span class="n">Some</span> <span class="nb">format</span> <span class="n">ID</span><span class="p">}</span><span class="o">&lt;/</span><span class="n">formatType</span><span class="o">&gt;</span>
+            <span class="o">...</span>
+        <span class="o">&lt;/</span><span class="n">formtTypes</span><span class="o">&gt;</span>
+      <span class="o">&lt;/</span><span class="n">servce</span><span class="o">&gt;</span>
+      <span class="o">...</span>
+<span class="o">&lt;/</span><span class="n">services</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>If an API call is added to describe available services then it may be modelled
+as accessing a collection of services. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">URL</span><span class="p">:</span> <span class="o">/</span><span class="n">v2</span><span class="o">/</span><span class="n">services</span>
+<span class="n">API</span><span class="p">:</span> <span class="n">MN</span><span class="o">.</span><span class="n">listServices</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span> <span class="n">of</span> <span class="nb">all</span> <span class="n">services</span> <span class="n">on</span> <span class="n">node</span>
+
+<span class="n">URL</span><span class="p">:</span> <span class="o">/</span><span class="n">v2</span><span class="o">/</span><span class="n">services</span><span class="o">/</span><span class="n">service</span><span class="o">/</span><span class="p">{</span><span class="n">SERVICE_TYPE_ID</span><span class="p">}</span>
+<span class="n">API</span><span class="p">:</span> <span class="n">MN</span><span class="o">.</span><span class="n">getService</span><span class="p">(</span><span class="n">SERVICE_TYPE_ID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Service</span> <span class="n">description</span>
+
+<span class="n">UR</span><span class="p">:</span> <span class="o">/</span><span class="n">v2</span><span class="o">/</span><span class="n">services</span><span class="o">/</span><span class="n">formats</span><span class="o">/</span><span class="p">{</span><span class="n">OBJECT_FORMAT_TYPE</span><span class="p">}</span>
+<span class="n">API</span><span class="p">:</span> <span class="n">MN</span><span class="o">.</span><span class="n">listFormatServices</span><span class="p">(</span><span class="n">object_format_type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span> <span class="n">of</span> <span class="n">services</span> <span class="n">applicable</span>
+                                                  <span class="n">to</span> <span class="n">an</span> <span class="nb">object</span> <span class="nb">format</span>
+</pre></div>
+</div>
+<p>A typical imagined user interaction scenario is described in MNSR-S01. Similar
+scenarios can be constructed for other combinations of data and service types.
+For example: a CSV subsetting service might return a selection of rows from a
+CSV file; a rendering service might provide a HTML rendering of different
+types of content (such as metadata, resource maps, and data objects).</p>
+<p>Services advertised will likely be mostly third-party implemenations, though
+it is conceivable that this mechanism for advertising the availability of
+services might also be applied to advertising the availability of DataONE
+defined services that may be optional for Member Node implementations.</p>
+<div class="section" id="scenario-mnsr-s01-spatial-subset">
+<h3>Scenario MNSR-S01, Spatial Subset<a class="headerlink" href="#scenario-mnsr-s01-spatial-subset" title="Permalink to this headline">¶</a></h3>
+<p>A user has a PID for a data object. Using a DataONE service aware client tool,
+the user discovers that the object is a fairly large (system metadata) set of
+imagery (system metadata, science metadata) that provides high resolution
+measurements on ground surface reflectance in the range of 400 to 700nm
+(science metadata). The science metaata describing the imagery indicates a
+very broad spatial coverage and the the file is too large to justify
+downloading for the small area of terrain being worked on.</p>
+<p>The client tool indicates to the user that a Member Node holding a copy of the
+data is known to be running a service (MN.getCapabilities) that will allow
+extraction of a spatial window from the large data object (the OGC Web
+Coverage Service, indicated by a unique identifier associated with the service
+type) and also provides the URL of the GetCapabilities endpoint for the
+service.</p>
+<p>The user utilizes an OGC-WCS client application to connect with the service
+operating on the Member Node and retrieves the desired window from the
+coverage identified by the PID.</p>
+</div>
+<div class="section" id="use-case-mnsr-uc01">
+<h3>Use Case MNSR-UC01<a class="headerlink" href="#use-case-mnsr-uc01" title="Permalink to this headline">¶</a></h3>
+<p>A client application is able to discover services available at a Member Node
+through the MN.getCapabilities method. Services thus listed must also provide
+a link to getCapabilities of the service (or equivalent introspection or well
+known service endpoint) so that a compatible client may determine interaction
+parameters.</p>
+</div>
+<div class="section" id="use-case-mnsr-uc02">
+<h3>Use Case MNSR-UC02<a class="headerlink" href="#use-case-mnsr-uc02" title="Permalink to this headline">¶</a></h3>
+<p>A client application is able to discover services available from registered
+Member Nodes for a particular object formatType. As for Use Case MNS-UC01,
+service registrations must provide references to the respective introspection
+mechanisms so that a compatible client may determine interaction parameters.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">(Proposal) Member Node Service Registration</a><ul>
+<li><a class="reference internal" href="#definitions">Definitions</a></li>
+<li><a class="reference internal" href="#overview">Overview</a><ul>
+<li><a class="reference internal" href="#scenario-mnsr-s01-spatial-subset">Scenario MNSR-S01, Spatial Subset</a></li>
+<li><a class="reference internal" href="#use-case-mnsr-uc01">Use Case MNSR-UC01</a></li>
+<li><a class="reference internal" href="#use-case-mnsr-uc02">Use Case MNSR-UC02</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/design/MemberNodeServicesRegistration.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/design/MemberNodeServicesRegistration.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/MemberNodeServicesRegistration.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

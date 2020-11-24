@@ -1,0 +1,295 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Authorization and Authentication in DataONE &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Authorization and Authentication in DataONE</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="authorization-and-authentication-in-dataone">
+<h1>Authorization and Authentication in DataONE<a class="headerlink" href="#authorization-and-authentication-in-dataone" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="authorization-vs-authentication-a-primer">
+<h2>Authorization vs. Authentication: A Primer<a class="headerlink" href="#authorization-vs-authentication-a-primer" title="Permalink to this headline">¶</a></h2>
+<p>The process of confirming whether a user has privileges to access a resource
+or use a service is called <em>authorization</em>.  <em>Authentication,</em>  on the other hand,
+is the process of
+determining whether or not a user is who they say they are. Both are required of
+a security architecture to ensure that the right people have the right access to
+resources and services.</p>
+<p>Authorization is achieved through the association of usernames (Subjects) and
+permissions with the resources and services being secured.  Typically, this is
+done using access control lists (ACL). When a request is made, the identity of
+the user is looked up in the ACL, and the appropriate action is taken based on
+the user’s permissions.  DataONE uses Subjects contained in a resource’s
+SystemMetadata, as well as Subjects in the Authoritative Member Node’s Node
+document as the ACL for the resource when making authorization decisions.
+The latter is used primarily for administrative actions and to secure services.</p>
+<p>In authentication, the user provides their username along with
+other information that gives assurances that they are who they say they are.
+Typical computer logon accounts are examples of authentication, where the password
+serves as the information used to assure a user’s identity.  Username-password
+systems over the internet need to be a bit more complicated than that, in that
+even the username and password have to be secured before sending them to the
+remote server.  That is, the user needs to authenticate the remote server and
+encrypt her confidential information before sending it.  X.509 has emerged as the
+de-facto standard used to do this, and is what DataONE uses for authentication.</p>
+</div>
+<div class="section" id="x-509-authentication">
+<h2>X.509 Authentication<a class="headerlink" href="#x-509-authentication" title="Permalink to this headline">¶</a></h2>
+<p>X.509 is a public infrastructure that provides for a way to trust newly-encountered
+entities through a strict chain-of-trust system.  It works though a public key
+infrastructure where trusted third parties known as Certificate Authorities (CA)
+issue certificates to entities that they can send to end-users and use for encrypted
+communication.  Through chain-of-trust, if the issuing CA (who’s identity is
+contained in the certificate sent to the end-user) is trusted by the end-user,
+then the end-user trusts the entity sending them the certificate.  Major internet
+browsers come pre-packaged with a set of CA certificates from well-established and
+reputable CAs.  Certificates signed by one of these CAs can be referred to as
+“commercially-signed” certificates.</p>
+<p>For example, VeriSign and Thawte are two well-known CAs.  Imagine a bank purchases
+a certificate from VeriSign to use in online transactions with customers.  When
+customers connect to the bank’s web-site, their browser receives the bank’s
+certificate, and traces the signing chain, finding VeriSign as the signer. If it
+finds the VeriSign certificate in its local trusted CA list, then it trusts that
+the certificate it just received is the bank’s, and can authenticate the connection.
+Otherwise, authentication fails, and the web page is not loaded. (At this point,
+some browsers appeal to the user that it doesn’t trust the signer of the certificate,
+and asks the user if they should, by adding the signer to their list of trusted CAs.)</p>
+</div>
+<div class="section" id="self-signed-certificates">
+<h2>Self-signed Certificates<a class="headerlink" href="#self-signed-certificates" title="Permalink to this headline">¶</a></h2>
+<p>It’s possible for organizations to create their own signing authority, and use
+those.  These types of certificates are generally only useful for situations
+where trust can be established in other ways - in other words, where the client
+and the server know each other.  Prime examples of this are certificates used
+by corporations for internal applications, where system administrators can install
+the certificate on behalf of users.  DataONE uses this type of certificate to
+authenticate requests between Nodes in its network.</p>
+</div>
+<div class="section" id="dataone-authentication">
+<h2>DataONE Authentication<a class="headerlink" href="#dataone-authentication" title="Permalink to this headline">¶</a></h2>
+<p>In the above example, the end-user provides a username and password to authenticate
+themselves, while the web-server authenticates itself to the end-user using a
+certificate.  This approach doesn’t work in the distributed DataONE environment,
+where servers communicate with other servers, as well as end-users.  Instead,
+DataONE relies on both end-users and servers (the MNs and CNs) to use these X.509
+certificates to authenticate themselves, and relies on CILogon to provide
+certificates to end-users.</p>
+<p>The use of CILogon has two main advantages for end-users.  First, they can use existing
+accounts to obtain certificates, so don’t need to create and remember another
+username and password combination.  Second, once they have downloaded the
+certificate, it will secure connections with all DataONE nodes throughout
+the day, and can be used by multiple DataONE applications.  This technique is
+known as single-sign-on.</p>
+<p>CILogon certificates issued for DataONE also have a third feature: they include
+additional DataONE Subjects mapped to the certificate’s Subject through DataONE’s
+identity management service, the DataONE Portal.  In a nutshell, a DataONE identity
+is the set of user accounts and groups that a person maintains.</p>
+<p>For more information on CILogon see their <a class="reference external" href="http://www.cilogon.org/faq">FAQ</a>.</p>
+<p>The DataONE landing page for CILogon is <a class="reference external" href="https://cilogon.org/?skin=DataONE">here</a>.</p>
+</div>
+<div class="section" id="member-node-certificates">
+<h2>Member Node Certificates<a class="headerlink" href="#member-node-certificates" title="Permalink to this headline">¶</a></h2>
+<p>Member Nodes cannot not use CILogon certificates to make calls to other DataONE
+nodes (as they are short-lived), but rather they use long-lived X.509 certificates
+issued by DataONE when they register their node with the DataONE network. Note
+that this DataONE-signed certificate is only used for initiating requests, and
+is not used when responding to requests.  In other words, it is used only when
+the Member Node is as acting as a client making requests.  In this situation, the
+connection manager it uses for the request will receive a commercially-signed
+certificate from the other DataONE Node during the request handshake, and so no
+special trust needs to be set up.</p>
+<p>Note that the behavior of the “other DataONE Node” from above is the same behavior
+the Member Node needs when responding to DataONE service API requests.  This
+certificate is known as the Member Node’s <em>server</em> certificate.</p>
+<p>In short, Member Nodes (and Coordinating Nodes) acts both as a client and as a
+server.  In its client role, the Member Node uses its DataONE issued and signed
+certificate, and needs to trust only commercially signed certificates.  In its
+server role, it needs to accept CILogon-issued-commercially-signed certificates
+as well as DataONE signed certificates from requesters, and respond with a
+commercially-signed certificate of its own.</p>
+</div>
+<div class="section" id="trust-relationships">
+<h2>Trust Relationships<a class="headerlink" href="#trust-relationships" title="Permalink to this headline">¶</a></h2>
+<p>Below illustrates the  certificates used for making requests…</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 34%" />
+<col style="width: 39%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Client / Requester</p></th>
+<th class="head"><p>requests using</p></th>
+<th class="head"><p>request cert. type</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>End-user</p></td>
+<td><p>CILogon-signed cert.</p></td>
+<td><p>short-lived, commercial</p></td>
+</tr>
+<tr class="row-odd"><td><p>Coordinating Node</p></td>
+<td><p>DataONE-signed cert.</p></td>
+<td><p>long-lived, non-commercial</p></td>
+</tr>
+<tr class="row-even"><td><p>Member Node</p></td>
+<td><p>DataONE-signed cert.</p></td>
+<td><p>long-lived, non-commercial</p></td>
+</tr>
+</tbody>
+</table>
+<p>… and the certificates given in response.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 42%" />
+<col style="width: 58%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Server</p></th>
+<th class="head"><p>responds with</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Coordinating Node</p></td>
+<td><p>commercially-signed cert</p></td>
+</tr>
+<tr class="row-odd"><td><p>Member Node</p></td>
+<td><p>commercially-signed cert</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="regarding-commercially-signed-certificates">
+<h2>Regarding Commercially-Signed Certificates<a class="headerlink" href="#regarding-commercially-signed-certificates" title="Permalink to this headline">¶</a></h2>
+<p>Client applications use client connection managers to set up the SSL connection
+that will exchange certificates, and most connection managers come configured
+with mostly the same set of CAs that they trust.  However, the overlap is not
+complete, so Member Nodes should take extra care to test that their server
+certificate is widely trusted by all major browsers, (Java) JVMs, and
+OS-specific trust-stores, so that their data is most widely accessible.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Authorization and Authentication in DataONE</a><ul>
+<li><a class="reference internal" href="#authorization-vs-authentication-a-primer">Authorization vs. Authentication: A Primer</a></li>
+<li><a class="reference internal" href="#x-509-authentication">X.509 Authentication</a></li>
+<li><a class="reference internal" href="#self-signed-certificates">Self-signed Certificates</a></li>
+<li><a class="reference internal" href="#dataone-authentication">DataONE Authentication</a></li>
+<li><a class="reference internal" href="#member-node-certificates">Member Node Certificates</a></li>
+<li><a class="reference internal" href="#trust-relationships">Trust Relationships</a></li>
+<li><a class="reference internal" href="#regarding-commercially-signed-certificates">Regarding Commercially-Signed Certificates</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/design/AuthorizationAndAuthentication.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/design/AuthorizationAndAuthentication.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/AuthorizationAndAuthentication.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

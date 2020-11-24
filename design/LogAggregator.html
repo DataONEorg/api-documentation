@@ -1,0 +1,427 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Log Aggregation Overview &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="DataONE Usage Statistics" href="UsageStatistics.html" />
+    <link rel="prev" title="Logging Schema" href="LoggingSchema.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="UsageStatistics.html" title="DataONE Usage Statistics"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="LoggingSchema.html" title="Logging Schema"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Log Aggregation Overview</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <blockquote>
+<div></div></blockquote>
+<div class="section" id="log-aggregation-overview">
+<h1>Log Aggregation Overview<a class="headerlink" href="#log-aggregation-overview" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><p>See subversion log for revision information.</p>
+</div></blockquote>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>The Log Aggregation Facility (LAF) harvests event log information from all Member Nodes registered with a Coordinating Node
+and aggregates this information into a Solr index that contains information from all member nodes. The Solr index can
+be queried to create reports of usage statistics for the DataONE network or individual Member Nodes.
+A description of the data harvested from MNs is described here: <a class="reference external" href="LoggingSchema.html">LoggingSchema.html</a></p>
+<p>LAF relies on several
+technologies: Quartz Scheduler, Hazelcast Data Distribution, Metacat
+Repository Storage, and the Solr Search platform.</p>
+<p>The DataONE use cases are described here:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="UseCases/16_uc.html">Use Case 16 - Log CRUD Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="UseCases/17_uc.html">Use Case 17 - CRUD Logs Aggregated at CNs</a></li>
+</ul>
+</div>
+<p>An overview of LAF processing is shown in <em>Figure 1: Log Aggregation Overview</em></p>
+<p><em>Figure 1.</em> Log Aggregation Overview</p>
+<div class="figure align-default">
+<img alt="../_images/log-aggregation-activity.png" src="../_images/log-aggregation-activity.png" />
+</div>
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>LAF software is installed from the dataone-cn-processdaemon and dataone-cn-solr Debian packages.</p>
+<p>LAF is started when the Unix service /etc/init.d/d1_processing is launched.
+LogAggregationScheduleManager is initialized by Spring when d1_processing runs the bootstrap class org.dataone.cn.batch.daemon.SchedulerDaemon.
+All LAF related beans are configured in /etc/dataone/process/applicationContext.xml.</p>
+<p>LAF does not require any manual configuration before it can be run, however Metacat must be installed and configured before LAF starts.</p>
+<p>Several LDAP attributes are used to control the execution of LAF, so
+if necessary the following LDAP entries can be manually edited to alter execution of LAF. This may be useful for testing purposes. Table 1 shows
+the LDAP attributes in the directory dc=dataone,dc=org,cn=urn:node:&lt;nodeName&gt; directory that LAF uses</p>
+<p><em>Table 1</em> LDAP entries</p>
+<blockquote>
+<div><table class="docutils align-default">
+<colgroup>
+<col style="width: 31%" />
+<col style="width: 17%" />
+<col style="width: 52%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Value</p></th>
+<th class="head"><p>Purpose</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>d1NodeAggregateLogs</p></td>
+<td><p>TRUE or FALSE</p></td>
+<td><p>Enable/Disable this node for harvesting</p></td>
+</tr>
+<tr class="row-odd"><td><p>d1NodeLogLastAggregated</p></td>
+<td><p>ISO 8601 date</p></td>
+<td><p>Last time this MN was harvested</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div>
+<div class="section" id="log-recovery-processing">
+<h2>Log Recovery Processing<a class="headerlink" href="#log-recovery-processing" title="Permalink to this headline">¶</a></h2>
+<p>The Java class LogAggregationScheduleManager coordinates all scheduling of jobs for LAF. This class first checks if any other CN has more
+current log information and if so a recovery job is scheduled to query the other CNs for newer log records.</p>
+</div>
+<div class="section" id="log-harvest-processing">
+<h2>Log Harvest Processing<a class="headerlink" href="#log-harvest-processing" title="Permalink to this headline">¶</a></h2>
+<p>Then LogAggregationScheduleManager schedules recurring Quartz job (every 24 hours) for LogAggregationHarvestJob which handles running the
+tasks that harvest log data from the MNs.</p>
+<p>Next a Hazelcast listener is registered for the top thehzLogEntryTopic. When log entries are returned from MNs they will posted to
+Hazelcast so that they are distributed to every CN.</p>
+<p>A Hazelcast systemmetadata listener is also registered so that certain changes to mutable systemmetata fields (see System Metadata
+Updates for details).</p>
+<p>The queue indexLogEntryQueue is then setup when the listener LogEntryTopicListener is called. This queue is how tasks that perform the log aggregation
+and tasks that perform the log indexing communicate.</p>
+<p>LogAggregationHarvestJob runs the task LogAggregatorTask that queries each MN by calling mn.getLogRecords and retrieving up to 1000 event log records at a
+time, starting after the last date retrieved that was recorded by the last run, if any.</p>
+<p>LogAggregatorTask then modifies
+each harvested record by adding the following fields: isPublic, dateAggregated, nodeId, readPermissions, formatId, formatType, size,
+rightsHolder, country, region, city, geohash_1 - geohash_9, location. These records are then published to the Hazelcast topic
+hzLogEntryTopic so that each CN that is running LAF will have it’s LogEntryTopicListener fire, which published them to the queue indexLogEntryQueue.
+In this way one CN harvests a single MN at a time, and the processing of those records is synced with the other CNs.</p>
+<p>On the indexing side of processing, LogEntryQueuManager is initialized by Spring when d1_processing init script is run executes
+the task LogEntryQueueTask that reads and processes entries from the logEntrySolrItemList when this queue has accumulated 100 entries.</p>
+<p>LogEntryQueueTask then starts task LogEntryIndexTask which sends entries to Solr for indexing.</p>
+<p><em>Figure 2.</em> Log Aggregation Processing</p>
+<div class="figure align-default">
+<img alt="../_images/log-aggregation-sequence.png" src="../_images/log-aggregation-sequence.png" />
+</div>
+</div>
+<div class="section" id="system-metadata-updates">
+<h2>System Metadata Updates<a class="headerlink" href="#system-metadata-updates" title="Permalink to this headline">¶</a></h2>
+<p>In addition to processing harvested records, when an entry in the Hazelcast Systemmetadata map is added or updated,
+SystemMetadataEntryListener runs. This may happen when one of the mutable fields in systemmetadata changes, such as
+formatId. In this event, all event log records for that pid must be updated, so SystemMetadataEntryListener
+retrieves these records, updates them with the current information in systemmetadata and then updates
+the entries and then publishes them to the IndexLogEntrySolrItem queue, so that they are processed in the same
+way as new Event Log records.</p>
+<p><em>Figure 3.</em> System Metadata Listener</p>
+<div class="figure align-default">
+<img alt="../_images/systemmetadata-listener-activity.png" src="../_images/systemmetadata-listener-activity.png" />
+</div>
+</div>
+<div class="section" id="solr-index">
+<h2>Solr Index<a class="headerlink" href="#solr-index" title="Permalink to this headline">¶</a></h2>
+<p>Table 2 shows the fields contained in the Event Log Solr index</p>
+<p><em>Table 2.</em> Solr index schema</p>
+</div>
+</div>
+<div class="section" id="event-log-index-schema">
+<h1>Event Log Index Schema<a class="headerlink" href="#event-log-index-schema" title="Permalink to this headline">¶</a></h1>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">Solr index schema</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 9%" />
+<col style="width: 74%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Solr Type</p></th>
+<th class="head"><p>Comment</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>id</p></td>
+<td><p>string</p></td>
+<td><p>added after harvest</p></td>
+</tr>
+<tr class="row-odd"><td><p>dateAggregated</p></td>
+<td><p>date</p></td>
+<td><p>added after harvest</p></td>
+</tr>
+<tr class="row-even"><td><p>isPublic</p></td>
+<td><p>boolean</p></td>
+<td><p>added after harvest, obtained from systemmetadata</p></td>
+</tr>
+<tr class="row-odd"><td><p>readPermission</p></td>
+<td><p>string</p></td>
+<td><p>added after harvest, obtained from systemmetadata, filtered during query</p></td>
+</tr>
+<tr class="row-even"><td><p>entryId</p></td>
+<td><p>string</p></td>
+<td><p>obtained from MN event log</p></td>
+</tr>
+<tr class="row-odd"><td><p>pid</p></td>
+<td><p>string</p></td>
+<td><p>added after harvest, obtained from systemmetadata</p></td>
+</tr>
+<tr class="row-even"><td><p>ipAddress</p></td>
+<td><p>string</p></td>
+<td><p>obtained from MN event log, filtered during query</p></td>
+</tr>
+<tr class="row-odd"><td><p>userAgent</p></td>
+<td><p>string</p></td>
+<td><p>obtained from MN event log</p></td>
+</tr>
+<tr class="row-even"><td><p>subject</p></td>
+<td><p>string</p></td>
+<td><p>obtained from MN event log, filtered during query</p></td>
+</tr>
+<tr class="row-odd"><td><p>event</p></td>
+<td><p>string</p></td>
+<td><p>obtained from MN event log</p></td>
+</tr>
+<tr class="row-even"><td><p>dateLogged</p></td>
+<td><p>date</p></td>
+<td><p>obtained from MN event log</p></td>
+</tr>
+<tr class="row-odd"><td><p>nodeId</p></td>
+<td><p>string</p></td>
+<td><p>obtained from MN event log</p></td>
+</tr>
+<tr class="row-even"><td><p>rightsHolder</p></td>
+<td><p>string</p></td>
+<td><p>added after harvest, obtained from systemmetadata, filtered during query</p></td>
+</tr>
+<tr class="row-odd"><td><p>formatId</p></td>
+<td><p>string</p></td>
+<td><p>added after harvest, obtained from systemmetadata</p></td>
+</tr>
+<tr class="row-even"><td><p>formatType</p></td>
+<td><p>string</p></td>
+<td><p>added after harvest, obtained from systemmetadata</p></td>
+</tr>
+<tr class="row-odd"><td><p>size</p></td>
+<td><p>slong</p></td>
+<td><p>added after harvest, obtained from systemmetadata</p></td>
+</tr>
+<tr class="row-even"><td><p>country</p></td>
+<td><p>string</p></td>
+<td><p>added after harvest, determined from ipAddress</p></td>
+</tr>
+<tr class="row-odd"><td><p>region</p></td>
+<td><p>string</p></td>
+<td><p>added after harvest, determined from ipAddress</p></td>
+</tr>
+<tr class="row-even"><td><p>city</p></td>
+<td><p>string</p></td>
+<td><p>added after harvest, determined from ipAddress</p></td>
+</tr>
+<tr class="row-odd"><td><p>geohash_1</p></td>
+<td><p>string</p></td>
+<td><p>added after harvest, determined from ipAddress</p></td>
+</tr>
+<tr class="row-even"><td><p>geohash_2</p></td>
+<td><p>string</p></td>
+<td><p>added after harvest, determined from ipAddress</p></td>
+</tr>
+<tr class="row-odd"><td><p>geohash_3</p></td>
+<td><p>string</p></td>
+<td><p>added after harvest, determined from ipAddress</p></td>
+</tr>
+<tr class="row-even"><td><p>geohash_4</p></td>
+<td><p>string</p></td>
+<td><p>added after harvest, determined from ipAddress</p></td>
+</tr>
+<tr class="row-odd"><td><p>geohash_5</p></td>
+<td><p>string</p></td>
+<td><p>added after harvest, determined from ipAddress</p></td>
+</tr>
+<tr class="row-even"><td><p>geohash_6</p></td>
+<td><p>string</p></td>
+<td><p>added after harvest, determined from ipAddress</p></td>
+</tr>
+<tr class="row-odd"><td><p>geohash_7</p></td>
+<td><p>string</p></td>
+<td><p>added after harvest, determined from ipAddress</p></td>
+</tr>
+<tr class="row-even"><td><p>geohash_8</p></td>
+<td><p>string</p></td>
+<td><p>added after harvest, determined from ipAddress</p></td>
+</tr>
+<tr class="row-odd"><td><p>geohash_9</p></td>
+<td><p>string</p></td>
+<td><p>added after harvest, determined from ipAddress</p></td>
+</tr>
+<tr class="row-even"><td><p>location</p></td>
+<td><p>location</p></td>
+<td><p>added after harvest, determined from ipAddress</p></td>
+</tr>
+<tr class="row-odd"><td><p>inFullRobotList</p></td>
+<td><p>boolean</p></td>
+<td><p>added after harvest, determined based on log processing for COUNTER compliance</p></td>
+</tr>
+<tr class="row-even"><td><p>inPartialRobotList</p></td>
+<td><p>boolean</p></td>
+<td><p>added after harvest, determined based on log processing for COUNTER compliance</p></td>
+</tr>
+<tr class="row-odd"><td><p>isRepeatVisit</p></td>
+<td><p>boolean</p></td>
+<td><p>added after harvest, determined based on log processing for COUNTER compliance</p></td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="solr-query-processing">
+<h2>Solr Query Processing<a class="headerlink" href="#solr-query-processing" title="Permalink to this headline">¶</a></h2>
+<p>The Event Log Solr index can be queried from the service endpoint <a class="reference external" href="https://cn.dataone.org/cn/v1/query/logsolr">https://cn.dataone.org/cn/v1/query/logsolr</a>, for example, the following query
+will return read counts for each node in the network:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>https://cn.dataone.org/cn/v1/query/logsolr/select?q=event:read&amp;facet=true&amp;facet.field=nodeId
+</pre></div>
+</div>
+<p>The Event Log Solr index requires authenticated access, because some fields in the log entries contain sensitive information, as
+shown in <em>Table 2</em>.</p>
+<p>Solr queries are inspected and rewritten by SolrLoggingHandler such that counts for Solr entries will be included only if the entries are
+publicly accessible, or the user is a CN administrator or the caller’s identify has access privileges to the pids of the entries.</p>
+<p>If the requesting session has a certificate then a list of authorized subjects is obtained from LDAP and access is based on
+the authorized subjects. Since the Solr index contains access information from systemmetadata, the same access rules that apply to
+systemmetadata will apply to the event log.</p>
+<p>If the authenticated user is the CN administrator then the entire contents of each SOLR document are available in the SOLR result.</p>
+</div>
+<div class="section" id="example-queries">
+<h2>Example Queries<a class="headerlink" href="#example-queries" title="Permalink to this headline">¶</a></h2>
+<p>A description of how to query the Event Log Solr Index, please see the document <a class="reference external" href="UsageStatistics.html">UsageStatistics.html</a>.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Log Aggregation Overview</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#log-recovery-processing">Log Recovery Processing</a></li>
+<li><a class="reference internal" href="#log-harvest-processing">Log Harvest Processing</a></li>
+<li><a class="reference internal" href="#system-metadata-updates">System Metadata Updates</a></li>
+<li><a class="reference internal" href="#solr-index">Solr Index</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#event-log-index-schema">Event Log Index Schema</a><ul>
+<li><a class="reference internal" href="#solr-query-processing">Solr Query Processing</a></li>
+<li><a class="reference internal" href="#example-queries">Example Queries</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+      <li>Previous: <a href="LoggingSchema.html" title="previous chapter">Logging Schema</a></li>
+      <li>Next: <a href="UsageStatistics.html" title="next chapter">DataONE Usage Statistics</a></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/design/LogAggregator.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/design/LogAggregator.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/LogAggregator.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

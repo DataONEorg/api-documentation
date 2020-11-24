@@ -1,0 +1,688 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Authorization in DataONE &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Identity, Authentication, and Authorization Requirements" href="AuthnAndAuthzRequirements.html" />
+    <link rel="prev" title="Identity Management and Authenticated Session Management" href="Authentication.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="AuthnAndAuthzRequirements.html" title="Identity, Authentication, and Authorization Requirements"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Authentication.html" title="Identity Management and Authenticated Session Management"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Authorization in DataONE</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="authorization-in-dataone">
+<h1>Authorization in DataONE<a class="headerlink" href="#authorization-in-dataone" title="Permalink to this headline">¶</a></h1>
+<p>This document outlines the mechanism for specifying authorization policies for
+objects and service in DataONE and a set of services for controlling access to
+those objects on Member Nodes and Coordinating Nodes.</p>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>Users and services authenticate in DataONE to confirm their identity. The
+identity is then used for controlling access to objects, systems, and services
+within the DataONE framework. Requirements for Authorization are listed here:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="AuthnAndAuthzRequirements.html">Identity, Authentication, and Authorization Requirements</a></li>
+</ul>
+</div>
+<p>Privacy and access control in DataONE are primarily for the protection and
+integrity of user contributed data and metadata via Member Nodes. There are,
+however, other entities in DataONE that also need protection, including DataONE
+specific services and system resources, like system metadata and components of
+the general software stack (e.g., databases, web servers) for Coordinating and
+Member Nodes. For this reason, all resources in DataONE, from data and metadata
+objects to system services, have an access policy (<a class="reference internal" href="../apis/Types.html#Types.AccessPolicy" title="Types.AccessPolicy"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.AccessPolicy</span></code></a>),
+made up of one or more <em>access control rules</em> (<a class="reference internal" href="../apis/Types.html#Types.AccessRule" title="Types.AccessRule"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.AccessRule</span></code></a>),
+that is used to determine who may access the resource. The process of confirming
+whether a user has privileges to access a resource in DataONE is called
+<em>authorization</em>. The act of authorization uses attribute information contained
+in the security token obtained by the user when authenticating with their
+identity provider, and compares such information to the resource access control
+rule. If the rule permits access by the <a class="reference internal" href="../glossary.html#term-principal"><span class="xref std std-term">principal</span></a> requesting the
+resource, then authorization succeeds and permission is granted to access the
+resource. The algorithm used to evaluate authorization for a resource is
+described in the section <em>Object Access Control</em> below.</p>
+<p>Because nodes that form the DataONE federation are managed by various
+administrative domains and may cross multiple political boundaries, “trust”
+relationships are crucial for DataONE to succeed in its security plan. In simple
+terms, this means that access control rules that are defined by one member of
+the federation are upheld be another member. It also means that trust may be
+revoked if a particular member does not behave accordingly within the
+federation. Access control rules may be dynamic and must be propagated with
+the resource they are designated to protect, such as when data or metadata
+objects are replicated to another Member Node.</p>
+<p>The language that specifies the policy for a given access control rule
+dictates only whether a user is allowed access to a given resource; to include
+the ability to explicitly deny access to a resource overly complicates
+management of the authorization process and is seldom used in practice. Access
+rules (<a class="reference internal" href="../apis/Types.html#Types.AccessRule" title="Types.AccessRule"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.AccessRule</span></code></a>) consist of the system identity of the user,
+also known as the <a class="reference internal" href="../glossary.html#term-Subject"><span class="xref std std-term">Subject</span></a>, the type of permission granted (e.g.,
+<em>read</em>, <em>write</em>, or <em>changePermission</em>), and the <a class="reference internal" href="../glossary.html#term-identifier"><span class="xref std std-term">identifier</span></a> of the
+resource being requested.</p>
+<p>An access policy is an optional element of the <a class="reference internal" href="../glossary.html#term-System-Metadata"><span class="xref std std-term">System Metadata</span></a>
+associated with an object. The default access policy is to deny access to the
+object to all users except the <em>subject</em> identified as the
+<a class="reference internal" href="../apis/Types.html#Types.SystemMetadata.rightsHolder" title="Types.SystemMetadata.rightsHolder"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Types.SystemMetadata.rightsHolder</span></code></a> in the System Metadata.</p>
+<p>DataONE will provide, where reasonable, a conversion of the internal access
+control rule to a subset of one or more industry standard policy languages to
+support interoperability between different organizations.</p>
+</div>
+<div class="section" id="trust-relationships">
+<h2>Trust Relationships<a class="headerlink" href="#trust-relationships" title="Permalink to this headline">¶</a></h2>
+<p>Any authorization system in a federation requires trust among participants.
+For DataONE, there are five types of trust relationships among nodes in the
+federation:</p>
+<ol class="arabic simple">
+<li><p><strong>MN to CN</strong>: Member Nodes need to have trust that Coordinating Nodes will
+respect and enforce their authorization policies, including any restrictions
+placed on where and when to create replicas of objects, and on the
+presentation of search results for restricted content.</p></li>
+<li><p><strong>CN to MN</strong>: Coordinating Nodes rely upon Member Nodes for limited services,
+and mainly expect Member Nodes to accurately implement the DataONE Service
+API, including replication services.</p></li>
+<li><p><strong>CN to CN</strong>: Each Coordinating Node contains a replica of the content of the
+others, and are configured to provide seamless failover and load-balancing
+for all incoming requests across the three nodes. Consequently, the
+Coordinating Nodes inherently trust one another fully. As the suite of
+Coordinating Node instances expands to other continents, this relationship
+may need to be re-examined.</p></li>
+<li><p><strong>MN to MN</strong>: Member Node to Member Node trust relies on one Member Node
+believing that another Member Node will respect the authorization policies
+that they publish for their objects and services. In the case of restricted
+access content, Member Nodes that house replicas of an object would need to
+faithfully enforce authorization policies that were expressed by the data
+owner. Because of this, Member Nodes can express replication policies for
+objects that indicate which other Member Nodes are acceptable targets for
+replication, and for which nodes they are willing to serve as replica stores.</p></li>
+<li><p><strong>User to DataONE</strong>: Users trust that the DataONE system, that is, the
+combination of Member and Coordinating Nodes interacting to provide the
+DataONE infrastructure and services, implements access control rules
+consistently and in compliance with the specifications provided when content
+was added to the system or subsequently modified. This implies minimal
+latency in propagation of rules between components of the system.</p></li>
+</ol>
+<p>Verification of proper technical implementation of these trust relationships is
+achieved through integration testing of the various components. This involves
+exercising a wide array of combinations of users, groups, and access control
+rules to ensure expected behavior as content moves around the DataONE
+infrastructure.</p>
+<p>The DataNet projects have a loosely defined requirement of interoperability
+between their respective implementations. This also implies that content and
+services <em>may</em> be shared between projects, and thus there will likely be
+additional trust relationships that need to be taken into consideration as the
+DataNet projects progress towards interoperability.</p>
+</div>
+<div class="section" id="object-access-control">
+<h2>Object Access Control<a class="headerlink" href="#object-access-control" title="Permalink to this headline">¶</a></h2>
+<p>Access control for content managed by DataONE (<a class="reference internal" href="../glossary.html#term-Data"><span class="xref std std-term">Data</span></a> objects,
+<a class="reference internal" href="../glossary.html#term-science-metadata"><span class="xref std std-term">Science Metadata</span></a> objects, and <a class="reference internal" href="../glossary.html#term-resource-maps"><span class="xref std std-term">Resource Maps</span></a>) is determined by
+the <a class="reference internal" href="../apis/Types.html#Types.AccessPolicy" title="Types.AccessPolicy"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.AccessPolicy</span></code></a> entry in the <a class="reference internal" href="../apis/Types.html#Types.SystemMetadata" title="Types.SystemMetadata"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.SystemMetadata</span></code></a>
+associated with the object.</p>
+<p>In addition, the <a class="reference internal" href="../glossary.html#term-rightsHolder"><span class="xref std std-term">rightsHolder</span></a> of the System Metadata holds all
+permissions on the object, and the <a class="reference internal" href="../glossary.html#term-Authoritative-Member-Node"><span class="xref std std-term">Authoritative Member Node</span></a> has
+equivalent privileges as the <em>rightsHolder</em>.</p>
+<p>The <em>Authoritative Member Node</em> is identified by one or more <a class="reference internal" href="../glossary.html#term-subjects"><span class="xref std std-term">Subjects</span></a>
+listed in the Member Node <a class="reference internal" href="../apis/Types.html#Types.Node" title="Types.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.Node</span></code></a> record registered in the DataONE
+<a class="reference internal" href="../glossary.html#term-node-registry"><span class="xref std std-term">node registry</span></a>. Thus, the <a class="reference internal" href="../apis/Types.html#Types.NodeReference" title="Types.NodeReference"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.NodeReference</span></code></a> entry recorded
+in the System Metadata <em>Authoritative Member Node</em> references the <em>Node</em> entry
+in the node registry, which in turn contains a list of <em>Subjects</em> that, when
+used in a request to access or manipulate an object, identify the user as the
+<em>Authoritative Member Node</em>.</p>
+<p>Permissions that can be associated with an object include:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Read</dt>
+<dd class="field-odd"><p>The ability to view the content of this object.</p>
+</dd>
+<dt class="field-even">Write</dt>
+<dd class="field-even"><p>The ability to change the content of this object via update services.
+Permissions are hierarchical, so <em>write</em> permission also includes <em>read</em>
+permission.</p>
+</dd>
+<dt class="field-odd">ChangePermission</dt>
+<dd class="field-odd"><p>The ability to change the authorization policies for this object.
+Includes both <em>read</em> and <em>write</em> permissions.</p>
+</dd>
+</dl>
+<p>Conceptually, an <a class="reference internal" href="../apis/Types.html#Types.AccessRule" title="Types.AccessRule"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.AccessRule</span></code></a> is a tuple with three components:
+an <em>identifier</em> which indicates which object the rule applies to; a <em>subject</em>
+which indicates who the rule applies to; and a <em>permission</em> which indicates
+the level of access described by the rule.</p>
+<p>In practice, the <em>access rule</em> is contained in the System Metadata, and so
+each access rule contains a permission and list of subjects. A set of <em>access
+rules</em> are contained in the <a class="reference internal" href="../apis/Types.html#Types.AccessPolicy" title="Types.AccessPolicy"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.AccessPolicy</span></code></a>, and these together
+with the <em>rights holder</em> and <em>authoritative member node</em> determine which
+subjects may perform operations on an object.</p>
+<p>Evaluation of a permission for an object is determined in a manner thus, where
+SUBJECT is the <em>subject</em> making the request, and PERMISSION is the
+<em>permission</em> being evaluated:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Is SUBJECT == rightsHolder?  Yes -&gt; return True
+Is SUBJECT IN authoritiveMemberNode.Subject?  Yes -&gt; return True
+for each accessRule in accessPolicy
+  if PERMISSION is IN accessRule.Permission
+    Is SUBJECT IN accessRule.Subject? Yes -&gt; return True
+return False
+</pre></div>
+</div>
+<p>DataONE supports <em>equivalent identities</em>, where a single principal may have
+multiple subjects associated with them. As such, the <code class="docutils literal notranslate"><span class="pre">SUBJECT</span></code> in algorithm
+described above is actually a list of 1 or more subjects. The list of subjects
+to be used for comparison is determined from the <em>Session</em> parameter of an API
+call as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SUBJECTS</span> <span class="o">=</span> <span class="p">[</span><span class="n">Session</span><span class="o">.</span><span class="n">subject</span><span class="p">,</span> <span class="p">]</span>
+</pre></div>
+</div>
+<div class="section" id="adjusting-object-access-control">
+<h3>Adjusting Object Access Control<a class="headerlink" href="#adjusting-object-access-control" title="Permalink to this headline">¶</a></h3>
+<p>Adjustments to access control for objects is made by altering the
+<em>accessPolicy</em> of the <a class="reference internal" href="../apis/Types.html#Types.SystemMetadata" title="Types.SystemMetadata"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.SystemMetadata</span></code></a> for the object. The
+process is to retrieve a current copy of the system metadata from a
+Coordinating Node using the <a class="reference internal" href="../apis/CN_APIs.html#CNRead.getSystemMetadata" title="CNRead.getSystemMetadata"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNRead.getSystemMetadata()</span></code></a> method, edit the
+<a class="reference internal" href="../apis/Types.html#Types.AccessPolicy" title="Types.AccessPolicy"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.AccessPolicy</span></code></a> entry as necessary, then send the updated
+<em>AccessPolicy</em> structure to a Coordinating Node using the
+<a class="reference internal" href="../apis/CN_APIs.html#CNAuthorization.setAccessPolicy" title="CNAuthorization.setAccessPolicy"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNAuthorization.setAccessPolicy()</span></code></a> method.</p>
+<p>Changes to <em>accessPolicy</em> are then propagated to other Coordinating Nodes
+through the Coordinating Node replication process (and hence to the search
+index), then to the Member Nodes that hold a copy of the object. Member Nodes
+are informed of a change to <em>accessPolicy</em> through the
+<code class="xref py py-func docutils literal notranslate"><span class="pre">MNStorage.systemMetadataChanged()</span></code> method which is called by a
+Coordinating Node. Member Nodes are expected to update the <em>accessPolicy</em> for
+an object as soon as possible after being informed of an update.</p>
+</div>
+</div>
+<div class="section" id="log-record-access-control">
+<h2>Log Record Access Control<a class="headerlink" href="#log-record-access-control" title="Permalink to this headline">¶</a></h2>
+<p>Access to log records is evaluated in the same manner as access to objects. If
+the requesting <em>subject</em> does not have <em>read</em> permission for the <em>identifier</em>
+recorded in the log record, then they will be denied access to the log entry.</p>
+<p>Adjustments to access control for log records are made indirectly by adjusting
+access control for the referenced object(s).</p>
+<p>EDIT: Log records are now completely restricted to administrative users so as
+not to expose raw usage patterns for any/all public objects.</p>
+</div>
+<div class="section" id="service-access-control">
+<h2>Service Access Control<a class="headerlink" href="#service-access-control" title="Permalink to this headline">¶</a></h2>
+<p>DataONE services are accessed through HTTPS connections. Restrictions on
+agents (i.e. clients) that may call the services may be imposed through
+network configuration (e.g. restricting IP addresses that may call the
+service) or preferably through the <em>restriction</em> property of the
+<a class="reference internal" href="../apis/Types.html#Types.Service" title="Types.Service"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.Service</span></code></a> entry in the <em>services</em> property of the
+<a class="reference internal" href="../apis/Types.html#Types.Node" title="Types.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.Node</span></code></a> entry describing the registered Member or Coordinating
+Node.</p>
+<p>The optional <em>restriction</em> property of the <em>service</em> lists subjects that have
+permission to invoke the service. If a <em>restriction</em> is not included with the
+service description, then any agent may call that service endpoint.</p>
+<p>NOTE: It is at the discretion of individual Node implementations as to whether these
+defined service restrictions will be enforced for the method in question. The service method
+restriction is meant only as a mechanism for node operators to record/manage
+restrictions to be enforced in a transparent manner.</p>
+<div class="section" id="adjusting-service-access-control">
+<h3>Adjusting Service Access Control<a class="headerlink" href="#adjusting-service-access-control" title="Permalink to this headline">¶</a></h3>
+<p>Adjustments to access control for services, or more accurately, the methods
+exposed within a service, are made by altering the contents of the
+<em>restriction</em> property of the <a class="reference internal" href="../apis/Types.html#Types.Service" title="Types.Service"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.Service</span></code></a> entry for the
+<a class="reference internal" href="../apis/Types.html#Types.Node" title="Types.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.Node</span></code></a> registration document for the node. These adjustments are
+made through the <code class="xref py py-func docutils literal notranslate"><span class="pre">CNRegistration.updateNodeCapabilities()</span></code> method by
+specifying a replacement node document. A current version of the node document
+should be retrieved from the Coordinating Node through the
+<a class="reference internal" href="../apis/CN_APIs.html#CNCore.listNodes" title="CNCore.listNodes"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNCore.listNodes()</span></code></a> method.</p>
+<p>Changes to node registration information can only be performed by subjects
+listed in the <em>subject</em> property of the <a class="reference internal" href="../apis/Types.html#Types.Node" title="Types.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.Node</span></code></a> document for the
+node.</p>
+</div>
+</div>
+<div class="section" id="additional-authorization-constraints">
+<h2>Additional Authorization Constraints<a class="headerlink" href="#additional-authorization-constraints" title="Permalink to this headline">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">TODO</dt>
+<dd class="field-odd"><p>Need to update this section to cover the additional constraints beyond
+subject authorization that will limit movement of content between components</p>
+</dd>
+</dl>
+<p>Some nodes may also want to conditionally provide access to some services based
+on a principal’s current usage of a resource such as node storage or node
+bandwidth.</p>
+<ul>
+<li><p>Create/Update constraints</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>MaximumStorageQuota</p></li>
+<li><p>MaximumNetworkTransferQuota</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Embargoes</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Add ability to specify an embargo period during which the access policies
+would not be in effect, and rather resources are only privately accessible</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Add constraints and embargoes to the AccessPolicy language described below</p>
+</div>
+</div>
+<div class="section" id="access-policy-language">
+<h2>Access Policy Language<a class="headerlink" href="#access-policy-language" title="Permalink to this headline">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">TODO</dt>
+<dd class="field-odd"><p>This section needs to be updated with the latest revisions to the
+AccessPolicy section. Also need to update / regenerate the example of access
+policy.</p>
+</dd>
+</dl>
+<p>Several existing authorization policy languages were evaluated for use in the
+DataONE architecture.  Given the simplicity of authorization rules that DataONE
+needs to express, these specifications were deemed overly complex and would
+impose too signification of a cost on Member Node implementations.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Authorization-technologies.html">Overview of Authorization Policy Languages</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Authorization-technologies.html#eml-access">eml-access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Authorization-technologies.html#xacml-3-0">XACML 3.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Authorization-technologies.html#xacml-2-0">XACML 2.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Authorization-technologies.html#xacml-1-0">XACML 1.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Authorization-technologies.html#simplified-policy-language-spl">Simplified Policy Language (SPL)</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Survey for additional policy languages to evaluate before deciding on a
+custom specification for DataONE.</p>
+</div>
+<p>DataONE has designed a simple access policy language that can be embedded in
+several contexts and can be used to express access rules.  The definitions of
+the elements in this AccessPolicy language are:</p>
+<dl class="py attribute">
+<dt id="accessPolicy">
+<code class="sig-name descname">accessPolicy</code><a class="headerlink" href="#accessPolicy" title="Permalink to this definition">¶</a></dt>
+<dd><p>A set of rules that specifies as a whole the allowable permissions that a
+given user or system has for accessing a resource, including both data and
+metadata resources and service resources. An access policy consists of a
+sequence of allow rules that grant permissions to principals, which can be
+individual users, groups of users, symbolic users, or systems and services.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Cardinality</dt>
+<dd class="field-odd"><p>1..1</p>
+</dd>
+<dt class="field-even">ValueSpace</dt>
+<dd class="field-even"><p><a class="reference internal" href="../apis/Types.html#Types.AccessPolicy" title="Types.AccessPolicy"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.AccessPolicy</span></code></a></p>
+</dd>
+<dt class="field-odd">Generated By</dt>
+<dd class="field-odd"><p>Client</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="allow">
+<code class="sig-name descname">allow</code><a class="headerlink" href="#allow" title="Permalink to this definition">¶</a></dt>
+<dd><p>A rule that is used to allow a principal to perform an action (such as
+read or write) on an object in DataONE. Rules are three-tuples (principal,
+permission, resource) specifying which permissions are allowed for the
+principal(s) for the resource(s) listed. Access control rules are specified
+by the OriginMemberNode when the object is first registered in DataONE. If no
+rules are specified at that time, then the object is deemed to be private and
+the only user with access to the object (read, write, or otherwise) is the
+RightsHolder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Cardinality</dt>
+<dd class="field-odd"><p>0..*</p>
+</dd>
+<dt class="field-even">ValueSpace</dt>
+<dd class="field-even"><p><a class="reference internal" href="../apis/Types.html#Types.AccessRule" title="Types.AccessRule"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.AccessRule</span></code></a></p>
+</dd>
+<dt class="field-odd">Generated By</dt>
+<dd class="field-odd"><p>Client</p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The ‘deny’ directive has been removed for simplicity, and because a survey
+of existing member nodes indicates it is not being used by the community.</p>
+</div>
+<dl class="py attribute">
+<dt id="principal">
+<code class="sig-name descname">principal</code><a class="headerlink" href="#principal" title="Permalink to this definition">¶</a></dt>
+<dd><p>The unique identifier representing a principal that is allowed or denied
+access to a resource.  Principal identifiers are strings that are found
+transported in the subject field of an identifying certificate produced from
+the authentication system.  Users, groups, systems, and services can all be
+represented as principals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Cardinality</dt>
+<dd class="field-odd"><p>1..*</p>
+</dd>
+<dt class="field-even">ValueSpace</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.Principal</span></code></p>
+</dd>
+<dt class="field-odd">Generated By</dt>
+<dd class="field-odd"><p>Client</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="permission">
+<code class="sig-name descname">permission</code><a class="headerlink" href="#permission" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string value indicating the set of actions that can be performed on a
+resource as specified in an access policy.  The set of permissions include
+the ability to read a resource, modify a resource (write), and to change the
+set of access control policies for a resource (changePermission).  In
+addition, there is a permission that controls ability to execute a service
+(execute).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Cardinality</dt>
+<dd class="field-odd"><p>1..*</p>
+</dd>
+<dt class="field-even">ValueSpace</dt>
+<dd class="field-even"><p><a class="reference internal" href="../apis/Types.html#Types.Permission" title="Types.Permission"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.Permission</span></code></a></p>
+</dd>
+<dt class="field-odd">Generated By</dt>
+<dd class="field-odd"><p>Client</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="resource">
+<code class="sig-name descname">resource</code><a class="headerlink" href="#resource" title="Permalink to this definition">¶</a></dt>
+<dd><p>The unique identifier (pid) for a resource in the system to which the access
+rules in this access policy apply.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Cardinality</dt>
+<dd class="field-odd"><p>1..*</p>
+</dd>
+<dt class="field-even">ValueSpace</dt>
+<dd class="field-even"><p><a class="reference internal" href="../apis/Types.html#Types.Identifier" title="Types.Identifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.Identifier</span></code></a></p>
+</dd>
+<dt class="field-odd">Generated By</dt>
+<dd class="field-odd"><p>Client</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="authorization-services">
+<h2>Authorization Services<a class="headerlink" href="#authorization-services" title="Permalink to this headline">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">TODO</dt>
+<dd class="field-odd"><p>Update this section to include the latest revisions to the methods defined
+for managing and working with the access control for objects.</p>
+</dd>
+</dl>
+<p>In this section, define a set of Authorization services to be implemented at
+CN and MN. The current Authorization Service is defined as a standalone
+service.</p>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>Link these methods to the generated methods in the API specifications,
+eliminate redundancy of the description text between the two locations.</p>
+</div>
+<p>isAuthorized(token, pid, action):: boolean</p>
+<blockquote>
+<div><p>Determine if the user authenticated by the token can take the action
+specified (read, write, changePermission, execute) on the resource named by
+the identifier pid.</p>
+</div></blockquote>
+<p>setAccess(token, Types.AccessPolicy):: void</p>
+<blockquote>
+<div><p>Set the access policy for a series of resources as specified by the
+provided AccessPolicy document.  The user identified by the authentication
+token must have changePermission permission on all resources named in the
+AccessPolicy.  If so, then the policies for those resources will be
+replaced (or created as needed) by the policies specified in AccessPolicy.
+If the user does not have sufficient permission, then the NotAuthorized
+exception must be thrown, and none of the policies should be applied (it is
+not sufficient to have appropriate permissions on just one resource – if
+permission is not present for all listed resources, then implementations
+must roll back any changes and return NotAuthorized.</p>
+</div></blockquote>
+</div>
+<div class="section" id="interaction-diagrams">
+<h2>Interaction diagrams<a class="headerlink" href="#interaction-diagrams" title="Permalink to this headline">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">TODO</dt>
+<dd class="field-odd"><p>Need to update authorization use cases and include references to them.</p>
+</dd>
+</dl>
+<div class="section" id="phase-1">
+<h3>Phase 1<a class="headerlink" href="#phase-1" title="Permalink to this headline">¶</a></h3>
+<img alt="../_images/authorization_seq.png" src="../_images/authorization_seq.png" />
+<p><em>Figure 1.</em> Only public objects are searchable and replicated in the system.
+Create, Read, Update, and Delete operations are controlled by member nodes
+for private objects, but read for public resources can be handled by any
+replicating member node, or a coordinating node in the case of metadata
+resources.</p>
+<div class="figure align-default">
+<img alt="../_images/anaz_phase1.png" src="../_images/anaz_phase1.png" />
+</div>
+<p><em>Figure 2.</em> Trust relationships between components during phase 1 of
+Authz/Authn. Triangle = CN, Rectangle = MN, open circle = public data, filled
+circle = private data, dashed line = untrusted connection. A Coordinating Node
+retrieves only public content from a Member Node (A), and only publicly
+readable content is available to users through the Coordinating Nodes (B) and
+Member Nodes (C). A Coordinating Node must have a trusted relationship with
+Member Nodes to request replication operations (E) even though the content
+being replicated is publicly readable and does not require a trusted
+connection (D).</p>
+</div>
+<div class="section" id="phase-2">
+<h3>Phase 2<a class="headerlink" href="#phase-2" title="Permalink to this headline">¶</a></h3>
+<div class="figure align-default">
+<img alt="../_images/anaz_phase2.png" src="../_images/anaz_phase2.png" />
+</div>
+<p><em>Figure 3.</em> Trust relationships between components during phase 2 of
+Authn/Authz. Triangle = CN, Rectangle = MN, open circle = public data, filled
+circle = private data, dashed line = untrusted connection, solid line =
+trusted connection, user with hat = authenticated user. Coordinating Nodes
+synchronize public and private content (A). Authenticated users can retrieve
+private data from the origin Member Node (B) and can discover and retrieve
+metadata from the Coordinating Nodes (C). Public content is replicated between
+Member Nodes (D) under the direction of a trusted connection from the
+Coordinating Nodes (E).</p>
+</div>
+<div class="section" id="phase-3">
+<h3>Phase 3<a class="headerlink" href="#phase-3" title="Permalink to this headline">¶</a></h3>
+<div class="figure align-default">
+<img alt="../_images/anaz_phase3.png" src="../_images/anaz_phase3.png" />
+</div>
+<p><em>Figure 4.</em> Trust relationships between components during phase 3 of
+Authn/Authz. Triangle = CN, Rectangle = MN, open circle = public data, filled
+circle = private data, dashed line = untrusted connection, solid line =
+trusted connection, user with hat = authenticated user. Member Nodes of
+compatible technology (D) have a trust relationship that enables transfer of
+protected content from one member node to another (A). An authenticated user
+has the same access to private content replicated to other Member Nodes (B).
+Member Nodes with incompatible technology (i.e. unable to create a trusted
+relationship) are only able to replicate public content (C). Coordinating
+Nodes must have trusted relationships to all Member Nodes (E) to direct
+replication.</p>
+</div>
+<div class="section" id="phase-4">
+<h3>Phase 4<a class="headerlink" href="#phase-4" title="Permalink to this headline">¶</a></h3>
+<p>TBD</p>
+</div>
+</div>
+<div class="section" id="issues">
+<h2>Issues<a class="headerlink" href="#issues" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p>Located At CN or MN?</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>At CN requires global knowledge of ACLs</p></li>
+<li><p>At CN requires a lot of network traffic for authorization on objects</p></li>
+<li><p>At MN makes authorization of search results impossible</p></li>
+<li><p>Compromise: Federated, each authoritative MN for an object keeps its ACL
+list, which gets synchronized to the CN at sync time</p>
+<ul>
+<li><p>Assume most object write is at MN level, so best to not have to go to
+CN</p></li>
+<li><p>Assume MN will want to control their own write access</p></li>
+<li><p>Requires MN Authorization services</p></li>
+</ul>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Efficiency of search results authorization</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Need to authorize large number of search results in each operation</p></li>
+<li><p>Has implications for search results cacheing</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Authorization in DataONE</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#trust-relationships">Trust Relationships</a></li>
+<li><a class="reference internal" href="#object-access-control">Object Access Control</a><ul>
+<li><a class="reference internal" href="#adjusting-object-access-control">Adjusting Object Access Control</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#log-record-access-control">Log Record Access Control</a></li>
+<li><a class="reference internal" href="#service-access-control">Service Access Control</a><ul>
+<li><a class="reference internal" href="#adjusting-service-access-control">Adjusting Service Access Control</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#additional-authorization-constraints">Additional Authorization Constraints</a></li>
+<li><a class="reference internal" href="#access-policy-language">Access Policy Language</a></li>
+<li><a class="reference internal" href="#authorization-services">Authorization Services</a></li>
+<li><a class="reference internal" href="#interaction-diagrams">Interaction diagrams</a><ul>
+<li><a class="reference internal" href="#phase-1">Phase 1</a></li>
+<li><a class="reference internal" href="#phase-2">Phase 2</a></li>
+<li><a class="reference internal" href="#phase-3">Phase 3</a></li>
+<li><a class="reference internal" href="#phase-4">Phase 4</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#issues">Issues</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+      <li>Previous: <a href="Authentication.html" title="previous chapter">Identity Management and Authenticated Session Management</a></li>
+      <li>Next: <a href="AuthnAndAuthzRequirements.html" title="next chapter">Identity, Authentication, and Authorization Requirements</a></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/design/Authorization.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/design/Authorization.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/Authorization.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

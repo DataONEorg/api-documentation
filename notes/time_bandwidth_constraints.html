@@ -1,0 +1,265 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Time and Bandwidth Constraints &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Proposal for API Refactoring" href="api_refactoring.html" />
+    <link rel="prev" title="Selectors for Data Package Components" href="selectors.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="api_refactoring.html" title="Proposal for API Refactoring"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="selectors.html" title="Selectors for Data Package Components"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">General Design and Implementation Notes</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Time and Bandwidth Constraints</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="time-and-bandwidth-constraints">
+<h1>Time and Bandwidth Constraints<a class="headerlink" href="#time-and-bandwidth-constraints" title="Permalink to this headline">¶</a></h1>
+<p>Given the DataONE architecture, estimate the constraints on rates of data
+acquisition, the size of data objects, and the number of simultaneous users
+that may be supported. There are of course, interactions between each of these
+metrics</p>
+<div class="section" id="cn-cn-transfer-rates">
+<h2>CN - CN Transfer Rates<a class="headerlink" href="#cn-cn-transfer-rates" title="Permalink to this headline">¶</a></h2>
+<p>Goal - what is the average rate of data transfer between each of the CNs.</p>
+<p>Four random files of sizes 1MB, 10MB, 100MB and 1GB were generated using
+variants of the command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dd</span> <span class="k">if</span><span class="o">=/</span><span class="n">dev</span><span class="o">/</span><span class="n">urandom</span> <span class="n">of</span><span class="o">=</span><span class="n">test_100M</span><span class="o">.</span><span class="n">bin</span> <span class="n">bs</span><span class="o">=</span><span class="mi">1048576</span> <span class="n">count</span><span class="o">=</span><span class="mi">100</span>
+</pre></div>
+</div>
+<p>These were placed in a location (/var/www/test) that can be served by the apache
+web server running on each of the CNs, and a script to time retrieval of the
+documents from each node executed.</p>
+graph {
+
+  fontname = &quot;Courier&quot;;
+  fontsize = 9;
+
+
+  edge [
+    fontname = &quot;Courier&quot;
+    fontsize = 9
+    color = &quot;#333333&quot;
+    arrowhead = &quot;open&quot;
+    arrowsize = 0.5
+    len = 0.2
+    dir = forward
+    ljust = &quot;l&quot;
+    ];
+
+  node [
+    fontname = &quot;Courier&quot;
+    fontsize = 9
+    fontcolor = &quot;black&quot;
+    ljust = &quot;l&quot;];
+
+
+UNM -- UCSB [label=&quot;1.1 (0.89)\n5.4 (1.84)\n30 (3.29)\n284 (3.51)&quot;]
+UCSB -- UNM [label=&quot;1.0 (1.00)\n5.6 (1.76)\n25 (3.89)\n232 (4.30)&quot;];
+UNM -- ORC [label=&quot;9.2 (0.11)\n14.2 (0.71)\n62 (1.61)\n553 (1.81)&quot;]
+ORC -- UNM [label=&quot;0.9 (0.54)\n2.1 (1.4)\n19.2 (5.2)\n144 (6.93)&quot;]
+UCSB -- ORC [label=&quot;9.2 (0.11)\n14.2 (0.7)\n40 (2.5)\n255 (3.91)&quot;]
+ORC -- UCSB [label=&quot;1.1 (0.86)\n5.7 (1.74)\n26 (3.77)\n268 (3.72)&quot;]
+UNM -- Home [label=&quot;2.2 (0.44)\n14.3 (0.70)&quot;]
+UCSB -- Home  [label=&quot;2.4 (0.40)\n14.5 (0.69)&quot;]
+ORC -- Home  [label=&quot;1.4 (0.70)\n11.7 (0.86)&quot;]
+}<p>Preliminary results are shown in diagram above. Numbers on left are seconds,
+numbers in parentheses are MB/sec. Each row represents average of three
+transfers for each of the four file sizes of 1MB, 10MB, 100MB, and 1GB
+respectively. For example, the time taken to transfer 100MB from UCSB to ORC
+was 40 seconds. Only first two values are shown for transfers to Home (Verizon
+FIOS in Annapolis).</p>
+</div>
+<div class="section" id="transaction-rates">
+<h2>Transaction Rates<a class="headerlink" href="#transaction-rates" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nCN</span> <span class="o">=</span> <span class="c1"># of coordinating nodes</span>
+<span class="n">nD</span> <span class="o">=</span> <span class="c1"># of data objects</span>
+<span class="n">nM</span> <span class="o">=</span> <span class="c1"># of science metadata objects</span>
+<span class="n">nY</span> <span class="o">=</span> <span class="c1"># of system metadata objects</span>
+<span class="n">nr</span> <span class="o">=</span> <span class="c1"># of replicas of each data object</span>
+<span class="n">n0</span> <span class="o">=</span> <span class="n">total</span> <span class="n">number</span> <span class="n">of</span> <span class="n">objects</span> <span class="n">before</span> <span class="n">synchronization</span> <span class="ow">or</span> <span class="n">replication</span>
+<span class="n">n1</span> <span class="o">=</span> <span class="n">total</span> <span class="n">number</span> <span class="n">of</span> <span class="n">objects</span> <span class="n">after</span> <span class="n">synchronization</span>
+<span class="n">n2</span> <span class="o">=</span> <span class="n">total</span> <span class="n">number</span> <span class="n">of</span> <span class="n">objects</span> <span class="n">after</span> <span class="n">replication</span>
+<span class="n">D</span> <span class="o">=</span> <span class="n">difference</span> <span class="ow">in</span> <span class="nb">object</span> <span class="n">count</span> <span class="n">between</span> <span class="n">start</span> <span class="ow">and</span> <span class="n">steady</span> <span class="n">state</span>
+
+<span class="n">nY</span> <span class="o">=</span> <span class="n">nM</span> <span class="o">+</span> <span class="n">nD</span>
+
+<span class="n">n0</span> <span class="o">=</span> <span class="n">nY</span> <span class="o">+</span> <span class="n">nM</span> <span class="o">+</span> <span class="n">nD</span>
+
+<span class="n">n1</span> <span class="o">=</span> <span class="n">nY</span><span class="o">*</span><span class="n">nCN</span> <span class="o">+</span> <span class="n">nM</span><span class="o">*</span><span class="n">nCN</span> <span class="o">+</span> <span class="n">n0</span>
+
+<span class="n">n2</span> <span class="o">=</span> <span class="n">nY</span> <span class="o">+</span> <span class="n">nr</span> <span class="o">*</span> <span class="n">nD</span> <span class="o">+</span> <span class="n">n1</span>
+
+<span class="n">D</span> <span class="o">=</span> <span class="n">n2</span> <span class="o">-</span> <span class="n">n0</span>
+</pre></div>
+</div>
+<p>So, if:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nD</span> <span class="o">=</span> <span class="n">nM</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n0</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">n1</span> <span class="o">=</span> <span class="mi">13</span><span class="p">,</span> <span class="n">n2</span> <span class="o">=</span> <span class="mi">18</span><span class="p">,</span> <span class="n">D</span> <span class="o">=</span> <span class="mi">14</span>
+</pre></div>
+</div>
+<p>If nD = 100,000 D = 1.4e6. The approximate (actually minimum) transaction rate
+(t) to reach steady state after d days for this number of new objects:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="o">=</span> <span class="mi">1</span>   <span class="n">t</span> <span class="o">=</span> <span class="mf">16.2</span>
+<span class="n">d</span> <span class="o">=</span> <span class="mi">7</span>   <span class="n">t</span> <span class="o">=</span> <span class="mf">2.3</span>
+<span class="n">d</span> <span class="o">=</span> <span class="mi">30</span>  <span class="n">t</span> <span class="o">=</span> <span class="mf">0.54</span>
+<span class="n">d</span> <span class="o">=</span> <span class="mi">365</span> <span class="n">t</span> <span class="o">=</span> <span class="mf">0.04</span>
+</pre></div>
+</div>
+<p>if nD = 1,000,000:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="o">=</span> <span class="mi">1</span>   <span class="n">t</span> <span class="o">=</span> <span class="mi">162</span>
+<span class="n">d</span> <span class="o">=</span> <span class="mi">7</span>   <span class="n">t</span> <span class="o">=</span> <span class="mi">23</span>
+<span class="n">d</span> <span class="o">=</span> <span class="mi">30</span>  <span class="n">t</span> <span class="o">=</span> <span class="mf">5.4</span>
+<span class="n">d</span> <span class="o">=</span> <span class="mi">365</span> <span class="n">t</span> <span class="o">=</span> <span class="mf">0.44</span>
+</pre></div>
+</div>
+<p>if nD = 1e9:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="o">=</span> <span class="mi">1</span>   <span class="n">t</span> <span class="o">=</span> <span class="mi">162000</span>
+<span class="n">d</span> <span class="o">=</span> <span class="mi">7</span>   <span class="n">t</span> <span class="o">=</span> <span class="mi">23000</span>
+<span class="n">d</span> <span class="o">=</span> <span class="mi">30</span>  <span class="n">t</span> <span class="o">=</span> <span class="mi">5400</span>
+<span class="n">d</span> <span class="o">=</span> <span class="mi">365</span> <span class="n">t</span> <span class="o">=</span> <span class="mi">443</span>
+</pre></div>
+</div>
+<p>Note that there will be many small additions of content, not necessarily a
+single large chunk except in the case where a total rebuild is required. These
+figures provide a quantitative basis for some indication as to what sort of
+capacity can be handled by the infrastructure given the fundamental constraint
+of the performance of the Coordinating Node replicated object store and the
+overall latency of operations across the network. A few key observations:</p>
+<ul class="simple">
+<li><p>Adding 1 data set along with its science and system metadata causes creation
+of 14 new data objects in the system.</p></li>
+<li><p>Refactoring the data store, system metadata can be a very expensive
+operation.</p></li>
+<li><p>Overall network impact must be taken into consideration when bringing on a
+new Member Node or when a Member Node adds a significant volume of data.</p></li>
+<li><p>Preference should be towards less granularity of data. For example, a single
+natural history collection alone may have several million records. These
+should be contributed to DataONE as a collection not as individual data
+objects per specimen.</p></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Time and Bandwidth Constraints</a><ul>
+<li><a class="reference internal" href="#cn-cn-transfer-rates">CN - CN Transfer Rates</a></li>
+<li><a class="reference internal" href="#transaction-rates">Transaction Rates</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+  <li><a href="index.html">General Design and Implementation Notes</a><ul>
+      <li>Previous: <a href="selectors.html" title="previous chapter">Selectors for Data Package Components</a></li>
+      <li>Next: <a href="api_refactoring.html" title="next chapter">Proposal for API Refactoring</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/notes/time_bandwidth_constraints.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/notes/time_bandwidth_constraints.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/notes/time_bandwidth_constraints.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

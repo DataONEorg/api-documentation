@@ -1,0 +1,800 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Identity Management and Authenticated Session Management &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Authorization in DataONE" href="Authorization.html" />
+    <link rel="prev" title="DataONE Cybersecurity Plan" href="security-plan.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Authorization.html" title="Authorization in DataONE"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="security-plan.html" title="DataONE Cybersecurity Plan"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Identity Management and Authenticated Session Management</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="identity-management-and-authenticated-session-management">
+<h1>Identity Management and Authenticated Session Management<a class="headerlink" href="#identity-management-and-authenticated-session-management" title="Permalink to this headline">¶</a></h1>
+<p>The planning and design for DataONE cybersecurity is predicated on the fact
+that DataONE is a diverse collaboration of researchers, data providers, institutions,
+coordinating nodes, member nodes, data collections and other infrastructure
+components. As such, DataONE is inherently a virtual organization (VO).
+DataONE, as an entity, spans many physical organizations and administrative
+domains. The approach that DataONE follows for cybersecurity is one in which all
+sensitive operations and or data/metadata resources within the DataONE VO
+require users requesting access to the operation/resource to register and
+authenticate with the DataONE system before an evaluation of rights to the
+operation/resource can/will be performed. DataONE supports authentication
+through CILogon, inlcuding both its InCommon partners such as Universities and OAuth
+providers such as Google.  Thus, any given user may have multiple identities which are
+verified through the authentication mechanisms from multiple providers, and these identities
+can then be mapped to one another to manage changes as users change institutions and roles.
+Once a user is authenticated and mapped to their DataONE identity, they can establish a session
+to pass credentials to DataONE services by either 1) passing a CILogon or DataONE-issed X.509
+certificate to the service provider as part of SSL negotiation, or 2) by providing an
+authentication token that is provided in HTTP requests made to the DataONE nodes.</p>
+<p>To this end, three services support identity management and authentication:</p>
+<ul class="simple">
+<li><p>Identity Management - user account registration, identity mapping, group
+management, and management of authentication tokens</p></li>
+<li><p>Authentication - establishing the identity of a user</p></li>
+<li><p>Authenticated Session Management - establishing a timed-session that
+identifies a DataONE user</p></li>
+</ul>
+<div class="section" id="identity-management">
+<h2>Identity Management<a class="headerlink" href="#identity-management" title="Permalink to this headline">¶</a></h2>
+<p>Identity Management for DataONE addresses the need to identify users that
+request the use of services and or data/metadata resources within DataONE
+(DataONE does recognize that not all services/resources require user
+identification, thus support for anonymous access to certain services/resources
+is possible using a Public identity).  DataONE provides services for users to
+register their identity with DataONE in a user account so as to create a unique
+DataONE identifier, along with other attributes about that user. This account
+information may be used for authorization and logging DataONE transactions.</p>
+<p>Users may have multiple identities as a result of distributed research endeavors
+at different participating organizations and or changes in organizational
+affiliation. Because of this, the DataONE Identity Management service will
+support user identity mappings, which allows users to authenticate using any one
+of their multiple identities, but still be recognized as the same DataONE
+identity. When a DataONE authenticated session begins, information pertaining to
+the user’s identity is available for authorization purposes, which includes a
+listing of all mapped identities associated with that user; these mapped
+identities serve equally well for authorization decisions - that is, within
+DataONE access control policies, reference to any mapped identity is the same as
+using any other of the user’s identities.</p>
+<p>DataONE also supports the use of <a class="reference external" href="http://orcid.org">ORCID</a> identifiers both for authentication and within
+Access Policies.  In this scenario, a user can either map their ORCID identifier
+to an existing CILogon Distinguished Name, or they can use ORCID as the primary mechanism
+for logging into DataONE, in which case the ORCID is the user’s primary identifier.</p>
+<p>In addition, the Identity Management service provides a system for users to
+create, store, and modify groups of users that can be used in access control
+directives. Only the user creating a group will be allowed to delete the group
+or to change the group’s membership. Service APIs for group management are
+outlined below in the Identity Management Service section.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The Internet2 project has defined a product called Grouper that is a
+standalone group management utility and that publishes a web interface for
+interacting with the service.  It allows users and organizations to create
+and manage groups.  See <a class="reference external" href="https://spaces.internet2.edu/display/Grouper/Grouper+Web+Services">Grouper</a> and earlier work from Internet2 on group
+management through their <a class="reference external" href="http://middleware.internet2.edu/dir/groups/">MACE</a> project.</p>
+</div>
+<div class="section" id="identifying-principals-aka-subjects">
+<h3>Identifying Principals (aka Subjects)<a class="headerlink" href="#identifying-principals-aka-subjects" title="Permalink to this headline">¶</a></h3>
+<p>Principals are users, groups of users, and system services within the DataONE
+system.  They need to be represented in access policies, authentication
+sessions, and other places within the system.</p>
+<p>The values for identifiers representing principals are unique, persistent,
+non-reassignable strings.  Within those constraints, it is useful to use a
+common convention for representing and scoping these principal names.  In DataONE,
+Principals are currently represented in one of several forms, although future forms
+may add to these as needed:</p>
+<ul>
+<li><p>X.509 Distinguished Names (DN)</p>
+<p>Examples of the syntax for the representation of principals in an DN include:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CN</span><span class="o">=</span><span class="n">Matt</span> <span class="n">Jones</span> <span class="n">A729</span><span class="p">,</span><span class="n">O</span><span class="o">=</span><span class="n">Google</span><span class="p">,</span><span class="n">C</span><span class="o">=</span><span class="n">US</span><span class="p">,</span><span class="n">DC</span><span class="o">=</span><span class="n">cilogon</span><span class="p">,</span><span class="n">DC</span><span class="o">=</span><span class="n">org</span>
+<span class="n">UID</span><span class="o">=</span><span class="n">mbjones</span><span class="p">,</span><span class="n">O</span><span class="o">=</span><span class="n">NCEAS</span><span class="p">,</span><span class="n">DC</span><span class="o">=</span><span class="n">ecoinformatics</span><span class="p">,</span><span class="n">DC</span><span class="o">=</span><span class="n">org</span>
+</pre></div>
+</div>
+</li>
+<li><p>ORCID Identifiers</p>
+<p>Identifiers from ORCID are compatible with ISNI and take either a bare form or
+are embedded in an orcid.org URL:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0000</span><span class="o">-</span><span class="mi">0003</span><span class="o">-</span><span class="mi">0077</span><span class="o">-</span><span class="mi">4738</span>
+<span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">orcid</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="mi">0000</span><span class="o">-</span><span class="mi">0003</span><span class="o">-</span><span class="mi">0077</span><span class="o">-</span><span class="mi">4738</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>Within DataONE, values of <a class="reference internal" href="../apis/Types.html#Types.Subject" title="Types.Subject"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.Subject</span></code></a> can be represented as the string
+form of a Distinguished Name (DN) as defined in <a class="reference external" href="http://tools.ietf.org/html/rfc4514">RFC4514</a>. Distinguished
+Names are composed of a sequence of Relative Distinguished Names (RDNs), each of
+which is composed of an attribute type and a value. Subjects are serialized to
+strings with attribute types in upper case (a DataONE convention), case is
+preserved for all values. RDNs are separated by commas, and ordering is
+preserved. Values must be converted to strings following the encoding rules in
+section 2.4 of <a class="reference external" href="http://tools.ietf.org/html/rfc4514">RFC4514</a>. In summary, Subjects in DataONE are often represented as
+Distinguished Names with the additional constraint that attribute types are in
+upper case.</p>
+<p>This approach enables simple string comparison to provide accurate results
+within the DataONE infrastructure and services and is fully compatible with
+existing services that utilize Distinguished Names as defined in <a class="reference external" href="http://tools.ietf.org/html/rfc4510">RFC4510</a>.</p>
+</div>
+<div class="section" id="symbolic-principals">
+<h3>Symbolic Principals<a class="headerlink" href="#symbolic-principals" title="Permalink to this headline">¶</a></h3>
+<p>In addition to named users, access policies can refer to several special symbolic groups of users
+that do not need to be explicitly enumerated, but define classes of people in the
+system.  The reserved symbolic principals are:</p>
+<ul>
+<li><p>Verified authenticated users</p>
+<blockquote>
+<div><ul>
+<li><p>A user who has a valid authentication token and an ‘isVerified’ flag.</p>
+<p>This designation is be used to ensure that users are in fact who they
+claim to be. These accounts have originated from trusted affiliate
+organizations or identity services or have been manually verified by an
+administrator. The identity information when logged during read operations
+should be fully trusted.</p>
+</li>
+<li><p>Represented using the special principal <strong>verifiedUser</strong></p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Authenticated users</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Any user who has a valid authentication token is considered a member of
+the authenticated users group. This designation can be used in particular
+to require that user identity has been established, but not necessarily
+verified as accurate. Authenticated users may be restricted from certain
+[read] operations depending on the data owners’ policy regarding access
+for untrusted identities.</p></li>
+<li><p>Represented using the special principal <strong>authenticatedUser</strong></p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Public user</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>The Public user represents any user accessing services that does not have
+a valid session token, plus all of those who do have a valid token. If a
+token is found to be invalid, the user’s privileges are immediately
+lowered to those of the symbolic ‘public’ user. For create, update, and
+delete operations, this typically means that the user has insufficient
+privileges to access the service. At times providers may want to provide
+public read access to resources.</p></li>
+<li><p>Represented using the special principal <strong>public</strong></p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="identity-management-service">
+<h3>Identity Management Service<a class="headerlink" href="#identity-management-service" title="Permalink to this headline">¶</a></h3>
+<p>The DataONE Identity Management service provides individuals with the ability
+to register a DataONE user account with the system and to set information into
+their profile.  This process creates a new identifier value for the user that
+uniquely identifies them in DataONE from other DataONE users.  This
+identifier is critical because it associates the user with an authenticated
+session for use when requesting services and or data/metadata resources from
+the DataONE nodes.</p>
+<p>The general application flow for a user to use DataONE services is to first log
+into CILogon or ORCID with an identity of their choice, then to register that identity
+with DataONE by calling the <code class="xref py py-func docutils literal notranslate"><span class="pre">CN_auth.registerAccount()</span></code> service. An authorized
+third party (such as a site manager) can then call <code class="xref py py-func docutils literal notranslate"><span class="pre">CN_auth.verifyAccount()</span></code>
+to verify that the real name, email address, and other biographical information
+about the Person are correct. A user with more than one Identity can call
+<code class="xref py py-func docutils literal notranslate"><span class="pre">CN_auth.mapIdentity()</span></code> to link those two identities together as equivalent
+identities. Once this registration process is complete, future authentication
+steps with CILogon will produce X.509 certificates that contain this
+biographical and account information in the returned certficate, all of which
+can be used by services to make authorization decisions.</p>
+<ul>
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">CN_auth.registerAccount()</span></code></p>
+<p>Register an identity with the DataONE IdentityService. When a user attempts to
+use a given identity at DataONE, the user must first register the identity and
+provide biographical information including their real name, real email
+address, and other identifying attributes. Takes a Person description
+including principal, givenName, familyName, and email address as input (other
+elements from the Person description such as isMemberOf, equivalentIdentity,
+and verifiedBy are ignored during registration because these elements are
+populated by other services).</p>
+</li>
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">CN_auth.verifyAccount()</span></code></p>
+<p>Verify that an Person is an accurate portrayal of the real-life name and
+identity of the named individual.</p>
+</li>
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">CN_auth.mapIdentity()</span></code></p>
+<p>Create an equivalence mapping between the identities listed for the users
+authenticated and represented by session1 and session2.</p>
+</li>
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">CN_auth.confirmMapIdentity()</span></code></p>
+<p>Confirm an equivalence mapping between the identities listed for the users
+authenticated and represented by session1 and session2.</p>
+</li>
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">CN_auth.getSubjectInfo()</span></code></p>
+<p>Get the information about a Person, their equivalent identities, and the
+Groups to which they belong.</p>
+</li>
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">CN_auth.listSubjects()</span></code></p>
+<p>Query for a matching set of users, groups, and systems.</p>
+</li>
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">CN_auth.createGroup()</span></code></p>
+<p>Create a named group of users. Throws IdentifierNotUnique if the group name is
+already in use.</p>
+</li>
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">CN_auth.addGroupMembers()</span></code></p>
+<p>Add the listed array of members to the named group, if and only if the user
+represented in token originally created the group.</p>
+</li>
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">CN_auth.removeGroupMembers()</span></code></p>
+<p>Remove the listed array of members from the named group, if and only if the
+user represented in token originally created the group or is an equivalent
+identity of the user who created the group.</p>
+</li>
+</ul>
+<img alt="../_images/62cfd2cd50c0f35cfea5a625cadde8b52a48e561eb7d5770a769020832df0e2f.svg" class="align-center" src="../_images/62cfd2cd50c0f35cfea5a625cadde8b52a48e561eb7d5770a769020832df0e2f.svg" /><p><strong>Figure 1.</strong> Identity Service is used to register an existing identity with
+DataONE. In this example, the same user has two distinct pre-existing
+identities. We register the primary identity with DataONE. We then request that
+a secondary identity is mapped to the same Types.Subject. The user must then
+confirm this equivalence between the two identities.</p>
+<img alt="../_images/693be4b98c83b5977373ff1693a1e494e397b23896ed9c67fdc7f0d5adb66471.svg" class="align-center" src="../_images/693be4b98c83b5977373ff1693a1e494e397b23896ed9c67fdc7f0d5adb66471.svg" /><p><strong>Figure 2.</strong> Identity Service is used to register an existing identity with
+DataONE. In this example, the user has an identity affiliation that is not
+initially trusted. We register the identity with DataONE as unverified. An
+administrator needs to verify the Person details before the identity is
+considered fully verified. Some DataONE actions will be restricted until
+verification is completed.</p>
+<img alt="../_images/7b55902dcf2b157754eb3e10e0d28b27162acac6a392ae3ef528c20ec20dbf20.svg" class="align-center" src="../_images/7b55902dcf2b157754eb3e10e0d28b27162acac6a392ae3ef528c20ec20dbf20.svg" /><p><strong>Figure 3.</strong> Identity Service is used to manage groups. The group creator is
+initially the only user able to add and remove group members. List editing
+permissions must be granted for other group members to edit the group.</p>
+</div>
+<div class="section" id="authentication-service">
+<h3>Authentication Service<a class="headerlink" href="#authentication-service" title="Permalink to this headline">¶</a></h3>
+<p>DataONE is working closely with the CILogon project to streamline and
+incorporate user identities that originate from academic and commercial
+institutions in the U.S. that are members of the InCommon federation or through
+more globally accessible identity providers like Google, Facebook, and Yahoo!.
+CILogon acts as an intermediary broker of “short-lived” identity assertions that
+are made by users verifying their identity through their home institution or
+identity provider service. These assertions are converted by CILogon into a
+longer-lived and more commonly recognized X.509 identity certificate, which can
+then be reused a number of times when interacting with DataONE. A benefit of
+adopting identity management through CILogon is that
+users who regularly identify themselves through their home institution or other
+identity service will now be able to access DataONE resources without yet
+another identity to manage.</p>
+<p>The DataONE Authentication Service provides a set of services for validating the
+identity of users and services and then establishing limited duration sessions
+that are represented by an X.509 cryptographically-signed certificate or an
+an authentication API key. A single session is always associated with a single
+user. The Authentication Service uses various methods
+to validate the identity of a user in the system, and then produces SubjectInfo and
+potentially a session certificate in the form of a X.509
+certificate that contains the relevant properties for that session.</p>
+<p>The CILogon service supports authentication by redirecting authentication
+requests to a pre-approved list of Identity Providers associated with user’s
+home institutions. The main source of these Identity Providers are the
+institutions that are members of the InCommon federation. Users only need to
+authenticate with their home institution, thereby protecting user credentials by
+preventing 3rd party clients and services from handling those credentials, and
+rather only passing the credentials to the user’s trusted institutional
+provider.</p>
+<p>In general, the user will initiate the request for a session from DataONE
+through either a dedicated DataONE desktop application or through a web-browser
+connected to a DataONE web server. After contacting CILogon, the user will be
+redirected to their institutional provider, which in turn will certify that the
+user successfully authenticated to CILogon. CILogon then will contact the
+DataONE Identity service to gather biographical attributes and additional
+identity attributes such as group memberships and equivalent identities, and
+produce an X.509 certificate containing these attributes and with a limited duration.
+This certificate represents a “valid session” via the digitally signed “authentication token” (see below) that
+is generated by DataONE upon authenticating the user by one of the above
+mechanisms. The certificate is then returned to the user for subsequent
+interactions with DataONE, and can be provided to services that need identity
+information information necessary to perform authorization processing.</p>
+<p>DataONE web clients will likely use CILogon Portal Delegation
+(<a class="reference external" href="http://www.cilogon.org/portal-delegation">http://www.cilogon.org/portal-delegation</a>) to manage user certificates (rather
+than the browser). The portal acts as a proxy for the user when interacting
+with underlying DataONE services that require authentication or authorization.
+Instead of direct browser-based certificate management, the portal requests and
+stores user certificates and opaquely presents them to DataONE. This does
+require development of an extra web application “layer” that provides user
+session/certificate management in conjunction with the defined
+DataONE services.</p>
+<p>Obtaining a CILogon X.509 certificate requires that the user authenticate
+through the CILogon InCommon identity services as outlined in Figure 4.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A proposal for mapping existing KNB accounts is included at the bottom of Figure 4.</p>
+</div>
+<img alt="../_images/749b11204066b1c5f3d0d054217d05f89af3d2171f03c0800df918e61fe28b23.svg" class="align-center" src="../_images/749b11204066b1c5f3d0d054217d05f89af3d2171f03c0800df918e61fe28b23.svg" /><p><strong>Figure 4.</strong> Detailed sequence of events for authentication through CILogon -
+Client authentication through the CILogon service; CILogon, using Shibboleth,
+requests a SAML authentication through a registered <em>Identity Provider</em> (IdP);
+the IdP confirms identity and returns SAML response to CILogon; client continues
+process, the portal delegate requests Certificate from CILogon;
+CILogon generates X509 certificate and returns it to portal for use with DataONE.</p>
+<p>The CILogon X.509 certificate provides a portable credential that binds a user’s
+public key to their distinguished name or another significant identifier (e.g.,
+email) that is stored in the “subject” field of the certificate. Once generated,
+the CILogon X.509 certificate has a specified span of time in which it is
+considered valid; this information is stored in the “valid not before” and
+“valid not after” fields of the certificate.</p>
+<p>Processing the CILogon X.509 certificate requires a verification exchange
+between the service provider (DataONE) and the external user. Upon receiving a
+service request from the user, the DataONE service provider will first determine
+that the user’s CILogon X.509 certificate sent with the request is valid (i.e.,
+verify issuer signature and confirm valid date span) and then use the attributes
+in the certificate to make authorization decisions regarding the request.</p>
+<img alt="design/images/auth_01.png" src="design/images/auth_01.png" />
+<p><strong>Figure 5.</strong> Authentication and session management assuming that the CN only
+runs an Identity service, and that the CILogon server runs the session
+management service as part of the authentication process.</p>
+</div>
+</div>
+<div class="section" id="using-access-tokens">
+<h2>Using Access Tokens<a class="headerlink" href="#using-access-tokens" title="Permalink to this headline">¶</a></h2>
+<p>Some clients have difficulty handling X.509 certificates, and so the DataONE V2 API
+also supports the use of <strong>access tokens</strong> as a mechanism for clients to identifiy themselves
+for API calls.  In this scenario, the user authenticates with the DataONE Portal, and then
+obtains an access token directly from the DataONE Portal.
+The client then uses this information to pass access tokens to
+service providers using an HTTP “Authorization” header.
+The service provider (e.g., MN), must then validate the access token to ensure that the
+request is coming from a host with a valid token and that the request is not being repeated via session hijacking.</p>
+<p>DataONE considered different scenarios for the structure and meaning of these access
+tokens, largely following the <a class="reference external" href="http://tools.ietf.org/html/rfc5849">OAuth1.0</a> and <a class="reference external" href="https://tools.ietf.org/html/rfc6749">OAuth2.0</a> specifications.
+These two specification propose related but different mechanisms for generating and utilizing
+access tokens.  Decision making fell along two axes: 1) what does an acces token represent,
+and 2) how does a service provider validate an access token.  The main choices were, in order of
+both increasing security and increasing complexity, are:</p>
+<ul class="simple">
+<li><p>Bearer tokens</p></li>
+<li><p>HMAC tokens with shared symmetric keys</p></li>
+<li><p>RSA-SHA1 tokens using RSA private/public keypairs</p></li>
+</ul>
+<p>We ultimately decided to use the simpler Bearer Token approach outlined below:</p>
+<ul>
+<li><dl>
+<dt>Bearer tokens</dt><dd><ul>
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc6750">Bearer tokens</a> are unique string values issued by an authentication server that show
+that a client is authorized for access; anyone holding the bearer token can use it to gain
+access to a service. Service providers validate the token via either a call to the central authorization
+service or cryptographically using the public key that corresponds to the private key with which
+the authentication service signed the token.
+These tokens must be used with TLS, and care must be taken to not leak the tokens via e.g. logs,
+client storage locations, or via MITM attacks.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Pros: simple to implement on client, passed directly in Authorization header</p></li>
+<li><p>Cons: Passed with every request, simple to capture, can use to steal session via replay attacks,
+may require centralized validation of tokens, requires TLS.</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<img alt="../_images/3f7d2391f9a6de5ff1b38aa65eb0710fc4899217ef05899f0de62c9ee9f5cb32.svg" class="align-center" src="../_images/3f7d2391f9a6de5ff1b38aa65eb0710fc4899217ef05899f0de62c9ee9f5cb32.svg" /><p><strong>Figure 6.</strong> Scenarios for using OAuth access tokens in HTTP Authorization headers as
+a mechanism to establish client identity and authorization.
+The user authenticates with the DataONE Portal to establish their identity, and the portal
+issues a client-specific token. For Bearer Tokens, the Portal issues
+a signed, reusable access token that is sent to service providers and verified using an asymmetric public key.</p>
+<div class="section" id="encoding-session-information-in-http-headers">
+<h3>Encoding Session information in HTTP headers<a class="headerlink" href="#encoding-session-information-in-http-headers" title="Permalink to this headline">¶</a></h3>
+<p>When clients wish to use an authentication token, they will include the
+token value in the Authorization request header:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Authorization</span><span class="p">:</span> <span class="n">Bearer</span> <span class="o">&lt;</span><span class="n">token_value</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>This is consistent with the OAuth 2 specification that states how Bearer tokens
+should be transmitted to the service.
+Service providers should inspect the request for
+this token and use it when a client x509 certificate is not present.</p>
+<p>When services wish to verify the JSON Web Token (JWT) , they should use the public
+certificate of the token issuing service (i.e., the CN’s public server certificate).
+A utility is included in the d1_portal project with example code below.</p>
+</div>
+</div>
+<div class="section" id="authenticating-and-retrieving-a-token">
+<h2>Authenticating and Retrieving a Token<a class="headerlink" href="#authenticating-and-retrieving-a-token" title="Permalink to this headline">¶</a></h2>
+<p>Because we wish to support many different identity providers,
+there is no single “login” method. Different identity providers will
+inherently utilize different methods for having users prove their identity.
+Initially, DataONE will target these avenues for authentication:</p>
+<ul>
+<li><p>CILogon - Users can continue to authenticate using CILogon identities much like they do today.
+The portal keeps track of their successful authnetication from whichever IdP they choose, and will
+issue an authentication token for that user</p>
+<p>To begin the CILogon authorization process in the CN portal, users can navigate to:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>https://&lt;cn-host&gt;/portal/startRequest[?target=&lt;some_final_uri&gt;
+</pre></div>
+</div>
+</li>
+<li><p>ORCID - Using a similar workflow as with CILogon, users can opt to authenticate using their ORCID
+accounts using OAuth 2.0. After successfully authenticating with the ORCID identity provider, an
+authentication token can be retrieved from the portal.
+To begin the ORCID authorization process in the CN portal, users can navigate to:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>https://&lt;cn-host&gt;/portal/oauth?action=start
+</pre></div>
+</div>
+</li>
+<li><p>LDAP - Existing Ecoinformatics account holders can opt to continue using those identites to authenticate
+with the DataONE portal. This is a more direct method of authentication and is meant to bridge the gap between
+our legacy account system and newer SSO options available above.
+To authenticate using LDAP, users can post to:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">https</span><span class="p">:</span><span class="o">//&lt;</span><span class="n">cn</span><span class="o">-</span><span class="n">host</span><span class="o">&gt;/</span><span class="n">portal</span><span class="o">/</span><span class="n">ldap</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>The following parameters are requred (*) or supported:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">username</span><span class="o">*</span> <span class="o">-</span> <span class="n">the</span> <span class="n">full</span> <span class="n">LDAP</span> <span class="n">DN</span>
+<span class="n">password</span><span class="o">*</span> <span class="o">-</span> <span class="n">the</span> <span class="n">user</span><span class="s1">&#39;s LDAP password</span>
+<span class="n">target</span> <span class="o">-</span> <span class="nb">any</span> <span class="n">URI</span> <span class="n">to</span> <span class="n">be</span> <span class="n">redirected</span> <span class="n">to</span> <span class="n">upon</span> <span class="n">successful</span> <span class="n">authentiction</span>
+</pre></div>
+</div>
+<p>In all cases, users will retrieve an authentication token from the CN Portal after they have successfully authenticated with
+their IdP of choice and been redirected back to the CN Portal. The auth token endpoint is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">https</span><span class="p">:</span><span class="o">//&lt;</span><span class="n">cn</span><span class="o">-</span><span class="n">host</span><span class="o">&gt;/</span><span class="n">portal</span><span class="o">/</span><span class="n">token</span>
+</pre></div>
+</div>
+<p>Note that the same browser session used to authenticate should be used to retrieve the authentication token.</p>
+</div>
+<div class="section" id="authenticated-session-management">
+<h2>Authenticated Session Management<a class="headerlink" href="#authenticated-session-management" title="Permalink to this headline">¶</a></h2>
+<p>For DataONE, identity management and verification is only the first step in
+ensuring system-wide security. Many service calls within DataONE will require
+authentication of the caller to create an authenticated session with a limited
+duration for access to DataONE services. The process of authentication for most
+users will begin with identity verification and downloading of the X.509
+certificate from CILogon. This download will often happen from within a local
+desktop DataONE application, which is acting on behalf of the user and can then
+use the certificate to represent the authenticated session when it makes
+requests to DataONE service providers. Both the desktop application and the
+DataONE service provider can verify (1) that the certificate originated from
+CILogon and (2) that the owner of the certificate, the user, is the actual party
+requesting authentication with DataONE (user identity verification is performed
+as prerequisite of the certificate).</p>
+<p>Passed from DataONE system to DataONE system, such as making requests from a
+client application to a Member Node, the certificate is a reference to an
+authenticated session that contains all the necessary information identifying
+the user of the original service call and other attributes used to determine
+authorization in the DataONE system. The certificate itself will have a short
+“time to live”, thereby limiting the duration of malicious activity if a rogue
+application or user were to intercept the certificate. The certificate will also
+have limited applicability, in that it will be intended to be used from a
+particular host location on the internet, and have other restrictions that
+prevent it from being broadly used as a surrogate for the user.</p>
+<p>Services internal to the DataONE system may operate autonomously to perform
+maintenance tasks or other asynchronous activities that are not bound to a
+particular user. In these cases, a certificate will still be generated, but
+without the prerequisite identity verification. Such certificates will have a
+special system identity that signifies it is a “trusted” principal of the
+DataONE system. For most instances, this certificate will serve identically to
+one generated during the authentication process of normal user.</p>
+</div>
+<div class="section" id="portal-delegation">
+<h2>Portal Delegation<a class="headerlink" href="#portal-delegation" title="Permalink to this headline">¶</a></h2>
+<p>For web clients, we can use the CILogon portal delegation approach. Note that
+the CN and portal are assumed to be on the same server.</p>
+<img alt="../_images/2e8b9d9ba8d2fdc1211c192b68be4d398243e0b7c4982fb70969276d6b59b972.svg" class="align-center" src="../_images/2e8b9d9ba8d2fdc1211c192b68be4d398243e0b7c4982fb70969276d6b59b972.svg" /><p><strong>Figure 7.</strong> Authenticated “read” going through CN. The browser is the client
+with no certificate. The portal keeps the user’s client certificate. The CN
+looks up the client certificate using the client cookie. The CN includes the
+client certificate in the request that is sent to Metacat. Object is returned to
+the client as though it was retrieved directly with a certificate.</p>
+</div>
+<div class="section" id="session-management-alternative-scenario">
+<h2>Session Management (Alternative Scenario)<a class="headerlink" href="#session-management-alternative-scenario" title="Permalink to this headline">¶</a></h2>
+<p>This is a deprecated scenario that describes the use of a separate Session
+Service.</p>
+<div class="section" id="authtoken-references-to-an-authenticated-session">
+<h3>AuthToken references to an Authenticated Session<a class="headerlink" href="#authtoken-references-to-an-authenticated-session" title="Permalink to this headline">¶</a></h3>
+<p>Each DataONE <code class="xref py py-class docutils literal notranslate"><span class="pre">Types.AuthToken</span></code> is a unique identifier that is affiliated
+with and specifies the authentication session associated with a particular
+request. DataONE AuthToken References are UUID values that are created by the
+DataONE Session Service when a client requests that a session be established. A
+client requests that a session be established from a particular Internet
+Protocol address, and all service requests associated with that session MUST
+originate from that Internet Protocol address.</p>
+<p>The DataONE AuthToken reference is a unique identifier that references a session
+that has been established for the purposes of interacting with particular
+DataONE service providers. DataONE AuthTokens are generally passed in the header
+of an HTTP request to a service, thereby supporting clients that utilize
+authentication and those that do not, as well as Member Nodes that support
+authentication and those that don’t. Any Member Nodes or clients that do not
+support authentication and access control will simply ignore the presence of the
+AuthToken in the HTTP header information if one is present.</p>
+<p>The DataONE HTTP header containing the AuthToken has the name ‘x-AuthToken’ and
+contains an identifier value that is a UUID URN; for example, one might send the
+header:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="o">-</span><span class="n">AuthToken</span><span class="p">:</span> <span class="n">urn</span><span class="p">:</span><span class="n">uuid</span><span class="p">:</span><span class="n">f689d586</span><span class="o">-</span><span class="mi">59</span><span class="n">a6</span><span class="o">-</span><span class="mf">11e0</span><span class="o">-</span><span class="mi">8</span><span class="n">dac</span><span class="o">-</span><span class="mi">3</span><span class="n">f586cd046b9</span>
+</pre></div>
+</div>
+<p>This session reference is used to indicate the session that should be used for
+requests, and has limited duration based on the session expiration time.
+AuthToken references refer to sessions that have limited duration and other
+constraints on their validity, and these constraints MUST be validated by
+service providers.</p>
+<p>If a Node or other data one service provider receives a service request with the
+DataONE x-AuthToken header, then the service SHOULD retrieve the associated
+<code class="xref py py-class docutils literal notranslate"><span class="pre">SAML.Assertion</span></code> data in order to confirm that the client has
+appropriately authenticated with the DataONE session service. If the service
+needs to make authorization decisions, the service MUST validate the the
+associated session data, check validity constraints on the session, and then
+proceed to make authorization decisions.</p>
+<p>While making authorization decisions, the service should apply any AccessPolicy
+rules that reference the identifier for the Principal, any identifier in the
+‘equivalentIdentity’ attributes in the session, any groups that are referenced
+in an ‘isMemberOf’ attribute in the session, and any polices that reference the
+DataONE ‘AuthenticatedUser’ or ‘VerifiedUser’ identities. All of these
+identities are valid identities for the authenticated session.</p>
+<p>If a Member Node or Coordinating Node receives an AuthToken that is invalid, can
+not be found using the <code class="xref py py-func docutils literal notranslate"><span class="pre">CN_auth.getAuthSession()</span></code> method, or is determined
+to not be satisfying the constraints of the session (such as wrong source IP
+Address), then the service MUST return an <a class="reference internal" href="../apis/Exceptions.html#Exceptions.InvalidToken" title="Exceptions.InvalidToken"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exceptions.InvalidToken</span></code></a>
+exception.</p>
+<p>If a Member Node or Coordinating Node receives a service request in which there
+is no x-AuthToken header, or if the header is empty, then the request should be
+considered to be validated as the DataONE ‘Public’ user. This user may be denied
+access to certain services as determined by appropriate access policies, or it
+may be granted access to services when appropriate (e.g., to perform a
+<code class="xref py py-func docutils literal notranslate"><span class="pre">MN_read.get()</span></code> operation on a data set marked for Public read access).</p>
+<ul class="simple">
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">CN_auth.login()</span></code> returns <code class="xref py py-class docutils literal notranslate"><span class="pre">Types.AuthToken</span></code></p></li>
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">CN_auth.getAuthSession()</span></code> returns <code class="xref py py-class docutils literal notranslate"><span class="pre">SAML.Assertion</span></code></p></li>
+</ul>
+</div>
+<div class="section" id="structure-of-metadata-about-authenticated-sessions">
+<h3>Structure of metadata about Authenticated Sessions<a class="headerlink" href="#structure-of-metadata-about-authenticated-sessions" title="Permalink to this headline">¶</a></h3>
+<p>Metadata about authenticated sessions are represented as a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">SAML.Assertion</span></code>. Details of the fields to be included in an
+<code class="xref py py-class docutils literal notranslate"><span class="pre">SAML.Assertion</span></code> include Subject, Address, givenName, sn, mail,
+equivalentIdentity, and group membership, among other fields. These fields are
+all mapped to SAML2 Assertion elements, as illustrated in the following example
+of an authenticated session represented by a SAML Assertion. Note that these
+SAML Assertion messages are returned when Member Nodes and Coordinating Nodes
+make calls to <code class="xref py py-func docutils literal notranslate"><span class="pre">CN_auth.getAuthSession()</span></code>.</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;saml:Assertion</span>
+   <span class="na">xmlns:saml=</span><span class="s">&quot;urn:oasis:names:tc:SAML:2.0:assertion&quot;</span>
+   <span class="na">xmlns:xs=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span>
+   <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+   <span class="na">Version=</span><span class="s">&quot;2.0&quot;</span>
+
+   <span class="na">ID=</span><span class="s">&quot;urn:uuid:f7eca768-59c0-11e0-bf7d-fbbaa0f3405c&quot;</span>
+
+   <span class="na">IssueInstant=</span><span class="s">&quot;2004-12-05T09:22:05Z&quot;</span><span class="nt">&gt;</span>
+
+   <span class="nt">&lt;saml:Issuer&gt;</span>https://cn.dataone.org/identity<span class="nt">&lt;/saml:Issuer&gt;</span>
+   <span class="nt">&lt;ds:Signature</span>
+     <span class="na">xmlns:ds=</span><span class="s">&quot;http://www.w3.org/2000/09/xmldsig#&quot;</span><span class="nt">&gt;</span>...<span class="nt">&lt;/ds:Signature&gt;</span>
+   <span class="nt">&lt;saml:Subject&gt;</span>
+     <span class="nt">&lt;saml:NameID</span>
+       <span class="na">Format=</span><span class="s">&quot;urn:oasis:names:tc:SAML:1.1:nameid-format:X509SubjectName&quot;</span>
+       <span class="na">SPProvidedID=</span><span class="s">&quot;CN=Some User,O=University One,C=US&quot;</span><span class="nt">&gt;</span>
+       uid=jones,o=NCEAS,dc=ecoinformatics,dc=org
+     <span class="nt">&lt;/saml:NameID&gt;</span>
+     <span class="nt">&lt;saml:SubjectConfirmation</span> <span class="na">Method=</span><span class="s">&quot;urn:oasis:names:tc:SAML:2.0:cm:bearer&quot;</span><span class="nt">&gt;</span>
+       <span class="nt">&lt;saml:SubjectConfirmationData</span> <span class="na">Address=</span><span class="s">&quot;10.0.45.21&quot;</span> <span class="nt">/&gt;</span>
+     <span class="nt">&lt;/saml:SubjectConfirmation&gt;</span>
+   <span class="nt">&lt;/saml:Subject&gt;</span>
+   <span class="nt">&lt;saml:Conditions</span>
+     <span class="na">NotBefore=</span><span class="s">&quot;2004-12-05T09:17:05Z&quot;</span>
+     <span class="na">NotOnOrAfter=</span><span class="s">&quot;2004-12-05T09:27:05Z&quot;</span><span class="nt">&gt;</span>
+   <span class="nt">&lt;/saml:Conditions&gt;</span>
+   <span class="nt">&lt;saml:AuthnStatement</span> <span class="na">AuthnInstant=</span><span class="s">&quot;2010-11-25T13:15:13Z&quot;</span><span class="nt">&gt;</span>
+     <span class="nt">&lt;saml:AuthnContext&gt;</span>
+       <span class="nt">&lt;saml:AuthnContextClassRef&gt;</span>
+         urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport
+       <span class="nt">&lt;/saml:AuthnContextClassRef&gt;</span>
+       <span class="c">&lt;!-- Note: One might also use X509 certs to authenticate, in which case the</span>
+<span class="c">            context class would be:</span>
+<span class="c">            urn:oasis:names:tc:SAML:2.0:ac:classes:X509</span>
+<span class="c">       --&gt;</span>
+     <span class="nt">&lt;/saml:AuthnContext&gt;</span>
+   <span class="nt">&lt;/saml:AuthnStatement&gt;</span>
+   <span class="nt">&lt;saml:AttributeStatement&gt;</span>
+     <span class="nt">&lt;saml:Attribute</span>
+       <span class="na">xmlns:x500=</span><span class="s">&quot;urn:oasis:names:tc:SAML:2.0:profiles:attribute:X500&quot;</span>
+       <span class="na">x500:Encoding=</span><span class="s">&quot;LDAP&quot;</span>
+       <span class="na">NameFormat=</span><span class="s">&quot;urn:oasis:names:tc:SAML:2.0:attrname-format:uri&quot;</span>
+       <span class="na">Name=</span><span class="s">&quot;urn:oid:2.5.4.42&quot;</span>
+       <span class="na">FriendlyName=</span><span class="s">&quot;givenName&quot;</span><span class="nt">&gt;</span>
+       <span class="nt">&lt;saml:AttributeValue</span> <span class="na">xsi:type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">&gt;</span>Tom<span class="nt">&lt;/saml:AttributeValue&gt;</span>
+     <span class="nt">&lt;/saml:Attribute&gt;</span>
+     <span class="nt">&lt;saml:Attribute</span>
+       <span class="na">xmlns:x500=</span><span class="s">&quot;urn:oasis:names:tc:SAML:2.0:profiles:attribute:X500&quot;</span>
+       <span class="na">x500:Encoding=</span><span class="s">&quot;LDAP&quot;</span>
+       <span class="na">NameFormat=</span><span class="s">&quot;urn:oasis:names:tc:SAML:2.0:attrname-format:uri&quot;</span>
+       <span class="na">Name=</span><span class="s">&quot;urn:oid:2.5.4.4&quot;</span>
+       <span class="na">FriendlyName=</span><span class="s">&quot;sn&quot;</span><span class="nt">&gt;</span>
+       <span class="nt">&lt;saml:AttributeValue</span> <span class="na">xsi:type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">&gt;</span>Thumb<span class="nt">&lt;/saml:AttributeValue&gt;</span>
+     <span class="nt">&lt;/saml:Attribute&gt;</span>
+     <span class="nt">&lt;saml:Attribute</span>
+       <span class="na">xmlns:x500=</span><span class="s">&quot;urn:oasis:names:tc:SAML:2.0:profiles:attribute:X500&quot;</span>
+       <span class="na">x500:Encoding=</span><span class="s">&quot;LDAP&quot;</span>
+       <span class="na">NameFormat=</span><span class="s">&quot;urn:oasis:names:tc:SAML:2.0:attrname-format:uri&quot;</span>
+       <span class="na">Name=</span><span class="s">&quot;urn:oid:1.3.6.1.4.1.1466.115.121.1.26&quot;</span>
+       <span class="na">FriendlyName=</span><span class="s">&quot;mail&quot;</span><span class="nt">&gt;</span>
+       <span class="nt">&lt;saml:AttributeValue</span> <span class="na">xsi:type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">&gt;</span>someone@gmail.com<span class="nt">&lt;/saml:AttributeValue&gt;</span>
+     <span class="nt">&lt;/saml:Attribute&gt;</span>
+     <span class="nt">&lt;saml:Attribute</span>
+       <span class="na">xmlns:x500=</span><span class="s">&quot;urn:oasis:names:tc:SAML:2.0:profiles:attribute:X500&quot;</span>
+       <span class="na">x500:Encoding=</span><span class="s">&quot;LDAP&quot;</span>
+       <span class="na">NameFormat=</span><span class="s">&quot;urn:oasis:names:tc:SAML:2.0:attrname-format:uri&quot;</span>
+       <span class="na">Name=</span><span class="s">&quot;urn:oid:1.3.6.1.4.1.5923.1.5.1.1&quot;</span>
+       <span class="na">FriendlyName=</span><span class="s">&quot;isMemberOf&quot;</span><span class="nt">&gt;</span>
+       <span class="nt">&lt;saml:AttributeValue</span> <span class="na">xsi:type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">&gt;</span>
+         cn=staff,o=NCEAS,dc=dataone,dc=org
+       <span class="nt">&lt;/saml:AttributeValue&gt;</span>
+     <span class="nt">&lt;/saml:Attribute&gt;</span>
+     <span class="nt">&lt;saml:Attribute</span> 
+       <span class="na">NameFormat=</span><span class="s">&quot;urn:oasis:names:tc:SAML:2.0:attrname-format:uri&quot;</span>
+       <span class="na">Name=</span><span class="s">&quot;urn:oasis:names:tc:SAML:2.0:profiles:session:sessionId&quot;</span>
+       <span class="na">FriendlyName=</span><span class="s">&quot;sessionId&quot;</span>
+       <span class="na">xsi:type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">&gt;</span>urn:uuid:f7eca768-59c0-11e0-bf7d-fbbaa0f3405c
+     <span class="nt">&lt;/saml:Attribute&gt;</span>
+     <span class="nt">&lt;saml:Attribute</span> 
+       <span class="na">NameFormat=</span><span class="s">&quot;urn:oasis:names:tc:SAML:2.0:attrname-format:uri&quot;</span>
+       <span class="na">Name=</span><span class="s">&quot;urn:dataone:attributenames:equivalentIdentity&quot;</span>
+       <span class="na">FriendlyName=</span><span class="s">&quot;equivalentIdentity&quot;</span>
+       <span class="na">xsi:type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">&gt;</span>mbjones@NCEAS
+     <span class="nt">&lt;/saml:Attribute&gt;</span>
+     <span class="nt">&lt;saml:Attribute</span> 
+       <span class="na">NameFormat=</span><span class="s">&quot;urn:oasis:names:tc:SAML:2.0:attrname-format:uri&quot;</span>
+       <span class="na">Name=</span><span class="s">&quot;urn:dataone:attributenames:equivalentIdentity&quot;</span>
+       <span class="na">FriendlyName=</span><span class="s">&quot;equivalentIdentity&quot;</span>
+       <span class="na">xsi:type=</span><span class="s">&quot;xs:string&quot;</span><span class="nt">&gt;</span>
+         /DC=org/DC=cilogon/C=US/O=ProtectNetwork/CN=Matthew Jones A332
+     <span class="nt">&lt;/saml:Attribute&gt;</span>
+   <span class="nt">&lt;/saml:AttributeStatement&gt;</span>
+<span class="nt">&lt;/saml:Assertion&gt;</span>
+</pre></div>
+</div>
+<img alt="../_images/ba4eb4c311fb8e10e6d195c1926b31d33cc58acc2f318dcd0c628c007a3211ff.svg" class="align-center" src="../_images/ba4eb4c311fb8e10e6d195c1926b31d33cc58acc2f318dcd0c628c007a3211ff.svg" /><p><strong>Figure 8.</strong> Authentication and session management assuming that the CN runs a
+seperate SessionService that creates and tracks sessions. This is an alternative
+scenario based on the idea that CILogon may not be able to make calls to the
+Identity Service, in which case the separate Session Service would need to be
+created.</p>
+<img alt="../_images/0813b06d1e9da42e41d1eba901f18d9a0217858b7a44e101ba2f53ceb77cb141.svg" class="align-center" src="../_images/0813b06d1e9da42e41d1eba901f18d9a0217858b7a44e101ba2f53ceb77cb141.svg" /></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Identity Management and Authenticated Session Management</a><ul>
+<li><a class="reference internal" href="#identity-management">Identity Management</a><ul>
+<li><a class="reference internal" href="#identifying-principals-aka-subjects">Identifying Principals (aka Subjects)</a></li>
+<li><a class="reference internal" href="#symbolic-principals">Symbolic Principals</a></li>
+<li><a class="reference internal" href="#identity-management-service">Identity Management Service</a></li>
+<li><a class="reference internal" href="#authentication-service">Authentication Service</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#using-access-tokens">Using Access Tokens</a><ul>
+<li><a class="reference internal" href="#encoding-session-information-in-http-headers">Encoding Session information in HTTP headers</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#authenticating-and-retrieving-a-token">Authenticating and Retrieving a Token</a></li>
+<li><a class="reference internal" href="#authenticated-session-management">Authenticated Session Management</a></li>
+<li><a class="reference internal" href="#portal-delegation">Portal Delegation</a></li>
+<li><a class="reference internal" href="#session-management-alternative-scenario">Session Management (Alternative Scenario)</a><ul>
+<li><a class="reference internal" href="#authtoken-references-to-an-authenticated-session">AuthToken references to an Authenticated Session</a></li>
+<li><a class="reference internal" href="#structure-of-metadata-about-authenticated-sessions">Structure of metadata about Authenticated Sessions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+      <li>Previous: <a href="security-plan.html" title="previous chapter">DataONE Cybersecurity Plan</a></li>
+      <li>Next: <a href="Authorization.html" title="next chapter">Authorization in DataONE</a></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/design/Authentication.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/design/Authentication.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/Authentication.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

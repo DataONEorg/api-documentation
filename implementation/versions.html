@@ -1,0 +1,421 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Infrastructure Versions &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="TO DO List" href="../todo.html" />
+    <link rel="prev" title="Integration Testing" href="integration-testing.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../todo.html" title="TO DO List"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="integration-testing.html" title="Integration Testing"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Implementation Notes</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Infrastructure Versions</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="infrastructure-versions">
+<h1>Infrastructure Versions<a class="headerlink" href="#infrastructure-versions" title="Permalink to this headline">¶</a></h1>
+<p>Outline of functionality to be implemented in versions of the DataONE
+cyber-infrastructure. Version numbers are expressed in three parts:
+Major.Minor.Revision to reflect official releases of the software, where:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Major</dt>
+<dd class="field-odd"><p>Is a significantly different release from the previous version number, may
+provide significant additional features and may implement functionality that
+is not backwards compatible with prior releases.</p>
+</dd>
+<dt class="field-even">Minor</dt>
+<dd class="field-even"><p>Adds additional features to an existing release and maintains compatibility
+within the current major version.</p>
+</dd>
+<dt class="field-odd">Revision</dt>
+<dd class="field-odd"><p>Indicates a minor change from the current version, typically used to provide
+bug fix releases. Will not usually add additional functionality.</p>
+</dd>
+</dl>
+<p>Three major versions are planned for the first five years of the DataONE
+project. These versions refer to the general implementation of the overall
+cyber-infrastructure, though for specific components (e.g. the Coordinating
+Node software stack or the Investigator Toolkit), it may be more appropriate
+for them to evolve their own versions (with some mapping between those and the
+general version of DataONE).</p>
+<p><strong>Version 0.x</strong> represents the prototype implementations to be developed prior to
+the first public release of the infrastructure. The general progression of
+features for this series beyond the initial specifications involves
+configuration of test environments and core API implementation libraries that
+are then used to add DataONE features and functionality to various existing
+data resources and component applications. The end result of the 0.x series
+will be three Coordinating Nodes and at least three Member Nodes that
+implement DataONE functionality to replicate metadata and data, enable search
+and discovery, and supports remote administration and monitoring. Another
+important output from the prototyping activities will be documentation and
+guidelines for further implementation, detailing the results of stress tests
+and evaluation of simulated failures such as node failures and connectivity
+issues.</p>
+<p><strong>Version 1.x</strong> is the first public release of the DataONE
+cyber-infrastructure and will represent a hardened and well-tested system that
+can reliably be placed in a core infrastructure role. Additional features will
+be added to the infrastructure throughout the 1.x series, with the majority of
+focus addressing the remaining performance and reliability questions as well
+the science use cases developed by various working groups during the first
+year of activity.m</p>
+<p><strong>Version 2.x</strong> represents more advanced functionality that builds upon the
+capabilities of the version 1.x series. Anticipated features of the 2.x series
+include content validation and quality control services (extending basic
+services implemented previously), more sophisticated event and notification
+facilities, support for content version migration strategies, and several
+service enhancements such as various data extraction, analysis, visualization
+and integration operations. An important aspect of the 2.x series development
+activities will be ensuring the system being implemented supports as far as
+possible the requirements of the scientific use cases identified throughout
+project.</p>
+<div class="section" id="general-schedule-for-infrastructure-version-0-x">
+<h2>General Schedule for Infrastructure Version 0.x<a class="headerlink" href="#general-schedule-for-infrastructure-version-0-x" title="Permalink to this headline">¶</a></h2>
+<table class="colwidths-given docutils align-default" id="id1">
+<caption><span class="caption-text">Approximate timeline and functionality for version releases.</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 56%" />
+<col style="width: 22%" />
+<col style="width: 11%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Version</p></th>
+<th class="head"><p>Date</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Use Cases</p></th>
+<th class="head"><p>API Methods</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0.1</p></td>
+<td><p>2009/09</p></td>
+<td><div class="line-block">
+<div class="line">* General architecture laid out</div>
+<div class="line">* Initial set of user requirements identified</div>
+<div class="line">* Functional use cases for user requirements drafted</div>
+</div>
+</td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>0.2</p></td>
+<td><p>2009/11</p></td>
+<td><div class="line-block">
+<div class="line">* Major system components identified</div>
+<div class="line">* Service interfaces specified</div>
+<div class="line">* Functional uses cases fleshed out, edited for consistency</div>
+<div class="line">* High level component interactions documented</div>
+</div>
+</td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>0.3</p></td>
+<td><p>2010/04</p></td>
+<td><div class="line-block">
+<div class="line">* Initial coding on low level functionality and shemas</div>
+<div class="line">* Prototype specfications documented</div>
+<div class="line">* Initial core software components identified</div>
+<div class="line">* System metadata schema defined</div>
+<div class="line">* CN library incompatibilities evaluatated</div>
+<div class="line">* Base inter-process communications enabled (Mercury - Metacat)</div>
+<div class="line">* CN, MN API wrappers generated</div>
+<div class="line">* Reference implementations for CN and MN initiated</div>
+<div class="line">* Low level logging incorporated into API wrappers</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">* <a class="reference internal" href="../design/UseCases/01_uc.html"><span class="doc">Use Case 01 - Get Object Identified by PID</span></a></div>
+<div class="line">* <a class="reference internal" href="../design/UseCases/36_uc.html"><span class="doc">Use Case 36 - Resolve an Object Location</span></a></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">* X <code class="xref py py-func docutils literal notranslate"><span class="pre">MN_crud.get()</span></code></div>
+<div class="line">* done for GMN <code class="xref py py-func docutils literal notranslate"><span class="pre">MN_crud.log()</span></code></div>
+<div class="line">* X <code class="xref py py-func docutils literal notranslate"><span class="pre">CN_crud.get()</span></code></div>
+<div class="line">* X <code class="xref py py-func docutils literal notranslate"><span class="pre">CN_crud.getSystemMetadata()</span></code></div>
+<div class="line">* X <code class="xref py py-func docutils literal notranslate"><span class="pre">CN_query.search()</span></code></div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>0.4</p></td>
+<td><p>2010/05</p></td>
+<td><div class="line-block">
+<div class="line">* Initial implementation of metadata replication and indexing</div>
+<div class="line">* Initial implementation of selected MNs</div>
+<div class="line">* CN Hardware procured</div>
+<div class="line">* CN implemetation using Metacat + Mercury with API wrapper</div>
+<div class="line">* MN - CN communication secured</div>
+<div class="line">* Mercury search index population trigger implemented</div>
+<div class="line">* CN - CN replication of metadata</div>
+<div class="line">* Design initial web interface for user interaction</div>
+<div class="line">* Design monitoring functionality to track services and objects</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">* <a class="reference internal" href="../design/UseCases/02_uc.html"><span class="doc">Use Case 02 - List PIDs By Search</span></a></div>
+<div class="line">* <a class="reference internal" href="../design/UseCases/03_uc.html"><span class="doc">Use Case 03 - Register MN</span></a></div>
+<div class="line">* <a class="reference internal" href="../design/UseCases/06_uc.html"><span class="doc">Use Case 06 - MN Synchronize</span></a></div>
+<div class="line">* <a class="reference internal" href="../design/UseCases/10_uc.html"><span class="doc">Use Case 10 - MN Status Reports</span></a></div>
+<div class="line">* <a class="reference internal" href="../design/UseCases/16_uc.html"><span class="doc">Use Case 16 - Log CRUD Operations</span></a></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">* X <code class="xref py py-func docutils literal notranslate"><span class="pre">MN_crud.getSystemMetadata()</span></code></div>
+<div class="line">* X <code class="xref py py-func docutils literal notranslate"><span class="pre">MN_replication.listObjects()</span></code></div>
+<div class="line">* X <code class="xref py py-func docutils literal notranslate"><span class="pre">CN_crud.create()</span></code></div>
+<div class="line">* <code class="xref py py-func docutils literal notranslate"><span class="pre">CN_crud.log()</span></code></div>
+<div class="line">* <code class="xref py py-func docutils literal notranslate"><span class="pre">CN_crud.resolve()</span></code></div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>0.5</p></td>
+<td><p>2010/06</p></td>
+<td><div class="line-block">
+<div class="line">* Initial data replication implemented</div>
+<div class="line">* MN - MN transfer implemented</div>
+<div class="line">* Basic search interface available</div>
+<div class="line">* Basic log reporting available</div>
+<div class="line">* Search and retrieval supported by ITK</div>
+<div class="line">* Initial implementation of centralized user authentication</div>
+<div class="line">* Identity and credentials propagated through system</div>
+<div class="line">* Implement web interface for user interaction with CNs</div>
+<div class="line">* Implement initial mechanisms for tracking objects and service uptime</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">* <a class="reference internal" href="../design/UseCases/06_uc.html"><span class="doc">Use Case 06 - MN Synchronize</span></a></div>
+<div class="line">* <a class="reference internal" href="../design/UseCases/17_uc.html"><span class="doc">Use Case 17 - CRUD Logs Aggregated at CNs</span></a></div>
+<div class="line">* <a class="reference internal" href="../design/UseCases/12_uc.html"><span class="doc">Use Case 12 - User Authentication</span></a></div>
+<div class="line">* <a class="reference internal" href="../design/UseCases/13_uc.html"><span class="doc">Use Case 13 - User Authorization</span></a></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">* <code class="xref py py-func docutils literal notranslate"><span class="pre">CN_authentication.login()</span></code>  (will use IP based auth)</div>
+<div class="line">* <code class="xref py py-func docutils literal notranslate"><span class="pre">CN_authentication.verifyToken()</span></code></div>
+<div class="line">* <code class="xref py py-func docutils literal notranslate"><span class="pre">CN_authorization.isAuthorized()</span></code></div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>0.6</p></td>
+<td><p>2010/07</p></td>
+<td><div class="line-block">
+<div class="line">* System self manages replication</div>
+<div class="line">* CN controlling replication between MNs</div>
+<div class="line">* Reporting interface for system status</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">* <a class="reference internal" href="../design/UseCases/09_uc.html"><span class="doc">Use Case 09 - Replicate MN to MN</span></a></div>
+<div class="line">* <a class="reference internal" href="../design/UseCases/24_uc.html"><span class="doc">Use Case 24 - MNs and CNs Support Transactions</span></a></div>
+</div>
+</td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>0.7</p></td>
+<td><p>2010/08</p></td>
+<td><div class="line-block">
+<div class="line">* Basic authorization and access control</div>
+<div class="line">* Initial authorization subsystem implemented</div>
+<div class="line">* Initial object access control implemented</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">* <a class="reference internal" href="../design/UseCases/14_uc.html"><span class="doc">Use Case 14 - System Authentication and Authorization</span></a></div>
+</div>
+</td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>0.8</p></td>
+<td><p>2010/09</p></td>
+<td><div class="line-block">
+<div class="line">* Stress testing</div>
+<div class="line">* Failure recovery test and evaluation</div>
+<div class="line">* Writeup, lessons learned</div>
+<div class="line">* Re-design, select alternative components as necessary</div>
+</div>
+</td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="detail-for-version-0-3">
+<h2>Detail for Version 0.3<a class="headerlink" href="#detail-for-version-0-3" title="Permalink to this headline">¶</a></h2>
+<p>Major goals for this target are functional prototype implementations of the
+CN, MN and a simple client suitable for testing interactions.</p>
+<p>This version of the software represents the initial implementation of the CN
+and MN services, and should support at least use cases <a class="reference internal" href="../design/UseCases/01_uc.html"><span class="doc">Use Case 01 - Get Object Identified by PID</span></a>
+and <a class="reference internal" href="../design/UseCases/36_uc.html"><span class="doc">Use Case 36 - Resolve an Object Location</span></a>.</p>
+<p>The MN implementation will be a Django application that can stand alone, or
+interact with Metacat, Dryad, or ORNL DAAC for retrieving data and science
+metadata objects. The MN will implement the APIs described in
+<a class="reference internal" href="../apis/MN_APIs.html"><span class="doc">Member Node APIs</span></a> using a REST interface approach as described in
+<span class="xref std std-doc">/apis/REST_interface</span>. The MN should be able to operate on any Linux, OS X or
+Windows platform that supports python 2.6. External dependencies beyond the
+standard python install should be clearly documented.</p>
+<p>The CN implementation will be a combination of Java servlet applications
+including Metacat for object storage, Mercury for object indexing for basic
+search and browse, and “cn_service” which will implement the necessary CN APIs
+and the logic to interact with the object store and search index. The CN
+should implement the APIs described in <a class="reference internal" href="../apis/CN_APIs.html"><span class="doc">Coordinating Node APIs</span></a> using a REST
+interface approach as described in <span class="xref std std-doc">/apis/REST_interface</span>.</p>
+<p>The simple client will be implemented in Python and should support the
+external APIs provided by both the CN and MN implementations. The client will
+be developed primarily to support test operations against the CN and MN,
+though should be developed with consideration as a general DataONE client
+tool.</p>
+</div>
+<div class="section" id="detail-for-version-0-4">
+<h2>Detail for Version 0.4<a class="headerlink" href="#detail-for-version-0-4" title="Permalink to this headline">¶</a></h2>
+<p>The major change for this target is replication of content across CNs.</p>
+<p>Version 0.4 will extend the implementations developed in version 0.3 by adding
+support for use cases <a class="reference internal" href="../design/UseCases/02_uc.html"><span class="doc">Use Case 02 - List PIDs By Search</span></a>, <a class="reference internal" href="../design/UseCases/03_uc.html"><span class="doc">Use Case 03 - Register MN</span></a>,
+<a class="reference internal" href="../design/UseCases/06_uc.html"><span class="doc">Use Case 06 - MN Synchronize</span></a>, and <a class="reference internal" href="../design/UseCases/10_uc.html"><span class="doc">Use Case 10 - MN Status Reports</span></a>.</p>
+<p>This MN implementation for this release should support basic interaction with
+at least one of the specified MN targets (i.e. Metacat, Dryad, ORNL DAAC) and
+provide access to real data from that service.</p>
+<p>The CN implementation will need to support replication between CN (Metacat)
+instances.</p>
+</div>
+<div class="section" id="detail-for-version-0-5">
+<h2>Detail for Version 0.5<a class="headerlink" href="#detail-for-version-0-5" title="Permalink to this headline">¶</a></h2>
+<p>The major change for this target is CN driven data replication across MNs.</p>
+<p>Version 0.5 will extend the implementation developed in version 0.4 by adding
+support for the use cases <a class="reference internal" href="../design/UseCases/06_uc.html"><span class="doc">Use Case 06 - MN Synchronize</span></a>, <a class="reference internal" href="../design/UseCases/16_uc.html"><span class="doc">Use Case 16 - Log CRUD Operations</span></a>, and
+<a class="reference internal" href="../design/UseCases/17_uc.html"><span class="doc">Use Case 17 - CRUD Logs Aggregated at CNs</span></a>.</p>
+<p>At completion of this milestone, the infrastructure will support the basic
+functionality of DataONE except with no integration of identity,
+authentication, and minimal authorization (dictated by machine connections
+rather than user identities).</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Infrastructure Versions</a><ul>
+<li><a class="reference internal" href="#general-schedule-for-infrastructure-version-0-x">General Schedule for Infrastructure Version 0.x</a></li>
+<li><a class="reference internal" href="#detail-for-version-0-3">Detail for Version 0.3</a></li>
+<li><a class="reference internal" href="#detail-for-version-0-4">Detail for Version 0.4</a></li>
+<li><a class="reference internal" href="#detail-for-version-0-5">Detail for Version 0.5</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+  <li><a href="index.html">Implementation Notes</a><ul>
+      <li>Previous: <a href="integration-testing.html" title="previous chapter">Integration Testing</a></li>
+      <li>Next: <a href="../todo.html" title="next chapter">TO DO List</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/implementation/versions.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/implementation/versions.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/implementation/versions.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

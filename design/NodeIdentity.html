@@ -1,0 +1,316 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Node Identity and Registration &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="What is Data (DataONE Perspective)?" href="WhatIsData.html" />
+    <link rel="prev" title="Use Case 22 - Link/Citation Report for Owner" href="UseCases/22_uc.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="WhatIsData.html" title="What is Data (DataONE Perspective)?"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="UseCases/22_uc.html" title="Use Case 22 - Link/Citation Report for Owner"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Node Identity and Registration</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="node-identity-and-registration">
+<h1><a class="toc-backref" href="#id1">Node Identity and Registration</a><a class="headerlink" href="#node-identity-and-registration" title="Permalink to this headline">¶</a></h1>
+<div class="contents topic" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#node-identity-and-registration" id="id1">Node Identity and Registration</a></p>
+<ul>
+<li><p><a class="reference internal" href="#node-identifiers" id="id2">Node Identifiers</a></p></li>
+<li><p><a class="reference internal" href="#node-authentication-and-contact" id="id3">Node Authentication and Contact</a></p></li>
+<li><p><a class="reference internal" href="#node-registration" id="id4">Node Registration</a></p></li>
+<li><p><a class="reference internal" href="#registration-procedure" id="id5">Registration Procedure</a></p></li>
+</ul>
+</li>
+</ul>
+</div>
+<p>DataONE nodes are of two types, <a class="reference internal" href="../glossary.html#term-Coordinating-Nodes"><span class="xref std std-term">Coordinating Nodes</span></a> and <a class="reference internal" href="../glossary.html#term-Member-Nodes"><span class="xref std std-term">Member
+Nodes</span></a>. Member Nodes are data and metadata providers that serve particular
+communities and that agree to interoperate with other nodes using the DataONE
+Service Interface. Coordinating Nodes provide services to each other and to
+the network of Member Nodes to enable DataONE to function as an integrated
+federation.</p>
+<div class="section" id="node-identifiers">
+<h2><a class="toc-backref" href="#id2">Node Identifiers</a><a class="headerlink" href="#node-identifiers" title="Permalink to this headline">¶</a></h2>
+<p>Each node in DataONE is assigned a unique, immutable identifier which serves
+to link all information about the node together in the system. References in
+various metadata documents in DataONE always utilize this NodeReference, as
+this will remain constant even as protocols and service endpoints evolve over
+time. Thus, while the URL endpoint for a node’s services may change over time,
+possibly even moving across domains, the NodeReference will always be
+constant. The DataONE NodeReference takes the following form:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">NodeReference</span> <span class="o">=</span> <span class="n">urn</span> <span class="s2">&quot;:&quot;</span> <span class="n">node</span> <span class="s2">&quot;:&quot;</span> <span class="n">identifier</span>
+<span class="n">urn</span>           <span class="o">=</span> <span class="s2">&quot;urn&quot;</span>
+<span class="n">node</span>          <span class="o">=</span> <span class="s2">&quot;node&quot;</span>
+<span class="n">identifier</span>    <span class="o">=</span> <span class="o">*</span><span class="p">(</span> <span class="n">idchars</span> <span class="p">)</span>
+<span class="n">idchars</span>       <span class="o">=</span> <span class="n">ALPHA</span> <span class="o">/</span> <span class="n">DIGIT</span> <span class="o">/</span> <span class="s2">&quot;_&quot;</span>
+</pre></div>
+</div>
+<p>ALPHA and DIGIT are patterns representing the upper and lower ASCII letters
+[A-Za-z] and the ASCII digits [0-9], defined in the <a class="reference external" href="http://www.apps.ietf.org/rfc/rfc5234.txt">ABNF</a> standard. Thus,
+<code class="docutils literal notranslate"><span class="pre">urn:node:</span></code> is a constant prefix, always in lowercase, and <code class="docutils literal notranslate"><span class="pre">identifier</span></code> is
+a short, unique name for the node that is case sensitive. For example, valid
+NodeReferences might include:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">urn</span><span class="p">:</span><span class="n">node</span><span class="p">:</span><span class="n">KNB</span>
+<span class="n">urn</span><span class="p">:</span><span class="n">node</span><span class="p">:</span><span class="n">DRYAD</span>
+<span class="n">urn</span><span class="p">:</span><span class="n">node</span><span class="p">:</span><span class="n">CN_UCSB</span>
+</pre></div>
+</div>
+<p>By policy, the length of nodes identifiers will generally be restricted to 25
+characters, inclusive of the <code class="docutils literal notranslate"><span class="pre">urn:node:</span></code> prefix, and will be reviewed for
+appropriateness for the node during the node approval process (see <a class="reference internal" href="#node-registration">Node
+Registration</a> below).</p>
+<p>In this case, appropriateness means concise, memorable, and durable. In
+general, the identifier should not contain terms that are likely to change
+over the very long term - implementation details such as host names, software
+service names, and versions. Identifier length is restricted to make it easy
+for system administrators and other programmers to read, recall, and type
+them. DataONE UI’s will make use of the name field of the Node record for
+display, so the identifier does not have to be meaningful for end-users.</p>
+</div>
+<div class="section" id="node-authentication-and-contact">
+<h2><a class="toc-backref" href="#id3">Node Authentication and Contact</a><a class="headerlink" href="#node-authentication-and-contact" title="Permalink to this headline">¶</a></h2>
+<p>In order to become a Member Node (or Coordinating Node) in DataONE, the node
+must be authenticated by DataONE in order to securely communicate with other
+DataONE nodes. One of the first steps in preparing the node for registration
+is receiving a DataONE certificate that will be used for negotiating secure
+connections with other nodes. This certificate is an X.509 certificate that is
+backed by a cryptographic key. The certificate will contain a distinguished
+name, that is included as the subject field in the node record. Over time,
+these node certificates will expire and will need to be renewed by installing
+the new certificate on the Member Node, and updating the subject field if
+necessary. The Node record provided in DataONE can contain a list of subjects
+representing the node, each corresponding to a valid DataONE certificate
+installed on the node that can be used for authentication.</p>
+<p>In addition, every node must have a contact person with whom DataONE can
+communicate about DataONE operations (such as new node certificates) and
+policies as needed. This contact person must be registered and verified with
+DataONE prior to registration.</p>
+</div>
+<div class="section" id="node-registration">
+<h2><a class="toc-backref" href="#id4">Node Registration</a><a class="headerlink" href="#node-registration" title="Permalink to this headline">¶</a></h2>
+<p>Registration as a node in the DataONE network is accomplished by registering
+as a Member Node (or Coordinating Node) through an existing Coordinating Node
+registration service (see <a class="reference internal" href="../apis/CN_APIs.html#CNRegister.register" title="CNRegister.register"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNRegister.register()</span></code></a>). This service takes a
+<a class="reference internal" href="../apis/Types.html#Types.Node" title="Types.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.Node</span></code></a> description as input, including a proposed
+<a class="reference internal" href="../apis/Types.html#Types.NodeReference" title="Types.NodeReference"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.NodeReference</span></code></a> for this node and additional metadata such as the
+nodeContact in the Node description. If the NodeReference is syntactically
+correct and is unique, and the nodeContact is a verified account registered
+with DataONE, then the registration service will successfully return the
+<a class="reference internal" href="../apis/Types.html#Types.NodeReference" title="Types.NodeReference"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.NodeReference</span></code></a> value for this node, which is then permanently
+assigned and can not be reused or reassigned. At this point, the
+<a class="reference internal" href="../apis/Types.html#Types.Node" title="Types.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.Node</span></code></a> has been registered but has not yet been approved. The
+request to become a node will be reviewed by DataONE, and, if approved, will
+be added to the list of Nodes in the federation. At this point, the Node will
+be be able to participate in all synchronization and replication services
+available in DataONE.</p>
+</div>
+<div class="section" id="registration-procedure">
+<h2><a class="toc-backref" href="#id5">Registration Procedure</a><a class="headerlink" href="#registration-procedure" title="Permalink to this headline">¶</a></h2>
+<p>Along with the production environment, DataONE maintains other environments of
+inter-communicating Coordinating and Member Nodes for various testing
+purposes. Aside from a unique list of nodes, each environment maintains their
+own sets of data objects, object formats, and user accounts. The registration
+steps described below pertain to a single environment, so registering a node
+to a new environment would require running through the procedure in its
+entirety for the new environment.</p>
+<p><strong>Step 1: Stand-alone testing</strong></p>
+<p>Prior to registration, the node needs to be tested for proper functionality of
+its services, and proper form of its content. Certain integration tests used
+by the core team have been deployed to a web server
+(<a class="reference external" href="http://mncheck.test.dataone.org">http://mncheck.test.dataone.org</a>) so member node implementers can test basic
+services in a stand-alone environment.</p>
+<p><strong>Step 2: Content checking</strong></p>
+<p>Not every aspect of the node can be checked prior to testing, and some tests
+take too long to be automated in a web-based platform. Also better done prior
+to node registration, content checking should be done to make sure that:</p>
+<ol class="arabic simple">
+<li><p>all object formats used by the member node are registered with DataONE.</p></li>
+<li><p>the member node supports the required checksum algorithms.</p></li>
+<li><p>the system metadata of each object contains accurate AccessPolicies
+as per that node?s agreement with their submitters.</p></li>
+<li><p>system metadata RightsHolders are valid subjects, representable by X.509
+certificate distinguished names, or a plan is in place to map these
+accounts to accounts that are representable in such a way.</p></li>
+<li><p>any other tests determined to be relevant for that node.</p></li>
+</ol>
+<p>This step is best done in close coordination with the DataONE core developer
+team.</p>
+<p><strong>Step 3: Node Registering</strong></p>
+<p>Registering the node involves the following steps.</p>
+<blockquote>
+<div><ol class="upperalpha simple">
+<li><p>Registering the nodeContact account with the environment via the identity
+portal. This account needs to be one compatible with CiLogon.</p></li>
+</ol>
+<p>Using the portal</p>
+<blockquote>
+<div><ol class="arabic">
+<li><p>go to <code class="docutils literal notranslate"><span class="pre">https://cn-{ENVIRONMENT}.dataone.org/portal</span></code></p></li>
+<li><p>choose your account provider (this step may be bypassed if you have
+already logged in</p></li>
+<li><p>At the My Account tab, fill out the Account Details fields, and click
+“Register.” (This will register this account and display the subject.
+If there is no button labeled “Register”, but one labeled “Update”,
+your account is already registered.)</p>
+<p>The subject displayed is the part within the parentheses, in the
+format “CN=foo,DC=cil ogon,DC=org”, and it is this value that must
+match what is in the Node record’s subject field.</p>
+</li>
+</ol>
+</div></blockquote>
+<ol class="upperalpha" start="2">
+<li><p>Submitting a cn.register(Session, Node) request, where the Session
+parameter contains the certificate of the person making the request, and
+the Node parameter is, in most cases, the Node record served by the
+mn.getCapabilities() service call (<code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/node</span></code>). Problems with the node
+record will be reported back as an exception.</p></li>
+<li><p>Approving the node.</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Contact the DataONE contact person that the node has been registered
+and ready for approval.</p></li>
+<li><p>Review any content checking test results with the node contact.</p></li>
+<li><p>DataONE will approve the node.</p></li>
+</ol>
+</div></blockquote>
+</li>
+</ol>
+</div></blockquote>
+<p><strong>Step 4: Functional Integration testing (except in PROD environment)</strong></p>
+<p>At this point, the appropriate multi-node functional tests (for
+synchronization, replication, and updateSystemMetadata) will be run. Tests in
+this arena are intended to shake out remaining bugs, and will in most cases be
+done in close coordination with the DataONE core developers team. Success at
+this step requires a dedicated developer resource from the member node
+implementation team for about a 1-2 week period, as bug fixing at this point
+tends to be sequential.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Node Identity and Registration</a><ul>
+<li><a class="reference internal" href="#node-identifiers">Node Identifiers</a></li>
+<li><a class="reference internal" href="#node-authentication-and-contact">Node Authentication and Contact</a></li>
+<li><a class="reference internal" href="#node-registration">Node Registration</a></li>
+<li><a class="reference internal" href="#registration-procedure">Registration Procedure</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+      <li>Previous: <a href="UseCases/22_uc.html" title="previous chapter">Use Case 22 - Link/Citation Report for Owner</a></li>
+      <li>Next: <a href="WhatIsData.html" title="next chapter">What is Data (DataONE Perspective)?</a></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/design/NodeIdentity.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/design/NodeIdentity.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/NodeIdentity.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

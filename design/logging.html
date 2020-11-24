@@ -1,0 +1,412 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Event Logging and Reporting &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Logging Schema" href="LoggingSchema.html" />
+    <link rel="prev" title="Coordinating Node Internals" href="CoordinatingNodeInternals.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="LoggingSchema.html" title="Logging Schema"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="CoordinatingNodeInternals.html" title="Coordinating Node Internals"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Event Logging and Reporting</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="event-logging-and-reporting">
+<h1>Event Logging and Reporting<a class="headerlink" href="#event-logging-and-reporting" title="Permalink to this headline">¶</a></h1>
+<p>The DataONE system should log various interactions and operations in the system
+to provide operational status information about the entire system, to report on
+specific node operations, and to inform DataONE participants (users,
+contributors, administrators) about their specific domain of interest in the
+system. For example, a contributor might like to monitor use of their data and
+where it is being replicated to. The methods <a class="reference internal" href="../apis/MN_APIs.html#MNCore.getLogRecords" title="MNCore.getLogRecords"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNCore.getLogRecords()</span></code></a> and
+<a class="reference internal" href="../apis/CN_APIs.html#CNCore.getLogRecords" title="CNCore.getLogRecords"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNCore.getLogRecords()</span></code></a> provide outward facing services for retrieving
+log information from member and coordinating nodes respectively.</p>
+<p>Logging is described in use cases 16, 17, 18, 20, and potentially 19.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="LoggingSchema.html">Logging Schema</a></li>
+</ul>
+</div>
+<div class="section" id="use-cases-to-be-supported">
+<span id="logging-use-case-synopsis"></span><h2>Use Cases to be Supported<a class="headerlink" href="#use-cases-to-be-supported" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>UC 16 specifies “all CRUD operations on metadata and data are logged at each
+node”</p></li>
+<li><p>UC 17 indicates that all CRUD operation logs should be aggregated at the CNs</p></li>
+<li><p>UC 18 indicates that a MN can retrieve aggregated logs about content that
+originated from that MN.</p></li>
+<li><p>UC 20 indicates that a data owner (original contributor, delegated owner)
+can retrieve aggregated logs about objects they own.</p></li>
+<li><p>UC 19 indicates that anyone can retrieve general use information for any
+object in DataONE.</p></li>
+</ul>
+</div>
+<div class="section" id="performance-metrics-to-be-reported">
+<h2>Performance Metrics to be Reported<a class="headerlink" href="#performance-metrics-to-be-reported" title="Permalink to this headline">¶</a></h2>
+<p>The performance metrics survey results from the Leadership Team specify (at
+least) the following metrics should be captured. Items that may be captured
+from the CI portion of the project are indicated by !!!.</p>
+<p><strong>Size and Diversity of DataONE Data, Metadata, and Investigator Toolkit
+Holdings</strong></p>
+<ol class="arabic simple">
+<li><p>!!! Data volume – total size of data holdings in DataONE Member Nodes and
+Coordinating Nodes</p></li>
+</ol>
+<blockquote>
+<div><dl class="simple">
+<dt>Recorded in:</dt><dd><ul class="simple">
+<li><p>Total (including replicas) data volume + unique object data volume</p></li>
+<li><p>Sysmeta</p></li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+<ol class="arabic simple" start="2">
+<li><p>!!! Number of metadata records – quantity of metadata records held at a
+Coordinating Node (note: the concept of a record may vary across metadata
+standards)</p>
+<ul class="simple">
+<li><p>science metadata only</p></li>
+</ul>
+</li>
+<li><p>!!! Number of data sets held by Member Nodes – (note: may be less
+meaningful as an absolute value because of the immense variability in data set
+granularity, but probably still useful in tracking the shape of the data
+accumulation curve)</p></li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><p>system metadata</p></li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="4">
+<li><p>!!! Number and types of software tools included in the Investigator Toolkit</p></li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><p>!!</p></li>
+<li><p>Mechanism to register external uses / implementations</p></li>
+<li><p>HTTP user-agent</p></li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="5">
+<li><p>!!! Number of different metadata schemas supported – (note: more metadata
+schemas is not necessarily better)</p></li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><p>object format from sysmeta</p></li>
+</ul>
+</div></blockquote>
+<p><strong>DataONE System Capacity</strong></p>
+<ol class="arabic simple" start="6">
+<li><p>!!! Number of Member Nodes</p></li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><p>registry</p></li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="7">
+<li><p>!!! Total storage capacity at Member Nodes</p></li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><p>per member node</p></li>
+<li><p>total</p></li>
+<li><p>part of MN registration and capabilities</p></li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="8">
+<li><p>!!! Geographic coverage of Member Nodes – continents, regions, and countries
+covered</p>
+<ul class="simple">
+<li><p>could potentially be part of capabilities (record physical location)</p></li>
+</ul>
+</li>
+<li><p>!!! Number of Coordinating Nodes</p>
+<ul class="simple">
+<li><p>constant = 3</p></li>
+<li><p>general expansion over five years to all countries.</p></li>
+</ul>
+</li>
+<li><p>!!! Total storage capacity at Coordinating Nodes</p></li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><p>disk space</p></li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="11">
+<li><p>!!! Geographic coverage of Coordinating Nodes – continents, regions, and
+countries covered</p></li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><p>capabilities  / metadata</p></li>
+</ul>
+</div></blockquote>
+<p><strong>DataONE Usage Statistics</strong></p>
+<ol class="arabic simple" start="12">
+<li><p>!!! (CN LOG) Number of web hits on DataONE portal</p></li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><p>standard web hits from logs</p></li>
+<li><p>aggregated across CNs</p></li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="13">
+<li><p>!!! (CN LOG) Number of DataONE users – (note: recording of individual IP
+addresses may be most readily implemented; requiring users to login to Member
+Nodes is not presently required)</p>
+<ul class="simple">
+<li><p>Any users of MNs = D1 user</p></li>
+<li><p>Eventually can use authn subsystem</p></li>
+</ul>
+</li>
+<li><p>!!! (supporting web site logs) Number of downloads of tools from the
+Investigator Toolkit  –&gt; “Number of times tools are downloaded”</p>
+<ul class="simple">
+<li><p>Log analysis</p></li>
+<li><p>Text needs to be clarified. ITK isn’t a place</p></li>
+<li><p>supporting information (videos, documents, …)</p></li>
+</ul>
+</li>
+<li><p>!!! (CN LOG) Number of metadata catalog searches completed – (note: over
+time it may also be desirable to assess precision and recall of incoming
+searches)</p>
+<ul class="simple">
+<li><p>part of the Mercury log (in mysql)</p></li>
+</ul>
+</li>
+<li><p>!!! (MN, CN LOG) Number of DataONE datasets downloaded (daily, weekly,
+monthly, annually) – (note: this may be straightforward if included in
+specifications for Member Node data, impossible otherwise)</p>
+<ul class="simple">
+<li><p>Member node access logs - need to be aggregated</p></li>
+<li><p>What was pulled through D1.get() vs the native mechanisms of the MN</p></li>
+<li></li>
+</ul>
+</li>
+<li><p>!!! (MN, CN LOG) Most frequently downloaded datasets</p></li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><p>Same as 16</p></li>
+</ul>
+</div></blockquote>
+<p><strong>Reliability and System Performance</strong></p>
+<ol class="arabic simple" start="18">
+<li><p>!!! (CN heartbeat logs) Uptime (availability) of Coordinating Nodes</p></li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><p>Need a monitoring service in addition to the CN service</p></li>
+<li><p>also need to consider geographic accessibility (users)</p></li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="19">
+<li><p>!!! (MN heartbeat logs) Uptime (availability) of Member Nodes – (note:
+tracked if heartbeat is fully implemented)</p></li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><p>Same as 18</p></li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="20">
+<li><p>!!! Server response time</p></li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><p>REST service performance</p></li>
+<li><p>Define a bunch of test queries that can be executed in parallel for load testing.</p></li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="21">
+<li><p>!!! Response time of user interface</p></li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><p>Time for “page load” vs. number of concurrent users</p></li>
+<li><p>Time for specific operations (test queries, test renderings, …)</p></li>
+</ul>
+</div></blockquote>
+<p><strong>Community Engagement</strong></p>
+<ol class="arabic simple" start="22">
+<li><p>Baseline assessment of scientists completed</p></li>
+<li><p>Number of repeat assessments of scientists completed</p></li>
+<li><p>Baseline assessment of other stakeholders completed</p></li>
+<li><p>Number of repeat assessments of other stakeholders completed</p></li>
+<li><p>Number of DataONE Partnership Agreements established</p></li>
+</ol>
+<p><strong>Education and Outreach</strong></p>
+<ol class="arabic simple" start="27">
+<li><p>Number of education modules developed and/or accessible through DataONE</p></li>
+<li><p>Number of times education modules are downloaded</p></li>
+<li><p>Number of best practices guides developed and/or accessible through DataONE</p></li>
+<li><p>Number of times best practices guides are downloaded</p></li>
+<li><p>Number of training sessions or workshops offered (e.g., at meetings)</p></li>
+<li><p>Number of workshop participants</p></li>
+<li><p>Number of people in DataONE International Users Group</p></li>
+</ol>
+<p><strong>Sustainability</strong></p>
+<ol class="arabic simple" start="34">
+<li><p>Amount of revenue (including in-kind support) generated annually to
+support DataONE</p></li>
+<li><p>Diversity of revenue streams – e.g., government, private foundations,
+commercial for-profit sector, etc.</p></li>
+<li><p>Number of projects and partners collaborating with DataONE or leveraging
+DataONE infrastructure</p></li>
+</ol>
+</div>
+<div class="section" id="union-of-use-cases-and-metrics">
+<h2>Union of Use Cases and Metrics<a class="headerlink" href="#union-of-use-cases-and-metrics" title="Permalink to this headline">¶</a></h2>
+<p>The following bullets represent the union of logging information indicated in
+the use cases and the metrics that can be reported from the logs. The
+information logged and suitable summarization and extraction procedures need
+to be identified to ensure the following items can be addressed:</p>
+<ul class="simple">
+<li><p>all CRUD operations on metadata and data are logged at each node</p></li>
+<li><p>all CRUD operation logs should be aggregated at the CNs</p></li>
+<li><p>an MN can retrieve aggregated logs about content that originated from that
+MN.</p></li>
+<li><p>A data owner (original contributor, delegated owner) can retrieve aggregated
+logs about objects they own.</p></li>
+<li><p>Anyone can retrieve general use information for any object in DataONE.</p></li>
+<li><p>(metric) Number of web hits on DataONE portal</p></li>
+<li><p>(metric) Number of DataONE users</p></li>
+<li><p>(metric) Number of downloads of tools from the Investigator Toolkit (From
+the download site logs)</p></li>
+<li><p>(metric) Number of metadata catalog searches completed</p></li>
+<li><p>(metric) Number of DataONE datasets downloaded (daily, weekly, monthly,
+annually)</p></li>
+<li><p>(metric) Most frequently downloaded datasets</p></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Event Logging and Reporting</a><ul>
+<li><a class="reference internal" href="#use-cases-to-be-supported">Use Cases to be Supported</a></li>
+<li><a class="reference internal" href="#performance-metrics-to-be-reported">Performance Metrics to be Reported</a></li>
+<li><a class="reference internal" href="#union-of-use-cases-and-metrics">Union of Use Cases and Metrics</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+      <li>Previous: <a href="CoordinatingNodeInternals.html" title="previous chapter">Coordinating Node Internals</a></li>
+      <li>Next: <a href="LoggingSchema.html" title="next chapter">Logging Schema</a></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/design/logging.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/design/logging.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/logging.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

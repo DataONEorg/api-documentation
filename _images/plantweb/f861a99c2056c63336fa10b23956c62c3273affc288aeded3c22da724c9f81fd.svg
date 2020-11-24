@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="312px" preserveAspectRatio="none" style="width:371px;height:312px;" version="1.1" viewBox="0 0 371 312" width="371px" zoomAndPan="magnify"><defs><filter height="300%" id="fytwztokbtv03" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--MD5=[fee662a292a0353a69bd162820bae93b]
+entity User--><ellipse cx="125.5" cy="14" fill="#FEFECE" filter="url(#fytwztokbtv03)" rx="8" ry="8" style="stroke:#A80036;stroke-width:1.5;"/><path d="M125.5,22 L125.5,49 M112.5,30 L138.5,30 M125.5,49 L112.5,64 M125.5,49 L138.5,64 " fill="none" filter="url(#fytwztokbtv03)" style="stroke:#A80036;stroke-width:1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="31" x="110" y="82.4951">User</text><ellipse cx="87.4151" cy="282.183" fill="#FEFECE" filter="url(#fytwztokbtv03)" rx="81.4151" ry="18.683" style="stroke:#A80036;stroke-width:1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="134" x="20.4151" y="286.8315">12. Authentication</text><!--MD5=[a7c3fe0f3374b913da9748d1ac0dbbf6]
+entity CN--><ellipse cx="243.5" cy="14" fill="#FEFECE" filter="url(#fytwztokbtv03)" rx="8" ry="8" style="stroke:#A80036;stroke-width:1.5;"/><path d="M243.5,22 L243.5,49 M230.5,30 L256.5,30 M243.5,49 L230.5,64 M243.5,49 L256.5,64 " fill="none" filter="url(#fytwztokbtv03)" style="stroke:#A80036;stroke-width:1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="134" x="176.5" y="82.4951">Coordinating Node</text><ellipse cx="281.6068" cy="281.9214" fill="#FEFECE" filter="url(#fytwztokbtv03)" rx="77.6068" ry="17.9214" style="stroke:#A80036;stroke-width:1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="125" x="219.1068" y="286.5698">13. Authorization</text><ellipse cx="184.5368" cy="166.3074" fill="#FEFECE" filter="url(#fytwztokbtv03)" rx="87.0368" ry="19.8074" style="stroke:#A80036;stroke-width:1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="147" x="111.0368" y="170.9558">02. Search Metadata</text><!--MD5=[f36ebf297d234ec8d2f2c2c116e54361]
+link User to SEARCH--><path d="M141.002,77.397 C151.859,99.388 166.009,128.048 175.174,146.61 " fill="none" id="User-SEARCH" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[198875f06f06a937ce58aeb650f166c9]
+link CN to SEARCH--><path d="M223.854,85.792 C213.797,106.16 202.015,130.025 193.981,146.296 " fill="none" id="CN-SEARCH" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[e60df2fb9c48eebc1ba4fe8e1252f6ac]
+link SEARCH to author--><path d="M200.518,186.242 C217.944,206.6325 245.724,239.1381 263.788,260.2755 " fill="none" id="SEARCH-to-author" style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#A80036" points="267.044,264.0845,264.2379,254.6438,263.7957,260.2834,258.1562,259.8411,267.044,264.0845" style="stroke:#A80036;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="68" x="240.5" y="229.5669">«includes»</text><!--MD5=[cb1b9a502f5bdc4b7fc625d59325fa21]
+link SEARCH to authen--><path d="M168.482,186.242 C151.158,206.5139 123.599,238.7605 105.5277,259.9057 " fill="none" id="SEARCH-to-authen" style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#A80036" points="102.2685,263.7194,111.1567,259.4768,105.5171,259.9186,105.0754,254.279,102.2685,263.7194" style="stroke:#A80036;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="68" x="143.5" y="229.5669">«includes»</text><!--MD5=[cd9d8c300dc247802c5ecec648819878]
+@startuml
+actor User
+usecase "12. Authentication" as authen
+
+ actor "Coordinating Node" as CN
+ usecase "13. Authorization" as author
+ usecase "02. Search Metadata" as SEARCH
+ User - - SEARCH
+ CN - - SEARCH
+ SEARCH ..> author: <<includes>>
+ SEARCH ..> authen: <<includes>>
+@enduml
+
+PlantUML version 1.2020.21beta3(Unknown compile time)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>

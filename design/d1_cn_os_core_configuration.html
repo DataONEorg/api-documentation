@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DataONE CN OS Core postinst and Configuration &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">DataONE CN OS Core postinst and Configuration</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="dataone-cn-os-core-postinst-and-configuration">
+<h1>DataONE CN OS Core postinst and Configuration<a class="headerlink" href="#dataone-cn-os-core-postinst-and-configuration" title="Permalink to this headline">¶</a></h1>
+<p>Each DataONE CN maintains a debian backend database named ‘dataone-cn-os-core’.  The database is populated by the dataone-cn-os-core debian package. Debian package installation for DataONE requires data input to the dataone-cn-os-core debian backend database for each environment, and sometimes each CN, such as IP address, passwords, node Ids, etc. Debian installation scripts can read the data written to the ‘dataone-cn-os-core’ debian backend database and use the data to configure software.  In order to lessen the amount of typing (and errors) during the debian installation process, debian configuration is automated as much as possible.</p>
+<p>The debian backend database is setup during a debian installation by the availability of a templates file.  The templates file contains multiple variable names (database fields), each a ‘Template’. Each ‘Template’ has a question to ask a user and the data type of the ‘Template’ to be persisted in the debian backend database.  Typically, a debian preinst script is used to decide which questions will be asked to a user during installation. DataONE uses a different strategy.</p>
+<p>DataONE debian installation uses an xml configuration (d1DebConfig.xml) file to fill in the ‘Template’ variable (field) questions that would typically be asked to a user.  d1DebConfig.xml is evaluated by the dataone-cn-os-core package’s postinst script during debian installation.  d1DebConfig.xml is divided into two parts. The first part mimics the templates file in the debian installation, the second part contains the data that debian expects the user to answer.  Each ‘template’ node in d1DebConfig.xml contains a key that is the field name associated with a debian ‘Template’. A ‘template’ node contains the question of the template, the type of the template and various flags.  The flags and the field name are the most important.  There are DataONE configuration specific flags for each ‘template’ node.  The ‘derived-value’ flag, the ‘user-entered-value’ flag and the ‘configured-value’ flag must each be set for each template.  Only one of the three flags should be set to true.  The ‘derived-value’ flag indicates to the postinst script that the value of the field is set programmatically by the postinst script.  For each ‘derived-value’ flag, there is custom logic in postinst to populate the debian backend database.  The ‘user-entered-value’ flag prompts the user for input in the traditional way that a debian package installation would.  The ‘configured-value’ flag indicates that postinst is able to parse the value of the field from d1DebConfig.xml.</p>
+<p>The second part of the d1DebConfig.xml contains the data for each of the templates defined in the first half of the file.  In the second part of d1DebConfig.xml are ‘environment’ nodes.  ‘environment’ nodes contain answers to questions or contain ‘machine’ nodes that then contain answers to questions.  Each ‘environment’ node has a context key that names the environment to which the answers or machines belong. Each template in the first half of d1DebConfig.xml should have an answered question in the second half for each environment.  If the question is a machine dependent question, then the ‘question’ node should a child of a ‘machine’ node. If the question is the same for every machine of an environment, then the ‘question’ node should be a child of an ‘environment’ node.  For ‘derived-value’ and ‘user-entered-value’ flagged questions, the ‘question’ node should be left empty.</p>
+<p>The steps below demonstrate how to ask for user input during debian installation of a package. The assumption is that the user input will be applied to configuration settings of a downstream dataone package.</p>
+<ol class="arabic simple">
+<li><p>A new entry in the debian templates file for the new template should be added. The location of this file is: <a class="reference external" href="https://repository.dataone.org/software/cicore/trunk/cn-buildout/dataone-cn-os-core/DEBIAN/templates">https://repository.dataone.org/software/cicore/trunk/cn-buildout/dataone-cn-os-core/DEBIAN/templates</a></p></li>
+<li><p>A new ‘template’ node that mimics the information in the debian templates file should be added to d1DebConfig.xml. As noted above, the values of the flags should be ‘derived-value’ false, ‘user-entered-value’ true, and ‘configured-value’ false.</p></li>
+<li><p>A new ‘question’ node should be added to each environment, but should be left empty.</p></li>
+<li><p>Lastly, in postinst, each ‘user-entered-value’ question will be re-asked each time by dataone-cn-os-core unless specifically excluded. The function ‘resetDebQuestionSeenFlag’ in <a class="reference external" href="https://repository.dataone.org/software/cicore/trunk/cn-buildout/dataone-cn-os-core/DEBIAN/postinst">https://repository.dataone.org/software/cicore/trunk/cn-buildout/dataone-cn-os-core/DEBIAN/postinst</a> should be edited to exclude the new template.  If the value of the field needs to be altered in the future, then the backend database will need to be modified through a stand-alone bash script.</p></li>
+<li><p>dataone-cn-os-core will not use the new data to configure software.  The software applying the data  is dependent upon dataone-cn-os-core and will be installed after dataone-cn-os-core.  For example, the postinst script of the dataone-cn-portal package would have lines added where the new template is read and then write logic to alter the configuration of the dataone-cn-portal install.</p></li>
+</ol>
+<p>As a note, the postinst script requires datastructures to maintain the information parsed from xml files and to evaluate if data in the backend database should be changed upon upgrade.  Debian requires the use of shell scripts (bash) for postinst.  Unfortunately, bash is fairly weak when it comes to datastructures and so the postinst code to maintain automated configuration is fairly complicated. This complication is in addition to the code needed to configure 8 different software packages for Dataone, LDAP being the most complicated. The dataone-cn-os-core postinst code must be run before any other dataone debian package may install correctly.</p>
+<p>Additonal Resources:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="http://www.fifi.org/doc/debconf-doc/tutorial.html">The Debconf Programmer’s Tutorial</a>.</p></li>
+<li><p><a class="reference external" href="http://www.debian.org/doc/debian-policy/">Debian Policy Manual</a>.</p></li>
+<li><p>Debian <a class="reference external" href="https://wiki.debian.org/MaintainerScripts">MaintainerScripts</a>.</p></li>
+<li><p>Debian <a class="reference external" href="http://www.debian.org/doc/packaging-manuals/debconf_specification.html">Configuration management</a>.</p></li>
+<li><p><a class="reference external" href="http://tldp.org/LDP/abs/html/index.html">Advanced Bash-Scripting Guide</a>.</p></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p><h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/design/d1_cn_os_core_configuration.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/design/d1_cn_os_core_configuration.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/d1_cn_os_core_configuration.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

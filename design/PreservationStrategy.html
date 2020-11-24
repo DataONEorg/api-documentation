@@ -1,0 +1,479 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DataONE Preservation Strategy &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Replication Overview" href="ReplicationOverview.html" />
+    <link rel="prev" title="Data Packaging" href="DataPackage.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ReplicationOverview.html" title="Replication Overview"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="DataPackage.html" title="Data Packaging"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">DataONE Preservation Strategy</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="dataone-preservation-strategy">
+<h1>DataONE Preservation Strategy<a class="headerlink" href="#dataone-preservation-strategy" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note" id="index-0">
+<p class="admonition-title">Note</p>
+<p>This document is a literal conversion of the DataONE Preservation Strategy
+document developed by the “Preservation and Metadata Working Group” as an
+outcome of the December 2010 meeting held in Chicago. The original document
+may be retrieved from the <a class="reference external" href="https://docs.dataone.org/member-area/documents/management/nsf-reviews/nsf-review-february-2011/documents-for-nsf-review/DataONE_Preservation_Strategy_2011.docx">DataONE document library</a>.</p>
+</div>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>To meet the objective of “easy, secure, and persistent storage of data”,
+DataONE adopts a simple three-tiered approach.</p>
+<ol class="arabic simple">
+<li><p>Keep the bits safe. Retaining the actual bits that comprise the data is
+paramount, as all other preservation and access questions are moot if the
+bits are lost. Key sub-strategies for this tier are (a) persistent
+identification, (b) replication of data and metadata, (c) periodic
+verification that stored content remains uncorrupted, and (d) reliance on
+member nodes to adhere to DataONE protocols and guidelines consistent with
+widely adopted public and private sector standards for IT infrastructure
+management.</p></li>
+<li><p>Protect the form, meaning, and behavior of the bits. Assuming the bits are
+kept undamaged, users must also be able to make sense of them into the
+future, so protecting their form, meaning, and behavior is critical. In
+this tier we rely on collecting characterization metadata, encouraging use
+of standardized formats, and securing legal rights appropriate to long-term
+archival management, all of which supports future access and, as needed to
+preserve meaning and behavior, format migration and emulation.</p></li>
+<li><p>Safeguard the guardians. If the DataONE organization and its member nodes
+were to disappear, that would be equivalent to 100 percent data loss. The
+DataONE network itself provides resiliency against the occasional loss of
+member nodes, and this will be shored up by succession planning, ongoing
+investigations into preservation cost models, and open-source software
+tools that can sustained by external developer communities.</p></li>
+</ol>
+</div>
+<div class="section" id="preservation-objectives">
+<h2>Preservation Objectives<a class="headerlink" href="#preservation-objectives" title="Permalink to this headline">¶</a></h2>
+<p>Fundamentally, DataONE’s preservation goal is to protect the content, meaning,
+and behavior of data sets registered in its global network of heterogeneous
+data repositories. This a complex undertaking that warrants a layered,
+prioritized approach. To get started on a solid footing, our first objective
+was to build a platform that immediately provides a significant degree of
+preservation assurance and makes it easy to add more sophisticated
+preservation function over time. Initially, DataONE will focus on preventing
+loss due to non-malicious causes, such as,</p>
+<ul class="simple">
+<li><p>Technological obsolescence (e.g., loss of support for rendering software and hardware),</p></li>
+<li><p>Accidental loss (human error, natural disaster, etc.), and</p></li>
+<li><p>Financial instability (loss of funding).</p></li>
+</ul>
+<p>While malicious threats do exist, many of them are addressed as a side-effect
+of DataONE protocols and information technology (IT) management standards in
+place at member nodes (MNs). By design, DataONE protocols limit the ability of
+any MN or Coordinating Node (CN) to directly alter content on another node,
+which in turn limits the havoc that an intruder could wreak. Moreover, MN
+guidelines call for the same strong local IT management standards that are
+widespread in financial services, manufacturing, and large technology
+organizations, and these are typically already in force at well-established
+data repositories.</p>
+<p>An ancillary objective is to help inform an overall NSF DataNet preservation
+strategy, and to that end this strategy was prepared at a DataONE workshop
+(Chicago, 2010) with direct input from the Data Conservancy project.</p>
+</div>
+<div class="section" id="three-dataone-preservation-tiers">
+<h2>Three DataONE preservation tiers<a class="headerlink" href="#three-dataone-preservation-tiers" title="Permalink to this headline">¶</a></h2>
+<p>The initial DataONE approach to preservation is described in the following
+three sections.</p>
+<div class="section" id="keep-the-bits-safe">
+<h3>1.  Keep the bits safe<a class="headerlink" href="#keep-the-bits-safe" title="Permalink to this headline">¶</a></h3>
+<p>Retaining the actual bits comprising the data and metadata is paramount, as
+all other preservation and access questions are moot if the bits are damaged
+or lost. The direct role played by MNs in bit-level preservation is addressed
+in the third section describing organizational sustainability.</p>
+<div class="section" id="identify-data-persistently">
+<h4>Identify data persistently<a class="headerlink" href="#identify-data-persistently" title="Permalink to this headline">¶</a></h4>
+<p>Persistent identifiers (PIDs) are required for stable reference to all content
+stored in DataONE. Without them, reliable data citation and long-term access
+would not be possible. Because there are many legacy identifiers to be
+accommodated, some of them dating from before the advent of the world-wide
+web, DataONE uses PIDs from a variety of schemes and support systems, such as
+purl.org and handle.net. Remaining agnostic about identifier syntax, DataONE
+will also rely on scheme-agnostic support systems such as n2t.net/ezid, which
+can deal with ARKs, DOIs, and traditionally non-actionable identifiers such as
+PMIDs (PubMed Identifiers).</p>
+</div>
+<div class="section" id="make-lots-of-copies">
+<h4>Make lots of copies<a class="headerlink" href="#make-lots-of-copies" title="Permalink to this headline">¶</a></h4>
+<p>To protect against the possible loss of a MN, or a bit-level failure at a
+single MN,DataONE replicates both data and metadata. Two replicas of the raw
+bits representing each dataset are created upon registration of a dataset by a
+MN; the two replicas and the original dataset held at the MN result in a total
+of three instances. The instances are kept at three different MNs, which
+creates safety through copies that are “de-correlated” by geographic,
+administrative, and financial domain. In this way, the instances are not
+vulnerable to the same power failure, same earthquake, same funding loss, etc.
+As for metadata, three replicas of all metadata are created and held at the
+CNs, resulting in a total of four de-correlated metadata instances.</p>
+<p>Depending on its data replication policy, a MN may fall into one of several
+classes:</p>
+<ol class="arabic simple">
+<li><p>Read-Only: MNs that are unwilling or unable to hold replicas (whether such
+MNs are admitted by DataONE is up to the Governance Working Group).</p></li>
+<li><p>Replication-Open: MNs that are willing to accept whatever content a CN
+tells them (up to capacity). These nodes will try to honor any access
+control rules that are applied to the data objects they replicate. If a MN
+is unable to honor a given access rule, the associated data object will be
+“darkived”, namely, stored within a dark archive that is not accessible to
+general users.</p></li>
+<li><p>Replication-Only: MNs that are set up by DataONE specifically to provide
+replication services and that do not provide original content of their own.
+They are designed for capacity and capability, and are willing to accept
+whatever content a CN tells them to replicate (up to capacity). They are
+able to honor any access restriction rules defined within the DataONE
+system.</p></li>
+</ol>
+<p>Replication will be triggered automatically by content registration. While it
+is desirable to maintain three instances of each data object, over time there
+may arise practical limits to replication due to a number of changeable
+factors:</p>
+<ul class="simple">
+<li><p>MN capacities and/or MN capabilities</p></li>
+<li><p>willingness of MNs to be targets of replication (to hold copies)</p></li>
+<li><p>willingness of MNs to permit outbound copies</p></li>
+<li><p>perceived value of data relative to its size</p></li>
+<li><p>changes in access control restrictions</p></li>
+</ul>
+</div>
+<div class="section" id="refresh-and-verify-the-copies">
+<h4>Refresh and verify the copies<a class="headerlink" href="#refresh-and-verify-the-copies" title="Permalink to this headline">¶</a></h4>
+<p>MN guidelines also call for the common-sense and usual practice of periodic
+“media refresh”, which is the copying of data from old physical recording
+devices to new physical recording devices to avoid errors due to media
+degradation and vendor de-support.</p>
+<p>Damage or corruption in those copies is detected by periodically re-computing
+checksums (e.g., SHA-256 digests) for randomly selected datasets and comparing
+them with checksums securely stored at the CNs. Any bit-level changes detected
+can be repaired by copying from an unchanged copy. This kind of “pop quiz”
+cannot be cheated by simply reporting back a previously computed checksum; the
+actual MN replica data is requested and the checksum recomputed. It is
+appropriate that this entails sampling only a subset of the data as it is not
+computationally feasible to keep the MNs and CNs constantly busy exhaustively
+checking the amount of content that DataONE anticipates holding.</p>
+</div>
+</div>
+<div class="section" id="protect-the-form-meaning-and-behavior-of-the-bits">
+<h3>2.  Protect the form, meaning, and behavior of the bits<a class="headerlink" href="#protect-the-form-meaning-and-behavior-of-the-bits" title="Permalink to this headline">¶</a></h3>
+<p>Digital content has three related aspects that must be considered when
+planning and performing preservation functions: content has a specific digital
+form; that form encapsulates a given abstract meaning; and that meaning is
+recovered for use through appropriate behaviors applied against the form.
+Preservation of form ensures that the low-level structure of the content is
+preserved; preservation of meaning ensures that the semantics of the content
+are recoverable, at least in theory; and preservation of behavior ensures that
+the semantics are recoverable in practice.</p>
+<p>For example, consider a dataset of environmental samples. At the structural
+level these numeric data are organized in a tabular fashion. But their full
+meaning is only recoverable by knowing the variables and units of measure
+associated with each column in the table. If the data are represented in
+binary, rather than textual form, then use of the data also depends on an
+appropriate software application that can expose the information in a directly
+human-useable form. DataONE metadata standards should incorporate schemas to
+document and describe data in terms enabling preservation of form, meaning,
+and behavior.</p>
+<p>Preservation activities in this tier fall into four conceptual categories:</p>
+<ul class="simple">
+<li><p>Know your rights</p></li>
+<li><p>Know what you have and share that knowledge</p></li>
+<li><p>Cope with obsolescence</p></li>
+<li><p>Watch the copies, yourself, and the world</p></li>
+</ul>
+<div class="section" id="know-your-rights">
+<h4>Know your rights<a class="headerlink" href="#know-your-rights" title="Permalink to this headline">¶</a></h4>
+<p>Ultimately, having the bits and their meaning is useless if one doesn’t also
+have the legal right (a) to hold the data, (b) to make copies and derivatives
+in performance of preservation management (such as replication and migration),
+and (c) to transfer those same rights to a successor archive. Just as
+important is to know specifically who owns the original data and <em>whether</em> those
+rights have been granted.</p>
+<p>As a start we strongly encourage providers to assign “Creative Commons Zero”
+(CC0) licenses to all contributed data, which facilitates preservation and
+does not prevent data providers from requiring an attribution statement as a
+condition of re-use.</p>
+</div>
+<div class="section" id="know-what-you-have-and-share-that-knowledge">
+<h4>Know what you have and share that knowledge<a class="headerlink" href="#know-what-you-have-and-share-that-knowledge" title="Permalink to this headline">¶</a></h4>
+<p>Understanding the content being preserved in the DataONE network is a function
+of metadata that describes various aspects of the content. This metadata comes
+from a variety of sources, including automated characterization of content at
+the point of acquisition or submission to the DataONE network, and direct
+contribution from content creators, curators, and consumers. Characterization
+is important in order to determine the significant properties of digital
+resources that must be preserved over time, and for purposes of
+classification, since many preservation actions will take place in an
+automated fashion on groups of similar resources. DataONE will encourage use
+of data formats that are open, transparent, widely used, and non-encrypted –
+formats that are more inherently amenable to long-term preservation.</p>
+<p>Use of automated characterization tools, such as DROID
+(<a class="reference external" href="http://droid.sourceforge.net/">http://droid.sourceforge.net/</a>) and JHOVE2
+(<a class="reference external" href="https://bitbucket.org/jhove2/main/wiki/Home">https://bitbucket.org/jhove2/main/wiki/Home</a>) will be strongly recommended of
+data providers. While most existing characterization tools focus on general
+formats for cultural heritage content, the DataONE community can contribute to
+development that will result in increased coverage of scientific formats.</p>
+<p>Rich preservation metadata will be managed at varying levels of granularity,
+including individual files, aggregations of files that collectively form a
+single coherent resource, and meaningful subsets of files. In addition to
+describing primary data sets, metadata is also necessary for associated
+toolkit workflows, which are themselves first-class data objects needing
+DataONE preservation. In some cases, characterization metadata will consist of
+references to information managed in external technical registries such as
+UDFR (<a class="reference external" href="http://udfr.org/">http://udfr.org/</a>) and PRONOM
+(<a class="reference external" href="http://www.nationalarchives.gov.uk/PRONOM/Default.aspx">http://www.nationalarchives.gov.uk/PRONOM/Default.aspx</a>). DataONE is fortunate
+to have partnered with the primary maintainers of JHOVE2 and UDFR.</p>
+<p>Preservation metadata will be expressed and managed within the DataONE network
+using a variety of schemas in the science metadata. In addition to providing a
+means for accurate description and citation of resources managed by DataONE,
+this information also will be exposed for search and retrieval by external
+indexing, search, and notification services.</p>
+</div>
+<div class="section" id="cope-with-obsolescence">
+<h4>Cope with obsolescence<a class="headerlink" href="#cope-with-obsolescence" title="Permalink to this headline">¶</a></h4>
+<p><em>Migration</em> and <em>emulation</em> are sub-strategies that DataONE will use in the
+event that formats become obsolete. At some time in the future, one may expect
+that available contemporary hardware and software will be unable to render or
+otherwise use bits saved in some formats.</p>
+<p><em>Migration</em> is used to convert from older to newer formats; all converted
+content is subject to “before” and “after” characterization to ensure semantic
+invariance. <em>Emulation</em> effectively preserves older computing environments in
+order to retain the experience of rendering older formats; once considered a
+specialized intervention, emulation has become a more viable technique with
+recent developments in consumer and enterprise server virtualization
+solutions.</p>
+<p>Migration workflows need only be available on a subset of DataONE member
+nodes, which can function as service utilities to the greater network. A
+successful migration strategy requires versioning of the content, where all
+versions are retained. The versioning of managed content that results from
+migration will be reflected in that content’s system metadata. All migrated
+content will be subject to “before” and “after” characterization to ensure the
+semantic invariance of the transformation.</p>
+<p>While emulation has become a more viable technique, it is important to
+understand the technological dependencies of the component parts of the
+workflow underlying the use of a particular resource. Emulation may become
+difficult if various workflow components require multiple levels of emulation
+support.</p>
+</div>
+<div class="section" id="watch-the-copies-yourself-and-the-world">
+<h4>Watch the copies, yourself, and the world<a class="headerlink" href="#watch-the-copies-yourself-and-the-world" title="Permalink to this headline">¶</a></h4>
+<p>Preservation action plans for mitigating preservation risks will be developed
+ahead of the need for their application. Protection against obsolescence
+requires an understanding of the technological dependencies underlying that
+use. While some resources are easily manipulated using relatively standard and
+long-lived desktop tools, others require highly specialized applications and
+complex workflows.</p>
+<p>DataONE will rely on existing notification services, such as AONS II (Pearson
+2007), CRiB (Ferreira 2006), and PLATO
+(<a class="reference external" href="http://www.ifs.tuwien.ac.at/dp/plato/intro.html">http://www.ifs.tuwien.ac.at/dp/plato/intro.html</a>). These services themselves
+depend on other external technical registries such as PRONOM. Existing
+coverage by these services may be limited to formats and tools geared towards
+general applicability in the cultural heritage realm. DataONE will encourage
+community effort to expand the scope of these services to understand technical
+components specific to scientific disciplines. It is preferable to enhance
+these existing frameworks and services so that obsolescence detection can take
+place centrally or in a consistent federated manner, rather than in an ad hoc
+and parallel manner.</p>
+<p>Responses to obsolescence should be planned in advance of need and captured in
+action plans (cf. the Planets template at
+<a class="reference external" href="http://www.ifs.tuwien.ac.at/dp/plato/docs/plan-template.pdf">http://www.ifs.tuwien.ac.at/dp/plato/docs/plan-template.pdf</a> and the FCLA
+template at <a class="reference external" href="http://www.fcla.edu/digitalArchive/formatInfo.htm">http://www.fcla.edu/digitalArchive/formatInfo.htm</a>).</p>
+</div>
+</div>
+<div class="section" id="safeguard-the-guardians">
+<h3>3.  Safeguard the guardians<a class="headerlink" href="#safeguard-the-guardians" title="Permalink to this headline">¶</a></h3>
+<p>If the DataONE federated network and its member nodes were to disappear, that
+would amount to total data loss.</p>
+<div class="section" id="safeguard-the-federation">
+<h4>Safeguard the federation<a class="headerlink" href="#safeguard-the-federation" title="Permalink to this headline">¶</a></h4>
+<p>By design, the DataONE network provides resiliency against the occasional loss
+of nodes. While departure of a MN (or even a CN) from DataONE should not be
+frequent, it is also not an unexpected occurrence. It is a feature of networks
+that they can sustain such events by redistributing the assets and workload
+among the remaining nodes. The arrival of a new node will be less disruptive.
+The software infrastructure of the DataONE network, including the Investigator
+Toolkit the cyberinfrastructure protocol stacks, are open-source in order to
+help it have a life beyond the end of DataONE funding; open-source community
+ownership improves not only buy-in and adoption, but also long-term external
+support for the DataONE network.</p>
+<p>The Sustainability and Governance Working Group is investigating a range of
+issues in protecting the DataONE organization. These include CN and MN
+succession planning, an analysis of the costs of preservation, the possibility
+of services that offer accreditation for repositories, realtime monitoring,
+and external auditing.</p>
+</div>
+<div class="section" id="safeguard-the-member-nodes">
+<h4>Safeguard the member nodes<a class="headerlink" href="#safeguard-the-member-nodes" title="Permalink to this headline">¶</a></h4>
+<p>Risks to the DataONE federated network are different from risks to individual
+nodes. Some risks are reduced by the redundancy and geographic distribution
+that the network provides. As for malicious threats that might increase due to
+federation, these are addressed by the authentication and authorization
+strategies that DataONE is developing with participation of Teragrid security
+experts. It is a core requirement of MNs that they conform to DataONE
+authentication and authorization policies and protocols.</p>
+<p>Not any data repository can qualify as a DataONE MN. Guidelines call for
+organizations to be on a sound technical and financial footing and to adhere
+to important standards. The DataONE network is in some respects only as secure
+as its weakest link, so local Information Technology (IT) standards at the MNs
+are critical.</p>
+<p>MNs conform to IT management practices typically found in federal agencies and
+higher education, which in turn are based on Payment Card Industry data
+security standards (PCI DSS) and the widely adopted ITIL (IT Infrastructure
+Library) best practices for such things as physical protection, electronic
+perimeter control (firewalls), account management, and event logging for
+forensic analysis. Adopters include financial service organizations, and large
+technology, pharmaceutical, and manufacturing companies.</p>
+<p>These standards call for common-sense practices such as periodic “media
+refresh”, which is the copying of data from older to newer physical devices
+and media with the aim of avoiding errors due to media degradation and vendor
+de-support.</p>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">DataONE Preservation Strategy</a><ul>
+<li><a class="reference internal" href="#summary">Summary</a></li>
+<li><a class="reference internal" href="#preservation-objectives">Preservation Objectives</a></li>
+<li><a class="reference internal" href="#three-dataone-preservation-tiers">Three DataONE preservation tiers</a><ul>
+<li><a class="reference internal" href="#keep-the-bits-safe">1.  Keep the bits safe</a><ul>
+<li><a class="reference internal" href="#identify-data-persistently">Identify data persistently</a></li>
+<li><a class="reference internal" href="#make-lots-of-copies">Make lots of copies</a></li>
+<li><a class="reference internal" href="#refresh-and-verify-the-copies">Refresh and verify the copies</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#protect-the-form-meaning-and-behavior-of-the-bits">2.  Protect the form, meaning, and behavior of the bits</a><ul>
+<li><a class="reference internal" href="#know-your-rights">Know your rights</a></li>
+<li><a class="reference internal" href="#know-what-you-have-and-share-that-knowledge">Know what you have and share that knowledge</a></li>
+<li><a class="reference internal" href="#cope-with-obsolescence">Cope with obsolescence</a></li>
+<li><a class="reference internal" href="#watch-the-copies-yourself-and-the-world">Watch the copies, yourself, and the world</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#safeguard-the-guardians">3.  Safeguard the guardians</a><ul>
+<li><a class="reference internal" href="#safeguard-the-federation">Safeguard the federation</a></li>
+<li><a class="reference internal" href="#safeguard-the-member-nodes">Safeguard the member nodes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+      <li>Previous: <a href="DataPackage.html" title="previous chapter">Data Packaging</a></li>
+      <li>Next: <a href="ReplicationOverview.html" title="next chapter">Replication Overview</a></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/design/PreservationStrategy.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/design/PreservationStrategy.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/PreservationStrategy.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>&lt;no title&gt; &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/mathjax_pre.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html"></a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">&lt;no title&gt;</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <p><strong>Response</strong></p>
+<p>The response should be a valid HTTP response with a blank or arbitrary body.
+Only the HTTP header information is considered by the requestor. A successful
+response must have a HTTP status code of 200. In case of an error condition,
+the appropriate HTTP status code must be set, and an exception or error
+information <em>may</em> be returned in the response.</p>
+<p>The outgoing request body <em>must</em> be encoded as <a class="reference external" href="http://www.ietf.org/rfc/rfc2388.txt">MIME multipart/form-data</a>
+with the system metadata portion as a file attachment and the sourceNode
+parameter as a form field.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">curl</span> <span class="o">-</span><span class="n">v</span> <span class="o">-</span><span class="n">X</span> <span class="n">POST</span> <span class="s2">&quot;https://localhost:8000/mn/v1/replicate&quot;</span> \
+  <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;Content-type: multipart/form-data&quot;</span> \
+  <span class="o">-</span><span class="n">F</span> <span class="s2">&quot;sysmeta=@systemmetadata.xml&quot;</span> \
+  <span class="o">-</span><span class="n">F</span> <span class="s2">&quot;sourceNode=urn:node:MN_B&quot;</span>
+
+<span class="o">*</span> <span class="n">About</span> <span class="n">to</span> <span class="n">connect</span><span class="p">()</span> <span class="n">to</span> <span class="n">localhost</span> <span class="n">port</span> <span class="mi">8000</span> <span class="p">(</span><span class="c1">#0)</span>
+<span class="o">*</span>   <span class="n">Trying</span> <span class="p">::</span><span class="mf">1.</span><span class="o">..</span> <span class="n">Connection</span> <span class="n">refused</span>
+<span class="o">*</span>   <span class="n">Trying</span> <span class="n">fe80</span><span class="p">::</span><span class="mf">1.</span><span class="o">..</span> <span class="n">Connection</span> <span class="n">refused</span>
+<span class="o">*</span>   <span class="n">Trying</span> <span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span><span class="o">...</span> <span class="n">connected</span>
+<span class="o">*</span> <span class="n">Connected</span> <span class="n">to</span> <span class="n">localhost</span> <span class="p">(</span><span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span><span class="p">)</span> <span class="n">port</span> <span class="mi">8000</span> <span class="p">(</span><span class="c1">#0)</span>
+<span class="o">&gt;</span> <span class="n">POST</span> <span class="o">/</span><span class="n">mn</span><span class="o">/</span><span class="n">v1</span><span class="o">/</span><span class="n">replicate</span> <span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="o">&gt;</span> <span class="n">User</span><span class="o">-</span><span class="n">Agent</span><span class="p">:</span> <span class="n">curl</span><span class="o">/</span><span class="mf">7.19</span><span class="o">.</span><span class="mi">7</span> <span class="p">(</span><span class="n">universal</span><span class="o">-</span><span class="n">apple</span><span class="o">-</span><span class="n">darwin10</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span> <span class="n">libcurl</span><span class="o">/</span><span class="mf">7.19</span><span class="o">.</span><span class="mi">7</span> <span class="n">OpenSSL</span><span class="o">/</span><span class="mf">0.9</span><span class="o">.</span><span class="mi">8</span><span class="n">l</span> <span class="n">zlib</span><span class="o">/</span><span class="mf">1.2</span><span class="o">.</span><span class="mi">3</span>
+<span class="o">&gt;</span> <span class="n">Host</span><span class="p">:</span> <span class="n">localhost</span><span class="p">:</span><span class="mi">8000</span>
+<span class="o">&gt;</span> <span class="n">Accept</span><span class="p">:</span> <span class="o">*/*</span>
+<span class="o">&gt;</span> <span class="n">Content</span><span class="o">-</span><span class="n">Length</span><span class="p">:</span> <span class="mi">1021</span>
+<span class="o">&gt;</span> <span class="n">Expect</span><span class="p">:</span> <span class="mi">100</span><span class="o">-</span><span class="k">continue</span>
+<span class="o">&gt;</span> <span class="n">Content</span><span class="o">-</span><span class="nb">type</span><span class="p">:</span> <span class="n">multipart</span><span class="o">/</span><span class="n">form</span><span class="o">-</span><span class="n">data</span><span class="p">;</span> <span class="n">boundary</span><span class="o">=----------------------------</span><span class="mi">88</span><span class="n">ffdd8070e9</span>
+<span class="o">&gt;</span>
+<span class="o">*</span> <span class="n">Done</span> <span class="n">waiting</span> <span class="k">for</span> <span class="mi">100</span><span class="o">-</span><span class="k">continue</span>
+<span class="o">*</span> <span class="n">HTTP</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">assume</span> <span class="n">close</span> <span class="n">after</span> <span class="n">body</span>
+<span class="o">&lt;</span> <span class="n">HTTP</span><span class="o">/</span><span class="mf">1.0</span> <span class="mi">200</span> <span class="n">OK</span>
+<span class="o">&lt;</span> <span class="n">Date</span><span class="p">:</span> <span class="n">Fri</span><span class="p">,</span> <span class="mi">14</span> <span class="n">Jan</span> <span class="mi">2011</span> <span class="mi">22</span><span class="p">:</span><span class="mi">01</span><span class="p">:</span><span class="mi">13</span> <span class="n">GMT</span>
+<span class="o">&lt;</span> <span class="n">Server</span><span class="p">:</span> <span class="n">WSGIServer</span><span class="o">/</span><span class="mf">0.1</span> <span class="n">Python</span><span class="o">/</span><span class="mf">2.6</span><span class="o">.</span><span class="mi">1</span>
+<span class="o">&lt;</span> <span class="n">Content</span><span class="o">-</span><span class="n">Type</span><span class="p">:</span> <span class="n">text</span><span class="o">/</span><span class="n">xml</span>
+<span class="o">&lt;</span>
+<span class="o">&lt;</span>
+<span class="o">*</span> <span class="n">Closing</span> <span class="n">connection</span> <span class="c1">#0</span>
+</pre></div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../../_static/dataone_logo.png" alt="Logo"/>
+    </a></p><h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation Overview</a><ul>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/apis/examples/replicate.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../../_sources/apis/examples/replicate.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/apis/examples/replicate.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

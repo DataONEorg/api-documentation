@@ -1,0 +1,641 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>What is Data (DataONE Perspective)? &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Data Packaging" href="DataPackage.html" />
+    <link rel="prev" title="Node Identity and Registration" href="NodeIdentity.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="DataPackage.html" title="Data Packaging"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="NodeIdentity.html" title="Node Identity and Registration"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">What is Data (DataONE Perspective)?</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="what-is-data-dataone-perspective">
+<h1>What is Data (DataONE Perspective)?<a class="headerlink" href="#what-is-data-dataone-perspective" title="Permalink to this headline">¶</a></h1>
+<p>This document describes the concept of “data” within the first iteration of
+the DataONE system.</p>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>Data, in the context of DataONE, is a discrete unit of digital content that is
+expected to represent information obtained from some experiment or scientific
+study. The <a class="reference internal" href="../glossary.html#term-data"><span class="xref std std-term">data</span></a> is accompanied by <a class="reference internal" href="../glossary.html#term-science-metadata"><span class="xref std std-term">science metadata</span></a>, which is a
+separate unit of digital content that describes properties of the data. Each
+unit of science data or science metadata is accompanied by a <a class="reference internal" href="../glossary.html#term-system-metadata"><span class="xref std std-term">system
+metadata</span></a> document which contains attributes that describe the digital object
+it accompanies (e.g. hash, time stamps, ownership, relationships).</p>
+<p>In the initial version of DataONE, science data are treated as opaque sets of
+bytes and are stored on <a class="reference internal" href="../glossary.html#term-Member-Node"><span class="xref std std-term">Member Node</span></a>s (MN). A copy of the science
+metadata is held by the <a class="reference internal" href="../glossary.html#term-Coordinating-Node"><span class="xref std std-term">Coordinating Node</span></a>s (CN) and is parsed to
+extract attributes to assist the discovery process (i.e. users searching for
+content).</p>
+<p>The opaqueness of data in DataONE is likely to change in the future to enable
+processing of the data with operations such as translation (e.g. for format
+migration), extraction (e.g. for rendering), and merging (e.g. to combine
+multiple instances of data that are expressed in different formats). Such
+operations rely upon a stable, accessible framework supporting reliable data
+access, and so are targeted after the initial requirements of DataONE are met
+and the core infrastructure is demonstrably robust.</p>
+<p><a class="reference internal" href="DataPackage.html"><span class="doc">Data Packaging</span></a> provides a more complete description of data, science metadata,
+and system metadata and their relationship to one another.</p>
+</div>
+<div class="section" id="metadata-types">
+<h2>Metadata Types<a class="headerlink" href="#metadata-types" title="Permalink to this headline">¶</a></h2>
+<p>The following metadata formats are of interest to the DataONE project for the
+initial version and are representative of the types of content that will need
+to be stored and parsed.</p>
+<p>In all cases the descriptive text was retrieved from the URL provided with the
+description, and so where there is discrepancy, the referenced location (or
+the currently authoritative location) takes precedence.</p>
+<table class="colwidths-given docutils align-default" id="id5">
+<caption><span class="caption-text">Types of <a class="reference internal" href="../glossary.html#term-science-metadata"><span class="xref std std-term">science metadata</span></a> and their corresponding <code class="xref py py-attr docutils literal notranslate"><span class="pre">SystemMetdata.ObjectFormat</span></code> identifier.</span><a class="headerlink" href="#id5" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 75%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Object Format</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Dublin Core</p></td>
+<td><p><a class="reference external" href="http://dublincore.org/documents/dces/">http://dublincore.org/documents/dces/</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Darwin Core</p></td>
+<td><p><a class="reference external" href="http://rs.tdwg.org/dwc/">http://rs.tdwg.org/dwc/</a></p></td>
+</tr>
+<tr class="row-even"><td><p>EML</p></td>
+<td><ul class="simple">
+<li><p>eml://ecoinformatics.org/eml-2.0.0</p></li>
+<li><p>eml://ecoinformatics.org/eml-2.0.1</p></li>
+<li><p>eml://ecoinformatics.org/eml-2.1.0</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>FGDC BPM</p></td>
+<td><p>FGDC-STD-001.1-1999</p></td>
+</tr>
+<tr class="row-even"><td><p>FGDC CSDGM</p></td>
+<td><p>FGDC-STD-001-1998</p></td>
+</tr>
+<tr class="row-odd"><td><p>GCMD DIF</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>ISO 19137</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>NEXML</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Water ML</p></td>
+<td><ul class="simple">
+<li><p><a class="reference external" href="http://www.cuahsi.org/waterML/1.0/">http://www.cuahsi.org/waterML/1.0/</a></p></li>
+<li><p><a class="reference external" href="http://www.cuahsi.org/waterML/1.1/">http://www.cuahsi.org/waterML/1.1/</a></p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Genbank internal format</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>ISO 19115</p></td>
+<td><p>INCITS 453-2009</p></td>
+</tr>
+<tr class="row-odd"><td><p>Dryad Application Profile</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>ADN</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>GML Profiles</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>NetCDF-CF-OPeNDAP</p></td>
+<td><ul class="simple">
+<li><p>CF-1.0</p></li>
+<li><p>CF-1.1</p></li>
+<li><p>CF-1.2</p></li>
+<li><p>CF-1.3</p></li>
+<li><p>CF-1.4</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>NetCDF Classic and 64-bit offset formats</p></td>
+<td><p>netCDF-3</p></td>
+</tr>
+<tr class="row-even"><td><p>NetCDF-4 and netCDF-4 classic model formats</p></td>
+<td><p>netCDF-4</p></td>
+</tr>
+<tr class="row-odd"><td><p>DDI</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>MAGE</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>ESML</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>CSR</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>NcML</p></td>
+<td><p><a class="reference external" href="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2</a></p></td>
+</tr>
+<tr class="row-even"><td><p>Dryad METS</p></td>
+<td><p><a class="reference external" href="http://www.loc.gov/METS/">http://www.loc.gov/METS/</a></p></td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="dublin-core">
+<h3>Dublin Core<a class="headerlink" href="#dublin-core" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="http://dublincore.org/documents/dces/">http://dublincore.org/documents/dces/</a></p></li>
+</ul>
+<p>The Dublin Core Metadata Element Set is a vocabulary of fifteen properties for
+use in resource description.</p>
+</div>
+<div class="section" id="darwin-core">
+<h3>Darwin Core<a class="headerlink" href="#darwin-core" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="http://rs.tdwg.org/dwc/index.htm">http://rs.tdwg.org/dwc/index.htm</a></p></li>
+</ul>
+<p>The Darwin Core is body of standards. It includes a glossary of terms (in
+other contexts these might be called properties, elements, fields, columns,
+attributes, or concepts) intended to facilitate the sharing of information
+about biological diversity by providing reference definitions, examples, and
+commentaries. The Darwin Core is primarily based on taxa, their occurrence in
+nature as documented by observations, specimens, and samples, and related
+information. Included are documents describing how these terms are managed,
+how the set of terms can be extended for new purposes, and how the terms can
+be used. The Simple Darwin Core [SIMPLEDWC] is a specification for one
+particular way to use the terms - to share data about taxa and their
+occurrences in a simply structured way - and is probably what is meant if
+someone suggests to “format your data according to the Darwin Core”.</p>
+</div>
+<div class="section" id="eml">
+<h3>EML<a class="headerlink" href="#eml" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="http://knb.ecoinformatics.org/software/eml">http://knb.ecoinformatics.org/software/eml</a></p></li>
+</ul>
+<p>The Ecological Metadata Language (EML) is a metadata specification developed
+by the ecology discipline and for the ecology discipline. It is based on prior
+work done by the Ecological Society of America and associated efforts
+(Michener et al., 1997, Ecological Applications). EML is implemented as a
+series of XML document types that can by used in a modular and extensible
+manner to document ecological data. Each EML module is designed to describe
+one logical part of the total metadata that should be included with any
+ecological dataset.</p>
+</div>
+<div class="section" id="fgdc-csdgm">
+<h3>FGDC CSDGM<a class="headerlink" href="#fgdc-csdgm" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="http://www.fgdc.gov/metadata/geospatial-metadata-standards">http://www.fgdc.gov/metadata/geospatial-metadata-standards</a></p></li>
+</ul>
+<p>The Content Standard for Digital Geospatial Metadata (CSDGM), Vers. 2
+(FGDC-STD-001-1998) is the US Federal Metadata standard. The Federal
+Geographic Data Committee (FGDC) originally adopted the CSDGM in 1994 and
+revised it in 1998. According to Executive Order 12096 all Federal agencies
+are ordered to use this standard to document geospatial data created as of
+January, 1995. The standard is often referred to as the FGDC Metadata Standard
+and has been implemented beyond the federal level with State and local
+governments adopting the metadata standard as well.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="n">bio</span>
+<span class="p">(</span><span class="n">word</span> <span class="n">document</span> <span class="n">available</span> <span class="k">for</span> <span class="n">descriptions</span><span class="p">,</span> <span class="n">Matt</span> <span class="n">has</span> <span class="n">XSD</span> <span class="n">of</span> <span class="n">FGDCbio</span><span class="p">)</span>
+<span class="p">(</span><span class="n">Excel</span> <span class="n">spreadsheet</span> <span class="n">listing</span> <span class="n">mapping</span><span class="p">,</span>
+ <span class="n">xslt</span><span class="p">:</span> <span class="n">EML</span><span class="o">-&gt;</span><span class="n">FGDC</span> <span class="p">(</span><span class="n">lossy</span><span class="p">),</span> <span class="n">FGDC</span><span class="o">-&gt;</span><span class="n">EML</span><span class="p">)</span>
+<span class="p">(</span><span class="n">mapping</span> <span class="n">available</span> <span class="k">for</span> <span class="n">EML</span> <span class="o">-&gt;</span> <span class="n">DC</span> <span class="p">(</span><span class="n">Duane</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="gcmd-dif">
+<h3>GCMD DIF<a class="headerlink" href="#gcmd-dif" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="http://gcmd.nasa.gov/User/difguide/difman.html">http://gcmd.nasa.gov/User/difguide/difman.html</a></p></li>
+</ul>
+<p>The DIF does not compete with other metadata standards. It is simply the
+“container” for the metadata elements that are maintained in the IDN database,
+where validation for mandatory fields, keywords, personnel, etc. takes place.</p>
+<p>The DIF is used to create directory entries which describe a group of data. A
+DIF consists of a collection of fields which detail specific information about
+the data. Eight fields are required in the DIF; the others expand upon and
+clarify the information. Some of the fields are text fields, others require
+the use of controlled keywords (sometimes known as “valids”).</p>
+<p>The DIF allows users of data to understand the contents of a data set and
+contains those fields which are necessary for users to decide whether a
+particular data set would be useful for their needs.</p>
+<ul class="simple">
+<li><p>Mapping to DC available at <a class="reference external" href="http://gcmd.nasa.gov/Aboutus/standards/dublin_to_dif.html">http://gcmd.nasa.gov/Aboutus/standards/dublin_to_dif.html</a></p></li>
+</ul>
+</div>
+<div class="section" id="iso-19137">
+<h3>ISO 19137<a class="headerlink" href="#iso-19137" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=32555">http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=32555</a></p>
+<p>ISO 19137:2007 defines a core profile of the spatial schema specified in ISO
+19107 that specifies, in accordance with ISO 19106, a minimal set of geometric
+elements necessary for the efficient creation of application schemata.</p>
+<p>It supports many of the spatial data formats and description languages already
+developed and in broad use within several nations or liaison organizations.</p>
+</div>
+<div class="section" id="nexml">
+<h3>NEXML<a class="headerlink" href="#nexml" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="http://nexml.org">http://nexml.org</a></p>
+<p>The NEXUS file format is a commonly used format for phylogenetic data.
+Unfortunately, over time, the format has become overloaded - which has caused
+various problems. Meanwhile, new technologies around the XML standard have
+emerged. These technologies have the potential to greatly simplify, and
+improve robustness, in the processing of phylogenetic data.</p>
+</div>
+<div class="section" id="water-ml">
+<h3>Water ML<a class="headerlink" href="#water-ml" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="http://his.cuahsi.org/wofws.html">http://his.cuahsi.org/wofws.html</a></p>
+<p>The Water Markup Language (WaterML) specification defines an information
+exchange schema, which has been used in water data services within the
+Hydrologic Information System (HIS) project supported by the U.S. National
+Science Foundation, and has been adopted by several federal agencies as a
+format for serving hydrologic data. The goal of WaterML was to encode the
+semantics of hydrologic observation discovery and retrieval and implement
+water data services in a way that is both generic and unambiguous across
+different data providers, thus creating the least barriers for adoption by the
+hydrologic research community.</p>
+</div>
+<div class="section" id="genbank-internal-format">
+<h3>Genbank internal format<a class="headerlink" href="#genbank-internal-format" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="http://www.ncbi.nlm.nih.gov/Sitemap/samplerecord.html">http://www.ncbi.nlm.nih.gov/Sitemap/samplerecord.html</a></p>
+</div>
+<div class="section" id="iso-19115">
+<h3>ISO 19115<a class="headerlink" href="#iso-19115" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="http://en.wikipedia.org/wiki/ISO_19115">http://en.wikipedia.org/wiki/ISO_19115</a></p></li>
+</ul>
+<p>ISO 19115 “Geographic Information - Metadata” is a standard of the
+International Organization for Standardization (ISO). It is a component of the
+series of ISO 191xx standards for Geospatial metadata. ISO 19115 defines how
+to describe geographical information and associated services, including
+contents, spatial-temporal purchases, data quality, access and rights to use.
+The standard defines more than 400 metadata elements and 20 core elements.</p>
+<ul class="simple">
+<li><p>NA profile</p></li>
+<li><p>bio profile</p></li>
+<li><p>marine community metadata profile</p></li>
+<li><p>WMO profile</p></li>
+</ul>
+</div>
+<div class="section" id="dryad-metadata-profile">
+<h3>Dryad Metadata Profile<a class="headerlink" href="#dryad-metadata-profile" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://www.nescent.org/wg_dryad/Metadata_Profile">https://www.nescent.org/wg_dryad/Metadata_Profile</a></p>
+<p>The Dryad metadata team has developed a metadata application profile based on
+the Dublin Core Metadata Initiative Abstract Model (DCAM) following the Dublin
+Core guidelines for application profiles. The Dryad metadata profile is being
+developed to conform to the Dublin Core Singapore Framework, a framework
+aligning with Semantic Web development and deployment.</p>
+</div>
+<div class="section" id="adn">
+<h3>ADN<a class="headerlink" href="#adn" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="http://www.dlese.org/Metadata/adn-item/">http://www.dlese.org/Metadata/adn-item/</a></p></li>
+</ul>
+<p>The purpose of the ADN (ADEPT/DLESE/NASA) metadata framework is to describe
+resources typically used in learning environments (e.g. classroom activities,
+lesson plans, modules, visualizations, some datasets) for discovery by the
+Earth system education community.</p>
+</div>
+<div class="section" id="gml-profiles">
+<h3>GML Profiles<a class="headerlink" href="#gml-profiles" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="http://en.wikipedia.org/wiki/Geography_Markup_Language#Profile">http://en.wikipedia.org/wiki/Geography_Markup_Language#Profile</a></p></li>
+</ul>
+<p>GML profiles are logical restrictions to GML, and may be expressed by a
+document, an XML schema or both.</p>
+</div>
+<div class="section" id="netcdf-cf-opendap">
+<h3>NetCDF-CF-OPeNDAP<a class="headerlink" href="#netcdf-cf-opendap" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="http://opendap.org/">http://opendap.org/</a></p></li>
+<li><p><a class="reference external" href="http://www.oceanobs09.net/work/cwp_proposals/docs/100_Hankin_StandardsOceanDataInteroperability_CWPprop.doc">http://www.oceanobs09.net/work/cwp_proposals/docs/100_Hankin_StandardsOceanDataInteroperability_CWPprop.doc</a></p></li>
+</ul>
+</div>
+<div class="section" id="ddi">
+<h3>DDI<a class="headerlink" href="#ddi" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="http://www.ddialliance.org/">http://www.ddialliance.org/</a></p></li>
+</ul>
+<p>The Data Documentation Initiative is an international effort to establish a
+standard for technical documentation describing social science data. A
+membership-based Alliance is developing the DDI specification, which is
+written in XML.</p>
+</div>
+<div class="section" id="mage">
+<h3>MAGE<a class="headerlink" href="#mage" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="http://www.mged.org/Workgroups/MAGE/mage.html">http://www.mged.org/Workgroups/MAGE/mage.html</a></p></li>
+</ul>
+<p>The MicroArray and Gene Expression (MAGE) provides a standard for the
+representation of microarray expression data that would facilitate the
+exchange of microarray information between different data systems.</p>
+</div>
+<div class="section" id="esml">
+<h3>ESML<a class="headerlink" href="#esml" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Earth Science Markup Language</p></li>
+<li><p><a class="reference external" href="http://esml.itsc.uah.edu/">http://esml.itsc.uah.edu/</a></p></li>
+</ul>
+<p>The Earth Science Markup Language (ESML) is a interchange standard that
+supports the description of both syntactic (structural) and semantic
+information about Earth science data. Semantic tags provide linking of
+different domain ontologies to provide a complete machine understandable data
+description.</p>
+</div>
+<div class="section" id="csr">
+<h3>CSR<a class="headerlink" href="#csr" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="http://www.oceanteacher.org/oceanteacher/index.php/Cruise_Summary_Report_%28CSR%29">http://www.oceanteacher.org/oceanteacher/index.php/Cruise_Summary_Report_%28CSR%29</a></p></li>
+</ul>
+<p>The Cruise Summary Report (CSR), previously known as ROSCOP (Report of
+Observations/Samples Collected by Oceanographic Programmes), is an established
+international standard designed to gather information about oceanographic
+data. ROSCOP was conceived in the late 1960s by the IOC to provide a low level
+inventory for tracking oceanographic data collected on Research Vessels.</p>
+<p>The ROSCOP form was extensively revised in 1990, and was re-named CSR (Cruise
+Summary Report), but the name ROSCOP still persists with many marine
+scientists. Most marine disciplines are represented in ROSCOP, including
+physical, chemical, and biological oceanography, fisheries, marine
+contamination/pollution, and marine meteorology. The ROSCOP database is
+maintained by ICES</p>
+</div>
+<div class="section" id="miens">
+<h3>MIENS<a class="headerlink" href="#miens" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Minimum Information about an ENvironmental Sequence (MIENS)</p></li>
+<li><p><a class="reference external" href="http://gensc.org/gc_wiki/index.php/MIENS">http://gensc.org/gc_wiki/index.php/MIENS</a></p></li>
+<li><p><a class="reference external" href="http://precedings.nature.com/documents/5252/version/2">http://precedings.nature.com/documents/5252/version/2</a></p></li>
+</ul>
+<p>A metadata specification for representing the contextual and environmental information
+associated with marker gene data sets collected in the environment.  The MIENS specification
+extends the MIGS/MIMS specification.</p>
+</div>
+</div>
+<div class="section" id="additional-specifications-in-use-by-relevant-agencies">
+<h2>Additional specifications in use by relevant agencies<a class="headerlink" href="#additional-specifications-in-use-by-relevant-agencies" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="iso-2146">
+<h3>ISO 2146<a class="headerlink" href="#iso-2146" title="Permalink to this headline">¶</a></h3>
+<p>ISO 2146 (Registry Services for Libraries and Related Organisations) is an
+international standard currently under development by ISO TC46 SC4 WG7 to
+operate as a framework for building registry services for libraries and
+related organizations. It takes the form of an information model that
+identifies the objects and data elements needed for the collaborative
+construction of registries of all types. It is not bound to any specific
+protocol or data schema. The aim is to be as abstract as possible, in order to
+facilitate a shared understanding of the common processes involved, across
+multiple communities of practice.</p>
+<p>Used by the Australian National Data Service (ANDS) for
+describing data collections in ANDS, which for many Australian data sets
+corresponds to the concept of a ‘data set’ used here. The term ‘collection’
+is loosely defined so that different disciplines can apply it appropriately.</p>
+<p>See: <a class="reference external" href="http://www.nla.gov.au/wgroups/ISO2146/">http://www.nla.gov.au/wgroups/ISO2146/</a>
+Schema: <a class="reference external" href="http://www.nla.gov.au/wgroups/ISO2146/n198.xsd">http://www.nla.gov.au/wgroups/ISO2146/n198.xsd</a></p>
+</div>
+<div class="section" id="anzlic-metadata-profile">
+<h3>ANZLIC Metadata Profile<a class="headerlink" href="#anzlic-metadata-profile" title="Permalink to this headline">¶</a></h3>
+<p>A profile of ISO 19115 for Australia.  See:
+<a class="reference external" href="http://www.osdm.gov.au/ANZLIC_MetadataProfile_v1-1.pdf?ID=303">http://www.osdm.gov.au/ANZLIC_MetadataProfile_v1-1.pdf?ID=303</a></p>
+</div>
+</div>
+<div class="section" id="identifying-metadata-types">
+<h2>Identifying Metadata Types<a class="headerlink" href="#identifying-metadata-types" title="Permalink to this headline">¶</a></h2>
+<p>It is a requirement (#384) of DataONE that users are able to search the
+holdings, and so a mechanism for indexing the content and therefore a
+mechanism for specifying how to retrieve attribute values from the different
+<a class="reference internal" href="../glossary.html#term-science-metadata"><span class="xref std std-term">science metadata</span></a> formats is required. This in turn requires that the
+system is able to accurately determine the format of the metadata in order to
+utilize the correct parser for extracting the necessary attribute values for
+indexing.  Potential resources may be found at:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="http://www.gdfr.info/docs.html">GDFR</a></p></li>
+<li><p><a class="reference external" href="http://www.udfr.org/">UDFR</a></p></li>
+<li><p><a class="reference external" href="http://www.nationalarchives.gov.uk/PRONOM/Default.aspx">PRONOM</a></p></li>
+</ul>
+</div>
+<div class="section" id="mutability">
+<h2>Mutability<a class="headerlink" href="#mutability" title="Permalink to this headline">¶</a></h2>
+<p>Data and science metadata are immutable for the first version of the
+DataONE system. As such, resolving the identifiers assigned to the data or the
+science metadata will always resolve to the same stream of bytes.</p>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>Byte stream equivalence of replicated science metadata would require that MNs
+record an exact copy of the metadata document received during replication
+operations in addition to the content that would be extracted and stored as
+part of the normal (existing) operations of a MN. Is this a reasonable
+requirement for MNs? Since MNs are required to store a copy of data, it seems
+reasonable to assume a copy of the metadata can be stored as well.</p>
+</div>
+<p>The DataONE <code class="xref py py-func docutils literal notranslate"><span class="pre">CN_crud.update()</span></code> method will fail if attempting to modify an
+instance of science data.</p>
+<p>Deletion of content is only available to DataONE administrators (perhaps a
+curator role is required?).</p>
+<div class="admonition-todo admonition" id="id2">
+<p class="admonition-title">Todo</p>
+<p>Define the procedures for content deletion - who is responsible,
+procedures for contacting authors, timeliness of response.</p>
+</div>
+</div>
+<div class="section" id="data-endianness">
+<h2>Data Endianness<a class="headerlink" href="#data-endianness" title="Permalink to this headline">¶</a></h2>
+<p>The data component of a DataONE package is opaque to the DataONE system
+(though this may change in the future), and so the endianness of the content
+does not affect operations except that it must be preserved. However,
+processing modules may utilize content from DataONE and may be sensitive to
+the byte ordering of content. As such, the endianness of the data content
+should be recorded in the user supplied metadata (the science metadata), and
+where not present SHOULD be assumed to be least significant byte first (LSB,
+or small-endian).</p>
+<div class="admonition-todo admonition" id="id3">
+<p class="admonition-title">Todo</p>
+<p>Describe how endianness is specified in various science metadata
+formats.</p>
+</div>
+</div>
+<div class="section" id="longevity">
+<h2>Longevity<a class="headerlink" href="#longevity" title="Permalink to this headline">¶</a></h2>
+<p>An original copy of the data is maintained for a long as practicable (ideally,
+the original content is never deleted). Derived copies of content, such as
+might occur when a new copy of a data object is created to migrate to a
+different binary format (e.g. an Excel 1.0 spreadsheet translated to Open
+Document Format) always create a new data object that will be noted as an
+annotation recorded in the system metadata of the data package.</p>
+</div>
+<div class="section" id="metadata-character-encoding">
+<h2>Metadata Character Encoding<a class="headerlink" href="#metadata-character-encoding" title="Permalink to this headline">¶</a></h2>
+<p>All metadata, including the science metadata and DataONE package metadata MUST
+be encoded in the UTF-8 encoding. The DataONE <code class="xref py py-func docutils literal notranslate"><span class="pre">CN_crud.create()</span></code> and
+<code class="xref py py-func docutils literal notranslate"><span class="pre">CN_crud.update()</span></code> methods always expect UTF-8 encoded information, and so
+content that contains characters outside of the ASCII character set should be
+converted to UTF-8 through an appropriate mechanism before adding to DataONE.</p>
+</div>
+<div class="section" id="metadata-minimal-content">
+<h2>Metadata Minimal Content<a class="headerlink" href="#metadata-minimal-content" title="Permalink to this headline">¶</a></h2>
+<p>Experiment metadata MUST contain a minimal set of fields to be accepted by the
+DataONE system.</p>
+<div class="admonition-todo admonition" id="id4">
+<p class="admonition-title">Todo</p>
+<p>List and define the minimal set of fields with examples. A starting
+point would be the union of the required search properties and the
+information required for accurate citation.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">What is Data (DataONE Perspective)?</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#metadata-types">Metadata Types</a><ul>
+<li><a class="reference internal" href="#dublin-core">Dublin Core</a></li>
+<li><a class="reference internal" href="#darwin-core">Darwin Core</a></li>
+<li><a class="reference internal" href="#eml">EML</a></li>
+<li><a class="reference internal" href="#fgdc-csdgm">FGDC CSDGM</a></li>
+<li><a class="reference internal" href="#gcmd-dif">GCMD DIF</a></li>
+<li><a class="reference internal" href="#iso-19137">ISO 19137</a></li>
+<li><a class="reference internal" href="#nexml">NEXML</a></li>
+<li><a class="reference internal" href="#water-ml">Water ML</a></li>
+<li><a class="reference internal" href="#genbank-internal-format">Genbank internal format</a></li>
+<li><a class="reference internal" href="#iso-19115">ISO 19115</a></li>
+<li><a class="reference internal" href="#dryad-metadata-profile">Dryad Metadata Profile</a></li>
+<li><a class="reference internal" href="#adn">ADN</a></li>
+<li><a class="reference internal" href="#gml-profiles">GML Profiles</a></li>
+<li><a class="reference internal" href="#netcdf-cf-opendap">NetCDF-CF-OPeNDAP</a></li>
+<li><a class="reference internal" href="#ddi">DDI</a></li>
+<li><a class="reference internal" href="#mage">MAGE</a></li>
+<li><a class="reference internal" href="#esml">ESML</a></li>
+<li><a class="reference internal" href="#csr">CSR</a></li>
+<li><a class="reference internal" href="#miens">MIENS</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#additional-specifications-in-use-by-relevant-agencies">Additional specifications in use by relevant agencies</a><ul>
+<li><a class="reference internal" href="#iso-2146">ISO 2146</a></li>
+<li><a class="reference internal" href="#anzlic-metadata-profile">ANZLIC Metadata Profile</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#identifying-metadata-types">Identifying Metadata Types</a></li>
+<li><a class="reference internal" href="#mutability">Mutability</a></li>
+<li><a class="reference internal" href="#data-endianness">Data Endianness</a></li>
+<li><a class="reference internal" href="#longevity">Longevity</a></li>
+<li><a class="reference internal" href="#metadata-character-encoding">Metadata Character Encoding</a></li>
+<li><a class="reference internal" href="#metadata-minimal-content">Metadata Minimal Content</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+      <li>Previous: <a href="NodeIdentity.html" title="previous chapter">Node Identity and Registration</a></li>
+      <li>Next: <a href="DataPackage.html" title="next chapter">Data Packaging</a></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/design/WhatIsData.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/design/WhatIsData.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/WhatIsData.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

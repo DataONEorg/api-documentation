@@ -1,0 +1,243 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DataONE Overview &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/mathjax_pre.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="User Scenarios" href="design/userscenarios.html" />
+    <link rel="prev" title="DataONE PIRI Service" href="services/piri_service.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="design/userscenarios.html" title="User Scenarios"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="services/piri_service.html" title="DataONE PIRI Service"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html"></a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">DataONE Overview</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="dataone-overview">
+<h1>DataONE Overview<a class="headerlink" href="#dataone-overview" title="Permalink to this headline">¶</a></h1>
+<p>The major goal of NSFs <a class="reference external" href="http://www.nsf.gov/pubs/2007/nsf07601/nsf07601.htm">DataNet program</a> is to catalyze development of a
+system addressing the vision outlined in Chapter 3 (Data, Data Analysis, and
+Visualization) of NSF’s <a class="reference external" href="http://www.nsf.gov/pubs/2007/nsf0728/index.jsp">Cyberinfrastructure Vision</a> for 21st Century
+Discovery in which “science and engineering digital data are routinely
+deposited in well-documented form, are regularly and easily consulted and
+analyzed by specialists and non-specialists alike, are openly accessible while
+suitably protected, and are reliably preserved.” The DataNet project <a class="reference external" href="http://dataone.org/">DataONE</a>
+(Data Observation Network for Earth) is a federated data network built to
+improve access to Earth science data, and to support science by:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>engaging the relevant science, data, and policy communities;</p></li>
+<li><p>facilitating easy, secure, and persistent storage of data;</p></li>
+<li><p>disseminating integrated and user-friendly tools for data discovery,
+analysis, visualization, and decision-making.</p></li>
+</ol>
+</div></blockquote>
+<img alt="_images/ReferenceArchitecture.png" src="_images/ReferenceArchitecture.png" />
+<p><em>Figure 1.</em> An overview of the major components of the DataONE architecture.</p>
+<p>There are three major components in the DataONE infrastructure: Member Nodes
+which represent data repositories, Coordinating Nodes which serve data
+management and discovery services, and the Investigator Toolkit which contains
+a variety of end user tools for interacting with the infrastructure.</p>
+<p>Participation in the DataONE infrastructure as a Member Node or by using the
+Investigator Toolkit (i.e. implementing or utilizing DataONE service
+interfaces) provides several fundamental services upon which additional
+infrastructure, services, applications and communities may be built. These
+core, community building services include:</p>
+<ul class="simple">
+<li><p>promotion of data preservation through automated replication of data and
+metadata</p></li>
+<li><p>support for arbitrary globally unique identifiers with guaranteed resolution
+and dereferencing</p></li>
+<li><p>extensible search and discovery services</p></li>
+<li><p>federated management of user identities and access control</p></li>
+</ul>
+<p>Member Nodes are primarily existing data repositories (e.g. the <a class="reference external" href="http://knb.ecoinformatics.org/">Knowledge
+Network for Biodiversity</a>, <a class="reference external" href="http://daac.ornl.gov/">ORNL DAAC</a>, <a class="reference external" href="http://www.piscoweb.org/">Partnership for Interdisciplinary
+Studies of Coastal Oceans</a>) that already fill an important role in their
+respective communities supporting data management, curation, discovery and
+access functions. There are two main technical aspects to Member Node
+participation in DataONE - the service interfaces to be implemented (i.e. the
+<a class="reference internal" href="apis/MN_APIs.html"><span class="doc">Member Node APIs</span></a>), and the content that is to be served.
+At a fundamental level, all content in DataONE is treated as discrete,
+immutable objects, each of which has a unique identifier. A Member Node would
+be considered functionally complete if it were able to support the required
+services interfaces for <a class="reference internal" href="glossary.html#term-Tier-1"><span class="xref std std-term">Tier 1</span></a> participation (i.e. public access, read
+only content), and so enable the discovery of all objects available on the
+Member Node (through <a class="reference internal" href="apis/MN_APIs.html#MNRead.listObjects" title="MNRead.listObjects"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNRead.listObjects()</span></code></a>), low level description of
+each object (through <a class="reference internal" href="apis/MN_APIs.html#MNRead.getSystemMetadata" title="MNRead.getSystemMetadata"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNRead.getSystemMetadata()</span></code></a>), retrieval of the
+object given it’s identifier (<a class="reference internal" href="apis/MN_APIs.html#MNRead.get" title="MNRead.get"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNRead.get()</span></code></a>), and reporting of activity
+(<a class="reference internal" href="apis/MN_APIs.html#MNCore.getLogRecords" title="MNCore.getLogRecords"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNCore.getLogRecords()</span></code></a>).</p>
+<p>There are basically three types of object being made available by Member Nodes
+and processed by DataONE: <span class="xref std std-term">data object`s, :term:`science metadata</span>
+objects, and <span class="xref std std-term">resource map documents</span>. Each of these are identifiable by
+their unique identifier (PID), and each has associated System Metadata which
+describes the type, size, and so forth of the object.</p>
+<p><span class="xref std std-term">Data objects</span> are treated as opaque blobs. The object availability is
+registered by the coordinating nodes, and the blob is retrievable via the
+<a class="reference internal" href="apis/MN_APIs.html#MNRead.get" title="MNRead.get"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNRead.get()</span></code></a> method given its identifier.</p>
+<p><a class="reference internal" href="glossary.html#term-Science-metadata"><span class="xref std std-term">Science metadata</span></a> objects are metadata documents such as EML, FGDC,
+ISO19115 and so forth that provide metadata describing some data object(s).
+These are represented in XML according to their respective schema.</p>
+<p><a class="reference internal" href="glossary.html#term-Resource-map"><span class="xref std std-term">Resource map</span></a> documents describe the relationships between data and
+metadata - they are basically RDF documents that conform to the OAI-ORE
+specifications.</p>
+<p>From an object or class inheritance perspective, science metadata and resource
+maps might be considered specializations of the data object type in that more
+functionality is provided to DataONE by those types of object.</p>
+<p>From a purely technical perspective, a Member Node may be completely
+functional and not provide any metadata or resource map documents. It will
+mean that the content provided will not be discoverable through the search
+interfaces.</p>
+<p>Member Nodes may implement a subset of the full suite of <a class="reference internal" href="apis/MN_APIs.html"><span class="doc">Member Node
+APIs</span></a>, and in this way participate in the network with minimal
+effort (e.g. as a “read only” or <a class="reference internal" href="glossary.html#term-Tier-1"><span class="xref std std-term">Tier 1</span></a> Member Node). Member Nodes
+that implement the full suite of APIs (a <a class="reference internal" href="glossary.html#term-Tier-4"><span class="xref std std-term">Tier 4</span></a> Member Node) will be
+able to accept data from other Member Nodes which in turn assists with data
+preservation by ensuring multiple copies of all content are available, thus
+reducing the risk that content will be lost or inaccessible if a Member Node
+should go offline.</p>
+<p>Member Nodes may eventually number in the thousands as progressively smaller
+repositories come online, perhaps even to the level of individual labs
+deploying their own Member Node to take advantage of the broad infrastructure
+enabled by DataONE.</p>
+<p>Coordinating Nodes make critical services available through the
+<a class="reference internal" href="apis/CN_APIs.html"><span class="doc">APIs</span></a> that enable identifier resolution, data
+preservation, data discovery, and supplement the federated identity system.
+Coordinating Nodes replicate all content between themselves, an in doing so
+create a small set (3-6 nodes) of geographically and institutionally isolated
+systems that ensure ongoing operation of the infrastructure should any
+particular node be inaccessible. Coordinating Nodes maintain complete copies
+of all science metadata (detailed descriptions of science data objects and
+collections) and system metadata (low level metadata describing the type,
+size, ownership, and locations of data and) and index this information to
+enable data discovery services.</p>
+<p>Investigator Toolkit is a suite of software libraries, tools, and applications
+that support interaction with the DataONE infrastructure through the
+<span class="xref std std-doc">REST</span> service APIs exposed by the
+<a class="reference internal" href="apis/CN_APIs.html"><span class="doc">Coordinating</span></a> and <a class="reference internal" href="apis/MN_APIs.html"><span class="doc">Member</span></a> Nodes. Low
+level libraries are initially available in Python and Java which assist
+application developers to take advantage of the core services exposed by
+DataONE participants. For example, an R plugin has been developed using the
+Java library. Enabling this plugin within a R script enables discovery,
+retrieval, and storage of content directly in the DataONE infrastructure.
+Similar extensions are being developed for workflow tools such as Kepler,
+VisTrails and Science Pipes to enable interaction with the core DataONE
+services.</p>
+<p>The DataONE infrastructure was released for public use in July 2012 and at
+that point supported identifier resolution, content discovery and retrieval
+and the federated identity management infrastructure. The replication service
+was implemented with release 1.1 of the infrastructure which occurred in May
+of 2013 and completed the core services of the infrastructure.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="_static/dataone_logo.png" alt="Logo"/>
+    </a></p><h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation Overview</a><ul>
+      <li>Previous: <a href="services/piri_service.html" title="previous chapter">DataONE PIRI Service</a></li>
+      <li>Next: <a href="design/userscenarios.html" title="next chapter">User Scenarios</a></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/overview.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="_sources/overview.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/overview.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

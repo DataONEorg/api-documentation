@@ -1,0 +1,236 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Semantic Search Design &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="General Design and Implementation Notes" href="../notes/index.html" />
+    <link rel="prev" title="What is This Thing?" href="what_is_it.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../notes/index.html" title="General Design and Implementation Notes"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="what_is_it.html" title="What is This Thing?"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Semantic Search Design</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="semantic-search-design">
+<h1>Semantic Search Design<a class="headerlink" href="#semantic-search-design" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>Semantic search improves both search and display of metadata records over what was previously possible. For example, with traditional, free-text search, if a metadata record described a dataset on American green tree frogs (<em>Hyla cinerea</em>) but never included the term “amphibian” in the metadata record’s text, a free-text search for “data on amphibians” may not return the record. With semantic search, we can index ahead of time that fact that American green tree frogs are amphibians using a suitable knowledge graph and the record would be returned.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although designed to be generally applicable, only annotations expressed with the EML 2.2.x semantics module are parsed. See <a class="reference external" href="https://eml.ecoinformatics.org/whats-new-in-eml-2-2-0.html">What’s New in EML 2.2.0</a>.</p>
+</div>
+<p>Annotations cane be expressed in various locations of EML 2.2.x records. For example:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;attribute</span> <span class="na">id=</span><span class="s">&quot;myatt&quot;</span><span class="nt">&gt;</span>
+  ...
+  <span class="nt">&lt;annotation&gt;</span>
+    <span class="nt">&lt;propertyURI</span> <span class="na">label=</span><span class="s">&quot;of characteristic&quot;</span><span class="nt">&gt;</span>
+      http://ecoinformatics.org/oboe/oboe.1.2/oboe-core.owl#ofCharacteristic
+    <span class="nt">&lt;/propertyURI&gt;</span>
+    <span class="nt">&lt;valueURI</span> <span class="na">label=</span><span class="s">&quot;Mass&quot;</span><span class="nt">&gt;</span>
+      http://ecoinformatics.org/oboe/oboe.1.2/oboe-characteristics.owl#Mass
+    <span class="nt">&lt;/valueURI&gt;</span>
+  <span class="nt">&lt;/annotation&gt;</span>
+  ...
+<span class="nt">&lt;/attribute&gt;</span>
+</pre></div>
+</div>
+<p>The above annotation asserts that the attribute “<cite>myatt</cite>” is “<cite>of characteristic</cite>” “<cite>Mass</cite>”. Both terms are defined in the OBOE ontology with specific definitions and logical relationships with other terms. After parsing and indexing, annotations such as this annotation are both searchable and displayed on dataset landing pages.</p>
+</div>
+<div class="section" id="indexing">
+<h2>Indexing<a class="headerlink" href="#indexing" title="Permalink to this headline">¶</a></h2>
+<p>Harvesting of an EML record with one or more annotations triggers <code class="docutils literal notranslate"><span class="pre">EMLAnnotationSubprocessor</span></code> (in addition to other applicable subprocessors). This does tthe following:</p>
+<ol class="arabic simple">
+<li><p>Executes the XPath <code class="docutils literal notranslate"><span class="pre">//annotation/valueURI</span></code> on the record</p></li>
+<li><p>Performs query expansion on the result of (1) to include all superclasses of each term</p></li>
+<li><p>Stores the expanded result in the <code class="docutils literal notranslate"><span class="pre">sem_annotation</span></code> field in the search index</p></li>
+</ol>
+<p>See below for a simplified architectural diagram:</p>
+<img alt="../_images/semantics_architecture_simple.png" src="../_images/semantics_architecture_simple.png" />
+</div>
+<div class="section" id="ontologymodelservice">
+<h2>OntologyModelService<a class="headerlink" href="#ontologymodelservice" title="Permalink to this headline">¶</a></h2>
+<p>In the above diagram, the <code class="docutils literal notranslate"><span class="pre">EMLAnnotationSubprocessor</span></code> uses the <code class="docutils literal notranslate"><span class="pre">OntologyModelService</span></code> to perform query expansion.
+The <code class="docutils literal notranslate"><span class="pre">OntologyModelService</span></code> implements a simple Jena <code class="docutils literal notranslate"><span class="pre">OntologyModel</span></code> which loads a set of <a class="reference internal" href="#whitelisted-ontologies">Whitelisted Ontologies</a> at startup into a single Jena <code class="docutils literal notranslate"><span class="pre">OntologyModel</span></code> which can be queried by other index subprocessors at index time.</p>
+<p>Each term is turned into a <a class="reference external" href="https://www.w3.org/TR/sparql11-property-paths/">Property Path</a> query to find all superclasses of the term:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>SELECT ?sem_annotation
+WHERE {
+  &lt;$CONCEPT_URI&gt; rdfs:subClassOf* ?sem_annotation .
+}
+</pre></div>
+</div>
+<p>The current architecture is flexible enough to allow other types of SPARQL queries to be run on annotations.</p>
+</div>
+<div class="section" id="search-interface">
+<h2>Search Interface<a class="headerlink" href="#search-interface" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="annotation-search-filter">
+<h3>Annotation Search Filter<a class="headerlink" href="#annotation-search-filter" title="Permalink to this headline">¶</a></h3>
+<p>The search UI leverages BioPortal’s API and their tree view widget to provide users with a way to find terms and search by them. At current, only terms from ECSO’s MeasurementType tree are viewable and searchable.</p>
+<img alt="../_images/semantics_searchfilter.png" src="../_images/semantics_searchfilter.png" />
+</div>
+<div class="section" id="annotation-popovers-on-landing-pages">
+<h3>Annotation Popovers on Landing Pages<a class="headerlink" href="#annotation-popovers-on-landing-pages" title="Permalink to this headline">¶</a></h3>
+<p>The search UI provides popovers on landing pages for annotations and provides an enhanced tooltip if the term is present in BioPortal. When the popover is clicked, a request is made to BioPortal’s class search API to find a defintion for the term and the popover is updated with the found defintion:</p>
+<img alt="../_images/semantics_popover.gif" src="../_images/semantics_popover.gif" />
+<p>If the term is not found in BioPortal, the popover is still shown and works mostly the same, minus the added definition.</p>
+</div>
+</div>
+<div class="section" id="whitelisted-ontologies">
+<h2>Whitelisted Ontologies<a class="headerlink" href="#whitelisted-ontologies" title="Permalink to this headline">¶</a></h2>
+<p>For performance and security reasons, the <code class="docutils literal notranslate"><span class="pre">OntologyModelService</span></code> doesn’t supporting loading arbitrary ontologies at query time. Instead, a set of whitelisted ontologies was established:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://bioportal.bioontology.org/ontologies/ECSO">ECSO</a>: (The ECcoSystem Ontology)</p></li>
+<li><p><a class="reference external" href="http://www.obofoundry.org/ontology/envo.html">ENVO</a> (Environmental Ontology)</p></li>
+<li><p><a class="reference external" href="https://github.com/NCEAS/oboe">OBOE</a> (The Extensible Observation Ontology)</p></li>
+<li><p><a class="reference external" href="https://github.com/NCEAS/oboe">ProvONE</a> (The DataONE PROV Ontology)</p></li>
+</ul>
+<p>These are loaded into a Jena <code class="docutils literal notranslate"><span class="pre">OntologyModelService</span></code> at startup and are available for query expansion when new records are indexed.</p>
+</div>
+<div class="section" id="adding-new-ontologies">
+<h2>Adding New Ontologies<a class="headerlink" href="#adding-new-ontologies" title="Permalink to this headline">¶</a></h2>
+<p>When EML records are annotated with terms <em>not</em> from the set of <a class="reference internal" href="#whitelisted-ontologies">Whitelisted Ontologies</a>, annotations, the search catalog will work slightly different than the case where annotations use terms from the whitelist.</p>
+<ol class="arabic simple">
+<li><p>Users won’t be able to search for those records by the term URI or label through the search interface because the Annotation search only supports searching for <code class="docutils literal notranslate"><span class="pre">ECSO</span></code>  <code class="docutils literal notranslate"><span class="pre">MeasurementType</span></code> annotations at this time.</p></li>
+<li><p>Users will be presented with only a basic tooltip for the term on the record’s landing page, see:</p></li>
+</ol>
+<img alt="../_images/semantics_annotation_outofwhitelist.png" src="../_images/semantics_annotation_outofwhitelist.png" />
+<p>Instead of the more helpful tooltip:</p>
+<img alt="../_images/semantics_annotation_inwhitelist.png" src="../_images/semantics_annotation_inwhitelist.png" />
+<p>To add an ontology, you must:</p>
+<ol class="arabic simple">
+<li><p>Check in a copy of the ontology’s OWL file or files to <code class="docutils literal notranslate"><span class="pre">src/main/resources/ontologies</span></code> in <code class="docutils literal notranslate"><span class="pre">D1_CN_INDEX_PROCESSOR</span></code>.</p></li>
+<li><p>Add a reference to <code class="docutils literal notranslate"><span class="pre">src/main/resources/application-context-ontology-model-service.xml</span></code> <code class="docutils literal notranslate"><span class="pre">D1_CN_INDEX_PROCESSOR</span></code> in the <code class="docutils literal notranslate"><span class="pre">ontologyList</span></code> and <code class="docutils literal notranslate"><span class="pre">altEntryList</span></code> properties.</p></li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Semantic Search Design</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#indexing">Indexing</a></li>
+<li><a class="reference internal" href="#ontologymodelservice">OntologyModelService</a></li>
+<li><a class="reference internal" href="#search-interface">Search Interface</a><ul>
+<li><a class="reference internal" href="#annotation-search-filter">Annotation Search Filter</a></li>
+<li><a class="reference internal" href="#annotation-popovers-on-landing-pages">Annotation Popovers on Landing Pages</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#whitelisted-ontologies">Whitelisted Ontologies</a></li>
+<li><a class="reference internal" href="#adding-new-ontologies">Adding New Ontologies</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+      <li>Previous: <a href="what_is_it.html" title="previous chapter">What is This Thing?</a></li>
+      <li>Next: <a href="../notes/index.html" title="next chapter">General Design and Implementation Notes</a></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/design/semantics.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/design/semantics.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/semantics.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

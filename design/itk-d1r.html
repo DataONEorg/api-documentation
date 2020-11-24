@@ -1,0 +1,315 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DataONE R Client Package &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Matlab" href="itk-matlab.html" />
+    <link rel="prev" title="Analysis and Modeling Tools" href="itk-analysis.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="itk-matlab.html" title="Matlab"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="itk-analysis.html" title="Analysis and Modeling Tools"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="itk-analysis.html" accesskey="U">Analysis and Modeling Tools</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">DataONE R Client Package</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="dataone-r-client-package">
+<h1>DataONE R Client Package<a class="headerlink" href="#dataone-r-client-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="synopsis">
+<h2>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this headline">¶</a></h2>
+<p>Environmental scientists commonly use the <a class="reference external" href="http://www.r-project.org">R Project</a> software system for
+statistical analysis and modeling. The R framework is a flexible statistical
+computing environment with robust, extensive packages to perform a large
+variety of analysis and modeling tasks. Because R is open source and
+extensible, it has been widely adopted by the environmental science community,
+and it is easy to extend to provide new analysis capabilities.</p>
+<p>The <a class="reference internal" href="#dataone-r-client-package">DataONE R Client Package</a> is an R package that provides access to the
+DataONE services that are present at Coordinating Nodes and Member Nodes. The
+tool will allow an R user to easily load the d1r package (using <a class="reference external" href="http://cran.r-project.org">CRAN</a>) and
+then use functions in R to search the DataONE system, locate data of interest,
+load that data into the R environment, process it using R’s various tools, and
+then upload derived data and metadata back into DataONE.</p>
+<p>By targeting R in the Investigator Toolkit, we enable a wide variety of
+scientists to harness data within the network of Member Nodes, and to
+reference the data sets within their R scripts using their unique identifiers
+from DataONE. This allows anyone to execute the R script from a paper or
+analysis, and the <cite>dataone</cite> library handles the details of finding and accessing
+the data needed for analysis or visualization.</p>
+</div>
+<div class="section" id="user-stories">
+<h2>User stories<a class="headerlink" href="#user-stories" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p>A scientist with R on their system can easily install d1r from <a class="reference external" href="http://cran.r-project.org">CRAN</a></p></li>
+<li><p>A scientist can load a data object using its DataONE identifier from the
+DataONE system into R for further processing by other R functions. The
+data objects supported should minimally include:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Data Tables in CSV and other delimited formats</p></li>
+<li><p>NetCDF files</p></li>
+<li><p>Raster images in various formats</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>A scientist can use d1r to search for data based on critical metadata,
+including title, creator, keywords, abstract, spatial location, temporal
+coverage, taxonomic coverage, and other relevant fields</p></li>
+<li><p>A scientist can load all of the supported data objects into R by using the
+metadata found in a metadata search without directly knowing the
+identifiers for individual data objects</p></li>
+<li><p>Given a data object loaded from DataONE into R, a scientist can display
+the science metadata associated with that object from within the R system
+(this might include a link to an external web URI that provides a nice
+human readable version of the metadata too)</p></li>
+<li><p>A scientist can authenticate with the DataONE system in order to establish
+their identity to access restricted objects and services</p></li>
+<li><p>A scientist can upload an R dataframe as a data set with associated
+science and system metadata for that object from within the R environment</p></li>
+</ul>
+</div>
+<div class="section" id="package-design">
+<h2>Package design<a class="headerlink" href="#package-design" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="classes-fields-and-methods">
+<h3>Classes, fields, and methods<a class="headerlink" href="#classes-fields-and-methods" title="Permalink to this headline">¶</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>All of the classes and methods in R are inverted (ie, classes don’t
+contain methods per se, instead, methods are specialized to work on
+particular classes, and the class is generally passed in as the first
+parameter of the method call. So, all signatures below need to have an
+added parameter for this object to be passed in.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This design is out of date, and instead follows the design in DataPackage.
+The R package mainly follows and uses the Java implementation, so does not
+need to reimplement this structure.  Probably can delete this section, but
+leaving for now until DataPackage design is completed.</p>
+</div>
+<ul class="simple">
+<li><dl class="simple">
+<dt>D1Client</dt><dd><ul>
+<li><dl class="simple">
+<dt>Fields</dt><dd><ul>
+<li><p>endpoint</p></li>
+<li><p>username</p></li>
+<li><p>cli &lt;D1Client&gt;</p></li>
+<li><p>token &lt;AuthToken&gt;</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Constructors</dt><dd><ul>
+<li><p>D1Client(CN_URI)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Methods</dt><dd><ul>
+<li><p>login(username, password): AuthToken</p></li>
+<li><p>logout()</p></li>
+<li><p>getEndpoint(): String</p></li>
+<li><p>getPackage(pid): DataPackage</p></li>
+<li><p>getUsername(): String</p></li>
+<li><p>getToken(): AuthToken</p></li>
+<li><p>search(): ResultSet</p></li>
+<li><p>resolve(pid): [MemberNodeURI]</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>DataPackage</dt><dd><ul>
+<li><dl class="simple">
+<dt>Fields</dt><dd><ul>
+<li><p>identifier</p></li>
+<li><p>scimeta</p></li>
+<li><p>sysmeta</p></li>
+<li><p>[dataObject]</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Constructors</dt><dd><ul>
+<li><p>DataPackage(identifier, scimeta, sysmeta)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Methods</dt><dd><ul>
+<li><p>addData(DataObject): DataPackage</p></li>
+<li><p>getDataObjectCount(): int</p></li>
+<li><p>getDataObject(index): DataObject</p></li>
+<li><p>getTitle(): String</p></li>
+<li><p>getCreator(): String</p></li>
+<li><p>getDisplayURL(): String</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>DataObject</dt><dd><ul>
+<li><dl class="simple">
+<dt>Fields</dt><dd><ul>
+<li><p>sysmeta</p></li>
+<li><p>databytes</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Constructors</dt><dd><ul>
+<li><p>DataObject(Identifier, SystemMetadata, databytes)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>Methods</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">DataONE R Client Package</a><ul>
+<li><a class="reference internal" href="#synopsis">Synopsis</a></li>
+<li><a class="reference internal" href="#user-stories">User stories</a></li>
+<li><a class="reference internal" href="#package-design">Package design</a><ul>
+<li><a class="reference internal" href="#classes-fields-and-methods">Classes, fields, and methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+  <li><a href="itk-analysis.html">Analysis and Modeling Tools</a><ul>
+      <li>Previous: <a href="itk-analysis.html" title="previous chapter">Analysis and Modeling Tools</a></li>
+      <li>Next: <a href="itk-matlab.html" title="next chapter">Matlab</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/design/itk-d1r.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/design/itk-d1r.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/itk-d1r.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

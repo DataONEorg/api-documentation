@@ -1,0 +1,356 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Use Case 06 - MN Synchronize &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/mathjax_pre.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Use Case 08 - Replication Policy Communication" href="08_uc.html" />
+    <link rel="prev" title="Use Case 41 - Archive an Object" href="41_uc.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="08_uc.html" title="Use Case 08 - Replication Policy Communication"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="41_uc.html" title="Use Case 41 - Archive an Object"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html"></a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../usecases.html" accesskey="U">Use Cases</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Use Case 06 - MN Synchronize</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="use-case-06-mn-synchronize">
+<span id="uc06"></span><h1>Use Case 06 - MN Synchronize<a class="headerlink" href="#use-case-06-mn-synchronize" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<span id="index-0"></span><h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>Science metadata records, resource maps, and system metadata for all objects
+available on a Member Node are synchronized to a Coordinating Node.</p>
+</div>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>As content is added to Member Nodes, the associated system metadata, science
+metadata, and resource map documents are retrieved by a Coordinating Node.
+Once the objects are registered with the Coordinating Node, they are
+considered to be part of the DataONE system, and so will be managed
+accordingly - the metadata and resource map object will be replicated between
+Coordinating Nodes, metadata will be indexed, and the objects will be
+replicated to other Member Nodes as required.</p>
+<p>Content replication as managed by Coordinating Nodes is described in Use Case
+09.</p>
+<p>In version 1.x of the DataONE infrastructure, synchronization is through polling
+only. A Coordinating Node will periodically request a list of objects that are
+new or have been altered for some specified time period using the listObjects
+method.</p>
+<p>In version 2.x of the DataONE infrastructure, a new mechanism to enable clients
+or Member Nodes to request synchronization of an object was added. This helps
+ensure a more rapid update of object properties such as access control rules are
+propogated through the infrastructure.</p>
+</div>
+<div class="section" id="actors">
+<h2>Actors<a class="headerlink" href="#actors" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Member Node</p></li>
+<li><p>Coordinating Node</p></li>
+</ul>
+<img alt="../../_images/c3e75bf5e58e3fa165e8bd217cd4f7e1def93c683741dcf262984044f277d06d.svg" class="align-center" src="../../_images/c3e75bf5e58e3fa165e8bd217cd4f7e1def93c683741dcf262984044f277d06d.svg" /><p><strong>Figure 1.</strong> Use case diagram indicating the components and other use cases
+involved in this use case.</p>
+</div>
+<div class="section" id="preconditions">
+<h2>Preconditions<a class="headerlink" href="#preconditions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>CN and MN operational</p></li>
+<li><p>New content available on a Member Node.</p></li>
+</ul>
+</div>
+<div class="section" id="triggers">
+<h2>Triggers<a class="headerlink" href="#triggers" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Periodic polling of MNs</p></li>
+<li><p>Signal to CN issued by a MN that is requesting synchronization</p></li>
+</ul>
+</div>
+<div class="section" id="post-conditions">
+<h2>Post Conditions<a class="headerlink" href="#post-conditions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>All System Metadata, science metadata, and resoruce map documents from a MN
+are also present on the CN</p></li>
+<li><p>Update to the search index is triggered (Use Case 43)</p></li>
+</ul>
+</div>
+<div class="section" id="implementation-overview">
+<h2>Implementation Overview<a class="headerlink" href="#implementation-overview" title="Permalink to this headline">¶</a></h2>
+<img alt="../../_images/a4e4b8f587e569829c9b462f915ea72004a3e972108bbc2711db7b8749be4c44.svg" class="align-center" src="../../_images/a4e4b8f587e569829c9b462f915ea72004a3e972108bbc2711db7b8749be4c44.svg" /><p><strong>Figure 2.</strong> Overview of synchronization process using a polling process to
+periodically request information about objects that have changed within a time
+period.</p>
+<img alt="../../_images/2d117cf4bb7d5f41dbfb9c111a9e93d6fb858a01fdc1577c24c70c2f6223d282.svg" class="align-center" src="../../_images/2d117cf4bb7d5f41dbfb9c111a9e93d6fb858a01fdc1577c24c70c2f6223d282.svg" /><p><strong>Figure 3.</strong> Overview of synchronization process with an external request to
+synchronize an object rather than relying on periodic polling. Note this is a
+Version 2.x feature.</p>
+</div>
+<div class="section" id="implementation-details">
+<h2>Implementation Details<a class="headerlink" href="#implementation-details" title="Permalink to this headline">¶</a></h2>
+<img alt="../../_images/c86167cefc70bda67dcf70fb79172496600bbd8a84bffc35ebb50e55f5b765ab.svg" class="align-center" src="../../_images/c86167cefc70bda67dcf70fb79172496600bbd8a84bffc35ebb50e55f5b765ab.svg" /><p><em>Figure 4.</em> Sequence diagram for use case 06. Synchronize content between
+Member and Coordinating Node. Detail for the <em>processObject()</em> step provided
+in the activity diagram below.</p>
+<img alt="../../_images/21c22eb044eb34bb4299bbe9c74971ea8318ae0b6346c1ea7ccf1c47dc02ca4b.svg" class="align-center" src="../../_images/21c22eb044eb34bb4299bbe9c74971ea8318ae0b6346c1ea7ccf1c47dc02ca4b.svg" /><p><em>Figure 5.</em> Activity diagram indicating the execution flow after attempting to
+retrieve the system metadata for the object from the CN.</p>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>The Member Node synchronization process will operate in an asynchronous
+manner, with a task queue on the CN service containing a list of objects that
+need to be added to the coordinating node populated through two mechanisms:</p>
+<ol class="arabic simple">
+<li><p>scheduled calls to <a class="reference internal" href="../../apis/MN_APIs.html#MNRead.listObjects" title="MNRead.listObjects"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNRead.listObjects()</span></code></a></p></li>
+<li><p>through a new notification API that is called by a Member Node after a
+successful create operation.</p></li>
+</ol>
+<p>The task queue is processed by a pool of workers which retrieve the content
+using <a class="reference internal" href="../../apis/MN_APIs.html#MNRead.get" title="MNRead.get"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNRead.get()</span></code></a> and <a class="reference internal" href="../../apis/MN_APIs.html#MNRead.getSystemMetadata" title="MNRead.getSystemMetadata"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNRead.getSystemMetadata()</span></code></a>, and store the
+content in the Coordinating Node using the internal <code class="xref py py-func docutils literal notranslate"><span class="pre">CNStorage.create()</span></code>
+method.</p>
+<p>The initial implementation will focus on using only scheduled calls to
+<a class="reference internal" href="../../apis/MN_APIs.html#MNRead.listObjects" title="MNRead.listObjects"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNRead.listObjects()</span></code></a> to populate the task queue. The scheduling
+information shall be set during the MN registration process.</p>
+<p>Multiple threads should be able to process the task queue, and the number of
+threads should be adjustable by an administrator. The total number of threads
+hitting on a particular MN should be limited, the limit should be specified in
+the MN capabilities recorded during the registration process.</p>
+<p>The tasks queue will need to be thread safe. In the future it may be feasible
+to use a distributed queue (based on Apache MQ or Zookeeper for example;
+shared across the CNs) so that processes on any CN can issue the
+<code class="xref py py-func docutils literal notranslate"><span class="pre">MN_get()</span></code> and <code class="xref py py-func docutils literal notranslate"><span class="pre">MN_getSystemMetadata()</span></code> requests.</p>
+<p>There will likely be a significant load on the system for indexing as new
+content is being added - this is the case for both Mercury and Metacat.
+Options for disabling indexing for bulk load should be considered.</p>
+<p>The synchronization process will certainly be more sophisticated down the road,
+but for now (i.e. prototype implementation) simplicity should be a priority:</p>
+<ul class="simple">
+<li><p>MNs are only scanned by the CN where they are registered (restriction to be
+dropped down the road).</p></li>
+<li><p>listObjects is polled (with max objects set to some limit), with results
+stored in a queue on the CN</p></li>
+<li><p>as the queue is processed and shrinks to some size, then listObjects process
+is polled again</p></li>
+<li><p>the queue is processed by n worker threads, with each task being to pop an
+entry from the queue, pull the content from the target, and store it in the
+object store.</p></li>
+<li><p>when there is some number of new entries in the object store, then the
+mercury indexing process needs to kick in. Ideally this should be updating
+rather than re-creating the index at each pass. This may be initiated by a
+cron job for the prototype implementation.</p></li>
+</ul>
+<p>This fairly simplistic approach should be enough to get things started. Not
+ideal, but should suffice to get some data moving around. To implement, there
+is need for a few new components - a queue, a place to store state
+information, the code that does the polling, the code that does the object
+retrieval, the worker thread code, and an overall controller service.</p>
+<div class="section" id="in-more-detail">
+<h3>In more detail<a class="headerlink" href="#in-more-detail" title="Permalink to this headline">¶</a></h3>
+<p>Retrieve objects from Member Nodes. getNextMemberNode() gets the next Member
+Node to work on - this could be serial selection from the list of registered
+MNs, could be based on the last update, perhaps from some hint returned in
+<code class="xref py py-func docutils literal notranslate"><span class="pre">MN_health.ping()</span></code>.</p>
+<p>New structures:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MemberNodeState</span>
+  <span class="n">String</span> <span class="n">url</span><span class="p">;</span>  <span class="o">//</span><span class="n">URL</span> <span class="n">of</span> <span class="n">the</span> <span class="n">member</span> <span class="n">node</span>
+  <span class="n">DateTime</span> <span class="n">lastCheckTime</span><span class="p">;</span>  <span class="o">//</span> <span class="n">time</span> <span class="n">stamp</span> <span class="k">for</span> <span class="n">when</span> <span class="n">the</span> <span class="n">MN</span> <span class="n">was</span> <span class="n">last</span> <span class="n">polled</span> <span class="k">for</span> <span class="n">listOjects</span>
+
+
+<span class="n">RetrievalTask</span>
+  <span class="n">String</span> <span class="n">url</span><span class="p">;</span>
+  <span class="n">ObjectInfo</span> <span class="n">objectInfo</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Populating the harvest task queue pseudo code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">populateTaskQueue</span> <span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">ThreadSafeQueue</span> <span class="n">taskQueue</span> <span class="o">=</span> <span class="n">getSharedTaskQueue</span><span class="p">()</span>
+  <span class="k">while</span> <span class="p">(</span> <span class="n">keepRunning</span><span class="p">()</span> <span class="p">)</span>
+  <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">taskQueue</span><span class="o">.</span><span class="n">length</span> <span class="o">&lt;</span> <span class="n">MIN_TASKS</span><span class="p">)</span>
+    <span class="p">{</span>
+      <span class="n">MemberNodeState</span> <span class="o">=</span> <span class="n">getNextMemberNode</span><span class="p">();</span>
+
+      <span class="o">//</span> <span class="n">This</span> <span class="n">could</span> <span class="n">be</span> <span class="n">executed</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">different</span> <span class="n">thread</span><span class="p">,</span> <span class="n">which</span> <span class="n">would</span>
+      <span class="o">//</span> <span class="n">enable</span> <span class="n">multiple</span> <span class="n">MNs</span> <span class="n">to</span> <span class="n">be</span> <span class="n">polled</span> <span class="n">at</span> <span class="n">a</span> <span class="n">tme</span> <span class="k">if</span> <span class="n">necessary</span>
+      <span class="nb">int</span> <span class="n">numNewEntries</span> <span class="o">=</span> <span class="n">loadMNTasks</span><span class="p">(</span><span class="n">taskQueue</span><span class="p">,</span> <span class="n">mnState</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Processing the harvest task queue pseudo code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">int</span> <span class="n">loadMNTasks</span><span class="p">(</span><span class="n">ThreadSafeQueue</span> <span class="n">taskQueue</span><span class="p">,</span> <span class="n">MemberNodeState</span> <span class="n">mnState</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">AuthToken</span> <span class="n">token</span> <span class="o">=</span> <span class="n">getSystemToken</span><span class="p">();</span>
+  <span class="n">D1cient</span> <span class="n">client</span> <span class="o">=</span> <span class="n">D1Client</span><span class="p">(</span> <span class="n">mnState</span><span class="o">.</span><span class="n">url</span> <span class="p">);</span>
+
+  <span class="o">//</span> <span class="n">get</span> <span class="n">a</span> <span class="nb">list</span> <span class="n">of</span> <span class="nb">all</span> <span class="n">the</span> <span class="n">new</span> <span class="n">entries</span> <span class="n">since</span> <span class="n">lastCheckTime</span>
+  <span class="n">DateTime</span> <span class="n">tstamp</span> <span class="o">=</span> <span class="n">now</span><span class="p">();</span>
+
+  <span class="o">//</span> <span class="n">Will</span> <span class="n">actually</span> <span class="n">need</span> <span class="n">to</span> <span class="n">loop</span> <span class="n">here</span> <span class="n">to</span> <span class="n">page</span> <span class="n">through</span> <span class="n">results</span>
+  <span class="n">ObjectList</span> <span class="n">objectList</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">listObjects</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">mnState</span><span class="o">.</span><span class="n">lastCheckTime</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">ObjectInfo</span> <span class="n">objinfo</span> <span class="p">:</span> <span class="n">objectList</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">RetrievalTask</span> <span class="n">task</span> <span class="o">=</span> <span class="n">RetrievalTask</span><span class="p">(</span><span class="n">mnState</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">objinfo</span><span class="p">)</span>
+    <span class="n">taskQueue</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+  <span class="p">}</span>
+  <span class="n">mnState</span><span class="o">.</span><span class="n">lastCheckTime</span> <span class="o">=</span> <span class="n">tstamp</span><span class="p">;</span>
+  <span class="n">setMemberNodeState</span><span class="p">(</span><span class="n">mnState</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">objectList</span><span class="o">.</span><span class="n">length</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Worker threads are responsible for retrieving each object listed in the
+taskQueue. The number of workers should be adjustable. An obvious target for
+improving efficiency is to enable requesting multiple objects in a single call
+to a MN (later enhancement):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">//</span> <span class="nb">object</span> <span class="ow">is</span> <span class="n">the</span> <span class="nb">next</span> <span class="n">entry</span> <span class="kn">from</span> <span class="nn">the</span> <span class="n">taskQueue</span>
+<span class="nb">bool</span> <span class="n">retrieveObject</span><span class="p">(</span><span class="n">String</span> <span class="n">mnurl</span><span class="p">,</span> <span class="n">ObjectInfo</span> <span class="nb">object</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">Authtoken</span> <span class="n">token</span> <span class="o">=</span> <span class="n">getSystemToken</span><span class="p">();</span>
+  <span class="n">D1Client</span> <span class="n">client</span> <span class="o">=</span> <span class="n">D1Client</span><span class="p">(</span><span class="n">mnurl</span><span class="p">);</span>
+  <span class="n">SystemMetadata</span> <span class="n">sysmeta</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">getSystemMetadata</span><span class="p">(</span> <span class="nb">object</span><span class="o">.</span><span class="n">identifier</span> <span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span> <span class="n">isScienceMetadata</span><span class="p">(</span><span class="n">sysmeta</span><span class="o">.</span><span class="n">objectClass</span><span class="p">)</span> <span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">scimeta</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="nb">object</span><span class="o">.</span><span class="n">identifier</span> <span class="p">);</span>
+    <span class="n">CN_SERVICE</span><span class="o">.</span><span class="n">create</span><span class="p">(</span> <span class="nb">object</span><span class="o">.</span><span class="n">identifier</span><span class="p">,</span> <span class="n">sysmeta</span><span class="p">,</span> <span class="n">scimeta</span> <span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">else</span>
+  <span class="p">{</span>
+    <span class="n">CN_SERVICE</span><span class="o">.</span><span class="n">create</span><span class="p">(</span> <span class="nb">object</span><span class="o">.</span><span class="n">identifier</span><span class="p">,</span> <span class="n">sysmeta</span> <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Use Case 06 - MN Synchronize</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#summary">Summary</a></li>
+<li><a class="reference internal" href="#actors">Actors</a></li>
+<li><a class="reference internal" href="#preconditions">Preconditions</a></li>
+<li><a class="reference internal" href="#triggers">Triggers</a></li>
+<li><a class="reference internal" href="#post-conditions">Post Conditions</a></li>
+<li><a class="reference internal" href="#implementation-overview">Implementation Overview</a></li>
+<li><a class="reference internal" href="#implementation-details">Implementation Details</a></li>
+<li><a class="reference internal" href="#implementation">Implementation</a><ul>
+<li><a class="reference internal" href="#in-more-detail">In more detail</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation Overview</a><ul>
+  <li><a href="../usecases.html">Use Cases</a><ul>
+      <li>Previous: <a href="41_uc.html" title="previous chapter">Use Case 41 - Archive an Object</a></li>
+      <li>Next: <a href="08_uc.html" title="next chapter">Use Case 08 - Replication Policy Communication</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/design/UseCases/06_uc.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../../_sources/design/UseCases/06_uc.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/06_uc.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

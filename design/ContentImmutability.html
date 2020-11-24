@@ -1,0 +1,338 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Immutability of Content in DataONE &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Immutability of Content in DataONE</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="immutability-of-content-in-dataone">
+<h1><a class="toc-backref" href="#id1">Immutability of Content in DataONE</a><a class="headerlink" href="#immutability-of-content-in-dataone" title="Permalink to this headline">¶</a></h1>
+<div class="contents topic" id="contents">
+<span id="index-0"></span><p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#immutability-of-content-in-dataone" id="id1">Immutability of Content in DataONE</a></p>
+<ul>
+<li><p><a class="reference internal" href="#overview" id="id2">Overview</a></p></li>
+<li><p><a class="reference internal" href="#changes-constituting-a-new-snapshot" id="id3">Changes constituting a new snapshot</a></p></li>
+<li><p><a class="reference internal" href="#changes-constituting-a-new-series" id="id4">Changes constituting a new series</a></p></li>
+<li><p><a class="reference internal" href="#usage-conventions" id="id5">Usage Conventions</a></p></li>
+<li><p><a class="reference internal" href="#aggregating-download-statistics" id="id6">Aggregating Download Statistics</a></p></li>
+<li><p><a class="reference internal" href="#identifier-resolution-in-dataone-apis" id="id7">Identifier resolution in DataONE APIs</a></p></li>
+<li><p><a class="reference internal" href="#series-identifier-resolution-to-the-head-revision" id="id8">Series Identifier resolution to the head revision</a></p></li>
+<li><p><a class="reference internal" href="#importance-of-the-obsolete-fields" id="id9">Importance of the obsolete fields</a></p></li>
+<li><p><a class="reference internal" href="#mutable-member-node-example" id="id10">Mutable Member Node example</a></p></li>
+<li><p><a class="reference internal" href="#summary" id="id11">Summary</a></p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="overview">
+<h2><a class="toc-backref" href="#id2">Overview</a><a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>To support the goals of <a class="reference external" href="PreservationStrategy.html">preservation and scientific reproducibility</a>, all registered
+objects in DataONE are considered immutable, with each object representing a
+published snapshot of data or metadata associated with a specific time. DataONE
+manages the registration, indexing, and replication of these snapshots throughout
+the DataONE network of Member Nodes.  Upon this foundation, DataONE can guarantee
+that the exact byte array returned through the DataONE Read APIs (MNRead and CNRead)
+is the one submitted and registered.</p>
+<p>Any repository that provides unique identifiers to snapshots (or revisions)
+can participate as
+DataONE Member Nodes, irrespective of whether or not they retain past snapshots.
+This is accomplished by the use of two identifiers, one representing the revision, and the
+other representing the changing (or mutable) entity. For those Member Nodes only managing the
+mutable entity, as long as a unique revision-level identifier is generated upon each
+update to the entity, DataONE will not reject the update. In situations where the
+rate of change is faster than DataONE’s Member Node synchronization,  it is possible
+that some snapshots will fail to be registered.  However, since that revision’s unique
+identifier is never indexed or otherwise made available, the chance for needing to
+retrieve that snapshot (and not finding it) in the future is very small.</p>
+<p>The two identifiers are known as:</p>
+<dl class="simple">
+<dt><strong>Persistent Identifier (PID)</strong></dt><dd><p>declared in the <code class="docutils literal notranslate"><span class="pre">systemMetadata.identifier</span></code> field. This identifier represents
+the snapshot or revision DataONE replicates among the DataONE federation.</p>
+</dd>
+<dt><strong>Series Identifier (SID)</strong></dt><dd><p>declared in the <code class="docutils literal notranslate"><span class="pre">systemMetadata.seriesId</span></code> field.  This identifier represents
+the mutable content, and resolves to the latest revision among all registered revisions
+when used in the DataONE Read APIs.</p>
+</dd>
+</dl>
+<p>DataONE relies on content originators to generate the identifiers they use for
+each snapshot (with the series identifier being optional) being registered, and
+determining which field will hold the “citable” identifier.</p>
+</div>
+<div class="section" id="changes-constituting-a-new-snapshot">
+<h2><a class="toc-backref" href="#id3">Changes constituting a new snapshot</a><a class="headerlink" href="#changes-constituting-a-new-snapshot" title="Permalink to this headline">¶</a></h2>
+<p>DataONE considers any change that results in a different byte array of content
+to be a new snapshot, and thus a new object to be registered. Subtle changes,
+such as whitespace differences, although potentially meaningless, do
+therefore constitute a new object. If not properly identified with a new PID,
+the content held on that Member Node is invalid. Member Nodes that periodically
+regenerate their stored content or manipulate it upon retrieval will need to take
+extra care to validate checksums after regeneration or manipulation and resolve
+any discrepancies in content they may encounter.</p>
+</div>
+<div class="section" id="changes-constituting-a-new-series">
+<h2><a class="toc-backref" href="#id4">Changes constituting a new series</a><a class="headerlink" href="#changes-constituting-a-new-series" title="Permalink to this headline">¶</a></h2>
+<p>The SID is provided expressly to group the snapshots of a single entity that is
+stable over time.  It was not intended to represent highly volatile entities, or
+those that significantly “drift” over time.  Member Nodes are encouraged to instead
+use registered services for volatile content, and create new entities when
+significant change in the scope of an entity occurs.</p>
+<p>It is not clear that individual contributers will always have the means to
+register a service, and so may have entities organized for input, such
+as a file that accumulates observations. If items such as these are registered as an
+object, the rightsHolders should be mindful to apply reasonable temporal bounds.</p>
+<p>When the scope of an item has changed significantly, it is permissible to supply
+a new seriesId to the next snapshot while still relating the two items by
+obsoletes and obsoletedBy. However, it is not necessary, and may be more straightforward
+to simply save the new entity without relating the snapshots through
+system metadata, but through provenance mechanisms instead.</p>
+</div>
+<div class="section" id="usage-conventions">
+<h2><a class="toc-backref" href="#id5">Usage Conventions</a><a class="headerlink" href="#usage-conventions" title="Permalink to this headline">¶</a></h2>
+<p>DataONE anticipates data consumers using other contributors’ data will prefer to cite
+using the PID, for the certainty that provides, and will prefer using the SID when
+citing indirectly (when citing metadata).  Similarly, we anticipate content originators
+will wish to promote one identifier for citation. For those content providers using
+both identifiers, it is recommended to assign the preferred identifier according
+to anticipated data consumer preference.</p>
+</div>
+<div class="section" id="aggregating-download-statistics">
+<h2><a class="toc-backref" href="#id6">Aggregating Download Statistics</a><a class="headerlink" href="#aggregating-download-statistics" title="Permalink to this headline">¶</a></h2>
+<p>To aid in aggregating download statistics for data providers, DataONE provides the
+<code class="docutils literal notranslate"><span class="pre">cn/v2/query/logsolr</span></code> query endpoint. Both PID and SID field are included in the index records
+to allow straightforward retrieval of download statistics by either field.</p>
+</div>
+<div class="section" id="identifier-resolution-in-dataone-apis">
+<h2><a class="toc-backref" href="#id7">Identifier resolution in DataONE APIs</a><a class="headerlink" href="#identifier-resolution-in-dataone-apis" title="Permalink to this headline">¶</a></h2>
+<p>All DataONE APIs accepting an Identifier must treat PIDs as requests for the exact
+snapshot, and SIDs as a request for the latest snapshot that DataONE Node has
+knowledge of.  Due to the distributed nature of snapshot replication, it is possible
+that a replica Member Node not know about the latest snapshot, in which case, a
+request by SID to that node should give a previous snapshot.  For all nodes, even
+the authoritative Member Node, a request by PID for a snapshot that it doesn’t host
+must return a NotFound exception.</p>
+<p>End users should therefore rely on <code class="docutils literal notranslate"><span class="pre">v2.cn.resolve</span></code> for object retrieval. If the
+Identifier used for the resolve is a SID, this method will return an ObjectLocationList
+for the latest known snapshot.</p>
+</div>
+<div class="section" id="series-identifier-resolution-to-the-head-revision">
+<h2><a class="toc-backref" href="#id8">Series Identifier resolution to the head revision</a><a class="headerlink" href="#series-identifier-resolution-to-the-head-revision" title="Permalink to this headline">¶</a></h2>
+<p>The primary way for determining the head of a series is via the <code class="docutils literal notranslate"><span class="pre">obsoletedBy</span></code> field
+in the system metadata that links to the next snapshot in the chain. With all of
+the snapshots synchronized, there should only be one of the series that is not
+obsolete, and that is the head.  With incomplete synchronization, there will be
+possibly more than one snapshot that is not obsoleted, and in these cases, the
+one with the latest <code class="docutils literal notranslate"><span class="pre">dateUploaded</span></code> value will be chosen as the head.</p>
+<p>Use of the obsoleted fields as the primary indicator for the head of the series
+is preferred because it is a direct reflection of the rightsHolder’s intentions,
+whereas the <code class="docutils literal notranslate"><span class="pre">dateUploaded</span></code> value is only a reflection of the order in which the
+Member Node processes uploaded content.</p>
+</div>
+<div class="section" id="importance-of-the-obsolete-fields">
+<h2><a class="toc-backref" href="#id9">Importance of the obsolete fields</a><a class="headerlink" href="#importance-of-the-obsolete-fields" title="Permalink to this headline">¶</a></h2>
+<p>Member Nodes that manage by mutable entity (don’t preserve prior snapshots) should
+populate the <code class="docutils literal notranslate"><span class="pre">obsoletes</span></code> and <code class="docutils literal notranslate"><span class="pre">obsoletedBy</span></code> fields, even if they do not plan to preserve
+older snapshots. Replica nodes and the DataONE Coordinating Nodes can use these
+fields to optimize queries for finding the head of the series.</p>
+<p><em>Question: should mutable Member Nodes keep systemMetadata documents for snapshots they
+no longer have?  (it would allow the obsoletedBy fields to be synchronized, but
+would it be in conflict with the behavior of deleted items (and would it matter?)</em></p>
+</div>
+<div class="section" id="mutable-member-node-example">
+<h2><a class="toc-backref" href="#id10">Mutable Member Node example</a><a class="headerlink" href="#mutable-member-node-example" title="Permalink to this headline">¶</a></h2>
+<p>To illustrate by way of example, author <strong>A</strong> uploads an item to Member Node <strong>M</strong>,
+with an identifier <strong>S</strong> not using the DataONE API, but with <strong>M</strong>’s primary API.  <strong>M</strong>
+builds a systemMetadata document for <strong>S</strong>, generating a PID, <strong>P1</strong>, to uniquely identify
+the initial snapshot, and assigns an upload date of <strong>D1</strong>, and uses the identifier <strong>S</strong>
+for the seriesId.  DataONE synchronizes the object, and replicates the snapshot
+<strong>P1</strong> to one other Member Node <strong>R1</strong>. The author, <strong>A</strong>, then saves changes to the item,
+whereupon <strong>M</strong> generates another PID, <strong>P2</strong>, to uniquely identifier this newer
+snapshot, uses <strong>S</strong> in the seriesId field, puts <strong>P1</strong> in the obsoletes field, and <strong>D2</strong>
+in the dateUploaded field.  (size and checksum are also calculated for the new
+snapshot.)  This is synchronized and replicated to a different Member Node, <strong>R2</strong>.</p>
+<p>When <code class="docutils literal notranslate"><span class="pre">v2.cn.resolve(S`)</span></code> is called, an ObjectLocationList for <strong>P2</strong> is returned, listing
+Member Nodes <strong>M</strong> and <strong>R2</strong> as locations for retrieval.  A call to <code class="docutils literal notranslate"><span class="pre">M.get(P2)</span></code> or
+<code class="docutils literal notranslate"><span class="pre">R2.get(P2)</span></code> will return the latest snapshot, as will the same call using <strong>S</strong> as the identifier
+instead.  However, a call to <code class="docutils literal notranslate"><span class="pre">R1.get(P2)</span></code> will return NotFound, because it was not
+a replication target for that snapshot, and a call to <code class="docutils literal notranslate"><span class="pre">R1.get(S)</span></code> will return the
+initial snapshot, because it has snapshot <strong>P1</strong> with the associated seriesId <strong>S</strong>.</p>
+<p>Notice, too, that <code class="docutils literal notranslate"><span class="pre">v2.cn.resolve(P1)</span></code> will return an ObjectLocationList containing
+both <strong>M</strong> and <strong>R1</strong>, although retrieval from <strong>M</strong> is no longer possible, since <strong>M</strong> doesn’t
+preserve past snapshots.  <code class="docutils literal notranslate"><span class="pre">M.get(P1)</span></code> should return a NotFound, and the client will
+move on to <strong>R1</strong>, and be able to retrieve <strong>P1</strong> with <code class="docutils literal notranslate"><span class="pre">R1.get(P1)</span></code>.</p>
+<p>The CN, when <code class="docutils literal notranslate"><span class="pre">v2.cn.resolve(S)</span></code> was called, determined the head of the series by first
+finding all of the snapshots where the seriesId is <strong>S</strong>, and obsoletedBy is null or
+the obsoletedBy object has a different seriesId. In this case, since the <strong>P1</strong>
+systemMetadata is never updated to fill in the obsoletedBy field, the algorithm
+will get both <strong>P1</strong> and <strong>P2</strong>.  It will then notice that <strong>P2</strong> has the later date of <strong>D2</strong>,
+so will choose <strong>P2</strong> as the head of the series.</p>
+<p>Suppose now that <strong>A</strong> spawns two more snapshots in quick succession, and DataONE
+synchronizes afterwards.  It missed <strong>P3(S)</strong> but picks up <strong>P4(S)</strong>.  <code class="docutils literal notranslate"><span class="pre">Cn.resolve(S)</span></code> will
+return an ObjectLocationList for the <strong>P4</strong> snapshot, since it is the latest of all
+non-obsoleted snapshots.</p>
+<p>Later, <strong>A</strong> makes some changes and realizes that the content is significantly different
+from previous revisions, so renames it <strong>S2</strong>.  The system treats it as related, so
+links to the <strong>P4</strong> snapshot with the obsoletes field.  <strong>P5(S2)</strong> is now hosted on <strong>M</strong>, but
+<strong>P4(S)</strong> is gone.  <code class="docutils literal notranslate"><span class="pre">cn.resolve(S)</span></code> will return an ObjectLocationList for <strong>P4</strong>, but <code class="docutils literal notranslate"><span class="pre">M.get(P4)</span></code>
+will return NotFound, and the client will have to retrieve from a replica Member Node,
+if possible.  <code class="docutils literal notranslate"><span class="pre">Cn.resolve(S2)</span></code> will return an OLL for <strong>P5</strong>.  Note also that <code class="docutils literal notranslate"><span class="pre">M.get(S)</span></code>
+will not be able to resolve the SID to any PID, since it doesn’t host any of the
+snapshots of <strong>S</strong>.</p>
+</div>
+<div class="section" id="summary">
+<h2><a class="toc-backref" href="#id11">Summary</a><a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>the PID represents the snapshot, and snapshots are immutable</p></li>
+<li><p>the SID represents the entity, and can be applied to several connected snapshots.</p></li>
+<li><p>A particular SID cannot be used if it is either reserved by or in use by someone else.</p>
+<ul>
+<li><p>Specifically, the CN checks that the submitter has CHANGE_PERMISSION on
+the current head of the series</p></li>
+<li><p>if not in use, checks submitter against <code class="docutils literal notranslate"><span class="pre">cn.hasReservation(SID)</span></code></p></li>
+</ul>
+</li>
+<li><p>cannot put SID in obsoletes and obsoletedBy fields</p></li>
+<li><p>SID resolution is “latest upload” among the set of snapshots not obsoleted by
+another member of the series.</p></li>
+<li><p>not all revisions are guaranteed to be synchronized or replicated</p>
+<ul>
+<li><p>is dependent on synchronization frequency, CN availability for sync</p></li>
+<li><p>missing revisions, if synced but not replicated will appear as NotFound
+exceptions on forwarded resolve requests</p></li>
+</ul>
+</li>
+<li><p>unsynchronized revisions might appear in obsoletes/dBy fields of existing revisions</p></li>
+<li><p>cn.listObjects(idFilter=sid)?? retrieves all synchronized revisions</p></li>
+<li><p>once SeriesID is set, it cannot be changed, because it breaks the trust that
+the identifier always gets the user to a conceptually equivalent object.</p></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Immutability of Content in DataONE</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#changes-constituting-a-new-snapshot">Changes constituting a new snapshot</a></li>
+<li><a class="reference internal" href="#changes-constituting-a-new-series">Changes constituting a new series</a></li>
+<li><a class="reference internal" href="#usage-conventions">Usage Conventions</a></li>
+<li><a class="reference internal" href="#aggregating-download-statistics">Aggregating Download Statistics</a></li>
+<li><a class="reference internal" href="#identifier-resolution-in-dataone-apis">Identifier resolution in DataONE APIs</a></li>
+<li><a class="reference internal" href="#series-identifier-resolution-to-the-head-revision">Series Identifier resolution to the head revision</a></li>
+<li><a class="reference internal" href="#importance-of-the-obsolete-fields">Importance of the obsolete fields</a></li>
+<li><a class="reference internal" href="#mutable-member-node-example">Mutable Member Node example</a></li>
+<li><a class="reference internal" href="#summary">Summary</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/design/ContentImmutability.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/design/ContentImmutability.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/ContentImmutability.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

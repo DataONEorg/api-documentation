@@ -1,0 +1,1048 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NodeList &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Coordinating Node Internals" href="CoordinatingNodeInternals.html" />
+    <link rel="prev" title="Serialization of Types for Transfer Over HTTP" href="Serialization.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="CoordinatingNodeInternals.html" title="Coordinating Node Internals"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Serialization.html" title="Serialization of Types for Transfer Over HTTP"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">NodeList</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-NodeList">
+<span id="nodelist"></span><h1>NodeList<a class="headerlink" href="#module-NodeList" title="Permalink to this headline">¶</a></h1>
+<p><strong>This document is OBSOLETE, and has been superseded by information in the
+DataONE types schema.  It will be deleted after review.</strong></p>
+<p>A NodeList is a synchronized register for all of the nodes in the DataONE
+environment. It contains the information needed by DataONE to orchestrate
+activities across the distributed coordinating and member nodes of the
+network. While some information is provided by the Member Nodes themselves,
+the <em>node list</em> is maintained dynamically by the Coordinating Nodes. The <em>node
+list</em> is mutable in that it reflects the latest state of the nodes that are
+part of the system. Replicated copies of the <em>node list</em> are maintained at
+each of the Coordinating nodes.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Registry</span>
+
+  <span class="n">ContactGroup</span>
+    <span class="n">groupid</span>
+    <span class="n">name</span>
+    <span class="n">description</span>
+    <span class="n">members</span>
+
+  <span class="n">Contact</span>
+    <span class="n">contactid</span>
+    <span class="n">role</span> <span class="p">(</span><span class="n">administrator</span><span class="p">,</span> <span class="n">manager</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+    <span class="n">givenName</span> <span class="p">(</span><span class="n">first</span> <span class="n">name</span><span class="p">)</span>
+    <span class="n">sn</span> <span class="p">(</span><span class="n">surname</span><span class="p">)</span>
+    <span class="n">notification</span>
+      <span class="nb">type</span> <span class="p">(</span><span class="n">phone</span><span class="p">,</span> <span class="n">email</span><span class="p">,</span> <span class="n">IRC</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+      <span class="n">connection</span> <span class="p">(</span><span class="n">phone</span> <span class="n">number</span><span class="p">,</span> <span class="n">email</span> <span class="n">address</span><span class="p">,</span> <span class="n">IRC</span> <span class="n">channel</span><span class="p">)</span>
+
+  <span class="n">Network</span> <span class="p">(</span><span class="mf">1.</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="n">replaces</span> <span class="s2">&quot;environment&quot;</span><span class="p">)</span>
+    <span class="n">networkid</span>
+    <span class="n">name</span>
+    <span class="n">description</span>
+    <span class="n">adminGroup</span>
+    <span class="n">notifyGroup</span>
+
+  <span class="n">Node</span>
+    <span class="n">nodeid</span>
+    <span class="n">name</span>
+    <span class="n">description</span>
+    <span class="n">location</span>
+    <span class="n">adminGroup</span>
+    <span class="n">notifyGroup</span>
+    <span class="n">created</span> <span class="p">(</span><span class="n">date</span> <span class="n">created</span> <span class="o">/</span> <span class="n">registered</span><span class="p">)</span>
+    <span class="n">modified</span> <span class="p">(</span><span class="n">time</span> <span class="n">stamp</span> <span class="k">for</span> <span class="n">modification</span><span class="p">)</span>
+    <span class="n">lastSynchronization</span> <span class="p">(</span><span class="n">time</span> <span class="n">stamp</span><span class="p">)</span>
+    <span class="n">objectFormatsSupported</span> <span class="p">(</span><span class="nb">list</span> <span class="n">of</span> <span class="nb">object</span> <span class="n">formats</span> <span class="n">known</span> <span class="n">to</span> <span class="n">support</span><span class="p">)</span>
+    <span class="n">synchronize</span>
+    <span class="n">replicate</span>
+    <span class="n">replicationTarget</span>
+
+    <span class="n">service</span>
+      <span class="n">version</span> <span class="p">(</span><span class="n">schema</span> <span class="n">version</span> <span class="n">supported</span><span class="p">,</span> <span class="n">MN</span><span class="p">)</span>
+      <span class="n">baseURL</span> <span class="p">(</span><span class="n">MN</span><span class="p">)</span>
+      <span class="n">name</span> <span class="p">(</span><span class="n">human</span> <span class="n">readable</span> <span class="n">name</span> <span class="k">for</span> <span class="n">service</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span> <span class="s2">&quot;DataONE-0.6.1&quot;</span><span class="p">,</span> <span class="n">MN</span><span class="p">)</span>
+      <span class="n">activeNetwork</span> <span class="p">(</span><span class="nb">id</span> <span class="n">of</span> <span class="n">network</span> <span class="n">this</span> <span class="n">interface</span> <span class="ow">is</span> <span class="n">active</span> <span class="k">for</span><span class="p">,</span> <span class="n">MN</span><span class="p">)</span>
+      <span class="n">lastChecked</span> <span class="p">(</span><span class="n">last</span> <span class="n">time</span> <span class="n">service</span> <span class="n">was</span> <span class="n">examined</span><span class="p">,</span> <span class="n">CN</span><span class="p">)</span>
+      <span class="n">method</span>
+        <span class="n">name</span> <span class="p">(</span><span class="n">MN</span><span class="p">)</span>
+        <span class="n">isactive</span> <span class="p">(</span><span class="nb">set</span> <span class="n">by</span> <span class="n">CN</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <em>node list</em> is a complex data type, with three main sub-structures:
+services, synchronization, and health. Some data is provided at node
+registration time, while other items are generated by DataONE itself in the
+course of managing objects.</p>
+<p>The nodelist schema is expressed in XMLSchema and is available at:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://repository.dataone.org/software/cicore/trunk/schemas/nodelist.xsd">https://repository.dataone.org/software/cicore/trunk/schemas/nodelist.xsd</a></p>
+</div></blockquote>
+<p>The following list of fields represents the set of information collected and
+maintained by Coordinating Nodes for every node in the system.</p>
+<p><strong>Table 1.</strong> Quick reference to the NodeList fields described in more detail below.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 39%" />
+<col style="width: 21%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 6%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Group</p></th>
+<th class="head"><p>Field</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Cardinality</p></th>
+<th class="head"><p>Generate By</p></th>
+<th class="head"><p>Version</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>General</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p></p></td>
+<td><p><a class="reference internal" href="#NodeList.identifier" title="NodeList.identifier"><code class="xref py py-attr docutils literal notranslate"><span class="pre">identifier</span></code></a></p></td>
+<td><p>NodeReference</p></td>
+<td><p>1</p></td>
+<td><p>CN</p></td>
+<td><p><strong>0.5</strong></p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p><a class="reference internal" href="#NodeList.name" title="NodeList.name"><code class="xref py py-attr docutils literal notranslate"><span class="pre">name</span></code></a></p></td>
+<td><p>NonEmptyString</p></td>
+<td><p>1</p></td>
+<td><p>CN</p></td>
+<td><p><strong>0.5</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p></p></td>
+<td><p><a class="reference internal" href="#NodeList.description" title="NodeList.description"><code class="xref py py-attr docutils literal notranslate"><span class="pre">description</span></code></a></p></td>
+<td><p>NonEmptyString</p></td>
+<td><p>1</p></td>
+<td><p>CN</p></td>
+<td><p><strong>0.5</strong></p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p><a class="reference internal" href="#NodeList.baseURL" title="NodeList.baseURL"><code class="xref py py-attr docutils literal notranslate"><span class="pre">baseURL</span></code></a></p></td>
+<td><p>anyURI</p></td>
+<td><p>1</p></td>
+<td><p>MN</p></td>
+<td><p><strong>0.5</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p></p></td>
+<td><p><code class="xref py py-attr docutils literal notranslate"><span class="pre">services</span></code></p></td>
+<td><p>Service</p></td>
+<td><p>0..n</p></td>
+<td><p>MN</p></td>
+<td><p><strong>0.5</strong></p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p><code class="xref py py-attr docutils literal notranslate"><span class="pre">synchronization</span></code></p></td>
+<td><p>Synchronization</p></td>
+<td><p>0..1</p></td>
+<td><p>CN</p></td>
+<td><p><strong>0.5</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p></p></td>
+<td><p><code class="xref py py-attr docutils literal notranslate"><span class="pre">health</span></code></p></td>
+<td><p>NodeHealth</p></td>
+<td><p>0..1</p></td>
+<td><p>CN</p></td>
+<td><p><strong>0.5</strong></p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p><a class="reference internal" href="#NodeList.replicate" title="NodeList.replicate"><code class="xref py py-attr docutils literal notranslate"><span class="pre">replicate</span></code></a></p></td>
+<td><p>boolean</p></td>
+<td><p>1</p></td>
+<td><p>MN</p></td>
+<td><p><strong>0.5</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p></p></td>
+<td><p><a class="reference internal" href="#NodeList.synchronize" title="NodeList.synchronize"><code class="xref py py-attr docutils literal notranslate"><span class="pre">synchronize</span></code></a></p></td>
+<td><p>boolean</p></td>
+<td><p>1</p></td>
+<td><p>MN</p></td>
+<td><p><strong>0.5</strong></p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p><a class="reference internal" href="#NodeList.type" title="NodeList.type"><code class="xref py py-attr docutils literal notranslate"><span class="pre">type</span></code></a></p></td>
+<td><p>NodeType</p></td>
+<td><p>1</p></td>
+<td><p>CN</p></td>
+<td><p><strong>0.5</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p></p></td>
+<td><p><a class="reference internal" href="#NodeList.environment" title="NodeList.environment"><code class="xref py py-attr docutils literal notranslate"><span class="pre">environment</span></code></a></p></td>
+<td><p>Environment</p></td>
+<td><p>1</p></td>
+<td><p>CN</p></td>
+<td><p><strong>0.5</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>Services</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p></p></td>
+<td><p><a class="reference internal" href="#NodeList.services.name" title="NodeList.services.name"><code class="xref py py-attr docutils literal notranslate"><span class="pre">services.name</span></code></a></p></td>
+<td><p>ServiceName</p></td>
+<td><p>1</p></td>
+<td><p>MN</p></td>
+<td><p><strong>0.5</strong></p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p><a class="reference internal" href="#NodeList.services.version" title="NodeList.services.version"><code class="xref py py-attr docutils literal notranslate"><span class="pre">services.version</span></code></a></p></td>
+<td><p>string</p></td>
+<td><p>1</p></td>
+<td><p>MN</p></td>
+<td><p><strong>0.5</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p></p></td>
+<td><p><a class="reference internal" href="#NodeList.services.available" title="NodeList.services.available"><code class="xref py py-attr docutils literal notranslate"><span class="pre">services.available</span></code></a></p></td>
+<td><p>boolean</p></td>
+<td><p>0..1</p></td>
+<td><p>MN</p></td>
+<td><p><strong>0.5</strong></p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p><code class="xref py py-attr docutils literal notranslate"><span class="pre">services.method</span></code></p></td>
+<td><p>ServiceMethod</p></td>
+<td><p>0..n</p></td>
+<td><p>MN</p></td>
+<td><p><strong>0.5</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p></p></td>
+<td><p><a class="reference internal" href="#NodeList.services.method.name" title="NodeList.services.method.name"><code class="xref py py-attr docutils literal notranslate"><span class="pre">services.method.name</span></code></a></p></td>
+<td><p>NMToken</p></td>
+<td><p>0..1</p></td>
+<td><p>CN</p></td>
+<td><p><strong>0.5</strong></p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p><a class="reference internal" href="#NodeList.services.method.rest" title="NodeList.services.method.rest"><code class="xref py py-attr docutils literal notranslate"><span class="pre">services.method.rest</span></code></a></p></td>
+<td><p>xs:token</p></td>
+<td><p>1</p></td>
+<td><p>MN</p></td>
+<td><p><strong>0.5</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p></p></td>
+<td><p><a class="reference internal" href="#NodeList.services.method.implemented" title="NodeList.services.method.implemented"><code class="xref py py-attr docutils literal notranslate"><span class="pre">services.method.implemented</span></code></a></p></td>
+<td><p>boolean</p></td>
+<td><p>1</p></td>
+<td><p>MN</p></td>
+<td><p><strong>0.5</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>Synchronization</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p></p></td>
+<td><p><a class="reference internal" href="#NodeList.synchronization.lastHarvested" title="NodeList.synchronization.lastHarvested"><code class="xref py py-attr docutils literal notranslate"><span class="pre">synchronization.lastHarvested</span></code></a></p></td>
+<td><p>dateTime</p></td>
+<td><p>1</p></td>
+<td><p>CN</p></td>
+<td><p><strong>0.5</strong></p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p><a class="reference internal" href="#NodeList.synchronization.lastCompleteHarvest" title="NodeList.synchronization.lastCompleteHarvest"><code class="xref py py-attr docutils literal notranslate"><span class="pre">synchronization.lastCompleteHarvest</span></code></a></p></td>
+<td><p>dateTime</p></td>
+<td><p>1</p></td>
+<td><p>CN</p></td>
+<td><p><strong>0.5</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p></p></td>
+<td><p><a class="reference internal" href="#NodeList.synchronization.schedule" title="NodeList.synchronization.schedule"><code class="xref py py-attr docutils literal notranslate"><span class="pre">synchronization.schedule</span></code></a></p></td>
+<td><p>Schedule</p></td>
+<td><p>1</p></td>
+<td><p>CN</p></td>
+<td><p><strong>0.5</strong></p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p><code class="xref py py-attr docutils literal notranslate"><span class="pre">synchronization.schedule.sec</span></code></p></td>
+<td><p>crontabEntryType</p></td>
+<td><p>1</p></td>
+<td><p>CN</p></td>
+<td><p><strong>0.5</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p></p></td>
+<td><p><code class="xref py py-attr docutils literal notranslate"><span class="pre">synchronization.schedule.min</span></code></p></td>
+<td><p>crontabEntryType</p></td>
+<td><p>1</p></td>
+<td><p>CN</p></td>
+<td><p><strong>0.5</strong></p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p><code class="xref py py-attr docutils literal notranslate"><span class="pre">synchronization.schedule.hour</span></code></p></td>
+<td><p>crontabEntryType</p></td>
+<td><p>1</p></td>
+<td><p>CN</p></td>
+<td><p><strong>0.5</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p></p></td>
+<td><p><code class="xref py py-attr docutils literal notranslate"><span class="pre">synchronization.schedule.mday</span></code></p></td>
+<td><p>crontabEntryType</p></td>
+<td><p>1</p></td>
+<td><p>CN</p></td>
+<td><p><strong>0.5</strong></p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p><code class="xref py py-attr docutils literal notranslate"><span class="pre">synchronization.schedule.mon</span></code></p></td>
+<td><p>crontabEntryType</p></td>
+<td><p>1</p></td>
+<td><p>CN</p></td>
+<td><p><strong>0.5</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p></p></td>
+<td><p><code class="xref py py-attr docutils literal notranslate"><span class="pre">synchronization.schedule.year</span></code></p></td>
+<td><p>crontabEntryType</p></td>
+<td><p>1</p></td>
+<td><p>CN</p></td>
+<td><p><strong>0.5</strong></p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p><code class="xref py py-attr docutils literal notranslate"><span class="pre">synchronization.schedule.wday</span></code></p></td>
+<td><p>crontabEntryType</p></td>
+<td><p>1</p></td>
+<td><p>CN</p></td>
+<td><p><strong>0.5</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>Health</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p><code class="xref py py-attr docutils literal notranslate"><span class="pre">health.ping</span></code></p></td>
+<td><p>Ping</p></td>
+<td><p>1</p></td>
+<td><p>CN</p></td>
+<td><p><strong>0.5</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p></p></td>
+<td><p><code class="xref py py-attr docutils literal notranslate"><span class="pre">health.status</span></code></p></td>
+<td><p>Status</p></td>
+<td><p>1</p></td>
+<td><p>CN</p></td>
+<td><p><strong>0.5</strong></p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p><a class="reference internal" href="#NodeList.health.state" title="NodeList.health.state"><code class="xref py py-attr docutils literal notranslate"><span class="pre">health.state</span></code></a></p></td>
+<td><p>State</p></td>
+<td><p>1</p></td>
+<td><p>CN</p></td>
+<td><p><strong>0.5</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p></p></td>
+<td><p><a class="reference internal" href="#NodeList.health.ping.success" title="NodeList.health.ping.success"><code class="xref py py-attr docutils literal notranslate"><span class="pre">health.ping.success</span></code></a></p></td>
+<td><p>boolean</p></td>
+<td><p>0..1</p></td>
+<td><p>CN</p></td>
+<td><p><strong>0.5</strong></p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p><a class="reference internal" href="#NodeList.health.ping.lastSuccess" title="NodeList.health.ping.lastSuccess"><code class="xref py py-attr docutils literal notranslate"><span class="pre">health.ping.lastSuccess</span></code></a></p></td>
+<td><p>dateTime</p></td>
+<td><p>0..1</p></td>
+<td><p>CN</p></td>
+<td><p><strong>0.5</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p></p></td>
+<td><p><a class="reference internal" href="#NodeList.health.status.success" title="NodeList.health.status.success"><code class="xref py py-attr docutils literal notranslate"><span class="pre">health.status.success</span></code></a></p></td>
+<td><p>boolean</p></td>
+<td><p>0..1</p></td>
+<td><p>CN</p></td>
+<td><p><strong>0.5</strong></p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p><a class="reference internal" href="#NodeList.health.status.dateChecked" title="NodeList.health.status.dateChecked"><code class="xref py py-attr docutils literal notranslate"><span class="pre">health.status.dateChecked</span></code></a></p></td>
+<td><p>dateTime</p></td>
+<td><p>0..1</p></td>
+<td><p>CN</p></td>
+<td><p><strong>0.5</strong></p></td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="nodelist-fields">
+<h2>NodeList fields<a class="headerlink" href="#nodelist-fields" title="Permalink to this headline">¶</a></h2>
+<dl class="py attribute">
+<dt id="NodeList.identifier">
+<code class="sig-prename descclassname">NodeList.</code><code class="sig-name descname">identifier</code><a class="headerlink" href="#NodeList.identifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>A unique identifier for the node of type NodeReference.  This may initially
+be the same as the baseURL, however this value should not change for future
+implementations of the same node, whereas the baseURL may change in the
+future.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Cardinality</dt>
+<dd class="field-odd"><p>1</p>
+</dd>
+<dt class="field-even">ValueSpace</dt>
+<dd class="field-even"><p>NodeReference</p>
+</dd>
+<dt class="field-odd">Generated By</dt>
+<dd class="field-odd"><p>CN</p>
+</dd>
+<dt class="field-even">Required Version</dt>
+<dd class="field-even"><p>0.5</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="NodeList.name">
+<code class="sig-prename descclassname">NodeList.</code><code class="sig-name descname">name</code><a class="headerlink" href="#NodeList.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>A human readable name for the node. (The name of the node is being used in
+Mercury currently to assign a path, so the format should be consistent with
+dataone directory naming conventions).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Cardinality</dt>
+<dd class="field-odd"><p>1</p>
+</dd>
+<dt class="field-even">ValueSpace</dt>
+<dd class="field-even"><p>NonEmptyString</p>
+</dd>
+<dt class="field-odd">Generated By</dt>
+<dd class="field-odd"><p>CN</p>
+</dd>
+<dt class="field-even">Required Version</dt>
+<dd class="field-even"><p>0.5</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="NodeList.description">
+<code class="sig-prename descclassname">NodeList.</code><code class="sig-name descname">description</code><a class="headerlink" href="#NodeList.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>Description of content maintained by this node and any other free style
+notes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Cardinality</dt>
+<dd class="field-odd"><p>1</p>
+</dd>
+<dt class="field-even">ValueSpace</dt>
+<dd class="field-even"><p>NonEmptyString</p>
+</dd>
+<dt class="field-odd">Generated By</dt>
+<dd class="field-odd"><p>CN</p>
+</dd>
+<dt class="field-even">Required Version</dt>
+<dd class="field-even"><p>0.5</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="NodeList.baseURL">
+<code class="sig-prename descclassname">NodeList.</code><code class="sig-name descname">baseURL</code><a class="headerlink" href="#NodeList.baseURL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Of type anyURI, it is the base URL that is complete enough with the
+service.method.rest attribute to create a valid call.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Cardinality</dt>
+<dd class="field-odd"><p>1</p>
+</dd>
+<dt class="field-even">ValueSpace</dt>
+<dd class="field-even"><p>anyURI</p>
+</dd>
+<dt class="field-odd">Generated By</dt>
+<dd class="field-odd"><p>CN</p>
+</dd>
+<dt class="field-even">Required Version</dt>
+<dd class="field-even"><p>0.5</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="NodeList.replicate">
+<code class="sig-prename descclassname">NodeList.</code><code class="sig-name descname">replicate</code><a class="headerlink" href="#NodeList.replicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>A flag to tell the CN whether or not to replicate MN data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Cardinality</dt>
+<dd class="field-odd"><p>1</p>
+</dd>
+<dt class="field-even">ValueSpace</dt>
+<dd class="field-even"><p>boolean</p>
+</dd>
+<dt class="field-odd">Generated By</dt>
+<dd class="field-odd"><p>CN</p>
+</dd>
+<dt class="field-even">Required Version</dt>
+<dd class="field-even"><p>0.5</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="NodeList.synchronize">
+<code class="sig-prename descclassname">NodeList.</code><code class="sig-name descname">synchronize</code><a class="headerlink" href="#NodeList.synchronize" title="Permalink to this definition">¶</a></dt>
+<dd><p>A flag to tell the CN to synchronize or not.  Applies to CNs and MNs
+(although CNs are presumed to synchronize)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Cardinality</dt>
+<dd class="field-odd"><p>1</p>
+</dd>
+<dt class="field-even">ValueSpace</dt>
+<dd class="field-even"><p>boolean</p>
+</dd>
+<dt class="field-odd">Generated By</dt>
+<dd class="field-odd"><p>CN</p>
+</dd>
+<dt class="field-even">Required Version</dt>
+<dd class="field-even"><p>0.5</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="NodeList.type">
+<code class="sig-prename descclassname">NodeList.</code><code class="sig-name descname">type</code><a class="headerlink" href="#NodeList.type" title="Permalink to this definition">¶</a></dt>
+<dd><p>The type of node in the dataONE world this one is. Legal
+values are “MN” and “CN”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Cardinality</dt>
+<dd class="field-odd"><p>1</p>
+</dd>
+<dt class="field-even">ValueSpace</dt>
+<dd class="field-even"><p>NodeType</p>
+</dd>
+<dt class="field-odd">Generated By</dt>
+<dd class="field-odd"><p>CN</p>
+</dd>
+<dt class="field-even">Required Version</dt>
+<dd class="field-even"><p>0.5</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="NodeList.environment">
+<code class="sig-prename descclassname">NodeList.</code><code class="sig-name descname">environment</code><a class="headerlink" href="#NodeList.environment" title="Permalink to this definition">¶</a></dt>
+<dd><p>The systems environment the node belongs to. Legal values
+are “dev”, “test”, “staging”, and “prod”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Cardinality</dt>
+<dd class="field-odd"><p>1</p>
+</dd>
+<dt class="field-even">ValueSpace</dt>
+<dd class="field-even"><p>Environment</p>
+</dd>
+<dt class="field-odd">Generated By</dt>
+<dd class="field-odd"><p>CN</p>
+</dd>
+<dt class="field-even">Required Version</dt>
+<dd class="field-even"><p>0.5</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="NodeList.services.name">
+<code class="sig-prename descclassname">services.</code><code class="sig-name descname">name</code><a class="headerlink" href="#NodeList.services.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the service exposed by the node</p>
+<dl class="field-list simple">
+<dt class="field-odd">Cardinality</dt>
+<dd class="field-odd"><p>1</p>
+</dd>
+<dt class="field-even">ValueSpace</dt>
+<dd class="field-even"><p>ServiceName</p>
+</dd>
+<dt class="field-odd">Generated By</dt>
+<dd class="field-odd"><p>CN</p>
+</dd>
+<dt class="field-even">Required Version</dt>
+<dd class="field-even"><p>0.5</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="NodeList.services.version">
+<code class="sig-prename descclassname">services.</code><code class="sig-name descname">version</code><a class="headerlink" href="#NodeList.services.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>The version of the service implemented.  Since not all member nodes can be
+orchestrated to migrate versions simultaneously, the version is needed to
+ensure business continuity in the eventuality of dataone-service-api
+upgrades.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Cardinality</dt>
+<dd class="field-odd"><p>1</p>
+</dd>
+<dt class="field-even">ValueSpace</dt>
+<dd class="field-even"><p>string</p>
+</dd>
+<dt class="field-odd">Generated By</dt>
+<dd class="field-odd"><p>CN</p>
+</dd>
+<dt class="field-even">Required Version</dt>
+<dd class="field-even"><p>0.5</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="NodeList.services.available">
+<code class="sig-prename descclassname">services.</code><code class="sig-name descname">available</code><a class="headerlink" href="#NodeList.services.available" title="Permalink to this definition">¶</a></dt>
+<dd><p>A flag to indicate whether or not the service is available.  Determined by
+the CN.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Cardinality</dt>
+<dd class="field-odd"><p>0..1</p>
+</dd>
+<dt class="field-even">ValueSpace</dt>
+<dd class="field-even"><p>boolean</p>
+</dd>
+<dt class="field-odd">Generated By</dt>
+<dd class="field-odd"><p>CN</p>
+</dd>
+<dt class="field-even">Required Version</dt>
+<dd class="field-even"><p>0.5</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="NodeList.services.method.name">
+<code class="sig-prename descclassname">services.method.</code><code class="sig-name descname">name</code><a class="headerlink" href="#NodeList.services.method.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>the name of the method implemented by the service</p>
+<dl class="field-list simple">
+<dt class="field-odd">Cardinality</dt>
+<dd class="field-odd"><p>0..1</p>
+</dd>
+<dt class="field-even">ValueSpace</dt>
+<dd class="field-even"><p>NMToken</p>
+</dd>
+<dt class="field-odd">Generated By</dt>
+<dd class="field-odd"><p>CN</p>
+</dd>
+<dt class="field-even">Required Version</dt>
+<dd class="field-even"><p>0.5</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="NodeList.services.method.rest">
+<code class="sig-prename descclassname">services.method.</code><code class="sig-name descname">rest</code><a class="headerlink" href="#NodeList.services.method.rest" title="Permalink to this definition">¶</a></dt>
+<dd><p>the rest path, relative to the baseURL of the node, that calls the method</p>
+<dl class="field-list simple">
+<dt class="field-odd">Cardinality</dt>
+<dd class="field-odd"><p>1</p>
+</dd>
+<dt class="field-even">ValueSpace</dt>
+<dd class="field-even"><p>xs:token</p>
+</dd>
+<dt class="field-odd">Generated By</dt>
+<dd class="field-odd"><p>CN</p>
+</dd>
+<dt class="field-even">Required Version</dt>
+<dd class="field-even"><p>0.5</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="NodeList.services.method.implemented">
+<code class="sig-prename descclassname">services.method.</code><code class="sig-name descname">implemented</code><a class="headerlink" href="#NodeList.services.method.implemented" title="Permalink to this definition">¶</a></dt>
+<dd><p>A flag to indicate if this method is implemented on the node.  Determined by
+the MN through the addCapabilities method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Cardinality</dt>
+<dd class="field-odd"><p>1</p>
+</dd>
+<dt class="field-even">ValueSpace</dt>
+<dd class="field-even"><p>boolean</p>
+</dd>
+<dt class="field-odd">Generated By</dt>
+<dd class="field-odd"><p>CN</p>
+</dd>
+<dt class="field-even">Required Version</dt>
+<dd class="field-even"><p>0.5</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="NodeList.synchronization.lastHarvested">
+<code class="sig-prename descclassname">synchronization.</code><code class="sig-name descname">lastHarvested</code><a class="headerlink" href="#NodeList.synchronization.lastHarvested" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set by a CN, contains the time of last MN-synchronization with a CN.  The
+dateTime is taken from the frame of reference of the member node, that is to
+say, it uses the latest modification date from the objects harvested.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Cardinality</dt>
+<dd class="field-odd"><p>1</p>
+</dd>
+<dt class="field-even">ValueSpace</dt>
+<dd class="field-even"><p>dateTime</p>
+</dd>
+<dt class="field-odd">Generated By</dt>
+<dd class="field-odd"><p>CN</p>
+</dd>
+<dt class="field-even">Required Version</dt>
+<dd class="field-even"><p>0.5</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="NodeList.synchronization.lastCompleteHarvest">
+<code class="sig-prename descclassname">synchronization.</code><code class="sig-name descname">lastCompleteHarvest</code><a class="headerlink" href="#NodeList.synchronization.lastCompleteHarvest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set by a CN, contains the time of the last complete harvest from a MN.  A
+complete harvest is a full re-harvesting from a member node not relying on
+last harvest time.  This value of this field should always be the same or
+earlier than the lastHarvested field.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Cardinality</dt>
+<dd class="field-odd"><p>1</p>
+</dd>
+<dt class="field-even">ValueSpace</dt>
+<dd class="field-even"><p>dateTime</p>
+</dd>
+<dt class="field-odd">Generated By</dt>
+<dd class="field-odd"><p>CN</p>
+</dd>
+<dt class="field-even">Required Version</dt>
+<dd class="field-even"><p>0.5</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="NodeList.synchronization.schedule">
+<code class="sig-prename descclassname">synchronization.</code><code class="sig-name descname">schedule</code><a class="headerlink" href="#NodeList.synchronization.schedule" title="Permalink to this definition">¶</a></dt>
+<dd><p>a set of numerical list or range values used to set the synchronization
+schedule with a MN, following crontab formatting rules.  See wikipedia entry
+for a popular, if not technical, explanation of crobtab
+<cite>http://en.wikipedia.org/wiki/Cron</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Cardinality</dt>
+<dd class="field-odd"><p>1</p>
+</dd>
+<dt class="field-even">ValueSpace</dt>
+<dd class="field-even"><p>Schedule</p>
+</dd>
+<dt class="field-odd">Generated By</dt>
+<dd class="field-odd"><p>CN</p>
+</dd>
+<dt class="field-even">Required Version</dt>
+<dd class="field-even"><p>0.5</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="NodeList.health.state">
+<code class="sig-prename descclassname">health.</code><code class="sig-name descname">state</code><a class="headerlink" href="#NodeList.health.state" title="Permalink to this definition">¶</a></dt>
+<dd><p>The state of health of the node, based on ping and status calls.  Legal
+values are “up”, “down”, “unknown”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Cardinality</dt>
+<dd class="field-odd"><p>1</p>
+</dd>
+<dt class="field-even">ValueSpace</dt>
+<dd class="field-even"><p>State</p>
+</dd>
+<dt class="field-odd">Generated By</dt>
+<dd class="field-odd"><p>CN</p>
+</dd>
+<dt class="field-even">Required Version</dt>
+<dd class="field-even"><p>0.5</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="NodeList.health.ping.success">
+<code class="sig-prename descclassname">health.ping.</code><code class="sig-name descname">success</code><a class="headerlink" href="#NodeList.health.ping.success" title="Permalink to this definition">¶</a></dt>
+<dd><p>A flag showing whether the last mn_health.ping was successful or not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Cardinality</dt>
+<dd class="field-odd"><p>0..1</p>
+</dd>
+<dt class="field-even">ValueSpace</dt>
+<dd class="field-even"><p>boolean</p>
+</dd>
+<dt class="field-odd">Generated By</dt>
+<dd class="field-odd"><p>CN</p>
+</dd>
+<dt class="field-even">Required Version</dt>
+<dd class="field-even"><p>0.5</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="NodeList.health.ping.lastSuccess">
+<code class="sig-prename descclassname">health.ping.</code><code class="sig-name descname">lastSuccess</code><a class="headerlink" href="#NodeList.health.ping.lastSuccess" title="Permalink to this definition">¶</a></dt>
+<dd><p>The time of last successful mn_health.ping to the node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Cardinality</dt>
+<dd class="field-odd"><p>0..1</p>
+</dd>
+<dt class="field-even">ValueSpace</dt>
+<dd class="field-even"><p>dateTime</p>
+</dd>
+<dt class="field-odd">Generated By</dt>
+<dd class="field-odd"><p>CN</p>
+</dd>
+<dt class="field-even">Required Version</dt>
+<dd class="field-even"><p>0.5</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="NodeList.health.status.success">
+<code class="sig-prename descclassname">health.status.</code><code class="sig-name descname">success</code><a class="headerlink" href="#NodeList.health.status.success" title="Permalink to this definition">¶</a></dt>
+<dd><p>A flag showing whether the last mn_health.status method call was successful
+or not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Cardinality</dt>
+<dd class="field-odd"><p>0..1</p>
+</dd>
+<dt class="field-even">ValueSpace</dt>
+<dd class="field-even"><p>boolean</p>
+</dd>
+<dt class="field-odd">Generated By</dt>
+<dd class="field-odd"><p>CN</p>
+</dd>
+<dt class="field-even">Required Version</dt>
+<dd class="field-even"><p>0.5</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="NodeList.health.status.dateChecked">
+<code class="sig-prename descclassname">health.status.</code><code class="sig-name descname">dateChecked</code><a class="headerlink" href="#NodeList.health.status.dateChecked" title="Permalink to this definition">¶</a></dt>
+<dd><p>The time of the last mn_health.status call to the node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Cardinality</dt>
+<dd class="field-odd"><p>0..1</p>
+</dd>
+<dt class="field-even">ValueSpace</dt>
+<dd class="field-even"><p>dateTime</p>
+</dd>
+<dt class="field-odd">Generated By</dt>
+<dd class="field-odd"><p>CN</p>
+</dd>
+<dt class="field-even">Required Version</dt>
+<dd class="field-even"><p>0.5</p>
+</dd>
+</dl>
+<p>The object format in protocol buffer format
+A set of values that describe a node, its Internet location, the services it
+supports and its replication policy.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">message</span> <span class="n">Node</span>
+<span class="p">{</span>
+  <span class="n">required</span> <span class="n">NodeReference</span> <span class="n">identifier</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="n">required</span> <span class="n">NonEmptyString</span> <span class="n">name</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+  <span class="n">required</span> <span class="n">NonEmptyString</span> <span class="n">description</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+  <span class="n">required</span> <span class="n">anyURI</span> <span class="n">baseURL</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+  <span class="n">repeated</span> <span class="n">Service</span> <span class="n">services</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+  <span class="n">optional</span> <span class="n">Synchronization</span> <span class="n">synchronization</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+  <span class="n">optional</span> <span class="n">NodeHealth</span> <span class="n">health</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
+  <span class="n">required</span> <span class="n">boolean</span> <span class="n">replicate</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+  <span class="n">required</span> <span class="n">boolean</span> <span class="n">synchronize</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span>
+  <span class="n">required</span> <span class="n">NMToken</span><span class="p">(</span><span class="n">string</span><span class="p">)</span> <span class="nb">type</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+
+  <span class="n">message</span> <span class="n">Service</span>
+  <span class="p">{</span>
+    <span class="n">required</span> <span class="n">ServiceName</span> <span class="n">name</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">required</span> <span class="n">string</span> <span class="n">version</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">boolean</span> <span class="n">available</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="n">repeated</span> <span class="n">ServiceMethod</span> <span class="n">method</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+
+    <span class="n">message</span> <span class="n">ServiceMethod</span>
+    <span class="p">{</span>
+      <span class="n">optional</span> <span class="n">NMToken</span> <span class="n">name</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="n">required</span> <span class="n">xs</span><span class="p">:</span><span class="n">token</span> <span class="n">rest</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+      <span class="n">required</span> <span class="n">boolean</span> <span class="n">implemented</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="n">message</span> <span class="n">Synchronization</span>
+  <span class="p">{</span>
+    <span class="n">required</span> <span class="n">dateTime</span> <span class="n">lastHarvested</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">required</span> <span class="n">dateTime</span> <span class="n">lastCompleteHarvest</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">required</span> <span class="n">Schedule</span> <span class="n">schedule</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+
+    <span class="n">message</span> <span class="n">Schedule</span>
+    <span class="p">{</span>
+      <span class="n">required</span> <span class="n">crontabEntryType</span> <span class="n">sec</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="n">required</span> <span class="n">crontabEntryType</span> <span class="nb">min</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+      <span class="n">required</span> <span class="n">crontabEntryType</span> <span class="n">hour</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+      <span class="n">required</span> <span class="n">crontabEntryType</span> <span class="n">mday</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+      <span class="n">required</span> <span class="n">crontabEntryType</span> <span class="n">mon</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+      <span class="n">required</span> <span class="n">crontabEntryType</span> <span class="n">year</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+      <span class="n">required</span> <span class="n">crontabEntryType</span> <span class="n">wday</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="n">message</span> <span class="n">NodeHealth</span>
+  <span class="p">{</span>
+    <span class="n">required</span> <span class="n">Ping</span> <span class="n">ping</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">required</span> <span class="n">Status</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">required</span> <span class="n">State</span> <span class="n">state</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+
+    <span class="n">message</span> <span class="n">Ping</span>
+    <span class="p">{</span>
+      <span class="n">optional</span> <span class="n">boolean</span> <span class="n">success</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="n">optional</span> <span class="n">dateTime</span> <span class="n">lastSuccess</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">message</span> <span class="n">Status</span>
+    <span class="p">{</span>
+      <span class="n">optional</span> <span class="n">boolean</span> <span class="n">success</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="n">optional</span> <span class="n">dateTime</span> <span class="n">dateChecked</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">enum</span> <span class="n">State</span>
+    <span class="p">{</span>
+      <span class="n">UP</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="n">DOWN</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+      <span class="n">UNKNOWN</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">NodeList</a><ul>
+<li><a class="reference internal" href="#nodelist-fields">NodeList fields</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+      <li>Previous: <a href="Serialization.html" title="previous chapter">Serialization of Types for Transfer Over HTTP</a></li>
+      <li>Next: <a href="CoordinatingNodeInternals.html" title="next chapter">Coordinating Node Internals</a></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/design/NodeList.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/design/NodeList.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/NodeList.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

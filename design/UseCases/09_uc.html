@@ -1,0 +1,293 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Use Case 09 - Replicate MN to MN &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/mathjax_pre.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Use Case 40 - Member Node Requests Synchronization" href="40_uc.html" />
+    <link rel="prev" title="Use Case 08 - Replication Policy Communication" href="08_uc.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="40_uc.html" title="Use Case 40 - Member Node Requests Synchronization"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="08_uc.html" title="Use Case 08 - Replication Policy Communication"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html"></a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../usecases.html" accesskey="U">Use Cases</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Use Case 09 - Replicate MN to MN</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="use-case-09-replicate-mn-to-mn">
+<span id="uc09"></span><h1>Use Case 09 - Replicate MN to MN<a class="headerlink" href="#use-case-09-replicate-mn-to-mn" title="Permalink to this headline">¶</a></h1>
+<dl id="index-0">
+<dt>Revisions</dt><dd><p>View document revision <a class="reference external" href="https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/09_uc.txt">history</a>.</p>
+</dd>
+<dt>Goal</dt><dd><p>Replicate data from Member Node to Member Node.</p>
+</dd>
+<dt>Summary</dt><dd><p>Replication of content between Member Nodes (MN) is done to improve
+persistence of information (avoid data loss with loss of MN) and to improve
+accessibility (more choices for content retrieval can lower bandwidth
+requirements for any particular MN). The process of replication is controlled
+by a Coordinating Node (CN).</p>
+<p>A full copy of science data and metadata is made during the replication
+process, so the original science metadata and data is copied to the
+recipient MN.</p>
+<p>Data is copied across as an exact copy. Science metadata may be transformed
+into another format if the original can not be supported.</p>
+<p>It is important that the original metadata is preserved on the CNs, as
+it is always possible that the original MN where the content was published
+may go offline or be removed from the DataONE system.</p>
+</dd>
+<dt>Actors</dt><dd><p>Two Member Nodes, one or more Coordinating Nodes</p>
+</dd>
+<dt>Preconditions</dt><dd><ul class="simple">
+<li><p>Content is present on a Member Node</p></li>
+<li><p>The content has been registered with the DataONE system (i.e. Member Node
+Synchronization has occurred for the data and metadata)</p></li>
+</ul>
+</dd>
+<dt>Triggers</dt><dd><ul class="simple">
+<li><p>A Coordinating Node detects that there are insufficient copies of the
+object(s) in question.</p></li>
+<li><p>Information on a Member Node is altered</p></li>
+<li><p>Capabilities of a Member Node changes (accepting more or less content)</p></li>
+<li><p>Replication policy of DataONE or a Member Node changes</p></li>
+<li><p>A Member Node goes offline</p></li>
+</ul>
+</dd>
+<dt>Post Conditions</dt><dd><ul class="simple">
+<li><p>Content is present on the recipient Member Node</p></li>
+<li><p>System metadata is updated to reflect the change</p></li>
+<li><p>Watchers are notified of the change</p></li>
+<li><p>Member Node and Coordinating Node logs are updated</p></li>
+</ul>
+</dd>
+</dl>
+<img alt="../../_images/97388dd0d69b78ce6c4d31f93ce7b53417431df438c4cfadcd693d7185e5ce32.svg" class="align-center" src="../../_images/97388dd0d69b78ce6c4d31f93ce7b53417431df438c4cfadcd693d7185e5ce32.svg" /><p><em>Figure 1.</em> Use case diagram indicating the actors involved in the process of
+Member Node replication.</p>
+<img alt="../../_images/dc3a0faad04270f8ef04d6766da58270701a9b31984055b559061866cada54ba.svg" class="align-center" src="../../_images/dc3a0faad04270f8ef04d6766da58270701a9b31984055b559061866cada54ba.svg" /><p><strong>Figure 2.</strong> Interactions for use case 09. The diagram describes transfer of a
+single object from MN_A to MN_B as directed by a CN. It is assumed that the
+object does not exist on MN_A and the object has been identified as requiring
+replication by the CN checking its status in the system metadata. The end
+state of a replicate operation is that content is available on the MN, the
+MN has notified the CN of such, and the CN will schedule a synchronize
+operation that will verify the copy as legitimate.</p>
+<img alt="../../_images/9b6b58d84881c3b319d9f105e9619976f65bf33f0e38dcaf4b90f4cd2c238dec.svg" class="align-center" src="../../_images/9b6b58d84881c3b319d9f105e9619976f65bf33f0e38dcaf4b90f4cd2c238dec.svg" /><p><em>Figure 3.</em></p>
+<div class="section" id="implementation-details">
+<h2>Implementation Details<a class="headerlink" href="#implementation-details" title="Permalink to this headline">¶</a></h2>
+<p>Replication of objects between Member Nodes (MN) within the DataONE system is
+managed by the Coordinating Nodes (CN). CNs are aware of the replication
+policies of each object (through system metadata) and the capabilities of each
+MN (through node capabilities), and populate a distributed queue of replication
+tasks to be processed by all of the CNs.</p>
+<p>Replication can be initiated in three ways:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>CN synchronization: harvesting of system and science metadata</p></li>
+<li><p>CN timed replication: periodic sweep of all system objects</p></li>
+<li><p>MN event-based replication: MN sends replication request to a
+CN (not implemented)</p></li>
+</ol>
+</div></blockquote>
+</div>
+<div class="section" id="replication-events">
+<h2>Replication Events<a class="headerlink" href="#replication-events" title="Permalink to this headline">¶</a></h2>
+<p>The CN’s maintain a synchronized, distributed Hazelcast Map of system
+metadata (hzSystemMetadata). This map reflects the current state of the
+DataONE system’s object store. This in-memory map is also bound to the backing
+Metacat object store via the Hazelcast MapStore and MapLoader interfaces. The
+hzSystemMetadata map serves as an object-level locking mechanism across CNs, and
+any service that will make changes to an object’s system metadata will need to
+gain a lock on the given object identifier in the map. The hzSystemMetadata map
+is set to be persisted (backed-up) on 3 CNs.</p>
+<p>As the CN Synchronization Service becomes aware of create, update, and delete
+events for MN objects through harvesting, it updates the hzSystemMetadata map.
+The Replication service monitors this map for entry changes, and builds a list
+of ReplicationTask objects for each changed identifier in the map. This is done by
+calling ReplicationService.createReplicationTaskList(pid). The Replication
+Service evaluates the ReplicationPolicy of the given object’s system metadata,
+evaluates the capabilities and availability of the potential target MNs, and
+creates a ReplicationTask for each MN replication target up to the
+numberOfReplicas in the object’s ReplicationPolicy. Each ReplicationTask is
+listed based on priority. The Replication Service then iterates through the
+returned task list and populates the hzReplicationTasks queue with the ordered
+tasks. Each item offered to the queue consists of a task identifier and a
+ReplicationTask.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>TODO: Describe the CN time-based population of the replication task queue
+that periodically does a full sweep of the object store.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>TODO: Describe the MN-based replication via a CNReplication API request
+(not implemented)</p>
+</div>
+</div>
+<div class="section" id="processing-replication-tasks">
+<h2>Processing Replication Tasks<a class="headerlink" href="#processing-replication-tasks" title="Permalink to this headline">¶</a></h2>
+<p>As the hzReplicationTasks queue is populated, each CN’s Replication Service
+receives entry added events and polls the queue with a short timeout to submit
+new tasks to process. A CN Replication Service instance’s entryAdded() method is
+fired, and it in turn polls the task queue and submits the ReplicationTask
+to the cluster-wide Executor Service.  One of the CN’s will execute the task by
+calling the ReplicationTask.call() method.  This call initiates MN replication.
+The CN calls replicate() on the target MN (mnB), passing in the cnZ token
+(cnZToken), the originating node reference (mnA), and the identifier of the
+object to be replicated (pid). This call triggers the MN (mnB) to call
+getReplica() on the originating MN (mnA), passing in mnB token
+(mnBToken) and the identifier of the object to be replicated (pid). In turn,
+the CN updates the system metadata for the object, setting the ReplicationStatus
+to REQUESTED after gaining the lock on the object. The lock is immediately
+released.</p>
+<p>Before responding to getReplica(), mnA checks for replication authorization by
+calling isNodeAuthorized() on the CN, passing in the mnA token
+(mnAToken), the Subject listed in the mnBToken (mnBSubject), the object
+identifier (pid), and the desired replication permission
+(replicationPermission). The Replication Service looks up Subject in the
+LDAP replication group, and returns the response.</p>
+<p>Upon successful authorization, mnA replicates the object (replicaBytes) to the
+target MN (mnB). mnB in turn sends a successful replication response to the CN
+(replicateResponse). The CN Replication Service once again updates the system
+metadata for the object after gaining a lock in the hzSystemMetadataMap. The
+lock is immediately released, and the statusResponse is sent to the CN.</p>
+<p>Note (2011.01.07 CWB): This simple authentication scheme will not work on
+member nodes that have their own access control rules. In this scheme, each
+member node will need to have knowledge of the administrative (or replication)
+credentials for each of the other member nodes. The CN needs to handle the
+login actions for both of the MNs involved and send an authenticated token
+from MN_A to MN_B so that it can use that credential to successfully get the
+document. This is only the case if the document on MN_A is read protected. If
+it is public, not token is needed.</p>
+<p>Note that the call setReplicationStatus with a value of <em>COMPLETE</em> is
+functionally equivalent to the <em>notify(objectCreated, identifier)</em> call
+indicated in use case 06.</p>
+</div>
+<div class="section" id="replication-auditing">
+<h2>Replication Auditing<a class="headerlink" href="#replication-auditing" title="Permalink to this headline">¶</a></h2>
+<img alt="../../_images/d34816cb58642d7d9997c3fe039a245775e4ef540511d80063adbfe9a94aa6e3.svg" class="align-center" src="../../_images/d34816cb58642d7d9997c3fe039a245775e4ef540511d80063adbfe9a94aa6e3.svg" /><p><strong>Figure 4.</strong></p>
+<img alt="../../_images/eff63896f37fc59f9ea2247e947b73fc4fbc2a9d1dc9ce77b052332d8101c832.svg" class="align-center" src="../../_images/eff63896f37fc59f9ea2247e947b73fc4fbc2a9d1dc9ce77b052332d8101c832.svg" /><p><strong>Figure 5.</strong></p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Use Case 09 - Replicate MN to MN</a><ul>
+<li><a class="reference internal" href="#implementation-details">Implementation Details</a></li>
+<li><a class="reference internal" href="#replication-events">Replication Events</a></li>
+<li><a class="reference internal" href="#processing-replication-tasks">Processing Replication Tasks</a></li>
+<li><a class="reference internal" href="#replication-auditing">Replication Auditing</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation Overview</a><ul>
+  <li><a href="../usecases.html">Use Cases</a><ul>
+      <li>Previous: <a href="08_uc.html" title="previous chapter">Use Case 08 - Replication Policy Communication</a></li>
+      <li>Next: <a href="40_uc.html" title="next chapter">Use Case 40 - Member Node Requests Synchronization</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/design/UseCases/09_uc.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../../_sources/design/UseCases/09_uc.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/09_uc.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

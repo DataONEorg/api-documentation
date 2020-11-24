@@ -1,0 +1,405 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>What is This Thing? &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Semantic Search Design" href="semantics.html" />
+    <link rel="prev" title="Java Library" href="itk-java-lib.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="semantics.html" title="Semantic Search Design"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="itk-java-lib.html" title="Java Library"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">What is This Thing?</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="what-is-this-thing">
+<h1>What is This Thing?<a class="headerlink" href="#what-is-this-thing" title="Permalink to this headline">¶</a></h1>
+<p><strong>It does not make sense to have a string without knowing what encoding it
+uses</strong> [<a class="reference external" href="http://www.joelonsoftware.com/articles/Unicode.html">Spolsky2003</a>].</p>
+<div class="section" id="media-type-metadata">
+<h2>Media Type Metadata<a class="headerlink" href="#media-type-metadata" title="Permalink to this headline">¶</a></h2>
+<p>In DataONE content may be transferred multiple times between multiple locations,
+and each transfer must result in an accurate representation of the original
+content. DataONE achieves this by transferring byte copies of content between
+clients and servers using the HTTP protocol, and verifying that the checksum
+computed by the origin matches that retrieved. Hence the bytes are accurately
+transferred and can be reliably transferred again by the consumer.</p>
+<p>In order to properly interpret how to use the object, the consumer must know the
+<em>media type</em> of the object. The media type (formerly the MIME or Multipurpose
+Internet Mail Extensions Type) is metadata about an object that can be used by
+the consumer to determine what the object is. The IANA (Internet Assigned
+Numbers Authority [<a class="reference external" href="http://www.iana.org/">IANA</a>]) provides a controlled list of media types
+[<a class="reference external" href="http://www.iana.org/assignments/media-types/media-types.xhtml">IANA_MEDIA</a>] (henceforth “IANA Media Types”) that are used during internet
+transfer of objects to inform the receiver of the type of object being
+transferred.</p>
+<p>The media type can be determined several ways:</p>
+<ul class="simple">
+<li><p>examine the bytes of the object</p></li>
+<li><p>infer from the file name of the object</p></li>
+<li><p>additional metadata provided by the object producer</p></li>
+</ul>
+<p>The most reliable general solution is for the media type metadata to be provided
+by the object producer. This is especially important for ambiguous object types
+such as text documents since the character encoding can in many cases only be
+reliably determined by the application that created the document.</p>
+<p>In some cases, the IANA Media Type by itself does not provide sufficient
+information for a consumer to reliably process an object. For example a text
+document with IANA Media Type of <code class="docutils literal notranslate"><span class="pre">text/plain</span></code> may have been created using any
+of hundreds of character sets [<a class="reference external" href="http://www.iana.org/assignments/character-sets/character-sets.xhtml">IANA_CHARS</a>]. In these cases, an additional
+<code class="docutils literal notranslate"><span class="pre">charset</span></code> parameter is specified, and this information along with the IANA
+Media Type is required to properly interpret a text file.</p>
+<p>DataONE expands on the metadata describing an object by recording additional
+information in <a class="reference internal" href="../apis/Types.html#Types.SystemMetadata" title="Types.SystemMetadata"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.SystemMetadata</span></code></a> that accompanies every object.
+Amongst this additional metadata is a <code class="docutils literal notranslate"><span class="pre">formatId</span></code> that, like the IANA Media
+Type, provides a pointer to additional information (a
+<a class="reference internal" href="../apis/Types.html#Types.ObjectFormat" title="Types.ObjectFormat"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.ObjectFormat</span></code></a>) about the object for the benefit of downstream
+consumers. The <code class="docutils literal notranslate"><span class="pre">ObjectFormat</span></code> structure is a controlled list of object
+classifications that augments the IANA Media Type to support use by analytical
+tools employed by researchers and other.</p>
+<p>In this manner the combination of an object and it’s System Metadata provides
+the information necessary for a consumer to discern what the object is and so
+what applications might be used to ingest the object.</p>
+</div>
+<div class="section" id="preserving-media-type-metadata-between-systems">
+<h2>Preserving Media Type Metadata Between Systems<a class="headerlink" href="#preserving-media-type-metadata-between-systems" title="Permalink to this headline">¶</a></h2>
+<p>Once available, the media type metadata should be preserved with the object to
+ensure that downstream consumers can utilize the content in the same way without
+resorting to inference mechanisms with potentially different results. Hence it
+is essential that media type information is considered an integral part of the
+action of transferring an object between systems.</p>
+<p>When a server sends an object to a user agent (e.g. a CN acting as a client
+retrieving a Science Metadata document from a MN, a script accessing content, or
+a browser viewing something from a CN), the server should specify the media type
+in the <code class="docutils literal notranslate"><span class="pre">Content-Type</span></code> field of the accompanying HTTP headers [<a class="reference external" href="http://www.ietf.org/rfc/rfc2616.txt">RFC2616</a> Section
+14.17]. The <code class="docutils literal notranslate"><span class="pre">Content-Type</span></code> entity-header field indicates the media type
+[<a class="reference external" href="http://www.iana.org/assignments/media-types/media-types.xhtml">IANA_MEDIA</a>] (formerly known as “MIME Type” or “Multipurpose Internet Mail
+Extensions Type”) of the entity-body sent to the recipient [<a class="reference external" href="http://www.ietf.org/rfc/rfc2616.txt">RFC2616</a>]. The media
+type entry of the Content-Type header is used to to inform the consumer of what
+the bytes in the payload represent.</p>
+<p>The server may also include a suggested filename in the Content-Disposition HTTP
+header [<a class="reference external" href="http://www.ietf.org/rfc/rfc6266.txt">RFC6266</a>]. This can be useful for consumers as it specifies a filename
+that may be used by default for the content, and also provides a hint as to the
+type of content being provided (i.e. through the file name extension).</p>
+<p>All content in DataONE is accompanied by System Metadata which is used to
+provide persistent information about the associated object that is useful for
+maintaining the object state and for consumers. Content type in DataONE is
+indicated in System Metadata by freference to an <code class="xref py py-class docutils literal notranslate"><span class="pre">Types.Object</span> <span class="pre">Format</span></code>, a
+complex structure that contains a <code class="docutils literal notranslate"><span class="pre">formatId</span></code>, a <code class="docutils literal notranslate"><span class="pre">formatName</span></code> and a
+<code class="docutils literal notranslate"><span class="pre">formatType</span></code>. In version 2.0 APIs, <code class="xref py py-class docutils literal notranslate"><span class="pre">V2_0.Types.objectFormat</span></code> is
+extended to include mimeType and extension.</p>
+<p>The use of a controlled list of object formats may be problematic however, when
+considering that a particular type of object may have multiple media types (e.g.
+an Excel spreadsheet) or may require more detail such as character encoding
+information (e.g. a CSV or XML document) that may not be reliably inferred from
+the object bytes.</p>
+<p>Hence, the system metadata for an object should also include optional properties
+for the media type specific to the object, the character encoding, and the
+filename. This information may be provided with the object System Metadata or in
+the Content-Type and Content-Disposition headers. Where the information in the
+headers conflicts with that in the System Metadata, the System Metadata should
+prevail (since presumably the system metadata was set correctly by the origin,
+whereas a misconfigured server may be setting an incorrect value).</p>
+<p><strong>Recommendations</strong></p>
+<ol class="arabic simple">
+<li><p>(no change) The objectFormat is used to indicate to a consumer application
+more detailed information than is available through the media type.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">mimeType</span></code> element of the Draft v2.0 API should be renamed “mediaType”
+and used to specify the default media type for an object should that
+information not be explicitly provided through the Content-Type header
+provided by the producer (Issue #)</p></li>
+<li><p>The media type as provided by the producer of the object should be specified
+and should be preserved as part of the system metadata so that the media type
+may be reliably presented to downstream consumers. When specified in the
+<code class="docutils literal notranslate"><span class="pre">Content-Type</span></code> header, the media   type overrides the default value present
+in the associated objectFormat. When present in System Metadata, that value
+overrides a value presented in the <a href="#id1"><span class="problematic" id="id2">``</span></a>Content-Type``header. In practice,
+System Metadata is retrieved separately from the object, and so such an
+override will optional for consumers.</p></li>
+<li><p>For text media sub-types, or content that is textual (e.g. media type =
+<code class="docutils literal notranslate"><span class="pre">application/xml</span></code> or <code class="docutils literal notranslate"><span class="pre">application/javascript</span></code>), a charset parameter
+should be provided in the <code class="docutils literal notranslate"><span class="pre">Content-Type</span></code> header. When provided, this value
+must be persisted in the system metadata associated with an object. When
+<code class="docutils literal notranslate"><span class="pre">charset</span></code> is specified in the System Metadata, it overrides a value that
+may be present in the Content-Type header. In practice, System Metadata is
+retrieved separately from the object, and so such an override will optional
+for consumers.</p></li>
+<li><p>A filename should be provided in a <code class="docutils literal notranslate"><span class="pre">Content-Disposition</span></code> header by a
+producer and should be preserved in the system metadata associated with the
+object. When present in the System Metadata, that value overrides a value in
+the <code class="docutils literal notranslate"><span class="pre">Content-Disposition</span></code> header. In practice, System Metadata is retrieved
+separately from the object, and so such an override will optional for
+consumers.</p></li>
+</ol>
+</div>
+<div class="section" id="setting-content-type-and-content-disposition-headers">
+<h2>Setting Content-Type and Content-Disposition Headers<a class="headerlink" href="#setting-content-type-and-content-disposition-headers" title="Permalink to this headline">¶</a></h2>
+<p>The purpose of the HTTP <code class="docutils literal notranslate"><span class="pre">Content-Type</span></code> header is to inform the receiver of a
+byte stream what the payload actually is. Parameters may be included with the
+<code class="docutils literal notranslate"><span class="pre">Content-Type</span></code> to provide additional information for the consumer (e.g. the
+<code class="docutils literal notranslate"><span class="pre">charset</span></code> parameter for text sub-types).</p>
+<div class="section" id="version-1-x-content-type">
+<h3>Version 1.x Content-Type<a class="headerlink" href="#version-1-x-content-type" title="Permalink to this headline">¶</a></h3>
+<p>Media type tracking in Version 1.x is largely delegated to the ObjectFormat
+referenced in the SystemMetadata associated with an object. A content producer
+may provide a Content-Type header, but this information is not preserved as part
+of the DataONE infrastructure. Hence, consumers that intend to re-expose the
+object should endeavor to record the provided Content-Type and provide tha
+header when re-transmitting the object. Such an action is however, undefined
+within the Version 1.x DataONE service interfaces.</p>
+<p>Lacking an explicltly set Content-Type, a Node may infer the Content-Type from the ObjectFormat</p>
+</div>
+<div class="section" id="version-2-0-content-type">
+<h3>Version 2.0 Content-Type<a class="headerlink" href="#version-2-0-content-type" title="Permalink to this headline">¶</a></h3>
+<ol class="loweralpha">
+<li><p><code class="docutils literal notranslate"><span class="pre">mediaType</span></code> value is specified in SystemMetadata</p>
+<p>The SystemMetdata.mediaType value is used to set the Content-Type header
+value. The SystemMetadata.mediaType overrides a value that may be set in the
+referenced ObjectFormat.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mediaType</span></code> value not specified in SystemMetadata, available in ObjectFormat</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mediaType</span></code> value not specified in SystemMetadata or ObjectFormat</p></li>
+</ol>
+</div>
+</div>
+<div class="section" id="rules-for-various-content-types">
+<h2>Rules for Various Content Types<a class="headerlink" href="#rules-for-various-content-types" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="application-xml">
+<h3>application/xml<a class="headerlink" href="#application-xml" title="Permalink to this headline">¶</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">application/xml</span></code> and <code class="docutils literal notranslate"><span class="pre">text/xml</span></code> are equivalent [<a class="reference external" href="http://www.ietf.org/rfc/rfc7303.txt">RFC7303</a> Section
+9.2].</p>
+</div>
+<p>The use of UTF-8, without a BOM, is RECOMMENDED for all XML MIME entities
+[<a class="reference external" href="http://www.ietf.org/rfc/rfc7303.txt">RFC7303</a>].</p>
+<p>The document character set for XML is Unicode (ISO 10646), which means that XML
+processors should behave as if they used Unicode internally. However, that does
+not mean an XML document must be transmitted in Unicode. As long as client and
+server agree on the encoding, they can use any encoding that can be converted to
+Unicode.</p>
+<p>A challenge with XML documents is that there are three locations where character
+encoding information may be provided:</p>
+<ul class="simple">
+<li><p>A Byte Order Marker (BOM) at the begining of the entity body</p></li>
+<li><p>An XML encoding property present at the start of the document</p></li>
+<li><p>A charset property present in the <code class="docutils literal notranslate"><span class="pre">Content-Type</span></code> HTTP header</p></li>
+</ul>
+<p>Each of these are optional, and when present may provide conflicting
+information. <a class="reference external" href="RFC7303">Section 3.2</a> of RFC7303 provides guidelines for how to
+infer the character encoding of a document. In order of priority:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>A BOM (Section 3.3) is authoritative if it is present in an XML MIME
+entity;</p></li>
+<li><p>In the absence of a BOM (Section 3.3), the charset parameter is
+authoritative if it is present.</p></li>
+<li><p>If an XML MIME entity is received where the charset parameter is omitted,
+no information is being provided about the character encoding by the MIME
+Content-Type header.  XML-aware consumers MUST follow the requirements in
+section 4.3.3 of [<a class="reference external" href="http://www.w3.org/TR/2008/REC-xml-20081126">XML</a>] that directly address this case.  XML-unaware MIME
+consumers SHOULD NOT assume a default encoding in this case.</p></li>
+</ol>
+</div></blockquote>
+<p>Section 8 of <a class="reference external" href="http://www.ietf.org/rfc/rfc7303.txt">RFC7303</a> provides several examples of consistent and inconsistent
+XML encoding.</p>
+<p>An important consequence of the document character set is that values of numeric
+character references (such as &amp;#x01F5; and &amp;#501; for LATIN SMALL LETTER G WITH
+ACUTE) are interpreted as Unicode characters - no matter what encoding you use
+for your document. This is a common source of error among those who are not
+clear about the distinction.</p>
+<p>Note that not all Unicode characters can be used anywhere in XML. Certain
+characters are excluded from use in tag names (elements and attributes), and
+<a class="reference external" href="XML1.1">XML 1.1</a> expands significantly on the range of characters that may
+be used compared with <a class="reference external" href="XML1.0">XML 1.0</a>.</p>
+</div>
+<div class="section" id="text-xml">
+<h3>text/xml<a class="headerlink" href="#text-xml" title="Permalink to this headline">¶</a></h3>
+<p>See application/xml.</p>
+</div>
+<div class="section" id="text-csv">
+<h3>text/csv<a class="headerlink" href="#text-csv" title="Permalink to this headline">¶</a></h3>
+<p>[<a class="reference external" href="http://www.ietf.org/rfc/rfc4180.txt">RFC4180</a>]</p>
+<p>MIME media type name: text</p>
+<p>MIME subtype name: csv</p>
+<p>Required parameters: none</p>
+<p>Optional parameters: charset, header</p>
+<blockquote>
+<div><p>Common usage of CSV is US-ASCII, but other character sets defined by IANA for
+the “text” tree may be used in conjunction with the “charset” parameter.</p>
+<p>The “header” parameter indicates the presence or absence of the header
+line.Valid values are “present” or “absent”. Implementors choosing not to use
+this parameter must make their own decisions as to whether the header line is
+present or absent.</p>
+</div></blockquote>
+<p>Encoding considerations:</p>
+<blockquote>
+<div><p>As per section 4.1.1. of RFC 2046 [3], this media type uses CRLF to denote
+line breaks.However, implementors should be aware that some implementations
+may use other values.</p>
+</div></blockquote>
+</div>
+<div class="section" id="text-plain">
+<h3>text/plain<a class="headerlink" href="#text-plain" title="Permalink to this headline">¶</a></h3>
+<p>[<a class="reference external" href="http://www.ietf.org/rfc/rfc2046.txt">RFC2046</a>]</p>
+</div>
+<div class="section" id="text-javascript">
+<h3>text/javascript<a class="headerlink" href="#text-javascript" title="Permalink to this headline">¶</a></h3>
+<p>Obsoleted in favor of <code class="docutils literal notranslate"><span class="pre">application/javascript</span></code></p>
+</div>
+<div class="section" id="application-javascript">
+<h3>application/javascript<a class="headerlink" href="#application-javascript" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="application-json">
+<h3>application/json<a class="headerlink" href="#application-json" title="Permalink to this headline">¶</a></h3>
+<p>JSON text SHALL be encoded in <a class="reference external" href="http://www.unicode.org/">Unicode</a> [<a class="reference external" href="http://www.ietf.org/rfc/rfc4627.txt">RFC4627</a>]. The default encoding is UTF-8.</p>
+<p>Since the first two characters of a JSON text will always be ASCII characters
+[<a class="reference external" href="http://www.ietf.org/rfc/rfc0020.txt">RFC0020</a>], it is possible to determine whether an octet stream is UTF-8, UTF-16
+(BE or LE), or UTF-32 (BE or LE) by looking at the pattern of nulls in the first
+four octets:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">00</span> <span class="mi">00</span> <span class="mi">00</span> <span class="n">xx</span>  <span class="n">UTF</span><span class="o">-</span><span class="mi">32</span><span class="n">BE</span>
+<span class="mi">00</span> <span class="n">xx</span> <span class="mi">00</span> <span class="n">xx</span>  <span class="n">UTF</span><span class="o">-</span><span class="mi">16</span><span class="n">BE</span>
+<span class="n">xx</span> <span class="mi">00</span> <span class="mi">00</span> <span class="mi">00</span>  <span class="n">UTF</span><span class="o">-</span><span class="mi">32</span><span class="n">LE</span>
+<span class="n">xx</span> <span class="mi">00</span> <span class="n">xx</span> <span class="mi">00</span>  <span class="n">UTF</span><span class="o">-</span><span class="mi">16</span><span class="n">LE</span>
+<span class="n">xx</span> <span class="n">xx</span> <span class="n">xx</span> <span class="n">xx</span>  <span class="n">UTF</span><span class="o">-</span><span class="mi">8</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">What is This Thing?</a><ul>
+<li><a class="reference internal" href="#media-type-metadata">Media Type Metadata</a></li>
+<li><a class="reference internal" href="#preserving-media-type-metadata-between-systems">Preserving Media Type Metadata Between Systems</a></li>
+<li><a class="reference internal" href="#setting-content-type-and-content-disposition-headers">Setting Content-Type and Content-Disposition Headers</a><ul>
+<li><a class="reference internal" href="#version-1-x-content-type">Version 1.x Content-Type</a></li>
+<li><a class="reference internal" href="#version-2-0-content-type">Version 2.0 Content-Type</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#rules-for-various-content-types">Rules for Various Content Types</a><ul>
+<li><a class="reference internal" href="#application-xml">application/xml</a></li>
+<li><a class="reference internal" href="#text-xml">text/xml</a></li>
+<li><a class="reference internal" href="#text-csv">text/csv</a></li>
+<li><a class="reference internal" href="#text-plain">text/plain</a></li>
+<li><a class="reference internal" href="#text-javascript">text/javascript</a></li>
+<li><a class="reference internal" href="#application-javascript">application/javascript</a></li>
+<li><a class="reference internal" href="#application-json">application/json</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+      <li>Previous: <a href="itk-java-lib.html" title="previous chapter">Java Library</a></li>
+      <li>Next: <a href="semantics.html" title="next chapter">Semantic Search Design</a></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/design/what_is_it.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/design/what_is_it.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/what_is_it.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

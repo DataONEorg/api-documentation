@@ -1,0 +1,1099 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data Packaging &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="DataONE Preservation Strategy" href="PreservationStrategy.html" />
+    <link rel="prev" title="What is Data (DataONE Perspective)?" href="WhatIsData.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="PreservationStrategy.html" title="DataONE Preservation Strategy"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="WhatIsData.html" title="What is Data (DataONE Perspective)?"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Data Packaging</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="data-packaging">
+<h1><a class="toc-backref" href="#id10">Data Packaging</a><a class="headerlink" href="#data-packaging" title="Permalink to this headline">¶</a></h1>
+<div class="contents topic" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#data-packaging" id="id10">Data Packaging</a></p>
+<ul>
+<li><p><a class="reference internal" href="#synopsis" id="id11">Synopsis</a></p></li>
+<li><p><a class="reference internal" href="#generating-resource-maps" id="id12">Generating Resource Maps</a></p>
+<ul>
+<li><p><a class="reference internal" href="#deviation-from-the-ore-model" id="id13">Deviation from the ORE model</a></p></li>
+<li><p><a class="reference internal" href="#referencing-other-data-packages" id="id14">Referencing other data packages</a></p></li>
+<li><p><a class="reference internal" href="#very-large-data-packages" id="id15">Very large data packages</a></p></li>
+<li><p><a class="reference internal" href="#describing-filesystem-hierarchies" id="id16">Describing filesystem hierarchies</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#resource-map-validation" id="id17">Resource map validation</a></p></li>
+<li><p><a class="reference internal" href="#background-discussion" id="id18">Background Discussion</a></p>
+<ul>
+<li><p><a class="reference internal" href="#overview" id="id19">Overview</a></p></li>
+<li><p><a class="reference internal" href="#user-stories" id="id20">User stories</a></p></li>
+<li><p><a class="reference internal" href="#package-content-associations-using-oai-ore" id="id21">Package Content Associations Using OAI-ORE</a></p></li>
+<li><p><a class="reference internal" href="#issues-and-resolution" id="id22">Issues and Resolution</a></p></li>
+<li><p><a class="reference internal" href="#examples" id="id23">Examples</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#package-serialization-using-bagit" id="id24">Package Serialization Using BagIt</a></p></li>
+<li><p><a class="reference internal" href="#data-package-client-design" id="id25">Data Package Client Design</a></p>
+<ul>
+<li><p><a class="reference internal" href="#classes-fields-and-methods" id="id26">Classes, Fields, and Methods</a></p></li>
+<li><p><a class="reference internal" href="#algorithm-for-constructing-data-packages" id="id27">Algorithm for Constructing Data Packages</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#additional-packaging-technologies" id="id28">Additional Packaging Technologies</a></p>
+<ul>
+<li><p><a class="reference internal" href="#ecological-metadata-language-eml" id="id29">Ecological Metadata Language (EML)</a></p></li>
+<li><p><a class="reference internal" href="#netcdf" id="id30">NetCDF</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#id6" id="id31">References</a></p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="synopsis">
+<h2><a class="toc-backref" href="#id11">Synopsis</a><a class="headerlink" href="#synopsis" title="Permalink to this headline">¶</a></h2>
+<p>A <a class="reference internal" href="../glossary.html#term-data-package"><span class="xref std std-term">data package</span></a> in DataONE is composed of at least one <a class="reference internal" href="../glossary.html#term-science-metadata"><span class="xref std std-term">science
+metadata</span></a> document describing at least one <a class="reference internal" href="../glossary.html#term-data"><span class="xref std std-term">data</span></a> object with the
+relationships between them documented in a <a class="reference internal" href="../glossary.html#term-resource-map"><span class="xref std std-term">resource map</span></a> document.</p>
+<p>Resource maps are RDF documents that conform to the Open Archives Initiative’s
+Object Reuse and Exchange (<a class="reference external" href="https://www.openarchives.org/ore/">OAI-ORE</a>) specification as described in detail
+below. Resource maps are generated by <a class="reference internal" href="../glossary.html#term-Member-Nodes"><span class="xref std std-term">Member Nodes</span></a> to define data
+packages, and have a <a class="reference internal" href="../glossary.html#term-formatId"><span class="xref std std-term">formatId</span></a> of:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">openarchives</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">ore</span><span class="o">/</span><span class="n">terms</span><span class="o">/</span>
+</pre></div>
+</div>
+<p>Note this is a name space string. The actual ORE terms can be found in the
+<a class="reference external" href="http://www.openarchives.org/ore/1.0/vocabulary">ORE Vocabulary Document</a>.</p>
+<img alt="../_images/54d25d1d7a59062003fd7527bae025b8119d06e3261a1946186051758c046f62.svg" class="align-center" src="../_images/54d25d1d7a59062003fd7527bae025b8119d06e3261a1946186051758c046f62.svg" /><p><strong>Figure 1.</strong> Overview class diagram for content model in DataONE. Class attributes refer to
+the equivalent SOLR index entry</p>
+</div>
+<div class="section" id="generating-resource-maps">
+<h2><a class="toc-backref" href="#id12">Generating Resource Maps</a><a class="headerlink" href="#generating-resource-maps" title="Permalink to this headline">¶</a></h2>
+<p>While there are several formats discussed in the general discussion below,
+DataONE currently only supports the RDF/XML serialization format, using the
+<a class="reference internal" href="../glossary.html#term-formatId"><span class="xref std std-term">formatId</span></a> of <code class="docutils literal notranslate"><span class="pre">http://www/openarchives.org/ore/terms</span></code>. For more
+information on OAI-ORE resource maps, see
+<a class="reference external" href="http://www.openarchives.org/ore/1.0/primer">http://www.openarchives.org/ore/1.0/primer</a>, especially sections 3 and 4. For
+more details on RDF/XML format, see
+<a class="reference external" href="http://www.openarchives.org/ore/1.0/rdfxml.html">http://www.openarchives.org/ore/1.0/rdfxml.html</a></p>
+<p>DataONE provides tools in both the Java and Python client libraries for building
+and serializing / deserializing resource maps, both based on the foresite-toolkit
+project (<a class="reference external" href="https://code.google.com/p/foresite-toolkit/">https://code.google.com/p/foresite-toolkit/</a>).  These are highly recommended
+for those who do not want to spend time on learning the OAI-ORE implementation model
+in detail in order to build and maintain a custom implementation.</p>
+<p>The ORE data model itself is flexible and general purpose.  In order to use it
+for our purposes, DataONE places a few additional constraints on the model.  (See
+<a class="reference external" href="http://www.openarchives.org/ore/1.0/datamodel">http://www.openarchives.org/ore/1.0/datamodel</a> for details on the ORE data model).</p>
+<ol class="arabic simple">
+<li><p>all DataONE objects in the map MUST be expressed as a URI using DataONE’s
+resolving service, instead of reference to a specific replica on a member
+node.  This is to separate the current physical location from the resource
+itself.</p></li>
+<li><p>The aggregation resource URI SHOULD be expressed as a hash URI based on the
+resource map URI, as recommended by ORE (see: <a class="reference external" href="http://www.openarchives.org/ore/1.0/primer#remHashURIs">http://www.openarchives.org/ore/1.0/primer#remHashURIs</a>,
+and <a class="reference external" href="http://www.openarchives.org/ore/1.0/http#Simple">http://www.openarchives.org/ore/1.0/http#Simple</a>) This ensures that the
+aggregation can be referenced directly in other resource maps and still be
+resolved.</p></li>
+<li><p>When referencing another DataONE data package, the URI of the package being
+referenced MUST resolve to a resource map.  The URI can either be the resource
+map URI or the aggregation URI if it follows the hash URI format.  Since some
+existing resource maps do not use aggregation URI’s that resolve to the
+resource map, it is necessary to check their format before deciding which to use.</p></li>
+<li><p>each resource with a representation in DataONE MUST be described with an
+dcterms:identifier field containing the DataONE identifier.</p></li>
+<li><p>when expressing an identifier in a URI, it must be URL encoded.  When expressing
+in the dcterms:identifier field, it must not.  (Of course any XML encoding
+would need to be applied as well, in the example below, there is none needed).</p></li>
+<li><p>the resource map MUST assert a triple with the pre:isDescribedBy relationship
+between the resource map and the aggregation, following the recommendation that
+aggregations with multiple resource maps express this relationship.
+(see http://www.openarchives.org/ore/1.0/datamodel#ReM-to-aggr)</p></li>
+</ol>
+<p>For example, the triple representing ‘scimeta_id1/foo documents scidata_id1’ would
+look like the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">rdf</span><span class="p">:</span><span class="n">Description</span> <span class="n">rdf</span><span class="p">:</span><span class="n">about</span><span class="o">=</span><span class="s2">&quot;https://cn.dataone.org/cn/v1/resolve/scimeta_id</span><span class="si">%2F</span><span class="s2">foo&quot;</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">cito</span><span class="p">:</span><span class="n">documents</span> <span class="n">rdf</span><span class="p">:</span><span class="n">resource</span><span class="o">=</span><span class="s2">&quot;https://cn.dataone.org/cn/v1/resolve/scidata_id&quot;</span><span class="o">/&gt;</span>
+  <span class="o">&lt;</span><span class="n">dcterms</span><span class="p">:</span><span class="n">identifier</span><span class="o">&gt;</span><span class="n">scimeta_id</span><span class="o">/</span><span class="n">foo</span><span class="o">&lt;/</span><span class="n">dcterms</span><span class="p">:</span><span class="n">identifier</span><span class="o">&gt;</span>
+  <span class="o">...</span>
+<span class="o">&lt;/</span><span class="n">rdf</span><span class="p">:</span><span class="n">Description</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>and the aggregation resource would look like the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">rdf</span><span class="p">:</span><span class="n">Description</span> <span class="n">rdf</span><span class="p">:</span><span class="n">about</span><span class="o">=</span><span class="s2">&quot;https://cn.dataone.org/cn/v1/resolve/resource_map_id#aggregation&quot;</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">rdf</span><span class="p">:</span><span class="nb">type</span> <span class="n">rdf</span><span class="p">:</span><span class="n">resource</span><span class="o">=</span><span class="s2">&quot;http://www.openarchives.org/ore/terms/Aggregation&quot;</span><span class="o">/&gt;</span>
+  <span class="o">&lt;</span><span class="n">ore</span><span class="p">:</span><span class="n">isDescribedBy</span> <span class="n">rdf</span><span class="p">:</span><span class="n">resource</span><span class="o">=</span><span class="s2">&quot;https://cn.dataone.org/cn/v1/resolve/resource_map_id&quot;</span><span class="o">/&gt;</span>
+  <span class="o">&lt;</span><span class="n">ore</span><span class="p">:</span><span class="n">aggregates</span> <span class="n">rdf</span><span class="p">:</span><span class="n">resource</span><span class="o">=</span><span class="s2">&quot;https://cn.dataone.org/cn/v1/resolve/scidata_id</span><span class="si">%2F</span><span class="s2">foo&quot;</span><span class="o">/&gt;</span>
+  <span class="o">&lt;</span><span class="n">ore</span><span class="p">:</span><span class="n">aggregates</span> <span class="n">rdf</span><span class="p">:</span><span class="n">resource</span><span class="o">=</span><span class="s2">&quot;https://cn.dataone.org/cn/v1/resolve/scimeta_id&quot;</span><span class="o">/&gt;</span>
+  <span class="o">...</span>
+<span class="o">&lt;/</span><span class="n">rdf</span><span class="p">:</span><span class="n">Description</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>See the Examples section under Background Discussion below for a full example of
+a resource map.</p>
+<div class="section" id="deviation-from-the-ore-model">
+<h3><a class="toc-backref" href="#id13">Deviation from the ORE model</a><a class="headerlink" href="#deviation-from-the-ore-model" title="Permalink to this headline">¶</a></h3>
+<p>Because DataONE already contains resource maps whose aggregation URIs do not
+conform to the ORE specification that they can be resolved to a resource map, we
+cannot assert that the collection of resource maps adhere to the specification,
+and therefore will not will not require conformity in this aspect for resource
+maps submitted in the future.</p>
+<p>As a result, users must be careful when referencing aggregations directly from
+other data packages, as not all of them will resolve to a resource map.  Similarly,
+if the collection of resource maps is put together into a triple store, these
+non-resolving aggregation URIs cannot be guaranteed to be unique, the result of
+which is that mistaken relationships between unrelated items would occur.</p>
+</div>
+<div class="section" id="referencing-other-data-packages">
+<h3><a class="toc-backref" href="#id14">Referencing other data packages</a><a class="headerlink" href="#referencing-other-data-packages" title="Permalink to this headline">¶</a></h3>
+<p>The main use case in DataONE for referencing other data packages in a resource map
+is that of nesting one inside another, which makes the ‘other’ data package itself
+something that is being aggregated.  Especially in such cases, it is necessary
+that the URI used to represent the data package being aggregated can be resolved
+to its resource map.  If the aggregation URI follows the has URI format, it will
+resolve to the resource map when following the URI.  Otherwise, the URI of the
+resource map should be used.  In both cases clients following the URI of the
+aggregated resource will get the resource map, as desired.</p>
+<p>To check that the aggregation is in hash URI form, the following check can be used:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">aggregation_X_uri</span> <span class="n">startsWith</span> <span class="p">(</span><span class="n">resourceMap_X_uri</span> <span class="o">+</span> <span class="s2">&quot;#&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Notes:  Future infrastructure development will likely involve standing up a triple-store
+where all resource maps will be held.  Any aggregation not in hash URI form cannot
+be relied upon to be unique, otherwise incorrect connections between unrelated
+objects are possible.  Likely solutions for incorporation of existing non-hashURI
+aggregations include either renaming the aggregations upon import, or treating
+them as relative URIs that would be appended to the resourceMap URI.</p>
+</div>
+<div class="section" id="very-large-data-packages">
+<h3><a class="toc-backref" href="#id15">Very large data packages</a><a class="headerlink" href="#very-large-data-packages" title="Permalink to this headline">¶</a></h3>
+<p>Current tools for building and parsing resource maps are not able to handle data
+packages that aggregate a very large number of objects.  The DataPackage class
+in d1_libclient_java was used to attempt to create serialized resource maps of
+increasing size.  Results are summarized below:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 36%" />
+<col style="width: 64%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p># of data objects</p></th>
+<th class="head"><p>time to build</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>100</p></td>
+<td><p>2  seconds</p></td>
+</tr>
+<tr class="row-odd"><td><p>1000</p></td>
+<td><p>3  seconds</p></td>
+</tr>
+<tr class="row-even"><td><p>3000</p></td>
+<td><p>20  seconds</p></td>
+</tr>
+<tr class="row-odd"><td><p>10000</p></td>
+<td><p>5  minutes</p></td>
+</tr>
+<tr class="row-even"><td><p>30000</p></td>
+<td><p>heap memory error after 45 minutes</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="describing-filesystem-hierarchies">
+<h3><a class="toc-backref" href="#id16">Describing filesystem hierarchies</a><a class="headerlink" href="#describing-filesystem-hierarchies" title="Permalink to this headline">¶</a></h3>
+<p>In some cases, data packages have scripts that depend on particular filesystem structures. For example, an <code class="docutils literal notranslate"><span class="pre">analyze.R</span></code> script may depend on
+a file <code class="docutils literal notranslate"><span class="pre">data/yearly_temps_2010.csv</span></code>. When packages are downloaded, the content is usually placed flat in the <code class="docutils literal notranslate"><span class="pre">data/</span></code> directory and the
+original path of the data is lost. This requires a researcher to manually reconstruct the folder structure of a bagged package.
+To remedy this, the original location of files that are uploaded to DataONE can be preserved in the resource map with
+<code class="docutils literal notranslate"><span class="pre">prov:atLocation</span></code>. This allows for reconstruction of the uploader’s package structure when exporting the package to a bag.</p>
+<p><code class="docutils literal notranslate"><span class="pre">prov:atLocation</span></code> has loose restrictions on the range of values that it can take. In DataONE’s case, the value
+will be the path of the file relative to the package root.</p>
+<p>For example, a file <code class="docutils literal notranslate"><span class="pre">yearly_temps_2010.csv</span></code> that resides in a folder on a researchers’ local machine at <code class="docutils literal notranslate"><span class="pre">global_warming_metrics/data</span></code>
+is described in DataONE as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">rdf</span><span class="p">:</span><span class="n">Description</span> <span class="n">rdf</span><span class="p">:</span><span class="n">about</span><span class="o">=</span><span class="s2">&quot;https://cn.dataone.org/cn/v1/resolve/pid&quot;</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">cito</span><span class="p">:</span><span class="n">isDocumentedBy</span> <span class="n">rdf</span><span class="p">:</span><span class="n">resource</span><span class="o">=</span><span class="s2">&quot;https://cn.dataone.org/cn/v2/resolve/&quot;</span><span class="o">/&gt;</span>
+  <span class="o">&lt;</span><span class="n">prov</span><span class="p">:</span><span class="n">atLocation</span><span class="o">&gt;</span><span class="n">global_warming_metrics</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">yearly_temps_2010</span><span class="o">.</span><span class="n">csv</span><span class="o">&lt;/</span><span class="n">prov</span><span class="p">:</span><span class="n">atLocation</span><span class="o">&gt;</span>
+  <span class="o">...</span>
+<span class="o">&lt;/</span><span class="n">rdf</span><span class="p">:</span><span class="n">Description</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>When exported to a bag archive, a directory <code class="docutils literal notranslate"><span class="pre">global_warming_metrics/data</span></code> is created under the root <code class="docutils literal notranslate"><span class="pre">data/</span></code> directory. <code class="docutils literal notranslate"><span class="pre">yearly_temps_2010.csv</span></code> is placed
+under the newly created directories, shown below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&lt;base directory&gt;/
+├── bagit.txt
+├── bag-info.txt
+├── manifest-&lt;algorithm&gt;.txt
+├── oai-ore.txt
+├── pid-mapping.txt
+└── data
+    └── global_warming_metrics
+        └── data
+            └──yearly_temps_2010.csv
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="resource-map-validation">
+<h2><a class="toc-backref" href="#id17">Resource map validation</a><a class="headerlink" href="#resource-map-validation" title="Permalink to this headline">¶</a></h2>
+<p>Because DataONE indexing relies on the integrity of the resource maps it receives
+from the member nodes, each resource map will be validated against the set of
+constraints enumerated above.  Resource maps that do not validate will fail
+synchronization, and the exception returned to the member node via the method
+MN_Read.syncrhonizationFailed.</p>
+</div>
+<div class="section" id="background-discussion">
+<h2><a class="toc-backref" href="#id18">Background Discussion</a><a class="headerlink" href="#background-discussion" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="overview">
+<h3><a class="toc-backref" href="#id19">Overview</a><a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h3>
+<p>Data, in the context of DataONE, is a discrete unit of digital content that is
+expected to represent information obtained from some experiment or scientific
+study. The <a class="reference internal" href="../glossary.html#term-data"><span class="xref std std-term">data</span></a> are accompanied by <a class="reference internal" href="../glossary.html#term-science-metadata"><span class="xref std std-term">science metadata</span></a>, which is a
+separate unit of digital content that describes properties of the data. Each
+unit of science data or science metadata is accompanied by <a class="reference internal" href="../glossary.html#term-system-metadata"><span class="xref std std-term">system
+metadata</span></a> which describes the digital object (e.g. hash, time stamps, ownership,
+relationships).</p>
+<p>In DataONE, data are treated as opaque sets of bytes and, along with their
+associated science metadata, are stored on <a class="reference internal" href="../glossary.html#term-Member-Node"><span class="xref std std-term">Member Node</span></a>s (MN). A copy
+of the science metadata is held by the <a class="reference internal" href="../glossary.html#term-Coordinating-Node"><span class="xref std std-term">Coordinating Node</span></a>s (CN) and is
+parsed to extract attributes to assist the discovery process (i.e. users
+searching for content).</p>
+<p>The opacity of data in DataONE is likely to change in the future to enable
+processing of the data with operations such as translation (e.g. for format
+migration), extraction (e.g. for rendering), and merging (e.g. to combine
+multiple instances of data that are expressed in different formats). Such
+operations rely upon a stable, accessible framework supporting reliable data
+access, and so are targeted after the initial requirements of DataONE are met
+and the core infrastructure is demonstrably robust.</p>
+<p>In order to properly interpret, preserve, and utilize a data object, users and
+their software agents need access to the science metadata describing the data
+objects. A <a class="reference internal" href="../glossary.html#term-data-package"><span class="xref std std-term">data package</span></a> in DataONE provides the conceptual
+relationships among the various components of the package that describe which
+<a class="reference internal" href="../glossary.html#term-data"><span class="xref std std-term">data</span></a> objects are described by which <a class="reference internal" href="../glossary.html#term-science-metadata"><span class="xref std std-term">science metadata</span></a>
+documents, and the role in that description that they play. This model
+accommodates use of well-established existing metadata specifications such as
+EML, BDP, and ISO 19115 for documenting science metadata while recognizing that
+some of these do not readily incorporate mechanisms for consistent linkages to
+and inclusion of data objects. The data package concept also provides a
+consistent mechanism to define one or more serialized representations of a
+package that can be used to transport the components of a data package from
+one system to another.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The DataONE <a class="reference internal" href="SystemMetadata.html"><span class="doc">System Metadata</span></a> format currently includes descriptions of
+some of the relationships that would be within scope of the definition of a
+Data Package. Specifically, the System Metadata fields
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">SystemMetadata.obsoletes</span></code> and <code class="xref py py-attr docutils literal notranslate"><span class="pre">SystemMetadata.obsoletedBy</span></code>
+describe the relationship between two objects where one replaces the other
+from a scientific utility perspective (such as an error-corrected version of
+an existing data file).</p>
+</div>
+<p>A <em>data package</em> will be represented in DataONE as a unique, additional class
+of object with its own unique identifier different from the identifiers of its
+components. Each of these data packages in DataONE will be represented by an
+OAI-ORE Resource Map that contains an Aggregation indicating relationships
+among the components of the package. The BagIt specification will be used to
+optionally provide these components as a single serialized object.</p>
+</div>
+<div class="section" id="user-stories">
+<h3><a class="toc-backref" href="#id20">User stories</a><a class="headerlink" href="#user-stories" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p>A user agent can download a description of a data package that provides the
+DataONE identifiers for all science metadata and data object components
+associated by the package</p></li>
+<li><p>A user agent can download a serialized version of a data package that
+includes the science metadata and either the data bytes or references to the
+data bytes via DataONE identifiers directly in the serialized version of the
+package, and the system metadata for each of these objects.</p></li>
+<li><p>The serialized form allows for the relationships between the various
+components to be properly maintained (e.g., which system metadata documents
+describe which data and science metadata objects)</p></li>
+<li><p>Data packages can be versioned, such that individual components of a package
+can be replaced with new versions of those objects, new objects can be
+added, existing objects can be removed, and the whole package is versioned
+to differentiate it from earlier versions that contained different
+components.</p></li>
+<li><p>A user agent can easily locate and inspect the science metadata associated
+with any data object</p></li>
+<li><p>A user agent can easily locate and access the data objects associated with a
+science metadata object.</p></li>
+<li><p>Data object formats should be well-described in science metadata, ideally to
+sufficient detail to allow software agents to parse and load the data and
+science metadata objects for additional processing, querying, and
+manipulation The data objects supported should minimally include:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Data Tables in CSV and other fixed and delimited text formats</p></li>
+<li><p>NetCDF files</p></li>
+<li><p>Raster images in various formats</p></li>
+<li><p>Vector data in specific, community-accepted formats</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>A scientist can load all of the supported data objects from a data package
+found in a metadata search without directly knowing the identifiers for
+individual data objects.</p></li>
+<li><p>A scientist can upload a new data object and associated science metadata in
+order to create a new data package, or to extend or create a new version of
+an existing data package</p></li>
+</ul>
+</div>
+<div class="section" id="package-content-associations-using-oai-ore">
+<h3><a class="toc-backref" href="#id21">Package Content Associations Using OAI-ORE</a><a class="headerlink" href="#package-content-associations-using-oai-ore" title="Permalink to this headline">¶</a></h3>
+<p>The Open Archives Initiative’s Object Reuse and Exchange (OAI-ORE)
+<a class="reference internal" href="#lagoze-2008" id="id1"><span>[Lagoze-2008]</span></a> “defines standards for the description and exchange of
+aggregations of Web resources”. OAI-ORE provides a mechanism for describing
+aggregations of distinct resources on the web by using their respective URIs
+to provide linkages in an RDF model. Each Aggregation is given its own
+distinct identifying URI, and ORE recommends the use of <a class="reference external" href="http://www.w3.org/TR/cooluris/">Cool URIs</a> for the
+Semantic Web <a class="reference internal" href="#sauermann-cyganiak-2008" id="id2"><span>[Sauermann_Cyganiak-2008]</span></a> as a mechanism to redirect from the
+Aggregation URI to a specific representation of the Aggregation, called a
+Resource Map, that can be represented in one of several different
+serializations such as RDF/XML, turtle, and Atom XML. Because relationships
+among resources are provided using RDF predicates, there is tremendous
+flexibility in the type of relationships that can be defined. ORE provides
+specific predicates that define relationship types between the Aggregation and
+a Resource Map (‘ore:describes’) and between the Aggregation and the Resources
+that it aggregates (‘ore:aggregates’). These concepts relate closely to
+similar concepts in DataONE.</p>
+<dl class="simple">
+<dt>Beneficial features</dt><dd><ul class="simple">
+<li><p>Uses traditional web URIs as global identifiers</p></li>
+<li><p>Compatible with the Linked Data philosophy</p></li>
+<li><p>Supports arbitrary graphs of resources and aggregations</p></li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="issues-and-resolution">
+<h3><a class="toc-backref" href="#id22">Issues and Resolution</a><a class="headerlink" href="#issues-and-resolution" title="Permalink to this headline">¶</a></h3>
+<dl class="simple">
+<dt>Issues</dt><dd><ul class="simple">
+<li><p>Does not provide a direct serialization of the Aggregation with the bytes
+inline</p></li>
+<li><p>No data model for internal structure of enclosed resources</p></li>
+</ul>
+</dd>
+<dt>Questions</dt><dd><ul class="simple">
+<li><p>Do URIs really have to be used, or can other resource identifiers such as
+DOIs be used?</p></li>
+<li><p>Is there a more elegant way to link the Aggregation to a Resource Map than
+using the <a class="reference external" href="http://www.w3.org/TR/cooluris/">Cool URIs</a> approach of redirection, especially when multiple
+physical copies of a Resource might exist at multiple physical locations?</p></li>
+</ul>
+</dd>
+</dl>
+<div class="figure align-default" id="id7">
+<img alt="http://www.openarchives.org/ore/1.0/datamodel-images/ore_uml.png" src="http://www.openarchives.org/ore/1.0/datamodel-images/ore_uml.png" />
+<p class="caption"><span class="caption-text"><strong>Figure 2.</strong> General model for an OAI-ORE document.</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
+</div>
+<div class="figure align-default" id="id8">
+<img alt="../_images/package_eg_1.png" src="../_images/package_eg_1.png" />
+<p class="caption"><span class="caption-text"><strong>Figure 2.</strong> Simple OAI-ORE representation of a data package with single
+science metadata (<em>scimeta_id</em>) and data(<em>scidata_id</em>) objects. There are
+two issues that need to be resolved for DataONE: a) how to assert that the
+aggregated object <em>scidata_id</em> is described by the metadata <em>scimeta_id</em>;
+and b) identifiers in OAI-ORE <em>must</em> be “protocol-based URIs”, which is
+more restrictive that DataONE requires.</span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
+</div>
+<p><strong>Issue:</strong></p>
+<p>There are no predicates in ORE that can be used to indicate that the
+aggregated object <em>scimeta_id</em> describes the data indicated by <em>scidata_id</em>.</p>
+<p><strong>Options:</strong></p>
+<ol class="arabic">
+<li><p>References between <em>scimeta_id</em> and <em>scidata_id</em> can be supported through
+non-ORE RDF elements. Reuse of existing terms should be emphasized.</p>
+<p>For example, the DCMI Type Vocabulary defines a <em>Dataset</em> type that could be
+used to indicate that <em>scidata_id</em> refers to a data object by attaching the
+Dublin Core Terms Type predicate to the ORE aggregated object. Other
+possibilities from dcterms include <a class="reference external" href="http://dublincore.org/documents/dcmi-terms/#terms-references">references</a> and <a class="reference external" href="http://dublincore.org/documents/dcmi-terms/#terms-isReferencedBy">isReferencedBy</a>,
+<a class="reference external" href="http://dublincore.org/documents/dcmi-terms/#terms-requires">requires</a> and <a class="reference external" href="http://dublincore.org/documents/dcmi-terms/#terms-isRequiredBy">isRequiredBy</a>, and <a class="reference external" href="http://dublincore.org/documents/dcmi-terms/#terms-relation">relation</a>.</p>
+<p>In the document Mapping DataCite Metadata Scheme Terms (v2.0) to ontologies
+(<a class="reference external" href="https://docs.google.com/document/d/1paJgvmCMu3pbM4in6PjWAKO0gP-6ultii3DWQslygq4/edit?authkey=CMeV3tgF&amp;hl=en_GB">DataCite2RDF</a>), Shotton and Peroni provide a mapping between concepts
+described in the DataCite schema and existing ontologies with the general
+goal of expressing DataCite in RDF. The recommendation provided therein is to
+use terms drawn from the Citation Typing Ontology (<a class="reference external" href="http://purl.org/spar/cito/">CiTO</a>) and others. The
+semantics of the CiTO terms <em>documents</em> and <em>isDocumentedBy</em> match nicely
+with the relationships between data and science metadata objects.</p>
+</li>
+<li><p>That a science metadata object actually describes one or more data objects
+can be inferred simply from its presence in a resource map aggregation.
+Detection of science metadata vs. data would be highly dependent on the
+object format for the object as expressed in it’s system metadata. This could
+be augmented by adding the <a class="reference external" href="http://dublincore.org/documents/dcmi-terms/#terms-format">format</a> predicate from dcterms, with the object
+being the corresponding entry in the object format registry. However, this
+approach will not indicate which data objects are described by which metadata
+documents in the case where multiple metadata documents exist in a package.</p></li>
+</ol>
+<p><strong>Resolution:</strong></p>
+<p>Relationships between aggregated objects are indicated using terms drawn from
+the <a class="reference external" href="http://purl.org/spar/cito/">CiTO</a> ontology, with <em>cito:documents</em> attached to an aggregated science
+metadata entry with the object of the triple being the URI of the relevant
+aggregated data object, and the converse indicated by <em>cito:isDocumentedBy</em>.</p>
+<p><strong>Issue:</strong></p>
+<p>Identifiers in OAI-ORE documents must technically be “protocol-based URIs”
+(<a class="reference external" href="http://www.openarchives.org/ore/1.0/datamodel#Aggregated_Resource">http://www.openarchives.org/ore/1.0/datamodel#Aggregated_Resource</a>), whereas
+identifiers in DataONE can be essentially any non-blank string.</p>
+<p><strong>Options:</strong></p>
+<ol class="arabic">
+<li><p>Ignore the OAI-ORE requirement for URI identifiers. The identifiers will
+still work fine in the DataONE context, but would not be friendly for anyone
+accessing the ORE document without an appropriate DataONE client to resolve
+and retrieve the referenced objects.</p></li>
+<li><p>Wrap the identifiers with a DataONE REST service URL that retrieves the
+object being referenced. So for example, if the DataONE identifier for the
+object was <em>scimeta_id</em>, then the URI used in the ORE document to reference
+the aggregated object would <em>http://cn.dataone.org/object/scimeta_id</em>. The
+<code class="xref py py-func docutils literal notranslate"><span class="pre">CN_read.get()</span></code> operation would be modified to do a resolve, then a HTTP
+302 redirect to the node that contains the content. This would also require
+that the client libraries are updated to support redirection.</p>
+<p>This option has the advantage of keeping the the ORE document functional for
+non-DataONE users but has the disadvantage of obfuscating the object
+identifiers. The later issue could be addressed by adding the dcterms
+<a class="reference external" href="http://dublincore.org/documents/dcmi-terms/#terms-identifier">identifier</a> property to the aggregated object with the object being the
+actual DataONE identifier.</p>
+</li>
+</ol>
+<p><strong>Resolution:</strong></p>
+<p>ORE URIs for aggregated objects are constructed by prepending the
+<code class="xref py py-func docutils literal notranslate"><span class="pre">CNCore.resolve()</span></code> REST URL to the identifier (with the identifier
+appropriately URI path encoded). <a class="reference internal" href="../apis/CN_APIs.html#CNRead.resolve" title="CNRead.resolve"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNRead.resolve()</span></code></a> returns an
+<a class="reference internal" href="../apis/Types.html#Types.ObjectLocationList" title="Types.ObjectLocationList"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.ObjectLocationList</span></code></a> as the response body, and a HTTP status of
+302 with the first node listed in the ObjectLocationList being the target of
+the redirect. The literal DataONE identifier for the aggregated object is
+added to the ORE aggregate entry as a dcterms <a class="reference external" href="http://dublincore.org/documents/dcmi-terms/#terms-identifier">identifier</a> property. DataONE
+clients will utilize the <em>dcterms:identifier</em> entry to determine the DataONE
+identifier of the object and utilize the normal <em>resolve</em> and <em>get</em> approach
+for retrieving the object. The URLs contained in the ORE document will
+continue to be handled as expected by other clients.</p>
+</div>
+<div class="section" id="examples">
+<h3><a class="toc-backref" href="#id23">Examples</a><a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h3>
+<p>An RDF-XML rendering of the example from Figure 2 following the
+recommendations as generated using the <a class="reference external" href="http://code.google.com/p/foresite-toolkit/wiki/PythonLibrary">Foresite python library</a> is presented
+below. This OAI-ORE document is an example of a simple data package in
+DataONE, where a single science metadata document (identifier = <em>scimeta_id</em>)
+describes a single data object (identifier = <em>scidata_id</em>).</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="nt">&lt;rdf:RDF</span>
+   <span class="na">xmlns:cito=</span><span class="s">&quot;http://purl.org/spar/cito/&quot;</span>
+   <span class="na">xmlns:dc=</span><span class="s">&quot;http://purl.org/dc/elements/1.1/&quot;</span>
+   <span class="na">xmlns:dcterms=</span><span class="s">&quot;http://purl.org/dc/terms/&quot;</span>
+   <span class="na">xmlns:foaf=</span><span class="s">&quot;http://xmlns.com/foaf/0.1/&quot;</span>
+   <span class="na">xmlns:ore=</span><span class="s">&quot;http://www.openarchives.org/ore/terms/&quot;</span>
+   <span class="na">xmlns:rdf=</span><span class="s">&quot;http://www.w3.org/1999/02/22-rdf-syntax-ns#&quot;</span>
+   <span class="na">xmlns:rdfs1=</span><span class="s">&quot;http://www.w3.org/2001/01/rdf-schema#&quot;</span>
+<span class="nt">&gt;</span>
+  <span class="nt">&lt;rdf:Description</span> <span class="na">rdf:about=</span><span class="s">&quot;http://foresite-toolkit.googlecode.com/#pythonAgent&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;foaf:mbox&gt;</span>foresite@googlegroups.com<span class="nt">&lt;/foaf:mbox&gt;</span>
+    <span class="nt">&lt;foaf:name&gt;</span>Foresite Toolkit (Python)<span class="nt">&lt;/foaf:name&gt;</span>
+  <span class="nt">&lt;/rdf:Description&gt;</span>
+  <span class="nt">&lt;rdf:Description</span> <span class="na">rdf:about=</span><span class="s">&quot;https://cn.dataone.org/cn/v1/resolve/scimeta_id&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;cito:documents</span> <span class="na">rdf:resource=</span><span class="s">&quot;https://cn.dataone.org/cn/v1/resolve/scidata_id&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;dcterms:identifier&gt;</span>scimeta_id<span class="nt">&lt;/dcterms:identifier&gt;</span>
+    <span class="nt">&lt;dcterms:description&gt;</span>A reference to a science metadata document using a DataONE identifier.<span class="nt">&lt;/dcterms:description&gt;</span>
+  <span class="nt">&lt;/rdf:Description&gt;</span>
+  <span class="nt">&lt;rdf:Description</span> <span class="na">rdf:about=</span><span class="s">&quot;http://www.openarchives.org/ore/terms/ResourceMap&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;rdfs1:isDefinedBy</span> <span class="na">rdf:resource=</span><span class="s">&quot;http://www.openarchives.org/ore/terms/&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;rdfs1:label&gt;</span>ResourceMap<span class="nt">&lt;/rdfs1:label&gt;</span>
+  <span class="nt">&lt;/rdf:Description&gt;</span>
+  <span class="nt">&lt;rdf:Description</span> <span class="na">rdf:about=</span><span class="s">&quot;https://cn.dataone.org/cn/v1/resolve/resource_map_id&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;dcterms:identifier&gt;</span>resource_map_id<span class="nt">&lt;/dcterms:identifier&gt;</span>
+    <span class="nt">&lt;dcterms:modified&gt;</span>2011-08-12T12:55:16Z<span class="nt">&lt;/dcterms:modified&gt;</span>
+    <span class="nt">&lt;rdf:type</span> <span class="na">rdf:resource=</span><span class="s">&quot;http://www.openarchives.org/ore/terms/ResourceMap&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;dc:format&gt;</span>application/rdf+xml<span class="nt">&lt;/dc:format&gt;</span>
+    <span class="nt">&lt;ore:describes</span> <span class="na">rdf:resource=</span><span class="s">&quot;https://cn.dataone.org/cn/v1/resolve/aggregation_id&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;dcterms:created&gt;</span>2011-08-12T12:55:16Z<span class="nt">&lt;/dcterms:created&gt;</span>
+    <span class="nt">&lt;dcterms:creator</span> <span class="na">rdf:resource=</span><span class="s">&quot;http://foresite-toolkit.googlecode.com/#pythonAgent&quot;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;/rdf:Description&gt;</span>
+  <span class="nt">&lt;rdf:Description</span> <span class="na">rdf:about=</span><span class="s">&quot;http://www.openarchives.org/ore/terms/Aggregation&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;rdfs1:isDefinedBy</span> <span class="na">rdf:resource=</span><span class="s">&quot;http://www.openarchives.org/ore/terms/&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;rdfs1:label&gt;</span>Aggregation<span class="nt">&lt;/rdfs1:label&gt;</span>
+  <span class="nt">&lt;/rdf:Description&gt;</span>
+  <span class="nt">&lt;rdf:Description</span> <span class="na">rdf:about=</span><span class="s">&quot;https://cn.dataone.org/cn/v1/resolve/aggregation_id&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;rdf:type</span> <span class="na">rdf:resource=</span><span class="s">&quot;http://www.openarchives.org/ore/terms/Aggregation&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;dcterms:title&gt;</span>Simple aggregation of science metadata and data<span class="nt">&lt;/dcterms:title&gt;</span>
+    <span class="nt">&lt;ore:isDescribedBy</span> <span class="na">rdf:resource=</span><span class="s">&quot;https://cn.dataone.org/cn/v1/resolve/resource_map_id&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;ore:aggregates</span> <span class="na">rdf:resource=</span><span class="s">&quot;https://cn.dataone.org/cn/v1/resolve/scidata_id&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;ore:aggregates</span> <span class="na">rdf:resource=</span><span class="s">&quot;https://cn.dataone.org/cn/v1/resolve/scimeta_id&quot;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;/rdf:Description&gt;</span>
+  <span class="nt">&lt;rdf:Description</span> <span class="na">rdf:about=</span><span class="s">&quot;https://cn.dataone.org/cn/v1/resolve/scidata_id&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;cito:isDocumentedBy</span> <span class="na">rdf:resource=</span><span class="s">&quot;https://cn.dataone.org/cn/v1/resolve/scimeta_id&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;dcterms:identifier&gt;</span>scidata_id<span class="nt">&lt;/dcterms:identifier&gt;</span>
+    <span class="nt">&lt;dcterms:description&gt;</span>A reference to a science data object using a DataONE identifier<span class="nt">&lt;/dcterms:description&gt;</span>
+  <span class="nt">&lt;/rdf:Description&gt;</span>
+<span class="nt">&lt;/rdf:RDF&gt;</span>
+</pre></div>
+</div>
+<p>The same in N3:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@prefix</span> <span class="n">cito</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">purl</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">spar</span><span class="o">/</span><span class="n">cito</span><span class="o">/&gt;</span> <span class="o">.</span>
+<span class="nd">@prefix</span> <span class="n">dc</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">purl</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">dc</span><span class="o">/</span><span class="n">elements</span><span class="o">/</span><span class="mf">1.1</span><span class="o">/&gt;</span> <span class="o">.</span>
+<span class="nd">@prefix</span> <span class="n">dcterms</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">purl</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">dc</span><span class="o">/</span><span class="n">terms</span><span class="o">/&gt;</span> <span class="o">.</span>
+<span class="nd">@prefix</span> <span class="n">foaf</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">xmlns</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">foaf</span><span class="o">/</span><span class="mf">0.1</span><span class="o">/&gt;</span> <span class="o">.</span>
+<span class="nd">@prefix</span> <span class="n">ore</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">openarchives</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">ore</span><span class="o">/</span><span class="n">terms</span><span class="o">/&gt;</span> <span class="o">.</span>
+<span class="nd">@prefix</span> <span class="n">rdfs1</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">w3</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="mi">2001</span><span class="o">/</span><span class="mi">01</span><span class="o">/</span><span class="n">rdf</span><span class="o">-</span><span class="n">schema</span><span class="c1">#&gt; .</span>
+
+<span class="o">&lt;</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">cn</span><span class="o">.</span><span class="n">dataone</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">cn</span><span class="o">/</span><span class="n">v1</span><span class="o">/</span><span class="n">resolve</span><span class="o">/</span><span class="n">resource_map_id</span><span class="o">&gt;</span> <span class="n">a</span> <span class="o">&lt;</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">openarchives</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">ore</span><span class="o">/</span><span class="n">terms</span><span class="o">/</span><span class="n">ResourceMap</span><span class="o">&gt;</span><span class="p">;</span>
+    <span class="n">dc</span><span class="p">:</span><span class="nb">format</span> <span class="s2">&quot;text/rdf+n3&quot;</span><span class="p">;</span>
+    <span class="n">dcterms</span><span class="p">:</span><span class="n">created</span> <span class="s2">&quot;2011-08-12T12:57:03Z&quot;</span><span class="p">;</span>
+    <span class="n">dcterms</span><span class="p">:</span><span class="n">creator</span> <span class="o">&lt;</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">foresite</span><span class="o">-</span><span class="n">toolkit</span><span class="o">.</span><span class="n">googlecode</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="c1">#pythonAgent&gt;;</span>
+    <span class="n">dcterms</span><span class="p">:</span><span class="n">identifier</span> <span class="s2">&quot;resource_map_id&quot;</span><span class="p">;</span>
+    <span class="n">dcterms</span><span class="p">:</span><span class="n">modified</span> <span class="s2">&quot;2011-08-12T12:57:03Z&quot;</span><span class="p">;</span>
+    <span class="n">ore</span><span class="p">:</span><span class="n">describes</span> <span class="o">&lt;</span><span class="n">aggregation_id</span><span class="o">&gt;</span> <span class="o">.</span>
+
+<span class="o">&lt;</span><span class="n">aggregation_id</span><span class="o">&gt;</span> <span class="n">a</span> <span class="o">&lt;</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">openarchives</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">ore</span><span class="o">/</span><span class="n">terms</span><span class="o">/</span><span class="n">Aggregation</span><span class="o">&gt;</span><span class="p">;</span>
+    <span class="n">dcterms</span><span class="p">:</span><span class="n">title</span> <span class="s2">&quot;Simple aggregation of science metadata and data&quot;</span><span class="p">;</span>
+    <span class="n">ore</span><span class="p">:</span><span class="n">aggregates</span> <span class="o">&lt;</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">cn</span><span class="o">.</span><span class="n">dataone</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">cn</span><span class="o">/</span><span class="n">v1</span><span class="o">/</span><span class="n">resolve</span><span class="o">/</span><span class="n">scidata_id</span><span class="o">&gt;</span><span class="p">,</span>
+        <span class="o">&lt;</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">cn</span><span class="o">.</span><span class="n">dataone</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">cn</span><span class="o">/</span><span class="n">v1</span><span class="o">/</span><span class="n">resolve</span><span class="o">/</span><span class="n">scimeta_id</span><span class="o">&gt;</span> <span class="o">.</span>
+
+<span class="o">&lt;</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">foresite</span><span class="o">-</span><span class="n">toolkit</span><span class="o">.</span><span class="n">googlecode</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="c1">#pythonAgent&gt; foaf:mbox &quot;foresite@googlegroups.com&quot;;</span>
+    <span class="n">foaf</span><span class="p">:</span><span class="n">name</span> <span class="s2">&quot;Foresite Toolkit (Python)&quot;</span> <span class="o">.</span>
+
+<span class="o">&lt;</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">openarchives</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">ore</span><span class="o">/</span><span class="n">terms</span><span class="o">/</span><span class="n">Aggregation</span><span class="o">&gt;</span> <span class="n">rdfs1</span><span class="p">:</span><span class="n">isDefinedBy</span> <span class="n">ore</span><span class="p">:;</span>
+    <span class="n">rdfs1</span><span class="p">:</span><span class="n">label</span> <span class="s2">&quot;Aggregation&quot;</span> <span class="o">.</span>
+
+<span class="o">&lt;</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">openarchives</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">ore</span><span class="o">/</span><span class="n">terms</span><span class="o">/</span><span class="n">ResourceMap</span><span class="o">&gt;</span> <span class="n">rdfs1</span><span class="p">:</span><span class="n">isDefinedBy</span> <span class="n">ore</span><span class="p">:;</span>
+    <span class="n">rdfs1</span><span class="p">:</span><span class="n">label</span> <span class="s2">&quot;ResourceMap&quot;</span> <span class="o">.</span>
+
+<span class="o">&lt;</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">cn</span><span class="o">.</span><span class="n">dataone</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="nb">object</span><span class="o">/</span><span class="n">scidata_id</span><span class="o">&gt;</span> <span class="n">dcterms</span><span class="p">:</span><span class="n">description</span> <span class="s2">&quot;A reference to a science data object using a DataONE identifier&quot;</span><span class="p">;</span>
+    <span class="n">dcterms</span><span class="p">:</span><span class="n">identifier</span> <span class="s2">&quot;scidata_id&quot;</span><span class="p">;</span>
+    <span class="n">cito</span><span class="p">:</span><span class="n">isDocumentedBy</span> <span class="o">&lt;</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">cn</span><span class="o">.</span><span class="n">dataone</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">cn</span><span class="o">/</span><span class="n">v1</span><span class="o">/</span><span class="n">resolve</span><span class="o">/</span><span class="n">scimeta_id</span><span class="o">&gt;</span> <span class="o">.</span>
+
+<span class="o">&lt;</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">cn</span><span class="o">.</span><span class="n">dataone</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="nb">object</span><span class="o">/</span><span class="n">scimeta_id</span><span class="o">&gt;</span> <span class="n">dcterms</span><span class="p">:</span><span class="n">description</span> <span class="s2">&quot;A reference to a science metadata document using a DataONE identifier.&quot;</span><span class="p">;</span>
+    <span class="n">dcterms</span><span class="p">:</span><span class="n">identifier</span> <span class="s2">&quot;scimeta_id&quot;</span><span class="p">;</span>
+    <span class="n">cito</span><span class="p">:</span><span class="n">documents</span> <span class="o">&lt;</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">cn</span><span class="o">.</span><span class="n">dataone</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">cn</span><span class="o">/</span><span class="n">v1</span><span class="o">/</span><span class="n">resolve</span><span class="o">/</span><span class="n">scidata_id</span><span class="o">&gt;</span> <span class="o">.</span>
+</pre></div>
+</div>
+<div class="figure align-default" id="id9">
+<img alt="../_images/resourcemap_eg_1.png" src="../_images/resourcemap_eg_1.png" />
+<p class="caption"><span class="caption-text"><strong>Figure 3.</strong> Also rendered using the W3C RDF validator.</span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+</div>
+<div class="section" id="package-serialization-using-bagit">
+<h2><a class="toc-backref" href="#id24">Package Serialization Using BagIt</a><a class="headerlink" href="#package-serialization-using-bagit" title="Permalink to this headline">¶</a></h2>
+<p>The BagIt File Packaging Format <a class="reference internal" href="#boyko-2009" id="id3"><span>[Boyko-2009]</span></a> “is a hierarchical file
+packaging format designed to support disk-based or network-based storage and
+transfer of generalized digital content” (p.3). BagIt is defined in an
+Internet RFC that is currently being revised and is being considered in
+several library implementations. BagIt mainly provides a consistent mechanism
+for a serialized representation of a group of opaque objects using commonly
+available technological approaches (such as the zip archive format). BagIt
+includes a specification for including metadata about each of the objects, the
+bag itself, and fixity attributes so that any BagIt implementation can
+validate the components contained within a package. Unlike NetCDF and EML, BagIt
+does not attempt to provide a data model for the data it carries, instead
+asserting that consuming applications will know how to handle package contents
+based on the metadata included in the bag or via external knowledge.</p>
+<p>Beneficial features</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Simple and clear serialization, easy to parse, simple to recreate</p></li>
+<li><p>Allows referencing external resources via URI, which are used to populate
+objects in the bag when it is processed</p></li>
+</ul>
+</div></blockquote>
+<p>Issues</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>No data model for internal structure of enclosed resources</p></li>
+<li><p>Hierarchical structure is not extensible to arbitrary graphs</p></li>
+<li><p>No explicit definition of the identifier for each object</p></li>
+<li><p>No clear delineation of the boundaries of objects within a hierarchy (e.g.,
+for any given sub-object in the hierarchy, is it identified by the name of
+its parent directory or by its own filename, or by a locally-scoped version
+of both?</p></li>
+</ul>
+</div></blockquote>
+<p>Questions</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>How is a URI or other identifier for data objects represented in the
+metadata, and how is it mapped to the data object to which it applies in
+the data hierarchy?</p></li>
+<li><p>To be valid, must all of the fetch.txt URLs be downloaded and checksummed,
+and how is this handled for particularly large objects?</p></li>
+<li><p>How are large objects that would normally exceed file system size
+limitations be handled?</p></li>
+</ul>
+</div></blockquote>
+<p>The structure of a Data Package will follow the BagIt specification with the
+exception of the following additions and changes described here.  The basic
+structure of a bag is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&lt;base directory&gt;/
+├── bagit.txt
+├── bag-info.txt
+├── manifest-&lt;algorithm&gt;.txt
+├── oai-ore.txt
+├── pid-mapping.txt
+└── data
+    ├── data-file-1.csv
+    ├── data-file-2.csv
+    ├── data-file-3.hdf
+    └── metadata-file-1.xml
+    └── analyses
+        └── script.R
+</pre></div>
+</div>
+<p>The first addition is the presence of an OAI-ORE document <code class="docutils literal notranslate"><span class="pre">oai-ore.txt</span></code> within
+the base directory that uses the object identifiers for DataONE objects and
+describes the relationships among the objects in the package. The second
+addition is the inclusion of <code class="docutils literal notranslate"><span class="pre">pid-mapping.txt</span></code> tag file showing the
+correspondence between the persistent identifier for an object and its file
+location in the bag, expressed relative to the base directory. The contents of
+the file consist of one line for each data object in the bag, with each line of
+the form:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PID</span> <span class="n">FILEPATH</span>
+</pre></div>
+</div>
+<p>where PID is the persistent identifier for the object and FILEPATH is the path
+in the bag to the file containing the bytes of the file.  For example, a
+typical pid-mapping.txt file might contain:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">doi</span><span class="p">:</span><span class="o">//</span><span class="mf">10.</span><span class="n">xxxx</span><span class="o">/</span><span class="n">AA</span><span class="o">/</span><span class="n">TG43</span> <span class="n">data</span><span class="o">/</span><span class="n">data</span><span class="o">-</span><span class="n">file</span><span class="o">-</span><span class="mf">1.</span><span class="n">csv</span>
+<span class="n">doi</span><span class="p">:</span><span class="o">//</span><span class="mf">10.</span><span class="n">xxxx</span><span class="o">/</span><span class="n">AA</span><span class="o">/</span><span class="mi">7</span><span class="n">AW3</span> <span class="n">data</span><span class="o">/</span><span class="n">data</span><span class="o">-</span><span class="n">file</span><span class="o">-</span><span class="mf">2.</span><span class="n">csv</span>
+<span class="n">doi</span><span class="p">:</span><span class="o">//</span><span class="mf">10.</span><span class="n">xxxx</span><span class="o">/</span><span class="n">AA</span><span class="o">/</span><span class="mi">790</span><span class="n">I</span> <span class="n">data</span><span class="o">/</span><span class="n">data</span><span class="o">-</span><span class="n">file</span><span class="o">-</span><span class="mf">3.</span><span class="n">csv</span>
+<span class="n">doi</span><span class="p">:</span><span class="o">//</span><span class="mf">10.</span><span class="n">xxxx</span><span class="o">/</span><span class="n">AA</span><span class="o">/</span><span class="mi">790</span><span class="n">I</span> <span class="n">data</span><span class="o">/</span><span class="n">analyses</span><span class="o">/</span><span class="n">script</span><span class="o">.</span><span class="n">R</span>
+<span class="n">doi</span><span class="p">:</span><span class="o">//</span><span class="mf">10.</span><span class="n">xxxx</span><span class="o">/</span><span class="n">AA</span><span class="o">/</span><span class="mi">76</span><span class="n">AV</span> <span class="n">data</span><span class="o">/</span><span class="n">metadata</span><span class="o">-</span><span class="n">file</span><span class="o">-</span><span class="mf">1.</span><span class="n">xml</span>
+</pre></div>
+</div>
+<p>The bag can be serialized as a single file for transport following the BagIt
+specifications. Any objects that are listed in the OAI-ORE file but are missing
+from the bag data directory (and therefore from the pid-mapping.txt) must be
+downloaded independently via the DataONE MNRead service.</p>
+</div>
+<div class="section" id="data-package-client-design">
+<h2><a class="toc-backref" href="#id25">Data Package Client Design</a><a class="headerlink" href="#data-package-client-design" title="Permalink to this headline">¶</a></h2>
+<p>Although DataONE CNs and MNs will treat data as opaque, it is useful to design
+clients that understand the structure of Data Packages and have a common
+semantics for representing the components and their relationships. Client
+applications can then be built in various analytical environments and
+processing languages that allow simplified manipulation and processing of the
+associated sets of objects contained in a Data Package. For example, given an
+identifier for a data object, a client should be able to easily query CNs to
+find the package(s) with which it is associated, and be able to easily locate
+and access the other components of the package to gain an understanding of the
+structure and semantics of the data object and its associated package
+components. Although initially this feature would mainly be used for providing
+simplified access to these components, in future versions of DataONE we
+envision that the structure and semantics of each object will be clear based
+on science metadata and annotations, allowing advanced data querying,
+processing, and analysis on highly heterogeneous sources of data.</p>
+<div class="section" id="classes-fields-and-methods">
+<h3><a class="toc-backref" href="#id26">Classes, Fields, and Methods</a><a class="headerlink" href="#classes-fields-and-methods" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><dl class="simple">
+<dt>DataPackage</dt><dd><ul>
+<li><dl class="simple">
+<dt>Fields</dt><dd><ul>
+<li><p>identifier</p></li>
+<li><p>D1Object[] objects</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Constructors</dt><dd><ul>
+<li><p>DataPackage(Identifier)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Methods</dt><dd><ul>
+<li><p>add(DataObject): DataPackage</p></li>
+<li><p>size(): int</p></li>
+<li><p>contains(Identifier): boolean</p></li>
+<li><p>get(Identifier): D1Object</p></li>
+<li><p>remove(Identifier): void</p></li>
+<li><p>identifiers(): List&lt;Identifier&gt;</p></li>
+<li><p>getTitle(): String</p></li>
+<li><p>getCreator(): String</p></li>
+<li><p>getDisplayURL(): String</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>D1Object</dt><dd><ul>
+<li><dl class="simple">
+<dt>Fields</dt><dd><ul>
+<li><p>SystemMetadata sysmeta (contains the Identifier for this object)</p></li>
+<li><p>byte[] data</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Constructors</dt><dd><ul>
+<li><p>DataObject(Identifier)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Methods</dt><dd><ul>
+<li><p>getIdentifier(): Identifier</p></li>
+<li><p>getType(): ObjectFormat</p></li>
+<li><p>getSystemMetadata(): SystemMetadata</p></li>
+<li><p>setSystemMetadata(SystemMetadata): void</p></li>
+<li><p>getData(): byte[]</p></li>
+<li><p>setData(byte[]): void</p></li>
+<li><p>getDescribeList(): List&lt;Identifier&gt;</p></li>
+<li><p>getDescribeByList(): List&lt;Identifier&gt;</p></li>
+<li><p>getObsoltedByList(): List&lt;Identifier&gt;</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="algorithm-for-constructing-data-packages">
+<h3><a class="toc-backref" href="#id27">Algorithm for Constructing Data Packages</a><a class="headerlink" href="#algorithm-for-constructing-data-packages" title="Permalink to this headline">¶</a></h3>
+<p>Constructing a data package involves taking a PID as passed to the client,
+and using that PID to query the system metadata to find all associated
+science metadata objects and other data objects. If the PID points at a
+scimeta object, it can be used to loop through all of the data objects it
+describes. If the PID points at a data object, trace back to its scimeta
+object first, then populate the data package, and then loop over all
+associated data objects. In pseudocode:</p>
+<ul class="simple">
+<li><p>mn = cn.resolve(PID)</p></li>
+<li><p>sysmeta = getSystemMetadata(PID)</p></li>
+<li><dl class="simple">
+<dt>switch(sysmeta.getObjectFormat())</dt><dd><ol class="arabic simple">
+<li><dl class="simple">
+<dt>case: EML or FGDC or other metadata format</dt><dd><ol class="loweralpha simple">
+<li><p>scimeta = mn.get(PID)</p></li>
+<li><p>construct DataPackage dp with sysmeta and scimeta</p></li>
+<li><dl class="simple">
+<dt>for each objid in sysmeta.getDescribes()</dt><dd><ul>
+<li><p>mn = cn.resolve(objid)</p></li>
+<li><p>objsysmeta = cn.getsysmetadata(objid)</p></li>
+<li><p>objdata = mn.get(objid)</p></li>
+<li><p>construct dobj = DataObject(objid, objsysmeta, objdata)</p></li>
+<li><p>dp.addData(dobj)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ol>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>case: all other objects considered data objects</dt><dd><ol class="loweralpha simple">
+<li><p>scimetaid = sysmeta.getDescribedBy()</p></li>
+<li><p>mn = cn.resolve(scimetaid)</p></li>
+<li><p>scisysmeta = cn.getsystemmetadata(scimetaid)</p></li>
+<li><p>scimeta = mn.get(scimetaid)</p></li>
+<li><p>construct DataPackage dp with scisysmeta and scimeta</p></li>
+<li><p>objdata = mn.get(objid)</p></li>
+<li><p>construct dobj = DataObject(ID, sysmeta, objdata)</p></li>
+<li><p>follow step 1.3 above to get remainder of data objects in package</p></li>
+</ol>
+</dd>
+</dl>
+</li>
+</ol>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="additional-packaging-technologies">
+<h2><a class="toc-backref" href="#id28">Additional Packaging Technologies</a><a class="headerlink" href="#additional-packaging-technologies" title="Permalink to this headline">¶</a></h2>
+<p>A number of additional existing technologies can and have been used for
+describing the linkages between science metadata, data, and system metadata.
+Here we review some packaging mechanisms that are presently in use and discuss
+how they are or might be used in existing systems to provide robust linkages
+among the components of a data package. These packaging mechanisms were
+considered but not selected, in favor of using BagIt and OAI-ORE.</p>
+<div class="section" id="ecological-metadata-language-eml">
+<h3><a class="toc-backref" href="#id29">Ecological Metadata Language (EML)</a><a class="headerlink" href="#ecological-metadata-language-eml" title="Permalink to this headline">¶</a></h3>
+<p>The Ecological Metadata Language (EML) <a class="reference internal" href="#eml-2010" id="id4"><span>[EML-2010]</span></a> is a science metadata
+specification that specifically is modeled around the idea of a ‘data package’
+that consists of science metadata that is encoded in the EML document and one
+or more data objects that can be either referenced in the the document via
+external references or can be included inline in the EML document directly.
+Both mechanisms are in widespread use in the ecological and environmental
+science communities that use EML, although the mechanism of external
+references is far more prevalent at this time (2010). EML documents are
+serialized as XML documents but can include data inline if properly encoded.
+Each EML document defines a top-level ‘packageId’ which contains the globally
+unique identifier for the data package. Each EML document also describes zero
+or more data entities that are drawn from a simple data model that includes
+data tables, spatial raster, spatial vector, and other generic entity data
+types. Each entity type in EML includes a distribution section that can be
+used to include the data inline or reference an external source for the data.
+External references to data are found in the ‘online/url’ field of the
+document, and can consist of URLs, URNs, and other URIs. Within the Knowledge
+Network for Biocomplexity, it is common to find references to web URLs and to
+indirect digital identifiers such as DOIs and ecogrid URIs. The ‘url’ field
+also includes an attribute that allows providers to declare the external
+reference as either a ‘download’ url, which when resolved and dereferenced
+should provide the exact byte stream of the digital object, or an
+‘information’ url, which when resolved and dereferenced provides additional
+information about the object but not the exact bytes of the object. This
+latter informational type of URL often leads to an HTML description of the
+object, a site-specific registration or authentication page, or some other
+site-specific gateway that may provide indirect access to the data.</p>
+<dl class="simple">
+<dt>Beneficial features</dt><dd><ul class="simple">
+<li><p>Simple data model covering common science object types, can be extended</p></li>
+<li><p>Library support through XML parsers on multiple platforms</p></li>
+<li><p>Highly structured metadata with good validation model</p></li>
+<li><p>Similarity to other science metadata models allows relatively simple and
+complete crosswalks</p></li>
+</ul>
+</dd>
+<dt>Issues</dt><dd><ul class="simple">
+<li><p>Large data access is inefficient (XML parsing)</p></li>
+<li><p>External data references are unconstrained URIs</p></li>
+</ul>
+</dd>
+<dt>Questions</dt><dd><ul class="simple">
+<li><p>Does the EML ‘packageId’ field suffice as an identifier for a DataONE data
+package per se, and if so, is the EML document the equivalent of a
+serialization of the package?</p></li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="netcdf">
+<h3><a class="toc-backref" href="#id30">NetCDF</a><a class="headerlink" href="#netcdf" title="Permalink to this headline">¶</a></h3>
+<p>“NetCDF is an abstraction that supports a view of data as a collection of
+self-describing, portable objects that can be accessed through a simple
+interface. Array values may be accessed directly, without knowing details of
+how the data are stored. Auxiliary information about the data, such as what
+units are used, may be stored with the data. Generic utilities and application
+programs can access netCDF datasets and transform, combine, analyze, or
+display specified fields of the data.” (NetCDF User’s Guide, 2010, section
+1.1, <a class="reference internal" href="#netcdf-2010" id="id5"><span>[NETCDF-2010]</span></a>) NetCDF is a self-describing data representation format
+developed by Unidata that is commonly used in the atmospheric and
+oceanographic communities. This data model is very similar to other existing
+data models such as the OPeNDAP model and the Hierarchical Data Format (HDF).
+NetCDF is self-describing in that it provides a mechanism for including
+metadata about the included data directly in the serialized representation.
+Many users of the format have standardized upon the use of CF (Climate Format)
+metadata attributes for the representation of science metadata, although this
+is not strictly required by NetCDF and many other ad-hoc approaches to
+metadata provision are commonly employed by users in the community as well.</p>
+<dl class="simple">
+<dt>Beneficial features</dt><dd><ul class="simple">
+<li><p>Rich data model</p></li>
+<li><p>Efficient (random) access to large data contents</p></li>
+<li><p>Extensive library support, including for parallel systems</p></li>
+<li><p>Efficient storage via binary format</p></li>
+</ul>
+</dd>
+<dt>Issues</dt><dd><ul class="simple">
+<li><p>Opaque binary format reduces long-term effectiveness for preservation</p></li>
+<li><p>Unspecified science metadata requirements (ad hoc community adoption)</p></li>
+<li><p>NetCDF actually represents multiple data models and multiple file formats,
+all of which are called NetCDF even though they are different binary
+formats</p></li>
+</ul>
+</dd>
+<dt>Questions</dt><dd><ul class="simple">
+<li><p>Does the spec allow for externally referenced data objects?</p></li>
+<li><p>What mechanisms are available for providing identifiers that are used to
+reference all of the components of the data package?</p></li>
+<li><p>What are the proper namespace names for the various NetCDF models and file
+formats?</p></li>
+</ul>
+</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="id6">
+<h2><a class="toc-backref" href="#id31">References</a><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<dl class="citation">
+<dt class="label" id="boyko-2009"><span class="brackets"><a class="fn-backref" href="#id3">Boyko-2009</a></span></dt>
+<dd><p>Boyko, A., Kunze, J., Littman, J., Madden, L., Vargas, B. (2009). The BagIt File
+Packaging Format (V0.96). Retrieved April 2, 2010, from
+<a class="reference external" href="http://www.ietf.org/Internet-drafts/draft-kunze-bagit-04.txt">http://www.ietf.org/Internet-drafts/draft-kunze-bagit-04.txt</a></p>
+</dd>
+<dt class="label" id="eml-2010"><span class="brackets"><a class="fn-backref" href="#id4">EML-2010</a></span></dt>
+<dd><p>___________. (2010). Ecological Metadata Language (EML) Specification.
+<a class="reference external" href="http://knb.ecoinformatics.org/software/eml/">http://knb.ecoinformatics.org/software/eml/</a></p>
+</dd>
+<dt class="label" id="lagoze-2008"><span class="brackets"><a class="fn-backref" href="#id1">Lagoze-2008</a></span></dt>
+<dd><p>Lagoze, C., Van de Sompel, H., Johnston, P., Nelson,
+M., Sanderson, R., Warner, S. (2008). Open Archives Initiative Object Reuse
+and Exchange: ORE User Guide - Primer. Retrieved November 1, 2010, from
+<a class="reference external" href="http://www.openarchives.org/ore/1.0/primer">http://www.openarchives.org/ore/1.0/primer</a>.</p>
+</dd>
+<dt class="label" id="netcdf-2010"><span class="brackets"><a class="fn-backref" href="#id5">NETCDF-2010</a></span></dt>
+<dd><p>____________. (2010). NetCDF Users’ Guide.
+<a class="reference external" href="http://www.unidata.ucar.edu/software/netcdf/docs/netcdf/">http://www.unidata.ucar.edu/software/netcdf/docs/netcdf/</a></p>
+</dd>
+<dt class="label" id="sauermann-cyganiak-2008"><span class="brackets"><a class="fn-backref" href="#id2">Sauermann_Cyganiak-2008</a></span></dt>
+<dd><p>Sauermann, L, Cyganiak, R. (2008). Cool URIs for the Semantic Web. W3C Interest Group Note 03
+December 2008.  <a class="reference external" href="http://www.w3.org/TR/cooluris/">http://www.w3.org/TR/cooluris/</a></p>
+</dd>
+</dl>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Data Packaging</a><ul>
+<li><a class="reference internal" href="#synopsis">Synopsis</a></li>
+<li><a class="reference internal" href="#generating-resource-maps">Generating Resource Maps</a><ul>
+<li><a class="reference internal" href="#deviation-from-the-ore-model">Deviation from the ORE model</a></li>
+<li><a class="reference internal" href="#referencing-other-data-packages">Referencing other data packages</a></li>
+<li><a class="reference internal" href="#very-large-data-packages">Very large data packages</a></li>
+<li><a class="reference internal" href="#describing-filesystem-hierarchies">Describing filesystem hierarchies</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#resource-map-validation">Resource map validation</a></li>
+<li><a class="reference internal" href="#background-discussion">Background Discussion</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#user-stories">User stories</a></li>
+<li><a class="reference internal" href="#package-content-associations-using-oai-ore">Package Content Associations Using OAI-ORE</a></li>
+<li><a class="reference internal" href="#issues-and-resolution">Issues and Resolution</a></li>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#package-serialization-using-bagit">Package Serialization Using BagIt</a></li>
+<li><a class="reference internal" href="#data-package-client-design">Data Package Client Design</a><ul>
+<li><a class="reference internal" href="#classes-fields-and-methods">Classes, Fields, and Methods</a></li>
+<li><a class="reference internal" href="#algorithm-for-constructing-data-packages">Algorithm for Constructing Data Packages</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#additional-packaging-technologies">Additional Packaging Technologies</a><ul>
+<li><a class="reference internal" href="#ecological-metadata-language-eml">Ecological Metadata Language (EML)</a></li>
+<li><a class="reference internal" href="#netcdf">NetCDF</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id6">References</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+      <li>Previous: <a href="WhatIsData.html" title="previous chapter">What is Data (DataONE Perspective)?</a></li>
+      <li>Next: <a href="PreservationStrategy.html" title="next chapter">DataONE Preservation Strategy</a></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/design/DataPackage.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/design/DataPackage.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/DataPackage.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

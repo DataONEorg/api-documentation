@@ -1,0 +1,301 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Supporting multiple API versions &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Supporting multiple API versions</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="supporting-multiple-api-versions">
+<h1><a class="toc-backref" href="#id1">Supporting multiple API versions</a><a class="headerlink" href="#supporting-multiple-api-versions" title="Permalink to this headline">¶</a></h1>
+<dl class="field-list" id="index-0">
+<dt class="field-odd">Document Status</dt>
+<dd class="field-odd"><table class="docutils align-default">
+<colgroup>
+<col style="width: 11%" />
+<col style="width: 89%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Status</p></th>
+<th class="head"><p>Comment</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>DRAFT</p></td>
+<td><p>(leinfelder) Listing scenarios for v1 and v2 interactions.</p></td>
+</tr>
+</tbody>
+</table>
+</dd>
+</dl>
+<div class="contents topic" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#supporting-multiple-api-versions" id="id1">Supporting multiple API versions</a></p>
+<ul>
+<li><p><a class="reference internal" href="#overview" id="id2">Overview</a></p></li>
+<li><p><a class="reference internal" href="#requirements" id="id3">Requirements</a></p></li>
+<li><p><a class="reference internal" href="#scenarios" id="id4">Scenarios</a></p>
+<ul>
+<li><p><a class="reference internal" href="#mn-running-v1-of-the-api-tier-1" id="id5">MN running v1 of the API (Tier 1)</a></p></li>
+<li><p><a class="reference internal" href="#mn-running-v2-of-the-api-tier-1" id="id6">MN running v2 of the API (Tier 1)</a></p></li>
+<li><p><a class="reference internal" href="#mn-running-v1-of-the-api-tier-4" id="id7">MN running v1 of the API (Tier 4)</a></p></li>
+<li><p><a class="reference internal" href="#mn-running-v2-of-the-api-tier-4" id="id8">MN running v2 of the API (Tier 4)</a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="overview">
+<h2><a class="toc-backref" href="#id2">Overview</a><a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>In order to accommodate changes to the the SystemMetadata type, new API methods
+will be introduced. Many existing v1 methods will have the same signatures but
+any method that deals with the SystemMetadata type will need to have a v2 version.</p>
+</div>
+<div class="section" id="requirements">
+<h2><a class="toc-backref" href="#id3">Requirements</a><a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>All v1 objects are valid v2 objects, save for namespace.</p></li>
+<li><p>All implementations of v2 must implement v1 methods.</p></li>
+<li><p>TDB: only the minimally-necessary v2 methods will be defined. This would require</p></li>
+</ul>
+<p>mixed-calls in when interacting with the API.</p>
+</div>
+<div class="section" id="scenarios">
+<h2><a class="toc-backref" href="#id4">Scenarios</a><a class="headerlink" href="#scenarios" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="mn-running-v1-of-the-api-tier-1">
+<h3><a class="toc-backref" href="#id5">MN running v1 of the API (Tier 1)</a><a class="headerlink" href="#mn-running-v1-of-the-api-tier-1" title="Permalink to this headline">¶</a></h3>
+<p># MN.v1.create()
+# Synch</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>MN.v1.listOjects()</p></li>
+<li><p>CN.v1.create()</p></li>
+</ul>
+</div></blockquote>
+<dl class="simple">
+<dt># Valid getSystemMetadata() calls</dt><dd><ul class="simple">
+<li><p>CN.v2.getSystemMetadata() –&gt; v2.SystemMetadata</p></li>
+<li><p>CN.v1.getSystemMetadata() –&gt; v1.SystemMetadata</p></li>
+<li><p>MN.v1.getSystemMetadata() –&gt; v1.SystemMetadata</p></li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="mn-running-v2-of-the-api-tier-1">
+<h3><a class="toc-backref" href="#id6">MN running v2 of the API (Tier 1)</a><a class="headerlink" href="#mn-running-v2-of-the-api-tier-1" title="Permalink to this headline">¶</a></h3>
+<p># MN.v2.create()
+# Synch</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>MN.v2.listOjects()</p></li>
+<li><p>CN.v2.create()</p></li>
+</ul>
+</div></blockquote>
+<dl class="simple">
+<dt># Valid getSystemMetadata() calls</dt><dd><ul class="simple">
+<li><p>CN.v2.getSystemMetadata() –&gt; v2.SystemMetadata</p></li>
+<li><p>MN.v2.getSystemMetadata() –&gt; v2.SystemMetadata</p></li>
+<li><p>CN.v1.getSystemMetadata() –&gt; v1.SystemMetadata</p></li>
+<li><p>MN.v1.getSystemMetadata() –&gt; v1.SystemMetadata</p></li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="mn-running-v1-of-the-api-tier-4">
+<h3><a class="toc-backref" href="#id7">MN running v1 of the API (Tier 4)</a><a class="headerlink" href="#mn-running-v1-of-the-api-tier-4" title="Permalink to this headline">¶</a></h3>
+<p># MN.v1.create()
+# Synch</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>MN.v1.listOjects()</p></li>
+<li><p>CN.[v1|v2].create()</p></li>
+</ul>
+</div></blockquote>
+<dl class="simple">
+<dt># Valid get() calls</dt><dd><ul class="simple">
+<li><p>CN.v2.getSystemMetadata() –&gt; v2.SystemMetadata</p></li>
+<li><p>CN.v1.getSystemMetadata() –&gt; v1.SystemMetadata</p></li>
+<li><p>MN.v1.getSystemMetadata() –&gt; v1.SystemMetadata</p></li>
+</ul>
+</dd>
+<dt># Replication to MN.target1 running v1 API</dt><dd><ul class="simple">
+<li><p>MN.v1.getReplica()</p></li>
+<li><p>MN.target1.v1.getSystemMetadata() –&gt; v1.SystemMetadata</p></li>
+</ul>
+</dd>
+<dt># Replication to MN.target2 running v2 API</dt><dd><ul class="simple">
+<li><p>MN.v1.getReplica()</p></li>
+<li><p>MN.target2.v1.getSystemMetadata() –&gt; v1.SystemMetadata</p></li>
+<li><p>MN.target2.v2.getSystemMetadata() –&gt; v2.SystemMetadata</p></li>
+</ul>
+</dd>
+<dt># Updates</dt><dd><ul class="simple">
+<li><p>CN.v1.setAccessPolicy() –&gt; MN.target1.v1.systemMetadataChanged()</p></li>
+<li><p>CN.v1.setAccessPolicy() –&gt; MN.target2.v2.systemMetadataChanged()</p></li>
+<li><p>CN.v2.setAccessPolicy() –&gt; MN.target1.v1.systemMetadataChanged() ALLOWED?</p></li>
+<li><p>CN.v2.setAccessPolicy() –&gt; MN.target2.v2.systemMetadataChanged()</p></li>
+</ul>
+</dd>
+</dl>
+<img alt="../_images/1c946e48e1c91354730833bf8c452dea427e9c51847e5c4a9912444141ca0c50.svg" class="align-center" src="../_images/1c946e48e1c91354730833bf8c452dea427e9c51847e5c4a9912444141ca0c50.svg" /><p><strong>Figure 1.</strong> Mixed MN API version interactions with replication</p>
+</div>
+<div class="section" id="mn-running-v2-of-the-api-tier-4">
+<h3><a class="toc-backref" href="#id8">MN running v2 of the API (Tier 4)</a><a class="headerlink" href="#mn-running-v2-of-the-api-tier-4" title="Permalink to this headline">¶</a></h3>
+<p># MN.v2.create()
+# Synch</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>MN.v1.listOjects()</p></li>
+<li><p>CN.[v1|v2].create()</p></li>
+</ul>
+</div></blockquote>
+<dl class="simple">
+<dt># Valid get() calls</dt><dd><ul class="simple">
+<li><p>CN.v2.getSystemMetadata() –&gt; v2.SystemMetadata</p></li>
+<li><p>CN.v1.getSystemMetadata() –&gt; v1.SystemMetadata</p></li>
+<li><p>MN.v1.getSystemMetadata() –&gt; v1.SystemMetadata</p></li>
+</ul>
+</dd>
+<dt># Replication to MN.target running v1 API</dt><dd><ul class="simple">
+<li><p>NOT ALLOWED</p></li>
+</ul>
+</dd>
+<dt># Replication to MN.target running v2 API</dt><dd><ul class="simple">
+<li><p>MN.v1.getReplica()</p></li>
+<li><p>MN.target.v1.getSystemMetadata() –&gt; v1.SystemMetadata</p></li>
+<li><p>MN.target.v2.getSystemMetadata() –&gt; v2.SystemMetadata</p></li>
+</ul>
+</dd>
+</dl>
+<img alt="../_images/19435ebdb207d0bb98861c84aff77a619e6ac7c73d2b7e875fe62750042ba331.svg" class="align-center" src="../_images/19435ebdb207d0bb98861c84aff77a619e6ac7c73d2b7e875fe62750042ba331.svg" /><p><strong>Figure 2.</strong> Mixed MN API version interactions with replication
+The original MN is running v2 of the API</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Supporting multiple API versions</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#requirements">Requirements</a></li>
+<li><a class="reference internal" href="#scenarios">Scenarios</a><ul>
+<li><a class="reference internal" href="#mn-running-v1-of-the-api-tier-1">MN running v1 of the API (Tier 1)</a></li>
+<li><a class="reference internal" href="#mn-running-v2-of-the-api-tier-1">MN running v2 of the API (Tier 1)</a></li>
+<li><a class="reference internal" href="#mn-running-v1-of-the-api-tier-4">MN running v1 of the API (Tier 4)</a></li>
+<li><a class="reference internal" href="#mn-running-v2-of-the-api-tier-4">MN running v2 of the API (Tier 4)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/design/Versions.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/design/Versions.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/Versions.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

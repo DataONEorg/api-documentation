@@ -1,0 +1,330 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Overview of Authorization Policy Languages &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Supporting Access Control in Search" href="search_auth.html" />
+    <link rel="prev" title="Identity, Authentication, and Authorization Requirements" href="AuthnAndAuthzRequirements.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="search_auth.html" title="Supporting Access Control in Search"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="AuthnAndAuthzRequirements.html" title="Identity, Authentication, and Authorization Requirements"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="Authorization.html" accesskey="U">Authorization in DataONE</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Overview of Authorization Policy Languages</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="overview-of-authorization-policy-languages">
+<h1>Overview of Authorization Policy Languages<a class="headerlink" href="#overview-of-authorization-policy-languages" title="Permalink to this headline">¶</a></h1>
+<dl class="field-list simple">
+<dt class="field-odd">Author</dt>
+<dd class="field-odd"><p>Matt Jones</p>
+</dd>
+<dt class="field-even">Status</dt>
+<dd class="field-even"><p>Incomplete Draft, Work in Progress being Edited</p>
+</dd>
+</dl>
+<p>This document provides an overview of authorization technologies that have been
+considered as part of the design of the DataONE authorization and access
+control system.</p>
+<p>Several open technologies can be used to express the policies for describing
+access control rules for resources and services in DataONE.</p>
+<div class="section" id="eml-access">
+<h2>eml-access<a class="headerlink" href="#eml-access" title="Permalink to this headline">¶</a></h2>
+<p>Ecological Metadata Language (EML) is in common use in the ecological and
+environmental monitoring community, and includes a simple module
+(eml-access.xsd) for describing access control policies for data resources.  It
+allows both additive and subtractive rules, which allows one to either build up
+a set of allowed permissions and then subtract a few (e.g., all of the members
+of group ‘data-managers’ except ‘john), or to deny all of the members of a
+group and then add a few.  After years of experience using EML within the KNB
+network, it has become clear that this ability to modify the ruleset using
+different approaches for combining the rules is unnecessary to express the
+typical rules needed in the stakeholder community.  The complexity also makes
+it more difficult for users to understand the implications of the access rules
+that they write, and that even with use of a GUI, many users compose access
+expressions that do not capture their intent.  Here is a simple eml-access
+block:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="nt">&lt;eml:access</span> 
+  <span class="na">xmlns:eml=</span><span class="s">&quot;eml://ecoinformatics.org/access-2.1.0&quot;</span> 
+  <span class="na">xmlns:xs=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;eml&gt;</span>
+      <span class="nt">&lt;access</span> 
+          <span class="na">authSystem=</span><span class="s">&quot;ldap://ldap.ecoinformatics.org:389/dc=ecoinformatics,dc=org&quot;</span> 
+          <span class="na">order=</span><span class="s">&quot;allowFirst&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;allow&gt;</span>
+          <span class="nt">&lt;principal&gt;</span>uid=alice,o=NCEAS,dc=ecoinformatics,dc=org<span class="nt">&lt;/principal&gt;</span>
+          <span class="nt">&lt;permission&gt;</span>read<span class="nt">&lt;/permission&gt;</span>
+          <span class="nt">&lt;permission&gt;</span>write<span class="nt">&lt;/permission&gt;</span>
+        <span class="nt">&lt;allow&gt;</span>
+      <span class="nt">&lt;/access&gt;</span>
+  <span class="nt">&lt;eml&gt;</span>
+</pre></div>
+</div>
+<p>One of the shortcominings of eml-access is that it assumes that the linkage to
+a particular resource is expressed elsewhere (typically the access element is
+embedded in a broader EML document, thereby implicitly expressing which
+resources it applies to), and so it contains no mechanism for referencing the
+resource that is to be controlled. Experience with using eml-access in EML
+documents indicates that this mechanism is cumbersome and causes inadvertant
+creation of multiple versions of objects just to accomplish an access rule
+policy change.  This is part of the motivation to moving access policies to
+SystemMetadata in DataONE (the other reason being that many metadata standards
+do not include an access policy descriptor at all).</p>
+</div>
+<div class="section" id="xacml-3-0">
+<h2>XACML 3.0<a class="headerlink" href="#xacml-3-0" title="Permalink to this headline">¶</a></h2>
+<p>XACML 3 replaces version 2.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Need to outline the approach to access control in version 3 and contrast it
+with versions 2 and 1.</p>
+</div>
+</div>
+<div class="section" id="xacml-2-0">
+<h2>XACML 2.0<a class="headerlink" href="#xacml-2-0" title="Permalink to this headline">¶</a></h2>
+<p>XACML 3 replaces version 1.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Need to outline the approach to access control in version 2 and contrast it
+with version 1.</p>
+</div>
+</div>
+<div class="section" id="xacml-1-0">
+<h2>XACML 1.0<a class="headerlink" href="#xacml-1-0" title="Permalink to this headline">¶</a></h2>
+<p>The Extensible Access Control Markup Language (XACML) is an OASIS standard for
+representing access control policies for resources and services.  XACML
+specifically includes support for federated systems in an open Internet
+environment, is an open standard, and is being widely adopted by various
+software systems. The advantages of XACML lie in its completeness and that it
+is an industry standard.  The disadvantages for DataONE lie in its complexity,
+which makes it difficult to author, understand, and consume these documents
+because of the large number of permutations which it could support.  As an
+example, below is the same access rule that is expressed in eml-access expressed
+instead in XACML. Note that there are multiple qualified mechanisms and types
+for matching values (e.g., string-equals), which is flexible but requires more
+implementation complexity than is specified in the DataONE authorization use
+cases.  With XACML, one could express conditions that include complex functions
+and comparisons of arbitrary subject attributes (beyond identity).</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="nt">&lt;Policy</span>
+      <span class="na">xmlns=</span><span class="s">&quot;urn:oasis:names:tc:xacml:1.0:policy&quot;</span>
+      <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+      <span class="na">xsi:schemaLocation=</span><span class="s">&quot;urn:oasis:names:tc:xacml:1.0:policy</span>
+<span class="s">        cs-xacml-schema-policy-01.xsd&quot;</span>
+      <span class="na">PolicyId=</span><span class="s">&quot;urn:oasis:names:tc:xacml:1.0:conformance-test:IIA1:policy&quot;</span>
+      <span class="na">RuleCombiningAlgId=</span><span class="s">&quot;urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-overrides&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;Description&gt;</span>
+        Example policy that grants read and write access to a data object.
+    <span class="nt">&lt;/Description&gt;</span>
+    <span class="nt">&lt;Target&gt;</span>
+        <span class="nt">&lt;Subjects&gt;</span>
+            <span class="nt">&lt;AnySubject/&gt;</span>
+        <span class="nt">&lt;/Subjects&gt;</span>
+        <span class="nt">&lt;Resources&gt;</span>
+            <span class="nt">&lt;AnyResource/&gt;</span>
+        <span class="nt">&lt;/Resources&gt;</span>
+        <span class="nt">&lt;Actions&gt;</span>
+            <span class="nt">&lt;AnyAction/&gt;</span>
+        <span class="nt">&lt;/Actions&gt;</span>
+    <span class="nt">&lt;/Target&gt;</span>
+    <span class="nt">&lt;Rule</span>
+          <span class="na">RuleId=</span><span class="s">&quot;urn:oasis:names:tc:xacml:1.0:conformance-test:IIA1:rule&quot;</span>
+          <span class="na">Effect=</span><span class="s">&quot;Permit&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;Description&gt;</span>
+            Alice can read and write data object with id doi:10.5432/example.1
+        <span class="nt">&lt;/Description&gt;</span>
+        <span class="nt">&lt;Target&gt;</span>
+            <span class="nt">&lt;Subjects&gt;</span>
+                <span class="nt">&lt;Subject&gt;</span>
+                    <span class="nt">&lt;SubjectMatch</span>
+                          <span class="na">MatchId=</span><span class="s">&quot;urn:oasis:names:tc:xacml:1.0:function:string-equal&quot;</span><span class="nt">&gt;</span>
+                        <span class="nt">&lt;AttributeValue</span>
+                              <span class="na">DataType=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema#string&quot;</span><span class="nt">&gt;</span>uid=alice,o=NCEAS,dc=ecoinformatics,dc=org<span class="nt">&lt;/AttributeValue&gt;</span>
+                        <span class="nt">&lt;SubjectAttributeDesignator</span>
+                              <span class="na">AttributeId=</span><span class="s">&quot;urn:oasis:names:tc:xacml:1.0:subject:subject-id&quot;</span>
+                              <span class="na">DataType=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema#string&quot;</span><span class="nt">/&gt;</span>
+                    <span class="nt">&lt;/SubjectMatch&gt;</span>
+                <span class="nt">&lt;/Subject&gt;</span>
+            <span class="nt">&lt;/Subjects&gt;</span>
+            <span class="nt">&lt;Resources&gt;</span>
+                <span class="nt">&lt;Resource&gt;</span>
+                    <span class="nt">&lt;ResourceMatch</span>
+                          <span class="na">MatchId=</span><span class="s">&quot;urn:oasis:names:tc:xacml:1.0:function:string-equal&quot;</span><span class="nt">&gt;</span>
+                        <span class="nt">&lt;AttributeValue</span>
+                              <span class="na">DataType=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema#string&quot;</span><span class="nt">&gt;</span>doi:10.0000/example_data_identifier<span class="nt">&lt;/AttributeValue&gt;</span>
+                        <span class="nt">&lt;ResourceAttributeDesignator</span>
+                              <span class="na">AttributeId=</span><span class="s">&quot;urn:oasis:names:tc:xacml:1.0:resource:resource-id&quot;</span>
+                              <span class="na">DataType=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema#string&quot;</span><span class="nt">/&gt;</span>
+                    <span class="nt">&lt;/ResourceMatch&gt;</span>
+                <span class="nt">&lt;/Resource&gt;</span>
+            <span class="nt">&lt;/Resources&gt;</span>
+            <span class="nt">&lt;Actions&gt;</span>
+                <span class="nt">&lt;Action&gt;</span>
+                    <span class="nt">&lt;ActionMatch</span>
+                          <span class="na">MatchId=</span><span class="s">&quot;urn:oasis:names:tc:xacml:1.0:function:string-equal&quot;</span><span class="nt">&gt;</span>
+                        <span class="nt">&lt;AttributeValue</span>
+                              <span class="na">DataType=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema#string&quot;</span><span class="nt">&gt;</span>read<span class="nt">&lt;/AttributeValue&gt;</span>
+                        <span class="nt">&lt;ActionAttributeDesignator</span>
+                              <span class="na">AttributeId=</span><span class="s">&quot;urn:oasis:names:tc:xacml:1.0:action:action-id&quot;</span>
+                              <span class="na">DataType=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema#string&quot;</span><span class="nt">/&gt;</span>
+                    <span class="nt">&lt;/ActionMatch&gt;</span>
+                <span class="nt">&lt;/Action&gt;</span>
+                <span class="nt">&lt;Action&gt;</span>
+                    <span class="nt">&lt;ActionMatch</span>
+                          <span class="na">MatchId=</span><span class="s">&quot;urn:oasis:names:tc:xacml:1.0:function:string-equal&quot;</span><span class="nt">&gt;</span>
+                        <span class="nt">&lt;AttributeValue</span>
+                              <span class="na">DataType=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema#string&quot;</span><span class="nt">&gt;</span>write<span class="nt">&lt;/AttributeValue&gt;</span>
+                        <span class="nt">&lt;ActionAttributeDesignator</span>
+                              <span class="na">AttributeId=</span><span class="s">&quot;urn:oasis:names:tc:xacml:1.0:action:action-id&quot;</span>
+                              <span class="na">DataType=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema#string&quot;</span><span class="nt">/&gt;</span>
+                    <span class="nt">&lt;/ActionMatch&gt;</span>
+                <span class="nt">&lt;/Action&gt;</span>
+            <span class="nt">&lt;/Actions&gt;</span>
+        <span class="nt">&lt;/Target&gt;</span>
+    <span class="nt">&lt;/Rule&gt;</span>
+<span class="nt">&lt;/Policy&gt;</span>
+</pre></div>
+</div>
+<p>The XACML ‘Permit’ Effect is equivalent to the eml-access ‘allow’ rule, the
+XACML ‘Deny’ Effect is equivalent to the EML ‘deny’ element, the
+XACML ‘Subject’ is equivalent to the EML ‘principal’ element, and the XACML
+‘Action’ element is equivalent to the EML ‘permission’ element.  The XACML
+constructs have considerably more flexibility in what is expressed that is
+accomplished via the indirection in the model, but this flexibility and
+expressive power come at a significant cost in implementation time and software
+complexity that would need to be borne by all Member Node implementations.</p>
+</div>
+<div class="section" id="simplified-policy-language-spl">
+<h2>Simplified Policy Language (SPL)<a class="headerlink" href="#simplified-policy-language-spl" title="Permalink to this headline">¶</a></h2>
+<p>A simplified syntax that acts as a front-end to XACML policies. See the
+<a class="reference external" href="https://twiki.cern.ch/twiki/bin/view/EGEE/SimplifiedPolicyLanguage">SimplifiedPolicyLanguage</a> web site for examples of use in the grid community.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Overview of Authorization Policy Languages</a><ul>
+<li><a class="reference internal" href="#eml-access">eml-access</a></li>
+<li><a class="reference internal" href="#xacml-3-0">XACML 3.0</a></li>
+<li><a class="reference internal" href="#xacml-2-0">XACML 2.0</a></li>
+<li><a class="reference internal" href="#xacml-1-0">XACML 1.0</a></li>
+<li><a class="reference internal" href="#simplified-policy-language-spl">Simplified Policy Language (SPL)</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+  <li><a href="Authorization.html">Authorization in DataONE</a><ul>
+      <li>Previous: <a href="AuthnAndAuthzRequirements.html" title="previous chapter">Identity, Authentication, and Authorization Requirements</a></li>
+      <li>Next: <a href="search_auth.html" title="next chapter">Supporting Access Control in Search</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/design/Authorization-technologies.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/design/Authorization-technologies.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/Authorization-technologies.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

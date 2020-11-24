@@ -1,0 +1,394 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Replication Notes &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Notes for MN API" href="MN_api_notes_comments.html" />
+    <link rel="prev" title="Cross Domain Indexing and Access for Data and Metadata" href="DataAndMetadata.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="MN_api_notes_comments.html" title="Notes for MN API"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="DataAndMetadata.html" title="Cross Domain Indexing and Access for Data and Metadata"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">General Design and Implementation Notes</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Replication Notes</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="replication-notes">
+<h1>Replication Notes<a class="headerlink" href="#replication-notes" title="Permalink to this headline">¶</a></h1>
+<dl class="field-list simple">
+<dt class="field-odd">Author</dt>
+<dd class="field-odd"><p>Dave Vieglas</p>
+</dd>
+</dl>
+<p>This document contains notes about replication that may be of some use in
+DataONE.</p>
+<div class="section" id="general">
+<h2>General<a class="headerlink" href="#general" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Reduce complex transactions to be written by a single server</p></li>
+<li><p>Monitor the server log</p></li>
+<li><p>Be prepared for failure. The more data is distributed and scaled, the
+more likely failure will be encountered.</p></li>
+</ol>
+</div></blockquote>
+</div>
+<div class="section" id="coordinating-nodes">
+<h2>Coordinating Nodes<a class="headerlink" href="#coordinating-nodes" title="Permalink to this headline">¶</a></h2>
+<p>CNs need to keep a copy of all science metadata, and it is expected that
+each CN will be replicated with the others, so that each will appear the same.</p>
+<p>There will be three CNs to start with.</p>
+<p>There’s basically three models for dealing with replication in this case:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>single master, two slaves</p></li>
+<li><p>ring - write one, it writes to the next, and so on</p></li>
+<li><p>multi-master. Write to any, replication to others</p></li>
+</ul>
+</div></blockquote>
+<p>Multi-master replication would be the ideal option, as each CN would then
+offer identical functionality rather than the alternative of redirecting
+(presumably) 2/3 of requests to the master node.</p>
+<p>There are basically two categories of information that are replicated:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>science metadata, which is information about a data set</p></li>
+<li><p>system metadata, which is information that is used to keep track of things
+such as the science metadata, MN capabilities and state, perhaps groups
+and access control lists, identity mappings</p></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="member-nodes">
+<h2>Member Nodes<a class="headerlink" href="#member-nodes" title="Permalink to this headline">¶</a></h2>
+<p>Replication of data is achieved by copying content between Member Nodes until
+sufficient copies have been made to address concerns of access (x% of MNs may
+be offline and the content can still be reached) and efficiency of access
+(Internet distance between client and the MN).</p>
+</div>
+<div class="section" id="resources">
+<h2>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><p>rcs - venerable, functional</p></li>
+<li><p>inotify - the linux kernel file system monitor</p></li>
+<li><p>LDAP multi-master (OpenLDAP, 389 Directory Server)</p></li>
+<li><p>MySQL multi-master</p></li>
+<li><p>Microsoft’s File System Replication Service and/or Distributed File System</p></li>
+<li><p>slony1 for Postgresql</p></li>
+<li><p><a class="reference external" href="http://www.drbd.org/home/what-is-drbd/">DRBD</a>  (dual master)</p></li>
+<li><p><a class="reference external" href="http://git-scm.com/">Git</a></p></li>
+<li><p><a class="reference external" href="http://mercurial.selenic.com/">Mercurial</a></p></li>
+<li><p><a class="reference external" href="http://bazaar-vcs.org/en/">Bazaar</a></p></li>
+<li><p><a class="reference external" href="http://knb.ecoinformatics.org/software/metacat/">Metacat</a></p></li>
+<li><p><a class="reference external" href="http://hadoop.apache.org/zookeeper">Zookeeper</a></p></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="coordinating-node-object-store">
+<h2>Coordinating Node Object Store<a class="headerlink" href="#coordinating-node-object-store" title="Permalink to this headline">¶</a></h2>
+<p>The CN object store (CN-OS) is responsible for holding a copy of all science
+and system metadata, enabling retrieval of objects by an identifier and for
+ensuring that the local copy is synchronized with the other CNs. The CN-OS is
+analogous to a replicated dictionary with the identifiers being keys and the
+science or system metadata documents being the values.</p>
+<p>The CN-OS should support operations:</p>
+<ul class="simple">
+<li><p>Create(pid)</p></li>
+<li><p>Read(pid)</p></li>
+<li><p>Update(pid)</p></li>
+<li><p>Delete(pid)</p></li>
+<li><p>List(start, stop, restriction)</p></li>
+</ul>
+</div>
+<div class="section" id="metacat-as-replicating-object-manager">
+<h2>Metacat As Replicating Object Manager<a class="headerlink" href="#metacat-as-replicating-object-manager" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="http://knb.ecoinformatics.org/software/metacat/">Metacat</a> is a flexible metadata database that utilizes XML as a common syntax
+for representing various types of metadata. In general, Metacat can be
+considered functionally equivalent to an XML database.</p>
+<p>Metacat supports replication of documents between instances, with replication
+being triggered by several events:</p>
+<ul class="simple">
+<li><p>Timer, at pre-specified intervals</p></li>
+<li><p>Inserts, when a document is inserted locally</p></li>
+<li><p>Updates, when a document is updated locally</p></li>
+<li><p>Lock, when a lock is requested on a document (replication after lock received)</p></li>
+</ul>
+<p>With Metacat filling the role of the Coordinating Node Object Store, each CN
+Metacat instance would replicate with the other instances on the CNs. The
+configuration for DataONE CNs would be something like:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 24%" />
+<col style="width: 22%" />
+<col style="width: 32%" />
+<col style="width: 10%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>host</p></th>
+<th class="head"><p>server</p></th>
+<th class="head"><p>replicate</p></th>
+<th class="head"><p>datareplicate</p></th>
+<th class="head"><p>hub</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>cn1</p></td>
+<td><p>localhost</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>.</p></td>
+<td><p>cn2</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>.</p></td>
+<td><p>cn3</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>cn2</p></td>
+<td><p>localhost</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>.</p></td>
+<td><p>cn1</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>.</p></td>
+<td><p>cn3</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>cn3</p></td>
+<td><p>localhost</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>.</p></td>
+<td><p>cn1</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>.</p></td>
+<td><p>cn2</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="using-a-distributed-lock-manager">
+<h2>Using a Distributed Lock Manager<a class="headerlink" href="#using-a-distributed-lock-manager" title="Permalink to this headline">¶</a></h2>
+<p>Apache <a class="reference external" href="http://hadoop.apache.org/zookeeper">Zookeeper</a> can be used as a distributed lock manager to assist with
+synchronization of records, especially across the CNs. Zookeeper is
+interesting because it can potentially scale to many more than three CNs.</p>
+<p>In this case we would create a globally synchronous lock on a specific PID
+(essentially the same as the Lock operation of Metacat). The basic procedure
+is described in the <a class="reference external" href="http://hadoop.apache.org/zookeeper/docs/r3.1.1/recipes.html#sc_recipes_Locks">Zookeeper recipes</a>.</p>
+</div>
+<div class="section" id="distributed-execution-environment">
+<h2>Distributed Execution Environment<a class="headerlink" href="#distributed-execution-environment" title="Permalink to this headline">¶</a></h2>
+<p>For example, <a class="reference external" href="http://www.hazelcast.com/">hazelcast</a>. These types of solutions are typically developed with
+LAN clusters in mind, and may run into problems with higher latency networks.
+Interesting product though.</p>
+</div>
+<div class="section" id="file-based-object-store-with-distributed-revision-control">
+<h2>File Based Object Store with Distributed Revision Control<a class="headerlink" href="#file-based-object-store-with-distributed-revision-control" title="Permalink to this headline">¶</a></h2>
+<p>These notes describe a strategy of utilizing the Linux file system and a
+<a class="reference external" href="http://en.wikipedia.org/wiki/Distributed_revision_control">distributed version control</a> system (DVC) such as <a class="reference external" href="http://git-scm.com/">Git</a> or <a class="reference external" href="http://mercurial.selenic.com/">Mercurial</a> as the
+science and system metadata store for the Coordinating Nodes.</p>
+<p>The basic approach is to treat all primary instances of science and system
+metadata as files that are stored on the Linux file system. The files are
+located in one or more folders that are under revision control using the DVC.
+As a new metadata file is added to a CN, it is replicated to the other CNs on
+a scheduled basis (e.g. every 10 minutes or when n files have been changed or
+added). Change notification hooks (e.g. commit scripts) are used to update
+local databases that are used to search science metadata (e.g. the Mercury
+index) or the local system metadata database.</p>
+<div class="section" id="scenario-1-adding-a-new-document">
+<h3>Scenario 1: Adding a new document<a class="headerlink" href="#scenario-1-adding-a-new-document" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li><p>A new document (d) is retrieved from a MN (or is pushed to the CN by the
+MN).</p></li>
+<li><p>The document is added to the file system and added to version control.</p></li>
+<li><p>In response to some trigger (time or number of commits), the DVC initiates
+a sync with other repositories.</p></li>
+</ol>
+</div>
+<div class="section" id="advantages">
+<h3>Advantages<a class="headerlink" href="#advantages" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Very simple replication mechanism</p></li>
+<li><p>Scalable, especially through partitioning of the file system</p></li>
+<li><p>No global write lock necessary</p></li>
+<li><p>Agnostic with respect to the file types</p></li>
+<li><p>Many existing tools</p></li>
+<li><p>Changes replicated through diffs</p></li>
+<li><p>Enable segmentation of all content through a simple taxonomy</p></li>
+<li><p>General approach is RCS agnostic - could use Git, Bazaar or any other
+distributed RCS system</p></li>
+<li><p>Change detection is trivial</p></li>
+</ul>
+</div>
+<div class="section" id="disadvantages">
+<h3>Disadvantages<a class="headerlink" href="#disadvantages" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>File replication only, need to implement mechanisms for search etc</p></li>
+<li><p>No per-object access control</p></li>
+<li><p>Potential for collisions for object instances</p></li>
+<li><p>How to (automatically) resolve conflicts?</p></li>
+<li><p>Limitations on the absolute number of files per folder/filesystem</p></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Replication Notes</a><ul>
+<li><a class="reference internal" href="#general">General</a></li>
+<li><a class="reference internal" href="#coordinating-nodes">Coordinating Nodes</a></li>
+<li><a class="reference internal" href="#member-nodes">Member Nodes</a></li>
+<li><a class="reference internal" href="#resources">Resources</a></li>
+<li><a class="reference internal" href="#coordinating-node-object-store">Coordinating Node Object Store</a></li>
+<li><a class="reference internal" href="#metacat-as-replicating-object-manager">Metacat As Replicating Object Manager</a></li>
+<li><a class="reference internal" href="#using-a-distributed-lock-manager">Using a Distributed Lock Manager</a></li>
+<li><a class="reference internal" href="#distributed-execution-environment">Distributed Execution Environment</a></li>
+<li><a class="reference internal" href="#file-based-object-store-with-distributed-revision-control">File Based Object Store with Distributed Revision Control</a><ul>
+<li><a class="reference internal" href="#scenario-1-adding-a-new-document">Scenario 1: Adding a new document</a></li>
+<li><a class="reference internal" href="#advantages">Advantages</a></li>
+<li><a class="reference internal" href="#disadvantages">Disadvantages</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+  <li><a href="index.html">General Design and Implementation Notes</a><ul>
+      <li>Previous: <a href="DataAndMetadata.html" title="previous chapter">Cross Domain Indexing and Access for Data and Metadata</a></li>
+      <li>Next: <a href="MN_api_notes_comments.html" title="next chapter">Notes for MN API</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/notes/Replication.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/notes/Replication.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/notes/Replication.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

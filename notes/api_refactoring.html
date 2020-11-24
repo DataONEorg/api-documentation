@@ -1,0 +1,242 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proposal for API Refactoring &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="License and Copyright Policy" href="../license_and_copyright_policy.html" />
+    <link rel="prev" title="Time and Bandwidth Constraints" href="time_bandwidth_constraints.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../license_and_copyright_policy.html" title="License and Copyright Policy"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="time_bandwidth_constraints.html" title="Time and Bandwidth Constraints"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">General Design and Implementation Notes</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Proposal for API Refactoring</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="proposal-for-api-refactoring">
+<h1>Proposal for API Refactoring<a class="headerlink" href="#proposal-for-api-refactoring" title="Permalink to this headline">¶</a></h1>
+<p>The DataONE service APIs currently contain methods that are grouped by the
+general category of functionality provided. For example, the CRUD API contains
+methods that support create, read, update, and delete operations against the
+Member Nodes. Such a grouping is convenient for development activities,
+however does not relate well to the overall functionality that must be
+expressed by a Member Node to participate at different “tiers” within the
+DataONE federation. A particular MN might operate in a read-only manner and so
+must express only a small selection of methods pulled from several different
+APIs as they are currently defined.</p>
+<p>Further complicating the division of methods between APIs is the need to
+support versioning of services. Current versioning operates across the entire
+set of APIs and thus requires that a service implements all methods of a
+single version. A more granular approach would versioning at the API level, so
+that in many cases (where there are no inter-dependencies) it will be possible
+to update a set of methods without affecting other methods, and so service
+update on a particular node can be more progressive, and so less disruptive to
+ongoing operations.</p>
+<p>Grouping the methods into API definitions more aligned with the functionality
+that should be exposed by different classes or tiers of nodes should also
+simplify the overall process of node service updates since the entire group of
+methods can be updated rather than working with methods pulled from different
+method groups of different versions to define the service that must be
+implemented by a particular Member Node.</p>
+<p>This document outlines a strategy for refactoring the APIs to better align
+with the tiers of Member Nodes that are likely to participate in the DataONE
+federation.</p>
+<div class="section" id="member-node-tiers">
+<h2>Member Node Tiers<a class="headerlink" href="#member-node-tiers" title="Permalink to this headline">¶</a></h2>
+<p>Five tiers of Member Node functionality have currently been identified:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Tier 1</dt>
+<dd class="field-odd"><p>Public read, no Authn/Authz</p>
+</dd>
+<dt class="field-even">Tier 2</dt>
+<dd class="field-even"><p>Read/Resolve with Authn/Authz</p>
+</dd>
+<dt class="field-odd">Tier 3</dt>
+<dd class="field-odd"><p>Write (create, update, delete), possibly limited support for data types</p>
+</dd>
+<dt class="field-even">Tier 4</dt>
+<dd class="field-even"><p>Limited Replication target (specified data types)</p>
+</dd>
+<dt class="field-odd">Tier 5</dt>
+<dd class="field-odd"><p>Replication target, any data types</p>
+</dd>
+</dl>
+<p>The methods that must be supported by each of these are indicated in Table 1.</p>
+<table class="colwidths-given docutils align-default" id="id1">
+<caption><span class="caption-text"><strong>Table 1.</strong> DataONE service methods supported at different
+             tiers of Member Node functionality. (*)Authentication and
+             Authorization APIs are under active development and may change
+             from the specifications listed here.</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 8%" />
+<col style="width: 8%" />
+<col style="width: 77%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Tier</p></th>
+<th class="head"><p>Existing APIs</p></th>
+<th class="head"><p>Proposed API</p></th>
+<th class="head"><p>Methods</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Core</p></td>
+<td><p>MN_health, MN_crud</p></td>
+<td><p>MN_core</p></td>
+<td><p>ping, getCapabilities, getStatus, [getObjectStatistics],
+[getOperationStatistics], [getLogRecords]</p></td>
+</tr>
+<tr class="row-odd"><td><p>Tier 1</p></td>
+<td><p>MN_crud, MN_replication, MN_health</p></td>
+<td><p>MN_read</p></td>
+<td><p>get, getSystemMetadata, listObjects, describe, getChecksum,
+synchronizationFailed</p></td>
+</tr>
+<tr class="row-even"><td><p>Tier 2</p></td>
+<td><p>MN_authorization, MN_authentication</p></td>
+<td><p>MN_auth</p></td>
+<td><p>MNCore + login(*), logout(*), isAuthorized(*), setAccess(*)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Tier 3</p></td>
+<td><p>MN_crud</p></td>
+<td><p>MN_storage</p></td>
+<td><p>MNAuth + create, update, delete,</p></td>
+</tr>
+<tr class="row-even"><td><p>Tier 4</p></td>
+<td><p>MN_replication</p></td>
+<td><p>MN_replication</p></td>
+<td><p>MNStorage + replicate</p></td>
+</tr>
+<tr class="row-odd"><td><p>Tier 5</p></td>
+<td></td>
+<td></td>
+<td><p>MNReplicationCore (no additional methods)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Proposal for API Refactoring</a><ul>
+<li><a class="reference internal" href="#member-node-tiers">Member Node Tiers</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+  <li><a href="index.html">General Design and Implementation Notes</a><ul>
+      <li>Previous: <a href="time_bandwidth_constraints.html" title="previous chapter">Time and Bandwidth Constraints</a></li>
+      <li>Next: <a href="../license_and_copyright_policy.html" title="next chapter">License and Copyright Policy</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/notes/api_refactoring.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/notes/api_refactoring.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/notes/api_refactoring.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

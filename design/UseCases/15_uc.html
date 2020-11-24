@@ -1,0 +1,181 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Use Case 15 - Account Management &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/mathjax_pre.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Use Case 31 - Manage Access Policies" href="31_uc.html" />
+    <link rel="prev" title="Use Case 14 - System Authentication and Authorization" href="14_uc.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="31_uc.html" title="Use Case 31 - Manage Access Policies"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="14_uc.html" title="Use Case 14 - System Authentication and Authorization"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html"></a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../usecases.html" accesskey="U">Use Cases</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Use Case 15 - Account Management</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="use-case-15-account-management">
+<span id="uc15"></span><h1>Use Case 15 - Account Management<a class="headerlink" href="#use-case-15-account-management" title="Permalink to this headline">¶</a></h1>
+<dl id="index-0">
+<dt>Revisions</dt><dd><p>View document revision <a class="reference external" href="https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/15_uc.txt">history</a>.</p>
+</dd>
+<dt>Goal</dt><dd><p>Edit a user account.  This includes creating, deleting, editing</p>
+<p>User Account Management - Create new user account on Identity Provider (also
+edit, delete, …).</p>
+</dd>
+<dt>Summary</dt><dd><p>Perform basic account management operations. This process can be quite
+complex depending on the identity provider in use and the security policies
+that need to be addressed.</p>
+<p>The use case and interaction presented here assumes a simplistic operation
+that relies only upon email verification for the new account creation. A
+more sophisticated interaction might include administrative approval of the
+new account, selection of an identity provider to use, and assignment of
+roles based on the level of approval and the nature of the selected identity
+provider (i.e. trustworthiness of identity provider).</p>
+</dd>
+<dt>Actors</dt><dd><ul class="simple">
+<li><p>New User</p></li>
+<li><p>Administrator</p></li>
+<li><p>Identity provider</p></li>
+<li><p>Coordinating Node</p></li>
+</ul>
+</dd>
+<dt>Preconditions</dt><dd><ul class="simple">
+<li><p>System is operational and policy is in place to accept new users.</p></li>
+</ul>
+</dd>
+<dt>Triggers</dt><dd><ul class="simple">
+<li><p>A new user account is requested.</p></li>
+</ul>
+</dd>
+<dt>Post Conditions</dt><dd><ul class="simple">
+<li><p>New account is created (if accepted)</p></li>
+<li><p>Access control rules for new account are specified</p></li>
+<li><p>Account information is replicated across CNs</p></li>
+</ul>
+</dd>
+</dl>
+<img alt="../../_images/098b293e2bea4a710c80d3e3eb3658ef2dcb6ac0fa55da05d2e1c1f0f0e7f70c.svg" class="align-center" src="../../_images/098b293e2bea4a710c80d3e3eb3658ef2dcb6ac0fa55da05d2e1c1f0f0e7f70c.svg" /><p><em>Figure 1.</em> Interactions for use case 15.</p>
+<p><strong>Notes</strong></p>
+<ul class="simple">
+<li><p>By default, accounts have no real privileges. To get higher privileges,
+users may have to jump through more hoops (such as verifying their
+association with a project/institution)</p></li>
+<li><p>Presumably, if we are using external identity providers this user account
+management functionality isn’t provided by the CN. Right? (PEA)</p></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../../_static/dataone_logo.png" alt="Logo"/>
+    </a></p><h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation Overview</a><ul>
+  <li><a href="../usecases.html">Use Cases</a><ul>
+      <li>Previous: <a href="14_uc.html" title="previous chapter">Use Case 14 - System Authentication and Authorization</a></li>
+      <li>Next: <a href="31_uc.html" title="next chapter">Use Case 31 - Manage Access Policies</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/design/UseCases/15_uc.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../../_sources/design/UseCases/15_uc.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/15_uc.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

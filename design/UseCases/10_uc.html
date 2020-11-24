@@ -1,0 +1,171 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Use Case 10 - MN Status Reports &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/mathjax_pre.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Use Case 23 - Owner Expunge Content" href="23_uc.html" />
+    <link rel="prev" title="Use Case 03 - Register MN" href="03_uc.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="23_uc.html" title="Use Case 23 - Owner Expunge Content"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="03_uc.html" title="Use Case 03 - Register MN"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html"></a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../usecases.html" accesskey="U">Use Cases</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Use Case 10 - MN Status Reports</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="use-case-10-mn-status-reports">
+<span id="uc10"></span><h1>Use Case 10 - MN Status Reports<a class="headerlink" href="#use-case-10-mn-status-reports" title="Permalink to this headline">¶</a></h1>
+<dl id="index-0">
+<dt>Revisions</dt><dd><p>View document revision <a class="reference external" href="https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/10_uc.txt">history</a>.</p>
+</dd>
+<dt>Goal</dt><dd><p>Coordinating Node checks “liveness” of all Member Nodes - checks ping,
+service x, load, space, bandwidth, transaction rate, …</p>
+</dd>
+<dt>Summary</dt><dd><p>As part of the infrastructure monitoring process, a CN checks on the
+“liveness” of all Member Nodes. This operation will be performed with moderate
+frequency (perhaps in the order of once every few minutes). The “lite” version
+of this use case, implemented for V0.3, is a simple ping to each Member Node.
+Later, more in-depth status information will be retrieved from Member Nodes
+using the <code class="docutils literal notranslate"><span class="pre">MN_health.getStatus()</span></code> method.</p>
+<p>The responses from the MNs should report sufficient metrics to gauge their
+performance in absolute terms and also relative to other MNs. See
+<code class="docutils literal notranslate"><span class="pre">MN_health.getStatus()</span></code> for those metrics.</p>
+</dd>
+<dt>Actors</dt><dd><p>CN, MN</p>
+</dd>
+<dt>Preconditions</dt><dd><ul class="simple">
+<li><p>CNs are operational</p></li>
+<li><p>MN is registered</p></li>
+</ul>
+</dd>
+<dt>Triggers</dt><dd><ul class="simple">
+<li><p>Timed interval</p></li>
+<li><p>Registration change (not for V0.3)</p></li>
+</ul>
+</dd>
+<dt>Post Conditions</dt><dd><ul class="simple">
+<li><p>Status metadata is updated at CNs</p></li>
+</ul>
+</dd>
+</dl>
+<img alt="../../_images/aa0357c40b0e044aa6d39823bdb915a572b0f66422c5d145ac35839d2463ba4e.svg" class="align-center" src="../../_images/aa0357c40b0e044aa6d39823bdb915a572b0f66422c5d145ac35839d2463ba4e.svg" /><p><em>Figure 1.</em> Interactions for use case 10. These interactions describe a
+synchronous process for generating a report. Most likely, a better mechanism
+would be for a background process to be accumulating the necessary statistics
+from Member Nodes, then the generateReport function would operate on the
+accumulated data rather than forcing a fresh copy.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../../_static/dataone_logo.png" alt="Logo"/>
+    </a></p><h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation Overview</a><ul>
+  <li><a href="../usecases.html">Use Cases</a><ul>
+      <li>Previous: <a href="03_uc.html" title="previous chapter">Use Case 03 - Register MN</a></li>
+      <li>Next: <a href="23_uc.html" title="next chapter">Use Case 23 - Owner Expunge Content</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/design/UseCases/10_uc.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../../_sources/design/UseCases/10_uc.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/10_uc.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

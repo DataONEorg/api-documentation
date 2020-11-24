@@ -1,0 +1,255 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cross Domain Indexing and Access for Data and Metadata &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Replication Notes" href="Replication.html" />
+    <link rel="prev" title="Logging and Privacy concerns" href="LoggingAndPrivacy.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Replication.html" title="Replication Notes"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="LoggingAndPrivacy.html" title="Logging and Privacy concerns"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">General Design and Implementation Notes</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Cross Domain Indexing and Access for Data and Metadata</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="cross-domain-indexing-and-access-for-data-and-metadata">
+<h1>Cross Domain Indexing and Access for Data and Metadata<a class="headerlink" href="#cross-domain-indexing-and-access-for-data-and-metadata" title="Permalink to this headline">¶</a></h1>
+<dl class="field-list simple">
+<dt class="field-odd">Status</dt>
+<dd class="field-odd"><p>Early Draft / notes</p>
+</dd>
+</dl>
+<div class="section" id="problem">
+<h2>Problem<a class="headerlink" href="#problem" title="Permalink to this headline">¶</a></h2>
+<p>DataONE requires storage, search, and retrieval of information (data and
+metadata) from a wide variety of data services (e.g. Mercury, Metacat, and
+OpenDAP). All of these systems have different data service interfaces, support
+different metadata standards, and implement different query mechanism and
+syntaxes. Data must be replicated between service instances (Member Nodes, MN)
+and metadata must be replicated between all nodes (Coordinating Nodes, CN and
+Member Nodes) to ensure multiple copies exist to avoid data loss in the event of
+node failure and to improve access through geographic proximity.</p>
+<p>A few general approaches to the problem include:</p>
+<ul class="simple">
+<li><p>translate the metadata to and from the format/model used internally by a MN</p></li>
+<li><p>treat the metadata document as an opaque object and just store it on the
+MNs, the CNs provide indexing service that locate copies of the metadata
+document</p></li>
+<li><p>MNs must implement a very general purpose metadata format, but may
+optionally make metadata available in more specific formats</p></li>
+</ul>
+</div>
+<div class="section" id="translation-approach">
+<h2>Translation Approach<a class="headerlink" href="#translation-approach" title="Permalink to this headline">¶</a></h2>
+<p>Translations between all metadata formats and the data service interfaces are
+implemented. In this scenario, metadata is translated to the native metadata
+format (or where multiple formats are supported, to the most appropriate form)
+supported by a MN and stored using the native API of the service. A common API
+provides the integration between all MNs, providing the basic operations
+necessary for managing and retrieving the content. Perhaps the most difficult
+component of this approach is the translation of metadata to the format
+supported internally by the service.</p>
+<p>Problems:</p>
+<ul class="simple">
+<li><p>n x n bi-directional translations for metadata to be written, tested, and
+maintained.</p></li>
+<li><p>Metadata translation almost invariably leads to loss of information</p></li>
+<li><p>…</p></li>
+</ul>
+<p>Advantages:</p>
+<ul class="simple">
+<li><p>No or minimal changes to existing services (translation functions required).</p></li>
+<li><p>…</p></li>
+</ul>
+</div>
+<div class="section" id="indexing-approach">
+<h2>Indexing Approach<a class="headerlink" href="#indexing-approach" title="Permalink to this headline">¶</a></h2>
+<p>Implement a common service API on all nodes that treats data and metadata as
+discrete units that can be read from and written to any node. The set of all
+nodes then becomes a large storage device. The CNs implement the processes
+which distribute content between all nodes (like a file system driver) to
+provide basic system level functionality. The actual metadata documents are
+opaque to the underlying storage system.</p>
+<p>Metadata is not searched directly but is indexed by extracting content that
+matches semantically equivalent search terms. A trivial example is the use of
+the Dublin Core terms to search across all types of metadata. In this case, a
+“dublin core metadata extractor” extracts term values from a metadata document
+and updates an index that supports DC fields with the values and the
+document PID. Searches on the index return the document PID, which is then
+retrieved using the MN API.</p>
+<p>Problems:</p>
+<ul class="simple">
+<li><p>Can not treat data available through service interfaces as a discrete unit
+(e.g. a MySQL service interface)</p></li>
+<li><p>Need parsers for all metadata formats to extract specific content</p></li>
+<li><p>New infrastructure (difficult to combine with existing services)</p></li>
+<li><p>Search capabilities on highly structured metadata may be limited</p></li>
+<li><p>…</p></li>
+</ul>
+<p>Advantages:</p>
+<ul class="simple">
+<li><p>No loss of information since there is no metadata translation, just
+extraction</p></li>
+<li><p>Format agnostic (system can store any type of discrete entity - basically
+anything that can be represented as a file)</p></li>
+<li><p>Search index can be highly tuned, multiple types of index can be implemented
+(e.g. topical domains)</p></li>
+<li><p>…</p></li>
+</ul>
+</div>
+<div class="section" id="content-model-approach">
+<h2>Content Model Approach<a class="headerlink" href="#content-model-approach" title="Permalink to this headline">¶</a></h2>
+<p>Similar to the indexing approach, but in addition to the lowest common
+denominator format, objects may make more detailed metadata/data available by
+advertising that they exhibit specific content models. These content models
+may be dictated by central DataONE community, or may be agreed upon by a small
+group of Member Nodes.</p>
+<p>Problems:</p>
+<ul class="simple">
+<li><p>A central registry of data/metadata formats must be maintained</p></li>
+<li><p>Burden is on Member Nodes to make sure they adhere to published content
+models</p></li>
+</ul>
+<p>Advantages:</p>
+<ul class="simple">
+<li><p>No loss of information since there is no metadata translation, just
+extraction</p></li>
+<li><p>Format agnostic (system can store any type of discrete entity - basically
+anything that can be represented as a file)</p></li>
+<li><p>Search index can be highly tuned, multiple types of index can be implemented
+(e.g. topical domains)</p></li>
+<li><p>Will work even for Member Nodes that only understand
+lowest-common-denominator formats, while nodes that understand more complex
+data/metadata will benefit from more specific searching and data management</p></li>
+<li><p>Multiple communities can be accommodated, even if they have overlapping
+and/or inconsistent standards</p></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Cross Domain Indexing and Access for Data and Metadata</a><ul>
+<li><a class="reference internal" href="#problem">Problem</a></li>
+<li><a class="reference internal" href="#translation-approach">Translation Approach</a></li>
+<li><a class="reference internal" href="#indexing-approach">Indexing Approach</a></li>
+<li><a class="reference internal" href="#content-model-approach">Content Model Approach</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+  <li><a href="index.html">General Design and Implementation Notes</a><ul>
+      <li>Previous: <a href="LoggingAndPrivacy.html" title="previous chapter">Logging and Privacy concerns</a></li>
+      <li>Next: <a href="Replication.html" title="next chapter">Replication Notes</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/notes/DataAndMetadata.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/notes/DataAndMetadata.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/notes/DataAndMetadata.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

@@ -1,0 +1,751 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Implementation Priority &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Integration Testing" href="integration-testing.html" />
+    <link rel="prev" title="Components of the DataONE Infrastructure" href="components.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="integration-testing.html" title="Integration Testing"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="components.html" title="Components of the DataONE Infrastructure"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Implementation Notes</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Implementation Priority</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="implementation-priority">
+<h1>Implementation Priority<a class="headerlink" href="#implementation-priority" title="Permalink to this headline">¶</a></h1>
+<dl class="field-list simple">
+<dt class="field-odd">Submitted by</dt>
+<dd class="field-odd"><p>DataONE Core Cyberinfrastructure Team / Virtual Data Center Technical
+Working Group</p>
+</dd>
+<dt class="field-even">Revisions</dt>
+<dd class="field-even"><ul class="simple">
+<li><p>October 7, 2009; revised October 10, 2009; revised October 13, 2009</p></li>
+<li><p>20091110: Text from Word format transferred to plain text (this document)</p></li>
+<li><p>20091123: Goals and milestones mapped to versions rather than years.
+Previous year 1 = 0.x, years 2-3 = 1.x, years 4-5 = 2.x</p></li>
+<li><p>201004; timeline revised.</p></li>
+<li><p>20101231; Timeline revised</p></li>
+</ul>
+</dd>
+</dl>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>The DataONE Core Cyberinfrastructure Team / Virtual Data Center Technical
+Working Group (CCIT/VDC TWG, hereafter CCIT) was charged with developing a
+prioritization of the approximately three dozen use cases developed to date.
+The prioritization was to be shared with the DataONE Leadership Team in order
+to come to agreement for the development priorities for years 1 through 5.
+This agreement was considered an important deliverable for the DataONE kickoff
+meeting in October 2009.</p>
+<p>The CCIT reviewed existing documents, including the CI Preliminary Task List,
+the Service Interface Prioritization diagram, the DataONE – VDC June 2009
+Technical Working Group Meeting Report, and the DataNetONE Implementation Plan
+(primarily Objective 4) – see References, below. The use cases are defined in
+the DataONE Architecture document available at
+<a class="reference external" href="https://purl.dataone.org/ArchitectureDocs">https://purl.dataone.org/ArchitectureDocs</a>. Goals and milestones expressed in
+the CI Preliminary Task List were foundational for developing the proposed
+prioritization (see Table 1).</p>
+<p>In some instances, use case implementations in the early years may be partial
+or limited implementations with work continuing in later years until
+completion. Examples of use cases that are likely to be improved over time
+include authentication, logging, search and retrieval, event notifications,
+etc. Work on other goals and milestones will begin as early as year 1, led by
+the appropriate working group, with the initial implementation in a subsequent
+year (e.g., scientific use cases; workflow support; ontology support). Certain
+goals and milestones (e.g., replication of data and metadata) will be met by
+evaluating alternatives and selecting a set of existing software applications.
+Additional details about Member Nodes will be provided in a separate document,
+forthcoming. This prioritization is mapped optimistically to the 5-year
+schedule: goals, milestones, and specific use cases that are the best
+candidates for potential deferral are indicated in the table and discussion
+below.</p>
+<p>The CCIT reviewed the prioritization, distributed it to the Leadership Team,
+and discussed the prioritization during a videoconference held October 13,
+2009. Improvements identified during the videoconference were incorporated
+into the document, which was then distributed at the DataONE kickoff meeting
+held October 20-22, 2009.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 72%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Goal / Milestone</p></th>
+<th class="head"><p>V 0.x</p></th>
+<th class="head"><p>V 1.x</p></th>
+<th class="head"><p>V 2.x</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Launch 3 Coord. / 3 Member Node network</p></td>
+<td><p>X</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Initial persistent identifier support</p></td>
+<td><p>X</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Formalize service APIs</p></td>
+<td><p>X</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Reference service / client implementations</p></td>
+<td><p>X</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Authentication: short- then long-term</p></td>
+<td><p>X</p></td>
+<td><p>X</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Search, retrieval, metadata interoperability</p></td>
+<td><p>X</p></td>
+<td><p>X</p></td>
+<td><p>X</p></td>
+</tr>
+<tr class="row-even"><td><p>DataONE User Interface</p></td>
+<td><p>X</p></td>
+<td><p>X</p></td>
+<td><p>X</p></td>
+</tr>
+<tr class="row-odd"><td><p>DataONE Investigator Toolkit</p></td>
+<td><p>X</p></td>
+<td><p>X</p></td>
+<td><p>X</p></td>
+</tr>
+<tr class="row-even"><td><p>Replication of data and metadata</p></td>
+<td><p>X</p></td>
+<td><p>X</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Heartbeat / health monitor (basic to robust)*</p></td>
+<td><p>X</p></td>
+<td><p>X</p></td>
+<td><p>X</p></td>
+</tr>
+<tr class="row-even"><td><p>Logging (basic to robust)*</p></td>
+<td><p>X</p></td>
+<td><p>X</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Member Node registry</p></td>
+<td><p>X</p></td>
+<td><p>X</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Additional Member Nodes</p></td>
+<td></td>
+<td><p>X</p></td>
+<td><p>X</p></td>
+</tr>
+<tr class="row-odd"><td><p>Data / metadata deposit, update, delete</p></td>
+<td></td>
+<td><p>X</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Identity provider (external or internal)</p></td>
+<td></td>
+<td><p>X</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Authorization</p></td>
+<td></td>
+<td><p>X</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Notification of DataONE events*</p></td>
+<td></td>
+<td><p>X</p></td>
+<td><p>X</p></td>
+</tr>
+<tr class="row-odd"><td><p>Data usage policy support</p></td>
+<td></td>
+<td><p>X</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Web-based batch data uploads</p></td>
+<td></td>
+<td><p>X</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Launch robust public prototype</p></td>
+<td></td>
+<td><p>X</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Support scientific use cases</p></td>
+<td></td>
+<td><p>X</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Client discovery services</p></td>
+<td></td>
+<td><p>X</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Batch ingest for data / metadata</p></td>
+<td></td>
+<td><p>X</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Stress and load testing</p></td>
+<td></td>
+<td><p>X</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Coordinating Node failover / load balancing*</p></td>
+<td></td>
+<td><p>X</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Data and metadata validation</p></td>
+<td></td>
+<td></td>
+<td><p>X</p></td>
+</tr>
+<tr class="row-even"><td><p>Data and metadata migration</p></td>
+<td></td>
+<td></td>
+<td><p>X</p></td>
+</tr>
+<tr class="row-odd"><td><p>Workflow support</p></td>
+<td></td>
+<td></td>
+<td><p>X</p></td>
+</tr>
+<tr class="row-even"><td><p>Ontology support</p></td>
+<td></td>
+<td></td>
+<td><p>X</p></td>
+</tr>
+<tr class="row-odd"><td><p>Provenance support</p></td>
+<td></td>
+<td></td>
+<td><p>X</p></td>
+</tr>
+<tr class="row-even"><td><p>Support advanced scientific use cases</p></td>
+<td></td>
+<td></td>
+<td><p>X</p></td>
+</tr>
+<tr class="row-odd"><td><p>Capacity monitoring</p></td>
+<td></td>
+<td></td>
+<td><p>X</p></td>
+</tr>
+<tr class="row-even"><td><p>Hardened infrastructure</p></td>
+<td></td>
+<td></td>
+<td><p>X</p></td>
+</tr>
+</tbody>
+</table>
+<p>Table 1: Goal / milestone summary by implementation version. Goals /
+milestones with asterisks could be deferred to the following year. X indicates
+the phase of development planned for implementation of that feature, and when
+appearing in multiple columns indicates that iterative development of that
+feature is expected.</p>
+<div class="section" id="notes">
+<h3>Notes<a class="headerlink" href="#notes" title="Permalink to this headline">¶</a></h3>
+<p>Prioritizing system implementation to address the use cases involves several
+factors including:</p>
+<ul class="simple">
+<li><p><em>Vision of the project</em>. The system is being designed with some overall goals
+described by the vision of the project proposal.</p></li>
+<li><p><em>Requirements of the community</em>. The stakeholders that comprise the user and
+participant community quite likely has some opinion on functionalities of
+the system that are important to them. If these are not properly addressed,
+then the resulting system may appear as a failure to them.</p></li>
+<li><p><em>Requirements of the sponsor</em>. The sponsor has laid out goals in the RFP
+that the project is responding to and also in the final agreement for
+conducting the work.</p></li>
+<li><p><em>Dependencies between use cases</em>. Implementation of functionality to address
+some use cases will require implementation of some components not directly
+specific in a use case.</p></li>
+<li><p><em>Resources available for implementation</em>. Some use cases may be identified
+as high priority, but would require resources that would prevent
+implementation of a number of other lower priority features.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="version-0-x-implementation">
+<h2>Version 0.x Implementation<a class="headerlink" href="#version-0-x-implementation" title="Permalink to this headline">¶</a></h2>
+<p>The 0.x series of implementation is anticipated to be essentially prototyping
+and proof of concept activities where critical infrastructure components and
+information flows are evaluated for scalability and reliability. It is not
+anticipated that this series of releases will be generally available as public
+services (except with the caveats of temporary, unstable, and in development
+implementation).</p>
+<div class="section" id="goals-and-milestones">
+<h3>Goals and Milestones<a class="headerlink" href="#goals-and-milestones" title="Permalink to this headline">¶</a></h3>
+<p>The goals and milestones for the version 0.x series of DataONE
+cyberinfrastructure include:</p>
+<ul class="simple">
+<li><p>Launching a network consisting of three Coordinating Nodes and three Member
+Nodes</p></li>
+<li><p>Initial support for PIDs (persistent, unique identifiers)</p></li>
+<li><p>Formalize service APIs</p></li>
+<li><p>Provide reference service / client implementations</p></li>
+<li><p>Authentication using a short-term solution</p></li>
+<li><p>Search and retrieval of data from all Member Nodes to demonstrate basic
+metadata interoperability (initial release)</p></li>
+<li><p>DataONE user interface (initial release)</p></li>
+<li><p>DataONE Investigator Toolkit (initial release)</p></li>
+<li><p>Replication of data and metadata between Coordinating and Member Nodes,
+bootstrapped using existing repositories</p></li>
+<li><p>Heartbeat / health monitoring (initial release)</p></li>
+<li><p>Infrastructure (initial release)</p></li>
+<li><p>Member Node registry services (initial release)</p></li>
+</ul>
+</div>
+<div class="section" id="use-cases">
+<h3>Use Cases<a class="headerlink" href="#use-cases" title="Permalink to this headline">¶</a></h3>
+<p>Authentication Using Short-term Solution</p>
+<blockquote>
+<div><p><a class="reference internal" href="../design/UseCases/12_uc.html"><span class="doc">Use Case 12</span></a> - User Authentication: Person,
+via client software, authenticates against Identify Provider to establish
+session token. Many operations in the DataONE system require user
+authentication to ensure that the user’s identity is known to the system,
+and that appropriate access controls can be executed based on the identity.</p>
+<p><a class="reference internal" href="../design/UseCases/14_uc.html"><span class="doc">Use Case 14</span></a> - System Authentication and
+Authorization: System Authentication/Authorization - Server authenticates
+and performs system operations (e.g. replication). This use case represents
+node-to-node authentication.</p>
+</div></blockquote>
+<p>Search and Retrieval, Indexing, Read Data and Metadata, Metadata
+Interoperability</p>
+<blockquote>
+<div><p><a class="reference internal" href="../design/UseCases/01_uc.html"><span class="doc">Use Case 1</span></a> - CRUD get(): Get object
+identified by an identifier (authenticated or not, notify subscriber of
+access). A client has an identifier for some object within the DataONE
+system and is retrieving the referenced object. The DataONE system must
+resolve the identifier and return the object bytes after checking that the
+user has read privileges on the object.</p>
+<p><a class="reference internal" href="../design/UseCases/02_uc.html"><span class="doc">Use Case 02</span></a> - List identifiers By Search: Get
+list of identifiers from metadata search (anonymous and authenticated). A
+user performs a search against the DataONE system and receives a list of
+object identifiers that match the search criteria. The list of identifiers
+is filtered such that only objects for which the user has read permission
+will be returned. This use case assumes that the search is being performed
+by submitting a query against a CN.</p>
+</div></blockquote>
+<p>Replication of Data and Metadata</p>
+<blockquote>
+<div><p><a class="reference internal" href="../design/UseCases/06_uc.html"><span class="doc">Use Case 06</span></a> - MN Synchronize: Copy metadata
+record from Member Node to Coordinating Node. As data are created or
+modified, the metadata associated with those is copied to the to the
+Coordinating Nodes. The presence of new or changed information on a Member
+Node (MN) is made known to a Coordinating Node (CN) through the status
+information in a ping() response. If so indicated, the CN schedules a
+synchronization operation with the MN, a list of changed object identifiers
+is retrieved by the CN, and the CN proceeds to retrieve and process each
+object. If new data packages are present on the MN, then a MN-MN replication
+process is scheduled.</p>
+<p><a class="reference internal" href="../design/UseCases/09_uc.html"><span class="doc">Use Case 09</span></a> - Replicate MN to MN: Replicate
+data from Member Node to Member Node - (facilitated by Coordinating Node).</p>
+<p><a class="reference internal" href="../design/UseCases/24_uc.html"><span class="doc">Use Case 24</span></a> - MNs and CNs Support
+Transactions: Transactions - CNs and MNs should support transaction sets
+where operations all complete successfully or get rolled back (e.g., upload
+both data and metadata records). Implementation of this use case could be
+deferred to year 2.</p>
+</div></blockquote>
+<p>Basic Heartbeat / Health Monitoring</p>
+<blockquote>
+<div><p><a class="reference internal" href="../design/UseCases/10_uc.html"><span class="doc">Use Case 10</span></a> - MN Status Reports: Coordinating Node
+checks “liveness” of all Member Nodes. Implementation of this use case could
+be deferred to year 2.</p>
+</div></blockquote>
+<p>Basic Logging Infrastructure</p>
+<blockquote>
+<div><p><a class="reference internal" href="../design/UseCases/16_uc.html"><span class="doc">Use Case 16</span></a> - Log CRUD Operations: All CRUD
+operations on metadata and data are logged at each node. Implementation of
+this use case could be deferred to year 2.</p>
+<p><a class="reference internal" href="../design/UseCases/17_uc.html"><span class="doc">Use Case 17</span></a> - CRUD Logs Aggregated at CNs: All CRUD
+logs are aggregated at Coordinating Nodes. Implementation of this use case
+could be deferred to year 2.</p>
+</div></blockquote>
+<p>Basic Member Node Registry Services</p>
+<blockquote>
+<div><p><a class="reference internal" href="../design/UseCases/03_uc.html"><span class="doc">Use Case 03</span></a> - Register MN: Register a new Member
+Node. This use case describes the technical process for addition of a new
+Member Node (MN) to the DataONE infrastructure. It is assumed that the
+appropriate social contracts have been formed and the MN is operational,
+ready to be connected.</p>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="version-1-x-implementation">
+<h2>Version 1.x Implementation<a class="headerlink" href="#version-1-x-implementation" title="Permalink to this headline">¶</a></h2>
+<p>The version 1.x series of DataONE cybrinfrastructure will provide a full
+public release that will support the basic functionality for long-term archive
+of content, discovery of content (search and browse), and basic data
+manipulation and visualization.</p>
+<div class="section" id="id1">
+<h3>Goals and Milestones<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>The version 1.x goals and milestones for DataONE include:</p>
+<ul class="simple">
+<li><p>Deploy additional Member Nodes</p></li>
+<li><p>Data and metadata deposit, update, and delete</p></li>
+<li><p>Implement an external or internal identity provider</p></li>
+<li><p>Implement authorization</p></li>
+<li><p>Support notifications based upon DataONE events</p></li>
+<li><p>Support negotiated and approved data usage policies</p></li>
+<li><p>Web-based interface for batch data uploads</p></li>
+<li><p>Search and retrieval of data from all Member Nodes</p></li>
+<li><p>DataONE user interface</p></li>
+<li><p>DataONE Investigator Toolkit</p></li>
+<li><p>Heartbeat / health monitoring</p></li>
+<li><p>Logging infrastructure</p></li>
+<li><p>Member Node registry services</p></li>
+<li><p>Launching a robust public prototype</p></li>
+<li><p>Support selected scientific use cases</p></li>
+<li><p>Authentication using a long-term solution</p></li>
+<li><p>Implement client discovery services</p></li>
+<li><p>Batch ingest support</p></li>
+<li><p>Conducting stress and load testing</p></li>
+<li><p>Implementing Coordination Node failover and load balancing</p></li>
+<li><p>Support notifications based upon DataONE events</p></li>
+</ul>
+<p>It is anticipated that additional use cases and milestones will be identified
+during the previous phases of development and as outputs from the various
+activities of the DataONE working groups.</p>
+</div>
+<div class="section" id="id2">
+<h3>Use Cases<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>Data and Metadata Deposit, Update, and Delete</p>
+<blockquote>
+<div><p><a class="reference internal" href="../design/UseCases/04_uc.html"><span class="doc">Use Case 04</span></a> - CRUD (Create, Update Delete) Metadata:
+Create, update or delete metadata record on a Member Node. A user is
+creating a new metadata record on a Member Node (MN). The mechanism by which
+the user does this is out of scope for the DataONE system, so this use case
+continues from the point where a new Data Package is present on the MN. The
+metadata is retrieved by the CN using a pull mechanism (CN requests content
+from the MN).</p>
+<p><a class="reference internal" href="../design/UseCases/05_uc.html"><span class="doc">Use Case 05</span></a> - CRUD (Create, Update Delete) Data:
+Create/Update/Delete data object in Member Node. May split out the update
+and delete portions to different use cases at some point in the future.</p>
+<p><a class="reference internal" href="../design/UseCases/23_uc.html"><span class="doc">Use Case 23</span></a> - Owner Expunge Content: User can find
+out where all copies of my data are in the system and can expunge them.
+Implementation of this use case could be deferred to year 3.</p>
+</div></blockquote>
+<p>Client Discovery Services</p>
+<blockquote>
+<div><p><a class="reference internal" href="../design/UseCases/33_uc.html"><span class="doc">Use Case 33</span></a> - Search for Data: Clients should be able
+to search for data using CN metadata catalogs.</p>
+<p><a class="reference internal" href="../design/UseCases/34_uc.html"><span class="doc">Use Case 34</span></a> - CNs Support Other Discovery Mechanisms
+(e.g. Google): Coordinating Nodes publish metadata in formats for other
+discovery services like Google/Libraries/GCMD/etc.</p>
+</div></blockquote>
+<p>Identity Provider</p>
+<blockquote>
+<div><p><a class="reference internal" href="../design/UseCases/15_uc.html"><span class="doc">Use Case 15</span></a> - Account Management: User Account
+Management - Create new user account on Identity Provider (also edit,
+delete).</p>
+</div></blockquote>
+<p>Authentication Using a Long-Term Solution</p>
+<blockquote>
+<div><p><a class="reference internal" href="../design/UseCases/12_uc.html"><span class="doc">Use Case 12</span></a> - User Authentication: Person, via client
+software, authenticates against Identify Provider to establish session
+token. Many operations in the DataONE system require user authentication to
+ensure that the user’s identity is known to the system, and that appropriate
+access controls can be executed based on the identity.</p>
+<p><a class="reference internal" href="../design/UseCases/14_uc.html"><span class="doc">Use Case 14</span></a> - System Authentication and
+Authorization: System Authentication/Authorization - Server authenticates
+and performs system operations (e.g. replication). This use case represents
+node-to-node authentication.</p>
+</div></blockquote>
+<p>Support Authorization</p>
+<blockquote>
+<div><p><a class="reference internal" href="../design/UseCases/13_uc.html"><span class="doc">Use Case 13</span></a> - User Authorization: ser Authorization -
+Client requests service (get, put, query, delete, …) using session token.</p>
+</div></blockquote>
+<p>Support Data Usage Policies</p>
+<blockquote>
+<div><p><a class="reference internal" href="../design/UseCases/08_uc.html"><span class="doc">Use Case 08</span></a> - Replication Policy Communication:
+Communication of replication policy metadata between Member Nodes and
+Coordinating Nodes. The replication policy of Member Nodes (MN) indicates
+factors such as the amount of storage space available, bandwidth
+constraints, the types of data and metadata that can be managed, and perhaps
+access control restrictions. This information is used by Coordinating Nodes
+(CN) to balance the distribution of data packages throughout the DataONE
+system to achieve the goals of data package persistence and accessibility.</p>
+<p><a class="reference internal" href="../design/UseCases/31_uc.html"><span class="doc">Use Case 31</span></a> - Manage Access Policies: Manage Access
+Policies - Client can specify access restrictions for their data and
+metadata objects. Also supports release time embargoes.</p>
+</div></blockquote>
+<p>Enhance the Logging Infrastructure</p>
+<blockquote>
+<div><p><a class="reference internal" href="../design/UseCases/16_uc.html"><span class="doc">Use Case 16</span></a> - Log CRUD Operations: All CRUD
+operations on metadata and data are logged at each node.</p>
+<p><a class="reference internal" href="../design/UseCases/17_uc.html"><span class="doc">Use Case 17</span></a> - CRUD Logs Aggregated at CNs: All CRUD
+logs are aggregated at Coordinating Nodes.</p>
+<p><a class="reference internal" href="../design/UseCases/18_uc.html"><span class="doc">Use Case 18</span></a> - MN Retrieve Aggregated Logs: Member
+nodes can request aggregated CRUD log for {time period/object id/userid} for
+all of ‘their’ objects. Implementation of this use case could be deferred to
+year 3.</p>
+<p><a class="reference internal" href="../design/UseCases/19_uc.html"><span class="doc">Use Case 19</span></a> - Retrieve Object Download Summary:
+General public can request aggregated download usage information by object
+id. Implementation of this use case could be deferred to year 3.</p>
+<p><a class="reference internal" href="../design/UseCases/20_uc.html"><span class="doc">Use Case 20</span></a> - Owner Retrieve Aggregate Logs: Data
+owners can request aggregated CRUD log for {time period/object id} for all
+of ‘their’ objects. Implementation of this use case could be deferred to
+year 3.</p>
+<p><a class="reference internal" href="../design/UseCases/22_uc.html"><span class="doc">Use Case 22</span></a> - Link/Citation Report for Owner: User
+can get report of links/cites my data (also can view this as a referrer
+log).</p>
+</div></blockquote>
+<p>Support Notifications Based Upon DataONE Events</p>
+<blockquote>
+<div><p><a class="reference internal" href="../design/UseCases/21_uc.html"><span class="doc">Use Case 21</span></a> - Owner Subscribe to CRUD Operations:
+Data owners can subscribe to notification service for CRUD operations for
+objects they own.</p>
+<p><a class="reference internal" href="../design/UseCases/28_uc.html"><span class="doc">Use Case 28</span></a> - Derived Product Original Change
+Notification: Relationships/Versioning - Derived products should be linked
+to source objects so that notifications can be made to users of derived
+products when source products change.</p>
+</div></blockquote>
+<p>Batch Ingest</p>
+<blockquote>
+<div><p><a class="reference internal" href="../design/UseCases/07_uc.html"><span class="doc">Use Case 07</span></a> - CN Batch Upload: Batch Operations -
+Coordinating Node requests metadata /data list from new Member Node and then
+batch upload (disable indexing for example to improve insert performance).</p>
+</div></blockquote>
+<p>Coordination Node Failover and Load Balancing</p>
+<blockquote>
+<div><p><a class="reference internal" href="../design/UseCases/29_uc.html"><span class="doc">Use Case 29</span></a> - CN Load Balancing: Load Balancing -
+Requests to Coordinating Nodes are load balanced. Implementation of this use
+case could be deferred to years 4-5.</p>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="version-2-x-implementation">
+<h2>Version 2.x Implementation<a class="headerlink" href="#version-2-x-implementation" title="Permalink to this headline">¶</a></h2>
+<p>The version 2.x series builds upon the core functionality provided in the 1.x
+releases and generally addresses the more advanced science user requirements
+such as semantic integration of content and additional services for data
+extraction, conversion, analysis and visualization.</p>
+<div class="section" id="id3">
+<h3>Goals and Milestones<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>The version 2.x series goals and milestones for DataONE include:</p>
+<ul class="simple">
+<li><p>Deploy additional Member Nodes</p></li>
+<li><p>Data and metadata validation</p></li>
+<li><p>Data and metadata migration</p></li>
+<li><p>Workflow support</p></li>
+<li><p>Ontology support</p></li>
+<li><p>Provenance support</p></li>
+<li><p>Support for general and innovative scientific use cases (subsetting,
+translation, semantic interoperability, advanced visualization, etc.)</p></li>
+<li><p>Capacity monitoring</p></li>
+<li><p>Hardening of overall infrastructure into a robust system</p></li>
+<li><p>Search and retrieval of data from all Member Nodes</p></li>
+<li><p>DataONE user interface</p></li>
+<li><p>DataONE Investigator Toolkit</p></li>
+<li><p>Heartbeat / health monitoring</p></li>
+<li><p>Support notifications based upon DataONE events</p></li>
+</ul>
+<p>It is anticipated that additional use cases and milestones will be identified
+during the previous phases of development and as outputs from the various
+activities of the DataONE working groups.</p>
+</div>
+<div class="section" id="id4">
+<h3>Use Cases<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>Data and Metadata Validation</p>
+<blockquote>
+<div><p><a class="reference internal" href="../design/UseCases/25_uc.html"><span class="doc">Use Case 25</span></a> - Detect Damaged Content: System should
+scans for damaged/defaced data and metadata using some validation process.</p>
+<p><a class="reference internal" href="../design/UseCases/26_uc.html"><span class="doc">Use Case 26</span></a> - Data Quality Checks: System performs
+data quality checks on data.</p>
+</div></blockquote>
+<p>Data and Metadata Migration</p>
+<blockquote>
+<div><p><a class="reference internal" href="../design/UseCases/27_uc.html"><span class="doc">Use Case 27</span></a> - Metadata Version Migration: CN should
+support forward migration of metadata documents from one version to another
+within a standard and to other standards.</p>
+</div></blockquote>
+<p>Workflow Support</p>
+<blockquote>
+<div><p><a class="reference internal" href="../design/UseCases/11_uc.html"><span class="doc">Use Case 11</span></a> - CRUD Workflow Objects: Create / update
+/ delete / search workflow objects.</p>
+</div></blockquote>
+<p>Provenance Support</p>
+<blockquote>
+<div><p><a class="reference internal" href="../design/UseCases/28_uc.html"><span class="doc">Use Case 28</span></a> - Derived Product Original Change
+Notification: Relationships/Versioning - Derived products should be linked
+to source objects so that notifications can be made to users of derived
+products when source products change.</p>
+<p><a class="reference internal" href="../design/UseCases/32_uc.html"><span class="doc">Use Case 32</span></a> - Transfer Object Ownership: User or
+organization takes over ‘ownership’ of a set of objects (write access for
+orphaned records).</p>
+</div></blockquote>
+<p>Complete Heartbeat / Health Monitoring</p>
+<blockquote>
+<div><p><a class="reference internal" href="../design/UseCases/30_uc.html"><span class="doc">Use Case 30</span></a> - MN Outage Notification: MN can notify
+CN about pending outages, severity, and duration, and CNs may want to act on
+that knowledge to maintain seamless operation.</p>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<p>CI Preliminary Task List, available at
+<a class="reference external" href="https://repository.dataone.org/documents/Meetings/20090210-mat-santa-barbara-mtg/CI_preliminary_tasklist_021809.xls">https://repository.dataone.org/documents/Meetings/20090210-mat-santa-barbara-mtg/CI_preliminary_tasklist_021809.xls</a></p>
+<p>DataONE Architecture, available at:
+<a class="reference external" href="https://repository.dataone.org/documents/Projects/VDC/docs/service-api/api-documentation/build/html">https://repository.dataone.org/documents/Projects/VDC/docs/service-api/api-documentation/build/html</a></p>
+<p>DataONE – VDC June 2009 Technical Working Group Meeting Report,
+<a class="reference external" href="https://repository.dataone.org/documents/Projects/VDC/docs/20090602_04_ABQ_Meeting/20090604MeetingReport.pdf">https://repository.dataone.org/documents/Projects/VDC/docs/20090602_04_ABQ_Meeting/20090604MeetingReport.pdf</a></p>
+<p>Service Interface Prioritization (diagram), available at
+<a class="reference external" href="https://repository.dataone.org/documents/Projects/VDC/docs/service-api/api-diagrams/service-api-layers.png">https://repository.dataone.org/documents/Projects/VDC/docs/service-api/api-diagrams/service-api-layers.png</a></p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Implementation Priority</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a><ul>
+<li><a class="reference internal" href="#notes">Notes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#version-0-x-implementation">Version 0.x Implementation</a><ul>
+<li><a class="reference internal" href="#goals-and-milestones">Goals and Milestones</a></li>
+<li><a class="reference internal" href="#use-cases">Use Cases</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#version-1-x-implementation">Version 1.x Implementation</a><ul>
+<li><a class="reference internal" href="#id1">Goals and Milestones</a></li>
+<li><a class="reference internal" href="#id2">Use Cases</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#version-2-x-implementation">Version 2.x Implementation</a><ul>
+<li><a class="reference internal" href="#id3">Goals and Milestones</a></li>
+<li><a class="reference internal" href="#id4">Use Cases</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+  <li><a href="index.html">Implementation Notes</a><ul>
+      <li>Previous: <a href="components.html" title="previous chapter">Components of the DataONE Infrastructure</a></li>
+      <li>Next: <a href="integration-testing.html" title="next chapter">Integration Testing</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/implementation/prioritization.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/implementation/prioritization.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/implementation/prioritization.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

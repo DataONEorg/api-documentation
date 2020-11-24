@@ -1,0 +1,587 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>System Metadata &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Getting a Handle on Systems Metadata for the Long Haul" href="SystemMetadataAnalysis.html" />
+    <link rel="prev" title="Supporting Access Control in Search" href="search_auth.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="SystemMetadataAnalysis.html" title="Getting a Handle on Systems Metadata for the Long Haul"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="search_auth.html" title="Supporting Access Control in Search"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">System Metadata</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-SystemMetadata">
+<span id="system-metadata"></span><h1>System Metadata<a class="headerlink" href="#module-SystemMetadata" title="Permalink to this headline">¶</a></h1>
+<p>Every object (science metadata document, data object, or resource map) managed
+by DataONE has number of properties that are used to faciliate access and
+mangement of the object (Figure 1). These properties are collectively called “system
+metadata” (aka. <a class="reference internal" href="../glossary.html#term-sysmeta"><span class="xref std std-term">sysmeta</span></a>). This document describes which properties of
+system metadata may be edited and why. More detailed information about the
+purpose for each property and its range of values can be found in the schema
+and associated documentation available at <a class="reference internal" href="../apis/Types.html#Types.SystemMetadata" title="Types.SystemMetadata"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.SystemMetadata</span></code></a> and
+<a class="reference internal" href="../apis/Types2.html#v2_0.Types.SystemMetadata" title="v2_0.Types.SystemMetadata"><code class="xref py py-class docutils literal notranslate"><span class="pre">v2_0.Types.SystemMetadata</span></code></a>.</p>
+<div class="figure align-default" id="id4">
+<img alt="../_images/sysmeta.png" src="../_images/sysmeta.png" />
+<p class="caption"><span class="caption-text"><em>Figure 1.</em> All managed content (science metadata, science data, and resource
+maps) in DataONE is accompanied by <em>system metadata</em> (1, 2, 3 respectively).
+The relationships between science metadata and data object, and thus the
+structure of a data package, is described by resource maps. In this simple
+data package, the resource map indicates that the science metadata document
+<em>documents</em> the science data (4), and that the science data <em>isDocumentedBy</em>
+the science metadata (5).</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</div>
+<p>System metadata is maintained dynamically by each Member Node and synchronized
+with Coordinating Nodes through the synchronization process or more directly
+through the <a class="reference internal" href="../apis/CN_APIs.html#CNRead.synchronize" title="CNRead.synchronize"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNRead.synchronize()</span></code></a> API. The Member Node copy is
+authoritative except for replica information which the Coordinating Nodes
+control (Figure 2). Collation of system metadata properties starts with a
+client adding content to a Member Node using the <a class="reference internal" href="../apis/MN_APIs.html#MNStorage.create" title="MNStorage.create"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNStorage.create()</span></code></a> API.
+System metadata contains properties that are immutable, may be set once, or may
+be altered at any time by an authorized subject.</p>
+<div class="figure align-default" id="id5">
+<img alt="../_images/sysmeta_flow.png" src="../_images/sysmeta_flow.png" />
+<p class="caption"><span class="caption-text"><em>Figure 2.</em> System metadata is provided by Member Nodes (1) in response to a
+<a class="reference internal" href="../apis/MN_APIs.html#MNRead.getSystemMetadata" title="MNRead.getSystemMetadata"><code class="xref py py-func docutils literal notranslate"><span class="pre">getSystemMetadata()</span></code></a> call by the Coordinating Nodes during the
+Member Node synchronization process (2). The Coordinating Node updates the
+replica location information (3). The copy of system metadata is replicated
+between the Coordinating Nodes, and the Member Node is informed of the
+system metadata change (4). A user will typically retrieve system metadata
+from the Member Node (5) using the <a class="reference internal" href="../apis/MN_APIs.html#MNRead.getSystemMetadata" title="MNRead.getSystemMetadata"><code class="xref py py-func docutils literal notranslate"><span class="pre">getSystemMetadata()</span></code></a> call
+since that is the authoritative source for the information.</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+</div>
+<div class="section" id="mutability-of-system-metadata">
+<h2>Mutability of System Metadata<a class="headerlink" href="#mutability-of-system-metadata" title="Permalink to this headline">¶</a></h2>
+<p>System metadata elements are partitioned into two classes: metadata elements
+that must be provided by client software to the DataONE system, and elements
+that are generated by DataONE itself in the course of object management.</p>
+<p>The mutability of system metadata elements is described in Table 1.</p>
+<p><strong>Table 1.</strong> Mutability of system metadata. Values are initialized by
+different components during creation, and those values are vetted by
+(controlled by) downstream, authoritative components. Mutable properties are
+edited through the specified edit method.</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 8%" />
+<col style="width: 8%" />
+<col style="width: 8%" />
+<col style="width: 62%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Property</p></th>
+<th class="head"><p>Mutable?</p></th>
+<th class="head"><p>Initialized By</p></th>
+<th class="head"><p>Controlled By</p></th>
+<th class="head"><p>Edit Method</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="../apis/Types.html#Types.SystemMetadata.identifier" title="Types.SystemMetadata.identifier"><code class="xref py py-attr docutils literal notranslate"><span class="pre">identifier</span></code></a></p></td>
+<td><p>Immutable</p></td>
+<td><p>Client + MN</p></td>
+<td><p>MN + CN</p></td>
+<td><p>The identifier is assigned during creation and can not be changed. The
+CNs will not allow reuse of an identifier, so content created with an
+identifier that is not unique will be rejected by CNs.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../apis/Types.html#Types.SystemMetadata.size" title="Types.SystemMetadata.size"><code class="xref py py-attr docutils literal notranslate"><span class="pre">size</span></code></a></p></td>
+<td><p>Immutable</p></td>
+<td><p>Client</p></td>
+<td><p>MN</p></td>
+<td><p>The object size is set during creation and can not be changed.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../apis/Types.html#Types.SystemMetadata.checksum" title="Types.SystemMetadata.checksum"><code class="xref py py-attr docutils literal notranslate"><span class="pre">checksum</span></code></a></p></td>
+<td><p>Immutable</p></td>
+<td><p>Client</p></td>
+<td><p>MN</p></td>
+<td><p>The object checksum is determined during creation and can not be changed.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../apis/Types.html#Types.SystemMetadata.submitter" title="Types.SystemMetadata.submitter"><code class="xref py py-attr docutils literal notranslate"><span class="pre">submitter</span></code></a></p></td>
+<td><p>Immutable</p></td>
+<td><p>MN</p></td>
+<td><p>MN</p></td>
+<td><p>The object submitter is set during creation and can not be changed.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../apis/Types.html#Types.SystemMetadata.dateUploaded" title="Types.SystemMetadata.dateUploaded"><code class="xref py py-attr docutils literal notranslate"><span class="pre">dateUploaded</span></code></a></p></td>
+<td><p>Immutable</p></td>
+<td><p>MN</p></td>
+<td><p>MN</p></td>
+<td><p>Upload to a MN occurs once, and the MN MUST set this value to indicate
+when the content was added to the repository (may be before the
+repository started operating as a MN).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../apis/Types.html#Types.SystemMetadata.originMemberNode" title="Types.SystemMetadata.originMemberNode"><code class="xref py py-attr docutils literal notranslate"><span class="pre">originMemberNode</span></code></a></p></td>
+<td><p>Immutable</p></td>
+<td><p>MN</p></td>
+<td><p>MN</p></td>
+<td><p>Value is set once by the origin Member Node</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../apis/Types2.html#v2_0.Types.SystemMetadata.seriesId" title="v2_0.Types.SystemMetadata.seriesId"><code class="xref py py-attr docutils literal notranslate"><span class="pre">seriesId</span></code></a> (v2)</p></td>
+<td><p>Set Once</p></td>
+<td><p>Client</p></td>
+<td><p>MN + CN</p></td>
+<td><p>The seriesId can be set if it has no value, but can not be changed once
+set. Use <a class="reference internal" href="../apis/MN_APIs.html#MNStorage.updateSystemMetadata" title="MNStorage.updateSystemMetadata"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNStorage.updateSystemMetadata()</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../apis/Types.html#Types.SystemMetadata.obsoletes" title="Types.SystemMetadata.obsoletes"><code class="xref py py-attr docutils literal notranslate"><span class="pre">obsoletes</span></code></a></p></td>
+<td><p>Set Once</p></td>
+<td><p>Client</p></td>
+<td><p>MN</p></td>
+<td><p>v1, v2: <a class="reference internal" href="../apis/MN_APIs.html#MNStorage.update" title="MNStorage.update"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNStorage.update()</span></code></a></p>
+<p>v2: <a class="reference internal" href="../apis/MN_APIs.html#MNStorage.updateSystemMetadata" title="MNStorage.updateSystemMetadata"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNStorage.updateSystemMetadata()</span></code></a></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">obsoletes</span></code> property may be set once, to indicate that the current
+object obsoletes or supercedes the PID that is the value of this field.
+Care must be taken when setting this value to ensure that no branching
+or circular lists are created.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../apis/Types.html#Types.SystemMetadata.obsoletedBy" title="Types.SystemMetadata.obsoletedBy"><code class="xref py py-attr docutils literal notranslate"><span class="pre">obsoletedBy</span></code></a></p></td>
+<td><p>Set Once</p></td>
+<td><p>Client</p></td>
+<td><p>Client</p></td>
+<td><p>v1, v2: <a class="reference internal" href="../apis/MN_APIs.html#MNStorage.update" title="MNStorage.update"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNStorage.update()</span></code></a></p>
+<p>v1: <a class="reference internal" href="../apis/CN_APIs.html#CNCore.setObsoletedBy" title="CNCore.setObsoletedBy"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNCore.setObsoletedBy()</span></code></a></p>
+<p>v2: <a class="reference internal" href="../apis/MN_APIs.html#MNStorage.updateSystemMetadata" title="MNStorage.updateSystemMetadata"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNStorage.updateSystemMetadata()</span></code></a></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">obsoletedBy</span></code> property may be set once, to indicate that the current
+object is obsoleted superceded by the PID that is the value of this field.
+Care must be taken when setting this value to ensure that no branching
+or circular lists are created.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../apis/Types.html#Types.SystemMetadata.archived" title="Types.SystemMetadata.archived"><code class="xref py py-attr docutils literal notranslate"><span class="pre">archived</span></code></a></p></td>
+<td><p>Set Once</p></td>
+<td><p>Client</p></td>
+<td><p>MN</p></td>
+<td><p>v1, v2: <a class="reference internal" href="../apis/CN_APIs.html#CNCore.archive" title="CNCore.archive"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNCore.archive()</span></code></a></p>
+<p>v2: <a class="reference internal" href="../apis/MN_APIs.html#MNStorage.updateSystemMetadata" title="MNStorage.updateSystemMetadata"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNStorage.updateSystemMetadata()</span></code></a></p>
+</td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../apis/Types.html#Types.SystemMetadata.serialVersion" title="Types.SystemMetadata.serialVersion"><code class="xref py py-attr docutils literal notranslate"><span class="pre">serialVersion</span></code></a></p></td>
+<td><p>Mutable</p></td>
+<td><p>CN</p></td>
+<td><p>CN</p></td>
+<td><p>v1: Set by CNs in response to any operation that alters System Metadata.</p>
+<p>v2: Used by CNs for management of replication process.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../apis/Types.html#Types.SystemMetadata.formatId" title="Types.SystemMetadata.formatId"><code class="xref py py-attr docutils literal notranslate"><span class="pre">formatId</span></code></a></p></td>
+<td><p>Mutable</p></td>
+<td><p>Client</p></td>
+<td><p>MN + CN</p></td>
+<td><p>Change is discouraged, values limited to the formats available from
+<a class="reference internal" href="../apis/CN_APIs.html#CNCore.listFormats" title="CNCore.listFormats"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNCore.listFormats()</span></code></a>.</p>
+<p>v1: <a class="reference internal" href="../apis/CN_APIs.html#CNCore.updateSystemMetadata" title="CNCore.updateSystemMetadata"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNCore.updateSystemMetadata()</span></code></a></p>
+<p>v2: <a class="reference internal" href="../apis/MN_APIs.html#MNStorage.updateSystemMetadata" title="MNStorage.updateSystemMetadata"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNStorage.updateSystemMetadata()</span></code></a></p>
+</td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../apis/Types2.html#v2_0.Types.SystemMetadata.mediaType" title="v2_0.Types.SystemMetadata.mediaType"><code class="xref py py-attr docutils literal notranslate"><span class="pre">mediaType</span></code></a> (v2)</p></td>
+<td><p>Mutable</p></td>
+<td><p>Client</p></td>
+<td><p>Client</p></td>
+<td><p>As for <code class="docutils literal notranslate"><span class="pre">formatId</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../apis/Types2.html#v2_0.Types.SystemMetadata.fileName" title="v2_0.Types.SystemMetadata.fileName"><code class="xref py py-attr docutils literal notranslate"><span class="pre">fileName</span></code></a> (v2)</p></td>
+<td><p>Mutable</p></td>
+<td><p>Client</p></td>
+<td><p>Client</p></td>
+<td><p>As for <code class="docutils literal notranslate"><span class="pre">formatId</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../apis/Types.html#Types.SystemMetadata.rightsHolder" title="Types.SystemMetadata.rightsHolder"><code class="xref py py-attr docutils literal notranslate"><span class="pre">rightsHolder</span></code></a></p></td>
+<td><p>Mutable</p></td>
+<td><p>Client</p></td>
+<td><p>Client</p></td>
+<td><p>Rights holder for an object may be altered.</p>
+<p>v1: <a class="reference internal" href="../apis/CN_APIs.html#CNAuthorization.setRightsHolder" title="CNAuthorization.setRightsHolder"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNAuthorization.setRightsHolder()</span></code></a></p>
+<p>v2: <a class="reference internal" href="../apis/MN_APIs.html#MNStorage.updateSystemMetadata" title="MNStorage.updateSystemMetadata"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNStorage.updateSystemMetadata()</span></code></a></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../apis/Types.html#Types.SystemMetadata.accessPolicy" title="Types.SystemMetadata.accessPolicy"><code class="xref py py-attr docutils literal notranslate"><span class="pre">accessPolicy</span></code></a></p></td>
+<td><p>Mutable</p></td>
+<td><p>Client</p></td>
+<td><p>Client</p></td>
+<td><p>Access policy for an object may be altered.</p>
+<p>v1: <a class="reference internal" href="../apis/CN_APIs.html#CNAuthorization.setAccessPolicy" title="CNAuthorization.setAccessPolicy"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNAuthorization.setAccessPolicy()</span></code></a></p>
+<p>v2: <a class="reference internal" href="../apis/MN_APIs.html#MNStorage.updateSystemMetadata" title="MNStorage.updateSystemMetadata"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNStorage.updateSystemMetadata()</span></code></a>.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../apis/Types.html#Types.SystemMetadata.replicationPolicy" title="Types.SystemMetadata.replicationPolicy"><code class="xref py py-attr docutils literal notranslate"><span class="pre">replicationPolicy</span></code></a></p></td>
+<td><p>Mutable</p></td>
+<td><p>Client</p></td>
+<td><p>Client</p></td>
+<td><p>v1: <a class="reference internal" href="../apis/CN_APIs.html#CNReplication.setReplicationPolicy" title="CNReplication.setReplicationPolicy"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNReplication.setReplicationPolicy()</span></code></a></p>
+<p>v2: <a class="reference internal" href="../apis/MN_APIs.html#MNStorage.updateSystemMetadata" title="MNStorage.updateSystemMetadata"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNStorage.updateSystemMetadata()</span></code></a></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../apis/Types.html#Types.SystemMetadata.dateSysMetadataModified" title="Types.SystemMetadata.dateSysMetadataModified"><code class="xref py py-attr docutils literal notranslate"><span class="pre">dateSysMetadataModified</span></code></a></p></td>
+<td><p>Mutable</p></td>
+<td><p>MN</p></td>
+<td><p>MN</p></td>
+<td><p>Updated any time a property value is changed.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../apis/Types.html#Types.SystemMetadata.authoritativeMemberNode" title="Types.SystemMetadata.authoritativeMemberNode"><code class="xref py py-attr docutils literal notranslate"><span class="pre">authoritativeMemberNode</span></code></a></p></td>
+<td><p>Mutable</p></td>
+<td><p>MN</p></td>
+<td><p>CN</p></td>
+<td><p>Manual update process that must be performed by a DataONE administrator.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../apis/Types.html#Types.SystemMetadata.replica" title="Types.SystemMetadata.replica"><code class="xref py py-attr docutils literal notranslate"><span class="pre">replica</span></code></a></p></td>
+<td><p>Mutable</p></td>
+<td><p>CN</p></td>
+<td><p>CN</p></td>
+<td><p><a class="reference internal" href="../apis/CN_APIs.html#CNReplication.updateReplicationMetadata" title="CNReplication.updateReplicationMetadata"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNReplication.updateReplicationMetadata()</span></code></a> (internal to
+Coordinating Nodes)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="changing-system-metadata-values">
+<h2>Changing System Metadata Values<a class="headerlink" href="#changing-system-metadata-values" title="Permalink to this headline">¶</a></h2>
+<p>Table 1. lists the properties of System Metadata that may be altered by
+authorized users. This section describes how those changes are performed.</p>
+<p>In all cases it is assumed that the user is appropriately authenticated and is
+authorized to perform the operation. Users must have <code class="docutils literal notranslate"><span class="pre">CHANGE_PERMISSION</span></code>
+permission in order to alter system metadata. The object <code class="docutils literal notranslate"><span class="pre">rightsHolder</span></code>, the
+identity of the <code class="docutils literal notranslate"><span class="pre">authoritativeMemberNode</span></code>, and the identity of a Coordinating
+Node will always have permission to update system metadata for an object.</p>
+<div class="section" id="updating-system-metadata-in-version-2-x">
+<h3>Updating System Metadata in Version 2.x<a class="headerlink" href="#updating-system-metadata-in-version-2-x" title="Permalink to this headline">¶</a></h3>
+<p>In version 2.x, properties of System Metadata are set via the Member Node using
+the <a class="reference internal" href="../apis/MN_APIs.html#MNStorage.updateSystemMetadata" title="MNStorage.updateSystemMetadata"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNStorage.updateSystemMetadata()</span></code></a> implemented by version 2.x Member
+Nodes. This method is implemented as a HTTP PUT agains the /meta endpoint of the
+Member Node with the identifier included as a URL parameter and the new System
+Metadata serialized as XML included in the MIME-Multipart payload.</p>
+</div>
+<div class="section" id="updating-system-metadata-in-version-1-x">
+<h3>Updating System Metadata in Version 1.x<a class="headerlink" href="#updating-system-metadata-in-version-1-x" title="Permalink to this headline">¶</a></h3>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>flesh this out with examples</p>
+</div>
+</div>
+</div>
+<div class="section" id="system-metadata-schema">
+<h2>System Metadata Schema<a class="headerlink" href="#system-metadata-schema" title="Permalink to this headline">¶</a></h2>
+<p>The structure of <a class="reference internal" href="../apis/Types2.html#v2_0.Types.SystemMetadata" title="v2_0.Types.SystemMetadata"><code class="xref py py-class docutils literal notranslate"><span class="pre">SystemMetadata</span></code></a> is defined in XMLSchema.</p>
+<p>The current release of the System Metadata schema involves three parts. Version 1.0 provides a full schema which version 1.1 extends, which is in turn extended by version 2.0.</p>
+<p>Release versions of the schema are available from their namespace URIs:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Version 1.0</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://ns.dataone.org/service/types/v1">https://ns.dataone.org/service/types/v1</a></p>
+</dd>
+<dt class="field-even">Version 1.1</dt>
+<dd class="field-even"><p><a class="reference external" href="https://ns.dataone.org/service/types/v1.1">https://ns.dataone.org/service/types/v1.1</a></p>
+</dd>
+<dt class="field-odd">Version 2.0</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://ns.dataone.org/service/types/v2.0">https://ns.dataone.org/service/types/v2.0</a></p>
+</dd>
+</dl>
+<p>Development versions of the schema are maintained in a subversion repository at:</p>
+<p><a class="reference external" href="https://repository.dataone.org/software/cicore/trunk/d1_schemas/">https://repository.dataone.org/software/cicore/trunk/d1_schemas/</a></p>
+<div class="admonition-todo admonition" id="id2">
+<p class="admonition-title">Todo</p>
+<p>example for system metadata</p>
+</div>
+</div>
+<div class="section" id="roadmap-to-system-metadata-control-changes-draft-to-be-reviewed">
+<h2>Roadmap to System Metadata Control Changes (DRAFT - to be reviewed)<a class="headerlink" href="#roadmap-to-system-metadata-control-changes-draft-to-be-reviewed" title="Permalink to this headline">¶</a></h2>
+<p>The following outline describes the policy and technical steps needed to shift the majority of control of system metadata attributes to Member Nodes such that client operations are more responsive.  The changes would require a new DataONE API v2 that involve changes to the DataONE Types schema, changes to the Member Node APIs, changes to the Coordinating Node APIs, and changes to the various software stacks that implement these APIs.  It will also involve a release and deployment schedule that allows both v1 and v2 of the APIs to be in operation simultaneously.</p>
+<p>In transferring control to the Member Nodes, they also adopt the responsibility of consistently managing the versions of the documents in a serial manner.  Use of the <cite>serialVersion</cite> attribute ensures that previous values are not overwritten by new values out of order (e.g. AccessPolicy)</p>
+<div class="section" id="rationale">
+<h3>Rationale<a class="headerlink" href="#rationale" title="Permalink to this headline">¶</a></h3>
+<p>The main use case involves access control.  When a scientist using an ITK client creates an object through MN.create(), control of the system metadata is currently transferred to the CN once synchronization happens. After that point, the ITK client (and scientist) has to make CN.setAccessPolicy() calls to make any changes. If the MN is set to sync once a week, this is problematic, since the scientist would naturally expect that the access control changes should take effect immediately.</p>
+<p>Example sequence diagrams show the differnce follows:</p>
+<img alt="../_images/sysmeta_cn_control.png" src="../_images/sysmeta_cn_control.png" />
+<p>—</p>
+<img alt="../_images/sysmeta_mn_control.png" src="../_images/sysmeta_mn_control.png" />
+</div>
+<div class="section" id="change-architecture-to-shift-authority-to-mns">
+<h3>1. Change architecture to shift authority to MNs<a class="headerlink" href="#change-architecture-to-shift-authority-to-mns" title="Permalink to this headline">¶</a></h3>
+<p>This document describes the management of system metadata across nodes, and has been updated to reflect control of system metadata attributes by the MN rather than the CN, except for the Replicas listed per object.
+Text changes are highlighted <a class="reference external" href="https://redmine.dataone.org/projects/d1/repository/diff/documents/Projects/cicore/architecture/api-documentation/source/design/SystemMetadata.txt?rev=11619&amp;rev_to=6100">here</a>.</p>
+</div>
+<div class="section" id="evaluate-dataone-types-schema">
+<h3>2. Evaluate DataONE Types Schema<a class="headerlink" href="#evaluate-dataone-types-schema" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="../apis/Types.html"><span class="doc">Types Schema</span></a> could be changed in two ways:</p>
+<p>2.1 Modify the Replica Type</p>
+<p>By adding an optional <cite>version</cite> attribute to the Replica Type, the Coordinating Nodes would no longer need to rely on the <cite>serialVersion</cite> attribute of the entire system metadata document to manage versions.
+A Replica example, with the version line highlighted, would be:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="hll"><span class="nt">&lt;replica</span> <span class="na">version=</span><span class="s">&quot;1&quot;</span><span class="nt">&gt;</span>
+</span>  <span class="nt">&lt;replicaMemberNode&gt;</span>urn:node:PISCO<span class="nt">&lt;/replicaMemberNode&gt;</span>
+  <span class="nt">&lt;replicationStatus&gt;</span>completed<span class="nt">&lt;/replicationStatus&gt;</span>
+  <span class="nt">&lt;replicaVerified&gt;</span>2012-07-10T00:00:00.000+00:00<span class="nt">&lt;/replicaVerified&gt;</span>
+<span class="nt">&lt;/replica&gt;</span>
+</pre></div>
+</div>
+<p>By making the <cite>version</cite> attribute optional, this approach would be backwards-compatible with existing system metadata documents in the system.
+However, the Replica list in System Metadata documents on the MN may be out of sync with the list on the CN during times of rapid change such as MN-to-MN replication operations.</p>
+<p>2.2 Remove the Replica</p>
+<p>Another approach is to remove the Replica entry from the SystemMetadata Type entirely, and manage replicas separately.
+This approach would be backwards-incompatible with existing system metadata documents, but once upgraded, all Replica information would be obtained through the CN services.</p>
+<div class="admonition-todo admonition" id="id3">
+<p class="admonition-title">Todo</p>
+<p>Needs discussion.</p>
+</div>
+<p>2.3 Leave the data types as is and let the CN have control over both the replica list and the serialVersion as it currently does.
+We always hope and intend that the MN and CN will have the same consistent SystemMetadata eventually. In this scenario, the CN would ignore any values the MN provided for SM.serialVersion and SM.replica and the MN would accept
+those values as provided by the CN’s copy of SystemMetadata. This allows much of our processing on the CN to remain as is and the different types of nodes then choose which parts of SM to manage/ignore.
+BRL: I believe we decided to pursue this course for now.</p>
+</div>
+<div class="section" id="change-dataone-apis">
+<h3>3. Change DataONE APIS<a class="headerlink" href="#change-dataone-apis" title="Permalink to this headline">¶</a></h3>
+<p>Changes would be required for both the Member Node and Coordinating Node APIs, in both the architecture documentation and the <cite>d1_common_java</cite> and <cite>d1_common_python</cite> libraries:</p>
+<p>3.1 MN and CN API changes</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 45%" />
+<col style="width: 39%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>Action</strong></p></td>
+<td><p><strong>Method</strong></p></td>
+<td><p><strong>Notes</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>Add</p></td>
+<td><p>MNStorage.updateSystemMetadata()</p></td>
+<td><p>Instead of multiple methods</p></td>
+</tr>
+<tr class="row-odd"><td><p>Change</p></td>
+<td><p>MNRead.systemMetadataChanged()</p></td>
+<td><p>Move from MNAuthorization</p></td>
+</tr>
+<tr class="row-even"><td><p>Reject</p></td>
+<td><p>MNAuthorization.setRightsHolder()</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Reject</p></td>
+<td><p>MNAuthorization.setAccessPolicy()</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Reject</p></td>
+<td><p>CNCore.sytemMetadataChanged()</p></td>
+<td><p>Required to push notify CNs</p></td>
+</tr>
+<tr class="row-odd"><td><p>Add</p></td>
+<td><p>CNCore.updateSytemMetadata()</p></td>
+<td><p>Keeps the CN copy in sync</p></td>
+</tr>
+<tr class="row-even"><td><p>Deprecate</p></td>
+<td><p>CNCore.archive()</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Deprecate</p></td>
+<td><p>CNCore.setObsoletedBy()</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Deprecate</p></td>
+<td><p>CNAuthorization.setRightsHolder()</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Reject</p></td>
+<td><p>CNReplication.getReplicaVersion()</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Reject</p></td>
+<td><p>CNReplication.setReplicaVersion()</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>As an alternative to individual MN APIs above, we might want to consider using a single MN call to update system metadata documents:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 45%" />
+<col style="width: 39%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>Action</strong></p></td>
+<td><p><strong>Method</strong></p></td>
+<td><p><strong>Notes</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>Add</p></td>
+<td><p>MNCore.updateSytemMetadata()</p></td>
+<td><p>Using this method now</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>CJ and BRL discussed this and decided the single updateSystemMetadata method would suffice and implementations could determine which mutable fields from the SystemMetadata it would update.
+TBD: do we reject updates if an immutable field differs from the original value  even if we never intend to save that new value anyway?</p>
+</div>
+</div>
+<div class="section" id="change-library-implementations">
+<h3>4. Change Library Implementations<a class="headerlink" href="#change-library-implementations" title="Permalink to this headline">¶</a></h3>
+<p>The DataONE Client Libraries (d1_libclient_java and d1_libclient_python) will need to be changed to support the above API changes in v2, as well as the existing v1 APIs.  This will help multiple MN software stacks in supporting both APIs.</p>
+</div>
+<div class="section" id="change-coordinating-node-implementations">
+<h3>5. Change Coordinating Node Implementations<a class="headerlink" href="#change-coordinating-node-implementations" title="Permalink to this headline">¶</a></h3>
+<p>5.1 New CN Rest Service calls</p>
+<p>The CN REST Service will need to be modified to add and deprecate the methods listed above. Likewise, the CN REST Proxy will also need to be adjusted.</p>
+<p>5.2 MN to CN Synchronization</p>
+<p>With these changes, d1_synchronization classes will need to consult the node registry to determine if an MN implements v1 or v2 of the API, and act accordingly.  As the synchronization code adds in replica entries, it should notify the authoritative Member Node and all replica Member Nodes of the change using MNRead.systemMetadataChanged() calls.  It will also need to call CNReplication.setReplicaVersion() for new entries.</p>
+<p>5.3 MN to MN Replication</p>
+<p>The CN ReplicationManager code will need to be adjusted to 1) Get authoritative copies of system metadata from the MN, 2) use CNReplication.getReplicaVersion() and CNReplication.setReplicaVersion() when processing replica tasks rather than setting the <cite>serialVersion</cite> of the system metadata document.</p>
+<p>5.4 Metacat CNodeService and schema</p>
+<p>The MetacatCNodeService class will need to be modified to implement the above CN API calls.  Likewise, the database schema will need to change to store a new <cite>version</cite> column in the <cite>smreplicationstatus</cite> SQL table.  This will also affect other classes that manage the persistence of system metadata, namely IndetifierManager.  Upgrade classes and scripts will need to be written for existing installations.</p>
+</div>
+<div class="section" id="change-member-node-implementations">
+<h3>6. Change Member Node implementations<a class="headerlink" href="#change-member-node-implementations" title="Permalink to this headline">¶</a></h3>
+<p>Member node software stacks will need to implement the API methods listed above, and will need to ensure that other calls that affect system Metadata entries also update Coordinating Node system metadata copy.
+For instance, a call to MNStorage.update() should also call CNCore.updateSystemMetadata() so that the CNs remain in sync with the MNs with regard to system metadata.</p>
+</div>
+<div class="section" id="release-and-deploy-new-nodes">
+<h3>7. Release and Deploy New Nodes<a class="headerlink" href="#release-and-deploy-new-nodes" title="Permalink to this headline">¶</a></h3>
+<p>We will need to establish a release schedule and deploy software stacks, likely in this order:</p>
+<ol class="arabic simple">
+<li><p>d1_schemas</p></li>
+<li><p>d1_common</p></li>
+<li><p>d1_libclient</p></li>
+<li><p>CN implementations</p></li>
+<li><p>MN implementations</p></li>
+</ol>
+<p>Note that we plan on introducing other changes into the DataONE types schema to accommodate mutable content and other features.  Changes to the type schema should be consolidated to reduce the impact on software that depend on the types.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">System Metadata</a><ul>
+<li><a class="reference internal" href="#mutability-of-system-metadata">Mutability of System Metadata</a></li>
+<li><a class="reference internal" href="#changing-system-metadata-values">Changing System Metadata Values</a><ul>
+<li><a class="reference internal" href="#updating-system-metadata-in-version-2-x">Updating System Metadata in Version 2.x</a></li>
+<li><a class="reference internal" href="#updating-system-metadata-in-version-1-x">Updating System Metadata in Version 1.x</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#system-metadata-schema">System Metadata Schema</a></li>
+<li><a class="reference internal" href="#roadmap-to-system-metadata-control-changes-draft-to-be-reviewed">Roadmap to System Metadata Control Changes (DRAFT - to be reviewed)</a><ul>
+<li><a class="reference internal" href="#rationale">Rationale</a></li>
+<li><a class="reference internal" href="#change-architecture-to-shift-authority-to-mns">1. Change architecture to shift authority to MNs</a></li>
+<li><a class="reference internal" href="#evaluate-dataone-types-schema">2. Evaluate DataONE Types Schema</a></li>
+<li><a class="reference internal" href="#change-dataone-apis">3. Change DataONE APIS</a></li>
+<li><a class="reference internal" href="#change-library-implementations">4. Change Library Implementations</a></li>
+<li><a class="reference internal" href="#change-coordinating-node-implementations">5. Change Coordinating Node Implementations</a></li>
+<li><a class="reference internal" href="#change-member-node-implementations">6. Change Member Node implementations</a></li>
+<li><a class="reference internal" href="#release-and-deploy-new-nodes">7. Release and Deploy New Nodes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+      <li>Previous: <a href="search_auth.html" title="previous chapter">Supporting Access Control in Search</a></li>
+      <li>Next: <a href="SystemMetadataAnalysis.html" title="next chapter">Getting a Handle on Systems Metadata for the Long Haul</a></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/design/SystemMetadata.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/design/SystemMetadata.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/SystemMetadata.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

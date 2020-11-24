@@ -1,0 +1,826 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Components of the DataONE Infrastructure &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Implementation Priority" href="prioritization.html" />
+    <link rel="prev" title="Implementation Roadmap" href="roadmap.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="prioritization.html" title="Implementation Priority"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="roadmap.html" title="Implementation Roadmap"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Implementation Notes</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Components of the DataONE Infrastructure</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="components-of-the-dataone-infrastructure">
+<h1>Components of the DataONE Infrastructure<a class="headerlink" href="#components-of-the-dataone-infrastructure" title="Permalink to this headline">¶</a></h1>
+<p>The following diagrams indicate code dependencies between various components
+that make up the DataONE infrastructure. Functional dependencies are not
+depicted.</p>
+<div class="section" id="common-components">
+<h2>Common Components<a class="headerlink" href="#common-components" title="Permalink to this headline">¶</a></h2>
+<p><strong>Figure 1.</strong> Core shared components.</p>
+digraph core_components {
+
+   fontname = &quot;Bitstream Vera Sans&quot;;
+   fontsize = 8;
+
+   edge [
+     fontname = &quot;Bitstream Vera Sans&quot;
+     fontsize = 8
+     color = &quot;#888888&quot;
+     arrowhead = &quot;open&quot;
+     arrowsize = 0.5
+     style=&quot;solid&quot;
+     ];
+
+   node [
+     fontname = &quot;Courier&quot;
+     fontsize = 8
+     fontcolor = &quot;black&quot;];
+
+   color=&quot;#888888&quot;;
+
+   schema [label=&quot;dataonetypes.xsd&quot; URL=&quot;#dataonetypes&quot;];
+   d1_common_java;
+   d1_common_python;
+   d1_libclient_java;
+   d1_libclient_python;
+   d1_architecture;
+   d1_jibx_extensions;
+   d1_test_resources;
+   foresite_java [style=&quot;filled&quot; bgcolor=&quot;grey80&quot;];
+   foresite_python [style=&quot;filled&quot; bgcolor=&quot;grey80&quot;];
+
+   d1_architecture -&gt; schema;
+   d1_common_java -&gt; schema;
+   d1_common_java -&gt; d1_jibx_extensions;
+   d1_common_java -&gt; d1_test_resources [style=&quot;dashed&quot;];
+   d1_common_java -&gt; d1_architecture [style=&quot;dotted&quot;];
+   d1_common_python -&gt; schema;
+   d1_common_python  -&gt; d1_architecture [style=&quot;dotted&quot;];
+   d1_libclient_java -&gt; d1_common_java;
+   d1_libclient_java -&gt; d1_test_resources [style=&quot;dashed&quot;];
+   d1_libclient_java  -&gt; d1_architecture [style=&quot;dotted&quot;];
+   d1_libclient_java  -&gt; foresite_java;
+   d1_libclient_python -&gt; d1_common_python;
+   d1_libclient_python -&gt; d1_architecture [style=&quot;dotted&quot;];
+   d1_libclient_python -&gt; foresite_python;
+
+}<p>NEEDS VERIFYING</p>
+</div>
+<div class="section" id="integration-test-tools">
+<h2>Integration Test Tools<a class="headerlink" href="#integration-test-tools" title="Permalink to this headline">¶</a></h2>
+<p><strong>Figure 2.</strong> Test services.</p>
+ digraph core_components {
+
+    color=&quot;#888888&quot;;
+    fontname = &quot;Bitstream Vera Sans&quot;;
+    fontsize = 8;
+
+    edge [
+      fontname = &quot;Bitstream Vera Sans&quot;
+      fontsize = 8
+      color = &quot;#888888&quot;
+      arrowhead = &quot;open&quot;
+      arrowsize = 0.5
+      style=&quot;solid&quot;
+      ];
+
+    node [
+      fontname = &quot;Courier&quot;
+      fontsize = 8
+      fontcolor = &quot;black&quot;];
+
+    subgraph cluster_CORE {
+      label=&quot;Shared Components&quot;;
+      color=&quot;#888888&quot;;
+
+      schema [label=&quot;dataonetypes.xsd&quot;];
+      d1_common_java;
+      d1_common_python;
+      d1_libclient_java;
+      d1_libclient_python;
+      d1_architecture;
+      d1_jibx_extensions;
+      d1_test_resources;
+      foresite_java [style=&quot;filled&quot; bgcolor=&quot;grey80&quot;];
+      foresite_python [style=&quot;filled&quot; bgcolor=&quot;grey80&quot;];
+
+      d1_architecture -&gt; schema;
+      d1_common_java -&gt; schema;
+      d1_common_java -&gt; d1_jibx_extensions;
+      d1_common_java -&gt; d1_test_resources [style=&quot;dashed&quot;];
+      d1_common_java -&gt; d1_architecture [style=&quot;dotted&quot;];
+      d1_common_python -&gt; schema;
+      d1_common_python  -&gt; d1_architecture [style=&quot;dotted&quot;];
+      d1_libclient_java -&gt; d1_common_java;
+      d1_libclient_java -&gt; d1_test_resources [style=&quot;dashed&quot;];
+      d1_libclient_java  -&gt; d1_architecture [style=&quot;dotted&quot;];
+      d1_libclient_java  -&gt; foresite_java;
+      d1_libclient_python -&gt; d1_common_python;
+      d1_libclient_python -&gt; d1_architecture [style=&quot;dotted&quot;];
+      d1_libclient_python -&gt; foresite_python;
+    }
+
+    d1_integration;
+    d1_web_test_site;
+    d1_instance_generator;
+    d1_echo_service;
+
+    d1_integration -&gt; d1_common_java;
+    d1_integration -&gt; d1_libclient_java;
+    d1_integration -&gt; Certificates;
+
+    d1_web_test_site -&gt; d1_integration;
+
+    d1_instance_generator -&gt; d1_common_python;
+    d1_instance_generator -&gt; d1_libclient_python;
+}</div>
+<div class="section" id="coordinating-node-components">
+<h2>Coordinating Node Components<a class="headerlink" href="#coordinating-node-components" title="Permalink to this headline">¶</a></h2>
+<p><strong>Figure 3.</strong> Coordinating node components.</p>
+digraph core_components {
+
+   color=&quot;#888888&quot;;
+   fontname = &quot;Bitstream Vera Sans&quot;;
+   fontsize = 10;
+
+   edge [
+     fontname = &quot;Bitstream Vera Sans&quot;
+     fontsize = 8
+     color = &quot;#888888&quot;
+     arrowhead = &quot;open&quot;
+     arrowsize = 0.5
+     style=&quot;solid&quot;
+     ];
+
+   node [
+     fontname = &quot;Courier&quot;
+     fontsize = 10
+     fontcolor = &quot;black&quot;];
+
+   subgraph cluster_CORE {
+     label=&quot;Shared Components&quot;;
+     color=&quot;#888888&quot;;
+
+     schema [label=&quot;dataonetypes.xsd&quot;];
+     d1_common_java;
+     d1_common_python;
+     d1_libclient_java;
+     d1_libclient_python;
+     d1_architecture;
+     d1_jibx_extensions;
+     d1_test_resources;
+     foresite_java [style=&quot;filled&quot; bgcolor=&quot;grey80&quot;];
+     foresite_python [style=&quot;filled&quot; bgcolor=&quot;grey80&quot;];
+
+     d1_architecture -&gt; schema;
+     d1_common_java -&gt; schema;
+     d1_common_java -&gt; d1_jibx_extensions;
+     d1_common_java -&gt; d1_test_resources [style=&quot;dashed&quot;];
+     d1_common_java -&gt; d1_architecture [style=&quot;dotted&quot;];
+     d1_common_python -&gt; schema;
+     d1_common_python  -&gt; d1_architecture [style=&quot;dotted&quot;];
+     d1_libclient_java -&gt; d1_common_java;
+     d1_libclient_java -&gt; d1_test_resources [style=&quot;dashed&quot;];
+     d1_libclient_java  -&gt; d1_architecture [style=&quot;dotted&quot;];
+     d1_libclient_java  -&gt; foresite_java;
+     d1_libclient_python -&gt; d1_common_python;
+     d1_libclient_python -&gt; d1_architecture [style=&quot;dotted&quot;];
+     d1_libclient_python -&gt; foresite_python;
+   }
+
+
+   postgres [style=&quot;filled&quot; fillcolor=&quot;grey80&quot;];
+   hazelcast [style=&quot;filled&quot; bgcolor=&quot;grey80&quot;];
+   LDAP [style=&quot;filled&quot; bgcolor=&quot;grey80&quot;];
+   SOLR [style=&quot;filled&quot; bgcolor=&quot;grey80&quot;];
+   cilogon_portal_servlet [style=&quot;filled&quot; bgcolor=&quot;grey80&quot; label=&quot;cilogon-portal-servlet&quot;];
+
+   d1_cn_version_tool;
+   d1_cn_common;
+   d1_cn_index_common;
+   d1_cn_index_generator;
+   d1_cn_noderegistry;
+   d1_mercury_common;
+   d1_portal;
+   d1_cn_approve_node;
+   d1_identity_manager;
+   d1_log_aggregation;
+   d1_mercury_ui;
+   d1_portal_servlet;
+   d1_cn_rest;
+   d1_cn_rest_proxy;
+   d1_cn_service;
+   d1_solr_extensions;
+   d1_synchronization;
+   d1_cn_index_processor;
+   d1_replication;
+   d1_cn_index_tool;
+   d1_process_daemon;
+   cn_metacat;
+
+   d1_cn_common -&gt; d1_common_java;
+   d1_cn_common -&gt; hazelcast;
+
+   d1_cn_index_common -&gt; d1_common_java;
+   d1_cn_index_common -&gt; postgres;
+
+   d1_cn_index_generator -&gt; d1_cn_index_common;
+   d1_cn_index_generator -&gt; d1_common_java;
+   d1_cn_index_generator -&gt; d1_cn_common;
+   d1_cn_index_generator -&gt; postgres;
+   d1_cn_index_generator -&gt; hazelcast;
+
+   d1_cn_noderegistry -&gt; d1_cn_common;
+   d1_cn_noderegistry -&gt; LDAP;
+   d1_cn_noderegistry -&gt; hazelcast;
+
+   d1_mercury_common -&gt; d1_common_java;
+   d1_mercury_common -&gt; d1_libclient_java;
+   d1_mercury_common -&gt; d1_portal;
+
+   d1_portal -&gt; d1_common_java;
+   d1_portal -&gt; d1_libclient_java;
+
+   d1_cn_approve_node -&gt; d1_cn_noderegistry;
+   d1_cn_approve_node -&gt; d1_libclient_java;
+
+   d1_identity_manager -&gt; d1_libclient_java;
+   d1_identity_manager -&gt; d1_cn_noderegistry;
+
+   d1_log_aggregation -&gt; d1_libclient_java;
+   d1_log_aggregation -&gt; d1_cn_noderegistry;
+
+   d1_mercury_ui -&gt; d1_common_java;
+   d1_mercury_ui -&gt; d1_libclient_java;
+   d1_mercury_ui -&gt; d1_portal;
+
+   d1_portal_servlet -&gt; cilogon_portal_servlet;
+   d1_portal_servlet -&gt; d1_portal;
+   d1_portal_servlet -&gt; hazelcast;
+
+   d1_cn_rest_proxy -&gt; d1_cn_common;
+
+   d1_cn_rest -&gt; d1_libclient_java;
+   d1_cn_rest -&gt; d1_identity_manager;
+   d1_cn_rest -&gt; d1_portal;
+   d1_cn_rest -&gt; d1_cn_rest_proxy;
+   d1_cn_rest -&gt; d1_cn_noderegistry;
+   d1_cn_rest -&gt; d1_cn_common;
+
+   d1_cn_service -&gt; d1_cn_rest;
+   d1_cn_service -&gt; d1_cn_rest_proxy;
+
+   d1_solr_extensions -&gt; d1_libclient_java;
+   d1_solr_extensions -&gt; d1_cn_common;
+   d1_solr_extensions -&gt; d1_identity_manager;
+   d1_solr_extensions -&gt; d1_cn_noderegistry;
+   d1_solr_extensions -&gt; d1_portal;
+
+   d1_synchronization -&gt; d1_libclient_java;
+   d1_synchronization -&gt; d1_cn_noderegistry;
+   d1_synchronization -&gt; d1_identity_manager;
+   d1_synchronization -&gt; hazelcast;
+
+   d1_cn_index_processor -&gt; d1_cn_common;
+   d1_cn_index_processor -&gt; d1_libclient_java;
+   d1_cn_index_processor -&gt; d1_cn_index_common;
+   d1_cn_index_processor -&gt; d1_cn_index_generator;
+   d1_cn_index_processor -&gt; postgres;
+   d1_cn_index_processor -&gt; SOLR;
+
+   d1_replication -&gt; d1_cn_noderegistry;
+   d1_replication -&gt; d1_cn_common;
+   d1_replication -&gt; d1_libclient_java;
+   d1_replication -&gt; hazelcast;
+
+   d1_cn_index_tool -&gt; d1_common_java;
+   d1_cn_index_tool -&gt; d1_libclient_java;
+   d1_cn_index_tool -&gt; d1_cn_common;
+   d1_cn_index_tool -&gt; d1_cn_index_common;
+   d1_cn_index_tool -&gt; d1_cn_index_generator;
+   d1_cn_index_tool -&gt; d1_cn_index_processor;
+
+   d1_process_daemon -&gt; d1_synchronization;
+   d1_process_daemon -&gt; d1_log_aggregation;
+   d1_process_daemon -&gt; d1_replication;
+   d1_process_daemon -&gt; hazelcast;
+
+   cn_metacat -&gt; d1_common_java;
+   cn_metacat -&gt; d1_libclient_java;
+   cn_metacat -&gt; postgres;
+   cn_metacat -&gt; hazelcast;
+   cn_metacat -&gt; foresite_java;
+
+}</div>
+<div class="section" id="member-node-components-and-instances">
+<h2>Member Node Components and Instances<a class="headerlink" href="#member-node-components-and-instances" title="Permalink to this headline">¶</a></h2>
+<p><strong>Figure 4.</strong> Member node implementations (ovals) and instances (rectangles).</p>
+<p>NEEDS UPDATING</p>
+ digraph core_components {
+
+    color=&quot;#888888&quot;;
+    fontname = &quot;Bitstream Vera Sans&quot;;
+    fontsize = 8;
+
+    edge [
+      fontname = &quot;Bitstream Vera Sans&quot;
+      fontsize = 8
+      color = &quot;#888888&quot;
+      arrowhead = &quot;open&quot;
+      arrowsize = 0.5
+      style=&quot;solid&quot;
+      ];
+
+    node [
+      fontname = &quot;Courier&quot;
+      fontsize = 8
+      fontcolor = &quot;black&quot;];
+
+    subgraph cluster_CORE {
+      label=&quot;Shared Components&quot;;
+      color=&quot;#888888&quot;;
+
+      schema [label=&quot;dataonetypes.xsd&quot;];
+      d1_common_java;
+      d1_common_python;
+      d1_libclient_java;
+      d1_libclient_python;
+      d1_architecture;
+      foresite_java [style=&quot;filled&quot; bgcolor=&quot;grey80&quot;];
+      foresite_python [style=&quot;filled&quot; bgcolor=&quot;grey80&quot;];
+
+      d1_architecture -&gt; schema;
+      d1_common_java -&gt; schema;
+      d1_common_java -&gt; d1_jibx_extensions;
+      d1_common_java -&gt; d1_test_resources [style=&quot;dashed&quot;];
+      d1_common_java -&gt; d1_architecture [style=&quot;dotted&quot;];
+      d1_common_python -&gt; schema;
+      d1_common_python  -&gt; d1_architecture [style=&quot;dotted&quot;];
+      d1_libclient_java -&gt; d1_common_java;
+      d1_libclient_java -&gt; d1_test_resources [style=&quot;dashed&quot;];
+      d1_libclient_java  -&gt; d1_architecture [style=&quot;dotted&quot;];
+      d1_libclient_java  -&gt; foresite_java;
+      d1_libclient_python -&gt; d1_common_python;
+      d1_libclient_python -&gt; d1_architecture [style=&quot;dotted&quot;];
+      d1_libclient_python -&gt; foresite_python;
+    }
+
+    Metacat;
+    Mercury_MN;
+
+    KNB [shape=&quot;record&quot;];
+    ORNL_DAAC [shape=&quot;record&quot;];
+    USGS [shape=&quot;record&quot;];
+    Dryad [shape=&quot;record&quot;];
+    Merritt [shape=&quot;record&quot;];
+    SAN_Parks [shape=&quot;record&quot;];
+    MN_Replication_UNM_1 [shape=&quot;record&quot;];
+    MN_Replication_UNM_2 [shape=&quot;record&quot;];
+    MN_Replication_UCSB_1 [shape=&quot;record&quot;];
+    MN_Replication_UCSB_2 [shape=&quot;record&quot;];
+    MN_Replication_ORC_1 [shape=&quot;record&quot;];
+    MN_Replication_ORC_2 [shape=&quot;record&quot;];
+
+    Metacat -&gt; d1_common_java;
+    Metacat -&gt; d1_libclient_java;
+    KNB -&gt; Metacat;
+    SAN_Parks -&gt; Metacat;
+    Merritt -&gt; Metacat;
+
+    Mercury_MN -&gt; d1_common_java;
+    ORNL_DAAC -&gt; Mercury_MN;
+    USGS -&gt; Mercury_MN;
+
+    GMN -&gt; d1_common_python;
+    GMN -&gt; d1_libclient_python;
+    MN_Replication_UNM_1 -&gt; GMN;
+    MN_Replication_UCSB_1 -&gt; GMN;
+    MN_Replication_ORC_1 -&gt; GMN;
+
+    MN_Replication_UNM_2 -&gt; Metacat;
+    MN_Replication_UCSB_2 -&gt; Metacat;
+    MN_Replication_ORC_2 -&gt; Metacat;
+
+    Dryad -&gt; d1_common_java;
+    Dryad -&gt; d1_libclient_java;
+}</div>
+<div class="section" id="investigator-toolkit-components">
+<h2>Investigator Toolkit Components<a class="headerlink" href="#investigator-toolkit-components" title="Permalink to this headline">¶</a></h2>
+<p><strong>Figure 5.</strong> Investigator toolkit.</p>
+<p>NEEDS UPDATING</p>
+ digraph core_components {
+
+    color=&quot;#888888&quot;;
+    fontname = &quot;Bitstream Vera Sans&quot;;
+    fontsize = 8;
+
+    edge [
+      fontname = &quot;Bitstream Vera Sans&quot;
+      fontsize = 8
+      color = &quot;#888888&quot;
+      arrowhead = &quot;open&quot;
+      arrowsize = 0.5
+      style=&quot;solid&quot;
+      ];
+
+    node [
+      fontname = &quot;Courier&quot;
+      fontsize = 8
+      fontcolor = &quot;black&quot;];
+
+    subgraph cluster_CORE {
+      label=&quot;Shared Components&quot;;
+      color=&quot;#888888&quot;;
+
+      schema [label=&quot;dataonetypes.xsd&quot;];
+      d1_common_java;
+      d1_common_python;
+      d1_libclient_java;
+      d1_libclient_python;
+      d1_architecture;
+      foresite_java [style=&quot;filled&quot; bgcolor=&quot;grey80&quot;];
+      foresite_python [style=&quot;filled&quot; bgcolor=&quot;grey80&quot;];
+
+      d1_architecture -&gt; schema;
+      d1_common_java -&gt; schema;
+      d1_common_java -&gt; d1_jibx_extensions;
+      d1_common_java -&gt; d1_test_resources [style=&quot;dashed&quot;];
+      d1_common_java -&gt; d1_architecture [style=&quot;dotted&quot;];
+      d1_common_python -&gt; schema;
+      d1_common_python  -&gt; d1_architecture [style=&quot;dotted&quot;];
+      d1_libclient_java -&gt; d1_common_java;
+      d1_libclient_java -&gt; d1_test_resources [style=&quot;dashed&quot;];
+      d1_libclient_java  -&gt; d1_architecture [style=&quot;dotted&quot;];
+      d1_libclient_java  -&gt; foresite_java;
+      d1_libclient_python -&gt; d1_common_python;
+      d1_libclient_python -&gt; d1_architecture [style=&quot;dotted&quot;];
+      d1_libclient_python -&gt; foresite_python;
+    }
+
+    d1_client_cli;
+    d1_client_r;
+    d1_client_fuse;
+    d1_client_dokan;
+
+    d1_client_cli -&gt; d1_common_python;
+    d1_client_cli -&gt; d1_libclient_python;
+    d1_client_r -&gt; d1_common_java;
+    d1_client_r -&gt; d1_libclient_java;
+    d1_client_fuse -&gt; d1_common_python;
+    d1_client_fuse -&gt; d1_libclient_python;
+    d1_client_dokan -&gt; d1_client_fuse;
+}</div>
+<div class="section" id="table-of-components">
+<h2>Table of Components<a class="headerlink" href="#table-of-components" title="Permalink to this headline">¶</a></h2>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">Components</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 59%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Component</p></th>
+<th class="head"><p>Category</p></th>
+<th class="head"><p>Responsible</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>‘Component’</p></td>
+<td><p>‘Category’</p></td>
+<td><p>‘Responsible’</p></td>
+<td><p>‘Description’</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘dataonetypes’</p></td>
+<td><p>‘Common’</p></td>
+<td><p>‘MJ’</p></td>
+<td><p>‘Schema used for defining serialization of core data types’</p></td>
+</tr>
+<tr class="row-even"><td><p>‘d1_architecture’</p></td>
+<td><p>‘Common’</p></td>
+<td><p>‘DV’</p></td>
+<td><p>‘The system architecture documentation’</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘operations’</p></td>
+<td><p>‘Operations’</p></td>
+<td><p>‘DV’</p></td>
+<td><p>‘Operations documentation - servers etc’</p></td>
+</tr>
+<tr class="row-even"><td><p>‘d1_common_java’</p></td>
+<td><p>‘Common’</p></td>
+<td><p>‘RW’</p></td>
+<td><p>‘Base DataONE library in Java’</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘d1_common_python’</p></td>
+<td><p>‘Common’</p></td>
+<td><p>‘RD’</p></td>
+<td><p>‘Base DataONE library in Python’</p></td>
+</tr>
+<tr class="row-even"><td><p>‘d1_libclient_java’</p></td>
+<td><p>‘Common’</p></td>
+<td><p>‘RN’</p></td>
+<td><p>‘Client library implemented in Java’</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘d1_libclient_python’</p></td>
+<td><p>‘Common’</p></td>
+<td><p>‘RD’</p></td>
+<td><p>‘Client library implemented in Python’</p></td>
+</tr>
+<tr class="row-even"><td><p>‘d1_web_test_site’</p></td>
+<td><p>‘Testing’</p></td>
+<td><p>‘RN’</p></td>
+<td><p>‘Member node integration testing service’</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘d1_echo_service’</p></td>
+<td><p>‘Testing’</p></td>
+<td><p>‘DV’</p></td>
+<td><p>‘A HTTP echo service used for testing’</p></td>
+</tr>
+<tr class="row-even"><td><p>‘d1_integration’</p></td>
+<td><p>‘Testing’</p></td>
+<td><p>‘RN’</p></td>
+<td><p>‘Integration testing for components and combinations thereof’</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘Certificates’</p></td>
+<td><p>‘Testing’</p></td>
+<td><p>‘RW’</p></td>
+<td><p>‘Generation and management of certificates for use by server components’</p></td>
+</tr>
+<tr class="row-even"><td><p>‘d1_instance_generator’</p></td>
+<td><p>‘Testing’</p></td>
+<td><p>‘RD’</p></td>
+<td><p>‘Generates example instances of objects defined in dataoneTypes.xsd’</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘one_mercury’</p></td>
+<td><p>‘CN’</p></td>
+<td><p>‘GP’</p></td>
+<td><p>‘The search interface that is implemented by the Mercury search index’</p></td>
+</tr>
+<tr class="row-even"><td><p>‘cn_metacat’</p></td>
+<td><p>‘CN’</p></td>
+<td><p>‘CJ’</p></td>
+<td><p>‘The <a class="reference external" href="http://knb.ecoinformatics.org/software/">Metacat application</a>. Currently employed as the replicated object  store on Coordinating Nodes.’</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘d1_cn_index_processor’</p></td>
+<td><p>‘CN’</p></td>
+<td><p>‘SR/DV’</p></td>
+<td><p>‘Populates the SOLR index by extracting informaton from system metadata, science metadata and resource maps.’</p></td>
+</tr>
+<tr class="row-even"><td><p>‘d1_cn_index_generator’</p></td>
+<td><p>‘CN’</p></td>
+<td><p>‘SR/DV’</p></td>
+<td><p>‘Generates indexing tasks when new objects appear or system metadata changes’</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘d1_cn_index_common’</p></td>
+<td><p>‘CN’</p></td>
+<td><p>‘SR/DV’</p></td>
+<td><p>‘Code shared between the indexing components’</p></td>
+</tr>
+<tr class="row-even"><td><p>‘indexerapi’</p></td>
+<td><p>‘CN’</p></td>
+<td><p>‘SR/DV’</p></td>
+<td><p>‘A library used by the index_processor for extracting content from various types of XML structures such as system metadata, science metadata and resource maps. ‘</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘d1_portal_servlet’</p></td>
+<td><p>‘CN’</p></td>
+<td><p>‘BL’</p></td>
+<td><p>‘Provides a UI for interacting with the CILogon service, an authentication proxy service’</p></td>
+</tr>
+<tr class="row-even"><td><p>‘d1_portal’</p></td>
+<td><p>‘CN’</p></td>
+<td><p>‘BL’</p></td>
+<td><p>‘Implements the certificate manager used by the portal servlets’</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘d1_identity_manager’</p></td>
+<td><p>‘CN’</p></td>
+<td><p>‘BL’</p></td>
+<td><p>‘Provides mechanisms for managing subjects in dataone’</p></td>
+</tr>
+<tr class="row-even"><td><p>‘d1_process_daemon’</p></td>
+<td><p>‘CN’</p></td>
+<td><p>‘RW’</p></td>
+<td><p>‘Monitors content on member nodes, creating tasks for synchronization and replication’</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘d1_synchronization’</p></td>
+<td><p>‘CN’</p></td>
+<td><p>‘RW’</p></td>
+<td><p>‘Manages the synchronization of content between Member Nodes and the Coordinating Nodes.’</p></td>
+</tr>
+<tr class="row-even"><td><p>‘d1_replication’</p></td>
+<td><p>‘CN’</p></td>
+<td><p>‘CJ’</p></td>
+<td><p>‘Manages replication of content between Member Nodes’</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘d1_cn_noderegistry’</p></td>
+<td><p>‘CN’</p></td>
+<td><p>‘RW’</p></td>
+<td><p>‘A register of coordinating and member nodes participating in a DataONE environment’</p></td>
+</tr>
+<tr class="row-even"><td><p>‘d1_cn_common’</p></td>
+<td><p>‘CN’</p></td>
+<td><p>‘RW’</p></td>
+<td><p>‘A library of code shared between coordintating node components’</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘d1_cn_rest’</p></td>
+<td><p>‘CN’</p></td>
+<td><p>‘RW’</p></td>
+<td><p>‘The coordinating node HTTP REST service interface’</p></td>
+</tr>
+<tr class="row-even"><td><p>‘d1_cn_rest_proxy’</p></td>
+<td><p>‘CN’</p></td>
+<td><p>‘RW’</p></td>
+<td><p>‘Proxies requests coming in to a CN to underlying service implementations such as the object store (i.e. Metacat)’</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘d1_cn_service’</p></td>
+<td><p>‘CN’</p></td>
+<td><p>‘RW’</p></td>
+<td><p>‘Coordinating node service, implementing the service APIs, data storage, and CN replication.’</p></td>
+</tr>
+<tr class="row-even"><td><p>‘d1_simple_search’</p></td>
+<td><p>‘CN’</p></td>
+<td><p>‘DV’</p></td>
+<td><p>‘A simple search interface using Javascript and the SOLR interface.’</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘Metacat’</p></td>
+<td><p>‘MN’</p></td>
+<td><p>‘CJ’</p></td>
+<td><p>‘The <a class="reference external" href="http://knb.ecoinformatics.org/software/">Metacat application</a>. Implements the DataONE MN service interfaces.’</p></td>
+</tr>
+<tr class="row-even"><td><p>‘Dryad’</p></td>
+<td><p>‘MN’</p></td>
+<td><p>‘RS’</p></td>
+<td><p>‘A member node implementation and instance for the Dryad repository’</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘GMN’</p></td>
+<td><p>‘MN’</p></td>
+<td><p>‘RD’</p></td>
+<td><p>‘A generic, standalone Member Node implementation written in Python using the <a class="reference external" href="http://www.djangoproject.com/">Django</a> framework.’</p></td>
+</tr>
+<tr class="row-even"><td><p>‘Mercury_MN’</p></td>
+<td><p>‘MN’</p></td>
+<td><p>‘JG’</p></td>
+<td><p>‘Mercury implementation of the Member Node services’</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘d1_client_cli’</p></td>
+<td><p>‘ITK’</p></td>
+<td><p>‘RD’</p></td>
+<td><p>‘A command line client for interacting with the DataONE infrastructure. Currently implemented using d1_libclient_python.’</p></td>
+</tr>
+<tr class="row-even"><td><p>‘d1_client_fuse’</p></td>
+<td><p>‘ITK’</p></td>
+<td><p>‘DV’</p></td>
+<td><p>‘A <a class="reference external" href="http://fuse.sourceforge.net/">FUSE</a> driver for mounting the DataONE infrastructure as a file system.’</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘d1_client_dokan’</p></td>
+<td><p>‘ITK’</p></td>
+<td><p>‘DV’</p></td>
+<td><p>‘An extention of the FUSE driver that is based on <a class="reference external" href="http://dokan-dev.net/en/">Dokan</a> for use on Microsoft Windows systems.’</p></td>
+</tr>
+<tr class="row-even"><td><p>‘d1_client_r’</p></td>
+<td><p>‘ITK’</p></td>
+<td><p>‘MJ’</p></td>
+<td><p>‘A plugin for R that enables access to DataONE content from the <a class="reference external" href="http://www.r-project.org/">R</a> application. Implemented using d1_libclient_java.’</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘hzpeek’</p></td>
+<td><p>‘Testing’</p></td>
+<td><p>‘DV’</p></td>
+<td><p>‘A tool for examining the Hazelcast queues on the CNs’</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Components of the DataONE Infrastructure</a><ul>
+<li><a class="reference internal" href="#common-components">Common Components</a></li>
+<li><a class="reference internal" href="#integration-test-tools">Integration Test Tools</a></li>
+<li><a class="reference internal" href="#coordinating-node-components">Coordinating Node Components</a></li>
+<li><a class="reference internal" href="#member-node-components-and-instances">Member Node Components and Instances</a></li>
+<li><a class="reference internal" href="#investigator-toolkit-components">Investigator Toolkit Components</a></li>
+<li><a class="reference internal" href="#table-of-components">Table of Components</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+  <li><a href="index.html">Implementation Notes</a><ul>
+      <li>Previous: <a href="roadmap.html" title="previous chapter">Implementation Roadmap</a></li>
+      <li>Next: <a href="prioritization.html" title="next chapter">Implementation Priority</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/implementation/components.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/implementation/components.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/implementation/components.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

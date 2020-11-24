@@ -1,0 +1,335 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mutability of Metadata &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Mutability of Metadata</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mutability-of-metadata">
+<h1>Mutability of Metadata<a class="headerlink" href="#mutability-of-metadata" title="Permalink to this headline">¶</a></h1>
+<p>These notes were initiated by DV with responses by RW and MJ around 17
+December, 2010.</p>
+<p>Need a couple of methods internal to the CN to allow efficient updating of
+mutable content, which includes SystemMetadata and the Node Registry.</p>
+<p>Update of system metadata is required so that CNs can keep track of content as
+it is replicated around the place between nodes.</p>
+<p>Update of registry is required on a fairly frequent basis for tracking node
+status and synchronization and other operations.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">bool</span> <span class="n">updateSystemMetadata</span><span class="p">(</span><span class="n">Identifier</span> <span class="n">pid</span><span class="p">,</span> <span class="n">newSysMetaDocument</span> <span class="n">doc</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>or perhaps a more granular approach:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">String</span> <span class="n">updateSystemMetadataProperty</span><span class="p">(</span><span class="n">Identifier</span> <span class="n">pid</span><span class="p">,</span> <span class="n">propertyPath</span> <span class="n">path</span><span class="p">,</span> <span class="n">String</span> <span class="n">newValue</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>pid = the identifier of the object for which sys meta is to be updated</p>
+<p>path = simple xpath statement identifying element or attribute to update</p>
+<p>newValue = the new value to set (assuming everything is a string)</p>
+<p>returns previous value</p>
+<p>We could generalize this a bit:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">stringList</span> <span class="n">updateMutableObject</span><span class="p">(</span><span class="n">Identifier</span> <span class="n">pid</span><span class="p">,</span> <span class="n">UpdateStatementList</span> <span class="n">updates</span><span class="p">)</span>
+
+<span class="n">UpdateStatementList</span> <span class="o">=</span> <span class="nb">list</span> <span class="n">of</span>
+
+  <span class="n">path</span>
+  <span class="n">new</span> <span class="n">value</span>
+</pre></div>
+</div>
+<p>Robert’s Notes:</p>
+<p>We decided not to use XPath as a means for editing Metadata.</p>
+<p>The rest interface must have a way inwhich to allow memberNodes and Clients to
+submit changes to the SystemMetadata.</p>
+<p>For now we will just implement a separate update REST call on metacat such
+that a metacat controlled document can be updated without its PID being
+changed. However, this will need to change in the future. Possible other
+solutions involve Java RMI or Java JMX. (due to the inherently restrictive
+nature of Java RMI, may that will be the preferred method)</p>
+<p>We need to consider the System Metadata schema as a packaging xml document.
+The System Metadata type will have three groups, an Immutable group, a
+Provenance group and a Mutable group. The root element has several ‘general’
+elements that are considered immutable. They are considered immutable because
+membernodes or clients may not alter these elements. These elements may be
+represented as the SystemMetadata header complex should we wish to explicitly
+nest and typify them.</p>
+<p>The new nesting element is being proposed to typify and group provenance
+information. The provenance complex type will contain two sub-elements origin
+and derivation. origin complex type element will contain two children,
+submitter and originMemberNode, that are immutable. The derivation complex
+type element contains mutable elements. Not that the derivation type can be
+used as a root element itself.</p>
+<p>All of the mutable elements are types that can be themselves serialized as
+DataONE messages (or they are represented as root elements). They can be
+submitted by MemberNodes or clients.</p>
+<p>The Immutable grouping:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>identifier element</p></li>
+<li><p>dateUploaded element</p></li>
+<li><p>dateSysMetadataModified element (may be modified by cn interal system processing)</p></li>
+<li><p>objectFormat element</p></li>
+<li><p>size element</p></li>
+</ol>
+<ol class="arabic simple" start="8">
+<li><p>checksum element</p></li>
+<li><p>replica complex type (may be modified by cn interal system processing)</p></li>
+</ol>
+</div></blockquote>
+<p>The Provenance grouping &amp; complex type(contains both mutable and immutable types</p>
+<blockquote>
+<div><ol class="arabic">
+<li><p>origin complex type (Immutable)</p>
+<blockquote>
+<div><ol class="loweralpha simple">
+<li><p>submitter element</p></li>
+<li><p>originMemberNode element</p></li>
+</ol>
+</div></blockquote>
+</li>
+<li><p>derivation complex type (Mutable)</p>
+<blockquote>
+<div><ol class="loweralpha simple">
+<li><p>rightsHolder - element</p></li>
+<li><p>authoritativeMemberNode - element</p></li>
+<li><p>obsoletes -element</p></li>
+<li><p>obsoletedBy -element</p></li>
+<li><p>derivedFrom -element</p></li>
+<li><p>describes -element</p></li>
+<li><p>describedBy -element</p></li>
+</ol>
+</div></blockquote>
+</li>
+</ol>
+</div></blockquote>
+<p>The Mutable grouping (may be modified by Cns, Mns or Clients)</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>replication policy complex type</p></li>
+<li><p>access control complex type</p></li>
+</ol>
+</div></blockquote>
+<p>REST API:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PUT</span> <span class="o">/</span><span class="n">meta</span><span class="o">/</span><span class="n">pid</span> <span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="n">derivation</span> <span class="o">|</span> <span class="n">replicationPolicy</span> <span class="o">|</span> <span class="n">accessControl</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Types</span><span class="o">.</span><span class="n">Identifier</span>
+</pre></div>
+</div>
+<p>CRUD Api  (Methods Overloaded or named separately??? assuming named separately???)</p>
+<p>internal only:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CN_crud</span><span class="o">.</span><span class="n">updateSystemMetadata</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="n">systemMetadata</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">boolean</span>
+</pre></div>
+</div>
+<p>externally available through REST API:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CN_crud</span><span class="o">.</span><span class="n">updateSystemMetadataProvenance</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="n">derivation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">boolean</span>
+<span class="n">CN_crud</span><span class="o">.</span><span class="n">updateSystemMetadataReplication</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="n">replicationPolicy</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">boolean</span>
+<span class="n">CN_crud</span><span class="o">.</span><span class="n">updateSystemMetadataAccessControl</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="n">accessControl</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">boolean</span>
+</pre></div>
+</div>
+<div class="section" id="matt-s-modification-of-the-notes-from-robert-above">
+<h2>Matt’s modification of the notes from Robert above:<a class="headerlink" href="#matt-s-modification-of-the-notes-from-robert-above" title="Permalink to this headline">¶</a></h2>
+<p>I think we need a slightly different set of groups of system metadata
+elements, which I outline below, and which then lead to a different set of
+services. Each group should be defined in its own freestanding ComplexType. I
+don’t think we should have a general service for modifying system metadata
+that is externally accessible, but rather should have a separate method for
+each system metadata group so that access to the services can be controlled
+independently.</p>
+<dl class="simple">
+<dt>The Identity group (immutable, set at time of create() call)</dt><dd><ol class="arabic simple">
+<li><p>identifier element</p></li>
+<li><p>dateUploaded element</p></li>
+<li><p>objectFormat element</p></li>
+<li><p>size element</p></li>
+<li><p>checksum element</p></li>
+<li><p>submitter element</p></li>
+<li><p>originMemberNode element</p></li>
+</ol>
+</dd>
+</dl>
+<p>The ObjectStatus group (mutable by CNs only):</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>dateSysMetadataModified element (may be modified by cn internal system processing)</p></li>
+<li><p>replica complex type (may be modified by cn interal system processing)</p></li>
+</ol>
+</div></blockquote>
+<p>The Policy group (mutable with changePermission [maybe ‘changePolicy’] permission by CNs, MNs, Clients):</p>
+<blockquote>
+<div><ol class="arabic">
+<li><p>AccessPolicy complex type</p>
+<blockquote>
+<div><ol class="loweralpha simple">
+<li><p>rightsHolder - element (NB: this needs to be added to AP schema)</p></li>
+<li><p>authoritativeMemberNode - element (NB: this needs to be added to AP schema)</p></li>
+</ol>
+</div></blockquote>
+</li>
+<li><p>ReplicationPolicy complex type</p></li>
+</ol>
+</div></blockquote>
+<p>The Provenance group (mutable by Clients/MNs):</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>obsoletes -element    (requires ‘write’ permission, set at time of update() call)</p></li>
+<li><p>obsoletedBy -element  (requires ‘write’ permission, set at time of update() call)</p></li>
+<li><p>derivedFrom -element  (requires ‘write’ permission, set at time of update() or create() call)*</p></li>
+<li><p>describes -element    (requires ‘write’ permission, set at time of update() or create() call)*</p></li>
+<li><p>describedBy -element  (requires ‘write’ permission, set at time of update() or create() call)*</p></li>
+</ol>
+</div></blockquote>
+<p>* There is a case to be made that these 3 elements should be settable by any client, but the problem comes in determining who can change values that someone else wrote (i.e., Joe says X describes Y, can Jane then say ‘Y describes X’ or other contrary statements, and who can delete Joe’s assertion?)</p>
+<p>The Overall SystemMetadata object would contain elements for all of these
+groups, so thet getSystemMetadata() returns all of this information. Updating
+system metadata would be done with the following calls:</p>
+</div>
+<div class="section" id="internal-cn-apis-not-accessible-to-mns-and-clients">
+<h2>Internal CN APIs (not accessible to MNs and Clients)<a class="headerlink" href="#internal-cn-apis-not-accessible-to-mns-and-clients" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CN_crud</span><span class="o">.</span><span class="n">updateSystemMetadata</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="n">systemMetadata</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Types</span><span class="o">.</span><span class="n">Identifier</span>
+<span class="n">REST</span> <span class="n">API</span><span class="p">:</span> <span class="n">PUT</span> <span class="o">/</span><span class="n">meta</span><span class="o">/</span><span class="n">pid</span> <span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="n">SystemMetadata</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Types</span><span class="o">.</span><span class="n">Identifier</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="external-cn-apis-accessible-to-any-caller-with-appropriate-credentials">
+<h2>External CN APIs (accessible to any caller with appropriate credentials)<a class="headerlink" href="#external-cn-apis-accessible-to-any-caller-with-appropriate-credentials" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CN_crud</span><span class="o">.</span><span class="n">setAccessPolicy</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="n">AccessPolicy</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">boolean</span>
+<span class="n">REST</span> <span class="n">API</span><span class="p">:</span> <span class="n">PUT</span> <span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="n">pid</span> <span class="p">(</span><span class="n">body</span> <span class="n">containing</span> <span class="n">token</span><span class="p">,</span> <span class="n">AccessPolicy</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">boolean</span>
+
+<span class="n">CN_crud</span><span class="o">.</span><span class="n">setReplicationPolicy</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="n">ReplicationPolicy</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">boolean</span>
+<span class="n">REST</span> <span class="n">API</span><span class="p">:</span> <span class="n">PUT</span> <span class="o">/</span><span class="n">replication</span><span class="o">/</span><span class="n">pid</span> <span class="p">(</span><span class="n">body</span> <span class="n">containing</span> <span class="n">token</span><span class="p">,</span> <span class="n">AccessPolicy</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">boolean</span>
+
+<span class="n">CN_crud</span><span class="o">.</span><span class="n">setProvenance</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="n">Provenance</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">boolean</span>
+<span class="n">REST</span> <span class="n">API</span><span class="p">:</span> <span class="n">PUT</span> <span class="o">/</span><span class="n">provenance</span><span class="o">/</span><span class="n">pid</span> <span class="p">(</span><span class="n">body</span> <span class="n">containing</span> <span class="n">token</span><span class="p">,</span> <span class="n">AccessPolicy</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">boolean</span>
+</pre></div>
+</div>
+<p>-robert’s response: I don’t think we have a boolean return type. Everything we
+return needs to be serializable.</p>
+<p>I was attempting to keep</p>
+<blockquote>
+<div><ol class="arabic simple" start="6">
+<li><p>submitter element</p></li>
+<li><p>originMemberNode element</p></li>
+</ol>
+</div></blockquote>
+<p>as part of the provenance group. It is information more appropriate to the
+provenance of an object than the identification of the object. Hence, i broke
+provenance into two parts, one mutable, the other not.</p>
+<p>Otherwise, it reads well.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Mutability of Metadata</a><ul>
+<li><a class="reference internal" href="#matt-s-modification-of-the-notes-from-robert-above">Matt’s modification of the notes from Robert above:</a></li>
+<li><a class="reference internal" href="#internal-cn-apis-not-accessible-to-mns-and-clients">Internal CN APIs (not accessible to MNs and Clients)</a></li>
+<li><a class="reference internal" href="#external-cn-apis-accessible-to-any-caller-with-appropriate-credentials">External CN APIs (accessible to any caller with appropriate credentials)</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/notes/sysmeta_mutation_20101217.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/notes/sysmeta_mutation_20101217.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/notes/sysmeta_mutation_20101217.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

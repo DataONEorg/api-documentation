@@ -1,0 +1,802 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Change Log &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/mathjax_pre.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Implementation Notes" href="implementation/index.html" />
+    <link rel="prev" title="Glossary" href="glossary.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="implementation/index.html" title="Implementation Notes"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="glossary.html" title="Glossary"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html"></a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Change Log</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="change-log">
+<h1>Change Log<a class="headerlink" href="#change-log" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="version-1-2-clarification-edits">
+<h2>2014-02-12: Version 1.2. Clarification edits<a class="headerlink" href="#version-1-2-clarification-edits" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Many edits to clarify definitions such as “archive”.</p></li>
+<li><p>Revised introductory text to APIs and the overall system</p></li>
+</ul>
+</div>
+<div class="section" id="version-1-2-minor-edits">
+<h2>2013-10-17: Version 1.2. Minor edits<a class="headerlink" href="#version-1-2-minor-edits" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Added language indicating restricted access to log information by public user</p></li>
+<li><p>New version of plantuml.jar</p></li>
+</ul>
+</div>
+<div class="section" id="version-1-1-clarifying-count-parameter-for-slicing">
+<h2>2012-10-09: Version 1.1. Clarifying <em>count</em> parameter for slicing<a class="headerlink" href="#version-1-1-clarifying-count-parameter-for-slicing" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>No functional changes were introduced.</p></li>
+<li><p>listObjects, listSubjects, getLogRecords descriptions were updated</p></li>
+</ul>
+</div>
+<div class="section" id="version-1-1-adding-mnquery-api">
+<h2>2012-09-28: Version 1.1. Adding MNQuery API<a class="headerlink" href="#version-1-1-adding-mnquery-api" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Added MNQuery API as an optional Tier 1 API with the same method signatures as
+the CNRead.Query* method definitions.</p></li>
+</ul>
+</div>
+<div class="section" id="version-1-1-revising-proposed-query-api">
+<h2>2012-09-25: Version 1.1. Revising proposed Query API<a class="headerlink" href="#version-1-1-revising-proposed-query-api" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Updated proposed search API following review and discussion. Including draft
+changes to 1.1 dataoneTypes.xsd</p></li>
+<li><p>Changed search2 to query</p></li>
+<li><p>Changed listSearchFields to getQueryEngineDescription</p></li>
+<li><p>Changed listSearchEngines to listQueryEngines</p></li>
+<li><p>2012-09-06: Version 1.0. Removed ambiguous exception serialization info</p></li>
+</ul>
+</div>
+<div class="section" id="version-1-1-augmenting-search-api">
+<h2>2012-08-20: Version 1.1. Augmenting Search API<a class="headerlink" href="#version-1-1-augmenting-search-api" title="Permalink to this headline">¶</a></h2>
+<p>DRAFT edits for review:</p>
+<ul class="simple">
+<li><p>Added method search2 which enables return of arbitrary structure as
+determined by the selected search engine.</p></li>
+<li><p>Added method listSearchFields which returns a list of fields that can be
+searched using a specified search engine.</p></li>
+<li><p>Added method listSearchEngines which returns a list of search engines
+available.</p></li>
+</ul>
+</div>
+<div class="section" id="version-1-0-correction-to-uris-in-resource-maps">
+<h2>2012-05-31: Version 1.0, Correction to URIs in Resource Maps<a class="headerlink" href="#version-1-0-correction-to-uris-in-resource-maps" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Corrected URI constructs in the resource map data package documents to use
+resolve rather than getObject URIs so that clients can take advantage of the
+ObjectLocationList or HTTP status 302 redirect.</p></li>
+</ul>
+</div>
+<div class="section" id="version-1-0-methodcrossreference-xls">
+<h2>2012-05-02: Version 1.0, MethodCrossReference.xls<a class="headerlink" href="#version-1-0-methodcrossreference-xls" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Moved MN systemMetadataChanged from MNStorage API to MNAuthorization API so
+that the method appears in Tier 2 operations.</p></li>
+</ul>
+</div>
+<div class="section" id="id1">
+<h2>2012-05-01: Version 1.0, MethodCrossReference.xls<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>The MN method <em>getReplica</em> was incorrectly located in Tier 4, effectively
+preventing any MN implementation except Tier 4 nodes from acting as
+replication sources. This has been corrected, with the method moved to the
+MNRead Tier1 API. The method description was updated accordingly.</p></li>
+<li><p>Existing MNStorage.delete renamed to MNStorage.archive, better reflecting its
+action.</p></li>
+<li><p>New MNStorage.delete operation added for Tier3. This operation does actually
+delete the content from the node, removing it from DataONE services (the node
+may choose to also delete the bytes)</p></li>
+<li><p>New CNCore.archive operation performs the same action as MN.archive, except
+the operation triggers a change notification to all nodes containing the
+object.</p></li>
+<li><p>New CNCore.delete operation intended to be used only by administrators when
+there is a requirement to remove an object from the entire DataONE system.
+Memory of the identifier persists, preventing its reuse.</p></li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h2>2012-03-26: Version 1.0, MethodCrossReference.xls<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Corrected typo in REST description for listObjects which had lowercase
+<em>formatid</em>, corrected to <em>formatId</em>.</p></li>
+<li><p>Corrected order of parameters for getLogRecords, moving <em>start</em> and <em>count</em> to
+the end to be consistent with other method signatures.</p></li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>2012-03-26: Version 1.0, MethodCrossReference.xls<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="apis/MN_APIs.html#MNCore.getLogRecords" title="MNCore.getLogRecords"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNCore.getLogRecords()</span></code></a> updated ‘pid’ parameter to string and renamed to
+‘pidFilter’</p></li>
+<li><p><a class="reference internal" href="apis/CN_APIs.html#CNCore.getLogRecords" title="CNCore.getLogRecords"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNCore.getLogRecords()</span></code></a> updated ‘pid’ parameter to string and renamed to
+‘pidFilter’</p></li>
+</ul>
+</div>
+<div class="section" id="id4">
+<h2>2012-03-25: Version 1.0, MethodCrossReference.xls<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="apis/MN_APIs.html#MNCore.getLogRecords" title="MNCore.getLogRecords"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNCore.getLogRecords()</span></code></a> added an optional parameter <em>pid</em> that specifies
+the prefix of the pid for matching on log records. Support for this parameter
+is optional, and a MN implementation may silently ignore if present in the
+request and the node is unable to support the pid prefix filter.</p></li>
+<li><p><a class="reference internal" href="apis/CN_APIs.html#CNCore.getLogRecords" title="CNCore.getLogRecords"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNCore.getLogRecords()</span></code></a> added an optional parameter <em>pid</em> that specifies
+the prefix of the pid for matching on log records. Support for this parameter
+is currently optional for CNs, and may be ignored if present in the request.</p></li>
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">MNStorage.GenerateIdentifier()</span></code> new method added to the MNStorage API.
+This signature mirrors the CNCore.GenerateIdentifier method and is made
+available on Member Nodes as they may choose to have an organizational
+association with an identifier service.</p></li>
+</ul>
+</div>
+<div class="section" id="id5">
+<h2>2012-02-27: Version 1.0, MethodCrossReference.xls<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="apis/CN_APIs.html#CNRead.search" title="CNRead.search"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNRead.search()</span></code></a> clarified how to specify path and query separators in the
+value of parameter ‘query.’  Change xmit type of parameter ‘query’ to ‘path’,
+since it contains both path and query (to simplify client conformity testing)</p></li>
+</ul>
+</div>
+<div class="section" id="dataonetypes-xsd">
+<h2>2012-02-24 : dataoneTypes.xsd<a class="headerlink" href="#dataonetypes-xsd" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Correction to the contrabEntry definition</p></li>
+<li><p>Several documentation only changes</p></li>
+</ul>
+</div>
+<div class="section" id="id6">
+<h2>2012-02-17 : Version 1.0, MethodCrossReference.xls<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="apis/CN_APIs.html#CNRead.search" title="CNRead.search"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNRead.search()</span></code></a> clarified that queryType is specified as a URL path parameter
+and the remainder of the URL (path and query) is passed to the respective
+search engine as indicated by the value of queryType.</p></li>
+</ul>
+</div>
+<div class="section" id="id7">
+<h2>2012-02-15 : Version 1.0, MethodCrossReference.xls<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="apis/CN_APIs.html#CNCore.hasReservation" title="CNCore.hasReservation"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNCore.hasReservation()</span></code></a> REST URL changed a POST message to <code class="docutils literal notranslate"><span class="pre">GET</span>
+<span class="pre">/reserve/{pid}?subject={subject}</span></code></p></li>
+</ul>
+</div>
+<div class="section" id="id8">
+<h2>2012-02-02 : Version 1.0, MethodCrossReference.xls<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="apis/CN_APIs.html#CNIdentity.updateAccount" title="CNIdentity.updateAccount"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNIdentity.updateAccount()</span></code></a> REST URL changed to <code class="docutils literal notranslate"><span class="pre">PUT</span> <span class="pre">/accounts/{subject}</span></code></p></li>
+<li><p><a class="reference internal" href="apis/CN_APIs.html#CNIdentity.verifyAccount" title="CNIdentity.verifyAccount"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNIdentity.verifyAccount()</span></code></a> REST URL changed to <code class="docutils literal notranslate"><span class="pre">PUT</span> <span class="pre">/accounts/verification/{subject}</span></code></p></li>
+<li><p>IMPORTANT: Encoding practice for simple types transmitted as part of a MIME
+multipart/mixed message has been changed to simple string encoding, not XML
+encoding. See <a class="reference internal" href="apis/rest_comms.html"><span class="doc">REST Interface Overview</span></a>.</p></li>
+</ul>
+</div>
+<div class="section" id="id9">
+<h2>2012-02-01 : Version 1.0, MethodCrossReference.xls<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Updated description of ping() to emphasize that the timestamp in the response
+is transmitted in the HTTP header.</p></li>
+<li><p>Response type for <a class="reference internal" href="apis/CN_APIs.html#CNIdentity.getSubjectInfo" title="CNIdentity.getSubjectInfo"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNIdentity.getSubjectInfo()</span></code></a> and
+<a class="reference internal" href="apis/CN_APIs.html#CNIdentity.listSubjects" title="CNIdentity.listSubjects"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNIdentity.listSubjects()</span></code></a> changed from <a class="reference internal" href="apis/Types.html#Types.SubjectList" title="Types.SubjectList"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.SubjectList</span></code></a> to
+<a class="reference internal" href="apis/Types.html#Types.SubjectInfo" title="Types.SubjectInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.SubjectInfo</span></code></a></p></li>
+<li><p>Response for <code class="xref py py-func docutils literal notranslate"><span class="pre">MNReplication.getReplica()</span></code> corrected in the documentation
+to indicate response is an octetStream of bytes that represent the requested
+object.</p></li>
+<li><p>Signature of <a class="reference internal" href="apis/MN_APIs.html#MNStorage.create" title="MNStorage.create"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNStorage.create()</span></code></a></p>
+<ul>
+<li><p>pid removed from URL, it should be a param in the message body.</p></li>
+</ul>
+</li>
+<li><p>Signature of <a class="reference internal" href="apis/CN_APIs.html#CNCore.create" title="CNCore.create"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNCore.create()</span></code></a></p>
+<ul>
+<li><p>pid removed from URL, it should be a param in the message body.</p></li>
+</ul>
+</li>
+<li><p>Signature of <a class="reference internal" href="apis/CN_APIs.html#CNIdentity.verifyAccount" title="CNIdentity.verifyAccount"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNIdentity.verifyAccount()</span></code></a></p>
+<ul>
+<li><p>subject removed from the URL, it should be a param in the message body.</p></li>
+</ul>
+</li>
+<li><p>Signature of <a class="reference internal" href="apis/CN_APIs.html#CNIdentity.requestMapIdentity" title="CNIdentity.requestMapIdentity"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNIdentity.requestMapIdentity()</span></code></a></p>
+<ul>
+<li><p>subject removed from URL, it should be a param in the message body.</p></li>
+</ul>
+</li>
+<li><p>Signature of <a class="reference internal" href="apis/CN_APIs.html#CNCore.registerSystemMetadata" title="CNCore.registerSystemMetadata"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNCore.registerSystemMetadata()</span></code></a></p>
+<ul>
+<li><p>pid removed from URL, should be a param in the message body</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id10">
+<h2>2012-01-20 : Version 1.0, MethodCrossReference.xls<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Switched from SubjectInfo to just Subject for <a class="reference internal" href="apis/CN_APIs.html#CNCore.hasReservation" title="CNCore.hasReservation"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNCore.hasReservation()</span></code></a> to
+remove requirement for a Member Node call to the CN to support create
+operations.</p></li>
+<li><p>Added InvalidToken exception to <a class="reference internal" href="apis/MN_APIs.html#MNReplication.replicate" title="MNReplication.replicate"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNReplication.replicate()</span></code></a>,
+<a class="reference internal" href="apis/CN_APIs.html#CNCore.registerSystemMetadata" title="CNCore.registerSystemMetadata"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNCore.registerSystemMetadata()</span></code></a>, <a class="reference internal" href="apis/CN_APIs.html#CNIdentity.registerAccount" title="CNIdentity.registerAccount"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNIdentity.registerAccount()</span></code></a>,
+<a class="reference internal" href="apis/CN_APIs.html#CNIdentity.updateAccount" title="CNIdentity.updateAccount"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNIdentity.updateAccount()</span></code></a>, <a class="reference internal" href="apis/CN_APIs.html#CNIdentity.getPendingMapIdentity" title="CNIdentity.getPendingMapIdentity"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNIdentity.getPendingMapIdentity()</span></code></a>,
+<a class="reference internal" href="apis/CN_APIs.html#CNRegister.register" title="CNRegister.register"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNRegister.register()</span></code></a>.</p></li>
+</ul>
+</div>
+<div class="section" id="id11">
+<h2>2012-01-19 : Version 1.0, MethodCrossReference.xls<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>The signature for <a class="reference internal" href="apis/CN_APIs.html#CNCore.hasReservation" title="CNCore.hasReservation"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNCore.hasReservation()</span></code></a> has been changed to include a
+<a class="reference internal" href="apis/Types.html#Types.SubjectInfo" title="Types.SubjectInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.SubjectInfo</span></code></a> field to identify the principal who originally made
+the reservation request.</p></li>
+<li><p>Request method and endpoint for <a class="reference internal" href="apis/CN_APIs.html#CNCore.hasReservation" title="CNCore.hasReservation"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNCore.hasReservation()</span></code></a> was changed to
+POST and <code class="docutils literal notranslate"><span class="pre">/hasReservation</span></code> respectively.</p></li>
+</ul>
+</div>
+<div class="section" id="id12">
+<h2>2012-01-12 : Version 1.0, MethodCrossReference.xls<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Updated <a class="reference internal" href="apis/CN_APIs.html#CNRead.resolve" title="CNRead.resolve"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNRead.resolve()</span></code></a> to return a HTTP 303 See Other response on
+success</p></li>
+<li><p>Added <a class="reference internal" href="apis/CN_APIs.html#CNCore.setObsoletedBy" title="CNCore.setObsoletedBy"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNCore.setObsoletedBy()</span></code></a> to update the obsoletedBy information for
+an object. Note that the proposed endpoint may change pending discussion.</p></li>
+<li><p>Added <a class="reference internal" href="apis/CN_APIs.html#CNReplication.deleteReplicationMetadata" title="CNReplication.deleteReplicationMetadata"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNReplication.deleteReplicationMetadata()</span></code></a> to remove the replica
+metadata for a particular node for an object. Only callable by CNs</p></li>
+</ul>
+</div>
+<div class="section" id="id13">
+<h2>2012-01-10 : Version 1.0, MethodCrossReference.xls<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>updated method descriptions for updateReplicaMetadata</p></li>
+<li><p>updated method descriptions for updateNodeCapabilities</p></li>
+<li><p>removed VersionMismatch from setReplicationStatus method</p></li>
+</ul>
+</div>
+<div class="section" id="id14">
+<h2>2012-01-03 : Version 1.0, MethodCrossReference.xls<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>removed the deprecated assertRelation method</p></li>
+</ul>
+</div>
+<div class="section" id="version-1-0-dataonetypes-xsd">
+<h2>2011-12-19 : Version 1.0, dataoneTypes.xsd<a class="headerlink" href="#version-1-0-dataonetypes-xsd" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p>replaced tabs with ”  “</p></li>
+<li><p>Event names in description changed to same case as enumerated values</p></li>
+<li><p>various: minor formatting changes for rendering in architecture docs.</p></li>
+<li><p>Added root elements for AccessRule, LogEntry, NodeReplicationPolicy,
+ObjectInfo, Service, Services, Schedule, Synchronization,
+NodeReplicationPolicy, ServiceMethodRestriction.</p>
+<p>AccessRule, LogEntry, NodeReplicationPolicy, ObjectInfo, Service, Services, Schedule, Synchronization, NodeReplicationPolicy, ServiceMethodRestriction.</p>
+</li>
+</ul>
+<p>2011-12-19 : Version 1.0</p>
+<ul class="simple">
+<li><p>Altered MNCore and CNCore ping() to use the HTTP Date header field for
+transmitting the timestamp. Removed requirement for timestamp appearing in
+response body.</p></li>
+</ul>
+<p>2011-12-14 : Version 1.0</p>
+<ul class="simple">
+<li><p>Changed MNCore.ping() to return a DateTime string</p></li>
+<li><p>Added CNCore.ping()</p></li>
+</ul>
+</div>
+<div class="section" id="version-1-0">
+<h2>2011-12-13 : Version 1.0<a class="headerlink" href="#version-1-0" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><p>Updated MethodCrossReference.xls to reflect API changes for CN.setReplicationStatus()</p></li>
+<li><p>Updated MethodCrossReference.xls to reflect API changes for CN.isNodeAuthorized()</p></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="id15">
+<h2>2011-12-12 : Version 1.0<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h2>
+<p>Changes to dataoneTypes.xsd:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Added ChecksumAlgorithmList</p></li>
+<li><p>Limited valid checksums to SHA-1 and MD5</p></li>
+<li><p>Added ReplicationStatus.FAILED to the enumeration</p></li>
+<li><p>Added a new SimpleType: NonEmptyNoWhitespaceString800, used to restrict identifiers</p></li>
+<li><p>Removed Permission.REPLICATE</p></li>
+<li><p>Changed SystemMetadata to make the following fields optional: submitter, dateUploaded,
+dateSystemMetadataModified, serialVersion. However, an MN or CN must set them.</p></li>
+<li><p>Created Types.CrontabEntrySeconds to restrict the seconds field in a Schedule</p></li>
+<li><p>Changed documentation for SystemMetadata.authoritativeMemberNode</p></li>
+<li><p>Added a new NodeReplicationPolicy type, to be used as an optional structure in Node</p></li>
+<li><p>Removed MonitorInfo and MonitorList types - deprecated.</p></li>
+<li><p>Updated documentation for the Node type.</p></li>
+</ul>
+</div></blockquote>
+<div class="section" id="mn-api">
+<h3>MN API<a class="headerlink" href="#mn-api" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>MNCore.getLogRecords and MNRead.listObjects - the time comparison range has
+been changed. The upper bound is now exclusive, i.e. <code class="docutils literal notranslate"><span class="pre">fromDate</span> <span class="pre">&lt;=</span> <span class="pre">date</span> <span class="pre">&lt;</span>
+<span class="pre">toDate</span></code></p></li>
+<li><p>MNRead.listObjects - the name of the date range comparison properties has been
+changed from “startTime” and “endTime” to “fromDate” and “toDate”
+respectively.</p></li>
+<li><p>MNRead.get - added InsufficientResources exception as possible response. This
+may be raised for example, if memory, CPU, or bandwidth use is too limited to
+respond to the request.</p></li>
+<li><p>MNCore.ping - added description for why InsufficientResources may be raised.</p></li>
+</ul>
+</div>
+<div class="section" id="cn-api">
+<h3>CN API<a class="headerlink" href="#cn-api" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>CNCore.getLogRecords and CNRead.listObjects - the time comparison range has
+been changed. The upper bound is now exclusive, i.e. <code class="docutils literal notranslate"><span class="pre">fromDate</span> <span class="pre">&lt;=</span> <span class="pre">date</span> <span class="pre">&lt;</span>
+<span class="pre">toDate</span></code></p></li>
+<li><p>CNRead.listObjects - the name of the date range comparison properties has been
+changed from “startTime” and “endTime” to “fromDate” and “toDate”
+respectively.</p></li>
+<li><p>CNIdentity.getSubjectInfo, added InvalidToken exception</p></li>
+<li><p>CNRegister.updateNodeCapabilities, added InvalidToken exception</p></li>
+<li><p>CNReplication.updateReplicationMetadata, added InvalidToken exception</p></li>
+<li><p>CNCore.listFormats: removed InsufficientResources exception. If the CN can not
+provide a response, then a ServiceFailure should be raised.</p></li>
+<li><p>CNCore.getChecksumAlgorithms renamed to listChecksumAlgorithms for consistency
+with other methods that return a list.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="id16">
+<h2>2011-12-08 : Version 1.0<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="methodcrossreference-xls-trunk">
+<h3>MethodCrossReference.xls (trunk)<a class="headerlink" href="#methodcrossreference-xls-trunk" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>CN.removeGroupMembers - changed REST specification from “DELETE /groups/{group}”
+to “POST /groups/remove/{group}</p></li>
+<li><p>CN.getFormat: removed InvalidRequest from documentation, (was supposedly
+removed earlier, but reappeared)</p></li>
+<li><p>CN.listSubjects - added status parameter to the method</p></li>
+<li><p>CN.search - added queryType and query parameters as optional (documentation fix)</p></li>
+<li><p>changed setOwner() to setRightsHolder()</p></li>
+<li><p>MN.getReplica - documentation fix, added pid as parameter - it was in REST specification
+but not listed as a parameter</p></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="api-corrections-branch">
+<h3>2011-12-07-api-corrections branch<a class="headerlink" href="#api-corrections-branch" title="Permalink to this headline">¶</a></h3>
+<p>Java libclient / implementation changes (in branch)</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>CN.verifyAccount - removed NotFound from java api and impl</p></li>
+<li><p>CN.updateAccount - removed IdentifierNotUnique from java api and impl</p></li>
+<li><p>CN.mapIdentity - refactored method signature from (session, subject1, subject2) to (session,subject)</p></li>
+<li><p>CN.mapIdentity - changed message body to pass subject as paramPart instead of filePart.</p></li>
+<li><p>CN.requestMapIdentity - added IdentifierNotUnique to java api and impl</p></li>
+<li><p>CN.denyMapIdentity - removed InvalidRequest from  java api and impl</p></li>
+<li><p>CN.removeMapIdentity - removed InvalidRequest from  java api and impl</p></li>
+<li><p>CN.search - changed resource in java libclient from ‘object’ to ‘search’</p></li>
+<li><p>CN.setAccessPolicy - put parameter ‘pid’ on path (removed from filePart)</p></li>
+<li><p>CN.setOwner - changed resource from ‘accounts/map’ to ‘owner’</p></li>
+<li><p>MN.getReplica - added InsufficientResources to java api and impl</p></li>
+<li><p>MN.setAccessPolicy - removed method from java api and impl</p></li>
+<li><p>CN.setOwner - changed name to setRightsHolder in java api and impl</p></li>
+</ul>
+</div></blockquote>
+<p>Client bug fixes (in trunk)</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>MN.getLogRecords - added missing ‘start’ and ‘count’ parameters to impl  call.</p></li>
+<li><p>MN.listObjects - fixed failed exception recast</p></li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="version-1-0-0-branch">
+<h2>2011-12-06 Version 1.0.0 Branch<a class="headerlink" href="#version-1-0-0-branch" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id17">
+<h3>dataoneTypes.xsd<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://redmine.dataone.org/projects/d1/repository/entry/software/cicore/branches/D1_SCHEMA_1_0_0/dataoneTypes.xsd">https://redmine.dataone.org/projects/d1/repository/entry/software/cicore/branches/D1_SCHEMA_1_0_0/dataoneTypes.xsd</a></p></li>
+<li><p>Modified LogEntry.entryId to be of type d1:NonEmptyString instead of d1:Identifier</p></li>
+<li><p>Removed LogEntry.memberNode of type d1:NodeReference</p></li>
+<li><p>Added LogEntry.nodeIdentifier of type d1:NodeReference</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="id18">
+<h2>2011-12-05 Version 1.0.0 Branch<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id19">
+<h3>dataoneTypes.xsd<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://redmine.dataone.org/projects/d1/repository/entry/software/cicore/branches/D1_SCHEMA_1_0_0/dataoneTypes.xsd">https://redmine.dataone.org/projects/d1/repository/entry/software/cicore/branches/D1_SCHEMA_1_0_0/dataoneTypes.xsd</a></p></li>
+<li><p>Added SystemMetadata.archived flag to indicated when a document is archived</p></li>
+<li><p>Added ObjectLocation.version field for convenient access</p></li>
+<li><p>Added Group.rightsHolder for access rights to groups</p></li>
+<li><p>Refactored ServiceMethodRestriction to removed unneeded levels</p></li>
+<li><p>Removed Permissions.execute as it is no longer needed</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="id20">
+<h2>2011-11-08 Version 1.0.0 Branch<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="cn-apis">
+<h3>CN APIs<a class="headerlink" href="#cn-apis" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>CNCore.hasReservation: Updated description: caller owns reservation = HTTP
+200; PID reserved but not owned by caller = NotAuthorized; PID in use as an
+identifier = IdentifierNotUnique; PID not reserved and not in use = NotFound.</p></li>
+<li><p>CNRead.updateSystemMetadata: DEPRECATED. There is no longer a need for this
+method to be exposed through an external interface.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="id21">
+<h2>2011-11-03 Version 1.0.0 Branch<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="mn-apis">
+<h3>MN APIs<a class="headerlink" href="#mn-apis" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>MNCore.getLogRecords: change date restriction to &gt;= from Date, and &lt;= toDate</p></li>
+<li><p>MNCore.getCapabilities: removed NotAuthorized exception. Anyone should be
+able to call this method.</p></li>
+<li><p>MNRead.listObjects: Indicated that if formatId is not present as a filter
+parameter, then that filter should be ignored. The previous was to default
+to <em>true</em>.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="id22">
+<h2>2011-11-02 Version 1.0.0 Branch<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id23">
+<h3>dataoneTypes.xsd<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://redmine.dataone.org/projects/d1/repository/revisions/5754">https://redmine.dataone.org/projects/d1/repository/revisions/5754</a></p></li>
+<li><p>Deprecated MNAuthorization.setAccessPolicy. This is replaced by
+MNStorage.systemMetadataChanged</p></li>
+<li><p>Added MNStorage.systemMetadataChanged, which is called by Coordinating Nodes
+when system metadata for an object known to be located on the Member Node
+changes. The Member Node is expected to retrieve the full system metadata
+document from the Coordinating Node and update the local system properties
+of the object using information contained in the authoritative system
+metadata. This is a Tier 2 method. It is accessed on the
+<em>/dirtySystemMetadata</em> REST endpoint.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="id24">
+<h2>2011-11-01 Version 1.0.0 Branch<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="exceptions">
+<h3>Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Added a new exception, VersionMistmatch which is raised when there is a
+version mistmatch between the target of the request and the supplied
+parameters. e.g. when serialVersion is provided in a call and does not match
+that of the target.</p></li>
+</ul>
+</div>
+<div class="section" id="id25">
+<h3>CN APIs<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>CNAuthorization.setOwner: added serialVersion parameter to method signature.
+serialVersion is used to indicate which revision the change to system
+metadata applies to. If the revision in the request does not match the
+revision in the response, then a VersionMistmatch exception is raised.</p></li>
+<li><p>CNAuthorization.getAccessPolicy: added serialVersion parameter to method
+signature.</p></li>
+<li><p>CNReplication.setReplicationStatus: added serialVersion parameter to method
+signature.</p></li>
+<li><p>CNReplication.updateReplicationMetadata: added serialVersion parameter to
+method signature.</p></li>
+<li><p>CNReplication.setReplicationPolicy: added serialVersion parameter to method
+signature.</p></li>
+</ul>
+</div>
+<div class="section" id="id26">
+<h3>MN APIs<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>MNCore.getLogRecords: changed fromDate from required to optional.</p></li>
+<li><p>MNCore.getCapabilities: removed InvalidRequest exception</p></li>
+<li><p>MNCore.get: removed InvalidRequest exception</p></li>
+<li><p>MNRead.getSystemMetadata: removed InvalidRequest exception</p></li>
+<li><p>MNRead.describe: removed InvalidRequest exception</p></li>
+<li><p>MNRead.synchronizationFailed: removed InvalidRequest exception</p></li>
+<li><p>MNAuthorization.setAccessPolicy: Added note indicating that this method should only be called by Coordinating Nodes.</p></li>
+<li><p>MNStorage.delete: removed InvalidRequest exception</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="id27">
+<h2>2011-10-26 Version 1.0.0 Branch<a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id28">
+<h3>dataoneTypes.xsd<a class="headerlink" href="#id28" title="Permalink to this headline">¶</a></h3>
+<p>The following changes were enacted on the dataoneTypes.xsd schema as a result
+of discussions during the DataONE all-hands meeting held during the week of
+October 18, 2011.</p>
+<p>No further significant changes to dataonetypes.xsd are expected for version
+1.0.0 of the DataONE infrastructure.</p>
+<ul class="simple">
+<li><p>unsigned long “serialversion” element added to the
+<a class="reference internal" href="apis/Types.html#Types.SystemMetadata" title="Types.SystemMetadata"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.SystemMetadata</span></code></a> complex type. The <em>serialVersion</em> value is
+incremented upon any updates to a system metadata instance, and is used to
+indicate which is the current version (highest <em>serialVersion</em> is always the
+latest) of system metadata for an object.</p></li>
+<li><p>“fmtid” change to “formatId” in <a class="reference internal" href="apis/Types.html#Types.SystemMetadata" title="Types.SystemMetadata"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.SystemMetadata</span></code></a> complex type</p></li>
+<li><p>“fmtid” change to “formatId” in <a class="reference internal" href="apis/Types.html#Types.ObjectFormat" title="Types.ObjectFormat"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.ObjectFormat</span></code></a> complex type</p></li>
+<li><p>“fmtid” change to “formatId” in <a class="reference internal" href="apis/Types.html#Types.ObjectInfo" title="Types.ObjectInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.ObjectInfo</span></code></a> complex type</p></li>
+<li><p>email minOccurs change from 1 to 0 in <a class="reference internal" href="apis/Types.html#Types.Person" title="Types.Person"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.Person</span></code></a> complex type</p></li>
+<li><p>boolean “verified” property added to <a class="reference internal" href="apis/Types.html#Types.Person" title="Types.Person"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.Person</span></code></a> complex type.
+This value is <em>true</em> if the name and email address of the Person have been
+verified to ensure that the <em>givenName</em> and <em>familyName</em> represent the real
+person’s legal name, and that the email address is correct for that person
+and is in the control of the indicated individual. Verification occurs
+through a established procedure within DataONE as part of the Identity
+Management system.</p></li>
+<li><p>Numerous annotation edits and updates</p></li>
+</ul>
+</div>
+<div class="section" id="id29">
+<h3>CN APIs<a class="headerlink" href="#id29" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>CNCore.listFormats: removed InvalidRequest and NotFound exceptions</p></li>
+<li><p>CNCore.getFormat: removed InvalidRequest exception</p></li>
+<li><p>CNCore.getLogRecords:</p>
+<ul>
+<li><p>Made fromDate optional. When not provided in request, there is no limit to
+the earliest record being returned.</p></li>
+<li><p>Added exception InsufficientResources (443, 1481)</p></li>
+</ul>
+</li>
+<li><p>CNCore.listNodes: removed InvalidRequest exception</p></li>
+<li><p>CNCore.hasReservation: removed exception IdentifierNotUnique</p></li>
+<li><p>CNRead.get: removed InvalidRequest exception</p></li>
+<li><p>CNRead.getSystemMetadata: removed InvalidRequest exception</p></li>
+<li><p>CNRead.resolve: removed InvalidRequest exception</p></li>
+<li><p>CNRead.assertRelation : deprecated</p></li>
+<li><p>CNRead.getChecksum: removed InvalidRequest exception</p></li>
+<li><p>CNIdentity.registerAccount: added NotAuthorized exception, thrown when subject
+of session does not match that of the person.</p></li>
+<li><p>CNIdentity.updateAccount:</p>
+<ul>
+<li><p>added exception NotAuthorized, raised if subject of session does not match
+that of the person.</p></li>
+<li><p>added exception NotFound, raised if the account does not exist.</p></li>
+</ul>
+</li>
+<li><p>CNIdentity.verifyAccount:</p>
+<ul>
+<li><p>changed HTTP method to PUT (this is an update operation)</p></li>
+<li><p>Added exception NotFound, raised if the specified account does not already
+exist.</p></li>
+</ul>
+</li>
+<li><p>CNIdentity.getSubjectInfo:</p>
+<ul>
+<li><p>added exception NotFound, raised if the requested subject is not registered.</p></li>
+<li><p>removed exception InvalidRequest</p></li>
+</ul>
+</li>
+<li><p>CNIdentity.listSubjects</p>
+<ul>
+<li><p>Specified default start value of 0</p></li>
+<li><p>Specified default page size (count) of 100</p></li>
+<li><p>Added InvalidRequest exception</p></li>
+</ul>
+</li>
+<li><p>CNIdentity.mapIdentity: added exception IdentfierNotUnique, raised when the
+subject of the session and the provided subject arethe same.</p></li>
+<li><p>CNIdentity.confirmMapIdentity</p>
+<ul>
+<li><p>changed REST URL to be a PUT to /accounts/map/{subject}</p></li>
+<li><p>Removed the InvalidRequest exception</p></li>
+<li><p>Updated the description of the NotFound exception</p></li>
+</ul>
+</li>
+<li><p>CNIdentity.createGroup</p>
+<ul>
+<li><p>Removed NotFound exception</p></li>
+<li><p>Removed InvalidRequest exception</p></li>
+</ul>
+</li>
+<li><p>CNReplication.setReplicationStatus: corrected description of the REST method
+signature. Parameters for the PUT request should be transmitted in the request
+body, the session information should be transmitted via SSL handshake process.</p></li>
+<li><p>CNReplication.updateReplicationStatus:</p>
+<ul>
+<li><p>corrected REST sURL description as for setReplicationStatus</p></li>
+<li><p>Added NotFound exception</p></li>
+</ul>
+</li>
+<li><p>CNReplication.setReplicationPolicy: updated REST URL description as per
+setReplicationStatus.</p></li>
+<li><p>CNReplication.isNodeAuthorized: updated REST URL description as per
+setReplicationStatus</p></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Change Log</a><ul>
+<li><a class="reference internal" href="#version-1-2-clarification-edits">2014-02-12: Version 1.2. Clarification edits</a></li>
+<li><a class="reference internal" href="#version-1-2-minor-edits">2013-10-17: Version 1.2. Minor edits</a></li>
+<li><a class="reference internal" href="#version-1-1-clarifying-count-parameter-for-slicing">2012-10-09: Version 1.1. Clarifying <em>count</em> parameter for slicing</a></li>
+<li><a class="reference internal" href="#version-1-1-adding-mnquery-api">2012-09-28: Version 1.1. Adding MNQuery API</a></li>
+<li><a class="reference internal" href="#version-1-1-revising-proposed-query-api">2012-09-25: Version 1.1. Revising proposed Query API</a></li>
+<li><a class="reference internal" href="#version-1-1-augmenting-search-api">2012-08-20: Version 1.1. Augmenting Search API</a></li>
+<li><a class="reference internal" href="#version-1-0-correction-to-uris-in-resource-maps">2012-05-31: Version 1.0, Correction to URIs in Resource Maps</a></li>
+<li><a class="reference internal" href="#version-1-0-methodcrossreference-xls">2012-05-02: Version 1.0, MethodCrossReference.xls</a></li>
+<li><a class="reference internal" href="#id1">2012-05-01: Version 1.0, MethodCrossReference.xls</a></li>
+<li><a class="reference internal" href="#id2">2012-03-26: Version 1.0, MethodCrossReference.xls</a></li>
+<li><a class="reference internal" href="#id3">2012-03-26: Version 1.0, MethodCrossReference.xls</a></li>
+<li><a class="reference internal" href="#id4">2012-03-25: Version 1.0, MethodCrossReference.xls</a></li>
+<li><a class="reference internal" href="#id5">2012-02-27: Version 1.0, MethodCrossReference.xls</a></li>
+<li><a class="reference internal" href="#dataonetypes-xsd">2012-02-24 : dataoneTypes.xsd</a></li>
+<li><a class="reference internal" href="#id6">2012-02-17 : Version 1.0, MethodCrossReference.xls</a></li>
+<li><a class="reference internal" href="#id7">2012-02-15 : Version 1.0, MethodCrossReference.xls</a></li>
+<li><a class="reference internal" href="#id8">2012-02-02 : Version 1.0, MethodCrossReference.xls</a></li>
+<li><a class="reference internal" href="#id9">2012-02-01 : Version 1.0, MethodCrossReference.xls</a></li>
+<li><a class="reference internal" href="#id10">2012-01-20 : Version 1.0, MethodCrossReference.xls</a></li>
+<li><a class="reference internal" href="#id11">2012-01-19 : Version 1.0, MethodCrossReference.xls</a></li>
+<li><a class="reference internal" href="#id12">2012-01-12 : Version 1.0, MethodCrossReference.xls</a></li>
+<li><a class="reference internal" href="#id13">2012-01-10 : Version 1.0, MethodCrossReference.xls</a></li>
+<li><a class="reference internal" href="#id14">2012-01-03 : Version 1.0, MethodCrossReference.xls</a></li>
+<li><a class="reference internal" href="#version-1-0-dataonetypes-xsd">2011-12-19 : Version 1.0, dataoneTypes.xsd</a></li>
+<li><a class="reference internal" href="#version-1-0">2011-12-13 : Version 1.0</a></li>
+<li><a class="reference internal" href="#id15">2011-12-12 : Version 1.0</a><ul>
+<li><a class="reference internal" href="#mn-api">MN API</a></li>
+<li><a class="reference internal" href="#cn-api">CN API</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id16">2011-12-08 : Version 1.0</a><ul>
+<li><a class="reference internal" href="#methodcrossreference-xls-trunk">MethodCrossReference.xls (trunk)</a></li>
+<li><a class="reference internal" href="#api-corrections-branch">2011-12-07-api-corrections branch</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#version-1-0-0-branch">2011-12-06 Version 1.0.0 Branch</a><ul>
+<li><a class="reference internal" href="#id17">dataoneTypes.xsd</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id18">2011-12-05 Version 1.0.0 Branch</a><ul>
+<li><a class="reference internal" href="#id19">dataoneTypes.xsd</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id20">2011-11-08 Version 1.0.0 Branch</a><ul>
+<li><a class="reference internal" href="#cn-apis">CN APIs</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id21">2011-11-03 Version 1.0.0 Branch</a><ul>
+<li><a class="reference internal" href="#mn-apis">MN APIs</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id22">2011-11-02 Version 1.0.0 Branch</a><ul>
+<li><a class="reference internal" href="#id23">dataoneTypes.xsd</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id24">2011-11-01 Version 1.0.0 Branch</a><ul>
+<li><a class="reference internal" href="#exceptions">Exceptions</a></li>
+<li><a class="reference internal" href="#id25">CN APIs</a></li>
+<li><a class="reference internal" href="#id26">MN APIs</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id27">2011-10-26 Version 1.0.0 Branch</a><ul>
+<li><a class="reference internal" href="#id28">dataoneTypes.xsd</a></li>
+<li><a class="reference internal" href="#id29">CN APIs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation Overview</a><ul>
+      <li>Previous: <a href="glossary.html" title="previous chapter">Glossary</a></li>
+      <li>Next: <a href="implementation/index.html" title="next chapter">Implementation Notes</a></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/changelog.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="_sources/changelog.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/changelog.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

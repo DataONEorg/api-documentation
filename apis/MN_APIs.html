@@ -1,0 +1,1840 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Member Node APIs &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Coordinating Node APIs" href="CN_APIs.html" />
+    <link rel="prev" title="DataONE Architecture" href="../index.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="CN_APIs.html" title="Coordinating Node APIs"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="DataONE Architecture"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Member Node APIs</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="member-node-apis">
+<h1>Member Node APIs<a class="headerlink" href="#member-node-apis" title="Permalink to this headline">¶</a></h1>
+<p>The service interfaces described here are exposed through the Member
+Node REST interface to support interactions with Coordinating Nodes and DataONE
+clients.</p>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#core-api" id="id17">Core API</a></p></li>
+<li><p><a class="reference internal" href="#read-api" id="id18">Read API</a></p></li>
+<li><p><a class="reference internal" href="#query-api" id="id19">Query API</a></p></li>
+<li><p><a class="reference internal" href="#view-api" id="id20">View API</a></p></li>
+<li><p><a class="reference internal" href="#package-api" id="id21">Package API</a></p></li>
+<li><p><a class="reference internal" href="#authorization-api" id="id22">Authorization API</a></p></li>
+<li><p><a class="reference internal" href="#storage-api" id="id23">Storage API</a></p></li>
+<li><p><a class="reference internal" href="#replication-api" id="id24">Replication API</a></p></li>
+</ul>
+</div>
+<hr class="docutils" />
+<div class="section" id="core-api">
+<h2><a class="toc-backref" href="#id17">Core API</a><a class="headerlink" href="#core-api" title="Permalink to this headline">¶</a></h2>
+<p>Base operations for Member Nodes</p>
+<p>The <em>MN_core</em> API provides mechanisms for a Member Node to report on the level
+of service compliance and to specify replication policies. The capabilities
+information is used in the Member Node registration process by the
+Coordinating Nodes.</p>
+<p>The state of health API provides mechanisms for the monitoring infrastructure
+to report on the current state of the DataONE infrastructure and for the
+Coordinating Nodes to track the current operating state of the Member Node.</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#MNCore.getCapabilities" title="MNCore.getCapabilities"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getCapabilities</span></code></a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/</span>&#160; <span class="pre">and</span>&#160; <span class="pre">GET</span> <span class="pre">/node</span></code> <br/> Returns a document describing the capabilities of the Member Node.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#MNCore.getLogRecords" title="MNCore.getLogRecords"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getLogRecords</span></code></a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/log?[fromDate={fromDate}][&amp;toDate={toDate}][&amp;event={event}][&amp;idFilter={idFilter}][&amp;start={start}][&amp;count={count}]</span></code> <br/> Retrieve log information from the Member Node for the specified slice parameters.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#MNCore.ping" title="MNCore.ping"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ping</span></code></a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/monitor/ping</span></code> <br/> Low level “are you alive” operation.</p></td>
+</tr>
+</tbody>
+</table>
+<span class="target" id="module-MNCore"></span><dl class="py function">
+<dt id="MNCore.getCapabilities">
+<code class="sig-prename descclassname">MNCore.</code><code class="sig-name descname">getCapabilities</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MNCore.getCapabilities" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/</span>&#160; <span class="pre">and</span>&#160; <span class="pre">GET</span> <span class="pre">/node</span></code> <br/> Returns a document describing the capabilities of the Member Node.</p>
+<p>The response at the Member Node base URL is for convenience only. Clients of Member Nodes SHOULD use the /node URL to retrieve the node capabilities document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Version</dt>
+<dd class="field-odd"><p>1.0</p>
+</dd>
+<dt class="field-even">REST URL</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/</span>&#160; <span class="pre">and</span>&#160; <span class="pre">GET</span> <span class="pre">/node</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The technical capabilities of the Member Node</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="Types.html#Types.Node" title="Types.Node">Types.Node</a></p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotImplemented" title="Exceptions.NotImplemented"><strong>Exceptions.NotImplemented</strong></a> – (errorCode=501, detailCode=2160)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.ServiceFailure" title="Exceptions.ServiceFailure"><strong>Exceptions.ServiceFailure</strong></a> – (errorCode=500, detailCode=2162)</p></li>
+</ul>
+</dd>
+</dl>
+<blockquote>
+<div><p><strong>Example</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>export NODE=&quot;https://demo2.test.dataone.org/knb/d1/mn&quot;
+curl -k -s &quot;$NODE/v1/node&quot; | xml fo
+
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;d1:node xmlns:d1=&quot;http://ns.dataone.org/service/types/v1&quot; replicate=&quot;true&quot; synchronize=&quot;true&quot; type=&quot;mn&quot; state=&quot;up&quot;&gt;
+  &lt;identifier&gt;urn:node:DEMO2&lt;/identifier&gt;
+  &lt;name&gt;DEMO2 Metacat Node&lt;/name&gt;
+  &lt;description&gt;A DataONE member node implemented in Metacat.&lt;/description&gt;
+  &lt;baseURL&gt;https://demo2.test.dataone.org:443/knb/d1/mn&lt;/baseURL&gt;
+  &lt;services&gt;
+    &lt;service name=&quot;MNRead&quot; version=&quot;v1&quot; available=&quot;true&quot;/&gt;
+    &lt;service name=&quot;MNCore&quot; version=&quot;v1&quot; available=&quot;true&quot;/&gt;
+    &lt;service name=&quot;MNAuthorization&quot; version=&quot;v1&quot; available=&quot;true&quot;/&gt;
+    &lt;service name=&quot;MNStorage&quot; version=&quot;v1&quot; available=&quot;true&quot;/&gt;
+    &lt;service name=&quot;MNReplication&quot; version=&quot;v1&quot; available=&quot;true&quot;/&gt;
+  &lt;/services&gt;
+  &lt;synchronization&gt;
+    &lt;schedule hour=&quot;*&quot; mday=&quot;*&quot; min=&quot;0/3&quot; mon=&quot;*&quot; sec=&quot;10&quot; wday=&quot;?&quot; year=&quot;*&quot;/&gt;
+    &lt;lastHarvested&gt;2012-03-06T14:57:39.851+00:00&lt;/lastHarvested&gt;
+    &lt;lastCompleteHarvest&gt;2012-03-06T14:57:39.851+00:00&lt;/lastCompleteHarvest&gt;
+  &lt;/synchronization&gt;
+  &lt;ping success=&quot;true&quot;/&gt;
+  &lt;subject&gt;CN=urn:node:DEMO2, DC=dataone, DC=org&lt;/subject&gt;
+  &lt;contactSubject&gt;CN=METACAT1, DC=dataone, DC=org&lt;/contactSubject&gt;
+&lt;/d1:node&gt;
+</pre></div>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt id="MNCore.getLogRecords">
+<code class="sig-prename descclassname">MNCore.</code><code class="sig-name descname">getLogRecords</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">session</span></em>, <em class="sig-param"><span class="n">fromDate</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">toDate</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">idFilter</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">start</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">count</span><span class="o">=</span><span class="default_value">1000</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MNCore.getLogRecords" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/log?[fromDate={fromDate}][&amp;toDate={toDate}][&amp;event={event}][&amp;idFilter={idFilter}][&amp;start={start}][&amp;count={count}]</span></code> <br/> Retrieve log information from the Member Node for the specified slice parameters. Log entries will only return PIDs.</p>
+<p>This method is used primarily by the log aggregator to generate aggregate statistics for nodes, objects, and the methods of access.</p>
+<p>The response MUST contain only records for which the requestor has permission to read.</p>
+<p>Note that date time precision is limited to one millisecond. If no timezone information is provided UTC will be assumed.</p>
+<p>Access control for this method MUST be configured to allow calling by Coordinating Nodes and MAY be configured to allow more general access.</p>
+<p>v2.0: The event parameter has changed from <code class="xref py py-class docutils literal notranslate"><span class="pre">v1_0.Types.Event</span></code> to a plain <em>string</em></p>
+<p>v2.0: The structure of <a class="reference internal" href="Types2.html#v2_0.Types.Log" title="v2_0.Types.Log"><code class="xref py py-class docutils literal notranslate"><span class="pre">v2_0.Types.Log</span></code></a> has changed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Version</dt>
+<dd class="field-odd"><p>1.0, 2.0</p>
+</dd>
+<dt class="field-even">REST URL</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/log?[fromDate={fromDate}][&amp;toDate={toDate}][&amp;event={event}][&amp;idFilter={idFilter}][&amp;start={start}][&amp;count={count}]</span></code></p>
+</dd>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<a class="reference internal" href="Types.html#Types.Session" title="Types.Session"><em>Types.Session</em></a>) – Session information that contains the identity of the
+calling user as retrieved from the X.509 certificate. Transmitted as part of
+the SSL handshake process.</p></li>
+<li><p><strong>fromDate</strong> (<a class="reference internal" href="Types11.html#Types.DateTime" title="Types.DateTime"><em>Types.DateTime</em></a>) – Records with time stamp greater than or equal to (&gt;=) this value will be returned. Transmitted as a URL query parameter, and so must be escaped accordingly.</p></li>
+<li><p><strong>toDate</strong> (<a class="reference internal" href="Types11.html#Types.DateTime" title="Types.DateTime"><em>Types.DateTime</em></a>) – Records with a time stamp less than (&lt;) this value will be returned. If not specified, then defaults to <em>now</em>. Transmitted as a URL query parameter, and so must be escaped accordingly.</p></li>
+<li><p><strong>event</strong> (<a class="reference internal" href="Types.html#Types.Event" title="Types.Event"><em>Types.Event</em></a><em>, </em><em>string</em>) – Return only log records for the specified type of event.  Default is <em>all</em>. Transmitted as a URL query parameter, and so must be escaped accordingly.</p></li>
+<li><p><strong>idFilter</strong> (<em>string</em>) – Return only log records for identifiers that start with the supplied identifier string. Support for this parameter is optional and MAY be ignored by the Member Node implementation with no warning. Accepts PIDs and SIDs Transmitted as a URL query parameter, and so must be escaped accordingly.</p></li>
+<li><p><strong>start</strong> (<em>integer</em>) – Optional zero based offset from the first record in the set of matching log records. Used to assist with paging the response. Transmitted as a URL query parameter, and so must be escaped accordingly.</p></li>
+<li><p><strong>count</strong> (<em>integer</em>) – The maximum number of log records that should be returned in the response. The Member Node may return fewer and the caller should check the <em>total</em> in the response to determine if further pages may be retrieved. Transmitted as a URL query parameter, and so must be escaped accordingly.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="Types.html#Types.Log" title="Types.Log">Types.Log</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotAuthorized" title="Exceptions.NotAuthorized"><strong>Exceptions.NotAuthorized</strong></a> – Raised if the user making the request is not authorized to access the log records. This is determined by the policy of the Member Node. (errorCode=401, detailCode=1460)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidRequest" title="Exceptions.InvalidRequest"><strong>Exceptions.InvalidRequest</strong></a> – The request parameters were malformed or an invalid date range was specified. (errorCode=400, detailCode=1480)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.ServiceFailure" title="Exceptions.ServiceFailure"><strong>Exceptions.ServiceFailure</strong></a> – (errorCode=500, detailCode=1490)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidToken" title="Exceptions.InvalidToken"><strong>Exceptions.InvalidToken</strong></a> – (errorCode=401, detailCode=1470)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotImplemented" title="Exceptions.NotImplemented"><strong>Exceptions.NotImplemented</strong></a> – (errorCode=501, detailCode=1461)</p></li>
+</ul>
+</dd>
+</dl>
+<blockquote>
+<div><p><strong>Example</strong></p>
+<p>Example of retrieving 3 log records from a Member Node. The <em>xml</em> command is
+provided by <a class="reference external" href="http://xmlstar.sourceforge.net/">xmlstarlet</a> and is used to format the output.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>export NODE=&quot;https://demo2.test.dataone.org/knb/d1/mn&quot;
+curl -k -s &quot;$NODE/v1/log?start=0&amp;count=3&quot; | xml fo
+
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;d1:log xmlns:d1=&quot;http://ns.dataone.org/service/types/v1&quot; count=&quot;3&quot; start=&quot;0&quot; total=&quot;1273&quot;&gt;
+  &lt;logEntry&gt;
+    &lt;entryId&gt;1&lt;/entryId&gt;
+    &lt;identifier&gt;MNodeTierTests.201260152556757.&lt;/identifier&gt;
+    &lt;ipAddress&gt;129.24.0.17&lt;/ipAddress&gt;
+    &lt;userAgent&gt;null&lt;/userAgent&gt;
+    &lt;subject&gt;CN=testSubmitter,DC=dataone,DC=org&lt;/subject&gt;
+    &lt;event&gt;create&lt;/event&gt;
+    &lt;dateLogged&gt;2012-02-29T23:25:58.104+00:00&lt;/dateLogged&gt;
+    &lt;nodeIdentifier&gt;urn:node:DEMO2&lt;/nodeIdentifier&gt;
+  &lt;/logEntry&gt;
+  &lt;logEntry&gt;
+    &lt;entryId&gt;2&lt;/entryId&gt;
+    &lt;identifier&gt;TierTesting:testObject:RightsHolder_Person.4&lt;/identifier&gt;
+    &lt;ipAddress&gt;129.24.0.17&lt;/ipAddress&gt;
+    &lt;userAgent&gt;null&lt;/userAgent&gt;
+    &lt;subject&gt;CN=testSubmitter,DC=dataone,DC=org&lt;/subject&gt;
+    &lt;event&gt;create&lt;/event&gt;
+    &lt;dateLogged&gt;2012-02-29T23:26:38.828+00:00&lt;/dateLogged&gt;
+    &lt;nodeIdentifier&gt;urn:node:DEMO2&lt;/nodeIdentifier&gt;
+  &lt;/logEntry&gt;
+  &lt;logEntry&gt;
+    &lt;entryId&gt;3&lt;/entryId&gt;
+    &lt;identifier&gt;TierTesting:testObject:RightsHolder_Group.4&lt;/identifier&gt;
+    &lt;ipAddress&gt;129.24.0.17&lt;/ipAddress&gt;
+    &lt;userAgent&gt;null&lt;/userAgent&gt;
+    &lt;subject&gt;CN=testSubmitter,DC=dataone,DC=org&lt;/subject&gt;
+    &lt;event&gt;create&lt;/event&gt;
+    &lt;dateLogged&gt;2012-02-29T23:27:40.255+00:00&lt;/dateLogged&gt;
+    &lt;nodeIdentifier&gt;urn:node:DEMO2&lt;/nodeIdentifier&gt;
+  &lt;/logEntry&gt;
+&lt;/d1:log&gt;
+</pre></div>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt id="MNCore.ping">
+<code class="sig-prename descclassname">MNCore.</code><code class="sig-name descname">ping</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MNCore.ping" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/monitor/ping</span></code> <br/> Low level “are you alive” operation. A valid ping response is indicated by a HTTP status of 200. A timestmap indicating the current system time (UTC) on the node MUST be returned in the HTTP Date header.</p>
+<p>The Member Node should perform some minimal internal functionality testing before answering. However, ping checks will be frequent (every few minutes) so the internal functionality test should not be high impact.</p>
+<p>Any status response other than 200 indicates that the node is offline for DataONE operations.</p>
+<p>Note that the timestamp returned in the Date header should follow the semantics as described in the HTTP specifications, <a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.18">http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.18</a></p>
+<p>The response body will be ignored by the caller except in the case of an error, in which case the response body should contain the appropriate DataONE exception.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Version</dt>
+<dd class="field-odd"><p>1.0</p>
+</dd>
+<dt class="field-even">Use Cases</dt>
+<dd class="field-even"><p><a class="reference internal" href="../design/UseCases/10_uc.html"><span class="doc">UC10</span></a></p>
+</dd>
+<dt class="field-odd">REST URL</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/monitor/ping</span></code></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Null body or Exception. The body of the message may be ignored by the caller. The HTTP header <em>Date</em> MUST be set in the response.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>null</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotImplemented" title="Exceptions.NotImplemented"><strong>Exceptions.NotImplemented</strong></a> – Ping is a required operation and so an operational member node should never return this exception unless under development. (errorCode=501, detailCode=2041)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.ServiceFailure" title="Exceptions.ServiceFailure"><strong>Exceptions.ServiceFailure</strong></a> – A ServiceFailure exception indicates that the node is not currently operational as a member node. A coordinating node or monitoring service may use this as an indication that the member node should be taken out of the pool of active nodes, though ping should be called on a regular basis to determine when the node might b ready to resume normal operations. (errorCode=500, detailCode=2042)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InsufficientResources" title="Exceptions.InsufficientResources"><strong>Exceptions.InsufficientResources</strong></a> – A ping response may return InsufficientResources if for example the system is in a state where normal DataONE operations may be impeded by an unusually high load on the node. (errorCode=413, detailCode=2045)</p></li>
+</ul>
+</dd>
+</dl>
+<blockquote>
+<div><p><strong>Response</strong></p>
+<p>The response should be a valid HTTP response with a blank or arbitrary body.
+Only the HTTP header information is considered by the requestor. A successful
+response MUST have a HTTP status code of 200. In case of an error condition,
+the appropriate HTTP status code MUST be set, and an exception or error
+information MAY be returned in the response body.</p>
+<p><strong>Example</strong></p>
+<p>Example of ping request and response for a Member Node (Coordinating Nodes
+implement the same functionality). Lines prefixed with “&gt;” indicate outgoing
+information, lines prefixed with “&lt;” show content returned from the server.
+Lines associated with SSL connection initiation and close are not shown here.
+Note that the actual response headers may vary, the only required header
+fields are the first status line and a <code class="docutils literal notranslate"><span class="pre">Date</span></code> entry. However, in order to
+fully support clients that may cache the response, it is recommended that the
+<code class="docutils literal notranslate"><span class="pre">Expires</span></code>, and <code class="docutils literal notranslate"><span class="pre">Cache-Control</span></code> headers are returned.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">NODE</span><span class="o">=</span><span class="s2">&quot;https://demo2.test.dataone.org/knb/d1/mn&quot;</span>
+<span class="hll">curl -k -v <span class="s2">&quot;</span><span class="nv">$NODE</span><span class="s2">/v1/monitor/ping&quot;</span>
+</span>
+&gt; GET /knb/d1/mn/v1/monitor/ping HTTP/1.1
+&gt; User-Agent: curl/7.21.6 <span class="o">(</span>x86_64-pc-linux-gnu<span class="o">)</span> libcurl/7.21.6
+  OpenSSL/1.0.0e zlib/1.2.3.4 libidn/1.22 librtmp/2.3
+&gt; Host: demo2.test.dataone.org
+&gt; Accept: */*
+&gt;
+&lt; HTTP/1.1 <span class="m">200</span> OK
+<span class="hll">&lt; Date: Tue, <span class="m">06</span> Mar <span class="m">2012</span> <span class="m">14</span>:19:59 GMT
+</span>&lt; Server: Apache/2.2.14 <span class="o">(</span>Ubuntu<span class="o">)</span>
+&lt; Content-Length: <span class="m">0</span>
+&lt; Content-Type: text/plain
+&lt;
+</pre></div>
+</div>
+</div></blockquote>
+</dd></dl>
+
+</div>
+<hr class="docutils" />
+<div class="section" id="read-api">
+<h2><a class="toc-backref" href="#id18">Read API</a><a class="headerlink" href="#read-api" title="Permalink to this headline">¶</a></h2>
+<p>Provide tier 1 operations for sharing content from a Member Node.</p>
+<p>The <em>MNRead</em> API implements methods that enable object management
+operations on a <a class="reference internal" href="../glossary.html#term-Member-Node"><span class="xref std std-term">Member Node</span></a>.</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#MNRead.describe" title="MNRead.describe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">describe</span></code></a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">HEAD</span> <span class="pre">/object/{id}</span></code> <br/> This method provides a lighter weight mechanism than <a class="reference internal" href="#MNRead.getSystemMetadata" title="MNRead.getSystemMetadata"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNRead.getSystemMetadata()</span></code></a> for a client to determine basic properties of the referenced object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#MNRead.get" title="MNRead.get"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get</span></code></a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/object/{id}</span></code> <br/> Retrieve an object identified by <em>id</em> from the node.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#MNRead.getChecksum" title="MNRead.getChecksum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getChecksum</span></code></a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/checksum/{pid}[?checksumAlgorithm={checksumAlgorithm}]</span></code> <br/> Returns a <a class="reference internal" href="Types.html#Types.Checksum" title="Types.Checksum"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.Checksum</span></code></a> for the specified object using an accepted hashing algorithm.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#MNRead.getReplica" title="MNRead.getReplica"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getReplica</span></code></a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/replica/{pid}</span></code> <br/> Called by a target Member Node to fullfill the replication request originated by a Coordinating Node calling <a class="reference internal" href="#MNReplication.replicate" title="MNReplication.replicate"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNReplication.replicate()</span></code></a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#MNRead.getSystemMetadata" title="MNRead.getSystemMetadata"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getSystemMetadata</span></code></a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/meta/{id}</span></code> <br/> Describes the object identified by <em>id</em> by returning the associated system metadata object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#MNRead.listObjects" title="MNRead.listObjects"><code class="xref py py-obj docutils literal notranslate"><span class="pre">listObjects</span></code></a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/object[?fromDate={fromDate}&amp;toDate={toDate}&amp;identifier={identifier}&amp;formatId={formatId}&amp;replicaStatus={replicaStatus}</span> <span class="pre">&amp;start={start}&amp;count={count}]</span></code> <br/> Retrieve the list of objects present on the MN that match the calling parameters. This method is required to support the process of <a class="reference internal" href="../glossary.html#term-Member-Node-synchronization"><span class="xref std std-term">Member Node synchronization</span></a>. At a minimum, this method MUST be able to return a list of objects that match::.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#MNRead.synchronizationFailed" title="MNRead.synchronizationFailed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">synchronizationFailed</span></code></a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/error</span></code> <br/> This is a callback method used by a CN to indicate to a MN that it cannot complete synchronization of the science metadata identified by <em>pid</em>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#MNRead.systemMetadataChanged" title="MNRead.systemMetadataChanged"><code class="xref py py-obj docutils literal notranslate"><span class="pre">systemMetadataChanged</span></code></a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/dirtySystemMetadata</span></code> <br/> Notifies the Member Node that the authoritative copy of system metadata on the Coordinating Nodes has changed.</p></td>
+</tr>
+</tbody>
+</table>
+<span class="target" id="module-MNRead"></span><dl class="py function">
+<dt id="MNRead.describe">
+<code class="sig-prename descclassname">MNRead.</code><code class="sig-name descname">describe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">session</span></em>, <em class="sig-param"><span class="n">id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MNRead.describe" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">HEAD</span> <span class="pre">/object/{id}</span></code> <br/> This method provides a lighter weight mechanism than <a class="reference internal" href="#MNRead.getSystemMetadata" title="MNRead.getSystemMetadata"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNRead.getSystemMetadata()</span></code></a> for a client to determine basic properties of the referenced object. The response should indicate properties that are typically returned in a HTTP HEAD request: the date late modified, the size of the object, the type of the object (the <code class="xref py py-attr docutils literal notranslate"><span class="pre">SystemMetadata.formatId</span></code>).</p>
+<p>The principal indicated by <em>token</em> must have read privileges on the object, otherwise <a class="reference internal" href="Exceptions.html#Exceptions.NotAuthorized" title="Exceptions.NotAuthorized"><code class="xref py py-exc docutils literal notranslate"><span class="pre">Exceptions.NotAuthorized</span></code></a> is raised.</p>
+<p>If the object does not exist on the node servicing the request, then <a class="reference internal" href="Exceptions.html#Exceptions.NotFound" title="Exceptions.NotFound"><code class="xref py py-exc docutils literal notranslate"><span class="pre">Exceptions.NotFound</span></code></a> must be raised even if the object exists on another node in the DataONE system.</p>
+<p>Note that this method is likely to be called frequently and so efficiency should be taken into consideration during implementation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Version</dt>
+<dd class="field-odd"><p>1.0</p>
+</dd>
+<dt class="field-even">Use Cases</dt>
+<dd class="field-even"><p><a class="reference internal" href="../design/UseCases/16_uc.html"><span class="doc">UC16</span></a></p>
+</dd>
+<dt class="field-odd">REST URL</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">HEAD</span> <span class="pre">/object/{id}</span></code></p>
+</dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>session</strong> (<a class="reference internal" href="Types.html#Types.Session" title="Types.Session"><em>Types.Session</em></a>) – Session information that contains the identity of the
+calling user as retrieved from the X.509 certificate. Transmitted as part of
+the SSL handshake process.</p></li>
+<li><p><strong>id</strong> (<a class="reference internal" href="Types.html#Types.Identifier" title="Types.Identifier"><em>Types.Identifier</em></a>) – Identifier for the object in question. May be either a PID or a SID.  Transmitted as part of the URL path and must be escaped accordingly.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A set of values providing a basic description of the object.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="Types11.html#Types.DescribeResponse" title="Types.DescribeResponse">Types.DescribeResponse</a></p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotAuthorized" title="Exceptions.NotAuthorized"><strong>Exceptions.NotAuthorized</strong></a> – (errorCode=401, detailCode=1360)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotFound" title="Exceptions.NotFound"><strong>Exceptions.NotFound</strong></a> – (errorCode=404, detailCode=1380)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.ServiceFailure" title="Exceptions.ServiceFailure"><strong>Exceptions.ServiceFailure</strong></a> – (errorCode=500, detailCode=1390)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidToken" title="Exceptions.InvalidToken"><strong>Exceptions.InvalidToken</strong></a> – (errorCode=401, detailCode=1370)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotImplemented" title="Exceptions.NotImplemented"><strong>Exceptions.NotImplemented</strong></a> – (errorCode=501, detailCode=1361)</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Examples</strong></p>
+<p>(HEAD) Retrieve information about the object with identifier “ABC123”:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">curl</span> <span class="o">-</span><span class="n">I</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">mn1</span><span class="o">.</span><span class="n">dataone</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">mn</span><span class="o">/</span><span class="n">v1</span><span class="o">/</span><span class="nb">object</span><span class="o">/</span><span class="n">ABC123</span>
+
+<span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span> <span class="mi">200</span> <span class="n">OK</span>
+<span class="n">Last</span><span class="o">-</span><span class="n">Modified</span><span class="p">:</span> <span class="n">Wed</span><span class="p">,</span> <span class="mi">16</span> <span class="n">Dec</span> <span class="mi">2009</span> <span class="mi">13</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mi">34</span> <span class="n">GMT</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Length</span><span class="p">:</span> <span class="mi">10400</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Type</span><span class="p">:</span> <span class="n">application</span><span class="o">/</span><span class="n">octet</span><span class="o">-</span><span class="n">stream</span>
+<span class="n">DataONE</span><span class="o">-</span><span class="n">ObjectFormat</span><span class="p">:</span> <span class="n">eml</span><span class="p">:</span><span class="o">//</span><span class="n">ecoinformatics</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">eml</span><span class="o">-</span><span class="mf">2.0</span><span class="o">.</span><span class="mi">1</span>
+<span class="n">DataONE</span><span class="o">-</span><span class="n">Checksum</span><span class="p">:</span> <span class="n">SHA</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mf">2e01</span><span class="n">e17467891f7c933dbaa00e1459d23db3fe4f</span>
+<span class="n">DataONE</span><span class="o">-</span><span class="n">SerialVersion</span><span class="p">:</span> <span class="mi">1234</span>
+</pre></div>
+</div>
+<p>(HEAD) An error response to a describe() request for object “IDONTEXIST”:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">curl</span> <span class="o">-</span><span class="n">I</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">mn1</span><span class="o">.</span><span class="n">dataone</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">mn</span><span class="o">/</span><span class="n">v1</span><span class="o">/</span><span class="nb">object</span><span class="o">/</span><span class="n">IDONTEXIST</span>
+
+<span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span> <span class="mi">404</span> <span class="n">Not</span> <span class="n">Found</span>
+<span class="n">Last</span><span class="o">-</span><span class="n">Modified</span><span class="p">:</span> <span class="n">Wed</span><span class="p">,</span> <span class="mi">16</span> <span class="n">Dec</span> <span class="mi">2009</span> <span class="mi">13</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mi">34</span> <span class="n">GMT</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Length</span><span class="p">:</span> <span class="mi">1182</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Type</span><span class="p">:</span> <span class="n">text</span><span class="o">/</span><span class="n">xml</span>
+<span class="n">DataONE</span><span class="o">-</span><span class="ne">Exception</span><span class="o">-</span><span class="n">Name</span><span class="p">:</span> <span class="n">NotFound</span>
+<span class="n">DataONE</span><span class="o">-</span><span class="ne">Exception</span><span class="o">-</span><span class="n">DetailCode</span><span class="p">:</span> <span class="mi">1380</span>
+<span class="n">DataONE</span><span class="o">-</span><span class="ne">Exception</span><span class="o">-</span><span class="n">Description</span><span class="p">:</span> <span class="n">The</span> <span class="n">specified</span> <span class="nb">object</span> <span class="n">does</span> <span class="ow">not</span> <span class="n">exist</span> <span class="n">on</span> <span class="n">this</span> <span class="n">node</span><span class="o">.</span>
+<span class="n">DataONE</span><span class="o">-</span><span class="ne">Exception</span><span class="o">-</span><span class="n">PID</span><span class="p">:</span> <span class="n">IDONTEXIST</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="MNRead.get">
+<code class="sig-prename descclassname">MNRead.</code><code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">session</span></em>, <em class="sig-param"><span class="n">id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MNRead.get" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/object/{id}</span></code> <br/> Retrieve an object identified by <em>id</em> from the node. Supports both PIDs and SIDs. SID will return HEAD PID.</p>
+<p>The response MUST contain the bytes of the indicated object, and the checksum of the bytes retrieved SHOULD match the <code class="xref py py-attr docutils literal notranslate"><span class="pre">SystemMetadata.checksum</span></code> recorded in the  <a class="reference internal" href="Types.html#Types.SystemMetadata" title="Types.SystemMetadata"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.SystemMetadata</span></code></a> when calling with PID.</p>
+<p>If the object does not exist on the node servicing the request, then <a class="reference internal" href="Exceptions.html#Exceptions.NotFound" title="Exceptions.NotFound"><code class="xref py py-exc docutils literal notranslate"><span class="pre">Exceptions.NotFound</span></code></a> must be raised even if the object exists on another node in the DataONE system.</p>
+<p>Also implmented by Coordinating Nodes as <a class="reference internal" href="CN_APIs.html#CNRead.get" title="CNRead.get"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNRead.get()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Version</dt>
+<dd class="field-odd"><p>1.0</p>
+</dd>
+<dt class="field-even">Use Cases</dt>
+<dd class="field-even"><p><a class="reference internal" href="../design/UseCases/01_uc.html"><span class="doc">UC01</span></a>, <a class="reference internal" href="../design/UseCases/06_uc.html"><span class="doc">UC06</span></a>, <a class="reference internal" href="../design/UseCases/16_uc.html"><span class="doc">UC16</span></a></p>
+</dd>
+<dt class="field-odd">REST URL</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/object/{id}</span></code></p>
+</dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>session</strong> (<a class="reference internal" href="Types.html#Types.Session" title="Types.Session"><em>Types.Session</em></a>) – Session information that contains the identity of the
+calling user as retrieved from the X.509 certificate. Transmitted as part of
+the SSL handshake process.</p></li>
+<li><p><strong>id</strong> (<a class="reference internal" href="Types.html#Types.Identifier" title="Types.Identifier"><em>Types.Identifier</em></a>) – The identifier for the object to be retrieved. May be a PID or a SID. Transmitted as part of the URL path and must be escaped accordingly.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Bytes of the specified object.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="Types11.html#Types.OctetStream" title="Types.OctetStream">Types.OctetStream</a></p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotAuthorized" title="Exceptions.NotAuthorized"><strong>Exceptions.NotAuthorized</strong></a> – The provided identity does not have READ permission on the object. (errorCode=401, detailCode=1000)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotFound" title="Exceptions.NotFound"><strong>Exceptions.NotFound</strong></a> – The object specified by <em>id</em> does not exist at this node. The description should include a reference to the resolve method. (errorCode=404, detailCode=1020)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.ServiceFailure" title="Exceptions.ServiceFailure"><strong>Exceptions.ServiceFailure</strong></a> – (errorCode=500, detailCode=1030)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidToken" title="Exceptions.InvalidToken"><strong>Exceptions.InvalidToken</strong></a> – (errorCode=401, detailCode=1010)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotImplemented" title="Exceptions.NotImplemented"><strong>Exceptions.NotImplemented</strong></a> – (errorCode=501, detailCode=1001)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InsufficientResources" title="Exceptions.InsufficientResources"><strong>Exceptions.InsufficientResources</strong></a> – The node is unable to service the request due to insufficient resources such as CPU, memory, or bandwidth being over utilized. (errorCode=413, detailCode=1002)</p></li>
+</ul>
+</dd>
+</dl>
+<blockquote>
+<div><p><strong>Examples</strong></p>
+<p>(GET) Retrieve the object with identifier “XYZ332”:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">NODE</span><span class="o">=</span><span class="s2">&quot;https://demo2.test.dataone.org/knb/d1/mn&quot;</span>
+<span class="n">curl</span> <span class="o">-</span><span class="n">k</span> <span class="s2">&quot;$NODE/v1/object/XYZ332&quot;</span>
+
+<span class="o">...</span> <span class="n">data</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>(GET) Attempt to retrieve a non-existent object (and show headers in response):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>export NODE=&quot;https://demo2.test.dataone.org/knb/d1/mn&quot;
+curl -D - &quot;$NODE/v1/object/DOESNTEXIST&quot;
+
+HTTP/1.1 404 Not Found
+Date: Tue, 06 Mar 2012 15:25:35 GMT
+Server: Apache/2.2.14 (Ubuntu)
+Content-Length: 196
+Vary: Accept-Encoding
+Content-Type: text/xml
+
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;error detailCode=&quot;1800&quot; errorCode=&quot;404&quot; name=&quot;NotFound&quot;&gt;
+   &lt;description&gt;No system metadata could be found for given PID: DOESNTEXIST&lt;/description&gt;
+&lt;/error&gt;
+</pre></div>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt id="MNRead.getChecksum">
+<code class="sig-prename descclassname">MNRead.</code><code class="sig-name descname">getChecksum</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">session</span></em>, <em class="sig-param"><span class="n">pid</span></em>, <em class="sig-param"><span class="n">checksumAlgorithm</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MNRead.getChecksum" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/checksum/{pid}[?checksumAlgorithm={checksumAlgorithm}]</span></code> <br/> Returns a <a class="reference internal" href="Types.html#Types.Checksum" title="Types.Checksum"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.Checksum</span></code></a> for the specified object using an accepted hashing algorithm. The result is used to determine if two instances referenced by a PID are identical, hence it is necessary that MNs can ensure that the returned checksum is valid for the referenced object either by computing it on the fly or by using a cached value that is certain to be correct.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Version</dt>
+<dd class="field-odd"><p>1.0</p>
+</dd>
+<dt class="field-even">REST URL</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/checksum/{pid}[?checksumAlgorithm={checksumAlgorithm}]</span></code></p>
+</dd>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<a class="reference internal" href="Types.html#Types.Session" title="Types.Session"><em>Types.Session</em></a>) – Session information that contains the identity of the
+calling user as retrieved from the X.509 certificate. Transmitted as part of
+the SSL handshake process.</p></li>
+<li><p><strong>pid</strong> (<a class="reference internal" href="Types.html#Types.Identifier" title="Types.Identifier"><em>Types.Identifier</em></a>) – The identifier of the object the operation is being performed on. Transmitted as part of the URL path and must be escaped accordingly.</p></li>
+<li><p><strong>checksumAlgorithm</strong> (<em>string</em>) – The name of an algorithm that will be used to compute a checksum of the bytes of the object. This value is drawn from a DataONE controlled list of values as indicted in the <a class="reference internal" href="Types.html#Types.SystemMetadata" title="Types.SystemMetadata"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.SystemMetadata</span></code></a>. If not specified, then the system wide default checksum algorithm should be used. Transmitted as a URL query parameter, and so must be escaped accordingly.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The checksum value originally computed for the specified object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="Types.html#Types.Checksum" title="Types.Checksum">Types.Checksum</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotAuthorized" title="Exceptions.NotAuthorized"><strong>Exceptions.NotAuthorized</strong></a> – (errorCode=401, detailCode=1400)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotFound" title="Exceptions.NotFound"><strong>Exceptions.NotFound</strong></a> – (errorCode=404, detailCode=1420)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidRequest" title="Exceptions.InvalidRequest"><strong>Exceptions.InvalidRequest</strong></a> – A supplied parameter was invalid, most likely an unsupported checksum algorithm was specified, in which case the error message should include an enumeration of supported checksum algorithms. (errorCode=400, detailCode=1402)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.ServiceFailure" title="Exceptions.ServiceFailure"><strong>Exceptions.ServiceFailure</strong></a> – (errorCode=500, detailCode=1410)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidToken" title="Exceptions.InvalidToken"><strong>Exceptions.InvalidToken</strong></a> – (errorCode=401, detailCode=1430)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotImplemented" title="Exceptions.NotImplemented"><strong>Exceptions.NotImplemented</strong></a> – (errorCode=501, detailCode=1401)</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example</strong></p>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>Example for MNRead.getChecksum</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="MNRead.getReplica">
+<code class="sig-prename descclassname">MNRead.</code><code class="sig-name descname">getReplica</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">session</span></em>, <em class="sig-param"><span class="n">pid</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MNRead.getReplica" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/replica/{pid}</span></code> <br/> Called by a target Member Node to fullfill the replication request originated by a Coordinating Node calling <a class="reference internal" href="#MNReplication.replicate" title="MNReplication.replicate"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNReplication.replicate()</span></code></a>. This is a request to make a replica copy of the object, and differs from a call to GET /object in that it should be logged as a replication event rather than a read event on that object.</p>
+<p>If the object being retrieved is restricted access, then a Tier 2 or higher Member Node MUST make a call to <a class="reference internal" href="CN_APIs.html#CNReplication.isNodeAuthorized" title="CNReplication.isNodeAuthorized"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNReplication.isNodeAuthorized()</span></code></a> to verify that the Subject of the caller is authorized to retrieve the content.</p>
+<p>A successful operation is indicated by a HTTP status of 200 on the response.</p>
+<p>Failure of the operation MUST be indicated by returning an appropriate exception.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Version</dt>
+<dd class="field-odd"><p>1.0</p>
+</dd>
+<dt class="field-even">Use Cases</dt>
+<dd class="field-even"><p><a class="reference internal" href="../design/UseCases/09_uc.html"><span class="doc">UC09</span></a></p>
+</dd>
+<dt class="field-odd">REST URL</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/replica/{pid}</span></code></p>
+</dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>session</strong> (<a class="reference internal" href="Types.html#Types.Session" title="Types.Session"><em>Types.Session</em></a>) – Session information that contains the identity of the
+calling user as retrieved from the X.509 certificate. Transmitted as part of
+the SSL handshake process.</p></li>
+<li><p><strong>pid</strong> (<a class="reference internal" href="Types.html#Types.Identifier" title="Types.Identifier"><em>Types.Identifier</em></a>) – The identifier of the object to get as a replica Transmitted as part of the URL path and must be escaped accordingly.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Bytes of the specified object.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="Types11.html#Types.OctetStream" title="Types.OctetStream">Types.OctetStream</a></p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotImplemented" title="Exceptions.NotImplemented"><strong>Exceptions.NotImplemented</strong></a> – (errorCode=501, detailCode=2180)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.ServiceFailure" title="Exceptions.ServiceFailure"><strong>Exceptions.ServiceFailure</strong></a> – (errorCode=500, detailCode=2181)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotAuthorized" title="Exceptions.NotAuthorized"><strong>Exceptions.NotAuthorized</strong></a> – (errorCode=401, detailCode=2182)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidToken" title="Exceptions.InvalidToken"><strong>Exceptions.InvalidToken</strong></a> – (errorCode=401, detailCode=2183)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InsufficientResources" title="Exceptions.InsufficientResources"><strong>Exceptions.InsufficientResources</strong></a> – The node is unable to service the request due to insufficient resources such as CPU, memory, or bandwidth being over utilized. (errorCode=413, detailCode=2184)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotFound" title="Exceptions.NotFound"><strong>Exceptions.NotFound</strong></a> – (errorCode=404, detailCode=2185)</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example</strong></p>
+<div class="admonition-todo admonition" id="id2">
+<p class="admonition-title">Todo</p>
+<p>Example for MNRead.getReplica</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="MNRead.getSystemMetadata">
+<code class="sig-prename descclassname">MNRead.</code><code class="sig-name descname">getSystemMetadata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">session</span></em>, <em class="sig-param"><span class="n">id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MNRead.getSystemMetadata" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/meta/{id}</span></code> <br/> Describes the object identified by <em>id</em> by returning the associated system metadata object.</p>
+<p>If the object does not exist on the node servicing the request, then <a class="reference internal" href="Exceptions.html#Exceptions.NotFound" title="Exceptions.NotFound"><code class="xref py py-exc docutils literal notranslate"><span class="pre">Exceptions.NotFound</span></code></a> MUST be raised even if the object exists on another node in the DataONE system.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Version</dt>
+<dd class="field-odd"><p>1.0</p>
+</dd>
+<dt class="field-even">Use Cases</dt>
+<dd class="field-even"><p><a class="reference internal" href="../design/UseCases/06_uc.html"><span class="doc">UC06</span></a>, <a class="reference internal" href="../design/UseCases/37_uc.html"><span class="doc">UC37</span></a>, <a class="reference internal" href="../design/UseCases/16_uc.html"><span class="doc">UC16</span></a></p>
+</dd>
+<dt class="field-odd">REST URL</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/meta/{id}</span></code></p>
+</dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>session</strong> (<a class="reference internal" href="Types.html#Types.Session" title="Types.Session"><em>Types.Session</em></a>) – Session information that contains the identity of the
+calling user as retrieved from the X.509 certificate. Transmitted as part of
+the SSL handshake process.</p></li>
+<li><p><strong>id</strong> (<a class="reference internal" href="Types.html#Types.Identifier" title="Types.Identifier"><em>Types.Identifier</em></a>) – Identifier for the science data or science metedata object of interest. May be either a PID or a SID. Transmitted as part of the URL path and must be escaped accordingly.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>System metadata object describing the object.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="Types.html#Types.SystemMetadata" title="Types.SystemMetadata">Types.SystemMetadata</a></p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotAuthorized" title="Exceptions.NotAuthorized"><strong>Exceptions.NotAuthorized</strong></a> – (errorCode=401, detailCode=1040)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotImplemented" title="Exceptions.NotImplemented"><strong>Exceptions.NotImplemented</strong></a> – (errorCode=501, detailCode=1041)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotFound" title="Exceptions.NotFound"><strong>Exceptions.NotFound</strong></a> – There is no data or science metadata identified by the given <em>id</em> on the node where the request was serviced. The error message should provide a hint to use the <a class="reference internal" href="CN_APIs.html#CNRead.resolve" title="CNRead.resolve"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNRead.resolve()</span></code></a> mechanism. (errorCode=404, detailCode=1060)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.ServiceFailure" title="Exceptions.ServiceFailure"><strong>Exceptions.ServiceFailure</strong></a> – (errorCode=500, detailCode=1090)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidToken" title="Exceptions.InvalidToken"><strong>Exceptions.InvalidToken</strong></a> – (errorCode=401, detailCode=1050)</p></li>
+</ul>
+</dd>
+</dl>
+<blockquote>
+<div><p><strong>Examples</strong></p>
+<p>(GET) Retrieve system metadata from a Member Node for object “XYZ332” which
+happens to be science metadata (an EML document) that has been obsoleted by
+a new version with identifier “XYZ33”:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>curl http://m1.dataone.org/mn/v1/meta/XYZ332
+
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;d1:systemMetadata xmlns:d1=&quot;http://ns.dataone.org/service/types/v1&quot;&gt;
+  &lt;serialVersion&gt;1&lt;/serialVersion&gt;
+  &lt;identifier&gt;XYZ332&lt;/identifier&gt;
+  &lt;formatId&gt;eml://ecoinformatics.org/eml-2.1.0&lt;/formatId&gt;
+  &lt;size&gt;20875&lt;/size&gt;
+  &lt;checksum algorithm=&quot;MD5&quot;&gt;e7451c1775461b13987d7539319ee41f&lt;/checksum&gt;
+  &lt;submitter&gt;uid=mbauer,o=NCEAS,dc=ecoinformatics,dc=org&lt;/submitter&gt;
+  &lt;rightsHolder&gt;uid=mbauer,o=NCEAS,dc=ecoinformatics,dc=org&lt;/rightsHolder&gt;
+  &lt;accessPolicy&gt;
+    &lt;allow&gt;
+      &lt;subject&gt;uid=jdoe,o=NCEAS,dc=ecoinformatics,dc=org&lt;/subject&gt;
+      &lt;permission&gt;read&lt;/permission&gt;
+      &lt;permission&gt;write&lt;/permission&gt;
+      &lt;permission&gt;changePermission&lt;/permission&gt;
+    &lt;/allow&gt;
+    &lt;allow&gt;
+      &lt;subject&gt;public&lt;/subject&gt;
+      &lt;permission&gt;read&lt;/permission&gt;
+    &lt;/allow&gt;
+    &lt;allow&gt;
+      &lt;subject&gt;uid=nceasadmin,o=NCEAS,dc=ecoinformatics,dc=org&lt;/subject&gt;
+      &lt;permission&gt;read&lt;/permission&gt;
+      &lt;permission&gt;write&lt;/permission&gt;
+      &lt;permission&gt;changePermission&lt;/permission&gt;
+    &lt;/allow&gt;
+  &lt;/accessPolicy&gt;
+  &lt;replicationPolicy replicationAllowed=&quot;false&quot;/&gt;
+  &lt;obsoletes&gt;XYZ331&lt;/obsoletes&gt;
+  &lt;obsoletedBy&gt;XYZ333&lt;/obsoletedBy&gt;
+  &lt;archived&gt;true&lt;/archived&gt;
+  &lt;dateUploaded&gt;2008-04-01T23:00:00.000+00:00&lt;/dateUploaded&gt;
+  &lt;dateSysMetadataModified&gt;2012-06-26T03:51:25.058+00:00&lt;/dateSysMetadataModified&gt;
+  &lt;originMemberNode&gt;urn:node:TEST&lt;/originMemberNode&gt;
+  &lt;authoritativeMemberNode&gt;urn:node:TEST&lt;/authoritativeMemberNode&gt;
+&lt;/d1:systemMetadata&gt;
+</pre></div>
+</div>
+<p>(GET) Attempt to retrieve system metadata for an object that does not exist.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>curl http://cn.dataone.org/cn/v1/meta/SomeObjectID
+
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;error detailCode=&quot;1800&quot; errorCode=&quot;404&quot; name=&quot;NotFound&quot;&gt;
+  &lt;description&gt;No system metadata could be found for given PID: SomeObjectID&lt;/description&gt;
+&lt;/error&gt;
+</pre></div>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt id="MNRead.listObjects">
+<code class="sig-prename descclassname">MNRead.</code><code class="sig-name descname">listObjects</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">session</span></em>, <em class="sig-param"><span class="n">fromDate</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">toDate</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">formatId</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">identifier</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">replicaStatus</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">start</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">count</span><span class="o">=</span><span class="default_value">1000</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MNRead.listObjects" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/object[?fromDate={fromDate}&amp;toDate={toDate}&amp;identifier={identifier}&amp;formatId={formatId}&amp;replicaStatus={replicaStatus}</span> <span class="pre">&amp;start={start}&amp;count={count}]</span></code> <br/> Retrieve the list of objects present on the MN that match the calling parameters. This method is required to support the process of <a class="reference internal" href="../glossary.html#term-Member-Node-synchronization"><span class="xref std std-term">Member Node synchronization</span></a>. At a minimum, this method MUST be able to return a list of objects that match:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fromDate</span> <span class="o">&lt;</span> <span class="n">SystemMetadata</span><span class="o">.</span><span class="n">dateSysMetadataModified</span>
+</pre></div>
+</div>
+<p>but is expected to also support date range (by also specifying <em>toDate</em>), and should also support slicing of the matching set of records by indicating the starting <em>index</em> of the response (where 0 is the index of the first item) and the <em>count</em> of elements to be returned.</p>
+<p>Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed.</p>
+<p>Note that date time precision is limited to one millisecond. If no timezone information is provided, the UTC will be assumed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Version</dt>
+<dd class="field-odd"><p>1.0</p>
+</dd>
+<dt class="field-even">Use Cases</dt>
+<dd class="field-even"><p><a class="reference internal" href="../design/UseCases/06_uc.html"><span class="doc">UC06</span></a>, <a class="reference internal" href="../design/UseCases/16_uc.html"><span class="doc">UC16</span></a></p>
+</dd>
+<dt class="field-odd">REST URL</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/object[?fromDate={fromDate}&amp;toDate={toDate}&amp;identifier={identifier}&amp;formatId={formatId}&amp;replicaStatus={replicaStatus}</span> <span class="pre">&amp;start={start}&amp;count={count}]</span></code></p>
+</dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>session</strong> (<a class="reference internal" href="Types.html#Types.Session" title="Types.Session"><em>Types.Session</em></a>) – Session information that contains the identity of the
+calling user as retrieved from the X.509 certificate. Transmitted as part of
+the SSL handshake process.</p></li>
+<li><p><strong>fromDate</strong> (<a class="reference internal" href="Types11.html#Types.DateTime" title="Types.DateTime"><em>Types.DateTime</em></a>) – Entries with <code class="xref py py-attr docutils literal notranslate"><span class="pre">SystemMetadata.dateSysMetadataModified</span></code> greater than or equal to (&gt;=) <em>fromDate</em> must be returned.  Transmitted as a URL query parameter, and so must be escaped accordingly.</p></li>
+<li><p><strong>toDate</strong> (<a class="reference internal" href="Types11.html#Types.DateTime" title="Types.DateTime"><em>Types.DateTime</em></a>) – Entries with <code class="xref py py-attr docutils literal notranslate"><span class="pre">SystemMetadata.dateSysMetadataModified</span></code> less than (&lt;) <em>toDate</em> must be returned. Transmitted as a URL query parameter, and so must be escaped accordingly.</p></li>
+<li><p><strong>formatId</strong> (<a class="reference internal" href="Types.html#Types.ObjectFormatIdentifier" title="Types.ObjectFormatIdentifier"><em>Types.ObjectFormatIdentifier</em></a>) – Restrict results to the specified object format identifier. Transmitted as a URL query parameter, and so must be escaped accordingly.</p></li>
+<li><p><strong>identifier</strong> (<a class="reference internal" href="Types.html#Types.Identifier" title="Types.Identifier"><em>Types.Identifier</em></a>) – Restrict results to the specified identifier. May be a PID or a SID. In the case of the latter, returns a listing of all PIDs that share the given SID. Transmitted as a URL query parameter, and so must be escaped accordingly.</p></li>
+<li><p><strong>replicaStatus</strong> (<em>boolean</em>) – Indicates if replicated objects should be returned in the list (i.e. any entries present in the <code class="xref py py-attr docutils literal notranslate"><span class="pre">SystemMetadata.replica</span></code>, objects that have been replicated to this node). If <code class="docutils literal notranslate"><span class="pre">false</span></code>, then no objects that have been replicated should be returned. If <code class="docutils literal notranslate"><span class="pre">true</span></code>, then any objects can be returned, regardless of replication status. The default value is <code class="docutils literal notranslate"><span class="pre">true</span></code>. Transmitted as a URL query parameter, and so must be escaped accordingly.</p></li>
+<li><p><strong>start</strong> (<em>integer</em>) – The zero-based index of the first value, relative to the first record of the resultset that matches the parameters. Transmitted as a URL query parameter, and so must be escaped accordingly.</p></li>
+<li><p><strong>count</strong> (<em>integer</em>) – The maximum number of entries that should be returned in the response. The Member Node may return fewer and the caller should check the <em>total</em> in the response to determine if further pages may be retrieved. Transmitted as a URL query parameter, and so must be escaped accordingly.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The list of PIDs that match the query criteria. If none match, an empty list is returned.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="Types.html#Types.ObjectList" title="Types.ObjectList">Types.ObjectList</a></p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotAuthorized" title="Exceptions.NotAuthorized"><strong>Exceptions.NotAuthorized</strong></a> – (errorCode=401, detailCode=1520)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidRequest" title="Exceptions.InvalidRequest"><strong>Exceptions.InvalidRequest</strong></a> – (errorCode=400, detailCode=1540)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotImplemented" title="Exceptions.NotImplemented"><strong>Exceptions.NotImplemented</strong></a> – Raised if some functionality requested is not implemented. In the case of an optional request parameter not being supported, the errorCode should be 400. If the requested format (through HTTP Accept headers) is not supported, then the standard HTTP 406 error code should be returned. (errorCode=501, detailCode=1560)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.ServiceFailure" title="Exceptions.ServiceFailure"><strong>Exceptions.ServiceFailure</strong></a> – (errorCode=500, detailCode=1580)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidToken" title="Exceptions.InvalidToken"><strong>Exceptions.InvalidToken</strong></a> – (errorCode=401, detailCode=1530)</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example</strong></p>
+<p>Retrieve an object list from a member node, and pipe the response through an
+xml formatter for easier viewing:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>curl &quot;https://gmn-dev.test.dataone.org/mn/v1/object?count=5&quot; | xml fo
+
+&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;ns1:objectList xmlns:ns1=&quot;http://ns.dataone.org/service/types/v1&quot; count=&quot;5&quot; start=&quot;0&quot; total=&quot;12&quot;&gt;
+  &lt;objectInfo&gt;
+    &lt;identifier&gt;AnserMatrix.htm&lt;/identifier&gt;
+    &lt;formatId&gt;eml://ecoinformatics.org/eml-2.0.0&lt;/formatId&gt;
+    &lt;checksum algorithm=&quot;MD5&quot;&gt;0e25cf59d7bd4d57154cc83e0aa32b34&lt;/checksum&gt;
+    &lt;dateSysMetadataModified&gt;1970-05-27T06:12:49&lt;/dateSysMetadataModified&gt;
+    &lt;size&gt;11048&lt;/size&gt;
+  &lt;/objectInfo&gt;
+
+  ...
+
+  &lt;objectInfo&gt;
+    &lt;identifier&gt;hdl:10255/dryad.218/mets.xml&lt;/identifier&gt;
+    &lt;formatId&gt;eml://ecoinformatics.org/eml-2.0.0&lt;/formatId&gt;
+    &lt;checksum algorithm=&quot;MD5&quot;&gt;65c4e0a9c4ccf37c1e3ecaaa2541e9d5&lt;/checksum&gt;
+    &lt;dateSysMetadataModified&gt;1987-01-14T07:09:09&lt;/dateSysMetadataModified&gt;
+    &lt;size&gt;2796&lt;/size&gt;
+  &lt;/objectInfo&gt;
+&lt;/ns1:objectList&gt;
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="MNRead.synchronizationFailed">
+<code class="sig-prename descclassname">MNRead.</code><code class="sig-name descname">synchronizationFailed</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">session</span></em>, <em class="sig-param"><span class="n">message</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MNRead.synchronizationFailed" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/error</span></code> <br/> This is a callback method used by a CN to indicate to a MN that it cannot complete synchronization of the science metadata identified by <em>pid</em>. When called, the MN should take steps to record the problem description and notify an administrator or the data owner of the issue.</p>
+<p>A successful response is indicated by a HTTP status of 200. An unsuccessful call is indicated by a returned exception and associated HTTP status code.</p>
+<p>Access control for this method MUST be configured to allow calling by Coordinating Nodes and MAY be configured to allow more general access.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Version</dt>
+<dd class="field-odd"><p></p></dd>
+<dt class="field-even">Use Cases</dt>
+<dd class="field-even"><p><a class="reference internal" href="../design/UseCases/06_uc.html"><span class="doc">UC06</span></a></p>
+</dd>
+<dt class="field-odd">REST URL</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/error</span></code></p>
+</dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>session</strong> (<a class="reference internal" href="Types.html#Types.Session" title="Types.Session"><em>Types.Session</em></a>) – Session information that contains the identity of the
+calling user as retrieved from the X.509 certificate. Transmitted as part of
+the SSL handshake process.</p></li>
+<li><p><strong>message</strong> (<em>Types.Exception</em>) – An instance of the <a class="reference internal" href="Exceptions.html#Exceptions.SynchronizationFailed" title="Exceptions.SynchronizationFailed"><code class="xref py py-exc docutils literal notranslate"><span class="pre">Exceptions.SynchronizationFailed</span></code></a> exception with body appropriately filled.  Transmitted as an UTF-8 encoded XML structure for the respective type as defined in the DataONE types schema, as a <em>File part</em> of the MIME multipart/mixed message.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A successful response is indicated by a HTTP 200 status. An unsuccessful call is indicated by returing the appropriate exception.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="Types11.html#Types.Boolean" title="Types.Boolean">Types.Boolean</a></p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotImplemented" title="Exceptions.NotImplemented"><strong>Exceptions.NotImplemented</strong></a> – (errorCode=501, detailCode=2160)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.ServiceFailure" title="Exceptions.ServiceFailure"><strong>Exceptions.ServiceFailure</strong></a> – (errorCode=500, detailCode=2161)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotAuthorized" title="Exceptions.NotAuthorized"><strong>Exceptions.NotAuthorized</strong></a> – (errorCode=401, detailCode=2162)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidToken" title="Exceptions.InvalidToken"><strong>Exceptions.InvalidToken</strong></a> – Optionally raised by the receiving MN, depending on implementation. (errorCode=401, detailCode=2164)</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example</strong></p>
+<div class="admonition-todo admonition" id="id3">
+<p class="admonition-title">Todo</p>
+<p>Example for MNRead.synchronizationFailed</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="MNRead.systemMetadataChanged">
+<code class="sig-prename descclassname">MNRead.</code><code class="sig-name descname">systemMetadataChanged</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">session</span></em>, <em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">serialVersion</span></em>, <em class="sig-param"><span class="n">dateSysMetaLastModified</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MNRead.systemMetadataChanged" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/dirtySystemMetadata</span></code> <br/> Notifies the Member Node that the authoritative copy of system metadata on the Coordinating Nodes has changed.</p>
+<p>The Member Node SHOULD schedule an update to its information about the affected object by retrieving an authoritative copy from a Coordinating Node.</p>
+<p>Note that date time precision is limited to one millisecond.</p>
+<p>Access control for this method MUST be configured to allow calling by Coordinating Nodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Version</dt>
+<dd class="field-odd"><p>1.0</p>
+</dd>
+<dt class="field-even">REST URL</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/dirtySystemMetadata</span></code></p>
+</dd>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<a class="reference internal" href="Types.html#Types.Session" title="Types.Session"><em>Types.Session</em></a>) – Session information that contains the identity of the
+calling user as retrieved from the X.509 certificate. Transmitted as part of
+the SSL handshake process.</p></li>
+<li><p><strong>id</strong> (<a class="reference internal" href="Types.html#Types.Identifier" title="Types.Identifier"><em>Types.Identifier</em></a>) – Identifier of the object for which system metadata was changed. May be either a PID or a SID. Calling with SID is equivalent to calling with HEAD PID. Transmitted as a UTF-8 String as a <em>Param part</em> of the MIME multipart/mixed message.</p></li>
+<li><p><strong>serialVersion</strong> (<em>unsigned long</em>) – The serialVersion of the system metadata. Transmitted as a UTF-8 String as a <em>Param part</em> of the MIME multipart/mixed message.</p></li>
+<li><p><strong>dateSysMetaLastModified</strong> (<a class="reference internal" href="Types11.html#Types.DateTime" title="Types.DateTime"><em>Types.DateTime</em></a>) – The time stamp for when the system metadata was changed. Transmitted as a UTF-8 String as a <em>Param part</em> of the MIME multipart/mixed message.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if notification was received OK, otherwise an error is returned.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotImplemented" title="Exceptions.NotImplemented"><strong>Exceptions.NotImplemented</strong></a> – (errorCode=501, detailCode=1330)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotAuthorized" title="Exceptions.NotAuthorized"><strong>Exceptions.NotAuthorized</strong></a> – (errorCode=401, detailCode=1331)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidToken" title="Exceptions.InvalidToken"><strong>Exceptions.InvalidToken</strong></a> – (errorCode=401, detailCode=1332)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.ServiceFailure" title="Exceptions.ServiceFailure"><strong>Exceptions.ServiceFailure</strong></a> – (errorCode=500, detailCode=1333)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidRequest" title="Exceptions.InvalidRequest"><strong>Exceptions.InvalidRequest</strong></a> – (errorCode=400, detailCode=1334)</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example</strong></p>
+<div class="admonition-todo admonition" id="id4">
+<p class="admonition-title">Todo</p>
+<p>Example for MNRead.systemMetadataChanged</p>
+</div>
+</dd></dl>
+
+</div>
+<hr class="docutils" />
+<div class="section" id="query-api">
+<h2><a class="toc-backref" href="#id19">Query API</a><a class="headerlink" href="#query-api" title="Permalink to this headline">¶</a></h2>
+<p>An optional tier 1 API for Member Node support of local query.</p>
+<p>The <em>MNQuery</em> API is an optional API that may be implemented by Member Nodes
+that intend to support querying the local repository. The actual form of the
+query is undefined, and t is expected that a small set of well known query
+engine types will be supported.</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#MNQuery.getQueryEngineDescription" title="MNQuery.getQueryEngineDescription"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getQueryEngineDescription</span></code></a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/query/{queryType}</span></code> <br/> Provides metadata about the query service of the specified <em>queryEngine</em>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#MNQuery.listQueryEngines" title="MNQuery.listQueryEngines"><code class="xref py py-obj docutils literal notranslate"><span class="pre">listQueryEngines</span></code></a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/query</span></code> <br/> Returns a list of query engines, i.e. supported values for the <em>queryEngine</em> parameter of the <em>getQueryEngineDescription</em> and <em>query</em> operations.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#MNQuery.query" title="MNQuery.query"><code class="xref py py-obj docutils literal notranslate"><span class="pre">query</span></code></a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/query/{queryEngine}/{query}</span></code> <br/> Submit a query against the specified <em>queryEngine</em> and return the response as formatted by the queryEngine.</p></td>
+</tr>
+</tbody>
+</table>
+<span class="target" id="module-MNQuery"></span><dl class="py function">
+<dt id="MNQuery.getQueryEngineDescription">
+<code class="sig-prename descclassname">MNQuery.</code><code class="sig-name descname">getQueryEngineDescription</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">session</span></em>, <em class="sig-param"><span class="n">queryEngine</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MNQuery.getQueryEngineDescription" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/query/{queryType}</span></code> <br/> Provides metadata about the query service of the specified <em>queryEngine</em>. The metadata provides a brief description of the query engine, its version, its schema version, and an optional list of fields supported by the query engine.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Version</dt>
+<dd class="field-odd"><p>1.1</p>
+</dd>
+<dt class="field-even">REST URL</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/query/{queryType}</span></code></p>
+</dd>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<a class="reference internal" href="Types.html#Types.Session" title="Types.Session"><em>Types.Session</em></a>) – Session information that contains the identity of the
+calling user as retrieved from the X.509 certificate. Transmitted as part of
+the SSL handshake process.</p></li>
+<li><p><strong>queryEngine</strong> (<em>string</em>) – Indicates which query engine for which to provide descriptive metadata. Currently supported search engines can be determined through MNQuery.listQueryEngines. Transmitted as part of the URL path and must be escaped accordingly.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of fields that are supported by the search index and additional metadata.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="Types11.html#Types.QueryEngineDescription" title="Types.QueryEngineDescription">Types.QueryEngineDescription</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotImplemented" title="Exceptions.NotImplemented"><strong>Exceptions.NotImplemented</strong></a> – (errorCode=501, detailCode=2810)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.ServiceFailure" title="Exceptions.ServiceFailure"><strong>Exceptions.ServiceFailure</strong></a> – (errorCode=500, detailCode=2811)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidToken" title="Exceptions.InvalidToken"><strong>Exceptions.InvalidToken</strong></a> – (errorCode=401, detailCode=2812)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotAuthorized" title="Exceptions.NotAuthorized"><strong>Exceptions.NotAuthorized</strong></a> – (errorCode=401, detailCode=2813)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotFound" title="Exceptions.NotFound"><strong>Exceptions.NotFound</strong></a> – The specified queryEngine does not exist (errorCode=404, detailCode=2814)</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example</strong></p>
+<div class="admonition-todo admonition" id="id5">
+<p class="admonition-title">Todo</p>
+<p>Example for MNQuery.getQueryEngineDescription</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="MNQuery.listQueryEngines">
+<code class="sig-prename descclassname">MNQuery.</code><code class="sig-name descname">listQueryEngines</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">session</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MNQuery.listQueryEngines" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/query</span></code> <br/> Returns a list of query engines, i.e. supported values for the <em>queryEngine</em> parameter of the <em>getQueryEngineDescription</em> and <em>query</em> operations.</p>
+<p>The list of search engines available may be influenced by the authentication status of the request.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Version</dt>
+<dd class="field-odd"><p>1.1</p>
+</dd>
+<dt class="field-even">REST URL</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/query</span></code></p>
+</dd>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>session</strong> (<a class="reference internal" href="Types.html#Types.Session" title="Types.Session"><em>Types.Session</em></a>) – Session information that contains the identity of the
+calling user as retrieved from the X.509 certificate. Transmitted as part of
+the SSL handshake process.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of names of queryEngines available to the user identified by <em>session</em>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="Types11.html#Types.QueryEngineList" title="Types.QueryEngineList">Types.QueryEngineList</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotImplemented" title="Exceptions.NotImplemented"><strong>Exceptions.NotImplemented</strong></a> – (errorCode=501, detailCode=2800)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.ServiceFailure" title="Exceptions.ServiceFailure"><strong>Exceptions.ServiceFailure</strong></a> – (errorCode=500, detailCode=2801)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidToken" title="Exceptions.InvalidToken"><strong>Exceptions.InvalidToken</strong></a> – (errorCode=401, detailCode=2802)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotAuthorized" title="Exceptions.NotAuthorized"><strong>Exceptions.NotAuthorized</strong></a> – (errorCode=401, detailCode=2803)</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example</strong></p>
+<div class="admonition-todo admonition" id="id6">
+<p class="admonition-title">Todo</p>
+<p>Example for MNQuery.listQueryEngines</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="MNQuery.query">
+<code class="sig-prename descclassname">MNQuery.</code><code class="sig-name descname">query</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">session</span></em>, <em class="sig-param"><span class="n">queryEngine</span></em>, <em class="sig-param"><span class="n">query</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MNQuery.query" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/query/{queryEngine}/{query}</span></code> <br/> Submit a query against the specified <em>queryEngine</em> and return the response as formatted by the queryEngine.</p>
+<p>The <a class="reference internal" href="#MNQuery.query" title="MNQuery.query"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNQuery.query()</span></code></a> operation may be implemented by more than one type of search engine and the <em>queryEngine</em> parameter indicates which search engine is targeted. The value and form of <em>query</em> is determined by the specific query engine.</p>
+<p>For example, the SOLR search engine will accept many of the standard parameters of SOLR, including field restrictions and faceting.</p>
+<p>This method is optional for Member Nodes, but if implemented, both getQueryEngineDescription and listQueryEngines must also be implemented.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Version</dt>
+<dd class="field-odd"><p>1.1</p>
+</dd>
+<dt class="field-even">Use Cases</dt>
+<dd class="field-even"><p><a class="reference internal" href="../design/UseCases/02_uc.html"><span class="doc">UC02</span></a>, <a class="reference internal" href="../design/UseCases/16_uc.html"><span class="doc">UC16</span></a></p>
+</dd>
+<dt class="field-odd">REST URL</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/query/{queryEngine}/{query}</span></code></p>
+</dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>session</strong> (<a class="reference internal" href="Types.html#Types.Session" title="Types.Session"><em>Types.Session</em></a>) – Session information that contains the identity of the
+calling user as retrieved from the X.509 certificate. Transmitted as part of
+the SSL handshake process.</p></li>
+<li><p><strong>queryEngine</strong> (<em>string</em>) – Indicates which search engine will be used to handle the query. Supported search engines can be determined through the MNQuery.listQueryEngines API call. Transmitted as part of the URL path and must be escaped accordingly.</p></li>
+<li><p><strong>query</strong> (<em>string</em>) – The remainder of the URL is passed verbatim to the respective search engine implementation. Hence it may contain additional path elements and query elements as determined by the functionality of the search engine. The caller is reponsible for providing a ‘?’ to indicate the start of the query string portion of the URL, as well as proper URL escaping.   Transmitted as part of the URL path and must be escaped accordingly.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The structure of the response is determined by the chosen search engine and parameters provided to it.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="Types11.html#Types.OctetStream" title="Types.OctetStream">Types.OctetStream</a></p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidToken" title="Exceptions.InvalidToken"><strong>Exceptions.InvalidToken</strong></a> – (errorCode=401, detailCode=2820)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.ServiceFailure" title="Exceptions.ServiceFailure"><strong>Exceptions.ServiceFailure</strong></a> – (errorCode=500, detailCode=2821)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotAuthorized" title="Exceptions.NotAuthorized"><strong>Exceptions.NotAuthorized</strong></a> – (errorCode=401, detailCode=2822)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidRequest" title="Exceptions.InvalidRequest"><strong>Exceptions.InvalidRequest</strong></a> – (errorCode=400, detailCode=2823)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotImplemented" title="Exceptions.NotImplemented"><strong>Exceptions.NotImplemented</strong></a> – (errorCode=501, detailCode=2824)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotFound" title="Exceptions.NotFound"><strong>Exceptions.NotFound</strong></a> – The specified queryEngine does not exist (errorCode=404, detailCode=2825)</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example</strong></p>
+<div class="admonition-todo admonition" id="id7">
+<p class="admonition-title">Todo</p>
+<p>Example for MNQuery.query</p>
+</div>
+</dd></dl>
+
+</div>
+<hr class="docutils" />
+<div class="section" id="view-api">
+<h2><a class="toc-backref" href="#id20">View API</a><a class="headerlink" href="#view-api" title="Permalink to this headline">¶</a></h2>
+<p>An optional tier 1 API for Member Node support of metadata and data views.</p>
+<p>The <em>MNView</em> API is an optional API that may be implemented by Member Nodes
+that intend to support providing rendered views of content on their repository. Each repository can implement multipe themed views of their content, each accesed using the name of the theme and the identifier of the content to be viewed.  Unlike the MNRead service, which returns the exact bytes of content, the MNView service provides a rendered view of the content which can transform the content into different formats.  The most common use of the view service will likely be to provide a rendered HTML landing page at a well-known URL that can be used to provide a human-readable view of metadata and data.  Other potential uses include providing alternative formats for metadata and data.  Each Member Node that implements the MNView service must implement at least one theme named ‘default’ which provides the default view of all content.  Other themes can be provided for use by various clients.</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#MNView.listViews" title="MNView.listViews"><code class="xref py py-obj docutils literal notranslate"><span class="pre">listViews</span></code></a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/views</span></code> <br/> Provides a list of usable themes for rendering content in a view, including a required ‘default’ theme.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#MNView.view" title="MNView.view"><code class="xref py py-obj docutils literal notranslate"><span class="pre">view</span></code></a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/views/{theme}/{pid}</span></code> <br/> Provides a formatted view of an object (science metadata, data, resource, or other) using the given named theme.</p></td>
+</tr>
+</tbody>
+</table>
+<span class="target" id="module-MNView"></span><dl class="py function">
+<dt id="MNView.listViews">
+<code class="sig-prename descclassname">MNView.</code><code class="sig-name descname">listViews</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">session</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MNView.listViews" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/views</span></code> <br/> Provides a list of usable themes for rendering content in a view, including a required ‘default’ theme. The list of themes is provided as an OptionList, where the option key should be used as the theme name in calls to MNView.view, and the description provides a human readable description of what will be returned fo rthat theme.</p>
+<p>This method is optional for Member Nodes, but if implemented,  MNView.view must also be implemented.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Version</dt>
+<dd class="field-odd"><p>1.2</p>
+</dd>
+<dt class="field-even">REST URL</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/views</span></code></p>
+</dd>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>session</strong> (<a class="reference internal" href="Types.html#Types.Session" title="Types.Session"><em>Types.Session</em></a>) – Session information that contains the identity of the
+calling user as retrieved from the X.509 certificate. Transmitted as part of
+the SSL handshake process.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of available themes that can be used with the MNView.view service.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="Types2.html#v2_0.Types.OptionList" title="v2_0.Types.OptionList">Types.OptionList</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidToken" title="Exceptions.InvalidToken"><strong>Exceptions.InvalidToken</strong></a> – (errorCode=401, detailCode=2840)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.ServiceFailure" title="Exceptions.ServiceFailure"><strong>Exceptions.ServiceFailure</strong></a> – (errorCode=500, detailCode=2841)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotAuthorized" title="Exceptions.NotAuthorized"><strong>Exceptions.NotAuthorized</strong></a> – (errorCode=401, detailCode=2842)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidRequest" title="Exceptions.InvalidRequest"><strong>Exceptions.InvalidRequest</strong></a> – (errorCode=400, detailCode=2843)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotImplemented" title="Exceptions.NotImplemented"><strong>Exceptions.NotImplemented</strong></a> – (errorCode=501, detailCode=2844)</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example</strong></p>
+<div class="admonition-todo admonition" id="id8">
+<p class="admonition-title">Todo</p>
+<p>Example for MNView.listViews</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="MNView.view">
+<code class="sig-prename descclassname">MNView.</code><code class="sig-name descname">view</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">session</span></em>, <em class="sig-param"><span class="n">theme</span></em>, <em class="sig-param"><span class="n">id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MNView.view" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/views/{theme}/{pid}</span></code> <br/> Provides a formatted view of an object (science metadata, data, resource, or other) using the given named theme.</p>
+<p>If this service is implemented, the <a class="reference internal" href="#MNView.view" title="MNView.view"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNView.view()</span></code></a> operation must implement at least one {theme} named ‘default’ to provide a standard (possibly minimalistic) view of the content in HTML format.</p>
+<p>If the {theme} parameter is not recognized, the service must render the object using the default theme rather than throwing an error.  Note that the return type of Types.OctetStream requires that the consuming client has a priori knowledge of the theme being returned (like HTML). Response headers must include the correct mime-type of the view being returned.</p>
+<p>This method is optional for Member Nodes, but if implemented,  MNView.listViews must also be implemented.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Version</dt>
+<dd class="field-odd"><p>1.2</p>
+</dd>
+<dt class="field-even">REST URL</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/views/{theme}/{pid}</span></code></p>
+</dd>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<a class="reference internal" href="Types.html#Types.Session" title="Types.Session"><em>Types.Session</em></a>) – Session information that contains the identity of the
+calling user as retrieved from the X.509 certificate. Transmitted as part of
+the SSL handshake process.</p></li>
+<li><p><strong>theme</strong> (<em>string</em>) – Indicates which themed view will be used to handle the query. All implementations must support a ‘default’ HTML theme, but are free to implement additional themes that return both HTML and non-HTML responses. Transmitted as part of the URL path and must be escaped accordingly.</p></li>
+<li><p><strong>id</strong> (<a class="reference internal" href="Types.html#Types.Identifier" title="Types.Identifier"><em>Types.Identifier</em></a>) – The identifier of the object to render in a view. May be either a PID or a SID. Transmitted as part of the URL path and must be escaped accordingly.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Any return type is allowed, including application/octet-stream, but the format of the response should be specialized by the requested theme.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="Types11.html#Types.OctetStream" title="Types.OctetStream">Types.OctetStream</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidToken" title="Exceptions.InvalidToken"><strong>Exceptions.InvalidToken</strong></a> – (errorCode=401, detailCode=2830)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.ServiceFailure" title="Exceptions.ServiceFailure"><strong>Exceptions.ServiceFailure</strong></a> – (errorCode=500, detailCode=2831)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotAuthorized" title="Exceptions.NotAuthorized"><strong>Exceptions.NotAuthorized</strong></a> – (errorCode=401, detailCode=2832)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidRequest" title="Exceptions.InvalidRequest"><strong>Exceptions.InvalidRequest</strong></a> – (errorCode=400, detailCode=2833)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotImplemented" title="Exceptions.NotImplemented"><strong>Exceptions.NotImplemented</strong></a> – (errorCode=501, detailCode=2834)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotFound" title="Exceptions.NotFound"><strong>Exceptions.NotFound</strong></a> – The specified pid does not exist. (errorCode=404, detailCode=2835)</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example</strong></p>
+<div class="admonition-todo admonition" id="id9">
+<p class="admonition-title">Todo</p>
+<p>Example for MNView.view</p>
+</div>
+</dd></dl>
+
+</div>
+<hr class="docutils" />
+<div class="section" id="package-api">
+<h2><a class="toc-backref" href="#id21">Package API</a><a class="headerlink" href="#package-api" title="Permalink to this headline">¶</a></h2>
+<p>An optional tier 1 API for Member Node support of downloads of whole packages.</p>
+<p>The <em>MNPackage</em> API is an optional API that may be implemented by Member Nodes
+that intend to support downloading all of the contents of a data package in a single API call. Without this service, a client application must individually retrieve each of the metadata and data components of a package as they are listed in the ORE document that describes the package.  Using the MNPackage service, a caller can instead request a serialized form of all of the data in a package, which is returned in the format requested.  All implementations must support the BagIt format specification, but may also support additional well-defined packaging standards and specifications.</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#MNPackage.getPackage" title="MNPackage.getPackage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getPackage</span></code></a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/packages/{packageType}/{pid}</span></code> <br/> Provides all of the content of a DataONE data package as defined by an OAI-ORE document in DataONE, in one of several possible package serialization formats.</p></td>
+</tr>
+</tbody>
+</table>
+<span class="target" id="module-MNPackage"></span><dl class="py function">
+<dt id="MNPackage.getPackage">
+<code class="sig-prename descclassname">MNPackage.</code><code class="sig-name descname">getPackage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">session</span></em>, <em class="sig-param"><span class="n">packageType</span></em>, <em class="sig-param"><span class="n">id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MNPackage.getPackage" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/packages/{packageType}/{pid}</span></code> <br/> Provides all of the content of a DataONE data package as defined by an OAI-ORE document in DataONE, in one of several possible package serialization formats.  The serialized package will contain all of the data described in the ORE aggregation. The default implementation will include packages in the BagIt format.  The packageType formats must be specified using the associated ObjectFormat formatId for that package serialization format.</p>
+<p>The {id} parameter must be the identifier of an ORE package object. If it is the identifier of one of the science metadata documents or data files contained within the package,  the Member Node should throw an InvalidRequest exception. Identifiers may be either PIDss or SIDs.</p>
+<p>This method is optional for Member Nodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Version</dt>
+<dd class="field-odd"><p>1.2</p>
+</dd>
+<dt class="field-even">REST URL</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/packages/{packageType}/{pid}</span></code></p>
+</dd>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<a class="reference internal" href="Types.html#Types.Session" title="Types.Session"><em>Types.Session</em></a>) – Session information that contains the identity of the
+calling user as retrieved from the X.509 certificate. Transmitted as part of
+the SSL handshake process.</p></li>
+<li><p><strong>packageType</strong> (<a class="reference internal" href="Types.html#Types.ObjectFormatIdentifier" title="Types.ObjectFormatIdentifier"><em>Types.ObjectFormatIdentifier</em></a>) – Indicates which package format will be used to serialize the package. All implementations must support a default BagIt package serialization, but are free to implement additional package serialization formats. Transmitted as part of the URL path and must be escaped accordingly.</p></li>
+<li><p><strong>id</strong> (<a class="reference internal" href="Types.html#Types.Identifier" title="Types.Identifier"><em>Types.Identifier</em></a>) – The identifier of the package or object in a package to be returned as a serialized package. Transmitted as part of the URL path and must be escaped accordingly.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Any return type is allowed, including application/octet-stream, but the format of the response should be specialized by the requested packageType.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="Types11.html#Types.OctetStream" title="Types.OctetStream">Types.OctetStream</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidToken" title="Exceptions.InvalidToken"><strong>Exceptions.InvalidToken</strong></a> – (errorCode=401, detailCode=2870)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.ServiceFailure" title="Exceptions.ServiceFailure"><strong>Exceptions.ServiceFailure</strong></a> – (errorCode=500, detailCode=2871)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotAuthorized" title="Exceptions.NotAuthorized"><strong>Exceptions.NotAuthorized</strong></a> – (errorCode=401, detailCode=2872)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidRequest" title="Exceptions.InvalidRequest"><strong>Exceptions.InvalidRequest</strong></a> – (errorCode=400, detailCode=2873)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotImplemented" title="Exceptions.NotImplemented"><strong>Exceptions.NotImplemented</strong></a> – (errorCode=501, detailCode=2874)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotFound" title="Exceptions.NotFound"><strong>Exceptions.NotFound</strong></a> – The specified pid does not exist. (errorCode=404, detailCode=2875)</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example</strong></p>
+<div class="admonition-todo admonition" id="id10">
+<p class="admonition-title">Todo</p>
+<p>Example for MNPackage.getPackage</p>
+</div>
+</dd></dl>
+
+</div>
+<hr class="docutils" />
+<div class="section" id="authorization-api">
+<h2><a class="toc-backref" href="#id22">Authorization API</a><a class="headerlink" href="#authorization-api" title="Permalink to this headline">¶</a></h2>
+<p>Authorization and access control operations for Member Nodes.</p>
+<p>Provides mechanisms Member Nodes to verify access to resources for users
+(<a class="reference internal" href="../glossary.html#term-subject"><span class="xref std std-term">subject</span></a>). See the document <a class="reference internal" href="../design/Authentication.html"><span class="doc">Identity Management and Authenticated Session Management</span></a> for more
+details on some authentication options.</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#MNAuthorization.isAuthorized" title="MNAuthorization.isAuthorized"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isAuthorized</span></code></a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/isAuthorized/{id}?action={action}</span></code> <br/> Test if the user identified by the provided session has authorization for operation on the specified object.</p></td>
+</tr>
+</tbody>
+</table>
+<span class="target" id="module-MNAuthorization"></span><dl class="py function">
+<dt id="MNAuthorization.isAuthorized">
+<code class="sig-prename descclassname">MNAuthorization.</code><code class="sig-name descname">isAuthorized</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">session</span></em>, <em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">action</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MNAuthorization.isAuthorized" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/isAuthorized/{id}?action={action}</span></code> <br/> Test if the user identified by the provided session has authorization for operation on the specified object.</p>
+<p>A successful operation is indicated by a return HTTP status of 200.</p>
+<p>Failure is indicated by an exception such as <code class="xref py py-exc docutils literal notranslate"><span class="pre">NotAuthorized</span></code> being returned.</p>
+<p>The body of the response is arbitrary and SHOULD be ignored by the caller.</p>
+<p>If the action is not authorized, then a <code class="xref py py-exc docutils literal notranslate"><span class="pre">NotAuthorized</span></code> exception MUST be raised.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Should perhaps add convenience methods for “canRead()” and “canWrite()” to verify that a user is able to read / write an object.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Version</dt>
+<dd class="field-odd"><p>1.0</p>
+</dd>
+<dt class="field-even">Use Cases</dt>
+<dd class="field-even"><p><a class="reference internal" href="../design/UseCases/01_uc.html"><span class="doc">UC01</span></a>, <a class="reference internal" href="../design/UseCases/37_uc.html"><span class="doc">UC37</span></a></p>
+</dd>
+<dt class="field-odd">REST URL</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/isAuthorized/{id}?action={action}</span></code></p>
+</dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>session</strong> (<a class="reference internal" href="Types.html#Types.Session" title="Types.Session"><em>Types.Session</em></a>) – Session information that contains the identity of the
+calling user as retrieved from the X.509 certificate. Transmitted as part of
+the SSL handshake process.</p></li>
+<li><p><strong>id</strong> (<a class="reference internal" href="Types.html#Types.Identifier" title="Types.Identifier"><em>Types.Identifier</em></a>) – The identifer of the resource for which access is being checked. May be either a PID or a SID. Will use the HEAD PID when given a SID value. Transmitted as part of the URL path and must be escaped accordingly.</p></li>
+<li><p><strong>action</strong> (<a class="reference internal" href="Types.html#Types.Permission" title="Types.Permission"><em>Types.Permission</em></a>) – The type of operation which is being requested for the given pid. Transmitted as a URL query parameter, and so must be escaped accordingly.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>True if the operation is allowed</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>boolean</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.ServiceFailure" title="Exceptions.ServiceFailure"><strong>Exceptions.ServiceFailure</strong></a> – (errorCode=500, detailCode=1760)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotImplemented" title="Exceptions.NotImplemented"><strong>Exceptions.NotImplemented</strong></a> – (errorCode=501, detailCode=1780)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotFound" title="Exceptions.NotFound"><strong>Exceptions.NotFound</strong></a> – (errorCode=404, detailCode=1800)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotAuthorized" title="Exceptions.NotAuthorized"><strong>Exceptions.NotAuthorized</strong></a> – This error is raised if the request comes from a black listed source (e.g. a temporary block may be imposed on a source that calls this method too many times within some time interval) (errorCode=401, detailCode=1820)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidToken" title="Exceptions.InvalidToken"><strong>Exceptions.InvalidToken</strong></a> – (errorCode=401, detailCode=1840)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidRequest" title="Exceptions.InvalidRequest"><strong>Exceptions.InvalidRequest</strong></a> – (errorCode=400, detailCode=1761)</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example</strong></p>
+<div class="admonition-todo admonition" id="id11">
+<p class="admonition-title">Todo</p>
+<p>Example for MNAuthorization.isAuthorized</p>
+</div>
+</dd></dl>
+
+</div>
+<hr class="docutils" />
+<div class="section" id="storage-api">
+<h2><a class="toc-backref" href="#id23">Storage API</a><a class="headerlink" href="#storage-api" title="Permalink to this headline">¶</a></h2>
+<p>Methods for manipulating (changing) content on a Member Node.</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#MNStorage.archive" title="MNStorage.archive"><code class="xref py py-obj docutils literal notranslate"><span class="pre">archive</span></code></a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PUT</span> <span class="pre">/archive/{id}</span></code> <br/> Hides an object managed by DataONE from search operations, effectively preventing its discovery during normal operations.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#MNStorage.create" title="MNStorage.create"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create</span></code></a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/object</span></code> <br/> Called by a client to adds a new object to the Member Node.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#MNStorage.delete" title="MNStorage.delete"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delete</span></code></a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DELETE</span> <span class="pre">/object/{id}</span></code> <br/> Deletes an object managed by DataONE from the Member Node.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#MNStorage.generateIdentifier" title="MNStorage.generateIdentifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generateIdentifier</span></code></a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/generate</span></code> <br/> Given a scheme and optional fragment, generates an identifier with that scheme and fragment that is unique.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#MNStorage.update" title="MNStorage.update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code></a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PUT</span> <span class="pre">/object/{pid}</span></code> <br/> This method is called by clients to update objects on Member Nodes.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#MNStorage.updateSystemMetadata" title="MNStorage.updateSystemMetadata"><code class="xref py py-obj docutils literal notranslate"><span class="pre">updateSystemMetadata</span></code></a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PUT</span> <span class="pre">/meta</span></code> <br/> Provides a mechanism for updating system metadata for any objects held on the Member Node where that Member Node is the authoritative Member Node.</p></td>
+</tr>
+</tbody>
+</table>
+<span class="target" id="module-MNStorage"></span><dl class="py function">
+<dt id="MNStorage.archive">
+<code class="sig-prename descclassname">MNStorage.</code><code class="sig-name descname">archive</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">session</span></em>, <em class="sig-param"><span class="n">id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MNStorage.archive" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">PUT</span> <span class="pre">/archive/{id}</span></code> <br/> Hides an object managed by DataONE from search operations, effectively preventing its discovery during normal operations.</p>
+<p>The operation does not delete the object bytes, but instead sets the <a class="reference internal" href="Types.html#Types.SystemMetadata.archived" title="Types.SystemMetadata.archived"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Types.SystemMetadata.archived</span></code></a> flag to True. This ensures that the object can still be resolved (and hence remain valid for existing citations and cross references), though will not appear in searches.</p>
+<p>Objects that are archived can not be updated through the <a class="reference internal" href="#MNStorage.update" title="MNStorage.update"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNStorage.update()</span></code></a> operation.</p>
+<p>Archived objects can not be un-archived. This behavior may change in future versions of the DataONE API.</p>
+<p>Member Nodes MUST check that the caller is authorized to perform this function.</p>
+<p>If the object does not exist on the node servicing the request, then an <a class="reference internal" href="Exceptions.html#Exceptions.NotFound" title="Exceptions.NotFound"><code class="xref py py-exc docutils literal notranslate"><span class="pre">Exceptions.NotFound</span></code></a> exception is raised. The message body of the exception SHOULD contain a hint as to the location of the <a class="reference internal" href="CN_APIs.html#CNRead.resolve" title="CNRead.resolve"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNRead.resolve()</span></code></a> method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Version</dt>
+<dd class="field-odd"><p>1.0</p>
+</dd>
+<dt class="field-even">REST URL</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">PUT</span> <span class="pre">/archive/{id}</span></code></p>
+</dd>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<a class="reference internal" href="Types.html#Types.Session" title="Types.Session"><em>Types.Session</em></a>) – Session information that contains the identity of the
+calling user as retrieved from the X.509 certificate. Transmitted as part of
+the SSL handshake process.</p></li>
+<li><p><strong>id</strong> (<a class="reference internal" href="Types.html#Types.Identifier" title="Types.Identifier"><em>Types.Identifier</em></a>) – The identifier of the object to be archived. May be either a PID or a SID. Will archive the HEAD PID when called with a SID. Transmitted as part of the URL path and must be escaped accordingly.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The identifier of the object that was archived.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="Types.html#Types.Identifier" title="Types.Identifier">Types.Identifier</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotAuthorized" title="Exceptions.NotAuthorized"><strong>Exceptions.NotAuthorized</strong></a> – (errorCode=401, detailCode=2910)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotFound" title="Exceptions.NotFound"><strong>Exceptions.NotFound</strong></a> – The archive operation failed because the object is not present on the node servicing the request. (errorCode=404, detailCode=2911)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.ServiceFailure" title="Exceptions.ServiceFailure"><strong>Exceptions.ServiceFailure</strong></a> – (errorCode=500, detailCode=2912)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidToken" title="Exceptions.InvalidToken"><strong>Exceptions.InvalidToken</strong></a> – (errorCode=401, detailCode=2913)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotImplemented" title="Exceptions.NotImplemented"><strong>Exceptions.NotImplemented</strong></a> – (errorCode=501, detailCode=2914)</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example</strong></p>
+<div class="admonition-todo admonition" id="id12">
+<p class="admonition-title">Todo</p>
+<p>Example for MNStorage.archive</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="MNStorage.create">
+<code class="sig-prename descclassname">MNStorage.</code><code class="sig-name descname">create</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">session</span></em>, <em class="sig-param"><span class="n">pid</span></em>, <em class="sig-param"><span class="n">object</span></em>, <em class="sig-param"><span class="n">sysmeta</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MNStorage.create" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/object</span></code> <br/> Called by a client to adds a new object to the Member Node.</p>
+<p>The <em>pid</em> must not exist in the DataONE system or should have been previously reserved using  <a class="reference internal" href="CN_APIs.html#CNCore.reserveIdentifier" title="CNCore.reserveIdentifier"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNCore.reserveIdentifier()</span></code></a>. A new, unique <code class="xref py py-attr docutils literal notranslate"><span class="pre">Types.SystemMetadata.seriesId</span></code> may be included.</p>
+<p>The caller MUST have authorization to write or create content on the Member Node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Version</dt>
+<dd class="field-odd"><p>1.0</p>
+</dd>
+<dt class="field-even">Use Cases</dt>
+<dd class="field-even"><p><a class="reference internal" href="../design/UseCases/04_uc.html"><span class="doc">UC04</span></a>, <a class="reference internal" href="../design/UseCases/09_uc.html"><span class="doc">UC09</span></a>, <a class="reference internal" href="../design/UseCases/16_uc.html"><span class="doc">UC16</span></a></p>
+</dd>
+<dt class="field-odd">REST URL</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/object</span></code></p>
+</dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>session</strong> (<a class="reference internal" href="Types.html#Types.Session" title="Types.Session"><em>Types.Session</em></a>) – Session information that contains the identity of the
+calling user as retrieved from the X.509 certificate. Transmitted as part of
+the SSL handshake process.</p></li>
+<li><p><strong>pid</strong> (<a class="reference internal" href="Types.html#Types.Identifier" title="Types.Identifier"><em>Types.Identifier</em></a>) – The identifier that should be used in DataONE to identify and access the object. This is an Unicode string that follows the constraints on identifiers described in <a class="reference internal" href="../design/PIDs.html"><span class="doc">Identifiers in DataONE</span></a>. If the identifier is already in use, <a class="reference internal" href="Exceptions.html#Exceptions.IdentifierNotUnique" title="Exceptions.IdentifierNotUnique"><code class="xref py py-exc docutils literal notranslate"><span class="pre">Exceptions.IdentifierNotUnique</span></code></a> will be raised and the client SHOULD try again with a different, unique identifier.  Transmitted as a UTF-8 String as a <em>Param part</em> of the MIME multipart/mixed message.</p></li>
+<li><p><strong>object</strong> (<em>bytes</em>) – The data bytes that are to be added to the Member Node.</p></li>
+<li><p><strong>sysmeta</strong> (<a class="reference internal" href="Types.html#Types.SystemMetadata" title="Types.SystemMetadata"><em>Types.SystemMetadata</em></a>) – The system metadata document that provides basic information about the object, including a reference to its identifier, access control information, etc. Attributes of the sysmeta that are the responsibility of the client MUST be set. Note that the obsoletes and obsoletedBy elements MUST not be set. It is the role of the update() method to ensure these are properly updated to ensure object lineage is as expected. Transmitted as an UTF-8 encoded XML structure for the respective type as defined in the DataONE types schema, as a <em>File part</em> of the MIME multipart/mixed message.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The identifier that was used to insert the document into the system.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="Types.html#Types.Identifier" title="Types.Identifier">Types.Identifier</a></p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotAuthorized" title="Exceptions.NotAuthorized"><strong>Exceptions.NotAuthorized</strong></a> – The provided identity does not have permission to WRITE to the Member Node. (errorCode=401, detailCode=1100)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.IdentifierNotUnique" title="Exceptions.IdentifierNotUnique"><strong>Exceptions.IdentifierNotUnique</strong></a> – The requested identifier is already used by another object and therefore can not be used for this object. Clients should choose a new identifier that is unique and retry the operation or use <a class="reference internal" href="CN_APIs.html#CNCore.reserveIdentifier" title="CNCore.reserveIdentifier"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNCore.reserveIdentifier()</span></code></a> to reserve one. (errorCode=409, detailCode=1120)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.UnsupportedType" title="Exceptions.UnsupportedType"><strong>Exceptions.UnsupportedType</strong></a> – The MN can not deal with the content specified in the data package. (errorCode=400, detailCode=1140)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InsufficientResources" title="Exceptions.InsufficientResources"><strong>Exceptions.InsufficientResources</strong></a> – The MN is unable to execute the transfer because it does not have sufficient storage space for example. (errorCode=413, detailCode=1160)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidSystemMetadata" title="Exceptions.InvalidSystemMetadata"><strong>Exceptions.InvalidSystemMetadata</strong></a> – The supplied system metadata is invalid. This could be because some required field is not set, the metadata document is malformed, or the value of some field is not valid. (errorCode=400, detailCode=1180)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.ServiceFailure" title="Exceptions.ServiceFailure"><strong>Exceptions.ServiceFailure</strong></a> – (errorCode=500, detailCode=1190)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidToken" title="Exceptions.InvalidToken"><strong>Exceptions.InvalidToken</strong></a> – (errorCode=401, detailCode=1110)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotImplemented" title="Exceptions.NotImplemented"><strong>Exceptions.NotImplemented</strong></a> – (errorCode=501, detailCode=1101)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidRequest" title="Exceptions.InvalidRequest"><strong>Exceptions.InvalidRequest</strong></a> – (errorCode=400, detailCode=1102)</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Examples</strong></p>
+<p>The outgoing request body <em>must</em> be encoded as <a class="reference external" href="http://www.ietf.org/rfc/rfc2388.txt">MIME multipart/form-data</a> with
+the system metadata portion and the object as file attachments.</p>
+<p>(POST) Create a new object with a given identifier (<em>XYZ33256</em>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">curl</span> <span class="o">-</span><span class="n">E</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">x509up_u502</span> \
+     <span class="o">-</span><span class="n">F</span> <span class="s2">&quot;pid=XYZ33256&quot;</span> \
+     <span class="o">-</span><span class="n">F</span> <span class="s2">&quot;object=@sciencemetadata.xml&quot;</span> \
+     <span class="o">-</span><span class="n">F</span> <span class="s2">&quot;sysmeta=@sysmeta.xml&quot;</span> \
+     <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">m1</span><span class="o">.</span><span class="n">dataone</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">mn</span><span class="o">/</span><span class="n">v1</span><span class="o">/</span><span class="nb">object</span>
+
+<span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span> <span class="mi">200</span> <span class="n">Success</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Type</span><span class="p">:</span>
+<span class="n">Date</span><span class="p">:</span> <span class="n">Wed</span><span class="p">,</span> <span class="mi">16</span> <span class="n">Dec</span> <span class="mi">2009</span> <span class="mi">13</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mi">34</span> <span class="n">GMT</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Length</span><span class="p">:</span> <span class="mi">355</span>
+
+<span class="n">XYZ33256</span>
+</pre></div>
+</div>
+<p>The system metadata included with the create call must contain values for the
+elements required to be set by clients (see <a class="reference internal" href="../design/SystemMetadata.html"><span class="doc">System Metadata</span></a>). The
+system metadata document can be crafted by hand or preferably with a tool such
+as <em>generate_sysmeta.py</em> which is available in the <a class="reference external" href="https://repository.dataone.org/software/cicore/trunk/d1_instance_generator">d1_instance_generator</a> Python
+package. See documentation included with that package for more information on
+its operation.</p>
+<p>For example, the system metadata document for the example above was generated
+using the sequence of commands:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&lt;&lt;log on to cilogon.org and download my certificate&gt;&gt;
+
+MYSUBJECT=`python my_subject.py /tmp/x509up_u502`
+echo $MYSUBJECT
+
+CN=Dave Vieglais T799,O=Google,C=US,DC=cilogon,DC=org
+
+python generate_sysmeta.py -f sciencemetadata.xml \
+                           -i &quot;XYZ33256&quot; \
+                           -s &quot;$MYSUBJECT&quot; \
+                           -t &quot;eml://ecoinformatics.org/eml-2.0.1&quot; \
+                            &gt; sysmeta.xml
+</pre></div>
+</div>
+<p>The generated system metadata document contains default information that indicates:</p>
+<ul class="simple">
+<li><p>The submitter is <code class="docutils literal notranslate"><span class="pre">CN=Dave</span> <span class="pre">Vieglais</span> <span class="pre">T799,O=Google,C=US,DC=cilogon,DC=org</span></code></p></li>
+<li><p>The rights holder is the same as the submitter</p></li>
+<li><p>The access policy indicates public read, and write by the submitter</p></li>
+<li><p>The replication policy indicates replication is allowed to any node</p></li>
+</ul>
+<p>The generated system metadata document is presented below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&lt;?xml version=&#39;1.0&#39; encoding=&#39;UTF-8&#39;?&gt;
+&lt;ns1:systemMetadata xmlns:ns1=&quot;http://ns.dataone.org/service/types/v1&quot;&gt;
+  &lt;identifier&gt;XYZ33256&lt;/identifier&gt;
+  &lt;formatId&gt;eml://ecoinformatics.org/eml-2.0.1&lt;/formatId&gt;
+  &lt;size&gt;22936&lt;/size&gt;
+  &lt;checksum algorithm=&quot;MD5&quot;&gt;2ec0084d1e11e0d5c9a46ba6a230aa85&lt;/checksum&gt;
+  &lt;submitter&gt;CN=Dave Vieglais T799,O=Google,C=US,DC=cilogon,DC=org&lt;/submitter&gt;
+  &lt;rightsHolder&gt;CN=Dave Vieglais T799,O=Google,C=US,DC=cilogon,DC=org&lt;/rightsHolder&gt;
+  &lt;accessPolicy&gt;
+    &lt;allow&gt;
+      &lt;subject&gt;public&lt;/subject&gt;
+      &lt;permission&gt;read&lt;/permission&gt;
+    &lt;/allow&gt;
+    &lt;allow&gt;
+      &lt;subject&gt;CN=Dave Vieglais T799,O=Google,C=US,DC=cilogon,DC=org&lt;/subject&gt;
+      &lt;permission&gt;changePermission&lt;/permission&gt;
+    &lt;/allow&gt;
+  &lt;/accessPolicy&gt;
+  &lt;replicationPolicy replicationAllowed=&quot;true&quot;/&gt;
+  &lt;dateUploaded&gt;2012-02-20T20:39:19.664495&lt;/dateUploaded&gt;
+  &lt;dateSysMetadataModified&gt;2012-02-20T20:39:19.70598&lt;/dateSysMetadataModified&gt;
+&lt;/ns1:systemMetadata&gt;
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="MNStorage.delete">
+<code class="sig-prename descclassname">MNStorage.</code><code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">session</span></em>, <em class="sig-param"><span class="n">id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MNStorage.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">DELETE</span> <span class="pre">/object/{id}</span></code> <br/> Deletes an object managed by DataONE from the Member Node. Member Nodes MUST check that the caller (typically a Coordinating Node) is authorized to perform this function.</p>
+<p>The delete operation will be used primarily by Coordinating Nodes to help manage the number of replicas of an object that are present in the entire system.</p>
+<p>The operation removes the object from further interaction with DataONE services. The implementation may delete the object bytes, and in general should do so since a delete operation may be in response to a problem with the object (e.g. it contains malicious content, is innappropriate, or is the subject of a legal request).</p>
+<p>If the object does not exist on the node servicing the request, then an <a class="reference internal" href="Exceptions.html#Exceptions.NotFound" title="Exceptions.NotFound"><code class="xref py py-exc docutils literal notranslate"><span class="pre">Exceptions.NotFound</span></code></a> exception is raised. The message body of the exception SHOULD contain a hint as to the location of the <a class="reference internal" href="CN_APIs.html#CNRead.resolve" title="CNRead.resolve"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNRead.resolve()</span></code></a> method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Version</dt>
+<dd class="field-odd"><p>1.0</p>
+</dd>
+<dt class="field-even">Use Cases</dt>
+<dd class="field-even"><p><a class="reference internal" href="../design/UseCases/16_uc.html"><span class="doc">UC16</span></a></p>
+</dd>
+<dt class="field-odd">REST URL</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">DELETE</span> <span class="pre">/object/{id}</span></code></p>
+</dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>session</strong> (<a class="reference internal" href="Types.html#Types.Session" title="Types.Session"><em>Types.Session</em></a>) – Session information that contains the identity of the
+calling user as retrieved from the X.509 certificate. Transmitted as part of
+the SSL handshake process.</p></li>
+<li><p><strong>id</strong> (<a class="reference internal" href="Types.html#Types.Identifier" title="Types.Identifier"><em>Types.Identifier</em></a>) – The identifier of the object to be deleted. May be either a PID or a SID. Will delete the HEAD PID when called with a SID. Transmitted as part of the URL path and must be escaped accordingly.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The identifier of the object that was deleted.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="Types.html#Types.Identifier" title="Types.Identifier">Types.Identifier</a></p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotAuthorized" title="Exceptions.NotAuthorized"><strong>Exceptions.NotAuthorized</strong></a> – (errorCode=401, detailCode=2900)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotFound" title="Exceptions.NotFound"><strong>Exceptions.NotFound</strong></a> – The delete operation failed because the object is not present on the node servicing the request. (errorCode=404, detailCode=2901)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.ServiceFailure" title="Exceptions.ServiceFailure"><strong>Exceptions.ServiceFailure</strong></a> – (errorCode=500, detailCode=2902)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidToken" title="Exceptions.InvalidToken"><strong>Exceptions.InvalidToken</strong></a> – (errorCode=401, detailCode=2903)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotImplemented" title="Exceptions.NotImplemented"><strong>Exceptions.NotImplemented</strong></a> – (errorCode=501, detailCode=2904)</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example</strong></p>
+<div class="admonition-todo admonition" id="id13">
+<p class="admonition-title">Todo</p>
+<p>Example for MNStorage.delete</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="MNStorage.generateIdentifier">
+<code class="sig-prename descclassname">MNStorage.</code><code class="sig-name descname">generateIdentifier</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">session</span></em>, <em class="sig-param"><span class="n">scheme</span></em>, <em class="sig-param"><span class="n">fragment</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MNStorage.generateIdentifier" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/generate</span></code> <br/> Given a scheme and optional fragment, generates an identifier with that scheme and fragment that is unique. Maybe be used for generating either PIDs or SIDs.</p>
+<p>The message body is encoded as MIME Multipart/form-data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Version</dt>
+<dd class="field-odd"><p>1.0</p>
+</dd>
+<dt class="field-even">REST URL</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/generate</span></code></p>
+</dd>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<a class="reference internal" href="Types.html#Types.Session" title="Types.Session"><em>Types.Session</em></a>) – Session information that contains the identity of the
+calling user as retrieved from the X.509 certificate. Transmitted as part of
+the SSL handshake process.</p></li>
+<li><p><strong>scheme</strong> (<em>string</em>) – The name of the identifier scheme to be used, drawn from a DataONE-specific vocabulary of identifier scheme names, including several common syntaxes such as DOI, ARK, LSID, UUID, and LSRN, among others. The first version of this method only supports the UUID scheme, and ignores the fragment parameter.  Transmitted as a UTF-8 String as a <em>Param part</em> of the MIME multipart/mixed message.</p></li>
+<li><p><strong>fragment</strong> (<em>string</em>) – The optional fragment to include in the generated Identifier. This parameter is optional and may not be present in the message body. Transmitted as a UTF-8 String as a <em>Param part</em> of the MIME multipart/mixed message.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The identifier that was generated</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="Types.html#Types.Identifier" title="Types.Identifier">Types.Identifier</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidToken" title="Exceptions.InvalidToken"><strong>Exceptions.InvalidToken</strong></a> – The supplied authentication token is not a proper certificate, or missing required fields, or otherwise proves invalid. (errorCode=401, detailCode=2190)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.ServiceFailure" title="Exceptions.ServiceFailure"><strong>Exceptions.ServiceFailure</strong></a> – (errorCode=500, detailCode=2191)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotAuthorized" title="Exceptions.NotAuthorized"><strong>Exceptions.NotAuthorized</strong></a> – Supplied credentials does not have WRITE permission (errorCode=401, detailCode=2192)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidRequest" title="Exceptions.InvalidRequest"><strong>Exceptions.InvalidRequest</strong></a> – The scheme requested is not a valid scheme accepted by this service (errorCode=400, detailCode=2193)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotImplemented" title="Exceptions.NotImplemented"><strong>Exceptions.NotImplemented</strong></a> – (errorCode=501, detailCode=2194)</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example</strong></p>
+<div class="admonition-todo admonition" id="id14">
+<p class="admonition-title">Todo</p>
+<p>Example for MNStorage.generateIdentifier</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="MNStorage.update">
+<code class="sig-prename descclassname">MNStorage.</code><code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">session</span></em>, <em class="sig-param"><span class="n">pid</span></em>, <em class="sig-param"><span class="n">object</span></em>, <em class="sig-param"><span class="n">newPid</span></em>, <em class="sig-param"><span class="n">sysmeta</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MNStorage.update" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">PUT</span> <span class="pre">/object/{pid}</span></code> <br/> This method is called by clients to update objects on Member Nodes.</p>
+<p>Updates an existing object by creating a new object identified by <em>newPid</em> on the Member Node which explicitly obsoletes the object identified by <em>pid</em> through appropriate changes to the SystemMetadata of <em>pid</em> and <em>newPid</em>.</p>
+<p>The Member Node sets <a class="reference internal" href="Types.html#Types.SystemMetadata.obsoletedBy" title="Types.SystemMetadata.obsoletedBy"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Types.SystemMetadata.obsoletedBy</span></code></a> on the object being obsoleted to the <em>pid</em> of the new object. It then updates <a class="reference internal" href="Types.html#Types.SystemMetadata.dateSysMetadataModified" title="Types.SystemMetadata.dateSysMetadataModified"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Types.SystemMetadata.dateSysMetadataModified</span></code></a> on both the new and old objects. The modified system metadata entries then become available in <a class="reference internal" href="#MNRead.listObjects" title="MNRead.listObjects"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNRead.listObjects()</span></code></a>. This ensures that a Coordinating Node will pick up the changes when filtering on <a class="reference internal" href="Types.html#Types.SystemMetadata.dateSysMetadataModified" title="Types.SystemMetadata.dateSysMetadataModified"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Types.SystemMetadata.dateSysMetadataModified</span></code></a>.</p>
+<p>The update operation MUST fail with <a class="reference internal" href="Exceptions.html#Exceptions.InvalidRequest" title="Exceptions.InvalidRequest"><code class="xref py py-exc docutils literal notranslate"><span class="pre">Exceptions.InvalidRequest</span></code></a> on objects that have the <a class="reference internal" href="Types.html#Types.SystemMetadata.archived" title="Types.SystemMetadata.archived"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Types.SystemMetadata.archived</span></code></a> property set to true.</p>
+<p>A new, unique <code class="xref py py-attr docutils literal notranslate"><span class="pre">Types.SystemMetadata.seriesId</span></code> may be included when beginning a series, or a series may be extended if the newPid obsoletes the existing pid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Version</dt>
+<dd class="field-odd"><p>1.0</p>
+</dd>
+<dt class="field-even">Use Cases</dt>
+<dd class="field-even"><p><a class="reference internal" href="../design/UseCases/16_uc.html"><span class="doc">UC16</span></a></p>
+</dd>
+<dt class="field-odd">REST URL</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">PUT</span> <span class="pre">/object/{pid}</span></code></p>
+</dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>session</strong> (<a class="reference internal" href="Types.html#Types.Session" title="Types.Session"><em>Types.Session</em></a>) – Session information that contains the identity of the
+calling user as retrieved from the X.509 certificate. Transmitted as part of
+the SSL handshake process.</p></li>
+<li><p><strong>pid</strong> (<a class="reference internal" href="Types.html#Types.Identifier" title="Types.Identifier"><em>Types.Identifier</em></a>) – The identifier of the object that is being updated. If this identifier does not exist in the system, an error is raised and the operation does not cause any changes to the objects or their metadata.  Transmitted as part of the URL path and must be escaped accordingly.</p></li>
+<li><p><strong>object</strong> (<em>bytes</em>) – The bytes of the data or science metadata object that will be deprecating the exsting object.</p></li>
+<li><p><strong>newPid</strong> (<a class="reference internal" href="Types.html#Types.Identifier" title="Types.Identifier"><em>Types.Identifier</em></a>) – The identifier that will become the replacement identifier for the existing object after the update. This identifier must have been previously reserved.  Transmitted as a UTF-8 String as a <em>Param part</em> of the MIME multipart/mixed message.</p></li>
+<li><p><strong>sysmeta</strong> (<a class="reference internal" href="Types.html#Types.SystemMetadata" title="Types.SystemMetadata"><em>Types.SystemMetadata</em></a>) – A System Metadata document describing the new object. The <code class="xref py py-attr docutils literal notranslate"><span class="pre">SystemMetadata.obsoletes</span></code> field must contain the identifier of the object being obsoleted. Other required client provided fields as described for <a class="reference internal" href="Types.html#Types.SystemMetadata" title="Types.SystemMetadata"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.SystemMetadata</span></code></a> must be filled. Transmitted as an UTF-8 encoded XML structure for the respective type as defined in the DataONE types schema, as a <em>File part</em> of the MIME multipart/mixed message.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The identifier of the document that is replacing the original, which should be the same as <em>newPid</em>.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="Types.html#Types.Identifier" title="Types.Identifier">Types.Identifier</a></p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotAuthorized" title="Exceptions.NotAuthorized"><strong>Exceptions.NotAuthorized</strong></a> – (errorCode=401, detailCode=1200)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.IdentifierNotUnique" title="Exceptions.IdentifierNotUnique"><strong>Exceptions.IdentifierNotUnique</strong></a> – The requested identifier is already used by another object and therefore can not be used for this object.  Clients should choose a new identifier that is unique and retry the operation. (errorCode=409, detailCode=1220)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.UnsupportedType" title="Exceptions.UnsupportedType"><strong>Exceptions.UnsupportedType</strong></a> – The MN can not deal with the object provided. (errorCode=400, detailCode=1240)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InsufficientResources" title="Exceptions.InsufficientResources"><strong>Exceptions.InsufficientResources</strong></a> – The MN is unable to execute the transfer because it does not have sufficient storage space for example. (errorCode=413, detailCode=1260)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotFound" title="Exceptions.NotFound"><strong>Exceptions.NotFound</strong></a> – The update operation failed because the object which was supposed to be updated in the system (indicated via the <em>obsoletedPid</em> parameter) is not present in the DataONE system, so update is an illegal operation. (errorCode=404, detailCode=1280)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidSystemMetadata" title="Exceptions.InvalidSystemMetadata"><strong>Exceptions.InvalidSystemMetadata</strong></a> – One or more required fields are not set, the metadata document is malformed or the value of some field is not valid. <code class="xref py py-attr docutils literal notranslate"><span class="pre">SystemMetadata.obsoletes</span></code> is set by the client and does not match the <em>pid</em> of the object being obsoleted. <code class="xref py py-attr docutils literal notranslate"><span class="pre">SystemMetadata.obsoletedBy</span></code> is set on the SystemMetadata of the new object provided by the client (a new object cannot be created in an obsoleted state). <code class="xref py py-attr docutils literal notranslate"><span class="pre">SystemMetadata.obsoletedBy</span></code> is already set on the object being obsoleted (no branching is allowed in the obsolescence chain). (errorCode=400, detailCode=1300)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.ServiceFailure" title="Exceptions.ServiceFailure"><strong>Exceptions.ServiceFailure</strong></a> – (errorCode=500, detailCode=1310)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidToken" title="Exceptions.InvalidToken"><strong>Exceptions.InvalidToken</strong></a> – (errorCode=401, detailCode=1210)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotImplemented" title="Exceptions.NotImplemented"><strong>Exceptions.NotImplemented</strong></a> – (errorCode=501, detailCode=1201)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidRequest" title="Exceptions.InvalidRequest"><strong>Exceptions.InvalidRequest</strong></a> – Raised when the request parameters are incorrect or the operation is not applicable to the current state of the object (e.g. an archived object can not be updated) (errorCode=400, detailCode=1202)</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example</strong></p>
+<div class="admonition-todo admonition" id="id15">
+<p class="admonition-title">Todo</p>
+<p>Example for MNStorage.update</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="MNStorage.updateSystemMetadata">
+<code class="sig-prename descclassname">MNStorage.</code><code class="sig-name descname">updateSystemMetadata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">session</span></em>, <em class="sig-param"><span class="n">pid</span></em>, <em class="sig-param"><span class="n">sysmeta</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MNStorage.updateSystemMetadata" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">PUT</span> <span class="pre">/meta</span></code> <br/> Provides a mechanism for updating system metadata for any objects held on the Member Node where that Member Node is the authoritative Member Node. Coordinating Node can call this method on the non-authoritative Member Node. However, this is not a normal operation and is for the special case - the authoritative Member Node doesn’t exist any more. Coordinating Node calling the method on the non-authoriative Memember Node in the normal operation can cause an unexpected consequence.</p>
+<p>This method is typically used by Authoritative Member Node or rights holder[s] to ensure system metadata quality.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Version</dt>
+<dd class="field-odd"><p>2.0</p>
+</dd>
+<dt class="field-even">REST URL</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">PUT</span> <span class="pre">/meta</span></code></p>
+</dd>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<a class="reference internal" href="Types.html#Types.Session" title="Types.Session"><em>Types.Session</em></a>) – Session information that contains the identity of the
+calling user as retrieved from the X.509 certificate. Transmitted as part of
+the SSL handshake process.</p></li>
+<li><p><strong>pid</strong> (<a class="reference internal" href="Types.html#Types.Identifier" title="Types.Identifier"><em>Types.Identifier</em></a>) – Transmitted as a UTF-8 String as a <em>Param part</em> of the MIME multipart/mixed message.</p></li>
+<li><p><strong>sysmeta</strong> (<a class="reference internal" href="Types.html#Types.SystemMetadata" title="Types.SystemMetadata"><em>Types.SystemMetadata</em></a>) – Transmitted as an UTF-8 encoded XML structure for the respective type as defined in the DataONE types schema, as a <em>File part</em> of the MIME multipart/mixed message.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the update was successful.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotImplemented" title="Exceptions.NotImplemented"><strong>Exceptions.NotImplemented</strong></a> – (errorCode=501, detailCode=4866)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotAuthorized" title="Exceptions.NotAuthorized"><strong>Exceptions.NotAuthorized</strong></a> – (errorCode=401, detailCode=4867)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.ServiceFailure" title="Exceptions.ServiceFailure"><strong>Exceptions.ServiceFailure</strong></a> – (errorCode=500, detailCode=4868)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidRequest" title="Exceptions.InvalidRequest"><strong>Exceptions.InvalidRequest</strong></a> – (errorCode=400, detailCode=4869)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidSystemMetadata" title="Exceptions.InvalidSystemMetadata"><strong>Exceptions.InvalidSystemMetadata</strong></a> – (errorCode=400, detailCode=4956)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidToken" title="Exceptions.InvalidToken"><strong>Exceptions.InvalidToken</strong></a> – (errorCode=401, detailCode=4957)</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Example</strong></p>
+<div class="admonition-todo admonition" id="id16">
+<p class="admonition-title">Todo</p>
+<p>Example for MNStorage.updateSystemMetadata</p>
+</div>
+</dd></dl>
+
+</div>
+<hr class="docutils" />
+<div class="section" id="replication-api">
+<h2><a class="toc-backref" href="#id24">Replication API</a><a class="headerlink" href="#replication-api" title="Permalink to this headline">¶</a></h2>
+<p>The Replication API provides methods to support CN-directed replication of
+content between MNs.</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#MNReplication.replicate" title="MNReplication.replicate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">replicate</span></code></a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/replicate</span></code> <br/> Called by a Coordinating Node to request that the Member Node create a copy of the specified object by retrieving it from another Member Nodeode and storing it locally so that it can be made accessible to the DataONE system.</p></td>
+</tr>
+</tbody>
+</table>
+<span class="target" id="module-MNReplication"></span><dl class="py function">
+<dt id="MNReplication.replicate">
+<code class="sig-prename descclassname">MNReplication.</code><code class="sig-name descname">replicate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">session</span></em>, <em class="sig-param"><span class="n">sysmeta</span></em>, <em class="sig-param"><span class="n">sourceNode</span></em><span class="sig-paren">)</span><a class="headerlink" href="#MNReplication.replicate" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/replicate</span></code> <br/> Called by a Coordinating Node to request that the Member Node create a copy of the specified object by retrieving it from another Member Nodeode and storing it locally so that it can be made accessible to the DataONE system.</p>
+<p>A successful operation is indicated by a HTTP status of 200 on the response.</p>
+<p>Failure of the operation MUST be indicated by returning an appropriate exception.</p>
+<p>Access control for this method MUST be configured to allow calling by Coordinating Nodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Version</dt>
+<dd class="field-odd"><p>1.0</p>
+</dd>
+<dt class="field-even">Use Cases</dt>
+<dd class="field-even"><p><a class="reference internal" href="../design/UseCases/09_uc.html"><span class="doc">UC09</span></a></p>
+</dd>
+<dt class="field-odd">REST URL</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/replicate</span></code></p>
+</dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>session</strong> (<a class="reference internal" href="Types.html#Types.Session" title="Types.Session"><em>Types.Session</em></a>) – Session information that contains the identity of the
+calling user as retrieved from the X.509 certificate. Transmitted as part of
+the SSL handshake process.</p></li>
+<li><p><strong>sysmeta</strong> (<a class="reference internal" href="Types.html#Types.SystemMetadata" title="Types.SystemMetadata"><em>Types.SystemMetadata</em></a>) – Copy of the CN held system metadata for the object. Transmitted as an UTF-8 encoded XML structure for the respective type as defined in the DataONE types schema, as a <em>File part</em> of the MIME multipart/mixed message.</p></li>
+<li><p><strong>sourceNode</strong> (<a class="reference internal" href="Types.html#Types.NodeReference" title="Types.NodeReference"><em>Types.NodeReference</em></a>) – A reference to node from which the content should be retrieved. The reference should be resolved by checking the CN node registry. Transmitted as a UTF-8 String as a <em>Param part</em> of the MIME multipart/mixed message.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>True if everything works OK, otherwise an error is returned.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>boolean</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotImplemented" title="Exceptions.NotImplemented"><strong>Exceptions.NotImplemented</strong></a> – (errorCode=501, detailCode=2150)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.ServiceFailure" title="Exceptions.ServiceFailure"><strong>Exceptions.ServiceFailure</strong></a> – (errorCode=500, detailCode=2151)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.NotAuthorized" title="Exceptions.NotAuthorized"><strong>Exceptions.NotAuthorized</strong></a> – (errorCode=401, detailCode=2152)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidRequest" title="Exceptions.InvalidRequest"><strong>Exceptions.InvalidRequest</strong></a> – (errorCode=400, detailCode=2153)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InsufficientResources" title="Exceptions.InsufficientResources"><strong>Exceptions.InsufficientResources</strong></a> – (errorCode=413, detailCode=2154)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.UnsupportedType" title="Exceptions.UnsupportedType"><strong>Exceptions.UnsupportedType</strong></a> – (errorCode=400, detailCode=2155)</p></li>
+<li><p><a class="reference internal" href="Exceptions.html#Exceptions.InvalidToken" title="Exceptions.InvalidToken"><strong>Exceptions.InvalidToken</strong></a> – (errorCode=401, detailCode=2156)</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Response</strong></p>
+<p>The response should be a valid HTTP response with a blank or arbitrary body.
+Only the HTTP header information is considered by the requestor. A successful
+response must have a HTTP status code of 200. In case of an error condition,
+the appropriate HTTP status code must be set, and an exception or error
+information <em>may</em> be returned in the response.</p>
+<p>The outgoing request body <em>must</em> be encoded as <a class="reference external" href="http://www.ietf.org/rfc/rfc2388.txt">MIME multipart/form-data</a>
+with the system metadata portion as a file attachment and the sourceNode
+parameter as a form field.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">curl</span> <span class="o">-</span><span class="n">v</span> <span class="o">-</span><span class="n">X</span> <span class="n">POST</span> <span class="s2">&quot;https://localhost:8000/mn/v1/replicate&quot;</span> \
+  <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;Content-type: multipart/form-data&quot;</span> \
+  <span class="o">-</span><span class="n">F</span> <span class="s2">&quot;sysmeta=@systemmetadata.xml&quot;</span> \
+  <span class="o">-</span><span class="n">F</span> <span class="s2">&quot;sourceNode=urn:node:MN_B&quot;</span>
+
+<span class="o">*</span> <span class="n">About</span> <span class="n">to</span> <span class="n">connect</span><span class="p">()</span> <span class="n">to</span> <span class="n">localhost</span> <span class="n">port</span> <span class="mi">8000</span> <span class="p">(</span><span class="c1">#0)</span>
+<span class="o">*</span>   <span class="n">Trying</span> <span class="p">::</span><span class="mf">1.</span><span class="o">..</span> <span class="n">Connection</span> <span class="n">refused</span>
+<span class="o">*</span>   <span class="n">Trying</span> <span class="n">fe80</span><span class="p">::</span><span class="mf">1.</span><span class="o">..</span> <span class="n">Connection</span> <span class="n">refused</span>
+<span class="o">*</span>   <span class="n">Trying</span> <span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span><span class="o">...</span> <span class="n">connected</span>
+<span class="o">*</span> <span class="n">Connected</span> <span class="n">to</span> <span class="n">localhost</span> <span class="p">(</span><span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span><span class="p">)</span> <span class="n">port</span> <span class="mi">8000</span> <span class="p">(</span><span class="c1">#0)</span>
+<span class="o">&gt;</span> <span class="n">POST</span> <span class="o">/</span><span class="n">mn</span><span class="o">/</span><span class="n">v1</span><span class="o">/</span><span class="n">replicate</span> <span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="o">&gt;</span> <span class="n">User</span><span class="o">-</span><span class="n">Agent</span><span class="p">:</span> <span class="n">curl</span><span class="o">/</span><span class="mf">7.19</span><span class="o">.</span><span class="mi">7</span> <span class="p">(</span><span class="n">universal</span><span class="o">-</span><span class="n">apple</span><span class="o">-</span><span class="n">darwin10</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span> <span class="n">libcurl</span><span class="o">/</span><span class="mf">7.19</span><span class="o">.</span><span class="mi">7</span> <span class="n">OpenSSL</span><span class="o">/</span><span class="mf">0.9</span><span class="o">.</span><span class="mi">8</span><span class="n">l</span> <span class="n">zlib</span><span class="o">/</span><span class="mf">1.2</span><span class="o">.</span><span class="mi">3</span>
+<span class="o">&gt;</span> <span class="n">Host</span><span class="p">:</span> <span class="n">localhost</span><span class="p">:</span><span class="mi">8000</span>
+<span class="o">&gt;</span> <span class="n">Accept</span><span class="p">:</span> <span class="o">*/*</span>
+<span class="o">&gt;</span> <span class="n">Content</span><span class="o">-</span><span class="n">Length</span><span class="p">:</span> <span class="mi">1021</span>
+<span class="o">&gt;</span> <span class="n">Expect</span><span class="p">:</span> <span class="mi">100</span><span class="o">-</span><span class="k">continue</span>
+<span class="o">&gt;</span> <span class="n">Content</span><span class="o">-</span><span class="nb">type</span><span class="p">:</span> <span class="n">multipart</span><span class="o">/</span><span class="n">form</span><span class="o">-</span><span class="n">data</span><span class="p">;</span> <span class="n">boundary</span><span class="o">=----------------------------</span><span class="mi">88</span><span class="n">ffdd8070e9</span>
+<span class="o">&gt;</span>
+<span class="o">*</span> <span class="n">Done</span> <span class="n">waiting</span> <span class="k">for</span> <span class="mi">100</span><span class="o">-</span><span class="k">continue</span>
+<span class="o">*</span> <span class="n">HTTP</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">assume</span> <span class="n">close</span> <span class="n">after</span> <span class="n">body</span>
+<span class="o">&lt;</span> <span class="n">HTTP</span><span class="o">/</span><span class="mf">1.0</span> <span class="mi">200</span> <span class="n">OK</span>
+<span class="o">&lt;</span> <span class="n">Date</span><span class="p">:</span> <span class="n">Fri</span><span class="p">,</span> <span class="mi">14</span> <span class="n">Jan</span> <span class="mi">2011</span> <span class="mi">22</span><span class="p">:</span><span class="mi">01</span><span class="p">:</span><span class="mi">13</span> <span class="n">GMT</span>
+<span class="o">&lt;</span> <span class="n">Server</span><span class="p">:</span> <span class="n">WSGIServer</span><span class="o">/</span><span class="mf">0.1</span> <span class="n">Python</span><span class="o">/</span><span class="mf">2.6</span><span class="o">.</span><span class="mi">1</span>
+<span class="o">&lt;</span> <span class="n">Content</span><span class="o">-</span><span class="n">Type</span><span class="p">:</span> <span class="n">text</span><span class="o">/</span><span class="n">xml</span>
+<span class="o">&lt;</span>
+<span class="o">&lt;</span>
+<span class="o">*</span> <span class="n">Closing</span> <span class="n">connection</span> <span class="c1">#0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Member Node APIs</a><ul>
+<li><a class="reference internal" href="#core-api">Core API</a></li>
+<li><a class="reference internal" href="#read-api">Read API</a></li>
+<li><a class="reference internal" href="#query-api">Query API</a></li>
+<li><a class="reference internal" href="#view-api">View API</a></li>
+<li><a class="reference internal" href="#package-api">Package API</a></li>
+<li><a class="reference internal" href="#authorization-api">Authorization API</a></li>
+<li><a class="reference internal" href="#storage-api">Storage API</a></li>
+<li><a class="reference internal" href="#replication-api">Replication API</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+      <li>Previous: <a href="../index.html" title="previous chapter">DataONE Architecture</a></li>
+      <li>Next: <a href="CN_APIs.html" title="next chapter">Coordinating Node APIs</a></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/apis/MN_APIs.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/apis/MN_APIs.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/apis/MN_APIs.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

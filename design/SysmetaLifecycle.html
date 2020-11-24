@@ -1,0 +1,1977 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Natural History of System Metadata &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Serialization of Types for Transfer Over HTTP" href="Serialization.html" />
+    <link rel="prev" title="Getting a Handle on Systems Metadata for the Long Haul" href="SystemMetadataAnalysis.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Serialization.html" title="Serialization of Types for Transfer Over HTTP"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="SystemMetadataAnalysis.html" title="Getting a Handle on Systems Metadata for the Long Haul"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Natural History of System Metadata</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="natural-history-of-system-metadata">
+<h1>Natural History of System Metadata<a class="headerlink" href="#natural-history-of-system-metadata" title="Permalink to this headline">¶</a></h1>
+<dl class="field-list">
+<dt class="field-odd">Revisions</dt>
+<dd class="field-odd"><table class="docutils align-default">
+<colgroup>
+<col style="width: 11%" />
+<col style="width: 89%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Date</p></th>
+<th class="head"><p>Comment</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>20100303</p></td>
+<td><p>(D.V.) Initial draft</p></td>
+</tr>
+<tr class="row-odd"><td><p>20100304</p></td>
+<td><p>(D.V.) Revised draft and added scenario where system
+metadata is stored only on the Coordinating Nodes</p>
+<p>Corrected DataSysMetadataModified changes in scenario B.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd>
+</dl>
+<p>This document describes the generation of system metadata associated with a
+data object and its associated science metadata document as they are added to
+a DataONE Member Node and subsequently propagated through the DataONE
+infrastructure.</p>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#process-overview" id="id2">Process Overview</a></p></li>
+<li><p><a class="reference internal" href="#process-detail-scenario-a" id="id3">Process Detail - Scenario A</a></p></li>
+<li><p><a class="reference internal" href="#process-detail-scenario-b" id="id4">Process Detail - Scenario B.</a></p></li>
+<li><p><a class="reference internal" href="#final-state-of-system-metadata" id="id5">Final State of System Metadata</a></p></li>
+<li><p><a class="reference internal" href="#conclusions" id="id6">Conclusions</a></p></li>
+</ul>
+</div>
+<div class="section" id="process-overview">
+<h2><a class="toc-backref" href="#id2">Process Overview</a><a class="headerlink" href="#process-overview" title="Permalink to this headline">¶</a></h2>
+<p>There are two scenarios examined here: A) the system metadata is stored on all
+nodes (MN and CN) and B) system metadata is stored only on the CNs. The general
+sequence of operations is the same for both scenarios with the exclusion of a
+couple of steps from scenario B.</p>
+<ol class="arabic">
+<li><p>Scientist using an ITK tool generates some science data and some science
+metadata describing the science data.</p></li>
+<li><p>The ITK populates the required fields of the system metadata documents.</p></li>
+<li><p>Not necessarily in this order:</p>
+<ol class="loweralpha simple">
+<li><p>The ITK uploads the science data</p></li>
+<li><p>The ITK uploads the science metadata</p></li>
+</ol>
+<p>On receipt, the MN updates the system metadata fields for which it is
+responsible.</p>
+</li>
+<li><p>The CN detects new content is available on the MN using the listObjects()
+method.</p></li>
+<li><p>Copies of the science metadata and the two (incomplete) system metadata
+documents are retrieved by the CN.</p>
+<dl class="field-list simple">
+<dt class="field-odd">A</dt>
+<dd class="field-odd"><p>The CN updates the system metadata replication information, and indicates
+to the MN that it should update its copy of the system metadata objects.</p>
+</dd>
+<dt class="field-even">B</dt>
+<dd class="field-even"><p>The CN updates the system metadata replication information.</p>
+</dd>
+</dl>
+</li>
+<li><p>The CN issues a replication order to an MN.</p>
+<dl class="field-list simple">
+<dt class="field-odd">A</dt>
+<dd class="field-odd"><p>The recipient MN retrieves copies of the system metadata and
+associated objects (science data and metadata)</p>
+</dd>
+<dt class="field-even">B</dt>
+<dd class="field-even"><p>The recipient MN retrieves copies of the various objects indicated
+by the CN</p>
+</dd>
+</dl>
+</li>
+<li><p>The recipient MN requests content from the origin MN, which in turn
+verifies the request with the CN.</p>
+<dl class="field-list simple">
+<dt class="field-odd">A</dt>
+<dd class="field-odd"><p>The origin MN and the CN update copies of system metadata</p>
+</dd>
+<dt class="field-even">B</dt>
+<dd class="field-even"><p>The CN updates system metadata</p>
+</dd>
+</dl>
+</li>
+<li><p>After verifying the successful transfer of content, the recipient MN
+indicates completion to the CN.</p>
+<dl class="field-list simple">
+<dt class="field-odd">A</dt>
+<dd class="field-odd"><p>The CN updates the system metadata for the objects and ensures that the
+MN copies of the system metadata are accurate.</p>
+</dd>
+<dt class="field-even">B</dt>
+<dd class="field-even"><p>The CN updates the system metadata for the objects.</p>
+</dd>
+</dl>
+</li>
+</ol>
+<p>The change in system metadata state is shown in the following process detail
+sections. In each case, the identifiers used for the various elements are
+indicated in table 1.</p>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">Table 1. Identifiers used in the example sequence.</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 76%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Identifier</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>sciD.1</p></td>
+<td><p>Science Data</p></td>
+</tr>
+<tr class="row-odd"><td><p>sciM.1</p></td>
+<td><p>Science metadata describing sciD.1</p></td>
+</tr>
+<tr class="row-even"><td><p>sysD.1</p></td>
+<td><p>System metadata for object sciD.1</p></td>
+</tr>
+<tr class="row-odd"><td><p>sysM.1</p></td>
+<td><p>System metadata for object sciM.1</p></td>
+</tr>
+<tr class="row-even"><td><p>cn1.dataone.org</p></td>
+<td><p>A Coordinating Node</p></td>
+</tr>
+<tr class="row-odd"><td><p>mn1.dataone.org</p></td>
+<td><p>Member Node that is initial recipient of data</p></td>
+</tr>
+<tr class="row-even"><td><p>mn2.dataone.org</p></td>
+<td><p>Member Node that receives a copy of the objects</p></td>
+</tr>
+</tbody>
+</table>
+<p>The following fictitious script provides an example of how uploading content
+to a Member Node using a DataONE client library might occur.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">pyd1.client</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pyd1.exceptions</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">d1client</span> <span class="o">=</span> <span class="n">pyd1</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="n">identity</span><span class="o">=</span><span class="s2">&quot;/home/vieglais/.d1/credentials&quot;</span><span class="p">,</span>
+                       <span class="n">defaults</span><span class="o">=</span><span class="s2">&quot;/home/vieglais/.d1/defaults.ini&quot;</span><span class="p">)</span>
+<span class="n">d1client</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
+
+<span class="c1"># The science data and metadata as files on disk</span>
+<span class="n">data_file</span> <span class="o">=</span> <span class="s2">&quot;/home/vieglais/data/mydata.csv&quot;</span>
+<span class="n">meta_file</span> <span class="o">=</span> <span class="s2">&quot;/home/vieglais/data/mymeta.xml&quot;</span>
+
+<span class="c1"># Reserve a couple of identifiers. Note that this reservation will</span>
+<span class="c1"># be system-wide.</span>
+<span class="k">try</span><span class="p">:</span>
+  <span class="n">data_id</span> <span class="o">=</span> <span class="n">d1client</span><span class="o">.</span><span class="n">reserve</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;sysD.1&quot;</span><span class="p">)</span>
+  <span class="n">meta_id</span> <span class="o">=</span> <span class="n">d1client</span><span class="o">.</span><span class="n">reserve</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;sysM.1&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">IdentifierInUseException</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+  <span class="n">logging</span><span class="o">.</span><span class="n">fatal</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+  <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+<span class="c1"># Generate stub system metadata documents. Default values</span>
+<span class="c1"># for access rules etc are loaded from defaults.ini</span>
+<span class="n">sysm_data</span> <span class="o">=</span> <span class="n">d1client</span><span class="o">.</span><span class="n">generateSysMeta</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">data_id</span><span class="p">,</span>
+                                     <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;text/csv&quot;</span><span class="p">,</span>
+                                     <span class="n">describedBy</span><span class="o">=</span><span class="n">meta_id</span><span class="p">)</span>
+<span class="n">sysm_meta</span> <span class="o">=</span> <span class="n">d1client</span><span class="o">.</span><span class="n">generateSysMeta</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">meta_id</span><span class="p">,</span>
+                                     <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;eml://ecoinformatics.org/eml-2.1.0&quot;</span><span class="p">,</span>
+                                     <span class="n">describedBy</span><span class="o">=</span><span class="n">data_id</span><span class="p">)</span>
+<span class="c1"># Open file handles for data and metadata</span>
+<span class="n">fdata</span> <span class="o">=</span> <span class="n">file</span><span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+<span class="n">fmetadata</span> <span class="o">=</span> <span class="n">file</span><span class="p">(</span><span class="n">meta_file</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+
+<span class="c1"># Send the data to the Member Node</span>
+<span class="n">target_node</span> <span class="o">=</span> <span class="s1">&#39;mn1.dataone.org&#39;</span>
+<span class="n">data_sysid</span> <span class="o">=</span> <span class="n">d1client</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">data_id</span><span class="p">,</span> <span class="n">fdata</span><span class="p">,</span> <span class="n">sys_data</span><span class="p">,</span>
+                             <span class="n">target</span><span class="o">=</span><span class="n">target_node</span><span class="p">)</span>
+<span class="n">meta_sysid</span> <span class="o">=</span> <span class="n">d1client</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">meta_id</span><span class="p">,</span> <span class="n">fmeta</span><span class="p">,</span> <span class="n">sys_meta</span><span class="p">,</span>
+                             <span class="n">target</span><span class="o">=</span><span class="n">target_node</span><span class="p">)</span>
+<span class="n">fdata</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">fmeta</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="process-detail-scenario-a">
+<h2><a class="toc-backref" href="#id3">Process Detail - Scenario A</a><a class="headerlink" href="#process-detail-scenario-a" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="step-a1">
+<h3>Step A1.<a class="headerlink" href="#step-a1" title="Permalink to this headline">¶</a></h3>
+<p>The scientist generates a data set and associated science metadata.</p>
+</div>
+<div class="section" id="step-a2">
+<h3>Step A2.<a class="headerlink" href="#step-a2" title="Permalink to this headline">¶</a></h3>
+<p>Using tools in the ITK, the scientist generates two initial system metadata
+documents, one describing the science metadata (<code class="docutils literal notranslate"><span class="pre">sysm_M.1</span></code>), one describing
+the science data (<code class="docutils literal notranslate"><span class="pre">sysm_D.1</span></code>).</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 38%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>sysD.1</p></th>
+<th class="head"><p>sysM.1</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>identifier</p></td>
+<td><p>sciD.1</p></td>
+<td><p>sciM.1</p></td>
+</tr>
+<tr class="row-odd"><td><p>objectFormat</p></td>
+<td><p>text/csv</p></td>
+<td><p>eml://ecoinformatics.org/eml-2.1.0</p></td>
+</tr>
+<tr class="row-even"><td><p>size</p></td>
+<td><p>1450238</p></td>
+<td><p>8132</p></td>
+</tr>
+<tr class="row-odd"><td><p>submitter</p></td>
+<td><p>uid=jones,o=NCEAS,dc=ecoinformatics,dc=org</p></td>
+<td><p>uid=jones,o=NCEAS,dc=ecoinformatics,dc=org</p></td>
+</tr>
+<tr class="row-even"><td><p>rightsHolder</p></td>
+<td><p>uid=jones,o=NCEAS,dc=ecoinformatics,dc=org</p></td>
+<td><p>uid=jones,o=NCEAS,dc=ecoinformatics,dc=org</p></td>
+</tr>
+<tr class="row-odd"><td><p>obsoletes</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>obsoletedBy</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>derivedFrom</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>describes</p></td>
+<td><p></p></td>
+<td><p>sciD.1</p></td>
+</tr>
+<tr class="row-odd"><td><p>describedBy</p></td>
+<td><p>sciM.1</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>checksum</p></td>
+<td><p>2e01e17467891f7c933dbaa00e1459d23db3fe4f</p></td>
+<td><p>9967467891f7c933dbaa00e1459d23db3f342</p></td>
+</tr>
+<tr class="row-odd"><td><p>checksumAlgorithm</p></td>
+<td><p>SHA-1</p></td>
+<td><p>SHA-1</p></td>
+</tr>
+<tr class="row-even"><td><p>accessRule[1]</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>.rule</p></td>
+<td><p>Allow</p></td>
+<td><p>Allow</p></td>
+</tr>
+<tr class="row-even"><td><p>.service</p></td>
+<td><p>Read</p></td>
+<td><p>Read</p></td>
+</tr>
+<tr class="row-odd"><td><p>.principal</p></td>
+<td><p>*</p></td>
+<td><p>*</p></td>
+</tr>
+<tr class="row-even"><td><p>accessRule[2]</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>.rule</p></td>
+<td><p>Allow</p></td>
+<td><p>Allow</p></td>
+</tr>
+<tr class="row-even"><td><p>.service</p></td>
+<td><p>Write</p></td>
+<td><p>Write</p></td>
+</tr>
+<tr class="row-odd"><td><p>.principal</p></td>
+<td><p>o=NCEAS,dc=ecoinformatics,dc=org</p></td>
+<td><p>o=NCEAS,dc=ecoinformatics,dc=org</p></td>
+</tr>
+<tr class="row-even"><td><p>replicationPolicy</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>.preferredMemberNode</p></td>
+<td><p>mn2.dataone.org</p></td>
+<td><p>mn2.dataone.org</p></td>
+</tr>
+<tr class="row-even"><td><p>.blockedMemberNode</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>.replicationAllowed</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+</tr>
+<tr class="row-even"><td><p>.numberReplicas</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>dateUploaded</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>dateSysMetadataModified</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>originMemberNode</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>authoritativeMemberNode</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>replica[1]</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>.replicaMemberNode</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>.replicationStatus</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>.replicaVerified</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="step-a3">
+<h3>Step A3.<a class="headerlink" href="#step-a3" title="Permalink to this headline">¶</a></h3>
+<p>The client tool transmits the data, science metadata and two stub system
+metadata documents to a Member Node. The Member Node updates values of the
+system metadata for which it is responsible.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 38%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>sysD.1</p></th>
+<th class="head"><p>sysM.1</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>identifier</p></td>
+<td><p>sciD.1</p></td>
+<td><p>sciM.1</p></td>
+</tr>
+<tr class="row-odd"><td><p>objectFormat</p></td>
+<td><p>text/csv</p></td>
+<td><p>eml://ecoinformatics.org/eml-2.1.0</p></td>
+</tr>
+<tr class="row-even"><td><p>size</p></td>
+<td><p>1450238</p></td>
+<td><p>8132</p></td>
+</tr>
+<tr class="row-odd"><td><p>submitter</p></td>
+<td><p>uid=jones,o=NCEAS,dc=ecoinformatics,dc=org</p></td>
+<td><p>uid=jones,o=NCEAS,dc=ecoinformatics,dc=org</p></td>
+</tr>
+<tr class="row-even"><td><p>rightsHolder</p></td>
+<td><p>uid=jones,o=NCEAS,dc=ecoinformatics,dc=org</p></td>
+<td><p>uid=jones,o=NCEAS,dc=ecoinformatics,dc=org</p></td>
+</tr>
+<tr class="row-odd"><td><p>obsoletes</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>obsoletedBy</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>derivedFrom</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>describes</p></td>
+<td><p></p></td>
+<td><p>sciD.1</p></td>
+</tr>
+<tr class="row-odd"><td><p>describedBy</p></td>
+<td><p>sciM.1</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>checksum</p></td>
+<td><p>2e01e17467891f7c933dbaa00e1459d23db3fe4f</p></td>
+<td><p>9967467891f7c933dbaa00e1459d23db3f342</p></td>
+</tr>
+<tr class="row-odd"><td><p>checksumAlgorithm</p></td>
+<td><p>SHA-1</p></td>
+<td><p>SHA-1</p></td>
+</tr>
+<tr class="row-even"><td><p>accessRule[1]</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>.rule</p></td>
+<td><p>Allow</p></td>
+<td><p>Allow</p></td>
+</tr>
+<tr class="row-even"><td><p>.service</p></td>
+<td><p>Read</p></td>
+<td><p>Read</p></td>
+</tr>
+<tr class="row-odd"><td><p>.principal</p></td>
+<td><p>*</p></td>
+<td><p>*</p></td>
+</tr>
+<tr class="row-even"><td><p>accessRule[2]</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>.rule</p></td>
+<td><p>Allow</p></td>
+<td><p>Allow</p></td>
+</tr>
+<tr class="row-even"><td><p>.service</p></td>
+<td><p>Write</p></td>
+<td><p>Write</p></td>
+</tr>
+<tr class="row-odd"><td><p>.principal</p></td>
+<td><p>o=NCEAS,dc=ecoinformatics,dc=org</p></td>
+<td><p>o=NCEAS,dc=ecoinformatics,dc=org</p></td>
+</tr>
+<tr class="row-even"><td><p>replicationPolicy</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>.preferredMemberNode</p></td>
+<td><p>mn2.dataone.org</p></td>
+<td><p>mn2.dataone.org</p></td>
+</tr>
+<tr class="row-even"><td><p>.blockedMemberNode</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>.replicationAllowed</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+</tr>
+<tr class="row-even"><td><p>.numberReplicas</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>dateUploaded</p></td>
+<td><p><strong>2010-03-04T18:13:51.0Z</strong></p></td>
+<td><p><strong>2010-03-04T18:14:45.0Z</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>dateSysMetadataModified</p></td>
+<td><p><strong>2010-03-04T18:13:51.0Z</strong></p></td>
+<td><p><strong>2010-03-04T18:14:45.0Z</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>originMemberNode</p></td>
+<td><p><strong>mn1.dataone.org</strong></p></td>
+<td><p><strong>mn1.dataone.org</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>authoritativeMemberNode</p></td>
+<td><p><strong>mn1.dataone.org</strong></p></td>
+<td><p><strong>mn1.dataone.org</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>replica[1]</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>.replicaMemberNode</p></td>
+<td><p><strong>mn1.dataone.org</strong></p></td>
+<td><p><strong>mn1.dataone.org</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>.replicationStatus</p></td>
+<td><p><strong>Queued</strong></p></td>
+<td><p><strong>Queued</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>.replicaVerified</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p>Since there are many copies of system metadata from this point onwards, only
+the replication properties of the <code class="docutils literal notranslate"><span class="pre">sysD.1</span></code> document are considered,
+summarized in a table as follows. MN1, CN, MN2 = copy of system metadata on
+<code class="docutils literal notranslate"><span class="pre">mn1.dataone.org</span></code>, <code class="docutils literal notranslate"><span class="pre">cn1.dataone.org</span></code>, <code class="docutils literal notranslate"><span class="pre">mn2.dataone.org</span></code> respectively.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 28%" />
+<col style="width: 24%" />
+<col style="width: 24%" />
+<col style="width: 24%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Property</p></th>
+<th class="head"><p>MN1</p></th>
+<th class="head"><p>CN</p></th>
+<th class="head"><p>MN2</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>R[1].replicaMemberNode</p></td>
+<td><p>mn1.dataone.org</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>R[1].replicationStatus</p></td>
+<td><p>Queued</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>R[1].replicaVerified</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="step-a4">
+<h3>Step A4.<a class="headerlink" href="#step-a4" title="Permalink to this headline">¶</a></h3>
+<p>A CN detects new content available on <code class="docutils literal notranslate"><span class="pre">mn1.dataone.org</span></code> through the
+listObjects() method.</p>
+<p>There is no change of state in system metadata resulting from this operation.</p>
+</div>
+<div class="section" id="step-a5">
+<h3>Step A5.<a class="headerlink" href="#step-a5" title="Permalink to this headline">¶</a></h3>
+<p>Copies of <code class="docutils literal notranslate"><span class="pre">sciM.1</span></code>, <code class="docutils literal notranslate"><span class="pre">sysM.1</span></code>, and <code class="docutils literal notranslate"><span class="pre">sysD.1</span></code> are retrieved to the CN, and
+the system metadata objects are updated. There are three steps to this process:</p>
+<ol class="arabic simple">
+<li><p>The CN requests a copy of the objects.</p></li>
+</ol>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 28%" />
+<col style="width: 24%" />
+<col style="width: 24%" />
+<col style="width: 24%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Property</p></th>
+<th class="head"><p>MN1</p></th>
+<th class="head"><p>CN</p></th>
+<th class="head"><p>MN2</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>R[1].replicaMemberNode</p></td>
+<td><p>mn1.dataone.org</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>R[1].replicationStatus</p></td>
+<td><p><strong>Requested</strong></p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>R[1].replicaVerified</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<ol class="arabic simple" start="2">
+<li><p>The CN receives a copy of the metadata.</p></li>
+</ol>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 28%" />
+<col style="width: 24%" />
+<col style="width: 24%" />
+<col style="width: 24%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Property</p></th>
+<th class="head"><p>MN1</p></th>
+<th class="head"><p>CN</p></th>
+<th class="head"><p>MN2</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>R[1].replicaMemberNode</p></td>
+<td><p>mn1.dataone.org</p></td>
+<td><p><strong>mn1.dataone.org</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>R[1].replicationStatus</p></td>
+<td><p>Requested</p></td>
+<td><p><strong>Requested</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>R[1].replicaVerified</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<ol class="arabic simple" start="3">
+<li><p>The CN verifies the checksums and indicates to the MN that the copy is
+complete, providing the time stamp that it used for the verification (ensuring
+identical copies of the system metadata).</p></li>
+</ol>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Property</p></th>
+<th class="head"><p>MN1</p></th>
+<th class="head"><p>CN</p></th>
+<th class="head"><p>MN2</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>R[1].replicaMemberNode</p></td>
+<td><p>mn1.dataone.org</p></td>
+<td><p>mn1.dataone.org</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>R[1].replicationStatus</p></td>
+<td><p><strong>Completed</strong></p></td>
+<td><p><strong>Completed</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>R[1].replicaVerified</p></td>
+<td><p><strong>2010-03-04T19:13:51.0Z</strong></p></td>
+<td><p><strong>2010-03-04T19:13:51.0Z</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="step-a6">
+<h3>Step A6.<a class="headerlink" href="#step-a6" title="Permalink to this headline">¶</a></h3>
+<p>The CN initiates replication of content from <code class="docutils literal notranslate"><span class="pre">mn1.dataone.org</span></code> to <code class="docutils literal notranslate"><span class="pre">mn2.dataone.org</span></code>.</p>
+<ol class="arabic simple">
+<li><p>The CN sends a replication request to MN2, indicating that it should
+retrieve the object from MN1.</p></li>
+</ol>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 28%" />
+<col style="width: 24%" />
+<col style="width: 24%" />
+<col style="width: 24%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Property</p></th>
+<th class="head"><p>MN1</p></th>
+<th class="head"><p>CN</p></th>
+<th class="head"><p>MN2</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>R[1].replicaMemberNode</p></td>
+<td><p>mn1.dataone.org</p></td>
+<td><p>mn1.dataone.org</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>R[1].replicationStatus</p></td>
+<td><p>Completed</p></td>
+<td><p>Completed</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>R[1].replicaVerified</p></td>
+<td><p>2010-03-04T19:13:51.0Z</p></td>
+<td><p>2010-03-04T19:13:51.0Z</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>R[2].replicaMemberNode</p></td>
+<td></td>
+<td><p><strong>mn2.dataone.org</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>R[2].replicationStatus</p></td>
+<td></td>
+<td><p><strong>Queued</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>R[2].replicaVerified</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<ol class="arabic simple" start="2">
+<li><p>MN2 requests the content from MN1.</p></li>
+</ol>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 23%" />
+<col style="width: 23%" />
+<col style="width: 27%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Property</p></th>
+<th class="head"><p>MN1</p></th>
+<th class="head"><p>CN</p></th>
+<th class="head"><p>MN2</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>R[1].replicaMemberNode</p></td>
+<td><p>mn1.dataone.org</p></td>
+<td><p>mn1.dataone.org</p></td>
+<td><p><strong>mn1.dataone.org</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>R[1].replicationStatus</p></td>
+<td><p>Completed</p></td>
+<td><p>Completed</p></td>
+<td><p><strong>Completed</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>R[1].replicaVerified</p></td>
+<td><p>2010-03-04T19:13:51.0Z</p></td>
+<td><p>2010-03-04T19:13:51.0Z</p></td>
+<td><p><strong>2010-03-04T19:13:51.0Z</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>R[2].replicaMemberNode</p></td>
+<td><p><strong>mn2.dataone.org</strong></p></td>
+<td><p>mn2.dataone.org</p></td>
+<td><p><strong>mn2.dataone.org</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>R[2].replicationStatus</p></td>
+<td><p><strong>Requested</strong></p></td>
+<td><p>Queued</p></td>
+<td><p><strong>Requested</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>R[2].replicaVerified</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<ol class="arabic simple" start="3">
+<li><p>MN1 checks with CN that the object was requested</p></li>
+</ol>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 28%" />
+<col style="width: 24%" />
+<col style="width: 24%" />
+<col style="width: 24%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Property</p></th>
+<th class="head"><p>MN1</p></th>
+<th class="head"><p>CN</p></th>
+<th class="head"><p>MN2</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>R[1].replicaMemberNode</p></td>
+<td><p>mn1.dataone.org</p></td>
+<td><p>mn1.dataone.org</p></td>
+<td><p>mn1.dataone.org</p></td>
+</tr>
+<tr class="row-odd"><td><p>R[1].replicationStatus</p></td>
+<td><p>Completed</p></td>
+<td><p>Completed</p></td>
+<td><p>Completed</p></td>
+</tr>
+<tr class="row-even"><td><p>R[1].replicaVerified</p></td>
+<td><p>2010-03-04T19:13:51.0Z</p></td>
+<td><p>2010-03-04T19:13:51.0Z</p></td>
+<td><p>2010-03-04T19:13:51.0Z</p></td>
+</tr>
+<tr class="row-odd"><td><p>R[2].replicaMemberNode</p></td>
+<td><p>mn2.dataone.org</p></td>
+<td><p>mn2.dataone.org</p></td>
+<td><p>mn2.dataone.org</p></td>
+</tr>
+<tr class="row-even"><td><p>R[2].replicationStatus</p></td>
+<td><p>Requested</p></td>
+<td><p><strong>Requested</strong></p></td>
+<td><p>Requested</p></td>
+</tr>
+<tr class="row-odd"><td><p>R[2].replicaVerified</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<ol class="arabic simple" start="4">
+<li><p>MN2 verifies that the checksum is correct, then indicates to MN1 that the
+copy was correctly transferred, forwarding the timestamp for when the
+object was verified to MN1.</p></li>
+</ol>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Property</p></th>
+<th class="head"><p>MN1</p></th>
+<th class="head"><p>CN</p></th>
+<th class="head"><p>MN2</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>R[1].replicaMemberNode</p></td>
+<td><p>mn1.dataone.org</p></td>
+<td><p>mn1.dataone.org</p></td>
+<td><p>mn1.dataone.org</p></td>
+</tr>
+<tr class="row-odd"><td><p>R[1].replicationStatus</p></td>
+<td><p>Completed</p></td>
+<td><p>Completed</p></td>
+<td><p>Completed</p></td>
+</tr>
+<tr class="row-even"><td><p>R[1].replicaVerified</p></td>
+<td><p>2010-03-04T19:13:51.0Z</p></td>
+<td><p>2010-03-04T19:13:51.0Z</p></td>
+<td><p>2010-03-04T19:13:51.0Z</p></td>
+</tr>
+<tr class="row-odd"><td><p>R[2].replicaMemberNode</p></td>
+<td><p>mn2.dataone.org</p></td>
+<td><p>mn2.dataone.org</p></td>
+<td><p>mn2.dataone.org</p></td>
+</tr>
+<tr class="row-even"><td><p>R[2].replicationStatus</p></td>
+<td><p><strong>Completed</strong></p></td>
+<td><p>Requested</p></td>
+<td><p><strong>Completed</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>R[2].replicaVerified</p></td>
+<td><p><strong>2010-03-04T20:00:00.0Z</strong></p></td>
+<td></td>
+<td><p><strong>2010-03-04T20:00:00.0Z</strong></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="step-a8">
+<h3>Step A8.<a class="headerlink" href="#step-a8" title="Permalink to this headline">¶</a></h3>
+<p>MN2 informs the Coordinating Node that it has retrieved a valid copy of the
+object from MN1, forwarding the time stamp for when the verification was made.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 23%" />
+<col style="width: 27%" />
+<col style="width: 23%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Property</p></th>
+<th class="head"><p>MN1</p></th>
+<th class="head"><p>CN</p></th>
+<th class="head"><p>MN2</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>R[1].replicaMemberNode</p></td>
+<td><p>mn1.dataone.org</p></td>
+<td><p>mn1.dataone.org</p></td>
+<td><p>mn1.dataone.org</p></td>
+</tr>
+<tr class="row-odd"><td><p>R[1].replicationStatus</p></td>
+<td><p>Completed</p></td>
+<td><p>Completed</p></td>
+<td><p>Completed</p></td>
+</tr>
+<tr class="row-even"><td><p>R[1].replicaVerified</p></td>
+<td><p>2010-03-04T19:13:51.0Z</p></td>
+<td><p>2010-03-04T19:13:51.0Z</p></td>
+<td><p>2010-03-04T19:13:51.0Z</p></td>
+</tr>
+<tr class="row-odd"><td><p>R[2].replicaMemberNode</p></td>
+<td><p>mn2.dataone.org</p></td>
+<td><p>mn2.dataone.org</p></td>
+<td><p>mn2.dataone.org</p></td>
+</tr>
+<tr class="row-even"><td><p>R[2].replicationStatus</p></td>
+<td><p>Completed</p></td>
+<td><p><strong>Completed</strong></p></td>
+<td><p>Completed</p></td>
+</tr>
+<tr class="row-odd"><td><p>R[2].replicaVerified</p></td>
+<td><p>2010-03-04T20:00:00.0Z</p></td>
+<td><p><strong>2010-03-04T20:00:00.0Z</strong></p></td>
+<td><p>2010-03-04T20:00:00.0Z</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="process-detail-scenario-b">
+<h2><a class="toc-backref" href="#id4">Process Detail - Scenario B.</a><a class="headerlink" href="#process-detail-scenario-b" title="Permalink to this headline">¶</a></h2>
+<p>This scenario uses the notion that system metadata is stored on the CNs only.</p>
+<div class="section" id="step-b1">
+<h3>Step B1.<a class="headerlink" href="#step-b1" title="Permalink to this headline">¶</a></h3>
+<p>The scientist generates a data set and associated science metadata.</p>
+</div>
+<div class="section" id="step-b2">
+<h3>Step B2.<a class="headerlink" href="#step-b2" title="Permalink to this headline">¶</a></h3>
+<p>Using tools in the ITK, the scientist generates two initial system metadata
+documents, one describing the science metadata (<code class="docutils literal notranslate"><span class="pre">sysm_M.1</span></code>), one describing
+the science data (<code class="docutils literal notranslate"><span class="pre">sysm_D.1</span></code>).</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 38%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>sysD.1</p></th>
+<th class="head"><p>sysM.1</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>identifier</p></td>
+<td><p>sciD.1</p></td>
+<td><p>sciM.1</p></td>
+</tr>
+<tr class="row-odd"><td><p>objectFormat</p></td>
+<td><p>text/csv</p></td>
+<td><p>eml://ecoinformatics.org/eml-2.1.0</p></td>
+</tr>
+<tr class="row-even"><td><p>size</p></td>
+<td><p>1450238</p></td>
+<td><p>8132</p></td>
+</tr>
+<tr class="row-odd"><td><p>submitter</p></td>
+<td><p>uid=jones,o=NCEAS,dc=ecoinformatics,dc=org</p></td>
+<td><p>uid=jones,o=NCEAS,dc=ecoinformatics,dc=org</p></td>
+</tr>
+<tr class="row-even"><td><p>rightsHolder</p></td>
+<td><p>uid=jones,o=NCEAS,dc=ecoinformatics,dc=org</p></td>
+<td><p>uid=jones,o=NCEAS,dc=ecoinformatics,dc=org</p></td>
+</tr>
+<tr class="row-odd"><td><p>obsoletes</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>obsoletedBy</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>derivedFrom</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>describes</p></td>
+<td></td>
+<td><p>sciD.1</p></td>
+</tr>
+<tr class="row-odd"><td><p>describedBy</p></td>
+<td><p>sciM.1</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>checksum</p></td>
+<td><p>2e01e17467891f7c933dbaa00e1459d23db3fe4f</p></td>
+<td><p>9967467891f7c933dbaa00e1459d23db3f342</p></td>
+</tr>
+<tr class="row-odd"><td><p>checksumAlgorithm</p></td>
+<td><p>SHA-1</p></td>
+<td><p>SHA-1</p></td>
+</tr>
+<tr class="row-even"><td><p>accessRule[1]</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>.rule</p></td>
+<td><p>Allow</p></td>
+<td><p>Allow</p></td>
+</tr>
+<tr class="row-even"><td><p>.service</p></td>
+<td><p>Read</p></td>
+<td><p>Read</p></td>
+</tr>
+<tr class="row-odd"><td><p>.principal</p></td>
+<td><p>*</p></td>
+<td><p>*</p></td>
+</tr>
+<tr class="row-even"><td><p>accessRule[2]</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>.rule</p></td>
+<td><p>Allow</p></td>
+<td><p>Allow</p></td>
+</tr>
+<tr class="row-even"><td><p>.service</p></td>
+<td><p>Write</p></td>
+<td><p>Write</p></td>
+</tr>
+<tr class="row-odd"><td><p>.principal</p></td>
+<td><p>o=NCEAS,dc=ecoinformatics,dc=org</p></td>
+<td><p>o=NCEAS,dc=ecoinformatics,dc=org</p></td>
+</tr>
+<tr class="row-even"><td><p>replicationPolicy</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>.preferredMemberNode</p></td>
+<td><p>mn2.dataone.org</p></td>
+<td><p>mn2.dataone.org</p></td>
+</tr>
+<tr class="row-even"><td><p>.blockedMemberNode</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>.replicationAllowed</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+</tr>
+<tr class="row-even"><td><p>.numberReplicas</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>dateUploaded</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>dateSysMetadataModified</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>originMemberNode</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>authoritativeMemberNode</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>replica[1]</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>.replicaMemberNode</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>.replicationStatus</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>.replicaVerified</p></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="step-b3">
+<h3>Step B3.<a class="headerlink" href="#step-b3" title="Permalink to this headline">¶</a></h3>
+<p>The client tool transmits the data, science metadata and two stub system
+metadata documents to a Member Node (<code class="docutils literal notranslate"><span class="pre">mn1.dataone.org</span></code>). On receipt, the
+Member Node sets the values of several fields as indicted in the table below.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 38%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>sysD.1</p></th>
+<th class="head"><p>sysM.1</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>identifier</p></td>
+<td><p>sciD.1</p></td>
+<td><p>sciM.1</p></td>
+</tr>
+<tr class="row-odd"><td><p>objectFormat</p></td>
+<td><p>text/csv</p></td>
+<td><p>eml://ecoinformatics.org/eml-2.1.0</p></td>
+</tr>
+<tr class="row-even"><td><p>size</p></td>
+<td><p>1450238</p></td>
+<td><p>8132</p></td>
+</tr>
+<tr class="row-odd"><td><p>submitter</p></td>
+<td><p>uid=jones,o=NCEAS,dc=ecoinformatics,dc=org</p></td>
+<td><p>uid=jones,o=NCEAS,dc=ecoinformatics,dc=org</p></td>
+</tr>
+<tr class="row-even"><td><p>rightsHolder</p></td>
+<td><p>uid=jones,o=NCEAS,dc=ecoinformatics,dc=org</p></td>
+<td><p>uid=jones,o=NCEAS,dc=ecoinformatics,dc=org</p></td>
+</tr>
+<tr class="row-odd"><td><p>obsoletes</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>obsoletedBy</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>derivedFrom</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>describes</p></td>
+<td></td>
+<td><p>sciD.1</p></td>
+</tr>
+<tr class="row-odd"><td><p>describedBy</p></td>
+<td><p>sciM.1</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>checksum</p></td>
+<td><p>2e01e17467891f7c933dbaa00e1459d23db3fe4f</p></td>
+<td><p>9967467891f7c933dbaa00e1459d23db3f342</p></td>
+</tr>
+<tr class="row-odd"><td><p>checksumAlgorithm</p></td>
+<td><p>SHA-1</p></td>
+<td><p>SHA-1</p></td>
+</tr>
+<tr class="row-even"><td><p>accessRule[1]</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>.ruleType</p></td>
+<td><p>Allow</p></td>
+<td><p>Allow</p></td>
+</tr>
+<tr class="row-even"><td><p>.service</p></td>
+<td><p>Read</p></td>
+<td><p>Read</p></td>
+</tr>
+<tr class="row-odd"><td><p>.principal</p></td>
+<td><p>*</p></td>
+<td><p>*</p></td>
+</tr>
+<tr class="row-even"><td><p>accessRule[2]</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>.ruleType</p></td>
+<td><p>Allow</p></td>
+<td><p>Allow</p></td>
+</tr>
+<tr class="row-even"><td><p>.service</p></td>
+<td><p>Write</p></td>
+<td><p>Write</p></td>
+</tr>
+<tr class="row-odd"><td><p>.principal</p></td>
+<td><p>o=NCEAS,dc=ecoinformatics,dc=org</p></td>
+<td><p>o=NCEAS,dc=ecoinformatics,dc=org</p></td>
+</tr>
+<tr class="row-even"><td><p>replicationPolicy</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>.preferredMemberNode</p></td>
+<td><p>mn2.dataone.org</p></td>
+<td><p>mn2.dataone.org</p></td>
+</tr>
+<tr class="row-even"><td><p>.blockedMemberNode</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>.replicationAllowed</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+</tr>
+<tr class="row-even"><td><p>.numberReplicas</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>dateUploaded</p></td>
+<td><p><strong>2010-03-04T18:13:51.0Z</strong></p></td>
+<td><p><strong>2010-03-04T18:14:45.0Z</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>dateSysMetadataModified</p></td>
+<td><p><strong>2010-03-04T18:13:51.0Z</strong></p></td>
+<td><p><strong>2010-03-04T18:14:45.0Z</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>originMemberNode</p></td>
+<td><p><strong>mn1.dataone.org</strong></p></td>
+<td><p><strong>mn1.dataone.org</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>authoritativeMemberNode</p></td>
+<td><p><strong>mn1.dataone.org</strong></p></td>
+<td><p><strong>mn1.dataone.org</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>replica[1]</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>.replicaMemberNode</p></td>
+<td><p><strong>mn1.dataone.org</strong></p></td>
+<td><p><strong>mn1.dataone.org</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>.replicationStatus</p></td>
+<td><p><strong>Queued</strong></p></td>
+<td><p><strong>Queued</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>.replicaVerified</p></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="step-b4">
+<h3>Step B4.<a class="headerlink" href="#step-b4" title="Permalink to this headline">¶</a></h3>
+<p>A CN detects new content available on <code class="docutils literal notranslate"><span class="pre">mn1.dataone.org</span></code> through
+<code class="xref py py-func docutils literal notranslate"><span class="pre">MN_replication.listObjects()</span></code>.</p>
+<p>There is no change of state in system metadata resulting from this operation.</p>
+</div>
+<div class="section" id="step-b5">
+<h3>Step B5.<a class="headerlink" href="#step-b5" title="Permalink to this headline">¶</a></h3>
+<p>Copies of <code class="docutils literal notranslate"><span class="pre">sciM.1</span></code>, <code class="docutils literal notranslate"><span class="pre">sysM.1</span></code>, and <code class="docutils literal notranslate"><span class="pre">sysD.1</span></code> are retrieved to the
+Coordinating Node, and the system metadata objects are updated on the
+Coordinating Node. For sake of brevity, only the elements from
+ReplicationPolicy onwards are shown in the remaining state tables since the
+remainder of the content does not change.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 38%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>sysD.1</p></th>
+<th class="head"><p>sysM.1</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>identifier</p></td>
+<td><p>sciD.1</p></td>
+<td><p>sciM.1</p></td>
+</tr>
+<tr class="row-odd"><td><p>…</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>replicationPolicy</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>.preferredMemberNode</p></td>
+<td><p>mn2.dataone.org</p></td>
+<td><p>mn2.dataone.org</p></td>
+</tr>
+<tr class="row-even"><td><p>.blockedMemberNode</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>.replicationAllowed</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+</tr>
+<tr class="row-even"><td><p>.numberReplicas</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>dateUploaded</p></td>
+<td><p>2010-03-04T18:13:51.0Z</p></td>
+<td><p>2010-03-04T18:14:45.0Z</p></td>
+</tr>
+<tr class="row-even"><td><p>dateSysMetadataModified</p></td>
+<td><p><strong>2010-03-04T19:13:51.0Z</strong></p></td>
+<td><p><strong>2010-03-04T19:13:52.0Z</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>originMemberNode</p></td>
+<td><p>mn1.dataone.org</p></td>
+<td><p>mn1.dataone.org</p></td>
+</tr>
+<tr class="row-even"><td><p>authoritativeMemberNode</p></td>
+<td><p>mn1.dataone.org</p></td>
+<td><p>mn1.dataone.org</p></td>
+</tr>
+<tr class="row-odd"><td><p>replica[1]</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>.replicaMemberNode</p></td>
+<td><p>mn1.dataone.org</p></td>
+<td><p>mn1.dataone.org</p></td>
+</tr>
+<tr class="row-odd"><td><p>.replicationStatus</p></td>
+<td><p><strong>Completed</strong></p></td>
+<td><p><strong>Completed</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>.replicaVerified</p></td>
+<td><p><strong>2010-03-04T19:13:51.0Z</strong></p></td>
+<td><p><strong>2010-03-04T19:13:52.0Z</strong></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="step-b6">
+<h3>Step B6.<a class="headerlink" href="#step-b6" title="Permalink to this headline">¶</a></h3>
+<p>The Coordinating Node initiates replication of the objects <code class="docutils literal notranslate"><span class="pre">sciM.1</span></code> and
+<code class="docutils literal notranslate"><span class="pre">sciD.1</span></code> from <code class="docutils literal notranslate"><span class="pre">mn1.dataone.org</span></code> to <code class="docutils literal notranslate"><span class="pre">mn2.dataone.org</span></code>. It does this by
+calling the “replicate()” method on <code class="docutils literal notranslate"><span class="pre">mn2.dataone.org</span></code>.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 38%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>sysD.1</p></th>
+<th class="head"><p>sysM.1</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>identifier</p></td>
+<td><p>sciD.1</p></td>
+<td><p>sciM.1</p></td>
+</tr>
+<tr class="row-odd"><td><p>…</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>replicationPolicy</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>.preferredMemberNode</p></td>
+<td><p>mn2.dataone.org</p></td>
+<td><p>mn2.dataone.org</p></td>
+</tr>
+<tr class="row-even"><td><p>.blockedMemberNode</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>.replicationAllowed</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+</tr>
+<tr class="row-even"><td><p>.numberReplicas</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>dateUploaded</p></td>
+<td><p>2010-03-04T18:13:51.0Z</p></td>
+<td><p>2010-03-04T18:14:45.0Z</p></td>
+</tr>
+<tr class="row-even"><td><p>dateSysMetadataModified</p></td>
+<td><p><strong>2010-03-04T20:58:00.0Z</strong></p></td>
+<td><p><strong>2010-03-04T20:58:00.0Z</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>originMemberNode</p></td>
+<td><p>mn1.dataone.org</p></td>
+<td><p>mn1.dataone.org</p></td>
+</tr>
+<tr class="row-even"><td><p>authoritativeMemberNode</p></td>
+<td><p>mn1.dataone.org</p></td>
+<td><p>mn1.dataone.org</p></td>
+</tr>
+<tr class="row-odd"><td><p>replica[1]</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>.replicaMemberNode</p></td>
+<td><p>mn1.dataone.org</p></td>
+<td><p>mn1.dataone.org</p></td>
+</tr>
+<tr class="row-odd"><td><p>.replicationStatus</p></td>
+<td><p>Completed</p></td>
+<td><p>Completed</p></td>
+</tr>
+<tr class="row-even"><td><p>.replicaVerified</p></td>
+<td><p>2010-03-04T19:13:51.0Z</p></td>
+<td><p>2010-03-04T19:13:52.0Z</p></td>
+</tr>
+<tr class="row-odd"><td><p>replica[2]</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>.replicaMemberNode</p></td>
+<td><p><strong>mn2.dataone.org</strong></p></td>
+<td><p><strong>mn2.dataone.org</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>.replicationStatus</p></td>
+<td><p><strong>Queued</strong></p></td>
+<td><p><strong>Queued</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>.replicaVerified</p></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="step-b7">
+<h3>Step B7.<a class="headerlink" href="#step-b7" title="Permalink to this headline">¶</a></h3>
+<p>The node <code class="docutils literal notranslate"><span class="pre">mn2.dataone.org</span></code> requests the objects <code class="docutils literal notranslate"><span class="pre">sciM.1</span></code> and <code class="docutils literal notranslate"><span class="pre">sciD.1</span></code>
+from <code class="docutils literal notranslate"><span class="pre">mn1.dataone.org</span></code>. After verifying the request with a Coordinating Node
+(which has a side effect of setting the system metadata ReplicationStatus to
+Requested), <code class="docutils literal notranslate"><span class="pre">mn1.dataone.org</span></code> returns the objects. (Note that in actuality,
+each object is requested individually.)</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 38%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>sysD.1</p></th>
+<th class="head"><p>sysM.1</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>identifier</p></td>
+<td><p>sciD.1</p></td>
+<td><p>sciM.1</p></td>
+</tr>
+<tr class="row-odd"><td><p>…</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>replicationPolicy</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>.preferredMemberNode</p></td>
+<td><p>mn2.dataone.org</p></td>
+<td><p>mn2.dataone.org</p></td>
+</tr>
+<tr class="row-even"><td><p>.blockedMemberNode</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>.replicationAllowed</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+</tr>
+<tr class="row-even"><td><p>.numberReplicas</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>dateUploaded</p></td>
+<td><p>2010-03-04T18:13:51.0Z</p></td>
+<td><p>2010-03-04T18:14:45.0Z</p></td>
+</tr>
+<tr class="row-even"><td><p>dateSysMetadataModified</p></td>
+<td><p><strong>2010-03-04T20:59:00.0Z</strong></p></td>
+<td><p><strong>2010-03-04T20:59:00.0Z</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>originMemberNode</p></td>
+<td><p>mn1.dataone.org</p></td>
+<td><p>mn1.dataone.org</p></td>
+</tr>
+<tr class="row-even"><td><p>authoritativeMemberNode</p></td>
+<td><p>mn1.dataone.org</p></td>
+<td><p>mn1.dataone.org</p></td>
+</tr>
+<tr class="row-odd"><td><p>replica[1]</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>.replicaMemberNode</p></td>
+<td><p>mn1.dataone.org</p></td>
+<td><p>mn1.dataone.org</p></td>
+</tr>
+<tr class="row-odd"><td><p>.replicationStatus</p></td>
+<td><p>Completed</p></td>
+<td><p>Completed</p></td>
+</tr>
+<tr class="row-even"><td><p>.replicaVerified</p></td>
+<td><p>2010-03-04T19:13:51.0Z</p></td>
+<td><p>2010-03-04T19:13:52.0Z</p></td>
+</tr>
+<tr class="row-odd"><td><p>replica[2]</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>.replicaMemberNode</p></td>
+<td><p><strong>mn2.dataone.org</strong></p></td>
+<td><p><strong>mn2.dataone.org</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>.replicationStatus</p></td>
+<td><p><strong>Requested</strong></p></td>
+<td><p><strong>Requested</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>.replicaVerified</p></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="step-b8">
+<h3>Step B8.<a class="headerlink" href="#step-b8" title="Permalink to this headline">¶</a></h3>
+<p>The node <code class="docutils literal notranslate"><span class="pre">mn2.dataone.org</span></code> verifies the retrieved objects against their
+checksums and indicates to the Coordinating Node that transfer was successful.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 38%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>sysD.1</p></th>
+<th class="head"><p>sysM.1</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>identifier</p></td>
+<td><p>sciD.1</p></td>
+<td><p>sciM.1</p></td>
+</tr>
+<tr class="row-odd"><td><p>…</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>replicationPolicy</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>.preferredMemberNode</p></td>
+<td><p>mn2.dataone.org</p></td>
+<td><p>mn2.dataone.org</p></td>
+</tr>
+<tr class="row-even"><td><p>.blockedMemberNode</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>.replicationAllowed</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+</tr>
+<tr class="row-even"><td><p>.numberReplicas</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>dateUploaded</p></td>
+<td><p>2010-03-04T18:13:51.0Z</p></td>
+<td><p>2010-03-04T18:14:45.0Z</p></td>
+</tr>
+<tr class="row-even"><td><p>dateSysMetadataModified</p></td>
+<td><p><strong>2010-03-04T21:00:00.0Z</strong></p></td>
+<td><p><strong>2010-03-04T21:00:00.0Z</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>originMemberNode</p></td>
+<td><p>mn1.dataone.org</p></td>
+<td><p>mn1.dataone.org</p></td>
+</tr>
+<tr class="row-even"><td><p>authoritativeMemberNode</p></td>
+<td><p>mn1.dataone.org</p></td>
+<td><p>mn1.dataone.org</p></td>
+</tr>
+<tr class="row-odd"><td><p>replica[1]</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>.replicaMemberNode</p></td>
+<td><p>mn1.dataone.org</p></td>
+<td><p>mn1.dataone.org</p></td>
+</tr>
+<tr class="row-odd"><td><p>.replicationStatus</p></td>
+<td><p>Completed</p></td>
+<td><p>Completed</p></td>
+</tr>
+<tr class="row-even"><td><p>.replicaVerified</p></td>
+<td><p>2010-03-04T19:13:51.0Z</p></td>
+<td><p>2010-03-04T19:13:52.0Z</p></td>
+</tr>
+<tr class="row-odd"><td><p>replica[2]</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>.replicaMemberNode</p></td>
+<td><p>mn2.dataone.org</p></td>
+<td><p>mn2.dataone.org</p></td>
+</tr>
+<tr class="row-odd"><td><p>.replicationStatus</p></td>
+<td><p><strong>Completed</strong></p></td>
+<td><p><strong>Completed</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>.replicaVerified</p></td>
+<td><p><strong>2010-03-04T21:00:00.0Z</strong></p></td>
+<td><p><strong>2010-03-04T21:00:00.0Z</strong></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="final-state-of-system-metadata">
+<h2><a class="toc-backref" href="#id5">Final State of System Metadata</a><a class="headerlink" href="#final-state-of-system-metadata" title="Permalink to this headline">¶</a></h2>
+<p>Assuming the replication policy was for one replica to be created for
+<code class="docutils literal notranslate"><span class="pre">sciM.1</span></code> and <code class="docutils literal notranslate"><span class="pre">sciD.1</span></code>, then the eventual end state of the associated
+system metadata documents (<code class="docutils literal notranslate"><span class="pre">sysM.1</span></code> and <code class="docutils literal notranslate"><span class="pre">sysD.1</span></code> respectively) after
+synchronization of the Coordinating Nodes, would be something like the
+following.</p>
+<p>Note that synchronization between Coordinating Nodes does not trigger an
+update to the DataSysMetadataModified field. This is necessary to avoid a
+situation where the state of the metadata is never consistent between
+Coordinating Nodes.</p>
+<p>Note also that even though the replication policy of <code class="docutils literal notranslate"><span class="pre">sciD.1</span></code> indicates that
+NumberReplicas is one, there are actually three additional replicas stored on
+the Coordinating Nodes.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 38%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>sysD.1</p></th>
+<th class="head"><p>sysM.1</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>identifier</p></td>
+<td><p>sciD.1</p></td>
+<td><p>sciM.1</p></td>
+</tr>
+<tr class="row-odd"><td><p>objectFormat</p></td>
+<td><p>text/csv</p></td>
+<td><p>eml://ecoinformatics.org/eml-2.1.0</p></td>
+</tr>
+<tr class="row-even"><td><p>size</p></td>
+<td><p>1450238</p></td>
+<td><p>8132</p></td>
+</tr>
+<tr class="row-odd"><td><p>submitter</p></td>
+<td><p>uid=jones,o=NCEAS,dc=ecoinformatics,dc=org</p></td>
+<td><p>uid=jones,o=NCEAS,dc=ecoinformatics,dc=org</p></td>
+</tr>
+<tr class="row-even"><td><p>rightsHolder</p></td>
+<td><p>uid=jones,o=NCEAS,dc=ecoinformatics,dc=org</p></td>
+<td><p>uid=jones,o=NCEAS,dc=ecoinformatics,dc=org</p></td>
+</tr>
+<tr class="row-odd"><td><p>obsoletes</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>obsoletedBy</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>derivedFrom</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>describes</p></td>
+<td></td>
+<td><p>sciD.1</p></td>
+</tr>
+<tr class="row-odd"><td><p>describedBy</p></td>
+<td><p>sciM.1</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>checksum</p></td>
+<td><p>2e01e17467891f7c933dbaa00e1459d23db3fe4f</p></td>
+<td><p>9967467891f7c933dbaa00e1459d23db3f342</p></td>
+</tr>
+<tr class="row-odd"><td><p>checksumAlgorithm</p></td>
+<td><p>SHA-1</p></td>
+<td><p>SHA-1</p></td>
+</tr>
+<tr class="row-even"><td><p>accessRule[1]</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>.ruleType</p></td>
+<td><p>Allow</p></td>
+<td><p>Allow</p></td>
+</tr>
+<tr class="row-even"><td><p>.service</p></td>
+<td><p>Read</p></td>
+<td><p>Read</p></td>
+</tr>
+<tr class="row-odd"><td><p>.principal</p></td>
+<td><p>*</p></td>
+<td><p>*</p></td>
+</tr>
+<tr class="row-even"><td><p>accessRule[2]</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>.ruleType</p></td>
+<td><p>Allow</p></td>
+<td><p>Allow</p></td>
+</tr>
+<tr class="row-even"><td><p>.service</p></td>
+<td><p>Write</p></td>
+<td><p>Write</p></td>
+</tr>
+<tr class="row-odd"><td><p>.principal</p></td>
+<td><p>o=NCEAS,dc=ecoinformatics,dc=org</p></td>
+<td><p>o=NCEAS,dc=ecoinformatics,dc=org</p></td>
+</tr>
+<tr class="row-even"><td><p>replicationPolicy</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>.preferredMemberNode</p></td>
+<td><p>mn2.dataone.org</p></td>
+<td><p>mn2.dataone.org</p></td>
+</tr>
+<tr class="row-even"><td><p>.blockedMemberNode</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>.replicationAllowed</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+</tr>
+<tr class="row-even"><td><p>.numberReplicas</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>dateUploaded</p></td>
+<td><p>2010-03-04T18:13:51.0Z</p></td>
+<td><p>2010-03-04T18:14:45.0Z</p></td>
+</tr>
+<tr class="row-even"><td><p>dateSysMetadataModified</p></td>
+<td><p>2010-03-04T18:13:51.0Z</p></td>
+<td><p>2010-03-04T18:14:45.0Z</p></td>
+</tr>
+<tr class="row-odd"><td><p>originMemberNode</p></td>
+<td><p>mn1.dataone.org</p></td>
+<td><p>mn1.dataone.org</p></td>
+</tr>
+<tr class="row-even"><td><p>authoritativeMemberNode</p></td>
+<td><p>mn1.dataone.org</p></td>
+<td><p>mn1.dataone.org</p></td>
+</tr>
+<tr class="row-odd"><td><p>replica[1]</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>.replicaMemberNode</p></td>
+<td><p>mn1.dataone.org</p></td>
+<td><p>mn1.dataone.org</p></td>
+</tr>
+<tr class="row-odd"><td><p>.replicationStatus</p></td>
+<td><p>Completed</p></td>
+<td><p>Completed</p></td>
+</tr>
+<tr class="row-even"><td><p>.replicaVerified</p></td>
+<td><p>2010-03-04T19:13:51.0Z</p></td>
+<td><p>2010-03-04T19:13:52.0Z</p></td>
+</tr>
+<tr class="row-odd"><td><p>replica[2]</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>.replicaMemberNode</p></td>
+<td><p>mn2.dataone.org</p></td>
+<td><p>mn2.dataone.org</p></td>
+</tr>
+<tr class="row-odd"><td><p>.replicationStatus</p></td>
+<td><p>Completed</p></td>
+<td><p>Completed</p></td>
+</tr>
+<tr class="row-even"><td><p>.replicaVerified</p></td>
+<td><p>2010-03-04T21:00:00.0Z</p></td>
+<td><p>2010-03-04T21:00:00.0Z</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="conclusions">
+<h2><a class="toc-backref" href="#id6">Conclusions</a><a class="headerlink" href="#conclusions" title="Permalink to this headline">¶</a></h2>
+<p>Maintaining complete copies of system metadata on all nodes is cumbersome and
+seems to be overly complicated. However, it is still necessary for Member Nodes
+to provide accurate information for some elements of the system metadata (to
+assist with transfer verification, to validate a data object is intact).</p>
+<p>As such, it seems that scenario B above is the most tractable and provides the
+desired functionality for tracking content in the DataONE infrastructure. The
+role of system metadata on Member Nodes and Coordinating Nodes is further
+clarified below.</p>
+<p>The recommendations are:</p>
+<ul class="simple">
+<li><p>Complete, authoritative copies of system metadata are maintained on the
+Coordinating Nodes.</p></li>
+<li><p>A system metadata record becomes authoritative once the replicationStatus is
+set to complete after initial transfer of content to the Coordinating Node
+(step B5 above)</p></li>
+<li><p>Member Nodes still provide access to system metadata through the
+<code class="xref py py-func docutils literal notranslate"><span class="pre">MN_crud.getSystemMetadata()</span></code> calls, though the copy of system metadata
+returned is authoritative for the properties controlled by the Member Nodes
+only.</p></li>
+<li><p>Member Nodes should not return any of the <code class="xref py py-attr docutils literal notranslate"><span class="pre">SystemMetdata.replica</span></code>
+attributes.</p></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Natural History of System Metadata</a><ul>
+<li><a class="reference internal" href="#process-overview">Process Overview</a></li>
+<li><a class="reference internal" href="#process-detail-scenario-a">Process Detail - Scenario A</a><ul>
+<li><a class="reference internal" href="#step-a1">Step A1.</a></li>
+<li><a class="reference internal" href="#step-a2">Step A2.</a></li>
+<li><a class="reference internal" href="#step-a3">Step A3.</a></li>
+<li><a class="reference internal" href="#step-a4">Step A4.</a></li>
+<li><a class="reference internal" href="#step-a5">Step A5.</a></li>
+<li><a class="reference internal" href="#step-a6">Step A6.</a></li>
+<li><a class="reference internal" href="#step-a8">Step A8.</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#process-detail-scenario-b">Process Detail - Scenario B.</a><ul>
+<li><a class="reference internal" href="#step-b1">Step B1.</a></li>
+<li><a class="reference internal" href="#step-b2">Step B2.</a></li>
+<li><a class="reference internal" href="#step-b3">Step B3.</a></li>
+<li><a class="reference internal" href="#step-b4">Step B4.</a></li>
+<li><a class="reference internal" href="#step-b5">Step B5.</a></li>
+<li><a class="reference internal" href="#step-b6">Step B6.</a></li>
+<li><a class="reference internal" href="#step-b7">Step B7.</a></li>
+<li><a class="reference internal" href="#step-b8">Step B8.</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#final-state-of-system-metadata">Final State of System Metadata</a></li>
+<li><a class="reference internal" href="#conclusions">Conclusions</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+      <li>Previous: <a href="SystemMetadataAnalysis.html" title="previous chapter">Getting a Handle on Systems Metadata for the Long Haul</a></li>
+      <li>Next: <a href="Serialization.html" title="next chapter">Serialization of Types for Transfer Over HTTP</a></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/design/SysmetaLifecycle.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/design/SysmetaLifecycle.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/SysmetaLifecycle.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

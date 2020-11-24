@@ -1,0 +1,364 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>REST Interface Overview &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/mathjax_pre.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="DataONE PIRI Service" href="../services/piri_service.html" />
+    <link rel="prev" title="Data Types in CICore" href="Types.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../services/piri_service.html" title="DataONE PIRI Service"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Types.html" title="Data Types in CICore"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html"></a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">REST Interface Overview</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="rest-interface-overview">
+<h1>REST Interface Overview<a class="headerlink" href="#rest-interface-overview" title="Permalink to this headline">¶</a></h1>
+<p>This document describes how the Member (<a class="reference internal" href="MN_APIs.html"><span class="doc">Member Node APIs</span></a>) and Coordinating
+(<a class="reference internal" href="CN_APIs.html"><span class="doc">Coordinating Node APIs</span></a>) Node APIs are implemented using a Representational State
+Transfer (REST) approach over HTTP.</p>
+<p>Key points on REST interactions in DataONE:</p>
+<ol class="arabic simple">
+<li><p>Content is generally modeled as collections, with <a class="reference internal" href="Types.html#Types.Identifier" title="Types.Identifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">PIDs</span></code></a> identifying individual items of a collection.</p></li>
+<li><p>The HTTP verbs HEAD, GET, POST, PUT, DELETE are used for retrieving
+information about content, retrieving content, creating content, updating
+content, and deleting content respectively.</p></li>
+<li><p>State information, if required, is passed in the HTTP headers.</p></li>
+<li><p>Identity transfer is performed using SSL, with the client certificate
+accessible through implementation specific mechanisms supported by the
+respective server environment.</p></li>
+<li><p>The identity information described in (4) is indicated as a <em>Session</em> in the
+method signatures and their descriptions.</p></li>
+<li><p>Hints to support efficient caching (e.g. content time stamps) should be
+respected. Caching is an important mechanism for assisting with service
+scalability.</p></li>
+<li><p>Names of parameters passed in URLs or message bodies are case sensitive
+unless explicitly indicated otherwise. If the case of the parameters names
+does not match the method signature, the request MAY be rejected with an
+<a class="reference internal" href="Exceptions.html#Exceptions.InvalidRequest" title="Exceptions.InvalidRequest"><code class="xref py py-exc docutils literal notranslate"><span class="pre">Exceptions.InvalidRequest</span></code></a> exception.</p></li>
+<li><p>GET, HEAD, DELETE requests only pass parameters as part of the URL. The
+parameter values are converted to UTF-8 Strings and appropriately escaped for
+incorporating into the URL.</p></li>
+<li><p>Message bodies (e.g. for POST and PUT requests) are encoded using MIME
+Multipart, mixed (<a class="reference external" href="http://tools.ietf.org/html/rfc2046#section-5.1.3">RFC2046</a>).</p></li>
+<li><p>PUT requests are for updating an existing resource. An identifier of some
+sort will typically appear in the URL (e.g. a PID or a Subject), which should
+be a UTF-8 string and appropriately URL path encoded. The message body will
+be MIME multipart/mixed and may contain values expressed as parameter and /
+or file parts as described in (12) below.</p></li>
+<li><p>POST requests are for creating resources. All information for creating the
+new object or resource is transmitted in the message body, which is encoded
+as a MIME multipart/mixed message.</p></li>
+<li><p>We use two types of content in MIME multipart/mixed messages: parameters and
+files. Parameters are to be used for all simple types (13, below). Files are
+to be used for all complex types (14, below) and for octet streams.</p></li>
+<li><p>Simple types are structures that contain a single value. When creating the
+parameter entry, the value is converted to a UTF-8 String using formatting
+equivalent to what is used when expressing the same value as part of an XML
+document (e.g. when serializing using PyxB or JibX). The expression of a
+simple type as a String in a MIME multipart/mixed parameter should be
+equivalent to expressing the same value as part of a URL (before escaping).</p></li>
+<li><p>Complex types are any structures that contain more than a single value. A
+simple example of a complex type is the <a class="reference internal" href="Types.html#Types.Checksum" title="Types.Checksum"><code class="xref py py-class docutils literal notranslate"><span class="pre">Types.Checksum</span></code></a> type. It is
+a String (the checksum) with an attribute (the algorithm). Complex types are
+serialized to UTF-8 encoded XML structures that are defined by the DataONE
+Types Schema.</p></li>
+<li><p>File parts of MIME multipart/mixed have three properties: the name of the
+entry, the file name of the content, and the content. The name of the entry
+must match the parameter name as described in the signature of the method
+being called. The content of the entry is XML encoded structure as described
+in (14) above (or an octet stream). The file name property is not used, and
+can be set to whatever the client considers appropriate. The file name MAY
+be ignored by the service receiving the request.</p></li>
+</ol>
+<p>Collections exposed by <a class="reference internal" href="../glossary.html#term-Member-Node"><span class="xref std std-term">Member Node</span></a>s and <a class="reference internal" href="../glossary.html#term-Coordinating-Node"><span class="xref std std-term">Coordinating Node</span></a>s
+include:</p>
+<dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">/object</span></code></dt>
+<dd class="field-odd"><p>The set of objects available for retrieval from the node.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">/meta</span></code></dt>
+<dd class="field-even"><p>Metadata about objects available for retrieval from the node.</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">/formats</span></code></dt>
+<dd class="field-odd"><p>Object formats registered on the node.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">/log</span></code></dt>
+<dd class="field-even"><p>Log records held on the node.</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">/reserve</span></code></dt>
+<dd class="field-odd"><p>Identifiers that have been reserved for future use.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">/accounts</span></code></dt>
+<dd class="field-even"><p>Principal and ownership related functionality.</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">/sessions</span></code></dt>
+<dd class="field-odd"><p>Authenticated session management functions.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">/node</span></code></dt>
+<dd class="field-even"><p>Service and status information for all nodes on the system.</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">/monitor</span></code></dt>
+<dd class="field-odd"><p>Node health monitoring</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">/replicate</span></code></dt>
+<dd class="field-even"><p>Member node to member node replication functionality</p>
+</dd>
+</dl>
+<div class="section" id="message-serialization">
+<h2>Message Serialization<a class="headerlink" href="#message-serialization" title="Permalink to this headline">¶</a></h2>
+<p>The format of the response (except for responses from <a class="reference internal" href="MN_APIs.html#MNRead.get" title="MNRead.get"><code class="xref py py-func docutils literal notranslate"><span class="pre">MNRead.get()</span></code></a> or
+<a class="reference internal" href="CN_APIs.html#CNRead.get" title="CNRead.get"><code class="xref py py-func docutils literal notranslate"><span class="pre">CNRead.get()</span></code></a>) is determined by the <em>Accept:</em> header provided in the
+request.</p>
+<p>Version 1.0 of the DataONE services only support XML serialization, and this
+format MUST be supported by all services and clients interacting with the
+DataONE system.</p>
+<p>All request and response documents MUST be encoded using the UTF-8 character
+set.</p>
+<p>If the service is not able to provide a response in the specified format, then
+the node should return an error code of <a class="reference internal" href="Exceptions.html#Exceptions.NotImplemented" title="Exceptions.NotImplemented"><code class="xref py py-exc docutils literal notranslate"><span class="pre">Exceptions.NotImplemented</span></code></a>, with
+the HTTP error code set to 406.</p>
+</div>
+<div class="section" id="parameters-in-requests">
+<h2>Parameters in Requests<a class="headerlink" href="#parameters-in-requests" title="Permalink to this headline">¶</a></h2>
+<p>Many of the URL patterns described here accept parameters in the URL and as
+components of a MIME multipart-mixed message body.</p>
+<p>Unless otherwise indicated, all parameter names and values should be considered
+case sensitive.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The default configuration of web servers such as Apache introduces some
+ambiguity in the interpretation of URLs that include slashes and other
+reserved characters that are used as path separators for example. The
+document <a class="reference internal" href="../notes/ApacheConfiguration.html"><span class="doc">Apache Configuration for DataONE Services</span></a> describes appropriate
+configuration details for the Apache web server.</p>
+</div>
+<div class="section" id="session-information">
+<h3>Session Information<a class="headerlink" href="#session-information" title="Permalink to this headline">¶</a></h3>
+<p>Session information (formerly referred to as a <em>token</em>) is obtained from the
+client side authentication certificate held by the SSL processing library of the
+HTTPS service handling the request. Hence, even though a <em>session</em> parameter may
+be present in the method signature, the session information itself is
+transported as part of the HTTPS handshaking process and is not present in the
+body or header section of the HTTP request.</p>
+</div>
+<div class="section" id="url-path-parameters">
+<h3>URL Path Parameters<a class="headerlink" href="#url-path-parameters" title="Permalink to this headline">¶</a></h3>
+<p>Some parameters are passed as part of the REST service URL path (e.g.
+/get/{pid}). Such values MUST be encoded according to the rules of <a class="reference external" href="http://tools.ietf.org/html/rfc3986">RFC3986</a> with
+the additional restriction that the space character MUST be encoded as “%20”
+rather than “+”. Examples of DataONE REST URLs for retrieving an object (i.e.
+the get() operation):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>PID: 10.1000/182
+URL: https://mn.example.com/mn/v1/object/10.1000%2F182
+
+PID: http://example.com/data/mydata?row=24
+URL: https://mn.example.com/mn/v1/object/http:%2F%2Fexample.com%2Fdata%2Fmydata%3Frow=24
+
+PID: Is_féidir_liom_ithe_gloine
+URL: https://mn.example.com/mn/v1/object/Is_f%C3%A9idir_liom_ithe_gloine
+</pre></div>
+</div>
+</div>
+<div class="section" id="url-query-parameters">
+<h3>URL Query Parameters<a class="headerlink" href="#url-query-parameters" title="Permalink to this headline">¶</a></h3>
+<p>Parameters passed as key, values parameters in the URL query string MUST be
+appropriately encoded for transmission as part of the URL according to <a class="reference external" href="http://tools.ietf.org/html/rfc3986">RFC3986</a>
+rules for the URL query component. In addition, the space character MUST be
+encoded as “%20” rather than the alternative “+” character.</p>
+</div>
+<div class="section" id="boolean-url-query-parameters">
+<h3>Boolean URL Query Parameters<a class="headerlink" href="#boolean-url-query-parameters" title="Permalink to this headline">¶</a></h3>
+<p>Where a boolean parameter value is being specified as the value portion of a
+key-value pair appearing in a URL, the strings “true” and “false” MUST be used
+to indicate logical true and logical false respectively.</p>
+</div>
+<div class="section" id="date-parameters-in-urls">
+<h3>Date Parameters in URLs<a class="headerlink" href="#date-parameters-in-urls" title="Permalink to this headline">¶</a></h3>
+<p>Date values in URLs should be formatted as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">yyyy</span><span class="o">-</span><span class="n">MM</span><span class="o">-</span><span class="n">dd</span><span class="p">[</span><span class="n">Thh</span><span class="p">:</span><span class="n">mm</span><span class="p">:</span><span class="n">ss</span><span class="o">.</span><span class="n">S</span><span class="p">[</span><span class="o">+</span><span class="n">ZZ</span><span class="p">:</span><span class="n">zz</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>Where:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">yyyy</span> <span class="o">=</span> <span class="n">Four</span> <span class="n">digit</span> <span class="n">year</span>
+<span class="n">MM</span>   <span class="o">=</span> <span class="n">Two</span> <span class="n">digit</span> <span class="n">month</span><span class="p">,</span> <span class="mi">01</span> <span class="o">=</span> <span class="n">January</span>
+<span class="n">dd</span>   <span class="o">=</span> <span class="n">Two</span> <span class="n">digit</span> <span class="n">day</span> <span class="n">of</span> <span class="n">month</span><span class="p">,</span> <span class="mi">01</span> <span class="o">=</span> <span class="n">first</span> <span class="n">day</span>
+<span class="n">hh</span>   <span class="o">=</span> <span class="n">Hour</span> <span class="n">of</span> <span class="n">day</span><span class="p">,</span> <span class="mi">00</span> <span class="o">-</span> <span class="mi">23</span>
+<span class="n">mm</span>   <span class="o">=</span> <span class="n">Minute</span> <span class="n">of</span> <span class="n">hour</span><span class="p">,</span> <span class="mi">00</span> <span class="o">-</span> <span class="mi">59</span>
+<span class="n">ss</span>   <span class="o">=</span> <span class="n">Second</span> <span class="n">of</span> <span class="n">minute</span><span class="p">,</span> <span class="mi">00</span> <span class="o">-</span> <span class="mi">59</span>
+<span class="n">S</span>    <span class="o">=</span> <span class="n">Milliseconds</span>
+<span class="n">ZZ</span>   <span class="o">=</span> <span class="n">Hours</span> <span class="n">of</span> <span class="n">timezone</span> <span class="n">offset</span>
+<span class="n">zz</span>   <span class="o">=</span> <span class="n">Minutes</span> <span class="n">of</span> <span class="n">timezone</span> <span class="n">offset</span>
+</pre></div>
+</div>
+<p>If the timezone values are not present then the date time is interpreted to be
+in GMT.</p>
+<p>If the time portion of the date time is not present, then the time is assumed to
+be 00:00:00.0, i.e. the first millisecond of the specified date.</p>
+</div>
+<div class="section" id="message-body-in-put-or-post">
+<h3>Message Body in PUT or POST<a class="headerlink" href="#message-body-in-put-or-post" title="Permalink to this headline">¶</a></h3>
+<p>Requests sent using the HTTP POST or PUT verbs MUST use MIME multipart-mixed
+encoding of the message body as described in <a class="reference external" href="http://tools.ietf.org/html/rfc2046#section-5.1.3">RFC2046</a>. In most cases and unless
+otherwise indicated, all parameters for PUT and POST requests except the
+authorization session will be sent in the message body (as opposed to URL
+parameters).</p>
+<p>Example of a HTTP POST request to the MN create() method using <em>curl</em>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">curl</span> <span class="o">-</span><span class="n">X</span> <span class="n">POST</span> \
+     <span class="o">--</span><span class="n">cert</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">x509up_u502</span> \
+     <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;Charset: utf-8&quot;</span> \
+     <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;Content-Type: multipart/mixed; boundary=----------6B3C785C-6290-11DF-A355-A6ECDED72085_$&quot;</span> \
+     <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;Accept: text/xml&quot;</span> \
+     <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;User-Agent: pyd1/1.0 +http://dataone.org/&quot;</span> \
+     <span class="o">-</span><span class="n">F</span> <span class="n">pid</span><span class="o">=</span><span class="mi">10</span><span class="n">Dappend1</span><span class="o">.</span><span class="n">txt</span> \
+     <span class="o">-</span><span class="n">F</span> <span class="nb">object</span><span class="o">=</span><span class="nd">@content</span><span class="o">.</span><span class="n">bin</span> \
+     <span class="o">-</span><span class="n">F</span> <span class="n">sysmeta</span><span class="o">=</span><span class="nd">@systemmetadata</span><span class="o">.</span><span class="n">abc</span> \
+     <span class="s2">&quot;https://demo1.test.dataone.org/knb/d1/mn/v1/object&quot;</span>
+</pre></div>
+</div>
+<p>Example serialized body of a HTTP POST request to the MN create() method
+(excluding session information):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TODO</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="message-body-in-delete">
+<h3>Message Body in DELETE<a class="headerlink" href="#message-body-in-delete" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="http://tools.ietf.org/html/rfc2046#section-5.1.3">RFC2046</a> does not explicitly prevent the presence of a message body in a HTTP
+DELETE request, however support for transmission of the request payload may vary
+by technology. DELETE requests requiring a request payload MUST have
+accompanying integration tests that exercise the technologies involved.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../_static/dataone_logo.png" alt="Logo"/>
+    </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">REST Interface Overview</a><ul>
+<li><a class="reference internal" href="#message-serialization">Message Serialization</a></li>
+<li><a class="reference internal" href="#parameters-in-requests">Parameters in Requests</a><ul>
+<li><a class="reference internal" href="#session-information">Session Information</a></li>
+<li><a class="reference internal" href="#url-path-parameters">URL Path Parameters</a></li>
+<li><a class="reference internal" href="#url-query-parameters">URL Query Parameters</a></li>
+<li><a class="reference internal" href="#boolean-url-query-parameters">Boolean URL Query Parameters</a></li>
+<li><a class="reference internal" href="#date-parameters-in-urls">Date Parameters in URLs</a></li>
+<li><a class="reference internal" href="#message-body-in-put-or-post">Message Body in PUT or POST</a></li>
+<li><a class="reference internal" href="#message-body-in-delete">Message Body in DELETE</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation Overview</a><ul>
+      <li>Previous: <a href="Types.html" title="previous chapter">Data Types in CICore</a></li>
+      <li>Next: <a href="../services/piri_service.html" title="next chapter">DataONE PIRI Service</a></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/apis/rest_comms.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../_sources/apis/rest_comms.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/apis/rest_comms.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>

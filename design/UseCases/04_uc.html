@@ -1,0 +1,194 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Use Case 04 - Create New Object &#8212; v2.2.2</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/dataone.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/mathjax_pre.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../../_static/sidebar.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Use Case 05 - Update Science Metadata" href="05_uc.html" />
+    <link rel="prev" title="Use Case 02 - List PIDs By Search" href="02_uc.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../../_static/small_dataone.css" type= "text/css" rel="stylesheet" />
+
+  </head><body>
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="05_uc.html" title="Use Case 05 - Update Science Metadata"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="02_uc.html" title="Use Case 02 - List PIDs By Search"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html"></a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../usecases.html" accesskey="U">Use Cases</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Use Case 04 - Create New Object</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="use-case-04-create-new-object">
+<span id="uc04"></span><h1>Use Case 04 - Create New Object<a class="headerlink" href="#use-case-04-create-new-object" title="Permalink to this headline">¶</a></h1>
+<dl id="index-0">
+<dt>Revisions</dt><dd><p>View document revision <a class="reference external" href="https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/04_uc.txt">history</a>.</p>
+</dd>
+<dt>Goal</dt><dd><p>Create new content on a Member Node.</p>
+</dd>
+<dt>Summary</dt><dd><p>A user adds new content to a Member Node (MN). The operation of adding new
+content to a Member Node is atomic to the Member Node, meaning there is no
+dependency on the replication or synchronization processes for the
+successful completion of a create operation.</p>
+<p>The metadata is retrieved by the CN using a pull mechanism (CN requests
+content from the MN) which may be triggered by a timer event or notification
+from the MN.</p>
+<p>The availability of new content on a MN is indicated by a flag in the
+response to a ping() message issued by a CN. The CN then retrieves a list of
+changes from the MN and for each change, retrieves the experiment metadata,
+stores it and generates a search metadata document by extracting content
+from the experiment metadata. The changes to the CN (stored experiment
+metadata, update search metadata) are replicated to the other CNs (Use Case
+###). The CN schedules replication of the data package across other MNs
+(Use Case 06).</p>
+</dd>
+<dt>Actors</dt><dd><p>Member Node, additional Member Nodes, Coordinating Nodes</p>
+</dd>
+<dt>Preconditions</dt><dd><ul class="simple">
+<li><p>Use is authenticated and so client application has an auth_token for the process.</p></li>
+<li><p>DataONE system operational</p></li>
+<li><p>MN is registered and is monitored</p></li>
+</ul>
+</dd>
+<dt>Triggers</dt><dd><ul class="simple">
+<li><p>New data package is present on Member Node</p></li>
+<li><p>An existing data package is modified on a Member Node</p></li>
+<li><p>A data package is deleted from a Member Node</p></li>
+</ul>
+</dd>
+<dt>Post Conditions</dt><dd><ul class="simple">
+<li><p>New data package is replicated across MNs</p></li>
+<li><p>Search metadata is updated</p></li>
+<li><p>Operation recorded in logs</p></li>
+<li><p>CN update of search metadata</p></li>
+<li><p>CN replication of metadata</p></li>
+<li><p>Watchers notified of change</p></li>
+</ul>
+</dd>
+</dl>
+<img alt="../../_images/47f8bf02186376e199068c8e8071556d7c08788d88ad46ec42294156d97bc8d0.svg" class="align-center" src="../../_images/47f8bf02186376e199068c8e8071556d7c08788d88ad46ec42294156d97bc8d0.svg" /><p><em>Figure 1.</em> Use case 04.</p>
+<img alt="../../_images/2d9840589847790d18f98bba31c786dc440c36ac21d77c263c5c4b695c4453d7.svg" class="align-center" src="../../_images/2d9840589847790d18f98bba31c786dc440c36ac21d77c263c5c4b695c4453d7.svg" /><p><em>Figure 2.</em> Create, update, delete, science metadata or data object in Member
+Node.</p>
+<p><strong>Notes</strong></p>
+<ul class="simple">
+<li><p>Are IDs are pegged to versions? If so, update might differ more radically
+from create.</p></li>
+<li><p>If delete is a metadata operation only, then will be very similar to update.
+But if it is a physical operation, it becomes more complex. Will there be an
+archival copy? Will member nodes that hold replicas be “forced” to destroy
+the replicas?</p></li>
+<li><p>Is submit from a member node a push or pull?</p></li>
+<li><p>Should queuing of a submission within a member node be required for success?
+(We assume yes, to guarantee replication of submissions).</p></li>
+<li><p>Can data packages be deleted or modified?</p></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <p class="logo"><a href="/">
+      <img class="logo" src="../../_static/dataone_logo.png" alt="Logo"/>
+    </a></p><h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation Overview</a><ul>
+  <li><a href="../usecases.html">Use Cases</a><ul>
+      <li>Previous: <a href="02_uc.html" title="previous chapter">Use Case 02 - List PIDs By Search</a></li>
+      <li>Next: <a href="05_uc.html" title="next chapter">Use Case 05 - Update Science Metadata</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/design/UseCases/04_uc.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      <div id="copyright">
+      &copy; Copyright <a href="http://www.dataone.org">2009-2019, DataONE</a>.
+        [ <a href="../../_sources/design/UseCases/04_uc.txt"
+               rel="nofollow">Page Source</a> |
+          <a href='https://redmine.dataone.org/projects/d1/repository/changes/documents/Projects/cicore/architecture/api-documentation/source/design/UseCases/04_uc.txt'
+            rel="nofollow">Revision History</a> ]&nbsp;&nbsp;
+      </div>
+      <div id="acknowledgement">
+        <p>This material is based upon work supported by the National Science Foundation
+          under Grant Numbers <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=0830944">083094</a> and <a href="http://www.nsf.gov/awardsearch/showAward?AWD_ID=1430508">1430508</a>.</p>
+        <p>Any opinions, findings, and conclusions or recommendations expressed in this
+           material are those of the author(s) and do not necessarily reflect the views
+           of the National Science Foundation.</p>
+      </div>
+    </div>
+    <!--
+    <hr />
+     <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML Comment Box</a> is loading comments...</div>
+     <link rel="stylesheet" type="text/css" href="_static/skin.css" />
+     <script type="text/javascript" language="javascript" id="hcb">
+     /*<! -*/
+     (function()
+     {s=document.createElement("script");
+     s.setAttribute("type","text/javascript");
+     s.setAttribute("src", "http://www.htmlcommentbox.com/jread?page="+escape((typeof hcb_user !== "undefined" && hcb_user.PAGE)||(""+window.location)).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24Gg8J5iYSHJWwAJtlYu/yU."+"&opts=21407&num=10");
+     if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})();
+      /* ->*/
+     </script>
+   -->
+  </body>
+</html>
