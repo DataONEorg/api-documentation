@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "api-documentation"
+version = "2.2.2"
+description = "DataONE API documentation"
+authors = ["datadavev <datadavev@users.noreply.github.com>"]
+license = "Apache 2.0"
+
+[tool.poetry.dependencies]
+python = "^3.6"
+Sphinx = "^3.3.1"
+recommonmark = "^0.6.0"
+plantweb = "^1.2.1"
+sqltable = {git = "https://github.com/datadavev/docutils_sqltable"}
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
