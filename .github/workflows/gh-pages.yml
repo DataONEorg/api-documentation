@@ -53,7 +53,7 @@ jobs:
 
       - name: Commit documentation changes
         run: |
-          git clone https://github.com/isamplesorg/isamples-central.git --branch gh-pages --single-branch gh-pages
+          git clone https://github.com/DataONEorg/api-documentation.git --branch gh-pages --single-branch gh-pages
           cd gh-pages
           find . -not -path '*/\.*' -delete
           cp -r ../docs/build/html/* .
