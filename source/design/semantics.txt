@@ -6,9 +6,9 @@ Overview
 
 Semantic search improves both search and display of metadata records over what was previously possible. For example, with traditional, free-text search, if a metadata record described a dataset on American green tree frogs (*Hyla cinerea*) but never included the term "amphibian" in the metadata record's text, a free-text search for "data on amphibians" may not return the record. With semantic search, we can index ahead of time that fact that American green tree frogs are amphibians using a suitable knowledge graph and the record would be returned.
 
-Note: At the moment, annotations are only supported on EML 2.2.0 records via the EML's semantics module, see `What's New in EML 2.2.0 <https://eml.ecoinformatics.org/whats-new-in-eml-2-2-0.html>`_. However, the design allows other metadata standards (e.g., schema.org) to make use of these features. Here, we'll focus on how semantic search applies to EML.
+.. Note:: Although designed to be generally applicable, only annotations expressed with the EML 2.2.x semantics module are parsed. See `What's New in EML 2.2.0 <https://eml.ecoinformatics.org/whats-new-in-eml-2-2-0.html>`_.
 
-Annotations are inlined into the EML record in various locations and take the following structure:
+Annotations cane be expressed in various locations of EML 2.2.x records. For example: 
 
 .. code:: xml
 
@@ -25,12 +25,12 @@ Annotations are inlined into the EML record in various locations and take the fo
     ...
   </attribute>
 
-The above annotation asserts that the attribute ``myatt`` is "of characteristic" "Mass". Both terms are defined in the OBOE ontology with specific definitions and logical relationships with other terms. This annotation is both searchable and displayed on the dataset's landing page.
+The above annotation asserts that the attribute "`myatt`" is "`of characteristic`" "`Mass`". Both terms are defined in the OBOE ontology with specific definitions and logical relationships with other terms. After parsing and indexing, annotations such as this annotation are both searchable and displayed on dataset landing pages.
 
 Indexing
 --------
 
-Harvesting of an EML record with one or more annotations triggers the normal ``SystemMetadataSubporcessor`` and the appropriate ``ScienceMetadataSubprocessor`` for the record but also triggers the ``EMLAnnotationSubprocessor`` which does two things:
+Harvesting of an EML record with one or more annotations triggers ``EMLAnnotationSubprocessor`` (in addition to other applicable subprocessors). This does tthe following:
 
 1. Executes the XPath ``//annotation/valueURI`` on the record
 2. Performs query expansion on the result of (1) to include all superclasses of each term
