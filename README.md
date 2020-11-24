@@ -1,5 +1,7 @@
 # Architecture Docs
 
+![Build Pages](https://github.com/DataONEorg/api-documentation/workflows/Build%20Pages/badge.svg)
+
 [![Documentation Status](https://readthedocs.org/projects/dataone-architecture-documentation/badge/?version=latest)](https://dataone-architecture-documentation.readthedocs.io/en/latest/?badge=latest)
 
 API and Architecture documentation for DataONE.
