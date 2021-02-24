@@ -1,0 +1,13 @@
+Search Metadata Elements Extracted from schema.org:Dataset
+==========================================================
+
+
+
+.. sqltable:: schema_org Meta Properties
+   :header: Field,SPARQL,Reference,Notes
+   :widths: 3 10 10 10
+   :driver: xlsx
+   :source: data/SearchFields.xlsx
+   :sql: SELECT ':attr:`SearchMetadata.'||SOLR||'`', SPARQL, Reference, Comments FROM schema_org;
+
+
